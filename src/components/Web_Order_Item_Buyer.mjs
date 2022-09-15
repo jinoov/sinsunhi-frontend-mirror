@@ -2,150 +2,470 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
+import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Belt_SetInt from "rescript/lib/es6/belt_SetInt.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
+import * as Footer_Buyer from "./Footer_Buyer.mjs";
+import * as Header_Buyer from "./Header_Buyer.mjs";
+import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
-import * as Hooks from "react-relay/hooks";
+import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
+import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
+import * as ReactHookForm from "react-hook-form";
+import * as Web_Order_Buyer_Form from "./Web_Order_Buyer_Form.mjs";
+import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
+import * as Web_Order_Delivery_Form from "./Web_Order_Delivery_Form.mjs";
+import * as Web_Order_Util_Component from "./Web_Order_Util_Component.mjs";
 import * as Web_Order_Orderer_Info_Buyer from "./Web_Order_Orderer_Info_Buyer.mjs";
 import * as Web_Order_Payment_Info_Buyer from "./Web_Order_Payment_Info_Buyer.mjs";
 import * as Web_Order_Product_Info_Buyer from "./Web_Order_Product_Info_Buyer.mjs";
-import * as WebOrderItemBuyerMutation_graphql from "../__generated__/WebOrderItemBuyerMutation_graphql.mjs";
+import * as WebOrderItemBuyer_Query_graphql from "../__generated__/WebOrderItemBuyer_Query_graphql.mjs";
+import * as WebOrderItemBuyer_Temp_Query_graphql from "../__generated__/WebOrderItemBuyer_Temp_Query_graphql.mjs";
 import * as Web_Order_Delivery_Method_Selection_Buyer from "./Web_Order_Delivery_Method_Selection_Buyer.mjs";
 
-function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
-  return RelayRuntime.commitMutation(environment, {
-              mutation: WebOrderItemBuyerMutation_graphql.node,
-              variables: WebOrderItemBuyerMutation_graphql.Internal.convertVariables(variables),
-              onCompleted: (function (res, err) {
-                  if (onCompleted !== undefined) {
-                    return Curry._2(onCompleted, WebOrderItemBuyerMutation_graphql.Internal.convertResponse(res), (err == null) ? undefined : Caml_option.some(err));
-                  }
-                  
-                }),
-              onError: (function (err) {
-                  if (onError !== undefined) {
-                    return Curry._1(onError, (err == null) ? undefined : Caml_option.some(err));
-                  }
-                  
-                }),
-              optimisticResponse: optimisticResponse !== undefined ? WebOrderItemBuyerMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
-              optimisticUpdater: optimisticUpdater,
-              updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, WebOrderItemBuyerMutation_graphql.Internal.convertResponse(r));
-                  }) : undefined,
-              uploadables: uploadables
-            });
+function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
+  var data = ReactRelay.useLazyLoadQuery(WebOrderItemBuyer_Query_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(WebOrderItemBuyer_Query_graphql.Internal.convertVariables(variables)), {
+        fetchKey: fetchKey,
+        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
+        networkCacheConfig: networkCacheConfig
+      });
+  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderItemBuyer_Query_graphql.Internal.convertResponse, data);
 }
 
-function use(param) {
-  var match = Hooks.useMutation(WebOrderItemBuyerMutation_graphql.node);
-  var mutate = match[0];
+function useLoader(param) {
+  var match = ReactRelay.useQueryLoader(WebOrderItemBuyer_Query_graphql.node);
+  var loadQueryFn = match[1];
+  var loadQuery = React.useMemo((function () {
+          return function (param, param$1, param$2, param$3) {
+            return Curry._2(loadQueryFn, WebOrderItemBuyer_Query_graphql.Internal.convertVariables(param), {
+                        fetchPolicy: param$1,
+                        networkCacheConfig: param$2
+                      });
+          };
+        }), [loadQueryFn]);
   return [
-          React.useMemo((function () {
-                  return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
-                    return Curry._1(mutate, {
-                                onError: param,
-                                onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, WebOrderItemBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
-                                    }) : undefined,
-                                onUnsubscribe: param$2,
-                                optimisticResponse: param$3 !== undefined ? WebOrderItemBuyerMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
-                                optimisticUpdater: param$4,
-                                updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, WebOrderItemBuyerMutation_graphql.Internal.convertResponse(r));
-                                    }) : undefined,
-                                variables: WebOrderItemBuyerMutation_graphql.Internal.convertVariables(param$6),
-                                uploadables: param$7
-                              });
-                  };
-                }), [mutate]),
-          match[1]
+          Caml_option.nullable_to_opt(match[0]),
+          loadQuery,
+          match[2]
         ];
 }
 
-var Mutation_errorCode_decode = WebOrderItemBuyerMutation_graphql.Utils.errorCode_decode;
+function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
+  ReactRelay.fetchQuery(environment, WebOrderItemBuyer_Query_graphql.node, WebOrderItemBuyer_Query_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).subscribe({
+        next: (function (res) {
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: WebOrderItemBuyer_Query_graphql.Internal.convertResponse(res)
+                });
+          }),
+        error: (function (err) {
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
+          })
+      });
+}
 
-var Mutation_errorCode_fromString = WebOrderItemBuyerMutation_graphql.Utils.errorCode_fromString;
+function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
+  var __x = ReactRelay.fetchQuery(environment, WebOrderItemBuyer_Query_graphql.node, WebOrderItemBuyer_Query_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).toPromise();
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(WebOrderItemBuyer_Query_graphql.Internal.convertResponse(res));
+              }), __x);
+}
 
-var Mutation_paymentMethod_decode = WebOrderItemBuyerMutation_graphql.Utils.paymentMethod_decode;
+function usePreloaded(queryRef, param) {
+  var data = ReactRelay.usePreloadedQuery(WebOrderItemBuyer_Query_graphql.node, queryRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderItemBuyer_Query_graphql.Internal.convertResponse, data);
+}
 
-var Mutation_paymentMethod_fromString = WebOrderItemBuyerMutation_graphql.Utils.paymentMethod_fromString;
+function retain(environment, variables) {
+  var operationDescriptor = RelayRuntime.createOperationDescriptor(WebOrderItemBuyer_Query_graphql.node, WebOrderItemBuyer_Query_graphql.Internal.convertVariables(variables));
+  return environment.retain(operationDescriptor);
+}
 
-var Mutation_paymentPurpose_decode = WebOrderItemBuyerMutation_graphql.Utils.paymentPurpose_decode;
-
-var Mutation_paymentPurpose_fromString = WebOrderItemBuyerMutation_graphql.Utils.paymentPurpose_fromString;
-
-var Mutation_makeVariables = WebOrderItemBuyerMutation_graphql.Utils.makeVariables;
-
-var Mutation = {
-  errorCode_decode: Mutation_errorCode_decode,
-  errorCode_fromString: Mutation_errorCode_fromString,
-  paymentMethod_decode: Mutation_paymentMethod_decode,
-  paymentMethod_fromString: Mutation_paymentMethod_fromString,
-  paymentPurpose_decode: Mutation_paymentPurpose_decode,
-  paymentPurpose_fromString: Mutation_paymentPurpose_fromString,
-  makeVariables: Mutation_makeVariables,
+var Query = {
+  Operation: undefined,
   Types: undefined,
-  commitMutation: commitMutation,
-  use: use
+  use: use,
+  useLoader: useLoader,
+  $$fetch: $$fetch,
+  fetchPromised: fetchPromised,
+  usePreloaded: usePreloaded,
+  retain: retain
+};
+
+function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
+  var data = ReactRelay.useLazyLoadQuery(WebOrderItemBuyer_Temp_Query_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(WebOrderItemBuyer_Temp_Query_graphql.Internal.convertVariables(variables)), {
+        fetchKey: fetchKey,
+        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
+        networkCacheConfig: networkCacheConfig
+      });
+  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderItemBuyer_Temp_Query_graphql.Internal.convertResponse, data);
+}
+
+function useLoader$1(param) {
+  var match = ReactRelay.useQueryLoader(WebOrderItemBuyer_Temp_Query_graphql.node);
+  var loadQueryFn = match[1];
+  var loadQuery = React.useMemo((function () {
+          return function (param, param$1, param$2, param$3) {
+            return Curry._2(loadQueryFn, WebOrderItemBuyer_Temp_Query_graphql.Internal.convertVariables(param), {
+                        fetchPolicy: param$1,
+                        networkCacheConfig: param$2
+                      });
+          };
+        }), [loadQueryFn]);
+  return [
+          Caml_option.nullable_to_opt(match[0]),
+          loadQuery,
+          match[2]
+        ];
+}
+
+function $$fetch$1(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
+  ReactRelay.fetchQuery(environment, WebOrderItemBuyer_Temp_Query_graphql.node, WebOrderItemBuyer_Temp_Query_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).subscribe({
+        next: (function (res) {
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: WebOrderItemBuyer_Temp_Query_graphql.Internal.convertResponse(res)
+                });
+          }),
+        error: (function (err) {
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
+          })
+      });
+}
+
+function fetchPromised$1(environment, variables, networkCacheConfig, fetchPolicy, param) {
+  var __x = ReactRelay.fetchQuery(environment, WebOrderItemBuyer_Temp_Query_graphql.node, WebOrderItemBuyer_Temp_Query_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).toPromise();
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(WebOrderItemBuyer_Temp_Query_graphql.Internal.convertResponse(res));
+              }), __x);
+}
+
+function usePreloaded$1(queryRef, param) {
+  var data = ReactRelay.usePreloadedQuery(WebOrderItemBuyer_Temp_Query_graphql.node, queryRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderItemBuyer_Temp_Query_graphql.Internal.convertResponse, data);
+}
+
+function retain$1(environment, variables) {
+  var operationDescriptor = RelayRuntime.createOperationDescriptor(WebOrderItemBuyer_Temp_Query_graphql.node, WebOrderItemBuyer_Temp_Query_graphql.Internal.convertVariables(variables));
+  return environment.retain(operationDescriptor);
+}
+
+var TempQuery = {
+  Operation: undefined,
+  Types: undefined,
+  use: use$1,
+  useLoader: useLoader$1,
+  $$fetch: $$fetch$1,
+  fetchPromised: fetchPromised$1,
+  usePreloaded: usePreloaded$1,
+  retain: retain$1
+};
+
+function Web_Order_Item_Buyer$PlaceHolder$PC(Props) {
+  var deviceType = Props.deviceType;
+  var router = Router.useRouter();
+  return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.PC_Old.make, {
+                  key: router.asPath
+                }), React.createElement("main", {
+                  className: "flex flex-col gap-5 px-[16%] py-20 bg-surface"
+                }, React.createElement("h1", {
+                      className: "flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
+                    }, "주문·결제"), React.createElement("div", {
+                      className: "flex flex-col xl:flex-row gap-5"
+                    }, React.createElement("article", {
+                          className: "w-3/5 flex flex-col gap-5 min-w-[550px]"
+                        }, React.createElement("div", {
+                              className: "flex flex-col gap-7 p-7 bg-white"
+                            }, React.createElement(Web_Order_Product_Info_Buyer.PlaceHolder.PC.make, {}), React.createElement("div", {
+                                  className: "h-px bg-border-default-L2"
+                                }), React.createElement(Web_Order_Orderer_Info_Buyer.PlaceHolder.make, {
+                                  deviceType: deviceType
+                                })), React.createElement(Web_Order_Delivery_Method_Selection_Buyer.PlaceHoder.PC.make, {})), React.createElement("aside", {
+                          className: "w-2/5"
+                        }, React.createElement(Web_Order_Payment_Info_Buyer.PlaceHolder.PC.make, {})))), React.createElement(Footer_Buyer.PC.make, {}));
+}
+
+var PC = {
+  make: Web_Order_Item_Buyer$PlaceHolder$PC
+};
+
+function Web_Order_Item_Buyer$PlaceHolder$MO(Props) {
+  var deviceType = Props.deviceType;
+  var router = Router.useRouter();
+  return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.Mobile.make, {
+                  key: router.asPath
+                }), React.createElement("main", {
+                  className: "flex flex-col gap-3 bg-surface"
+                }, React.createElement("div", {
+                      className: "flex flex-col gap-4"
+                    }, React.createElement("article", {
+                          className: "w-full flex flex-col gap-5"
+                        }, React.createElement("div", {
+                              className: "flex flex-col gap-7 p-7 bg-white"
+                            }, React.createElement(Web_Order_Product_Info_Buyer.PlaceHolder.MO.make, {}), React.createElement("div", {
+                                  className: "h-px bg-border-default-L2"
+                                }), React.createElement(Web_Order_Orderer_Info_Buyer.PlaceHolder.make, {
+                                  deviceType: deviceType
+                                })), React.createElement(Web_Order_Delivery_Method_Selection_Buyer.PlaceHoder.MO.make, {})), React.createElement("aside", {
+                          className: "w-full"
+                        }, React.createElement(Web_Order_Payment_Info_Buyer.PlaceHolder.MO.make, {})))), React.createElement(Footer_Buyer.MO.make, {}));
+}
+
+var MO = {
+  make: Web_Order_Item_Buyer$PlaceHolder$MO
 };
 
 function Web_Order_Item_Buyer$PlaceHolder(Props) {
-  return React.createElement("main", {
-              className: "flex flex-col gap-5 xl:px-[16%] xl:py-20 bg-surface"
-            }, React.createElement("h1", {
-                  className: "hidden xl:flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
-                }, "주문·결제"), React.createElement("div", {
-                  className: "flex flex-col xl:flex-row gap-4 xl:gap-5"
-                }, React.createElement("article", {
-                      className: "w-full xl:w-3/5 flex flex-col gap-5"
-                    }, React.createElement("div", {
-                          className: "flex flex-col gap-7 p-7 bg-white"
-                        }, React.createElement(Web_Order_Product_Info_Buyer.PlaceHolder.make, {}), React.createElement("div", {
-                              className: "h-px bg-border-default-L2"
-                            }), React.createElement(Web_Order_Orderer_Info_Buyer.PlaceHolder.make, {})), React.createElement(Web_Order_Delivery_Method_Selection_Buyer.PlaceHoder.make, {})), React.createElement("aside", {
-                      className: "w-full xl:w-2/5"
-                    }, React.createElement(Web_Order_Payment_Info_Buyer.PlaceHolder.make, {}))));
+  var deviceType = Props.deviceType;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement(Web_Order_Item_Buyer$PlaceHolder$PC, {
+                    deviceType: deviceType
+                  });
+    case /* Mobile */2 :
+        return React.createElement(Web_Order_Item_Buyer$PlaceHolder$MO, {
+                    deviceType: deviceType
+                  });
+    
+  }
 }
 
 var PlaceHolder = {
+  PC: PC,
+  MO: MO,
   make: Web_Order_Item_Buyer$PlaceHolder
 };
 
-function Web_Order_Item_Buyer(Props) {
-  var query = Props.query;
-  var quantity = Props.quantity;
+function Web_Order_Item_Buyer$PC(Props) {
+  var productInfos = Props.productInfos;
+  var firstIsCourierAvailable = Props.firstIsCourierAvailable;
+  var isSameCourierAvailable = Props.isSameCourierAvailable;
+  var formNames = Props.formNames;
+  var watchValue = Props.watchValue;
+  var deviceType = Props.deviceType;
   return React.createElement("main", {
-              className: "flex flex-col gap-5 xl:px-[16%] xl:py-20 bg-surface"
+              className: "flex flex-col gap-5 px-[16%] py-20 bg-surface"
             }, React.createElement("h1", {
-                  className: "hidden xl:flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
+                  className: "flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
                 }, "주문·결제"), React.createElement("div", {
-                  className: "flex flex-col xl:flex-row gap-4 xl:gap-5"
+                  className: "flex flex-row gap-5"
                 }, React.createElement("article", {
-                      className: "w-full xl:w-3/5 flex flex-col gap-5"
+                      className: "w-2/3 flex flex-col gap-5 min-w-[550px]"
                     }, React.createElement("div", {
                           className: "flex flex-col gap-7 p-7 bg-white"
-                        }, React.createElement(Web_Order_Product_Info_Buyer.make, {
-                              query: query,
-                              quantity: quantity
-                            }), React.createElement("div", {
-                              className: "h-px bg-border-default-L2"
-                            }), React.createElement(Web_Order_Orderer_Info_Buyer.make, {})), React.createElement(Web_Order_Delivery_Method_Selection_Buyer.make, {
-                          query: query,
-                          quantity: quantity
-                        })), React.createElement("aside", {
-                      className: "w-full xl:w-2/5 xl:min-h-full xl:relative"
+                        }, React.createElement(Web_Order_Product_Info_Buyer.PC.make, {
+                              productInfos: productInfos
+                            }), React.createElement(Web_Order_Orderer_Info_Buyer.make, {
+                              deviceType: deviceType
+                            })), React.createElement("section", {
+                          className: "flex flex-col gap-5 p-7 bg-white rounded-sm"
+                        }, React.createElement("span", {
+                              className: "flex items-center gap-1 text-xl text-enabled-L1 font-bold"
+                            }, "배송 방식 선택", React.createElement(Web_Order_Util_Component.Tooltip.PC.make, {
+                                  children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.",
+                                  className: "flex"
+                                })), React.createElement(Web_Order_Delivery_Method_Selection_Buyer.make, {
+                              isSameCourierAvailable: isSameCourierAvailable,
+                              isCourierAvailable: firstIsCourierAvailable,
+                              prefix: formNames.name,
+                              deviceType: deviceType
+                            }), React.createElement(Web_Order_Delivery_Form.make, {
+                              watchValue: watchValue,
+                              prefix: formNames.name,
+                              deviceType: deviceType
+                            }))), React.createElement("aside", {
+                      className: "w-1/3 min-h-full relative bottom-0"
                     }, React.createElement(Web_Order_Payment_Info_Buyer.make, {
-                          query: query,
-                          quantity: quantity
+                          prefix: formNames.name,
+                          productInfos: productInfos,
+                          deviceType: deviceType
                         }))));
 }
+
+var PC$1 = {
+  make: Web_Order_Item_Buyer$PC
+};
+
+function Web_Order_Item_Buyer$MO(Props) {
+  var productInfos = Props.productInfos;
+  var firstIsCourierAvailable = Props.firstIsCourierAvailable;
+  var isSameCourierAvailable = Props.isSameCourierAvailable;
+  var formNames = Props.formNames;
+  var watchValue = Props.watchValue;
+  var deviceType = Props.deviceType;
+  return React.createElement("main", {
+              className: "flex flex-col gap-5 bg-surface"
+            }, React.createElement("div", {
+                  className: "flex flex-col gap-4"
+                }, React.createElement("article", {
+                      className: "w-full flex flex-col gap-5"
+                    }, React.createElement("div", {
+                          className: "flex flex-col gap-2 p-5 pb-7 bg-white"
+                        }, React.createElement(Web_Order_Product_Info_Buyer.MO.make, {
+                              productInfos: productInfos
+                            }), React.createElement("div", {
+                              className: "h-px bg-div-border-L2"
+                            }), React.createElement(Web_Order_Orderer_Info_Buyer.make, {
+                              deviceType: deviceType
+                            })), React.createElement("section", {
+                          className: "flex flex-col gap-5 p-5 pb-7 bg-white rounded-sm"
+                        }, React.createElement("span", {
+                              className: "flex items-center gap-1 text-lg text-enabled-L1 font-bold"
+                            }, "배송 방식 선택", React.createElement(Web_Order_Util_Component.Tooltip.Mobile.make, {
+                                  children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.",
+                                  className: "flex"
+                                })), React.createElement(Web_Order_Delivery_Method_Selection_Buyer.make, {
+                              isSameCourierAvailable: isSameCourierAvailable,
+                              isCourierAvailable: firstIsCourierAvailable,
+                              prefix: formNames.name,
+                              deviceType: deviceType
+                            }), React.createElement(Web_Order_Delivery_Form.make, {
+                              watchValue: watchValue,
+                              prefix: formNames.name,
+                              deviceType: deviceType
+                            }))), React.createElement("aside", {
+                      className: "w-full relative bottom-0"
+                    }, React.createElement(Web_Order_Payment_Info_Buyer.make, {
+                          prefix: formNames.name,
+                          productInfos: productInfos,
+                          deviceType: deviceType
+                        }))));
+}
+
+var MO$1 = {
+  make: Web_Order_Item_Buyer$MO
+};
+
+function Web_Order_Item_Buyer(Props) {
+  var productNos = Props.productNos;
+  var skuNos = Props.skuNos;
+  var skuMap = Props.skuMap;
+  var deviceType = Props.deviceType;
+  var match = ReactHookForm.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var setValue = match.setValue;
+  var router = Router.useRouter();
+  var formNames = Web_Order_Buyer_Form.names(Web_Order_Buyer_Form.name);
+  var temp = Belt_Array.map(Belt_SetInt.toArray(Belt_SetInt.fromArray(productNos)), (function (a) {
+          return use$1({
+                      number: a
+                    }, /* StoreAndNetwork */2, undefined, undefined, undefined);
+        }));
+  var productInfos = Web_Order_Buyer_Form.productInfoSort(Belt_Array.keepMap(Belt_Array.map(temp, (function (param) {
+                  var product = param.product;
+                  if (product === undefined) {
+                    return [];
+                  }
+                  if (typeof product !== "object") {
+                    return [];
+                  }
+                  var variant = product.NAME;
+                  if (variant === "NormalProduct") {
+                    var product$1 = product.VAL;
+                    return Belt_Array.keepMap(Belt_Array.keep(product$1.productOptions.edges, (function (option) {
+                                      return Belt_SetString.has(skuNos, option.node.stockSku);
+                                    })), (function (option) {
+                                  return Belt_Option.map(Belt_MapString.get(skuMap, option.node.stockSku), (function (param) {
+                                                return Web_Order_Buyer_Form.normalProductToFixedDataTemp(product$1, option, param);
+                                              }));
+                                }));
+                  }
+                  if (variant !== "QuotableProduct") {
+                    return [];
+                  }
+                  var product$2 = product.VAL;
+                  return Belt_Array.keepMap(Belt_Array.keep(product$2.productOptions.edges, (function (option) {
+                                    return Belt_SetString.has(skuNos, option.node.stockSku);
+                                  })), (function (option) {
+                                return Belt_Option.map(Belt_MapString.get(skuMap, option.node.stockSku), (function (param) {
+                                              return Web_Order_Buyer_Form.quotableProductToFixedDataTemp(product$2, option, param);
+                                            }));
+                              }));
+                })), Web_Order_Buyer_Form.concat));
+  var firstIsCourierAvailable = Belt_Option.map(Belt_Array.get(productInfos, 0), (function (first) {
+          return first.isCourierAvailable;
+        }));
+  var isSameCourierAvailable = Belt_Option.map(firstIsCourierAvailable, (function (first$p) {
+          return Belt_Array.every(Belt_Array.map(productInfos, (function (t) {
+                            return t.isCourierAvailable;
+                          })), (function (c) {
+                        return c === first$p;
+                      }));
+        }));
+  var defaultDeliveryType = firstIsCourierAvailable !== undefined && isSameCourierAvailable !== undefined && firstIsCourierAvailable && isSameCourierAvailable ? "parcel" : "freight";
+  var watchValue = ReactHookForm.useWatch({
+        name: formNames.deliveryType
+      });
+  React.useEffect((function () {
+          Web_Order_Buyer_Form.gtmDataPush(productInfos);
+          setValue(formNames.productInfos, Web_Order_Buyer_Form.productInfos_encode(productInfos));
+          setValue(formNames.deliveryType, defaultDeliveryType);
+        }), []);
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.PC_Old.make, {
+                        key: router.asPath
+                      }), React.createElement(Web_Order_Item_Buyer$PC, {
+                        productInfos: productInfos,
+                        firstIsCourierAvailable: firstIsCourierAvailable,
+                        isSameCourierAvailable: isSameCourierAvailable,
+                        formNames: formNames,
+                        watchValue: watchValue,
+                        deviceType: deviceType
+                      }), React.createElement(Footer_Buyer.PC.make, {}));
+    case /* Mobile */2 :
+        return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.Mobile.make, {
+                        key: router.asPath
+                      }), React.createElement(Web_Order_Item_Buyer$MO, {
+                        productInfos: productInfos,
+                        firstIsCourierAvailable: firstIsCourierAvailable,
+                        isSameCourierAvailable: isSameCourierAvailable,
+                        formNames: formNames,
+                        watchValue: watchValue,
+                        deviceType: deviceType
+                      }), React.createElement(Footer_Buyer.MO.make, {}));
+    
+  }
+}
+
+var Form;
 
 var make = Web_Order_Item_Buyer;
 
 export {
-  Mutation ,
+  Query ,
+  TempQuery ,
+  Form ,
   PlaceHolder ,
+  PC$1 as PC,
+  MO$1 as MO,
   make ,
-  
 }
 /* react Not a pure module */

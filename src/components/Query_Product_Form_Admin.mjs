@@ -10,6 +10,10 @@ function get(values, field) {
         return values.productName;
     case /* Std */2 :
         return values.std;
+    case /* ProductNos */3 :
+        return values.productNos;
+    case /* SkuNos */4 :
+        return values.skuNos;
     
   }
 }
@@ -20,19 +24,41 @@ function set(values, field, value) {
         return {
                 producerName: value,
                 productName: values.productName,
-                std: values.std
+                std: values.std,
+                productNos: values.productNos,
+                skuNos: values.skuNos
               };
     case /* ProductName */1 :
         return {
                 producerName: values.producerName,
                 productName: value,
-                std: values.std
+                std: values.std,
+                productNos: values.productNos,
+                skuNos: values.skuNos
               };
     case /* Std */2 :
         return {
                 producerName: values.producerName,
                 productName: values.productName,
-                std: value
+                std: value,
+                productNos: values.productNos,
+                skuNos: values.skuNos
+              };
+    case /* ProductNos */3 :
+        return {
+                producerName: values.producerName,
+                productName: values.productName,
+                std: values.std,
+                productNos: value,
+                skuNos: values.skuNos
+              };
+    case /* SkuNos */4 :
+        return {
+                producerName: values.producerName,
+                productName: values.productName,
+                std: values.std,
+                productNos: values.productNos,
+                skuNos: value
               };
     
   }
@@ -51,13 +77,14 @@ var Form = ReForm.Make({
 var initialState = {
   producerName: "",
   productName: "",
-  std: "Crop"
+  std: "Crop",
+  productNos: "",
+  skuNos: ""
 };
 
 export {
   FormFields ,
   Form ,
   initialState ,
-  
 }
 /* Form Not a pure module */

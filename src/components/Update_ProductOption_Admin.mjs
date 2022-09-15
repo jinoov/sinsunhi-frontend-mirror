@@ -14,12 +14,12 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
+import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
 import Format from "date-fns/format";
 import * as ReactHookForm$1 from "react-hook-form";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ErrorMessage from "@hookform/error-message";
 import * as Add_ProductOption_Admin from "./Add_ProductOption_Admin.mjs";
@@ -27,7 +27,7 @@ import * as Product_Option_Each_Admin from "./Product_Option_Each_Admin.mjs";
 import * as Select_Product_Option_Unit from "./Select_Product_Option_Unit.mjs";
 import * as ReactCollapsible from "@radix-ui/react-collapsible";
 import * as Select_Product_Shipping_Type from "./Select_Product_Shipping_Type.mjs";
-import * as Select_Product_Operation_Status from "./Select_Product_Operation_Status.mjs";
+import * as Select_ProductOption_Operation_Status from "./Select_ProductOption_Operation_Status.mjs";
 import CheckboxCheckedSvg from "../../public/assets/checkbox-checked.svg";
 import * as UpdateProductOptionAdminFragment_graphql from "../__generated__/UpdateProductOptionAdminFragment_graphql.mjs";
 import CheckboxUncheckedSvg from "../../public/assets/checkbox-unchecked.svg";
@@ -38,13 +38,13 @@ var checkboxCheckedIcon = CheckboxCheckedSvg;
 var checkboxUncheckedIcon = CheckboxUncheckedSvg;
 
 function use(fRef) {
-  var data = Hooks.useFragment(UpdateProductOptionAdminFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(UpdateProductOptionAdminFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(UpdateProductOptionAdminFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(UpdateProductOptionAdminFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(UpdateProductOptionAdminFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -54,6 +54,10 @@ function useOpt(opt_fRef) {
               }), data);
 }
 
+var Fragment_amountUnit_decode = UpdateProductOptionAdminFragment_graphql.Utils.amountUnit_decode;
+
+var Fragment_amountUnit_fromString = UpdateProductOptionAdminFragment_graphql.Utils.amountUnit_fromString;
+
 var Fragment_productOptionStatus_decode = UpdateProductOptionAdminFragment_graphql.Utils.productOptionStatus_decode;
 
 var Fragment_productOptionStatus_fromString = UpdateProductOptionAdminFragment_graphql.Utils.productOptionStatus_fromString;
@@ -62,41 +66,50 @@ var Fragment_sizeUnit_decode = UpdateProductOptionAdminFragment_graphql.Utils.si
 
 var Fragment_sizeUnit_fromString = UpdateProductOptionAdminFragment_graphql.Utils.sizeUnit_fromString;
 
-var Fragment_weightUnit_decode = UpdateProductOptionAdminFragment_graphql.Utils.weightUnit_decode;
-
-var Fragment_weightUnit_fromString = UpdateProductOptionAdminFragment_graphql.Utils.weightUnit_fromString;
-
 var Fragment = {
+  amountUnit_decode: Fragment_amountUnit_decode,
+  amountUnit_fromString: Fragment_amountUnit_fromString,
   productOptionStatus_decode: Fragment_productOptionStatus_decode,
   productOptionStatus_fromString: Fragment_productOptionStatus_fromString,
   sizeUnit_decode: Fragment_sizeUnit_decode,
   sizeUnit_fromString: Fragment_sizeUnit_fromString,
-  weightUnit_decode: Fragment_weightUnit_decode,
-  weightUnit_fromString: Fragment_weightUnit_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
 
-function weightUnit(unit) {
+function amountUnit(unit) {
   if (unit === "G") {
     return /* G */0;
+  } else if (unit === "L") {
+    return /* L */4;
   } else if (unit === "T") {
     return /* T */2;
+  } else if (unit === "EA") {
+    return /* EA */5;
   } else if (unit === "KG") {
     return /* KG */1;
+  } else if (unit === "ML") {
+    return /* ML */3;
   } else {
     return /* G */0;
   }
 }
 
-function perWeightUnit(unit) {
+function perAmountUnit(unit) {
   if (unit === "G") {
     return /* G */0;
+  } else if (unit === "L") {
+    return /* L */4;
   } else if (unit === "T") {
     return /* T */2;
+  } else if (unit === "EA") {
+    return /* EA */5;
   } else if (unit === "KG") {
     return /* KG */1;
+  } else if (unit === "ML") {
+    return /* ML */3;
   } else {
     return /* G */0;
   }
@@ -117,8 +130,6 @@ function status(statusFromApi) {
     return /* NOSALE */2;
   } else if (statusFromApi === "SOLDOUT") {
     return /* SOLDOUT */1;
-  } else if (statusFromApi === "HIDDEN_SALE") {
-    return /* HIDDEN_SALE */4;
   } else if (statusFromApi === "SALE" || statusFromApi !== "RETIRE") {
     return /* SALE */0;
   } else {
@@ -131,8 +142,6 @@ function stringifyStatus(statusFromApi) {
     return "NOSALE";
   } else if (statusFromApi === "SOLDOUT") {
     return "SOLDOUT";
-  } else if (statusFromApi === "HIDDEN_SALE") {
-    return "HIDDEN_SALE";
   } else if (statusFromApi === "SALE" || statusFromApi !== "RETIRE") {
     return "SALE";
   } else {
@@ -140,17 +149,17 @@ function stringifyStatus(statusFromApi) {
   }
 }
 
-function hasEach(countPerPackageMax, countPerPackageMin, perSizeMax, perSizeMin, perSizeUnit, perWeightUnit) {
+function hasEach(countPerPackageMax, countPerPackageMin, perSizeMax, perSizeMin, perSizeUnit, perAmountUnit) {
   if (countPerPackageMax !== undefined || countPerPackageMin !== undefined || perSizeMax !== undefined || perSizeMin !== undefined || perSizeUnit !== undefined) {
     return true;
   } else {
-    return perWeightUnit !== undefined;
+    return perAmountUnit !== undefined;
   }
 }
 
 var DecodeProductOption = {
-  weightUnit: weightUnit,
-  perWeightUnit: perWeightUnit,
+  amountUnit: amountUnit,
+  perAmountUnit: perAmountUnit,
   perSizeUnit: perSizeUnit,
   status: status,
   stringifyStatus: stringifyStatus,
@@ -160,11 +169,11 @@ var DecodeProductOption = {
 function Update_ProductOption_Admin$Each(Props) {
   var minNum = Props.minNum;
   var maxNum = Props.maxNum;
-  var weight = Props.weight;
-  var weightUnit = Props.weightUnit;
-  var perWeightMin = Props.perWeightMin;
-  var perWeightMax = Props.perWeightMax;
-  var perWeightUnit = Props.perWeightUnit;
+  var amount = Props.amount;
+  var amountUnit = Props.amountUnit;
+  var perAmountMin = Props.perAmountMin;
+  var perAmountMax = Props.perAmountMax;
+  var perAmountUnit = Props.perAmountUnit;
   var minSize = Props.minSize;
   var maxSize = Props.maxSize;
   var sizeUnit = Props.sizeUnit;
@@ -176,9 +185,9 @@ function Update_ProductOption_Admin$Each(Props) {
                       className: "block"
                     }, "입수 정보"), React.createElement("div", {
                       className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 leading-4.5"
-                    }, Belt_Option.mapWithDefault(weight, "", (function (prim) {
+                    }, "" + Belt_Option.mapWithDefault(amount, "", (function (prim) {
                             return String(prim);
-                          })) + "\n          " + Belt_Option.mapWithDefault(weightUnit, "", Select_Product_Option_Unit.Weight.toString)), React.createElement("div", undefined, React.createElement("div", {
+                          })) + "\n          " + Belt_Option.mapWithDefault(amountUnit, "", Select_Product_Option_Unit.Amount.toString) + ""), React.createElement("div", undefined, React.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none bg-disabled-L3 w-36"
                         }, Belt_Option.mapWithDefault(minNum, "", (function (prim) {
                                 return String(prim);
@@ -194,14 +203,14 @@ function Update_ProductOption_Admin$Each(Props) {
                           className: "block shrink-0"
                         }, "개당 무게"), React.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
-                        }, Belt_Option.mapWithDefault(perWeightMin, "", (function (prim) {
+                        }, Belt_Option.mapWithDefault(perAmountMin, "", (function (prim) {
                                 return String(prim);
                               }))), React.createElement("span", undefined, "~"), React.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
-                        }, Belt_Option.mapWithDefault(perWeightMax, "", (function (prim) {
+                        }, Belt_Option.mapWithDefault(perAmountMax, "", (function (prim) {
                                 return String(prim);
-                              }))), React.createElement(Select_Product_Option_Unit.Weight.make, {
-                          status: Belt_Option.getWithDefault(perWeightUnit, /* G */0),
+                              }))), React.createElement(Select_Product_Option_Unit.Amount.make, {
+                          status: Belt_Option.getWithDefault(perAmountUnit, /* G */0),
                           onChange: (function (param) {
                               
                             }),
@@ -243,7 +252,7 @@ function submit_encode(v) {
               ],
               [
                 "operation-status",
-                Select_Product_Operation_Status.Base.status_encode(v.operationStatus)
+                Select_ProductOption_Operation_Status.Base.status_encode(v.operationStatus)
               ],
               [
                 "cut-off-time",
@@ -260,6 +269,10 @@ function submit_encode(v) {
               [
                 "is-free-shipping",
                 Select_Product_Shipping_Type.status_encode(v.isFreeShipping)
+              ],
+              [
+                "shipping-unit-quantity",
+                Spice.intToJson(v.shippingUnitQuantity)
               ]
             ]);
 }
@@ -277,7 +290,7 @@ function submit_decode(v) {
   if (id.TAG === /* Ok */0) {
     var name = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "name"), null));
     if (name.TAG === /* Ok */0) {
-      var operationStatus = Select_Product_Operation_Status.Base.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "operation-status"), null));
+      var operationStatus = Select_ProductOption_Operation_Status.Base.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "operation-status"), null));
       if (operationStatus.TAG === /* Ok */0) {
         var cutOffTime = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "cut-off-time"), null));
         if (cutOffTime.TAG === /* Ok */0) {
@@ -287,103 +300,117 @@ function submit_decode(v) {
             if (autoGenName.TAG === /* Ok */0) {
               var isFreeShipping = Select_Product_Shipping_Type.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "is-free-shipping"), null));
               if (isFreeShipping.TAG === /* Ok */0) {
+                var shippingUnitQuantity = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "shipping-unit-quantity"), null));
+                if (shippingUnitQuantity.TAG === /* Ok */0) {
+                  return {
+                          TAG: /* Ok */0,
+                          _0: {
+                            id: id._0,
+                            name: name._0,
+                            operationStatus: operationStatus._0,
+                            cutOffTime: cutOffTime._0,
+                            memo: memo._0,
+                            autoGenName: autoGenName._0,
+                            isFreeShipping: isFreeShipping._0,
+                            shippingUnitQuantity: shippingUnitQuantity._0
+                          }
+                        };
+                }
+                var e = shippingUnitQuantity._0;
                 return {
-                        TAG: /* Ok */0,
+                        TAG: /* Error */1,
                         _0: {
-                          id: id._0,
-                          name: name._0,
-                          operationStatus: operationStatus._0,
-                          cutOffTime: cutOffTime._0,
-                          memo: memo._0,
-                          autoGenName: autoGenName._0,
-                          isFreeShipping: isFreeShipping._0
+                          path: ".shipping-unit-quantity" + e.path,
+                          message: e.message,
+                          value: e.value
                         }
                       };
               }
-              var e = isFreeShipping._0;
+              var e$1 = isFreeShipping._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".is-free-shipping" + e.path,
-                        message: e.message,
-                        value: e.value
+                        path: ".is-free-shipping" + e$1.path,
+                        message: e$1.message,
+                        value: e$1.value
                       }
                     };
             }
-            var e$1 = autoGenName._0;
+            var e$2 = autoGenName._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".auto-generated-name" + e$1.path,
-                      message: e$1.message,
-                      value: e$1.value
+                      path: ".auto-generated-name" + e$2.path,
+                      message: e$2.message,
+                      value: e$2.value
                     }
                   };
           }
-          var e$2 = memo._0;
+          var e$3 = memo._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".memo" + e$2.path,
-                    message: e$2.message,
-                    value: e$2.value
+                    path: ".memo" + e$3.path,
+                    message: e$3.message,
+                    value: e$3.value
                   }
                 };
         }
-        var e$3 = cutOffTime._0;
+        var e$4 = cutOffTime._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".cut-off-time" + e$3.path,
-                  message: e$3.message,
-                  value: e$3.value
+                  path: ".cut-off-time" + e$4.path,
+                  message: e$4.message,
+                  value: e$4.value
                 }
               };
       }
-      var e$4 = operationStatus._0;
+      var e$5 = operationStatus._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".operation-status" + e$4.path,
-                message: e$4.message,
-                value: e$4.value
+                path: ".operation-status" + e$5.path,
+                message: e$5.message,
+                value: e$5.value
               }
             };
     }
-    var e$5 = name._0;
+    var e$6 = name._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".name" + e$5.path,
-              message: e$5.message,
-              value: e$5.value
+              path: ".name" + e$6.path,
+              message: e$6.message,
+              value: e$6.value
             }
           };
   }
-  var e$6 = id._0;
+  var e$7 = id._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".id" + e$6.path,
-            message: e$6.message,
-            value: e$6.value
+            path: ".id" + e$7.path,
+            message: e$7.message,
+            value: e$7.value
           }
         };
 }
 
 function makeInputNames(prefix) {
   return {
-          id: prefix + ".id",
-          name: prefix + ".name",
-          operationStatus: prefix + ".operation-status",
-          cutOffTime: prefix + ".cut-off-time",
-          memo: prefix + ".memo",
-          autoGenName: prefix + ".auto-generated-name",
-          isFreeShipping: prefix + ".is-free-shipping"
+          id: "" + prefix + ".id",
+          name: "" + prefix + ".name",
+          operationStatus: "" + prefix + ".operation-status",
+          cutOffTime: "" + prefix + ".cut-off-time",
+          memo: "" + prefix + ".memo",
+          autoGenName: "" + prefix + ".auto-generated-name",
+          isFreeShipping: "" + prefix + ".is-free-shipping",
+          shippingUnitQuantity: "" + prefix + ".shipping-unit-quantity"
         };
 }
 
-function makeAddProductOptionDefaultValue(values, grade, packageType, countPerPackageMax, countPerPackageMin, perSizeMax, perSizeMin, perSizeUnit, perWeightUnit, weight, weightUnit) {
+function makeAddProductOptionDefaultValue(values, grade, packageType, countPerPackageMax, countPerPackageMin, perSizeMax, perSizeMin, perSizeUnit, perAmountUnit, amount, amountUnit) {
   var names = Add_ProductOption_Admin.Form.names;
   var fields = [
     [
@@ -405,18 +432,18 @@ function makeAddProductOptionDefaultValue(values, grade, packageType, countPerPa
             }))
     ],
     [
-      names.weight,
-      Belt_Option.mapWithDefault(weight, null, (function (prim) {
+      names.amount,
+      Belt_Option.mapWithDefault(amount, null, (function (prim) {
               return prim;
             }))
     ],
     [
-      names.weightUnit,
-      Belt_Option.mapWithDefault(weightUnit, null, Select_Product_Option_Unit.Weight.status_encode)
+      names.amountUnit,
+      Belt_Option.mapWithDefault(amountUnit, null, Select_Product_Option_Unit.Amount.status_encode)
     ],
     [
       names.operationStatus,
-      Select_Product_Operation_Status.Base.status_encode(values.operationStatus)
+      Select_ProductOption_Operation_Status.Base.status_encode(values.operationStatus)
     ],
     [
       names.isFreeShipping,
@@ -465,7 +492,7 @@ function makeAddProductOptionDefaultValue(values, grade, packageType, countPerPa
     ]
   ];
   var each;
-  if (hasEach(countPerPackageMax, countPerPackageMin, perSizeMax, perSizeMin, perSizeUnit, perWeightUnit)) {
+  if (hasEach(countPerPackageMax, countPerPackageMin, perSizeMax, perSizeMin, perSizeUnit, perAmountUnit)) {
     var names$1 = Product_Option_Each_Admin.Form.names;
     each = [
       [
@@ -476,8 +503,8 @@ function makeAddProductOptionDefaultValue(values, grade, packageType, countPerPa
         "each",
         Js_dict.fromArray([
               [
-                names$1.unitWeight,
-                Select_Product_Option_Unit.Weight.status_encode(Belt_Option.getWithDefault(perWeightUnit, /* KG */1))
+                names$1.unitAmount,
+                Select_Product_Option_Unit.Amount.status_encode(Belt_Option.getWithDefault(perAmountUnit, /* KG */1))
               ],
               [
                 names$1.minSize,
@@ -575,13 +602,13 @@ var EditName = {
 };
 
 function use$1(fRef) {
-  var data = Hooks.useFragment(UpdateProductOptionAdminAutoGenNameFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(UpdateProductOptionAdminAutoGenNameFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(UpdateProductOptionAdminAutoGenNameFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt$1(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(UpdateProductOptionAdminAutoGenNameFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(UpdateProductOptionAdminAutoGenNameFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -591,20 +618,21 @@ function useOpt$1(opt_fRef) {
               }), data);
 }
 
+var Fragment_amountUnit_decode$1 = UpdateProductOptionAdminAutoGenNameFragment_graphql.Utils.amountUnit_decode;
+
+var Fragment_amountUnit_fromString$1 = UpdateProductOptionAdminAutoGenNameFragment_graphql.Utils.amountUnit_fromString;
+
 var Fragment_sizeUnit_decode$1 = UpdateProductOptionAdminAutoGenNameFragment_graphql.Utils.sizeUnit_decode;
 
 var Fragment_sizeUnit_fromString$1 = UpdateProductOptionAdminAutoGenNameFragment_graphql.Utils.sizeUnit_fromString;
 
-var Fragment_weightUnit_decode$1 = UpdateProductOptionAdminAutoGenNameFragment_graphql.Utils.weightUnit_decode;
-
-var Fragment_weightUnit_fromString$1 = UpdateProductOptionAdminAutoGenNameFragment_graphql.Utils.weightUnit_fromString;
-
 var Fragment$1 = {
+  amountUnit_decode: Fragment_amountUnit_decode$1,
+  amountUnit_fromString: Fragment_amountUnit_fromString$1,
   sizeUnit_decode: Fragment_sizeUnit_decode$1,
   sizeUnit_fromString: Fragment_sizeUnit_fromString$1,
-  weightUnit_decode: Fragment_weightUnit_decode$1,
-  weightUnit_fromString: Fragment_weightUnit_fromString$1,
   Types: undefined,
+  Operation: undefined,
   use: use$1,
   useOpt: useOpt$1
 };
@@ -618,16 +646,14 @@ function Update_ProductOption_Admin$ReadOnlyAutoGenName(Props) {
       }, undefined);
   var match$2 = match$1.register(inputName, undefined);
   var name = match$2.name;
-  var parsedWeightUnit = Belt_Option.map(match.weightUnit, weightUnit);
-  var parsedPerWeightUnit = Belt_Option.map(match.perWeightUnit, perWeightUnit);
+  var parsedAmountUnit = amountUnit(match.amountUnit);
+  var parsedPerAmountUnit = Belt_Option.map(match.perAmountUnit, perAmountUnit);
   var parsedPerSizeUnit = Belt_Option.map(match.perSizeUnit, perSizeUnit);
-  var autoGenName = Add_ProductOption_Admin.makeAutoGeneratedName(match.grade, match.packageType, Belt_Option.map(match.weight, (function (prim) {
-              return String(prim);
-            })), Belt_Option.map(parsedWeightUnit, Select_Product_Option_Unit.Weight.toString), Belt_Option.map(match.countPerPackageMin, (function (prim) {
+  var autoGenName = Add_ProductOption_Admin.makeAutoGeneratedName(match.grade, match.packageType, String(match.amount), Select_Product_Option_Unit.Amount.toString(parsedAmountUnit), Belt_Option.map(match.countPerPackageMin, (function (prim) {
               return String(prim);
             })), Belt_Option.map(match.countPerPackageMax, (function (prim) {
               return String(prim);
-            })), Belt_Option.map(parsedPerWeightUnit, Select_Product_Option_Unit.Weight.toString), Belt_Option.map(match.perSizeMin, (function (prim) {
+            })), Belt_Option.map(parsedPerAmountUnit, Select_Product_Option_Unit.Amount.toString), Belt_Option.map(match.perSizeMin, (function (prim) {
               return String(prim);
             })), Belt_Option.map(match.perSizeMax, (function (prim) {
               return String(prim);
@@ -691,7 +717,7 @@ var ReadOnlyPackage = {
   make: Update_ProductOption_Admin$ReadOnlyPackage
 };
 
-function Update_ProductOption_Admin$ReadOnlyWeight(Props) {
+function Update_ProductOption_Admin$ReadOnlyAmount(Props) {
   var value = Props.value;
   var unit = Props.unit;
   var showEach = Props.showEach;
@@ -709,8 +735,8 @@ function Update_ProductOption_Admin$ReadOnlyWeight(Props) {
                               className: "px-3 py-2 border border-gray-300 bg-gray-100 rounded-lg h-9 w-36"
                             }, Belt_Option.mapWithDefault(value, "", (function (prim) {
                                     return String(prim);
-                                  })))), React.createElement(Select_Product_Option_Unit.Weight.make, {
-                          status: Belt_Option.mapWithDefault(unit, /* G */0, weightUnit),
+                                  })))), React.createElement(Select_Product_Option_Unit.Amount.make, {
+                          status: Belt_Option.mapWithDefault(unit, /* G */0, amountUnit),
                           onChange: (function (param) {
                               
                             }),
@@ -723,8 +749,8 @@ function Update_ProductOption_Admin$ReadOnlyWeight(Props) {
                             }), React.createElement("label", undefined, "입수 정보 확인")))));
 }
 
-var ReadOnlyWeight = {
-  make: Update_ProductOption_Admin$ReadOnlyWeight
+var ReadOnlyAmount = {
+  make: Update_ProductOption_Admin$ReadOnlyAmount
 };
 
 function Update_ProductOption_Admin$EditStatus(Props) {
@@ -736,7 +762,7 @@ function Update_ProductOption_Admin$EditStatus(Props) {
       }, undefined);
   var errors = match.formState.errors;
   var toStatus = function (statusFromSelect) {
-    return Belt_Result.mapWithDefault(Select_Product_Operation_Status.Base.status_decode(statusFromSelect), undefined, (function (v) {
+    return Belt_Result.mapWithDefault(Select_ProductOption_Operation_Status.Base.status_decode(statusFromSelect), undefined, (function (v) {
                   return v;
                 }));
   };
@@ -756,10 +782,10 @@ function Update_ProductOption_Admin$EditStatus(Props) {
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
-                          return React.createElement("div", undefined, React.createElement(Select_Product_Operation_Status.Base.make, {
+                          return React.createElement("div", undefined, React.createElement(Select_ProductOption_Operation_Status.Base.make, {
                                           status: toStatus(match.value),
                                           onChange: (function (selected) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Operation_Status.Base.status_encode(selected)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_ProductOption_Operation_Status.Base.status_encode(selected)));
                                             }),
                                           forwardRef: match.ref,
                                           disabled: disabled
@@ -778,7 +804,7 @@ function Update_ProductOption_Admin$EditStatus(Props) {
                                             })
                                         }));
                         }),
-                      defaultValue: Select_Product_Operation_Status.Base.status_encode(status(defaultValue)),
+                      defaultValue: Select_ProductOption_Operation_Status.Base.status_encode(status(defaultValue)),
                       rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                     })));
 }
@@ -819,7 +845,7 @@ function Update_ProductOption_Admin$EditIsFreeShipping(Props) {
                           return React.createElement("div", undefined, React.createElement(Select_Product_Shipping_Type.make, {
                                           status: toStatus(match.value),
                                           onChange: (function (selected) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Shipping_Type.status_encode(selected)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Shipping_Type.status_encode(selected)));
                                             }),
                                           forwardRef: match.ref,
                                           disabled: disabled
@@ -845,6 +871,57 @@ function Update_ProductOption_Admin$EditIsFreeShipping(Props) {
 
 var EditIsFreeShipping = {
   make: Update_ProductOption_Admin$EditIsFreeShipping
+};
+
+function Update_ProductOption_Admin$EditShippingUnitQuantity(Props) {
+  var inputName = Props.inputName;
+  var defaultValue = Props.defaultValue;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var match$1 = match.register(inputName, {
+        required: true,
+        min: 1,
+        valueAsNumber: true
+      });
+  var name = match$1.name;
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "block",
+                  htmlFor: name
+                }, React.createElement("span", {
+                      className: "font-bold"
+                    }, "배송 합포장 단위"), React.createElement("span", {
+                      className: "text-red-500"
+                    }, "*")), React.createElement("input", {
+                  ref: match$1.ref,
+                  defaultValue: String(defaultValue),
+                  className: "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none",
+                  id: name,
+                  name: name,
+                  placeholder: "배송 합포장 단위 입력",
+                  type: "number",
+                  onBlur: match$1.onBlur,
+                  onChange: match$1.onChange
+                }), React.createElement(ErrorMessage.ErrorMessage, {
+                  name: name,
+                  errors: match.formState.errors,
+                  render: (function (e) {
+                      return React.createElement("span", {
+                                  className: "flex"
+                                }, React.createElement(IconError.make, {
+                                      width: "20",
+                                      height: "20"
+                                    }), React.createElement("span", {
+                                      className: "text-sm text-notice ml-1"
+                                    }, "합포장 단위를 입력해주세요. (1 미만 입력 불가)"));
+                    })
+                }));
+}
+
+var EditShippingUnitQuantity = {
+  make: Update_ProductOption_Admin$EditShippingUnitQuantity
 };
 
 function Update_ProductOption_Admin$EditCutOffTime(Props) {
@@ -965,10 +1042,10 @@ function Update_ProductOption_Admin(Props) {
   var trigger = match.trigger;
   var getValues = match.getValues;
   var inputNames = makeInputNames(prefix);
-  var weightUnit$1 = Belt_Option.map(productOption.weightUnit, weightUnit);
-  var perWeightUnit$1 = Belt_Option.map(productOption.perWeightUnit, perWeightUnit);
+  var amountUnit$1 = amountUnit(productOption.amountUnit);
+  var perAmountUnit$1 = Belt_Option.map(productOption.perAmountUnit, perAmountUnit);
   var perSizeUnit$1 = Belt_Option.map(productOption.perSizeUnit, perSizeUnit);
-  var showEach = hasEach(productOption.countPerPackageMax, productOption.countPerPackageMin, productOption.perSizeMax, productOption.perSizeMin, perSizeUnit$1, perWeightUnit$1);
+  var showEach = hasEach(productOption.countPerPackageMax, productOption.countPerPackageMin, productOption.perSizeMax, productOption.perSizeMin, perSizeUnit$1, perAmountUnit$1);
   var onClickCopy = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   setApplyAll(function (param) {
@@ -977,7 +1054,7 @@ function Update_ProductOption_Admin(Props) {
                   var values = Belt_Option.flatMap(Js_json.decodeArray(getValues([prefix])), Garter_Array.first);
                   var match = Belt_Option.map(values, submit_decode);
                   if (match !== undefined && match.TAG === /* Ok */0) {
-                    prepend(makeAddProductOptionDefaultValue(match._0, productOption.grade, productOption.packageType, productOption.countPerPackageMax, productOption.countPerPackageMin, productOption.perSizeMax, productOption.perSizeMin, perSizeUnit$1, perWeightUnit$1, productOption.weight, weightUnit$1), {
+                    prepend(makeAddProductOptionDefaultValue(match._0, productOption.grade, productOption.packageType, productOption.countPerPackageMax, productOption.countPerPackageMin, productOption.perSizeMax, productOption.perSizeMin, perSizeUnit$1, perAmountUnit$1, productOption.amount, amountUnit$1), {
                           shouldFocus: true
                         }, undefined);
                   }
@@ -986,14 +1063,13 @@ function Update_ProductOption_Admin(Props) {
   };
   var onClickApplyAll = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setApplyAll(function (prev) {
-                              return !prev;
-                            });
+                  setApplyAll(function (prev) {
+                        return !prev;
+                      });
                 }), param);
   };
   React.useLayoutEffect((function () {
           trigger(inputNames.id);
-          
         }), []);
   var tmp = {
     inputName: inputNames.cutOffTime,
@@ -1036,9 +1112,9 @@ function Update_ProductOption_Admin(Props) {
                                         }, React.createElement("span", {
                                               className: "underline"
                                             }, "단품정보 접기"), React.createElement(IconArrow.make, {
-                                              height: "15",
-                                              width: "15",
-                                              stroke: "#000000",
+                                              height: "16",
+                                              width: "16",
+                                              fill: "#000000",
                                               className: "transform -rotate-90"
                                             })),
                                     className: "collabsible-trigger"
@@ -1066,18 +1142,18 @@ function Update_ProductOption_Admin(Props) {
                                       value: productOption.grade
                                     }), React.createElement(Update_ProductOption_Admin$ReadOnlyPackage, {
                                       value: productOption.packageType
-                                    })), React.createElement(Update_ProductOption_Admin$ReadOnlyWeight, {
-                                  value: productOption.weight,
-                                  unit: productOption.weightUnit,
+                                    })), React.createElement(Update_ProductOption_Admin$ReadOnlyAmount, {
+                                  value: productOption.amount,
+                                  unit: productOption.amountUnit,
                                   showEach: showEach
                                 }), showEach ? React.createElement(Update_ProductOption_Admin$Each, {
                                     minNum: productOption.countPerPackageMin,
                                     maxNum: productOption.countPerPackageMax,
-                                    weight: productOption.weight,
-                                    weightUnit: weightUnit$1,
-                                    perWeightMin: productOption.perWeightMin,
-                                    perWeightMax: productOption.perWeightMax,
-                                    perWeightUnit: perWeightUnit$1,
+                                    amount: productOption.amount,
+                                    amountUnit: amountUnit$1,
+                                    perAmountMin: productOption.perAmountMin,
+                                    perAmountMax: productOption.perAmountMax,
+                                    perAmountUnit: perAmountUnit$1,
                                     minSize: productOption.perSizeMin,
                                     maxSize: productOption.perSizeMax,
                                     sizeUnit: perSizeUnit$1
@@ -1096,6 +1172,9 @@ function Update_ProductOption_Admin(Props) {
                                           inputName: inputNames.isFreeShipping,
                                           defaultValue: productOption.productOptionCost.isFreeShipping ? /* FREE */1 : /* NOTFREE */0,
                                           disabled: disabled
+                                        }), React.createElement(Update_ProductOption_Admin$EditShippingUnitQuantity, {
+                                          inputName: inputNames.shippingUnitQuantity,
+                                          defaultValue: productOption.shippingUnitQuantity
                                         }))), React.createElement("div", {
                                   className: "flex flex-col gap-6 py-6 w-full"
                                 }, React.createElement(Update_ProductOption_Admin$EditCutOffTime, tmp), React.createElement(Update_ProductOption_Admin$EditMemo, tmp$1), index !== 0 || !match$1 ? null : React.createElement("div", {
@@ -1129,12 +1208,12 @@ export {
   ReadOnlyStockSku ,
   ReadOnlyGrade ,
   ReadOnlyPackage ,
-  ReadOnlyWeight ,
+  ReadOnlyAmount ,
   EditStatus ,
   EditIsFreeShipping ,
+  EditShippingUnitQuantity ,
   EditCutOffTime ,
   EditMemo ,
   make ,
-  
 }
 /* checkboxCheckedIcon Not a pure module */

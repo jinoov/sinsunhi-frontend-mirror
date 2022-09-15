@@ -3,6 +3,7 @@
 import * as Braze from "./utils/Braze.mjs";
 import * as React from "react";
 import * as Global from "./components/Global.mjs";
+import * as Header from "./components/Header.mjs";
 import * as RelayEnv from "./constants/RelayEnv.mjs";
 import * as ErrorPage from "./pages/ErrorPage.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
@@ -45,7 +46,6 @@ function $$default(props) {
             Braze.changeUser(user._0, braze);
             braze.requestPushPermission();
           }
-          
         }), [
         braze,
         user,
@@ -56,7 +56,6 @@ function $$default(props) {
           if (Global.$$window !== undefined) {
             Caml_option.valFromOption(Global.$$window).nextRouterPush = (function (url) {
                 router$1.push(url);
-                
               });
           }
           
@@ -76,6 +75,7 @@ function $$default(props) {
       case "buyer" :
           if (secondPathname !== undefined) {
             switch (secondPathname) {
+              case "me" :
               case "search" :
                   tmp = content;
                   break;
@@ -97,6 +97,9 @@ function $$default(props) {
       case "seller" :
           if (secondPathname !== undefined) {
             switch (secondPathname) {
+              case "activate-user" :
+                  tmp = React.createElement(React.Fragment, undefined, React.createElement(Header.SellerActivateUser.make, {}), content);
+                  break;
               case "reset-password" :
               case "rfq" :
               case "signin" :
@@ -140,6 +143,5 @@ export {
   PageComponent ,
   $$default ,
   $$default as default,
-  
 }
 /* Braze Not a pure module */

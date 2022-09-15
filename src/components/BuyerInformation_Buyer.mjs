@@ -6,6 +6,7 @@ import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
 import * as DS_Tab from "./common/container/DS_Tab.mjs";
 import * as DS_Icon from "./svgs/DS_Icon.mjs";
+import * as DataGtm from "../utils/DataGtm.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
@@ -15,22 +16,23 @@ import * as IconClose from "./svgs/IconClose.mjs";
 import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as IconSearch from "./svgs/IconSearch.mjs";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ChannelTalk from "../bindings/ChannelTalk.mjs";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as IconWarning from "./svgs/IconWarning.mjs";
+import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
-import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
 import * as IconCloseInput from "./svgs/IconCloseInput.mjs";
 import * as LocalStorageHooks from "../utils/LocalStorageHooks.mjs";
+import IsBefore from "date-fns/isBefore";
 import ParseISO from "date-fns/parseISO";
-import * as Hooks from "react-relay/hooks";
 import * as DS_ButtonContainer from "./common/container/DS_ButtonContainer.mjs";
 import FormatISO from "date-fns/formatISO";
-import IsYesterday from "date-fns/isYesterday";
+import StartOfDay from "date-fns/startOfDay";
 import * as ReactDialog from "@radix-ui/react-dialog";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactToastNotifications from "react-toast-notifications";
@@ -76,7 +78,7 @@ var Capsule = {
 };
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -85,7 +87,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(BuyerInformationBuyerBusinessSectorListingQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(BuyerInformationBuyerBusinessSectorListingQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -103,38 +105,37 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(BuyerInformationBuyerBusinessSectorListingQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -147,12 +148,10 @@ var Query_selfReportedBusinessSector_decode = BuyerInformationBuyerBusinessSecto
 
 var Query_selfReportedBusinessSector_fromString = BuyerInformationBuyerBusinessSectorListingQuery_graphql.Utils.selfReportedBusinessSector_fromString;
 
-var Query_makeVariables = BuyerInformationBuyerBusinessSectorListingQuery_graphql.Utils.makeVariables;
-
 var Query = {
   selfReportedBusinessSector_decode: Query_selfReportedBusinessSector_decode,
   selfReportedBusinessSector_fromString: Query_selfReportedBusinessSector_fromString,
-  makeVariables: Query_makeVariables,
+  Operation: undefined,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -166,13 +165,13 @@ function BuyerInformation_Buyer$SectorAndSale$Sector(Props) {
   var selected = Props.selected;
   var onClick = Props.onClick;
   var hasSelected = Props.hasSelected;
+  var queriedSectors = Props.queriedSectors;
   var queryData = use(undefined, undefined, undefined, undefined, undefined);
+  queriedSectors.current = queryData.selfReportedBusinessSectorListing;
   var listing = queryData.selfReportedBusinessSectorListing;
   return React.createElement(React.Fragment, undefined, React.createElement("section", undefined, React.createElement("h3", {
                       className: "font-bold"
-                    }, "업종", React.createElement("span", {
-                          className: "ml-1 text-sm font-normal text-text-L2"
-                        }, "*최대 3개 선택가능"))), React.createElement("section", {
+                    }, "업종")), React.createElement("section", {
                   className: "flex flex-wrap gap-2 mt-5"
                 }, listing !== undefined ? Belt_Array.map(listing, (function (d) {
                           var partial_arg = d.id;
@@ -195,7 +194,7 @@ var Sector = {
 };
 
 function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(BuyerInformationBuyerSalesBinQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(BuyerInformationBuyerSalesBinQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -204,7 +203,7 @@ function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader$1(param) {
-  var match = Hooks.useQueryLoader(BuyerInformationBuyerSalesBinQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(BuyerInformationBuyerSalesBinQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -222,38 +221,37 @@ function useLoader$1(param) {
 }
 
 function $$fetch$1(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, BuyerInformationBuyerSalesBinQuery_graphql.node, BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, BuyerInformationBuyerSalesBinQuery_graphql.node, BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised$1(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, BuyerInformationBuyerSalesBinQuery_graphql.node, BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, BuyerInformationBuyerSalesBinQuery_graphql.node, BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded$1(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(BuyerInformationBuyerSalesBinQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(BuyerInformationBuyerSalesBinQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -266,12 +264,10 @@ var Query_selfReportedSalesBin_decode = BuyerInformationBuyerSalesBinQuery_graph
 
 var Query_selfReportedSalesBin_fromString = BuyerInformationBuyerSalesBinQuery_graphql.Utils.selfReportedSalesBin_fromString;
 
-var Query_makeVariables$1 = BuyerInformationBuyerSalesBinQuery_graphql.Utils.makeVariables;
-
 var Query$1 = {
   selfReportedSalesBin_decode: Query_selfReportedSalesBin_decode,
   selfReportedSalesBin_fromString: Query_selfReportedSalesBin_fromString,
-  makeVariables: Query_makeVariables$1,
+  Operation: undefined,
   Types: undefined,
   use: use$1,
   useLoader: useLoader$1,
@@ -284,7 +280,9 @@ var Query$1 = {
 function BuyerInformation_Buyer$SectorAndSale$Sale(Props) {
   var selected = Props.selected;
   var onClick = Props.onClick;
+  var queriedSales = Props.queriedSales;
   var queryData = use$1(undefined, undefined, undefined, undefined, undefined);
+  queriedSales.current = queryData.selfReportedSalesBinListing;
   var listing = queryData.selfReportedSalesBinListing;
   return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "mt-12"
@@ -296,7 +294,7 @@ function BuyerInformation_Buyer$SectorAndSale$Sale(Props) {
                           var partial_arg = d.id;
                           return React.createElement(BuyerInformation_Buyer$SectorAndSale$Capsule, {
                                       label: d.label,
-                                      selected: Caml_obj.caml_equal(selected, d.id),
+                                      selected: Caml_obj.equal(selected, d.id),
                                       onClick: (function (param) {
                                           return Curry._1(onClick, partial_arg);
                                         }),
@@ -329,14 +327,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use$2(param) {
-  var match = Hooks.useMutation(BuyerInformationBuyerSectorSalesMutation_graphql.node);
+  var match = ReactRelay.useMutation(BuyerInformationBuyerSectorSalesMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -344,13 +342,13 @@ function use$2(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: BuyerInformationBuyerSectorSalesMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -373,8 +371,6 @@ var Mutation_selfReportedSalesBin_decode = BuyerInformationBuyerSectorSalesMutat
 
 var Mutation_selfReportedSalesBin_fromString = BuyerInformationBuyerSectorSalesMutation_graphql.Utils.selfReportedSalesBin_fromString;
 
-var Mutation_makeVariables = BuyerInformationBuyerSectorSalesMutation_graphql.Utils.makeVariables;
-
 var Mutation = {
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
@@ -382,7 +378,7 @@ var Mutation = {
   selfReportedBusinessSector_fromString: Mutation_selfReportedBusinessSector_fromString,
   selfReportedSalesBin_decode: Mutation_selfReportedSalesBin_decode,
   selfReportedSalesBin_fromString: Mutation_selfReportedSalesBin_fromString,
-  makeVariables: Mutation_makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use$2
@@ -390,22 +386,23 @@ var Mutation = {
 
 function BuyerInformation_Buyer$SectorAndSale(Props) {
   var selected = Props.selected;
+  var changeModeToInterestedItemCategory = Props.changeModeToInterestedItemCategory;
   var close = Props.close;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
-  var selectedSet = selected !== undefined ? Belt_Option.mapWithDefault(selected[0], undefined, (function (bs) {
-            return Belt_SetString.fromArray(Belt_Array.map(bs, (function (i) {
-                              return i.id;
-                            })));
+  var selectedSector = selected !== undefined ? Belt_Option.flatMap(selected[0], (function (bs) {
+            return Belt_Option.map(Garter_Array.first(bs), (function (i) {
+                          return i.id;
+                        }));
           })) : undefined;
   var selectedBin = selected !== undefined ? Belt_Option.map(selected[1], (function (sb) {
             return sb.id;
           })) : undefined;
   var match$1 = React.useState(function () {
-        return selectedSet;
+        return selectedSector;
       });
-  var setBusinessSectorSet = match$1[1];
-  var businessSectorSet = match$1[0];
+  var setBusinessSector = match$1[1];
+  var businessSector = match$1[0];
   var match$2 = React.useState(function () {
         return selectedBin;
       });
@@ -413,41 +410,33 @@ function BuyerInformation_Buyer$SectorAndSale(Props) {
   var salesBin = match$2[0];
   var match$3 = use$2(undefined);
   var mutate = match$3[0];
-  var handleClickBusiSect = function (item) {
-    return setBusinessSectorSet(function (prev) {
-                if (Belt_SetString.has(prev, item)) {
-                  return Belt_SetString.remove(prev, item);
-                } else if (Belt_SetString.size(prev) < 3) {
-                  return Belt_SetString.add(prev, item);
-                } else {
-                  addToast(React.createElement("div", {
-                            className: "flex items-center"
-                          }, React.createElement(IconWarning.make, {
-                                width: "24",
-                                height: "24",
-                                className: "mr-2",
-                                stroke: "#FED925"
-                              }), "선택 가능한 최대 품목수를 넘었습니다. (최대3개)"), {
-                        appearance: "error"
-                      });
-                  return prev;
-                }
-              });
+  var handleClickBusiSector = function (item) {
+    setBusinessSector(function (param) {
+          return item;
+        });
   };
   var handleClickSalesBin = function (item) {
-    return setSalesBin(function (prev) {
-                if (Caml_obj.caml_equal(prev, item)) {
-                  return ;
-                } else {
-                  return item;
-                }
-              });
+    setSalesBin(function (prev) {
+          if (Caml_obj.equal(prev, item)) {
+            return ;
+          } else {
+            return item;
+          }
+        });
   };
-  var hasItem = Belt_SetString.has;
+  var hasItem = function (selected, item) {
+    if (selected !== undefined) {
+      return Caml_obj.equal(Caml_option.valFromOption(selected), item);
+    } else {
+      return false;
+    }
+  };
+  var queriedSectors = React.useRef(undefined);
+  var queriedSales = React.useRef(undefined);
   React.useEffect((function () {
           ChannelTalk.hideChannelButton(undefined);
           return (function (param) {
-                    return ChannelTalk.showChannelButton(undefined);
+                    ChannelTalk.showChannelButton(undefined);
                   });
         }), []);
   return React.createElement(React.Fragment, undefined, React.createElement("section", {
@@ -459,32 +448,47 @@ function BuyerInformation_Buyer$SectorAndSale(Props) {
                             }, "맞춤 소싱 정보"), React.createElement("span", undefined, "를 알려드릴 수 있어요")))), React.createElement("section", {
                   className: "p-5 text-text-L1"
                 }, React.createElement(BuyerInformation_Buyer$SectorAndSale$Sector, {
-                      selected: businessSectorSet,
-                      onClick: handleClickBusiSect,
-                      hasSelected: hasItem
+                      selected: businessSector,
+                      onClick: handleClickBusiSector,
+                      hasSelected: hasItem,
+                      queriedSectors: queriedSectors
                     }), React.createElement(BuyerInformation_Buyer$SectorAndSale$Sale, {
                       selected: salesBin,
-                      onClick: handleClickSalesBin
+                      onClick: handleClickSalesBin,
+                      queriedSales: queriedSales
                     })), React.createElement("section", {
                   className: "p-5"
                 }, React.createElement(BuyerInformation_Buyer$Button, {
                       label: "저장",
                       disabled: match$3[1],
                       onClick: (function (param) {
-                          var match = Belt_SetString.size(businessSectorSet) > 0;
+                          var labelsOfSales = Belt_Option.flatMap(queriedSales.current, (function (sales) {
+                                  return Belt_Option.map(Garter_Array.first(Belt_Array.keep(sales, (function (sale) {
+                                                        return Caml_obj.equal(sale.id, salesBin);
+                                                      }))), (function (sale) {
+                                                return sale.label;
+                                              }));
+                                }));
+                          var labelOfSectors = Belt_Option.map(queriedSectors.current, (function (sectors) {
+                                  return Belt_Array.map(Belt_Array.keep(sectors, (function (sector) {
+                                                    return Caml_obj.equal(businessSector, sector.id);
+                                                  })), (function (sector) {
+                                                return sector.label;
+                                              }));
+                                }));
                           if (salesBin !== undefined) {
-                            if (match) {
+                            if (businessSector !== undefined) {
                               Curry.app(mutate, [
                                     (function (param) {
-                                        return addToast(React.createElement("div", {
-                                                        className: "flex items-center"
-                                                      }, React.createElement(IconError.make, {
-                                                            width: "24",
-                                                            height: "24",
-                                                            className: "mr-2"
-                                                          }), "에러가 발생하였습니다."), {
-                                                    appearance: "error"
-                                                  });
+                                        addToast(React.createElement("div", {
+                                                  className: "flex items-center"
+                                                }, React.createElement(IconError.make, {
+                                                      width: "24",
+                                                      height: "24",
+                                                      className: "mr-2"
+                                                    }), "에러가 발생하였습니다."), {
+                                              appearance: "error"
+                                            });
                                       }),
                                     (function (param, param$1) {
                                         addToast(React.createElement("div", {
@@ -497,7 +501,18 @@ function BuyerInformation_Buyer$SectorAndSale(Props) {
                                                     }), "업종과 연매출 정보가 저장되었습니다."), {
                                               appearance: "success"
                                             });
-                                        return Curry._1(close, undefined);
+                                        Belt_Option.forEach(changeModeToInterestedItemCategory, (function (changeMode) {
+                                                Curry._1(changeMode, undefined);
+                                              }));
+                                        Belt_Option.forEach(close, (function (close) {
+                                                Curry._1(close, undefined);
+                                              }));
+                                        DataGtm.push(DataGtm.mergeUserIdUnsafe({
+                                                  event: "save_buyer_info_business_sectors_sales",
+                                                  selected_sectors: labelOfSectors,
+                                                  selected_sales: labelsOfSales,
+                                                  location: "login"
+                                                }));
                                       }),
                                     undefined,
                                     undefined,
@@ -505,7 +520,7 @@ function BuyerInformation_Buyer$SectorAndSale(Props) {
                                     undefined,
                                     {
                                       binId: salesBin,
-                                      businessSectors: Belt_SetString.toArray(businessSectorSet)
+                                      businessSectors: [businessSector]
                                     },
                                     undefined,
                                     undefined
@@ -522,7 +537,7 @@ function BuyerInformation_Buyer$SectorAndSale(Props) {
                                           appearance: "success"
                                         });
                             }
-                          } else if (match) {
+                          } else if (businessSector !== undefined) {
                             return addToast(React.createElement("div", {
                                             className: "flex items-center"
                                           }, React.createElement(IconWarning.make, {
@@ -561,7 +576,7 @@ function BuyerInformation_Buyer$InterestedCategories$Capsule(Props) {
   return React.createElement("button", {
               className: "px-4 py-2 rounded-[20px] bg-gray-50 flex items-center whitespace-pre",
               onClick: (function (param) {
-                  return Curry._1(onClick, item.id);
+                  Curry._1(onClick, item.id);
                 })
             }, item.name, React.createElement("span", {
                   className: "ml-1"
@@ -596,14 +611,14 @@ function BuyerInformation_Buyer$InterestedCategories$Search(Props) {
                       size: /* Large */0,
                       error: undefined
                     }), React.createElement(IconSearch.make, {
-                      width: "28",
-                      height: "28",
-                      className: "absolute left-3 top-1/2 transform -translate-y-1/2",
-                      stroke: "#262626"
+                      width: "24",
+                      height: "24",
+                      fill: "#262626",
+                      className: "absolute left-3 top-1/2 transform -translate-y-1/2"
                     }), search.length > 0 ? React.createElement("span", {
                         className: "absolute p-2 right-1 top-1/2 transform -translate-y-1/2 cursor-pointer",
                         onClick: (function (param) {
-                            return Curry._1(onClear, undefined);
+                            Curry._1(onClear, undefined);
                           })
                       }, React.createElement(IconCloseInput.make, {
                             height: "24",
@@ -669,7 +684,7 @@ function BuyerInformation_Buyer$InterestedCategories$ListItems(Props) {
                                 "aria-selected": Curry._2(hasItem, selected, id),
                                 className: "flex items-center min-h-[48px] cursor-pointer tab-highlight-color",
                                 onClick: (function (param) {
-                                    return Curry._1(onClickItem, id);
+                                    Curry._1(onClickItem, id);
                                   })
                               }, React.createElement("div", {
                                     className: "flex flex-col justify-between truncate"
@@ -694,7 +709,7 @@ var ListItems = {
 };
 
 function use$3(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -703,7 +718,7 @@ function use$3(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader$2(param) {
-  var match = Hooks.useQueryLoader(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -721,38 +736,37 @@ function useLoader$2(param) {
 }
 
 function $$fetch$2(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised$2(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded$2(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -761,10 +775,8 @@ function retain$2(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
-var Query_makeVariables$2 = BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Utils.makeVariables;
-
 var Query$2 = {
-  makeVariables: Query_makeVariables$2,
+  Operation: undefined,
   Types: undefined,
   use: use$3,
   useLoader: useLoader$2,
@@ -801,7 +813,7 @@ function BuyerInformation_Buyer$InterestedCategories$SearchResults(Props) {
                                       "aria-selected": Curry._2(hasItem, selected, id),
                                       className: "flex items-center min-h-[48px] cursor-pointer tab-highlight-color",
                                       onClick: (function (param) {
-                                          return Curry._1(onClickItem, id);
+                                          Curry._1(onClickItem, id);
                                         })
                                     }, React.createElement("div", {
                                           className: "flex flex-col justify-between truncate"
@@ -822,8 +834,9 @@ function BuyerInformation_Buyer$InterestedCategories$SearchResults(Props) {
                   label: "저장",
                   disabled: isMutating,
                   onClick: (function (param) {
-                      return Curry._1(save, undefined);
-                    })
+                      Curry._1(save, undefined);
+                    }),
+                  isFixed: false
                 }));
 }
 
@@ -839,6 +852,7 @@ function BuyerInformation_Buyer$InterestedCategories$List(Props) {
   var selected = Props.selected;
   var onClickItem = Props.onClickItem;
   var hasItem = Props.hasItem;
+  var clickCategoryIds = Props.clickCategoryIds;
   var initialSelectedDepth0Category = Belt_Option.map(Belt_Option.flatMap(data.interestedCategoryListing, (function (listing) {
               return Garter_Array.first(listing.depth0Categories);
             })), (function (depth0Categories) {
@@ -886,12 +900,13 @@ function BuyerInformation_Buyer$InterestedCategories$List(Props) {
                                 return React.createElement(DS_Tab.LeftTab.Item.make, {
                                             children: React.createElement(DS_Button.Tab.LeftTab1.make, {
                                                   text: param.name,
-                                                  selected: Caml_obj.caml_equal(id, selectedDepth0Category),
+                                                  selected: Caml_obj.equal(id, selectedDepth0Category),
                                                   labelNumber: countOfSelected(id),
                                                   onClick: (function (param) {
-                                                      return setSelectedDepth0Category(function (param) {
-                                                                  return id;
-                                                                });
+                                                      setSelectedDepth0Category(function (param) {
+                                                            return id;
+                                                          });
+                                                      clickCategoryIds.current = Belt_Array.concat(clickCategoryIds.current, [id]);
                                                     })
                                                 }),
                                             className: "mx-2 first:ml-0 last:mr-0",
@@ -912,8 +927,9 @@ function BuyerInformation_Buyer$InterestedCategories$List(Props) {
                   label: "저장",
                   disabled: isMutating,
                   onClick: (function (param) {
-                      return Curry._1(save, undefined);
-                    })
+                      Curry._1(save, undefined);
+                    }),
+                  isFixed: false
                 }));
 }
 
@@ -940,14 +956,14 @@ function commitMutation$1(environment, variables, optimisticUpdater, optimisticR
               optimisticResponse: optimisticResponse !== undefined ? BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use$4(param) {
-  var match = Hooks.useMutation(BuyerInformationBuyerInterestedCategoryMutation_graphql.node);
+  var match = ReactRelay.useMutation(BuyerInformationBuyerInterestedCategoryMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -955,13 +971,13 @@ function use$4(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: BuyerInformationBuyerInterestedCategoryMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -976,12 +992,10 @@ var Mutation_errorCode_decode$1 = BuyerInformationBuyerInterestedCategoryMutatio
 
 var Mutation_errorCode_fromString$1 = BuyerInformationBuyerInterestedCategoryMutation_graphql.Utils.errorCode_fromString;
 
-var Mutation_makeVariables$1 = BuyerInformationBuyerInterestedCategoryMutation_graphql.Utils.makeVariables;
-
 var Mutation$1 = {
   errorCode_decode: Mutation_errorCode_decode$1,
   errorCode_fromString: Mutation_errorCode_fromString$1,
-  makeVariables: Mutation_makeVariables$1,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation$1,
   use: use$4
@@ -991,6 +1005,7 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(Props) {
   var data = Props.data;
   var selected = Props.selected;
   var changeModeToSectorSale = Props.changeModeToSectorSale;
+  var close = Props.close;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var selected$1 = selected !== undefined ? Belt_Array.map(selected, (function (s) {
@@ -1004,19 +1019,20 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(Props) {
   var match$2 = use$4(undefined);
   var isMutating = match$2[1];
   var mutate = match$2[0];
+  var clickCategoryIds = React.useRef([]);
   var save = function (param) {
     if (selected$2.length !== 0) {
       Curry.app(mutate, [
             (function (param) {
-                return addToast(React.createElement("div", {
-                                className: "flex items-center"
-                              }, React.createElement(IconError.make, {
-                                    width: "24",
-                                    height: "24",
-                                    className: "mr-2"
-                                  }), "에러가 발생하였습니다."), {
-                            appearance: "error"
-                          });
+                addToast(React.createElement("div", {
+                          className: "flex items-center"
+                        }, React.createElement(IconError.make, {
+                              width: "24",
+                              height: "24",
+                              className: "mr-2"
+                            }), "에러가 발생하였습니다."), {
+                      appearance: "error"
+                    });
               }),
             (function (param, param$1) {
                 addToast(React.createElement("div", {
@@ -1029,7 +1045,18 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(Props) {
                             }), "관심 상품이 저장되었습니다."), {
                       appearance: "success"
                     });
-                return Curry._1(changeModeToSectorSale, undefined);
+                DataGtm.push(DataGtm.mergeUserIdUnsafe({
+                          event: "save_buyer_info_interested_item_category",
+                          selected_item_ids: selected$2,
+                          click_category_ids: clickCategoryIds.current,
+                          location: "login"
+                        }));
+                Belt_Option.forEach(changeModeToSectorSale, (function (changeMode) {
+                        Curry._1(changeMode, undefined);
+                      }));
+                Belt_Option.forEach(close, (function (close) {
+                        Curry._1(close, undefined);
+                      }));
               }),
             undefined,
             undefined,
@@ -1060,33 +1087,33 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(Props) {
                           }));
             })), Belt_Array.concatMany);
   var handleClickItemCategory = function (item) {
-    return setSelected(function (prev) {
-                if (Garter_Array.some(prev, (function (p) {
-                          return p === item;
-                        }))) {
-                  return Garter_Array.keep(prev, (function (p) {
-                                return p !== item;
-                              }));
-                } else if (prev.length < 20) {
-                  return Garter_Array.concat(prev, [item]);
-                } else {
-                  addToast(React.createElement("div", {
-                            className: "flex items-center whitespace-pre-line sm:whitespace-normal"
-                          }, React.createElement(IconWarning.make, {
-                                width: "24",
-                                height: "24",
-                                className: "mr-2",
-                                stroke: "#FED925"
-                              }), "선택 가능한 최대 품목수를 넘었습니다. \n(최대20개)"), {
-                        appearance: "error"
-                      });
-                  return prev;
-                }
-              });
+    setSelected(function (prev) {
+          if (Garter_Array.some(prev, (function (p) {
+                    return p === item;
+                  }))) {
+            return Garter_Array.keep(prev, (function (p) {
+                          return p !== item;
+                        }));
+          } else if (prev.length < 20) {
+            return Garter_Array.concat(prev, [item]);
+          } else {
+            addToast(React.createElement("div", {
+                      className: "flex items-center whitespace-pre-line sm:whitespace-normal"
+                    }, React.createElement(IconWarning.make, {
+                          width: "24",
+                          height: "24",
+                          className: "mr-2",
+                          stroke: "#FED925"
+                        }), "선택 가능한 최대 품목수를 넘었습니다. \n(최대20개)"), {
+                  appearance: "error"
+                });
+            return prev;
+          }
+        });
   };
   var hasItem = function (set, item) {
     return Garter_Array.some(set, (function (i) {
-                  return Caml_obj.caml_equal(i, item);
+                  return Caml_obj.equal(i, item);
                 }));
   };
   var match$3 = React.useState(function () {
@@ -1096,14 +1123,14 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(Props) {
   var search = match$3[0];
   var handleOnChange = function ($$event) {
     var value = $$event.target.value;
-    return setSearch(function (param) {
-                return value;
-              });
+    setSearch(function (param) {
+          return value;
+        });
   };
   var handleOnClear = function (param) {
-    return setSearch(function (param) {
-                return "";
-              });
+    setSearch(function (param) {
+          return "";
+        });
   };
   return React.createElement(React.Fragment, undefined, React.createElement(BuyerInformation_Buyer$InterestedCategories$Search, {
                   search: search,
@@ -1132,7 +1159,8 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(Props) {
                     save: save,
                     selected: selected$2,
                     onClickItem: handleClickItemCategory,
-                    hasItem: hasItem
+                    hasItem: hasItem,
+                    clickCategoryIds: clickCategoryIds
                   }));
 }
 
@@ -1141,7 +1169,7 @@ var SearchAndList = {
 };
 
 function use$5(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -1150,7 +1178,7 @@ function use$5(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader$3(param) {
-  var match = Hooks.useQueryLoader(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -1168,38 +1196,37 @@ function useLoader$3(param) {
 }
 
 function $$fetch$3(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised$3(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded$3(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -1208,10 +1235,8 @@ function retain$3(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
-var Query_makeVariables$3 = BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Utils.makeVariables;
-
 var Query$3 = {
-  makeVariables: Query_makeVariables$3,
+  Operation: undefined,
   Types: undefined,
   use: use$5,
   useLoader: useLoader$3,
@@ -1224,13 +1249,24 @@ var Query$3 = {
 function BuyerInformation_Buyer$InterestedCategories(Props) {
   var selected = Props.selected;
   var changeModeToSectorSale = Props.changeModeToSectorSale;
+  var close = Props.close;
   var queryData = use$5(undefined, undefined, undefined, undefined, undefined);
   React.useEffect((function () {
           ChannelTalk.hideChannelButton(undefined);
           return (function (param) {
-                    return ChannelTalk.showChannelButton(undefined);
+                    ChannelTalk.showChannelButton(undefined);
                   });
         }), []);
+  var tmp = {
+    data: queryData,
+    selected: selected
+  };
+  if (changeModeToSectorSale !== undefined) {
+    tmp.changeModeToSectorSale = Caml_option.valFromOption(changeModeToSectorSale);
+  }
+  if (close !== undefined) {
+    tmp.close = Caml_option.valFromOption(close);
+  }
   return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "p-5 pt-0 text-text-L1"
                 }, React.createElement("article", undefined, React.createElement("h2", {
@@ -1239,11 +1275,7 @@ function BuyerInformation_Buyer$InterestedCategories(Props) {
                               className: "text-primary"
                             }, "더 유리한 소싱 조건"), React.createElement("span", undefined, "을 받아보세요!")))), React.createElement("section", {
                   className: "p-5 text-text-L1"
-                }, React.createElement(BuyerInformation_Buyer$InterestedCategories$SearchAndList, {
-                      data: queryData,
-                      selected: selected,
-                      changeModeToSectorSale: changeModeToSectorSale
-                    })));
+                }, React.createElement(BuyerInformation_Buyer$InterestedCategories$SearchAndList, tmp)));
 }
 
 var InterestedCategories = {
@@ -1260,7 +1292,7 @@ var InterestedCategories = {
 };
 
 function use$6(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(BuyerInformationBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(BuyerInformationBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BuyerInformationBuyerQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -1269,7 +1301,7 @@ function use$6(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader$4(param) {
-  var match = Hooks.useQueryLoader(BuyerInformationBuyerQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(BuyerInformationBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -1287,38 +1319,37 @@ function useLoader$4(param) {
 }
 
 function $$fetch$4(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, BuyerInformationBuyerQuery_graphql.node, BuyerInformationBuyerQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, BuyerInformationBuyerQuery_graphql.node, BuyerInformationBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: BuyerInformationBuyerQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: BuyerInformationBuyerQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised$4(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, BuyerInformationBuyerQuery_graphql.node, BuyerInformationBuyerQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, BuyerInformationBuyerQuery_graphql.node, BuyerInformationBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(BuyerInformationBuyerQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(BuyerInformationBuyerQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded$4(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(BuyerInformationBuyerQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(BuyerInformationBuyerQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(BuyerInformationBuyerQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -1335,14 +1366,12 @@ var Query_selfReportedSalesBin_decode$1 = BuyerInformationBuyerQuery_graphql.Uti
 
 var Query_selfReportedSalesBin_fromString$1 = BuyerInformationBuyerQuery_graphql.Utils.selfReportedSalesBin_fromString;
 
-var Query_makeVariables$4 = BuyerInformationBuyerQuery_graphql.Utils.makeVariables;
-
 var Query$4 = {
   selfReportedBusinessSector_decode: Query_selfReportedBusinessSector_decode$1,
   selfReportedBusinessSector_fromString: Query_selfReportedBusinessSector_fromString$1,
   selfReportedSalesBin_decode: Query_selfReportedSalesBin_decode$1,
   selfReportedSalesBin_fromString: Query_selfReportedSalesBin_fromString$1,
-  makeVariables: Query_makeVariables$4,
+  Operation: undefined,
   Types: undefined,
   use: use$6,
   useLoader: useLoader$4,
@@ -1452,8 +1481,8 @@ function BuyerInformation_Buyer$Fetcher(Props) {
               var date = Belt_Option.map(parse(lastShownDate), (function (lastShown) {
                       return lastShown.date;
                     }));
-              if (lastShownDate === "" || Caml_obj.caml_notequal(userId, id) || Belt_Option.mapWithDefault(date, true, (function (d) {
-                        return IsYesterday(ParseISO(d));
+              if (lastShownDate === "" || Caml_obj.notequal(userId, id) || Belt_Option.mapWithDefault(date, true, (function (d) {
+                        return IsBefore(ParseISO(d), StartOfDay(new Date()));
                       }))) {
                 var isSalesBinInput = Belt_Option.flatMap(queryData.viewer, (function (viewer) {
                         return viewer.selfReportedSalesBin;
@@ -1469,19 +1498,25 @@ function BuyerInformation_Buyer$Fetcher(Props) {
                                     }));
                       }));
                 var exit = 0;
-                var exit$1 = 0;
-                if (!(isSalesBinInput !== undefined && isBusiniessSectorsInput !== undefined && isBusiniessSectorsInput && isInterestedItemCategoriesInput !== undefined && isInterestedItemCategoriesInput)) {
-                  exit$1 = 2;
-                }
-                if (exit$1 === 2) {
-                  var exit$2 = 0;
-                  if (isBusiniessSectorsInput !== undefined && isBusiniessSectorsInput) {
+                if (isSalesBinInput !== undefined && isBusiniessSectorsInput !== undefined) {
+                  if (!(isBusiniessSectorsInput && isInterestedItemCategoriesInput !== undefined && isInterestedItemCategoriesInput)) {
                     exit = 1;
-                  } else {
-                    exit$2 = 3;
                   }
-                  if (exit$2 === 3) {
-                    if (isInterestedItemCategoriesInput !== undefined && isInterestedItemCategoriesInput) {
+                  
+                } else {
+                  exit = 2;
+                }
+                switch (exit) {
+                  case 1 :
+                      setOpen(function (param) {
+                            return /* Show */0;
+                          });
+                      setMode(function (param) {
+                            return /* InterestedCategories */1;
+                          });
+                      Curry._1(LocalStorageHooks.BuyerInfoLastShown.set, makeLastShown(id));
+                      break;
+                  case 2 :
                       setOpen(function (param) {
                             return /* Show */0;
                           });
@@ -1489,22 +1524,9 @@ function BuyerInformation_Buyer$Fetcher(Props) {
                             return /* SectorAndSale */0;
                           });
                       Curry._1(LocalStorageHooks.BuyerInfoLastShown.set, makeLastShown(id));
-                    } else {
-                      exit = 1;
-                    }
-                  }
+                      break;
                   
                 }
-                if (exit === 1) {
-                  setOpen(function (param) {
-                        return /* Show */0;
-                      });
-                  setMode(function (param) {
-                        return /* InterestedCategories */1;
-                      });
-                  Curry._1(LocalStorageHooks.BuyerInfoLastShown.set, makeLastShown(id));
-                }
-                
               }
               
             }
@@ -1515,26 +1537,20 @@ function BuyerInformation_Buyer$Fetcher(Props) {
         queryData,
         user
       ]);
-  var changeModeToSectorSale = function (param) {
-    return setMode(function (param) {
-                return /* SectorAndSale */0;
-              });
+  var changeModeToInterestedItemCategory = function (param) {
+    setMode(function (param) {
+          return /* InterestedCategories */1;
+        });
   };
   var close = function (param) {
-    return setOpen(function (param) {
-                return /* Hide */1;
-              });
+    setOpen(function (param) {
+          return /* Hide */1;
+        });
   };
-  var hasInputBusinessSectorsAndSalesBin = Belt_Option.mapWithDefault(queryData.viewer, false, (function (v) {
-          var bs = Belt_Option.map(v.selfReportedBusinessSectors, (function (arr) {
-                  return !Garter_Array.isEmpty(arr);
-                }));
-          var sb = v.selfReportedSalesBin;
-          if (bs !== undefined && bs) {
-            return sb !== undefined;
-          } else {
-            return false;
-          }
+  var hasInputInterestedItemCategory = Belt_Option.mapWithDefault(queryData.viewer, false, (function (v) {
+          return Belt_Option.mapWithDefault(v.interestedItemCategories, false, (function (arr) {
+                        return !Garter_Array.isEmpty(arr);
+                      }));
         }));
   var contentStyle = mode ? "dialog-content-full overflow-y-auto sm:rounded-2xl" : "dialog-content-detail overflow-y-auto rounded-2xl";
   return React.createElement(ReactDialog.Root, {
@@ -1551,9 +1567,9 @@ function BuyerInformation_Buyer$Fetcher(Props) {
                           className: "flex"
                         }, React.createElement(ReactDialog.Close, {
                               onClick: (function (param) {
-                                  if (mode === /* InterestedCategories */1 && !hasInputBusinessSectorsAndSalesBin) {
+                                  if (mode === /* SectorAndSale */0 && !hasInputInterestedItemCategory) {
                                     return setMode(function (param) {
-                                                return /* SectorAndSale */0;
+                                                return /* InterestedCategories */1;
                                               });
                                   } else {
                                     return setOpen(function (param) {
@@ -1571,7 +1587,7 @@ function BuyerInformation_Buyer$Fetcher(Props) {
                         selected: Belt_Option.flatMap(queryData.viewer, (function (v) {
                                 return v.interestedItemCategories;
                               })),
-                        changeModeToSectorSale: changeModeToSectorSale
+                        close: close
                       }) : React.createElement(BuyerInformation_Buyer$SectorAndSale, {
                         selected: Belt_Option.map(queryData.viewer, (function (v) {
                                 return [
@@ -1579,7 +1595,7 @@ function BuyerInformation_Buyer$Fetcher(Props) {
                                         v.selfReportedSalesBin
                                       ];
                               })),
-                        close: close
+                        changeModeToInterestedItemCategory: changeModeToInterestedItemCategory
                       })));
 }
 
@@ -1598,7 +1614,7 @@ function BuyerInformation_Buyer(Props) {
   } else {
     return React.createElement(React.Suspense, {
                 children: React.createElement(BuyerInformation_Buyer$Fetcher, {}),
-                fallback: React.createElement("div", undefined, "!!!")
+                fallback: null
               });
   }
 }
@@ -1612,6 +1628,5 @@ export {
   Query$4 as Query,
   Fetcher ,
   make ,
-  
 }
 /* Input Not a pure module */

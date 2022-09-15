@@ -26,13 +26,13 @@ module Item = {
     Root({
       title: `대시 보드`,
       anchor: {url: "/admin/dashboard", target: #_self}, // fs 원래대로
-      icon: <img src=naviDashboardIcon />,
+      icon: <img src=naviDashboardIcon className=%twc("w-5 h-5") />,
       children: [],
     }),
     Root({
       title: `상품`,
       anchor: {url: "/admin/products", target: #_self},
-      icon: <img src=naviProductIcon />,
+      icon: <img src=naviProductIcon className=%twc("w-5 h-5") />,
       children: [
         Sub({
           title: `상품 등록`,
@@ -54,7 +54,7 @@ module Item = {
     Root({
       title: `주문 배송`,
       anchor: {url: "/admin/orders", target: #_self},
-      icon: <img src=naviOrderIcon />,
+      icon: <img src=naviOrderIcon className=%twc("w-5 h-5") />,
       children: [
         Sub({
           title: `주문서 조회`,
@@ -74,41 +74,6 @@ module Item = {
         Sub({
           title: `송장번호 등록`,
           anchor: {url: "/admin/add-tracking-numbers", target: #_self},
-          slug: None,
-        }),
-        Sub({
-          title: `오프라인 주문관리`,
-          anchor: {
-            url: {
-              let {makeWithDict, toString} = module(Webapi.Url.URLSearchParams)
-              let defaultQueryParams = Js.Dict.empty()
-
-              defaultQueryParams->Js.Dict.set(
-                "created-at-from",
-                Js.Date.make()->DateFns.setDate(1)->DateFns.format("yyyy-MM-dd"),
-              )
-              defaultQueryParams->Js.Dict.set(
-                "created-at-to",
-                Js.Date.make()->DateFns.endOfMonth->DateFns.format("yyyy-MM-dd"),
-              )
-              defaultQueryParams->Js.Dict.set(
-                "release-due-date-from",
-                Js.Date.make()->DateFns.setDate(1)->DateFns.format("yyyy-MM-dd"),
-              )
-              defaultQueryParams->Js.Dict.set(
-                "release-due-date-to",
-                Js.Date.make()->DateFns.endOfMonth->DateFns.format("yyyy-MM-dd"),
-              )
-              defaultQueryParams->Js.Dict.set("limit", "25")
-              `/admin/offline-orders?${defaultQueryParams->makeWithDict->toString}`
-            },
-            target: #_self,
-          },
-          slug: None,
-        }),
-        Sub({
-          title: `오프라인 주문등록`,
-          anchor: {url: "/admin/add-offline-orders", target: #_self},
           slug: None,
         }),
       ],
@@ -150,7 +115,7 @@ module Item = {
     Root({
       title: `회원`,
       anchor: {url: "/admin/farmer-users", target: #_self},
-      icon: <img src=naviUserIcon />,
+      icon: <img src=naviUserIcon className=%twc("w-5 h-5") />,
       children: [
         Sub({
           title: `생산자 사용자 조회`,

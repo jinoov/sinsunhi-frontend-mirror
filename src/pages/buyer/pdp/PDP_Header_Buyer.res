@@ -8,8 +8,8 @@
  */
 
 module Query = %relay(`
-  query PDPHeaderBuyerQuery($id: ID!) {
-    node(id: $id) {
+  query PDPHeaderBuyerQuery($productId: Int!) {
+    product(number: $productId) {
       ...PDPHeaderBuyerFragment
     }
   }
@@ -39,9 +39,7 @@ module Default = {
             <div>
               <span className=%twc("font-bold text-xl")> {`상품 상세`->React.string} </span>
             </div>
-            <button onClick={_ => router->Next.Router.push("/buyer")}>
-              <IconHome height="24" width="24" fill="#262626" />
-            </button>
+            <CartLinkIcon />
           </div>
         </header>
       </div>
@@ -64,10 +62,7 @@ module Placeholder = {
             <button onClick={_ => router->Next.Router.back}>
               <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
             </button>
-            <div />
-            <button onClick={_ => router->Next.Router.push("/buyer")}>
-              <IconHome height="24" width="24" fill="#262626" />
-            </button>
+            <CartLinkIcon />
           </div>
         </header>
       </div>
@@ -90,9 +85,13 @@ module Presenter = {
 
 module Container = {
   @react.component
-  let make = (~nodeId) => {
-    let {node} = Query.use(~variables={id: nodeId}, ~fetchPolicy=RescriptRelay.StoreAndNetwork, ())
-    switch node {
+  let make = (~productId) => {
+    let {product} = Query.use(
+      ~variables=Query.makeVariables(~productId),
+      ~fetchPolicy=RescriptRelay.StoreAndNetwork,
+      (),
+    )
+    switch product {
     | Some({fragmentRefs}) => <Presenter query=fragmentRefs />
     | None => <Placeholder />
     }
@@ -102,9 +101,9 @@ module Container = {
 @react.component
 let make = () => {
   let router = Next.Router.useRouter()
-  let pid = router.query->Js.Dict.get("pid")
+  let pid = router.query->Js.Dict.get("pid")->Option.flatMap(Int.fromString)
   switch pid {
-  | Some(nodeId) => <Container nodeId />
+  | Some(productId) => <Container productId />
   | None => <Placeholder />
   }
 }

@@ -1,6 +1,3 @@
-@val @scope("window")
-external jsAlert: string => unit = "alert"
-
 @module("../../public/assets/chrome.svg")
 external chromeIcon: string = "default"
 
@@ -14,7 +11,7 @@ let make = () => {
   let showAlertCopyToClipboard = _ => {
     %external(window)
     ->Option.map(_ => {
-      jsAlert(`클립보드에 복사되었습니다.`)
+      Global.jsAlert(`클립보드에 복사되었습니다.`)
     })
     ->ignore
   }

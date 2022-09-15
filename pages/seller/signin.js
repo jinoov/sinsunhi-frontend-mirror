@@ -1,4 +1,4 @@
-import { make as SignInSeller } from "src/pages/seller/SignIn_Seller.mjs";
+import SignInSeller from "src/pages/seller/SignIn_Seller.mjs";
 
 // Note:
 // We need to wrap the make call with

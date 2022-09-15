@@ -4,7 +4,7 @@ let toString = (t: contractType) => t->contractType_encode->Js.Json.decodeString
 
 let toContractTypeDisplay = str =>
   switch str {
-  | "bulk-sale" => `전량구매`
+  | "bulksale" => `전량구매`
   | "online" => `온라인`
   | _ => `온라인`
   }

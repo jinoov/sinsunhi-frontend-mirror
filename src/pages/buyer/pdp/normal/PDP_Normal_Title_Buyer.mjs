@@ -17,23 +17,21 @@ function PDP_Normal_Title_Buyer$PC(Props) {
   var tmp;
   if (typeof user === "number") {
     tmp = user !== 0 ? React.createElement("h1", {
-            className: "mt-5 text-[28px] text-green-500 font-bold"
+            className: "mt-4 text-[28px] text-green-500 font-bold"
           }, "공급가 회원공개") : null;
   } else {
     var textColor = isSoldout ? "text-gray-600" : "text-gray-800";
     tmp = React.createElement("h1", {
-          className: "mt-5 text-[32px] font-bold" + textColor
+          className: "mt-4 text-[32px] leading-[38px] font-bold " + textColor
         }, priceLabel, React.createElement("span", {
-              className: "text-lg"
+              className: "text-[28px]"
             }, "원"));
   }
   return React.createElement("section", undefined, React.createElement("h1", {
-                  className: "text-[32px] text-gray-800"
-                }, displayName), tmp, React.createElement("div", {
-                  className: "w-full h-16 my-4 px-6 flex items-center rounded-xl bg-[#FFF1EE]"
-                }, React.createElement("span", {
-                      className: "text-orange-500"
-                    }, "시세에 따라 가격이 변동될 수 있습니다")));
+                  className: "text-[32px] leading-[44px] text-gray-800"
+                }, displayName), tmp, React.createElement("span", {
+                  className: "mt-4 text-red-500 text-[15px]"
+                }, "시세에 따라 가격이 변동될 수 있습니다"));
 }
 
 var PC = {
@@ -56,14 +54,16 @@ function PDP_Normal_Title_Buyer$MO(Props) {
   } else {
     var textColor = isSoldout ? "text-gray-600" : "text-gray-800";
     tmp = React.createElement("h1", {
-          className: "text-xl font-bold " + textColor
+          className: "text-[22px] font-bold " + textColor
         }, priceLabel, React.createElement("span", {
               className: "text-lg"
             }, "원"));
   }
   return React.createElement("section", undefined, React.createElement("h1", {
                   className: "text-lg text-gray-800"
-                }, displayName), tmp);
+                }, displayName), tmp, React.createElement("span", {
+                  className: "mt-4 text-red-500 text-[13px]"
+                }, "시세에 따라 가격이 변동될 수 있습니다"));
 }
 
 var MO = {
@@ -73,6 +73,5 @@ var MO = {
 export {
   PC ,
   MO ,
-  
 }
 /* react Not a pure module */

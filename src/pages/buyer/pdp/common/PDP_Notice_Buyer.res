@@ -16,6 +16,7 @@ module PC = {
 
     switch notice {
     | None => React.null
+
     | Some(notice') =>
       <div className=%twc("mt-14 flex min-h-[204px]")>
         <div className=%twc("p-7 flex flex-col flex-1 bg-gray-50 rounded-xl mr-5")>
@@ -25,13 +26,15 @@ module PC = {
           </p>
           <span className=%twc("mt-2 text-gray-600")> {noticeDateLabel->React.string} </span>
         </div>
-        <button onClick={_ => ChannelTalk.showMessenger()} className=%twc("w-[314px] h-[204px]")>
-          <img
-            src="/images/qna-green-square@3x.png"
-            className=%twc("w-full h-full object-cover")
-            alt="detail-qna"
-          />
-        </button>
+        <ReactUtil.SpreadProps props={"data-gtm": `click_chatbot`}>
+          <button onClick={_ => ChannelTalk.showMessenger()} className=%twc("w-[314px] h-[204px]")>
+            <img
+              src="/images/qna-green-square@3x.png"
+              className=%twc("w-full h-full object-cover")
+              alt="detail-qna"
+            />
+          </button>
+        </ReactUtil.SpreadProps>
       </div>
     }
   }
@@ -47,6 +50,7 @@ module MO = {
 
     switch notice {
     | None => React.null
+
     | Some(notice') =>
       <div className=%twc("flex flex-col gap-2 bg-surface p-4 rounded-2xl")>
         <h4 className=%twc("text-[15px] font-bold")> {`공지사항`->React.string} </h4>

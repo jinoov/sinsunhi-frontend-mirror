@@ -30,3 +30,4 @@ styles/.tailwind.dev.css
 .vercel
 
 .env.local
+.env.development

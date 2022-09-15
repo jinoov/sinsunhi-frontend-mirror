@@ -5,13 +5,31 @@ import * as React from "react";
 import * as Skeleton from "./Skeleton.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
+import * as Web_Order_Buyer_Form from "./Web_Order_Buyer_Form.mjs";
+import * as Web_Order_Util_Component from "./Web_Order_Util_Component.mjs";
 
 function Web_Order_Orderer_Info_Buyer$PlaceHolder(Props) {
+  var deviceType = Props.deviceType;
+  var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    
+  }
   return React.createElement("section", {
               className: "flex flex-col gap-5 bg-white rounded-sm"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "주문자 정보"), React.createElement("div", {
+            }, tmp, React.createElement("div", {
                   className: "flex text-sm"
                 }, React.createElement("ul", {
                       className: "w-23 flex flex-col gap-2 font-bold"
@@ -31,35 +49,64 @@ var PlaceHolder = {
 };
 
 function Web_Order_Orderer_Info_Buyer(Props) {
+  var deviceType = Props.deviceType;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
+  var formNames = Web_Order_Buyer_Form.names(Web_Order_Buyer_Form.name);
   var toPhoneNumberForm = function (s) {
     return s.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
   };
   var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    
+  }
+  var tmp$1;
   if (typeof user === "number") {
-    tmp = null;
+    tmp$1 = null;
   } else {
     var user$p = user._0;
-    tmp = React.createElement(React.Fragment, undefined, React.createElement("li", undefined, user$p.name), React.createElement("li", undefined, toPhoneNumberForm(Belt_Option.getWithDefault(user$p.phone, "-"))), React.createElement("li", undefined, Belt_Option.getWithDefault(user$p.email, "-")));
+    tmp$1 = React.createElement(React.Fragment, undefined, React.createElement("li", undefined, user$p.name), React.createElement("li", undefined, toPhoneNumberForm(Belt_Option.getWithDefault(user$p.phone, "-"))), React.createElement("li", undefined, Belt_Option.getWithDefault(user$p.email, "-")), React.createElement(Web_Order_Util_Component.Hidden.make, {
+              value: user$p.name,
+              inputName: formNames.ordererName
+            }), React.createElement(Web_Order_Util_Component.Hidden.make, {
+              value: Belt_Option.map(user$p.phone, toPhoneNumberForm),
+              inputName: formNames.ordererPhone
+            }), React.createElement(Web_Order_Util_Component.Hidden.make, {
+              value: String(user$p.id),
+              inputName: formNames.orderUserId,
+              isNumber: true
+            }));
   }
   return React.createElement("section", {
-              className: "flex flex-col gap-5 bg-white rounded-sm"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "주문자 정보"), React.createElement("div", {
+              className: "flex flex-col gap-5 bg-white rounded-sm mt-7"
+            }, tmp, React.createElement("div", {
                   className: "flex text-sm"
                 }, React.createElement("ul", {
                       className: "w-23 flex flex-col gap-2 font-bold"
                     }, React.createElement("li", undefined, "주문자명"), React.createElement("li", undefined, "연락처"), React.createElement("li", undefined, "이메일")), React.createElement("ul", {
                       className: "flex flex-col gap-2"
-                    }, tmp)));
+                    }, tmp$1)));
 }
+
+var Form;
 
 var make = Web_Order_Orderer_Info_Buyer;
 
 export {
   PlaceHolder ,
+  Form ,
   make ,
-  
 }
 /* react Not a pure module */

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import { make as RfqBasketBuyer } from "src/pages/buyer/rfq/RfqBasket_Buyer.mjs";
+import { make as RfqBasketBuyer } from "src/pages/buyer/rfq/CreateRequest/RfqBasket_Buyer.mjs";
 
 export default function Index(props) {
   const router = useRouter();

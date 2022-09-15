@@ -1,6 +1,3 @@
-@val @scope("window")
-external jsAlert: string => unit = "alert"
-
 @spice
 type tossPaymentsErrorCode =
   | @spice.as("PAY_PROCESS_CANCELED") PAY_PROCESS_CANCELED
@@ -17,6 +14,8 @@ let codeToString = code =>
 module ErrorDialog = {
   @react.component
   let make = (~children, ~show, ~href) => {
+    let {useRouter, replace} = module(Next.Router)
+    let router = useRouter()
     <RadixUI.Dialog.Root _open=show>
       <RadixUI.Dialog.Portal>
         <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
@@ -25,14 +24,14 @@ module ErrorDialog = {
             "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
           )>
           children
-          <Next.Link href>
-            <a
-              className=%twc(
-                "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
-              )>
-              {`닫기`->React.string}
-            </a>
-          </Next.Link>
+          <button
+            type_="button"
+            onClick={_ => router->replace(href)}
+            className=%twc(
+              "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
+            )>
+            {`닫기`->React.string}
+          </button>
         </RadixUI.Dialog.Content>
       </RadixUI.Dialog.Portal>
     </RadixUI.Dialog.Root>
@@ -52,16 +51,14 @@ let make = () => {
   React.useEffect1(_ => {
     let params = router.query->makeWithDict
     let code = params->get("code")->Option.map(c => c->Js.Json.string->tossPaymentsErrorCode_decode)
-    let productId = router.query->Js.Dict.get("product-id")
-    let productOptionId = router.query->Js.Dict.get("product-option-id")
-    let quantity = router.query->Js.Dict.get("quantity")->Option.flatMap(Int.fromString)
+    let tempOrderId = params->get("temp-order-id")->Option.flatMap(Int.fromString)
+    let from = params->get("from")
 
-    switch (productId, productOptionId, quantity) {
-    | (Some(productId'), Some(productOptionId'), Some(quantity')) =>
-      setRedirect(._ =>
-        `/buyer/web-order/${productId'}/${productOptionId'}?quantity=${quantity'->Int.toString}`
-      )
-    | _ => setRedirect(._ => "/buyer/transactions")
+    switch tempOrderId {
+    | Some(tempOrderId') => setRedirect(._ => `/buyer/web-order/${tempOrderId'->Int.toString}`)
+    | _ => setRedirect(._ => "/buyer" ++ from->Option.getWithDefault(""))
+    // 쿼리파라미터에 from이 있으면 해당 페이지로 없으면 메인 페이지로
+    // 예) ~?from=/transactions -> /buyer/transactions 으로 이동시킴
     }
 
     switch code {

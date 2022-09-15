@@ -14,32 +14,24 @@ let setIntInRange = (number, min, max) => {
 }
 
 @react.component
-let make = (~min=1, ~max=999, ~value, ~setValue) => {
-  let increment = ReactEvents.interceptingHandler(_ => setValue(.prev => prev + 1))
-
-  let decrement = ReactEvents.interceptingHandler(_ => setValue(.prev => prev - 1))
-
-  let onChange = e => {
-    let v = (e->ReactEvent.Synthetic.target)["value"]
-
-    let parsed = {
-      if v == "" {
-        Some(min)
-      } else {
-        v
-        ->Js.String2.replaceByRe(%re("/[^0-9]/g"), "")
-        ->Int.fromString
-        ->Option.map(v' => v'->setIntInRange(min, max))
-      }
+let make = (~min=1, ~max=999, ~value, ~onChange) => {
+  let onChangeValue = e => {
+    let parsed = switch (e->ReactEvent.Synthetic.target)["value"] {
+    | "" => min->Some
+    | nonEmptyStr =>
+      nonEmptyStr
+      ->Js.String2.replaceByRe(%re("/[^0-9]/g"), "")
+      ->Int.fromString
+      ->Option.map(v' => v'->setIntInRange(min, max))
     }
 
-    parsed->Option.map(v' => setValue(._ => v'))->ignore
+    parsed->Option.map(onChange)->ignore
   }
 
   <div className=%twc("w-[7.5rem] h-10 flex border rounded-xl divide-x")>
     <button
       className=%twc("w-9 flex items-center justify-center")
-      onClick={decrement}
+      onClick={_ => onChange(value - 1)}
       disabled={value == min}>
       <IconSpinnerMinus fill={value == min ? "#cccccc" : "#262626"} />
     </button>
@@ -47,12 +39,12 @@ let make = (~min=1, ~max=999, ~value, ~setValue) => {
       <input
         className=%twc("w-[46px] text-center focus:outline-none")
         value={value->Int.toString}
-        onChange
+        onChange={onChangeValue}
       />
     </div>
     <button
       className=%twc("w-9 flex items-center justify-center")
-      onClick={increment}
+      onClick={_ => onChange(value + 1)}
       disabled={value == max}>
       <IconSpinnerPlus fill={value == max ? "#cccccc" : "#262626"} />
     </button>

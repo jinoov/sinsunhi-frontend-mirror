@@ -168,17 +168,17 @@ function Rfq_Buyer$Container(Props) {
                           className: "hidden lg:flex justify-center items-center flex-col text-white font-bold leading-[61.44px] text-[44px]"
                         }, React.createElement("h2", undefined, "첫 거래 시 ", React.createElement("span", {
                                   className: "text-primary"
-                                }, "10만원 추가할인!")), React.createElement("h2", undefined, " 1분만에 견적을 요청해보세요"), React.createElement("h3", {
-                              className: "text-2xl font-normal leading-9 mt-5"
-                            }, "오후 3시 전에 견적 요청하면 당일 오후 4시에 견적서가 도착")), React.createElement("div", {
+                                }, "10만원 추가할인!")), React.createElement("h2", undefined, "1분만에 견적을 요청해보세요"), React.createElement("h3", {
+                              className: "text-2xl font-normal text-center leading-9 mt-5 whitespace-pre-line"
+                            }, "영업일 기준 견적요청 후 2시간 내로 견적서가 도착!\n※ 단, 16시 이후 견적요청 건은 다음 날 오전에 견적서를 발송해드려요.")), React.createElement("div", {
                           className: "flex lg:hidden justify-center items-center flex-col text-white font-bold leading-9 text-[26px]"
                         }, React.createElement("h2", undefined, "첫 거래 시 "), React.createElement("h2", undefined, React.createElement("span", {
                                   className: "text-primary"
-                                }, "10만원 추가할인!")), React.createElement("h2", undefined, "1분만에"), React.createElement("h2", undefined, "견적을 요청해보세요"), React.createElement("h3", {
-                              className: "text-[17px] font-normal leading-6 mt-5"
-                            }, "오후 3시 전에 견적 요청하면"), React.createElement("h3", {
-                              className: "text-[17px] font-normal leading-6"
-                            }, "당일 오후 4시에 견적서가 도착")), React.createElement("div", {
+                                }, "10만원 추가할인!")), React.createElement("h2", undefined, "1분만에"), React.createElement("h2", undefined, "견적을 요청해보세요"), React.createElement("span", {
+                              className: "text-[17px] font-normal leading-6 mt-5 whitespace-pre-wrap text-center"
+                            }, "영업일 기준 견적요청 후\n2시간 내로 견적서가 도착!"), React.createElement("span", {
+                              className: "text-[17px] font-normal leading-6 mt-2 whitespace-pre-wrap text-center"
+                            }, "※ 단, 16시 이후 견적요청 건은\n다음 날 오전에 견적서를 발송해드려요.")), React.createElement("div", {
                           className: "flex justify-center mt-2.5"
                         }, React.createElement(RfqCreateRequestButton.make, {
                               className: buttonStyle,
@@ -217,6 +217,5 @@ export {
   rfqBgImgM ,
   Container ,
   make ,
-  
 }
 /* rfqBgImg Not a pure module */

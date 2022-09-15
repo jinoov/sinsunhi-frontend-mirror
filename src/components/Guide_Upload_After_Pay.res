@@ -21,7 +21,7 @@ let make = () =>
               {j`주문서 업로드 사용설명서`->React.string}
             </h4>
             <div className=%twc("flex mt-5")>
-              <a href="/buyer/products/advanced-search" target="_blank" className=%twc("flex-1")>
+              <a href="/products/advanced-search" target="_blank" className=%twc("flex-1")>
                 <span
                   className=%twc(
                     "block text-center p-3 rounded-xl border border-green-gl text-base font-bold text-green-gl mr-2 bg-white"

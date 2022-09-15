@@ -7,6 +7,8 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Router from "next/router";
 import * as Header_Buyer from "../components/Header_Buyer.mjs";
 import * as IconNotFound from "../components/svgs/IconNotFound.mjs";
+import * as GnbBannerList_Buyer from "../components/GnbBannerList_Buyer.mjs";
+import * as ShopCategorySelect_Buyer from "../components/ShopCategorySelect_Buyer.mjs";
 
 function parsePath(path) {
   switch (path) {
@@ -26,9 +28,18 @@ function getFirstPath(pathname) {
 }
 
 function NotFound$Buyer(Props) {
+  var match = GnbBannerList_Buyer.Query.use(undefined, /* StoreOrNetwork */1, undefined, undefined, undefined);
+  var match$1 = ShopCategorySelect_Buyer.Query.use({
+        onlyDisplayable: true,
+        parentId: undefined,
+        types: ["NORMAL"]
+      }, undefined, undefined, undefined, undefined);
   return React.createElement("div", {
               className: "w-screen h-screen flex flex-col items-center justify-start"
-            }, React.createElement(Header_Buyer.PC.make, {}), React.createElement("div", {
+            }, React.createElement(Header_Buyer.PC.make, {
+                  gnbBanners: match.gnbBanners,
+                  displayCategories: match$1.displayCategories
+                }), React.createElement("div", {
                   className: "flex flex-col h-full items-center justify-center"
                 }, React.createElement(IconNotFound.make, {
                       width: "160",
@@ -94,7 +105,6 @@ function NotFound(Props) {
           setIsCsr(function (param) {
                 return true;
               });
-          
         }), []);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "신선하이")
@@ -110,6 +120,5 @@ export {
   Default ,
   Container ,
   make ,
-  
 }
 /* react Not a pure module */

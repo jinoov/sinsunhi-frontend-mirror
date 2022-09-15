@@ -6,7 +6,7 @@
   "dependencies": {
     "@braze/web-sdk": "^4.0.2",
     "@duetds/date-picker": "^1.4.0",
-    "@greenlabs/garter": "^0.7.1",
+    "@greenlabs/garter": "^0.11.0",
     "@greenlabs/re-korean-numeral": "^0.1.2",
     "@greenlabs/res-daum-postcode": "^0.1.0",
     "@hookform/error-message": "^2.0.0",
@@ -18,6 +18,8 @@
     "@radix-ui/react-radio-group": "^0.1.5",
     "@radix-ui/react-scroll-area": "^0.1.4",
     "@radix-ui/react-separator": "^0.1.4",
+    "@radix-ui/react-switch": "^1.0.0",
+    "@radix-ui/react-slider": "^1.0.0",
     "@radix-ui/react-tabs": "^0.1.5",
     "@radix-ui/react-tooltip": "^0.1.7",
     "@rescriptbr/reform": "^11.0.1",
@@ -36,6 +38,7 @@
     "next": "12.1.5",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.8.4",
+    "postscribe": "^2.0.8",
     "react": "^18.0.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.0.0",
@@ -52,7 +55,7 @@
     "res-date-fns": "^1.1.2",
     "reschema": "^2.0.3",
     "rescript-classnames": "^6.0.0",
-    "rescript-relay": "1.0.0-beta.8",
+    "rescript-relay": "^1.0.0-beta.26",
     "rescript-webapi": "^0.6.0",
     "swr": "^1.2.0",
     "tailwind-scrollbar-hide": "^1.1.7",
@@ -94,7 +97,7 @@
     "postcss": "^8.4.5",
     "postcss-cli": "^8.3.1",
     "prettier": "^2.5.1",
-    "rescript": "^9.1.4",
+    "rescript": "10",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.0.7"
   },
@@ -118,7 +121,8 @@
     "relay": "mkdir -p src/__generated__ && rescript-relay-compiler",
     "relay:watch": "rescript-relay-compiler --watch",
     "api-introspect": "set -o allexport && source .env.local && set +o allexport && graphql-codegen --config codegen.yml",
-    "format": "rescript format -all"
+    "format": "rescript format -all",
+    "clean": "rm -rf node_modules && rm -rf .next && yarn && yarn res:clean"
   },
   "resolutions": {
     "react": "18.0.0",

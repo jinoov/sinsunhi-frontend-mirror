@@ -1,3 +1,9 @@
+"""장바구니 오퍼레이션 결과"""
+type AddCartItemListResult {
+  """장바구니 오퍼레이션이 성공했다면 true"""
+  result: Boolean!
+}
+
 """신선마켓 관리자"""
 type AdminUser implements FreshmarketUser & Node {
   """담당하는 안심판매 신청 목록"""
@@ -30,6 +36,15 @@ type AdminUserEdge implements Edge {
 
   """Node"""
   node: AdminUser!
+}
+
+enum AmountUnit {
+  EA
+  G
+  KG
+  L
+  ML
+  T
 }
 
 """연 평균 판매량 구간"""
@@ -93,6 +108,9 @@ type BannerEdge implements Edge {
   cursor: String!
   node: Banner!
 }
+
+"""Big Integer"""
+scalar BigInt
 
 """브릭스 (당도)"""
 scalar Brix
@@ -1112,6 +1130,24 @@ input BulkSaleSampleReviewUpdateInput {
 """사업자등록번호"""
 scalar BusinessRegistrationNumber
 
+enum BusinessRegistrationNumberVerificationStatus {
+  REVIEWING
+  UNVERIFIED
+  VERIFIED
+}
+
+"""장바구니 오류"""
+type CartError {
+  """문제의 원인이 된 장바구니 아이템 목록"""
+  cartItems: [CartItem]
+
+  """오류 코드"""
+  code: ErrorCode!
+
+  """오류 메시지"""
+  message: String
+}
+
 """장바구니 조회 결과"""
 type CartItem {
   """장바구니 아이템 아이디"""
@@ -1143,10 +1179,16 @@ type CartItem {
 
   """수량"""
   quantity: Int!
+
+  """최근 변경 DateTime(ISO 8601)"""
+  updatedAt: DateTime
 }
 
 type Category implements Node {
-  children: [Category!]!
+  children(
+    """True일 시 SALE | SOLDOUT 상태의 matching 상품을 가진 카테고리만 조회합니다."""
+    hasMatchingProduct: Boolean = false
+  ): [Category!]!
 
   """스스로를 포함한 전체 표준 카테고리 (ex [{최상위 카테고리} {차상위 카테고리} ... self])"""
   fullyQualifiedName: [Category!]!
@@ -1204,6 +1246,37 @@ type ChannelIOBootEventProfile {
                                그러니 경험칙으로 그렇다고 생각하는 것이 편합니다.
   """
   joinTime: Float
+
+  """
+  SSTECH-292 에서 노영님께 요청 받았습니다.
+  
+                                         purchasedAmount 와 사용례에서 별로 차이나지는 않을 것 같기는 하다.
+  """
+  lastCheckoutAmount: DecimalNumber!
+
+  """
+  SSTECH-292 에서 노영님께 요청 받았습니다.
+                                 joinTime 과 마찬가리고 epochMillis 를 넣습니다.
+  
+                                 채널톡 비즈팀 베이지님 알려주길 채널톡으로 ‘CheckoutCompleted’ 이벤트를 보내면
+                                 profile.lastCheckoutCompletedAt 을 업데이트 한다고 합니다.
+                                 어디 문서에 적힌 것이 있는지 물었지만 답이 없는 것으로 봐서 어떤 문서에도
+                                 적혀 있지 않다고 보는 것이 낫겠습니다.
+  
+                                 track API 로 'CheckoutCompleted' 이벤트를 보내는 것이 깔끔하겠다 싶었는데,
+  
+                                 1. 위탁: 주문서 업로드 페이지에서 엑셀 업로드가 완료되고 신선캐시 차감이 완료되었을 때
+                                 2. 웹주문서: 웹주문서 페이지에서 결제하기 버튼을 눌러 정상적으로 발주가 완료되었을 때
+  
+                                 이렇게 2군데 넣으려다 보니 2 시점에 track API 를 frontend 에서 호출하는 방법은 명확한데
+                                 AWS Lambda 에서 엑셀업로드가 끝나고 channelIO 의 web sdk 를 이용해서 호출하는 것은
+                                 말이 잘 안 됩니다.
+  
+                                 2 시점에 frontend 로 보내기도 하고
+                                 1 은 딱히 처리하지 않는 것으로 하고
+                                 bootEvent 를 보낼 때도 이 field 의 값으로 보내두는 것으로 해봅니다.
+  """
+  lastCheckoutCompletedAt: Float
   mobileNumber: String!
   name: String!
   purchasedAmount: DecimalNumber!
@@ -1220,6 +1293,90 @@ interface Connection {
 
   """Page information"""
   pageInfo: PageInfo!
+}
+
+"""국가"""
+type Country implements Node {
+  """식별자"""
+  id: ID!
+
+  """국가명"""
+  name: String!
+}
+
+"""국가 코드"""
+enum CountryCode {
+  """오스트리아"""
+  AT
+
+  """호주"""
+  AU
+
+  """벨기에"""
+  BE
+
+  """브라질"""
+  BR
+
+  """캐나다"""
+  CA
+
+  """칠레"""
+  CL
+
+  """덴마크"""
+  DK
+
+  """스페인"""
+  ES
+
+  """핀란드"""
+  FI
+
+  """프랑스"""
+  FR
+
+  """아일랜드"""
+  IE
+
+  """대한민국"""
+  KR
+
+  """멕시코"""
+  MX
+
+  """네덜란드"""
+  NL
+
+  """뉴질랜드"""
+  NZ
+
+  """기타"""
+  OTHER
+
+  """포르투갈"""
+  PT
+
+  """태국"""
+  TH
+
+  """미국"""
+  US
+
+  """우루과이"""
+  UY
+}
+
+type CountryConnection implements Connection {
+  """Number of edges"""
+  count: Int!
+  edges: [CountryEdge!]!
+  pageInfo: PageInfo!
+}
+
+type CountryEdge implements Edge {
+  cursor: String!
+  node: Country!
 }
 
 """
@@ -1289,7 +1446,7 @@ type CreatePresignedUrlForImageResult {
 
 """
 일반 상품을 생성합니다. 
-    - 상품인터페이스 기준 추가 전달 필드: producerId/ type, isCourierAvailable, isVat, price
+    - 상품인터페이스 기준 추가 전달 필드: producerId/ type, isCourierAvailable, isVat, price, notationInformationType
 """
 input CreateProductInput {
   """표준 카테고리 node ID"""
@@ -1316,6 +1473,9 @@ input CreateProductInput {
   """생산자용 상품명"""
   name: String!
 
+  """필수 고지정보 유형, 농축수산물 | 가공식품"""
+  notationInformationType: ProductNotationInformationType!
+
   """공지사항"""
   notice: String
 
@@ -1336,6 +1496,9 @@ input CreateProductInput {
 
   """판매 자료 문서 url"""
   salesDocument: String
+
+  """판매 유형입니다.  축산 RFQ와 수산매칭이 있습니다."""
+  salesType: ProductSalesType
 
   """운영 상태"""
   status: ProductStatus!
@@ -1363,6 +1526,12 @@ input CreateProductOptionCostInput {
 }
 
 input CreateProductOptionInput {
+  """수량"""
+  amount: Float!
+
+  """무게 단위"""
+  amountUnit: AmountUnit!
+
   """포장당 입수 최대"""
   countPerPackageMax: Int
 
@@ -1384,6 +1553,15 @@ input CreateProductOptionInput {
   """포장재질"""
   packageType: String
 
+  """개당 수량 최대"""
+  perAmountMax: Float
+
+  """개당 수량 최소"""
+  perAmountMin: Float
+
+  """개당 수량 단위"""
+  perAmountUnit: AmountUnit
+
   """개당 길이 최대"""
   perSizeMax: Float
 
@@ -1393,15 +1571,6 @@ input CreateProductOptionInput {
   """개당 크기 단위"""
   perSizeUnit: SizeUnit
 
-  """개당 무게 최대"""
-  perWeightMax: Float
-
-  """개당 무게 최소"""
-  perWeightMin: Float
-
-  """개당 무게 단위"""
-  perWeightUnit: WeightUnit
-
   """바이어 판매가"""
   price: Int!
 
@@ -1409,14 +1578,11 @@ input CreateProductOptionInput {
   productId: ID!
   productOptionCost: CreateProductOptionCostInput!
 
+  """합포장 단위수량"""
+  shippingUnitQuantity: Int!
+
   """운영상태"""
   status: ProductOptionStatus!
-
-  """중량 gram"""
-  weight: Float!
-
-  """무게 단위"""
-  weightUnit: WeightUnit!
 }
 
 union CreateProductPayload = CreateProductResult | Error
@@ -1470,6 +1636,9 @@ input CreateQuotedProductInput {
   """판매 자료 문서 url"""
   salesDocument: String
 
+  """판매 유형입니다.  축산 RFQ와 수산매칭이 있습니다."""
+  salesType: ProductSalesType!
+
   """운영 상태"""
   status: ProductStatus!
 }
@@ -1481,34 +1650,28 @@ type CreateQuotedProductResult {
   product: Product!
 }
 
-"""임시 웹주문서 생성 요청 input"""
+"""임시 웹주문서(장바구니용) 생성 요청 input"""
 input CreateTempWosOrderInput {
-  """배송 방법"""
-  deliveryType: WosDeliveryType!
-  productOptions: [TempWosOrderProductOptionsInput!]!
+  """장바구니 아이템 id 리스트"""
+  cartItems: [Int!]!
 }
 
-union CreateTempWosOrderPayload = Error | TempWosOrder
+union CreateTempWosOrderPayload = CartError | Error | TempWosOrder
 
-"""주문서를 생성하기 위한 input입니다."""
-input CreateWosOrderInput {
-  """구매자 ID"""
-  orderUserId: Int!
-
-  """결제 목적"""
-  paymentPurpose: String!
-
-  """상품 정보 리스트"""
-  productOptions: [WosProductOptionInput!]!
-
-  """총 배송비"""
-  totalDeliveryCost: Int!
-
-  """총 주문 금액"""
-  totalOrderPrice: Int!
+"""임시 웹주문서(단품구매용) 생성 요청 input"""
+input CreateTempWosOrderProductOptionsInput {
+  """단품(상품옵션) 아이디"""
+  productOptions: [TempWosOrderProductOptionsList!]!
 }
 
-union CreateWosOrderPayload = CreateWosOrderResult | Error | WosError | WosOrder
+"""임시 웹주문서(단품구매용) 생성 요청 input"""
+input CreateTempWosOrderSingleInput {
+  """단품(상품옵션) 아이디"""
+  productOptionId: Int!
+
+  """구매 수량"""
+  quantity: Int!
+}
 
 type CreateWosOrderResult {
   """주문서 번호"""
@@ -1606,6 +1769,20 @@ scalar DateTime
 """실수. 부동소수점 수 오차 방지. 텍스트로 통신."""
 scalar DecimalNumber
 
+"""장바구니 아이템 삭제 Input"""
+input DeleteCartItemsInput {
+  """삭제할 상품 옵션 Id"""
+  optionIds: [Int]!
+}
+
+union DeleteCartItemsPayload = DeleteCartItemsSuccess | Error
+
+"""장바구니 아이템 제거 Payload"""
+type DeleteCartItemsSuccess {
+  """제거된 장바구니 아이템 개수"""
+  count: Int!
+}
+
 """삭제 성공시 페이로드"""
 type DeleteSuccess {
   deletedId: ID!
@@ -1679,13 +1856,16 @@ enum Device {
 }
 
 type DisplayCategory implements Node {
-  children: [DisplayCategory!]!
+  children(orderBy: [DisplayCategoryOrderBy!]): [DisplayCategory!]!
 
   """[{최상위} {차상위} ... self]"""
   fullyQualifiedName: [DisplayCategory!]!
   id: ID!
   image: Image
   name: String!
+
+  """전시 카테고리의 unique 구분자입니다."""
+  number: Int!
   parent: DisplayCategory
   products(
     """pagination cursor 이 id 이후의 product에 대해서 조회합니다"""
@@ -1696,6 +1876,7 @@ type DisplayCategory implements Node {
 
     """True일 경우 노출되는 단품이 없는 일반상품을 제외하고 조회합니다."""
     onlyBuyable: Boolean
+    orderBy: [ProductsOrderBy!]
 
     """상품의 순서를 지정합니다.  기본값은 UPDATED_DESC입니다"""
     sort: DisplayCategoryProductsSort
@@ -1718,9 +1899,17 @@ type DisplayCategoryEdge implements Edge {
   node: DisplayCategory!
 }
 
+input DisplayCategoryOrderBy {
+  buyableProductsCount: OrderDirection
+  order: NullableOrderDirection
+  updatedAt: OrderDirection
+}
+
 enum DisplayCategoryProductsSort {
   PRICE_ASC
   PRICE_DESC
+  PRICE_PER_KG_ASC
+  PRICE_PER_KG_DESC
   UPDATED_ASC
   UPDATED_DESC
 }
@@ -1741,6 +1930,11 @@ interface Edge {
 
 """이메일 주소"""
 scalar EmailAddress
+
+enum EmailVerificationStatus {
+  UNVERIFIED
+  VERIFIED
+}
 
 type Error {
   code: ErrorCode!
@@ -2028,6 +2222,9 @@ type Image {
   """800x800"""
   thumb800x800: String!
 
+  """800xall"""
+  thumb800xall: String
+
   """1000x1000"""
   thumb1000x1000: String!
 
@@ -2047,6 +2244,9 @@ input ImageInput {
 
   """800x800"""
   thumb800x800: String!
+
+  """800xall"""
+  thumb800xall: String!
 
   """1000x1000"""
   thumb1000x1000: String!
@@ -2078,8 +2278,32 @@ type ItemCategory {
   name: String!
 }
 
+input LikeProductInput {
+  """상품 node ID"""
+  id: ID!
+}
+
+union LikeProductPayload = Error | LikeProductResult
+
+type LikeProductResult {
+  """찜한 상품 정보"""
+  product: Product!
+}
+
 """field 제약이 없는 기본 맵 타입"""
 scalar Map
+
+input MarkProductAsViewedInput {
+  """조회한 상품 노드 ID"""
+  productId: ID!
+}
+
+union MarkProductAsViewedPayload = Error | MarkProductAsViewedResult
+
+type MarkProductAsViewedResult {
+  """조회한 상품 노드 ID"""
+  markedProductId: ID!
+}
 
 """농작물 거래처"""
 type Market implements Node {
@@ -2176,11 +2400,17 @@ type MatchingProduct implements Node & Product {
   """ISO 8601 공지사항 시작 시점"""
   noticeStartAt: DateTime
 
+  """상품번호"""
+  number: Int!
+
   """원산지"""
   origin: String
 
-  """상품번호"""
-  productId: Int!
+  """대표 가격 (kg당 가격 * 대표 무게)"""
+  price: Int
+
+  """kg당 가격"""
+  pricePerKg: Int
 
   """품종 품질규격 정보 (품종 카테고리에만 유효함)"""
   qualityStandard: QualityStandardPerPriceGroup!
@@ -2198,6 +2428,9 @@ type MatchingProduct implements Node & Product {
 
   """운영상태"""
   status: ProductStatus!
+
+  """현재 로그인한 유저의 상품 찜 여부"""
+  viewerHasLiked: Boolean
 
   """최근 일주일치 시세가 (품종 카테고리에만 유효함)"""
   weeklyMarketPrices: MarketPricesPerPriceGroup
@@ -2217,6 +2450,9 @@ type MatchingProductEdge implements Edge {
 
 """육류 브랜드"""
 type MeatBrand implements Node {
+  """국가 정보"""
+  country: Country!
+
   """생성일시"""
   createdAt: DateTime!
 
@@ -2225,6 +2461,12 @@ type MeatBrand implements Node {
 
   """가용여부"""
   isAvailable: Boolean!
+
+  """국내산 여부"""
+  isDomestic: Boolean!
+
+  """원산지"""
+  madeIn: CountryCode!
 
   """육류 축종"""
   meatSpecies: MeatSpecies!
@@ -2278,7 +2520,7 @@ type MeatGrade implements Node {
   isDomestic: Boolean!
 
   """원산지"""
-  madeIn: MeatMadeIn!
+  madeIn: CountryCode!
 
   """육류 축종"""
   meatSpecies: MeatSpecies!
@@ -2306,27 +2548,6 @@ enum MeatGradeOrderBy {
 
   """순위"""
   RANKING
-}
-
-"""육류 원산지"""
-enum MeatMadeIn {
-  """호주"""
-  AU
-
-  """캐나다"""
-  CA
-
-  """한국"""
-  KR
-
-  """뉴질랜드"""
-  NZ
-
-  """기타"""
-  OTHER
-
-  """미국"""
-  US
 }
 
 """육류 부위"""
@@ -2462,6 +2683,9 @@ type Mutation {
   """장바구니에 새로운 아이템을 추가합니다. 추가에 성공하면 true를 리턴합니다."""
   addCartItem(input: RequestAddCartItem!): Boolean!
 
+  """장바구니에 새로운 아이템들을 추가합니다. 추가에 성공하면 true를 리턴합니다."""
+  addCartItemList(input: [RequestAddCartItem!]!): AddCartItemListResult!
+
   """안심판매 신청 진행 상태 변경"""
   changeBulkSaleApplicationProgress(id: ID!, input: BulkSaleApplicationProgressInput!): BulkSaleApplicationMutationPayload
 
@@ -2491,8 +2715,14 @@ type Mutation {
   createRfqRequest(input: RfqRequestCreateInput!): RfqRequestCreateResponse!
   createRfqRequestItemsMeat(input: RfqRequestItemMeatCreateInput!): RfqRequestItemMeatCreateResponse!
 
-  """임시 웹주문서 생성 요청"""
+  """임시 웹주문서 생성 요청(장바구니용)"""
   createTempWosOrder(input: CreateTempWosOrderInput!): CreateTempWosOrderPayload
+
+  """임시 웹주문서 생성 요청(여러 건 단품구매)"""
+  createTempWosOrderProductOptions(input: CreateTempWosOrderProductOptionsInput!): CreateTempWosOrderPayload
+
+  """임시 웹주문서 생성 요청(단품구매)용"""
+  createTempWosOrderSingle(input: CreateTempWosOrderSingleInput!): CreateTempWosOrderPayload
   createTerm(input: TermCreateInput!): TermMutationResponse!
 
   """[거래매칭] 수요 생성"""
@@ -2501,11 +2731,11 @@ type Mutation {
     input: TradematchDemandCreateInput!
   ): TradematchDemandMutationResponse!
 
-  """주문서 생성 요청"""
-  createWosOrder(input: CreateWosOrderInput!): CreateWosOrderPayload
-
   """판매원표 삭제"""
   deleteBulkSaleProductSaleLedger(id: ID!): BulkSaleProductSaleLedgerMutationPayload
+
+  """장바구니 아이템을 제거합니다."""
+  deleteCartItems(input: DeleteCartItemsInput!): DeleteCartItemsPayload!
   deleteRfqQuotationMeat(id: ID!): RfqQuotationMeatDeleteResponse!
   deleteRfqRequest(id: ID!): RfqRequestDeleteResponse!
   deleteRfqRequestItemsMeat(id: ID!): RfqRequestItemMeatDeleteResponse!
@@ -2515,6 +2745,12 @@ type Mutation {
     """삭제 대상 ID"""
     id: ID!
   ): TradematchDemandDeleteResponse!
+
+  """상품 찜하기"""
+  likeProduct(input: LikeProductInput!): LikeProductPayload!
+
+  """상품을 조회했다고 마킹합니다."""
+  markProductAsViewed(input: MarkProductAsViewedInput!): MarkProductAsViewedPayload!
 
   """[거래매칭] 수요 부분 수정"""
   partialUpdateTradematchDemand(
@@ -2537,6 +2773,15 @@ type Mutation {
   setSelfReportedBusinessSectors(input: SetSelfReportedBusinessSectorsInput!): SetSelfReportedBusinessSectorsPayload!
   setSelfReportedSalesBin(input: SetSelfReportedSalesBinInput): SetSelfReportedSalesBinPayload!
 
+  """상품 찜하기 취소"""
+  unlikeProduct(input: UnlikeProductInput!): UnlikeProductPayload!
+
+  """찜한 상품 목록 삭제"""
+  unlikeProducts(input: UnlikeProductsInput!): UnlikeProductsPayload!
+
+  """상품을 조회했단 기록을 지웁니다."""
+  unmarkProductsAsViewed(input: UnmarkProductsAsViewedInput!): UnmarkProductsAsViewedPayload!
+
   """안심판매 신청 업데이트"""
   updateBulkSaleApplication(id: ID!, input: BulkSaleApplicationUpdateInput!): BulkSaleApplicationMutationPayload
 
@@ -2552,6 +2797,9 @@ type Mutation {
   """전량판매 샘플 품평 수정"""
   updateBulkSaleSampleReview(id: ID!, input: BulkSaleSampleReviewUpdateInput!): BulkSaleSampleReviewMutationPayload
 
+  """장바구니 아이템의 수량을 수정합니다."""
+  updateCartItemQuantity(input: UpdateCartItemQuantityInput!): UpdateCartItemQuantityPayload!
+
   """매칭 상품 수정"""
   updateMatchingProduct(input: UpdateMatchingProductInput!): UpdateMatchingProductPayload!
 
@@ -2563,6 +2811,10 @@ type Mutation {
   updateRfqQuotationMeat(id: ID!, input: RfqQuotationMeatInput!): RfqQuotationMeatUpdateResponse!
   updateRfqRequest(id: ID!, input: RfqRequestUpdateInput!): RfqRequestUpdateResponse!
   updateRfqRequestItemsMeat(id: ID!, input: RfqRequestItemMeatUpdateInput!): RfqRequestItemMeatUpdateResponse!
+
+  """임시 주문서 업데이트 요청(결제 전에 호출)"""
+  updateTempWosOrder(input: UpdateTempWosOrderInput!): UpdateTempWosOrderPayload
+  updateUser(input: UpdateUserInput): UpdateUserPayload!
 
   """단품 복수 등록 및 수정"""
   upsertProductOptions(input: UpsertProductOptionsInput!): UpsertProductOptionsPayload
@@ -2581,7 +2833,7 @@ interface Node {
 }
 
 """
-일반상품: Product interface에서 producer, price, isCourierAvailable, isVat, productOptions가 추가됩니다.
+일반상품: Product interface에서 producer, price, isCourierAvailable, isVat, productOptions, notationInformationType가 추가됩니다.
 """
 type NormalProduct implements Node & Product {
   """표준 카테고리 (작물 코드)"""
@@ -2612,6 +2864,9 @@ type NormalProduct implements Node & Product {
   """생산자 작명 상품명"""
   name: String!
 
+  """필수 표기정보를 구분하기 위한 플래그, 농축수산물(WHOLE_FOOD) | 가공식품(PROCESSED_FOOD)"""
+  notationInformationType: ProductNotationInformationType!
+
   """공지사항"""
   notice: String
 
@@ -2621,6 +2876,9 @@ type NormalProduct implements Node & Product {
   """ISO 8601 공지사항 시작 시점"""
   noticeStartAt: DateTime
 
+  """상품번호"""
+  number: Int!
+
   """원산지"""
   origin: String
 
@@ -2629,9 +2887,6 @@ type NormalProduct implements Node & Product {
 
   """생산자"""
   producer: User!
-
-  """상품번호"""
-  productId: Int!
 
   """연관 단품 리스트입니다. connection 타입을 따르지만 파라미터에 따라 스펙이 적용되어있지 않습니다."""
   productOptions(
@@ -2647,6 +2902,9 @@ type NormalProduct implements Node & Product {
 
   """운영상태"""
   status: ProductStatus!
+
+  """현재 로그인한 유저의 상품 찜 여부"""
+  viewerHasLiked: Boolean
 }
 
 type NormalProductConnection implements Connection {
@@ -2668,6 +2926,14 @@ enum NormalProductType {
 
   """견적 요청이 가능한 일반 상품"""
   QUOTABLE
+}
+
+"""order direction considering the position of the null"""
+enum NullableOrderDirection {
+  ASC_NULLS_FIRST
+  ASC_NULLS_LAST
+  DESC_NULLS_FIRST
+  DESC_NULLS_LAST
 }
 
 """온라인 판매처"""
@@ -2713,6 +2979,23 @@ enum OrderDirection {
 
   """high to low"""
   DESC
+}
+
+"""상태별 개수를 표현합니다"""
+type OrderProductCountByStatusItem {
+  count: Int!
+  status: OrderProductStatus!
+}
+
+enum OrderProductStatus {
+  CANCEL
+  COMPLETE
+  CREATE
+  DELIVERING
+  DEPARTURE
+  NEGOTIATING
+  PACKING
+  REFUND
 }
 
 """Page information"""
@@ -2810,6 +3093,11 @@ enum PgCode {
 """전화번호"""
 scalar PhoneNumber
 
+enum PhoneVerificationStatus {
+  UNVERIFIED
+  VERIFIED
+}
+
 """양의 정수"""
 scalar PositiveInt
 
@@ -2849,17 +3137,20 @@ interface Product {
   """ISO 8601 공지사항 시작 시점"""
   noticeStartAt: DateTime
 
+  """상품번호"""
+  number: Int!
+
   """원산지"""
   origin: String
-
-  """상품번호"""
-  productId: Int!
 
   """판매 자료 문서 url"""
   salesDocument: String
 
   """운영상태"""
   status: ProductStatus!
+
+  """현재 로그인한 유저의 상품 찜 여부"""
+  viewerHasLiked: Boolean
 }
 
 """품종"""
@@ -2934,8 +3225,23 @@ type ProductEdge {
   node: Product!
 }
 
+"""법적으로 필수 표기해야 하는 정보를 구분하는 값입니다."""
+enum ProductNotationInformationType {
+  """가공식품"""
+  PROCESSED_FOOD
+
+  """농축수산물"""
+  WHOLE_FOOD
+}
+
 """단품 상품 정보가 html 태그가 포함된 상태로 노출됩니다."""
 type ProductOption implements Node {
+  """단위 수량"""
+  amount: Float!
+
+  """수량 단위"""
+  amountUnit: AmountUnit!
+
   """포장당 입수 최대"""
   countPerPackageMax: Int
 
@@ -2949,14 +3255,29 @@ type ProductOption implements Node {
   grade: String
   id: ID!
 
+  """무료배송 프로모션 제공 여부"""
+  isFreeShipping: Boolean!
+
   """출고 기준 시간 메모"""
   memo: String
+
+  """단품번호"""
+  number: Int!
 
   """단품 이름"""
   optionName: String!
 
   """포장 재질"""
   packageType: String
+
+  """개당 수량 최대"""
+  perAmountMax: Float
+
+  """개당 수량 최소"""
+  perAmountMin: Float
+
+  """개당 수량 단위"""
+  perAmountUnit: AmountUnit
 
   """개당 크기 최대"""
   perSizeMax: Float
@@ -2967,15 +3288,6 @@ type ProductOption implements Node {
   """개당 크기 단위"""
   perSizeUnit: SizeUnit
 
-  """개당 무게 최대"""
-  perWeightMax: Float
-
-  """개당 무게 최소"""
-  perWeightMin: Float
-
-  """개당 무게 단위"""
-  perWeightUnit: WeightUnit
-
   """바이어(구매자)에게 보이는 판매가"""
   price: Int
 
@@ -2985,17 +3297,14 @@ type ProductOption implements Node {
   """현재시점 기준 적용되는 원가 정보"""
   productOptionCost: ProductOptionCost!
 
+  """합포장 단위수량"""
+  shippingUnitQuantity: Int!
+
   """판매 상태 ex 판매중, 매진, ..."""
   status: ProductOptionStatus!
 
-  """단품 번호"""
+  """단품 sku"""
   stockSku: String!
-
-  """단위 중량"""
-  weight: Float
-
-  """무게 단위"""
-  weightUnit: WeightUnit
 }
 
 type ProductOptionConnection {
@@ -3021,7 +3330,7 @@ type ProductOptionCost {
   fromDate: DateTime!
 
   """무료배송 프로모션 제공 여부"""
-  isFreeShipping: Boolean!
+  isFreeShipping: Boolean! @deprecated(reason: "productOption에서 제공하는 필드를 참조하도록 변경됩니다")
 
   """현재 원물원가; 배송비나 작업비용이 빠진 물건만의 비용"""
   rawCost: Int!
@@ -3036,15 +3345,11 @@ type ProductOptionEdge implements Edge {
 }
 
 enum ProductOptionSort {
-  """sku 번호 기준 오름차순"""
-  SKU_ASC
-
   """sku 번호 기준 내림차순"""
   SKU_DESC
 }
 
 enum ProductOptionStatus {
-  HIDDEN_SALE
   NOSALE
   RETIRE
   SALE
@@ -3087,6 +3392,15 @@ enum ProductPackageMassUnit {
   MG
 }
 
+"""견적상품과 견적 요청이 가능한 일반 상품의 판매 유형입니다.  이 값에 따라 판매 경로가 달라집니다."""
+enum ProductSalesType {
+  """축산 RFQ를 통해 판매하는 상품입니다."""
+  RFQ_LIVESTOCK
+
+  """수산 매칭을 통해 판매하는 상품입니다."""
+  TRADEMATCH_AQUATIC
+}
+
 """상품 상태"""
 enum ProductStatus {
   HIDDEN_SALE
@@ -3122,9 +3436,19 @@ enum ProductionCertificate {
   LOW_CARBON
 }
 
+"""상품 커넥션 정렬 옵션. 필드 중에 하나만 사용해야 함"""
+input ProductsOrderBy {
+  price: NullableOrderDirection
+  pricePerKg: NullableOrderDirection
+  statusPriority: OrderDirection
+  updatedAt: OrderDirection
+}
+
 enum ProductsQueryInputSort {
   PRICE_ASC
   PRICE_DESC
+  PRICE_PER_KG_ASC
+  PRICE_PER_KG_DESC
   UPDATED_ASC
   UPDATED_DESC
 }
@@ -3201,6 +3525,9 @@ type Query {
   """전량판매 샘플 품평 조회"""
   bulkSaleSampleReviews(after: ID, before: ID, bulkSaleApplicationIds: [ID!], first: Int, ids: [ID!], last: Int, orderBy: BulkSaleSampleReviewOrderBy, orderDirection: OrderDirection): BulkSaleSampleReviewConnection!
 
+  """유저의 장바구니 아이템 개수를 조회합니다."""
+  cartItemCount: Int!
+
   """장바구니를 조회합니다."""
   cartItems: [CartItem!]!
   categories(
@@ -3210,6 +3537,9 @@ type Query {
 
   """ChannelIO 의 `boot` event 에 넣을 value 를 조회합니다"""
   channelIO: ChannelIO
+
+  """국가 조회"""
+  countries(after: ID, before: ID, first: Int, last: Int): CountryConnection!
 
   """품목 조회"""
   crops(after: ID, before: ID, categories: [CropCategory!], first: Int, ids: [ID!], last: Int, nameMatch: String, orderBy: CropOrderBy, orderDirection: OrderDirection): CropConnection!
@@ -3226,6 +3556,7 @@ type Query {
     """조회할 전시 카테고리의 타입, null일 경우 타입제한 없이 조회한다"""
     types: [DisplayCategoryType!]
   ): [DisplayCategory!]!
+  displayCategory(number: Int!): DisplayCategory
 
   """농작물 거래처 조회"""
   farmMarkets(after: ID, before: ID, first: Int, ids: [ID!], last: Int, orderBy: FarmMarketOrderBy, orderDirection: OrderDirection): FarmMarketConnection!
@@ -3252,7 +3583,7 @@ type Query {
   ): [DisplayCategory!]!
 
   """육류 브랜드 조회"""
-  meatBrands(after: ID, before: ID, first: Int, last: Int, meatSpeciesIds: [ID!], orderBy: MeatBrandOrderBy, orderDirection: OrderDirection): MeatBrandConnection!
+  meatBrands(after: ID, before: ID, first: Int, isDomestic: Boolean, last: Int, madeIns: [CountryCode!], meatSpeciesIds: [ID!], orderBy: MeatBrandOrderBy, orderDirection: OrderDirection): MeatBrandConnection!
 
   """육류 등급 조회"""
   meatGrades(after: ID, before: ID, first: Int, isDomestic: Boolean, last: Int, meatSpeciesIds: [ID!], orderBy: MeatGradeOrderBy, orderDirection: OrderDirection): MeatGradeConnection!
@@ -3269,6 +3600,10 @@ type Query {
 
   """충전내역을 조회합니다."""
   payments(paymentMethod: PaymentMethod!, status: PaymentStatus!): [Payment!]!
+  product(
+    """Number id of product"""
+    number: Int!
+  ): Product
 
   """품종 목록 조회"""
   productCategories(after: ID, before: ID, cropIds: [ID!], first: Int, ids: [ID!], isAvailable: Boolean, last: Int, nameMatch: String, orderBy: ProductCategoryOrderBy, orderDirection: OrderDirection): ProductCategoryConnection!
@@ -3328,6 +3663,7 @@ type Query {
 
     """True일 경우 노출되는 단품이 없는 일반상품을 제외하고 조회합니다."""
     onlyBuyable: Boolean
+    orderBy: [ProductsOrderBy!]
 
     """생산자번호"""
     producerCodes: [String!]
@@ -3337,7 +3673,7 @@ type Query {
 
     """상품번호들"""
     productNos: [Int!]
-    sort: ProductsQueryInputSort!
+    sort: ProductsQueryInputSort
 
     """판매상태"""
     statuses: [ProductStatus!]
@@ -3371,6 +3707,7 @@ type Query {
     q: String
   ): SearchInterestedItemCategoryListing
   seasonDisplayCategory: DisplayCategory
+  section(type: SectionType!): Section
 
   """바이어 정보받기에서 업종정보를 화면에 표시할 때 자료로 쓰는 목록입니다."""
   selfReportedBusinessSectorListing: [SelfReportedBusinessSectorListingItem!]
@@ -3385,6 +3722,10 @@ type Query {
 
   """서비스 점검 스케쥴을 조회합니다."""
   systemMaintenance: SystemMaintenance
+  tempWosOrder(
+    """임시주문서 아이디"""
+    tempWosOrderId: Int!
+  ): TempWosOrder
   termAgreementTypes(after: ID, before: ID, first: Int, last: Int): TermAgreementTypeConnection!
   terms(after: ID, before: ID, first: Int, last: Int): TermConnection!
 
@@ -3392,7 +3733,7 @@ type Query {
   tradematchDeliveryPolicy: TradematchDeliveryPolicy
 
   """[거래매칭] 수요 목록"""
-  tradematchDemands(after: ID, before: ID, first: Int, last: Int, orderBy: TradematchDemandOrderBy, orderDirection: OrderDirection, productIds: [ID!], statuses: [TradematchDemandStatus!]): TradematchDemandConnection!
+  tradematchDemands(after: ID, before: ID, first: Int, last: Int, orderBy: TradematchDemandOrderBy, orderDirection: OrderDirection, productIds: [ID!], productTypes: [TradematchProductType!], statuses: [TradematchDemandStatus!]): TradematchDemandConnection!
 
   """농가 사업 지원 목록 조회"""
   userBusinessSupportInfo(after: ID, before: ID, facilities: [UserBusinessSupportFacility!], first: Int, ids: [ID!], last: Int, orderBy: UserBusinessSupportInfoOrderBy, orderDirection: OrderDirection): UserBusinessSupportInfoConnection!
@@ -3414,7 +3755,7 @@ type Query {
 }
 
 """
-일반+견적상품: Product interface에서 producer, price, isCourierAvailable, isVat, productOptions가 추가됩니다.
+일반+견적상품: Product interface에서 producer, price, isCourierAvailable, isVat, productOptions, notationInformationType가 추가됩니다.
 """
 type QuotableProduct implements Node & Product {
   """표준 카테고리 (작물 코드)"""
@@ -3445,6 +3786,9 @@ type QuotableProduct implements Node & Product {
   """생산자 작명 상품명"""
   name: String!
 
+  """필수 표기정보를 구분하기 위한 플래그, 농축수산물(WHOLE_FOOD) | 가공식품(PROCESSED_FOOD)"""
+  notationInformationType: ProductNotationInformationType!
+
   """공지사항"""
   notice: String
 
@@ -3454,6 +3798,9 @@ type QuotableProduct implements Node & Product {
   """ISO 8601 공지사항 시작 시점"""
   noticeStartAt: DateTime
 
+  """상품번호"""
+  number: Int!
+
   """원산지"""
   origin: String
 
@@ -3462,9 +3809,6 @@ type QuotableProduct implements Node & Product {
 
   """생산자"""
   producer: User!
-
-  """상품번호"""
-  productId: Int!
 
   """연관 단품 리스트입니다. connection 타입을 따르지만 파라미터에 따라 스펙이 적용되어있지 않습니다."""
   productOptions(
@@ -3478,8 +3822,14 @@ type QuotableProduct implements Node & Product {
   """판매 자료 문서 url"""
   salesDocument: String
 
+  """판매 유형입니다.  축산 RFQ와 수산매칭이 있습니다."""
+  salesType: ProductSalesType!
+
   """운영상태"""
   status: ProductStatus!
+
+  """현재 로그인한 유저의 상품 찜 여부"""
+  viewerHasLiked: Boolean
 }
 
 type QuotableProductConnection implements Connection {
@@ -3530,20 +3880,26 @@ type QuotedProduct implements Node & Product {
   """ISO 8601 공지사항 시작 시점"""
   noticeStartAt: DateTime
 
+  """상품번호"""
+  number: Int!
+
   """원산지"""
   origin: String
 
   """생산자"""
   producer: User!
 
-  """상품번호"""
-  productId: Int!
-
   """판매 자료 문서 url"""
   salesDocument: String
 
+  """판매 유형입니다.  축산 RFQ와 수산매칭이 있습니다."""
+  salesType: ProductSalesType!
+
   """운영상태"""
   status: ProductStatus!
+
+  """현재 로그인한 유저의 상품 찜 여부"""
+  viewerHasLiked: Boolean
 }
 
 type QuotedProductConnection implements Connection {
@@ -4181,6 +4537,9 @@ type RfqRequestItemEdge {
 
 """[RFQ] 견적 요청 상품 <고기>"""
 type RfqRequestItemMeat implements Node & RfqRequestItem {
+  """브랜드 목록"""
+  brands(after: ID, before: ID, first: Int, last: Int): MeatBrandConnection!
+
   """생성일시"""
   createdAt: DateTime!
 
@@ -4245,13 +4604,13 @@ type RfqRequestItemMeatConnection implements Connection {
 
 """RFQ 요청 아이템 생성 Input"""
 input RfqRequestItemMeatCreateInput {
+  meatBrandIds: [ID!]!
   meatGradeId: ID
   meatPartId: ID
   meatSpeciesId: ID
   meatUsageIds: [ID!]!
   otherRequirements: String
   packageMethod: String
-  preferredBrand: String
   prevTradePricePerKg: String
   prevTradeSellerName: String
   rfqRequestId: ID!
@@ -4287,13 +4646,13 @@ enum RfqRequestItemMeatOrderBy {
 
 """RFQ 요청 아이템 변경 Input"""
 input RfqRequestItemMeatUpdateInput {
+  meatBrandIds: [ID!]!
   meatGradeId: ID
   meatPartId: ID
   meatSpeciesId: ID
   meatUsageIds: [ID!]!
   otherRequirements: String
   packageMethod: String
-  preferredBrand: String
   prevTradePricePerKg: String
   prevTradeSellerName: String
 
@@ -4325,6 +4684,9 @@ enum RfqRequestItemStatus {
   """견적요청 발송 후, 취소"""
   REQUEST_CANCELED
 
+  """검토 필요"""
+  REVIEW_REQUIRED
+
   """견적 수신 후, 발주 대기중"""
   WAITING_FOR_ORDER
 
@@ -4350,6 +4712,9 @@ enum RfqRequestStatus {
 
   """견적요청 처리 완료"""
   REQUEST_PROCESSED
+
+  """검토 필요"""
+  REVIEW_REQUIRED
 
   """견적요청 발송 후, 견적 대기중"""
   WAITING_FOR_QUOTATION
@@ -4520,7 +4885,7 @@ type RfqSellerItem implements Node {
   isSubscribed: Boolean!
 
   """육류 원산지"""
-  madeIn: MeatMadeIn!
+  madeIn: CountryCode!
 
   """육류 축종"""
   meatSpecies: MeatSpecies!
@@ -4545,6 +4910,47 @@ type SearchInterestedItemCategoryListing {
   itemCategories: [ItemCategory!]
 }
 
+type Section {
+  displayCategories(
+    onlyDisplayable: Boolean
+    onlyHasBuyableProducts: Boolean
+    orderBy: [SectionDisplayCategoryOrderBy!]
+
+    """카테고리의 부모 ID"""
+    parentId: ID
+    types: [DisplayCategoryType!]
+  ): [DisplayCategory!]!
+
+  """이 전시 카테고리는 어드민이 노출 순서를 직접 지정해 둘 수 있음. 사용 예) 홈 화면 - 전체 카테고리, 기획전 카테고리"""
+  featuredDisplayCategories(
+    onlyDisplayable: Boolean
+    onlyHasBuyableProducts: Boolean
+    orderBy: [SectionFeaturedDisplayCategoryOrderBy!]
+
+    """전시 카테고리 타입"""
+    type: DisplayCategoryType!
+  ): [DisplayCategory!]!
+  name: String!
+  type: SectionType!
+}
+
+"""섹션에 대한 전시카테고리 정렬 옵션"""
+input SectionDisplayCategoryOrderBy {
+  buyableProductsCount: OrderDirection
+  id: OrderDirection
+}
+
+"""섹션에 어드민이 노출 순서를 직접 지정할 수 있는 전시카테고리 정렬 옵션"""
+input SectionFeaturedDisplayCategoryOrderBy {
+  displayOrder: OrderDirection
+}
+
+enum SectionType {
+  DELIVERY
+  MAIN
+  MATCHING
+}
+
 enum SelfReportedBusinessSector {
   """정육점"""
   BUCHER_SHOP
@@ -4552,13 +4958,13 @@ enum SelfReportedBusinessSector {
   """카페"""
   CAFE
 
-  """위탁쇼핑몰"""
+  """위탁 쇼핑몰"""
   CONSIGNMENT_SALES
 
   """기타"""
   ETC
 
-  """식품제조"""
+  """식품 제조"""
   FOOD_PROCESSING
 
   """프랜차이즈 본사"""
@@ -4570,22 +4976,22 @@ enum SelfReportedBusinessSector {
   """마트"""
   MART
 
-  """전처리공장"""
+  """전처리 공장"""
   PREPROCESSING_FACTORY
 
-  """사입쇼핑몰"""
+  """사입 쇼핑몰"""
   PURCHASE_AND_SALES
 
   """식당"""
   RESTAURANT
 
-  """급식유통"""
+  """급식 유통"""
   SUBSISTENCES
 
   """슈퍼마켓"""
   SUPERMARKET
 
-  """도매유통"""
+  """도매유통사"""
   WHOLESALE
 }
 
@@ -4626,6 +5032,7 @@ union SetInterestedItemCategoriesPayload = Error | SetInterestedItemCategoriesRe
 
 type SetInterestedItemCategoriesResponse {
   itemCategoryIds: [ID!]
+  viewer: User
 }
 
 input SetSelfReportedBusinessSectorsInput {
@@ -4636,6 +5043,7 @@ union SetSelfReportedBusinessSectorsPayload = Error | SetSelfReportedBusinessSec
 
 type SetSelfReportedBusinessSectorsResponse {
   businessSectors: [SelfReportedBusinessSectorListingItem!]
+  viewer: User
 }
 
 input SetSelfReportedSalesBinInput {
@@ -4646,6 +5054,7 @@ union SetSelfReportedSalesBinPayload = Error | SetSelfReportedSalesBinResponse
 
 type SetSelfReportedSalesBinResponse {
   bin: SelfReportedSalesBinListingItem
+  viewer: User
 }
 
 enum SizeUnit {
@@ -4725,8 +5134,41 @@ type SystemMaintenanceEdge implements Edge {
 
 """임시 웹주문서"""
 type TempWosOrder {
-  """생성된 임시 주문서 ID"""
+  """임시 주문서 상세 정보"""
+  data: TempWosOrderData
+
+  """임시 주문서 ID"""
   tempOrderId: Int!
+
+  """고객 ID"""
+  userId: Int!
+}
+
+"""임시 웹주문서 상세정보"""
+type TempWosOrderData {
+  """주문 생성자 아이디(관리자일 수 있음)"""
+  createUserId: Int!
+
+  """임시 주문서 생성일시"""
+  createdAt: String!
+
+  """orders 테이블 식별자"""
+  orderNo: String!
+
+  """주문자 아이디"""
+  orderUserId: Int!
+
+  """주문 목적"""
+  paymentPurpose: PaymentPurpose!
+
+  """주문 단품정보 리스트"""
+  productOptions: [WosProductOption]!
+
+  """총 배송비"""
+  totalDeliveryCost: Int!
+
+  """총 주문(상품) 금액"""
+  totalOrderPrice: Int!
 }
 
 """임시 웹주문서 생성 요청시 필요한 단품(상품옵션) 정보"""
@@ -4739,6 +5181,15 @@ input TempWosOrderProductOptionsInput {
 
   """단품(상품옵션) 번호"""
   productOptionId: Int!
+}
+
+"""임시 웹주문서(단품구매용) 생성 요청"""
+input TempWosOrderProductOptionsList {
+  """상품 옵션 아이디"""
+  productOptionId: Int!
+
+  """구매 수량"""
+  quantity: Int!
 }
 
 """사용자 약관"""
@@ -4843,13 +5294,16 @@ type TradematchDemand implements Node {
   priceGroup: String
 
   """희망가/거래"""
-  pricePerTrade: Int
+  pricePerTrade: BigInt
 
   """상품 품종 코드"""
   productCategoryCode: String!
 
   """상품 ID"""
   productId: ID
+
+  """상품 원산지"""
+  productOrigin: String!
 
   """상품 가공"""
   productProcess: String!
@@ -4859,6 +5313,12 @@ type TradematchDemand implements Node {
 
   """상품 크기"""
   productSize: String!
+
+  """상품 보관 방식"""
+  productStorageMethod: String!
+
+  """상품 종류"""
+  productType: TradematchProductType!
 
   """양/포장"""
   quantityPerPackage: Float
@@ -4918,6 +5378,9 @@ input TradematchDemandCreateInput {
   """상품 ID"""
   productId: ID
 
+  """상품 원산지"""
+  productOrigin: String
+
   """상품 가공"""
   productProcess: String
 
@@ -4926,6 +5389,12 @@ input TradematchDemandCreateInput {
 
   """상품 크기"""
   productSize: String
+
+  """상품 보관 방식"""
+  productStorageMethod: String
+
+  """상품 종류"""
+  productType: TradematchProductType
 
   """양/포장"""
   quantityPerPackage: Float
@@ -4998,6 +5467,9 @@ input TradematchDemandPartialUpdateInput {
   """상품 ID"""
   productId: ID
 
+  """상품 원산지"""
+  productOrigin: String
+
   """상품 가공"""
   productProcess: String
 
@@ -5006,6 +5478,12 @@ input TradematchDemandPartialUpdateInput {
 
   """상품 크기"""
   productSize: String
+
+  """상품 보관 방식"""
+  productStorageMethod: String
+
+  """상품 종류"""
+  productType: TradematchProductType
 
   """양/포장"""
   quantityPerPackage: Float
@@ -5034,6 +5512,9 @@ enum TradematchDemandStatus {
 
 """[거래매칭] 포장량 단위"""
 enum TradematchPackageQuantityUnit {
+  """ea"""
+  EA
+
   """g"""
   G
 
@@ -5048,6 +5529,79 @@ enum TradematchPackageQuantityUnit {
 
   """ml"""
   ML
+}
+
+"""[거래매칭] 상품 종류"""
+enum TradematchProductType {
+  """농산물"""
+  AGRICULTURAL
+
+  """수산물/건수산"""
+  AQUATIC
+
+  """축산물"""
+  LIVESTOCK
+
+  """기타"""
+  OTHER
+}
+
+input UnlikeProductInput {
+  """상품 node ID"""
+  id: ID!
+}
+
+union UnlikeProductPayload = Error | UnlikeProductResult
+
+type UnlikeProductResult {
+  """찜 취소 상품 정보"""
+  product: Product!
+}
+
+input UnlikeProductsInput {
+  """삭제할 상품 ID 리스트"""
+  productIds: [ID!]!
+}
+
+union UnlikeProductsPayload = Error | UnlikeProductsResult
+
+type UnlikeProductsResult {
+  """삭제 후 남은 찜한 상품 갯수"""
+  remainingCount: Int!
+
+  """찜한 상품 목록에서 삭제된 상품 ID 리스트"""
+  unlikedProductIds: [ID!]!
+}
+
+input UnmarkProductsAsViewedInput {
+  """조회한 기록을 지울 상품 노드 ID 리스트"""
+  productIds: [ID!]!
+}
+
+union UnmarkProductsAsViewedPayload = Error | UnmarkProductsAsViewedResult
+
+type UnmarkProductsAsViewedResult {
+  """mutation 후 유저의 남은 최근 조회 상품 수"""
+  remainingCount: Int!
+
+  """조회한 기록을 지울 상품 노드 ID 리스트"""
+  unmarkedProductIds: [ID!]!
+}
+
+"""장바구니 아이템의 개수 수정 Input"""
+input UpdateCartItemQuantityInput {
+  """장바구니 아이템 아이디"""
+  cartId: Int!
+
+  """상품 수량"""
+  quantity: Int!
+}
+
+union UpdateCartItemQuantityPayload = Error | UpdateCartItemQuantitySuccess
+
+type UpdateCartItemQuantitySuccess {
+  """변경된 장바구니 아이템 아이디"""
+  cartId: Int!
 }
 
 """
@@ -5107,9 +5661,12 @@ type UpdateMatchingProductResult {
 
 """
 일반/일반+견적 상품을 업데이트합니다. 
-    - 상품 인터페이스 기준 추가 전달 필드: producerId, type, isCourierAvailable, isVat, price
+    - 상품 인터페이스 기준 추가 전달 필드: producerId, type, isCourierAvailable, isVat, price, notationInformationType
 """
 input UpdateProductInput {
+  """표준 카테고리 node ID"""
+  categoryId: ID!
+
   """상품 설명 editor HTML"""
   description: String!
 
@@ -5131,6 +5688,9 @@ input UpdateProductInput {
   """생산자용 상품명"""
   name: String!
 
+  """필수 고지정보 유형, 농축수산물 | 가공식품"""
+  notationInformationType: ProductNotationInformationType!
+
   """공지사항"""
   notice: String
 
@@ -5148,6 +5708,9 @@ input UpdateProductInput {
 
   """판매 자료 문서 url"""
   salesDocument: String
+
+  """판매 유형입니다.  축산 RFQ와 수산매칭이 있습니다."""
+  salesType: ProductSalesType
 
   """운영 상태"""
   status: ProductStatus!
@@ -5176,6 +5739,9 @@ input UpdateProductOptionInput {
   """상품 원가 및 비용 관련 input"""
   productOptionCost: UpdateProductOptionCostInput!
 
+  """합포장 단위수량"""
+  shippingUnitQuantity: Int!
+
   """운영상태"""
   status: ProductOptionStatus!
 }
@@ -5192,6 +5758,9 @@ type UpdateProductResult {
     - 상품 인터페이스 기준 추가 전달 필드: producerId, grade
 """
 input UpdateQuotedProductInput {
+  """표준 카테고리 node ID"""
+  categoryId: ID!
+
   """상품 설명 editor HTML"""
   description: String!
 
@@ -5228,6 +5797,9 @@ input UpdateQuotedProductInput {
   """판매 자료 문서 url"""
   salesDocument: String
 
+  """판매 유형입니다.  축산 RFQ와 수산매칭이 있습니다."""
+  salesType: ProductSalesType!
+
   """운영 상태"""
   status: ProductStatus!
 }
@@ -5237,6 +5809,50 @@ union UpdateQuotedProductPayload = Error | UpdateQuotedProductResult
 type UpdateQuotedProductResult {
   """수정된 견적 상품 정보"""
   product: Product!
+}
+
+"""결제 전, 고객이 입력한 주문 정보(배송지 등)를 저장합니다."""
+input UpdateTempWosOrderInput {
+  """구매자 ID"""
+  orderUserId: Int!
+
+  """결제 목적"""
+  paymentPurpose: String!
+
+  """상품 정보 리스트"""
+  productOptions: [WosProductOptionInput!]!
+
+  """임시 주문서 ID"""
+  tempOrderId: Int!
+
+  """총 배송비"""
+  totalDeliveryCost: Int!
+
+  """총 주문 금액"""
+  totalOrderPrice: Int!
+}
+
+union UpdateTempWosOrderPayload = CreateWosOrderResult | Error | WosError | WosOrder
+
+input UpdateUserInput {
+  address: String
+  businessRegistrationNumber: String
+  email: String
+  manager: String
+
+  """이름 또는 회사명"""
+  name: String
+  password: String
+  phone: String
+  terms: [UpdateUserTermInputItem!]
+  zipCode: String
+}
+
+union UpdateUserPayload = Error | User
+
+input UpdateUserTermInputItem {
+  agreement: String!
+  isAgreedByViewer: Boolean!
 }
 
 input UpsertProductOptionsInput {
@@ -5255,11 +5871,28 @@ type UpsertProductOptionsResult {
 scalar Url
 
 type User implements Node {
+  address: String
+
   """대표명"""
   bossName: String
+  businessRegistrationNumber: String
+
+  """유저의 미결제(나중결제) 금액; 나중결제 유저가 아닌 경우 null"""
+  debtAmount: Int
   id: ID!
   interestedItemCategories: [ItemCategory!]
+  manager: String
   name: String!
+
+  """유저의 상태별 주문수"""
+  orderProductCountByStatus(
+    """yyyyMMdd KST"""
+    from: String!
+
+    """yyyyMMdd KST"""
+    to: String!
+  ): [OrderProductCountByStatusItem!]!
+  phone: String!
   producerCode: String
   products(input: UserProductsInput): ProductConnection!
 
@@ -5267,8 +5900,17 @@ type User implements Node {
   rfqSeller: RfqSeller
   selfReportedBusinessSectors: [SelfReportedBusinessSectorListingItem!]
   selfReportedSalesBin: SelfReportedSalesBinListingItem
+  sinsunCashDeposit: Int!
+
+  """고객의 이용약관"""
+  terms(after: ID, before: ID, first: Int, last: Int): TermConnection!
   uid: String!
   userRole: UserRole!
+
+  """유저 정보 별 인증 여부"""
+  verifications: UserVerifications
+  viewedProducts(after: String, before: String, first: Int, last: Int, orderBy: [ViewedProductsOrderBy!]): ViewedProductConnection!
+  zipCode: String
 }
 
 """신청자 사업 정보"""
@@ -5519,18 +6161,42 @@ enum UserRole {
   PRODUCER
 }
 
+type UserVerifications {
+  """사업자등록번호 본인 인증 여부"""
+  businessRegistrationNumberVerificationStatus: BusinessRegistrationNumberVerificationStatus!
+
+  """이메일 인증 여부"""
+  emailVerificationStatus: EmailVerificationStatus!
+
+  """사업자등록번호 진위 여부"""
+  isValidBusinessRegistrationNumberByViewer: Boolean!
+
+  """핸드폰 번호 인증 여부"""
+  phoneVerificationStatus: PhoneVerificationStatus!
+}
+
+type ViewedProductConnection {
+  edges: [ViewedProductEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type ViewedProductEdge {
+  cursor: String!
+  node: Product!
+  viewedAt: DateTime!
+}
+
+input ViewedProductsOrderBy {
+  viewedAt: OrderDirection
+}
+
 """가상계좌 정보"""
 type VirtualAccount {
   accountNo: String!
   bank: Bank!
   createdAt: DateTime!
   expiredAt: DateTime!
-}
-
-enum WeightUnit {
-  G
-  KG
-  T
 }
 
 """도매법인"""
@@ -5759,6 +6425,38 @@ enum WosOrderStatus {
   WAITING
 }
 
+"""임시 주문서에 포함되는 Product Option Detail 정보"""
+type WosProductOption {
+  """장바구니에서 가장 최근 변경된 날짜(현재 정렬에서 사용)"""
+  cartUpdatedAt: String
+  createdAt: String
+
+  """단품 등급"""
+  grade: String
+
+  """product option detail 아이디"""
+  id: Int!
+
+  """단품 이름"""
+  optionName: String
+
+  """가격"""
+  price: Int!
+
+  """product 아이디"""
+  productId: Int
+
+  """주문 수량"""
+  quantity: Int!
+
+  """단품 상태"""
+  status: String!
+
+  """단품 고유 번호"""
+  stockSku: String!
+  updatedAt: String
+}
+
 """주문서 생성시 필요한 상품 정보입니다. order_product 테이블 참조하세요"""
 input WosProductOptionInput {
   """배송비"""
@@ -5773,9 +6471,6 @@ input WosProductOptionInput {
   """배송 방법"""
   deliveryType: WosDeliveryType!
 
-  """등급"""
-  grade: String
-
   """상품의 과세 유무"""
   isTaxFree: Boolean!
 
@@ -5785,20 +6480,8 @@ input WosProductOptionInput {
   """구매자 번호"""
   ordererPhone: String!
 
-  """바이어(구매자)에게 보이는 판매가"""
-  price: Int!
-
   """상품 번호"""
   productId: Int!
-
-  """상품 이름"""
-  productName: String!
-
-  """단품 이름"""
-  productOptionName: String!
-
-  """구매 수량"""
-  quantity: Int!
 
   """수령자 주소"""
   receiverAddress: String

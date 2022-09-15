@@ -18,64 +18,12 @@ external noticeIcon: string = "default"
 @val @scope("window")
 external jsfPay: Dom.element => unit = "jsf__pay"
 
-@val @scope("window")
-external jsAlert: string => unit = "alert"
-
 @val @scope(("window", "location"))
 external origin: string = "origin"
 
 @spice
-type paymentMethod = [
-  | @spice.as("card") #CREDIT_CARD
-  | @spice.as("virtual") #VIRTUAL_ACCOUNT
-  | @spice.as("transfer") #TRANSFER
-]
-
-type cashReceipt = {"type": string}
-
-type tossRequest = {
-  amount: int,
-  orderId: string,
-  orderName: string,
-  customerName: string,
-  successUrl: string,
-  failUrl: string,
-  validHours: option<int>,
-  cashReceipt: option<cashReceipt>,
-}
-
-@val @scope(("window", "tossPayments"))
-external requestTossPayment: (. string, tossRequest) => unit = "requestPayment"
-
-let paymentMethodToKCPValue = c =>
-  switch c {
-  | #CREDIT_CARD => "100000000000"
-  | #VIRTUAL_ACCOUNT => "001000000000"
-  | #TRANSFER => "001000000000"
-  }
-
-let paymentMethodToTossValue = c =>
-  switch c {
-  | #CREDIT_CARD => `카드`
-  | #VIRTUAL_ACCOUNT => `가상계좌`
-  | #TRANSFER => `계좌이체`
-  }
-
-let tossPaymentsValidHours = c =>
-  switch c {
-  | #VIRTUAL_ACCOUNT => Some(24)
-  | _ => None
-  }
-
-let tossPaymentsCashReceipt = c =>
-  switch c {
-  | #VIRTUAL_ACCOUNT => Some({"type": `미발행`})
-  | _ => None
-  }
-
-@spice
 type form = {
-  @spice.key("payment-method") paymentMethod: paymentMethod,
+  @spice.key("payment-method") paymentMethod: Payments.paymentMethod,
   amount: int,
 }
 
@@ -141,6 +89,8 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
 
   let (requireTerms, setRequireTerms) = React.Uncurried.useState(_ => false)
 
+  let availableButton = ToggleOrderAndPayment.use()
+
   let close = _ => {
     open Webapi
     let buttonClose = Dom.document->Dom.Document.getElementById("btn-close")
@@ -190,79 +140,91 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
   }
 
   let handleConfirm = (data, _) => {
-    switch data->form_decode {
-    | Ok(data') =>
-      {
-        open Webapi.Dom
+    switch availableButton {
+    | true =>
+      switch data->form_decode {
+      | Ok(data') =>
+        {
+          open Webapi.Dom
 
-        setValueToHtmlInputElement("good_mny", data'.amount->Int.toString)
-        setValueToHtmlInputElement("pay_method", data'.paymentMethod->paymentMethodToKCPValue)
+          setValueToHtmlInputElement("good_mny", data'.amount->Int.toString)
+          setValueToHtmlInputElement("pay_method", data'.paymentMethod->Payments.methodToKCPValue)
 
-        mutate(
-          ~variables={
-            paymentMethod: data'.paymentMethod,
-            amount: data'.amount,
-            device: detectIsMobile() ? Some(#MOBILE) : Some(#PC),
-            purpose: #SINSUN_CASH,
-          },
-          ~onCompleted={
-            ({requestPayment}, _) => {
-              switch requestPayment {
-              | Some(result) =>
-                // 2번 플로우의 우리 API가 응답해준 주문 정보를 폼에 채운다.
-                switch result {
-                | #RequestPaymentKCPResult(requestPaymnetKCPResult) => {
-                    // KCP 결제창이 뜨기 전에, 충전하기 다이얼로그를 닫는다.
-                    close()
+          mutate(
+            ~variables={
+              paymentMethod: data'.paymentMethod,
+              amount: data'.amount,
+              device: detectIsMobile() ? Some(#MOBILE) : Some(#PC),
+              purpose: #SINSUN_CASH,
+            },
+            ~onCompleted={
+              ({requestPayment}, _) => {
+                switch requestPayment {
+                | Some(result) =>
+                  // 2번 플로우의 우리 API가 응답해준 주문 정보를 폼에 채운다.
+                  switch result {
+                  | #RequestPaymentKCPResult(requestPaymnetKCPResult) => {
+                      // KCP 결제창이 뜨기 전에, 충전하기 다이얼로그를 닫는다.
+                      close()
 
-                    setValueToHtmlInputElement("site_cd", requestPaymnetKCPResult.siteCd)
-                    setValueToHtmlInputElement("site_name", requestPaymnetKCPResult.siteName)
-                    setValueToHtmlInputElement("site_key", requestPaymnetKCPResult.siteKey)
-                    setValueToHtmlInputElement("ordr_idxx", requestPaymnetKCPResult.ordrIdxx)
-                    setValueToHtmlInputElement("currency", requestPaymnetKCPResult.currency)
-                    setValueToHtmlInputElement("shop_user_id", requestPaymnetKCPResult.shopUserId)
-                    setValueToHtmlInputElement("buyr_name", requestPaymnetKCPResult.buyrName)
+                      setValueToHtmlInputElement("site_cd", requestPaymnetKCPResult.siteCd)
+                      setValueToHtmlInputElement("site_name", requestPaymnetKCPResult.siteName)
+                      setValueToHtmlInputElement("site_key", requestPaymnetKCPResult.siteKey)
+                      setValueToHtmlInputElement("ordr_idxx", requestPaymnetKCPResult.ordrIdxx)
+                      setValueToHtmlInputElement("currency", requestPaymnetKCPResult.currency)
+                      setValueToHtmlInputElement("shop_user_id", requestPaymnetKCPResult.shopUserId)
+                      setValueToHtmlInputElement("buyr_name", requestPaymnetKCPResult.buyrName)
 
-                    let orderInfo = document->Document.getElementById("order_info")
+                      let orderInfo = document->Document.getElementById("order_info")
 
-                    switch orderInfo {
-                    | Some(orderInfo') => jsfPay(orderInfo')
-                    | None =>
-                      handleError(~message=`폼 데이터를 찾을 수가 없습니다.`, ())
+                      switch orderInfo {
+                      | Some(orderInfo') => jsfPay(orderInfo')
+                      | None =>
+                        handleError(~message=`폼 데이터를 찾을 수가 없습니다.`, ())
+                      }
                     }
+
+                  | #RequestPaymentTossPaymentsResult(requestPaymentTossPaymentsResult) =>
+                    Payments.requestTossPayment(.
+                      data'.paymentMethod->Payments.methodToTossValue,
+                      {
+                        amount: requestPaymentTossPaymentsResult.amount,
+                        orderId: requestPaymentTossPaymentsResult.orderId,
+                        orderName: `신선하이 ${requestPaymentTossPaymentsResult.amount->Int.toString}`,
+                        taxFreeAmount: None,
+                        customerName: requestPaymentTossPaymentsResult.customerName,
+                        validHours: data'.paymentMethod->Payments.tossPaymentsValidHours,
+                        successUrl: `${origin}/buyer/toss-payments/success?payment-id=${requestPaymentTossPaymentsResult.paymentId->Int.toString}`,
+                        failUrl: `${origin}/buyer/toss-payments/fail?from=/transactions`,
+                        cashReceipt: data'.paymentMethod->Payments.tossPaymentsCashReceipt,
+                        appScheme: Global.Window.ReactNativeWebView.tOpt->Option.map(_ =>
+                          Js.Global.encodeURIComponent(
+                            `sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?payment-id=${requestPaymentTossPaymentsResult.paymentId->Int.toString}`,
+                          )
+                        ),
+                      },
+                    )
+                  | #Error(_)
+                  | _ =>
+                    handleError(~message=`주문 생성 에러`, ())
                   }
-                | #RequestPaymentTossPaymentsResult(requestPaymentTossPaymentsResult) =>
-                  requestTossPayment(.
-                    data'.paymentMethod->paymentMethodToTossValue,
-                    {
-                      amount: requestPaymentTossPaymentsResult.amount,
-                      orderId: requestPaymentTossPaymentsResult.orderId,
-                      orderName: `신선하이 ${requestPaymentTossPaymentsResult.amount->Int.toString}`,
-                      customerName: requestPaymentTossPaymentsResult.customerName,
-                      validHours: data'.paymentMethod->tossPaymentsValidHours,
-                      successUrl: `${origin}/buyer/toss-payments/success?payment-id=${requestPaymentTossPaymentsResult.paymentId->Int.toString}`, // TODO
-                      failUrl: `${origin}/buyer/toss-payments/fail`,
-                      cashReceipt: data'.paymentMethod->tossPaymentsCashReceipt,
-                    },
-                  )
-                | #Error(_)
-                | _ =>
-                  handleError(~message=`주문 생성 에러`, ())
+                | _ => handleError(~message=`주문 생성 요청 실패`, ())
                 }
-              | _ => handleError(~message=`주문 생성 요청 실패`, ())
               }
-            }
-          },
-          ~onError={
-            err => handleError(~message=err.message, ())
-          },
-          (),
-        )
-      }->ignore
-    | Error(msg) => {
-        Js.Console.log(msg)
-        handleError(~message=msg.message, ())
+            },
+            ~onError={
+              err => handleError(~message=err.message, ())
+            },
+            (),
+          )
+        }->ignore
+      | Error(msg) => {
+          Js.Console.log(msg)
+          handleError(~message=msg.message, ())
+        }
       }
+    | false =>
+      Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
     }
   }
 
@@ -302,7 +264,7 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
         <div className=%twc("flex justify-between items-center")>
           <h3 className=%twc("font-bold text-xl")> {j`신선캐시 충전`->React.string} </h3>
           <button onClick={_ => close()} className=%twc("cursor-pointer border-none")>
-            <IconClose height="1.5rem" width="1.5rem" fill="#262626" />
+            <IconClose height="24" width="24" fill="#262626" />
           </button>
         </div>
         <div className=%twc("flex items-center gap-4 mt-10 font-bold")>
@@ -401,9 +363,7 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
                 </span>
               </button>
               <a href={"/terms"} target="_blank">
-                <IconArrow
-                  width="20" height="20" stroke="#B2B2B2" className=%twc("cursor-pointer")
-                />
+                <IconArrow width="20" height="20" fill="#B2B2B2" className=%twc("cursor-pointer") />
               </a>
             </div>
           | false => React.null

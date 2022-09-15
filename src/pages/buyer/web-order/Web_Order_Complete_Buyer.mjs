@@ -3,20 +3,28 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
+import * as Global from "../../../components/Global.mjs";
 import * as DataGtm from "../../../utils/DataGtm.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as NotFound from "../../NotFound.mjs";
+import * as RelayEnv from "../../../constants/RelayEnv.mjs";
 import * as Garter_Fn from "@greenlabs/garter/src/Garter_Fn.mjs";
 import Head from "next/head";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ChannelTalk from "../../../bindings/ChannelTalk.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
+import * as DeviceDetect from "../../../bindings/DeviceDetect.mjs";
+import * as Footer_Buyer from "../../../components/Footer_Buyer.mjs";
+import * as Header_Buyer from "../../../components/Header_Buyer.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
-import * as Hooks from "react-relay/hooks";
+import * as GnbBannerList_Buyer from "../../../components/GnbBannerList_Buyer.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
 import * as WebOrderCompleteBuyerQuery_graphql from "../../../__generated__/WebOrderCompleteBuyerQuery_graphql.mjs";
@@ -26,7 +34,7 @@ import * as Web_Order_Complete_Product_Info_Buyer from "../../../components/Web_
 import * as Web_Order_Complete_Delivery_Info_Buyer from "../../../components/Web_Order_Complete_Delivery_Info_Buyer.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(WebOrderCompleteBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(WebOrderCompleteBuyerQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(WebOrderCompleteBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(WebOrderCompleteBuyerQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -35,7 +43,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(WebOrderCompleteBuyerQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(WebOrderCompleteBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -53,38 +61,37 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, WebOrderCompleteBuyerQuery_graphql.node, WebOrderCompleteBuyerQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, WebOrderCompleteBuyerQuery_graphql.node, WebOrderCompleteBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: WebOrderCompleteBuyerQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: WebOrderCompleteBuyerQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, WebOrderCompleteBuyerQuery_graphql.node, WebOrderCompleteBuyerQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, WebOrderCompleteBuyerQuery_graphql.node, WebOrderCompleteBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(WebOrderCompleteBuyerQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(WebOrderCompleteBuyerQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(WebOrderCompleteBuyerQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(WebOrderCompleteBuyerQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(WebOrderCompleteBuyerQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -93,10 +100,20 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
-var Query_makeVariables = WebOrderCompleteBuyerQuery_graphql.Utils.makeVariables;
+var Query_paymentMethod_decode = WebOrderCompleteBuyerQuery_graphql.Utils.paymentMethod_decode;
+
+var Query_paymentMethod_fromString = WebOrderCompleteBuyerQuery_graphql.Utils.paymentMethod_fromString;
+
+var Query_wosDeliveryType_decode = WebOrderCompleteBuyerQuery_graphql.Utils.wosDeliveryType_decode;
+
+var Query_wosDeliveryType_fromString = WebOrderCompleteBuyerQuery_graphql.Utils.wosDeliveryType_fromString;
 
 var Query = {
-  makeVariables: Query_makeVariables,
+  paymentMethod_decode: Query_paymentMethod_decode,
+  paymentMethod_fromString: Query_paymentMethod_fromString,
+  wosDeliveryType_decode: Query_wosDeliveryType_decode,
+  wosDeliveryType_fromString: Query_wosDeliveryType_fromString,
+  Operation: undefined,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -131,6 +148,10 @@ function item_encode(v) {
               [
                 "quantity",
                 Spice.intToJson(v.quantity)
+              ],
+              [
+                "index",
+                Spice.intToJson(v.index)
               ]
             ]);
 }
@@ -156,75 +177,88 @@ function item_decode(v) {
           if (price.TAG === /* Ok */0) {
             var quantity = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "quantity"), null));
             if (quantity.TAG === /* Ok */0) {
+              var index = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "index"), null));
+              if (index.TAG === /* Ok */0) {
+                return {
+                        TAG: /* Ok */0,
+                        _0: {
+                          itemId: itemId._0,
+                          itemName: itemName._0,
+                          currency: currency._0,
+                          itemVariant: itemVariant._0,
+                          price: price._0,
+                          quantity: quantity._0,
+                          index: index._0
+                        }
+                      };
+              }
+              var e = index._0;
               return {
-                      TAG: /* Ok */0,
+                      TAG: /* Error */1,
                       _0: {
-                        itemId: itemId._0,
-                        itemName: itemName._0,
-                        currency: currency._0,
-                        itemVariant: itemVariant._0,
-                        price: price._0,
-                        quantity: quantity._0
+                        path: ".index" + e.path,
+                        message: e.message,
+                        value: e.value
                       }
                     };
             }
-            var e = quantity._0;
+            var e$1 = quantity._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".quantity" + e.path,
-                      message: e.message,
-                      value: e.value
+                      path: ".quantity" + e$1.path,
+                      message: e$1.message,
+                      value: e$1.value
                     }
                   };
           }
-          var e$1 = price._0;
+          var e$2 = price._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".price" + e$1.path,
-                    message: e$1.message,
-                    value: e$1.value
+                    path: ".price" + e$2.path,
+                    message: e$2.message,
+                    value: e$2.value
                   }
                 };
         }
-        var e$2 = itemVariant._0;
+        var e$3 = itemVariant._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".item_variant" + e$2.path,
-                  message: e$2.message,
-                  value: e$2.value
+                  path: ".item_variant" + e$3.path,
+                  message: e$3.message,
+                  value: e$3.value
                 }
               };
       }
-      var e$3 = currency._0;
+      var e$4 = currency._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".currency" + e$3.path,
-                message: e$3.message,
-                value: e$3.value
+                path: ".currency" + e$4.path,
+                message: e$4.message,
+                value: e$4.value
               }
             };
     }
-    var e$4 = itemName._0;
+    var e$5 = itemName._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".item_name" + e$4.path,
-              message: e$4.message,
-              value: e$4.value
+              path: ".item_name" + e$5.path,
+              message: e$5.message,
+              value: e$5.value
             }
           };
   }
-  var e$5 = itemId._0;
+  var e$6 = itemId._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".item_id" + e$5.path,
-            message: e$5.message,
-            value: e$5.value
+            path: ".item_id" + e$6.path,
+            message: e$6.message,
+            value: e$6.value
           }
         };
 }
@@ -240,8 +274,8 @@ function ecommerce_encode(v) {
                 Spice.stringToJson(v.currency)
               ],
               [
-                "purchase_revenue",
-                Spice.intToJson(v.purchaseRevenue)
+                "value",
+                Spice.intToJson(v.value)
               ],
               [
                 "shipping_value",
@@ -263,8 +297,8 @@ function ecommerce_decode(v) {
   if (transactionId.TAG === /* Ok */0) {
     var currency = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "currency"), null));
     if (currency.TAG === /* Ok */0) {
-      var purchaseRevenue = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "purchase_revenue"), null));
-      if (purchaseRevenue.TAG === /* Ok */0) {
+      var value = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "value"), null));
+      if (value.TAG === /* Ok */0) {
         var shippingValue = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "shipping_value"), null));
         if (shippingValue.TAG === /* Ok */0) {
           return {
@@ -272,7 +306,7 @@ function ecommerce_decode(v) {
                   _0: {
                     transactionId: transactionId._0,
                     currency: currency._0,
-                    purchaseRevenue: purchaseRevenue._0,
+                    value: value._0,
                     shippingValue: shippingValue._0
                   }
                 };
@@ -287,11 +321,11 @@ function ecommerce_decode(v) {
                 }
               };
       }
-      var e$1 = purchaseRevenue._0;
+      var e$1 = value._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".purchase_revenue" + e$1.path,
+                path: ".value" + e$1.path,
                 message: e$1.message,
                 value: e$1.value
               }
@@ -318,139 +352,318 @@ function ecommerce_decode(v) {
         };
 }
 
-function toEcommerce(w) {
-  return ecommerce_encode({
-              transactionId: w.orderNo,
-              currency: "KRW",
-              purchaseRevenue: w.totalOrderPrice,
-              shippingValue: Belt_Option.getWithDefault(w.totalDeliveryCost, 0)
-            });
-}
-
-function toItems(param) {
+function toItems(index, param) {
   return item_encode({
               itemId: String(param.productId),
               itemName: param.productName,
               currency: "KRW",
               itemVariant: param.stockSku,
               price: param.price,
-              quantity: param.quantity
+              quantity: param.quantity,
+              index: index
             });
 }
 
 function Web_Order_Complete_Buyer$Placeholder(Props) {
-  return React.createElement("main", {
-              className: "flex flex-col gap-5 xl:px-[16%] xl:py-20 bg-surface min-w-[375px]"
-            }, React.createElement("label", {
-                  className: "hidden xl:flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
-                }, "주문 완료"), React.createElement("div", {
-                  className: "flex flex-col xl:flex-row gap-4 xl:gap-5"
-                }, React.createElement("article", {
-                      className: "w-full xl:w-3/5 flex flex-col gap-5"
-                    }, React.createElement("section", {
-                          className: "flex justify-center bg-white rounded-sm p-7 xl:p-0 min-w-[375px]"
-                        }, React.createElement("span", {
-                              className: "w-full text-center text-base xl:text-xl p-6 font-bold text-text-L1 shadow-card-box xl:shadow-none"
-                            }, "주문이 완료되었습니다 📦")), React.createElement("section", {
-                          className: "flex flex-col p-7 gap-7 bg-white rounded-sm min-w-max"
-                        }, React.createElement(Web_Order_Complete_Product_Info_Buyer.Placeholder.make, {}), React.createElement("div", {
-                              className: "h-px bg-border-default-L2"
-                            }), React.createElement(Web_Order_Complete_Orderer_Info_Buyer.Placeholder.make, {}), React.createElement("div", {
-                              className: "h-px bg-border-default-L2"
-                            }), React.createElement(Web_Order_Complete_Delivery_Info_Buyer.Placeholder.make, {}), React.createElement("div", {
-                              className: "h-px bg-border-default-L2"
-                            }))), React.createElement("aside", {
-                      className: "xl:w-2/5 min-w-[375px]"
-                    }, React.createElement(Web_Order_Complete_Payment_Info_Buyer.Placeholder.make, {}))), React.createElement("nav", {
-                  className: "w-full xl:w-[59%] flex flex-col xl:flex-row gap-2 p-7 pb-16 xl:pb-7 bg-white min-w-[375px]"
-                }, React.createElement(Link, {
-                      href: "/buyer/orders",
-                      children: React.createElement("a", {
-                            className: "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
-                          }, "주문 상세내역 보기")
-                    }), React.createElement(Link, {
-                      href: "/buyer",
-                      children: React.createElement("a", {
-                            className: "flex w-full xl:w-1/2 h-13 bg-green-100 rounded-lg justify-center items-center font-bold text-lg cursor-pointer text-primary"
-                          }, "쇼핑 계속하기")
-                    })));
+  var deviceType = Props.deviceType;
+  var router = Router.useRouter();
+  var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement(Header_Buyer.PC_Old.make, {
+              key: router.asPath
+            });
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement(Header_Buyer.Mobile.make, {});
+        break;
+    
+  }
+  var tmp$1;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp$1 = null;
+        break;
+    case /* PC */1 :
+        tmp$1 = React.createElement(Footer_Buyer.PC.make, {});
+        break;
+    case /* Mobile */2 :
+        tmp$1 = React.createElement(Footer_Buyer.MO.make, {});
+        break;
+    
+  }
+  return React.createElement(React.Fragment, undefined, tmp, React.createElement("main", {
+                  className: "flex flex-col gap-5 xl:px-[16%] xl:py-20 bg-surface min-w-[375px]"
+                }, React.createElement("label", {
+                      className: "hidden xl:flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
+                    }, "주문 완료"), React.createElement("div", {
+                      className: "flex flex-col xl:flex-row gap-4 xl:gap-5"
+                    }, React.createElement("article", {
+                          className: "w-full xl:w-3/5 flex flex-col gap-5"
+                        }, React.createElement("section", {
+                              className: "flex justify-center bg-white rounded-sm p-7 xl:p-0 min-w-[375px]"
+                            }, React.createElement("span", {
+                                  className: "w-full text-center text-base xl:text-xl p-6 font-bold text-text-L1 shadow-card-box xl:shadow-none"
+                                }, "총 N건의 상품 주문이 완료되었습니다 📦")), React.createElement("section", {
+                              className: "flex flex-col p-7 gap-7 bg-white rounded-sm min-w-max"
+                            }, React.createElement(Web_Order_Complete_Product_Info_Buyer.Placeholder.make, {}), React.createElement("div", {
+                                  className: "h-px bg-border-default-L2"
+                                }), React.createElement(Web_Order_Complete_Orderer_Info_Buyer.Placeholder.make, {
+                                  deviceType: deviceType
+                                }), React.createElement("div", {
+                                  className: "h-px bg-border-default-L2"
+                                }), React.createElement(Web_Order_Complete_Delivery_Info_Buyer.Placeholder.make, {
+                                  deviceType: deviceType
+                                }), React.createElement("div", {
+                                  className: "h-px bg-border-default-L2"
+                                }))), React.createElement("aside", {
+                          className: "xl:w-2/5 min-w-[375px]"
+                        }, React.createElement(Web_Order_Complete_Payment_Info_Buyer.Placeholder.make, {
+                              deviceType: deviceType
+                            }))), React.createElement("nav", {
+                      className: "w-full xl:w-[59%] flex flex-col xl:flex-row gap-2 p-7 pb-16 xl:pb-7 bg-white min-w-[375px]"
+                    }, React.createElement(Link, {
+                          href: "/buyer/orders",
+                          children: React.createElement("a", {
+                                className: "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
+                              }, "주문 상세내역 보기")
+                        }), React.createElement(Link, {
+                          href: "/buyer",
+                          children: React.createElement("a", {
+                                className: "flex w-full xl:w-1/2 h-13 bg-green-100 rounded-lg justify-center items-center font-bold text-lg cursor-pointer text-primary"
+                              }, "쇼핑 계속하기")
+                        }))), tmp$1);
 }
 
 var Placeholder = {
   make: Web_Order_Complete_Buyer$Placeholder
 };
 
-function Web_Order_Complete_Buyer$Container(Props) {
-  var nodeId = Props.nodeId;
-  var queryData = use({
-        orderNo: nodeId
-      }, undefined, undefined, undefined, undefined);
-  React.useEffect((function () {
-          Belt_Option.forEach(queryData.wosOrder, (function (wosOrder) {
-                  return DataGtm.push({
-                              evnet: "purchase",
-                              ecommerce: [toEcommerce(wosOrder)],
-                              items: Belt_Array.map(Belt_Array.keepMap(wosOrder.orderProducts, Garter_Fn.identity), toItems)
-                            });
-                }));
-          
-        }), []);
+function Web_Order_Complete_Buyer$PC(Props) {
+  var query = Props.query;
+  var numberOfProductOptions = Props.numberOfProductOptions;
+  var deviceType = Props.deviceType;
   return React.createElement("main", {
-              className: "flex flex-col gap-5 xl:px-[16%] xl:py-20 bg-surface min-w-[375px]"
+              className: "flex flex-col gap-5 px-[16%] py-20 bg-surface min-w-[375px]"
             }, React.createElement("label", {
-                  className: "hidden xl:flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
+                  className: "flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
                 }, "주문 완료"), React.createElement("div", {
-                  className: "flex flex-col xl:flex-row gap-4 xl:gap-5"
+                  className: "flex flex-row gap-5"
                 }, React.createElement("article", {
-                      className: "w-full xl:w-3/5 flex flex-col gap-5"
+                      className: "w-3/5 flex flex-col gap-5 min-w-[550px]"
                     }, React.createElement("section", {
-                          className: "flex justify-center bg-white rounded-sm p-7 xl:p-0 min-w-[375px]"
+                          className: "flex justify-center bg-white rounded-sm p-0"
                         }, React.createElement("span", {
-                              className: "w-full text-center text-base xl:text-xl p-6 font-bold text-text-L1 shadow-card-box xl:shadow-none"
-                            }, "주문이 완료되었습니다 📦")), React.createElement("section", {
+                              className: "w-full text-center text-xl p-6 font-bold text-text-L1 shadow-none"
+                            }, "총 " + String(numberOfProductOptions) + "건의 상품 주문이 완료되었습니다 📦")), React.createElement("section", {
                           className: "flex flex-col p-7 gap-7 bg-white rounded-sm min-w-max"
                         }, React.createElement(Web_Order_Complete_Product_Info_Buyer.make, {
-                              query: queryData.fragmentRefs
+                              query: query,
+                              deviceType: deviceType
                             }), React.createElement("div", {
                               className: "h-px bg-border-default-L2"
-                            }), React.createElement(Web_Order_Complete_Orderer_Info_Buyer.make, {}), React.createElement("div", {
+                            }), React.createElement(Web_Order_Complete_Orderer_Info_Buyer.make, {
+                              deviceType: deviceType
+                            }), React.createElement("div", {
                               className: "h-px bg-border-default-L2"
                             }), React.createElement(Web_Order_Complete_Delivery_Info_Buyer.make, {
-                              query: queryData.fragmentRefs
+                              query: query,
+                              deviceType: deviceType
                             }))), React.createElement("aside", {
-                      className: "xl:w-2/5 min-w-[375px]"
+                      className: "w-2/5 min-w-[375px]"
                     }, React.createElement(Web_Order_Complete_Payment_Info_Buyer.make, {
-                          query: queryData.fragmentRefs
+                          query: query,
+                          deviceType: deviceType
                         }))), React.createElement("nav", {
-                  className: "w-full xl:w-[59%] flex flex-col xl:flex-row gap-2 p-7 pb-16 xl:pb-7 bg-white min-w-[375px]"
+                  className: "w-[59%] flex flex-row gap-2 p-7 bg-white min-w-[550px]"
                 }, React.createElement(Link, {
                       href: "/buyer/orders",
                       children: React.createElement("a", {
-                            className: "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
+                            className: "flex w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
                           }, "주문 상세내역 보기")
                     }), React.createElement(Link, {
                       href: "/buyer",
                       children: React.createElement("a", {
-                            className: "flex w-full xl:w-1/2 h-13 bg-green-100 rounded-lg justify-center items-center font-bold text-lg cursor-pointer text-primary"
+                            className: "flex w-1/2 h-13 bg-green-100 rounded-lg justify-center items-center font-bold text-lg cursor-pointer text-primary"
                           }, "쇼핑 계속하기")
                     })));
+}
+
+var PC = {
+  make: Web_Order_Complete_Buyer$PC
+};
+
+function Web_Order_Complete_Buyer$MO(Props) {
+  var query = Props.query;
+  var numberOfProductOptions = Props.numberOfProductOptions;
+  var deviceType = Props.deviceType;
+  return React.createElement("main", {
+              className: "flex flex-col gap-5 bg-surface min-w-[375px]"
+            }, React.createElement("div", {
+                  className: "flex flex-col gap-4"
+                }, React.createElement("article", {
+                      className: "w-full flex flex-col gap-5"
+                    }, React.createElement("section", {
+                          className: "flex justify-center bg-white rounded-sm p-7 min-w-[375px]"
+                        }, React.createElement("span", {
+                              className: "w-full text-center text-base p-6 font-bold text-text-L1 shadow-card-box"
+                            }, "총 " + String(numberOfProductOptions) + "건의 상품 주문이 완료되었습니다 📦")), React.createElement("section", {
+                          className: "flex flex-col p-7 gap-7 bg-white rounded-sm min-w-max"
+                        }, React.createElement(Web_Order_Complete_Product_Info_Buyer.make, {
+                              query: query,
+                              deviceType: deviceType
+                            }), React.createElement("div", {
+                              className: "h-px bg-border-default-L2"
+                            }), React.createElement(Web_Order_Complete_Orderer_Info_Buyer.make, {
+                              deviceType: deviceType
+                            }), React.createElement("div", {
+                              className: "h-px bg-border-default-L2"
+                            }), React.createElement(Web_Order_Complete_Delivery_Info_Buyer.make, {
+                              query: query,
+                              deviceType: deviceType
+                            }))), React.createElement("aside", {
+                      className: "min-w-[375px]"
+                    }, React.createElement(Web_Order_Complete_Payment_Info_Buyer.make, {
+                          query: query,
+                          deviceType: deviceType
+                        }))), React.createElement("nav", {
+                  className: "w-full flex flex-col gap-2 p-7 pb-16 bg-white min-w-[375px]"
+                }, React.createElement(Link, {
+                      href: "/buyer/orders",
+                      children: React.createElement("a", {
+                            className: "flex w-full h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
+                          }, "주문 상세내역 보기")
+                    }), React.createElement(Link, {
+                      href: "/buyer",
+                      children: React.createElement("a", {
+                            className: "flex w-full h-13 bg-green-100 rounded-lg justify-center items-center font-bold text-lg cursor-pointer text-primary"
+                          }, "쇼핑 계속하기")
+                    })));
+}
+
+var MO = {
+  make: Web_Order_Complete_Buyer$MO
+};
+
+function Web_Order_Complete_Buyer$Container(Props) {
+  var nodeId = Props.nodeId;
+  var deviceType = Props.deviceType;
+  var router = Router.useRouter();
+  var match = use({
+        orderNo: nodeId
+      }, undefined, undefined, undefined, undefined);
+  var fragmentRefs = match.fragmentRefs;
+  var wosOrder = match.wosOrder;
+  React.useEffect((function () {
+          Belt_Option.forEach(wosOrder, (function (wosOrder$p) {
+                  DataGtm.push({
+                        ecommerce: null
+                      });
+                  var match = Belt_Array.get(wosOrder$p.orderProducts, 0);
+                  var tmp;
+                  if (match !== undefined) {
+                    var match$1 = Caml_option.valFromOption(match);
+                    tmp = match$1 !== undefined ? Web_Order_Complete_Delivery_Info_Buyer.deliveryTypetoString(match$1.deliveryType) : "";
+                  } else {
+                    tmp = "";
+                  }
+                  var match$2 = wosOrder$p.paymentMethod;
+                  DataGtm.push(DataGtm.mergeUserIdUnsafe({
+                            event: "purchase",
+                            ecommerce: {
+                              transaction_id: wosOrder$p.orderNo,
+                              currency: "KRW",
+                              value: wosOrder$p.totalOrderPrice,
+                              shipping_value: Belt_Option.getWithDefault(wosOrder$p.totalDeliveryCost, 0),
+                              shipping_method: tmp,
+                              payment_method: match$2 !== undefined ? (
+                                  match$2 === "VIRTUAL_ACCOUNT" ? "가상계좌" : (
+                                      match$2 === "CREDIT_CARD" ? "신용카드" : (
+                                          match$2 === "TRANSFER" ? "계좌이체" : ""
+                                        )
+                                    )
+                                ) : "",
+                              items: Belt_Array.mapWithIndex(Belt_Array.keepMap(wosOrder$p.orderProducts, Garter_Fn.identity), toItems)
+                            }
+                          }));
+                }));
+          Belt_Option.forEach(wosOrder, (function (wosOrder$p) {
+                  ChannelTalk.track("track", "CheckoutCompleted", {
+                        price: wosOrder$p.totalOrderPrice,
+                        currency: "KRW"
+                      });
+                }));
+          Belt_Option.forEach(wosOrder, (function (wosOrder) {
+                  Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "PURCHASE", {
+                        transactionID: wosOrder.orderNo,
+                        price: wosOrder.totalOrderPrice,
+                        currency: "KRW",
+                        items: Belt_Array.mapWithIndex(Belt_Array.keepMap(wosOrder.orderProducts, Garter_Fn.identity), toItems),
+                        quantity: wosOrder.orderProducts.length
+                      }, undefined);
+                }));
+        }), []);
+  var numberOfProductOptions = Belt_Option.mapWithDefault(wosOrder, 0, (function (w) {
+          return Belt_Array.keepMap(w.orderProducts, Garter_Fn.identity).length;
+        }));
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.PC_Old.make, {
+                        key: router.asPath
+                      }), React.createElement(Web_Order_Complete_Buyer$PC, {
+                        query: fragmentRefs,
+                        numberOfProductOptions: numberOfProductOptions,
+                        deviceType: deviceType
+                      }), React.createElement(Footer_Buyer.PC.make, {}));
+    case /* Mobile */2 :
+        return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.Mobile.make, {}), React.createElement(Web_Order_Complete_Buyer$MO, {
+                        query: fragmentRefs,
+                        numberOfProductOptions: numberOfProductOptions,
+                        deviceType: deviceType
+                      }), React.createElement(Footer_Buyer.MO.make, {}));
+    
+  }
 }
 
 var Container = {
   make: Web_Order_Complete_Buyer$Container
 };
 
-function Web_Order_Complete_Buyer(Props) {
+function $$default(props) {
+  var deviceType = props.deviceType;
   var router = Router.useRouter();
   var orderId = Js_dict.get(router.query, "order-id");
+  var match = React.useState(function () {
+        return false;
+      });
+  var setIsCsr = match[1];
+  React.useEffect((function () {
+          setIsCsr(function (param) {
+                return true;
+              });
+        }), []);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "주문완료 - 신선하이")
                 }), React.createElement(RescriptReactErrorBoundary.make, {
                   children: React.createElement(React.Suspense, {
-                        children: orderId !== undefined ? React.createElement(Web_Order_Complete_Buyer$Container, {
-                                nodeId: orderId
-                              }) : React.createElement(Web_Order_Complete_Buyer$Placeholder, {}),
-                        fallback: React.createElement(Web_Order_Complete_Buyer$Placeholder, {})
+                        children: match[0] ? (
+                            orderId !== undefined ? React.createElement(Web_Order_Complete_Buyer$Container, {
+                                    nodeId: orderId,
+                                    deviceType: deviceType
+                                  }) : React.createElement(Web_Order_Complete_Buyer$Placeholder, {
+                                    deviceType: deviceType
+                                  })
+                          ) : React.createElement(Web_Order_Complete_Buyer$Placeholder, {
+                                deviceType: deviceType
+                              }),
+                        fallback: React.createElement(Web_Order_Complete_Buyer$Placeholder, {
+                              deviceType: deviceType
+                            })
                       }),
                   fallback: (function (param) {
                       return React.createElement(NotFound.make, {});
@@ -458,7 +671,27 @@ function Web_Order_Complete_Buyer(Props) {
                 }));
 }
 
-var make = Web_Order_Complete_Buyer;
+function getServerSideProps(ctx) {
+  var deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req);
+  return Js_promise.$$catch((function (err) {
+                console.log("에러 GnbBannerListBuyerQuery", err);
+                return Promise.resolve({
+                            props: {
+                              query: ctx.query,
+                              deviceType: deviceType,
+                              gnbBanners: []
+                            }
+                          });
+              }), Js_promise.then_((function (res) {
+                    return Promise.resolve({
+                                props: {
+                                  query: ctx.query,
+                                  deviceType: deviceType,
+                                  gnbBanners: res.gnbBanners
+                                }
+                              });
+                  }), GnbBannerList_Buyer.Query.fetchPromised(RelayEnv.envSinsunMarket, undefined, undefined, undefined, undefined)));
+}
 
 export {
   Query ,
@@ -466,11 +699,13 @@ export {
   item_decode ,
   ecommerce_encode ,
   ecommerce_decode ,
-  toEcommerce ,
   toItems ,
   Placeholder ,
+  PC ,
+  MO ,
   Container ,
-  make ,
-  
+  $$default ,
+  $$default as default,
+  getServerSideProps ,
 }
 /* react Not a pure module */

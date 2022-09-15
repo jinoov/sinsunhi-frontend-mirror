@@ -32,9 +32,13 @@ let make = (~children) => {
   }
 
   switch paths {
-  // TEMP: 매칭 PDP는 모바일뷰 Only이므로, 기본 레이아웃 적용대상 예외
-  | ["buyer", "products", "[pid]"] => children
-
+  // 기본 레이아웃 적용대상 예외
+  | ["buyer", "products", "[pid]"]
+  | ["buyer", "products", "all"]
+  | ["buyer", "products"]
+  | ["buyer", "cart"]
+  | ["buyer", "web-order", _]
+  | ["buyer", "web-order", "complete", _] => children
   | _ =>
     <div className=%twc("w-full min-h-screen")>
       // PC Header

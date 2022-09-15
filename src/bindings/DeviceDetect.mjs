@@ -27,6 +27,16 @@ function detectDeviceFromCtx(ctx) {
   }
 }
 
+function detectDeviceFromCtx2(req) {
+  var userAgent = req.headers["user-agent"];
+  var selector = ReactDeviceDetect.getSelectorsByUserAgent(userAgent);
+  if (selector.isMobile) {
+    return /* Mobile */2;
+  } else {
+    return /* PC */1;
+  }
+}
+
 function detectDevice(param) {
   if (ReactDeviceDetect.isMobile) {
     return /* Mobile */2;
@@ -37,7 +47,7 @@ function detectDevice(param) {
 
 export {
   detectDeviceFromCtx ,
+  detectDeviceFromCtx2 ,
   detectDevice ,
-  
 }
 /* react-device-detect Not a pure module */

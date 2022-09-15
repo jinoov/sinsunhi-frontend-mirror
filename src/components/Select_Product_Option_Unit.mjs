@@ -20,9 +20,11 @@ function Select(Status) {
   var defaultStyle = "md:w-20 flex items-center border border-border-default-L1 rounded-md px-3 text-enabled-L1 h-9";
   var Select_Product_Option_Unit$Select = function (Props) {
     var status = Props.status;
+    var availableOptionsOpt = Props.availableOptions;
     var onChange = Props.onChange;
     var forwardRef = Props.forwardRef;
     var disabledOpt = Props.disabled;
+    var availableOptions = availableOptionsOpt !== undefined ? availableOptionsOpt : Status.options;
     var disabled = disabledOpt !== undefined ? disabledOpt : false;
     var displayStatus = toString(status);
     var handleProductOptionUnit = function (e) {
@@ -58,7 +60,7 @@ function Select(Status) {
                             height: "24",
                             width: "24",
                             fill: "#121212"
-                          })), React.createElement("select", tmp, Garter_Array.map(Status.options, (function (s) {
+                          })), React.createElement("select", tmp, Garter_Array.map(availableOptions, (function (s) {
                               return React.createElement("option", {
                                           key: toString(s),
                                           value: toString(s)
@@ -84,6 +86,12 @@ function status_encode(v) {
         return "kg";
     case /* T */2 :
         return "t";
+    case /* ML */3 :
+        return "ml";
+    case /* L */4 :
+        return "l";
+    case /* EA */5 :
+        return "ea";
     
   }
 }
@@ -112,6 +120,21 @@ function status_decode(v) {
             TAG: /* Ok */0,
             _0: /* T */2
           };
+  } else if ("ml" === str$1) {
+    return {
+            TAG: /* Ok */0,
+            _0: /* ML */3
+          };
+  } else if ("l" === str$1) {
+    return {
+            TAG: /* Ok */0,
+            _0: /* L */4
+          };
+  } else if ("ea" === str$1) {
+    return {
+            TAG: /* Ok */0,
+            _0: /* EA */5
+          };
   } else {
     return Spice.error(undefined, "Not matched", v);
   }
@@ -120,13 +143,49 @@ function status_decode(v) {
 var options = [
   /* G */0,
   /* KG */1,
-  /* T */2
+  /* T */2,
+  /* EA */5,
+  /* ML */3,
+  /* L */4
 ];
 
-var WeightStatus = {
+function makeDefaultUnit(current) {
+  if (current >= 3) {
+    if (current >= 5) {
+      return /* EA */5;
+    } else {
+      return /* L */4;
+    }
+  } else {
+    return /* KG */1;
+  }
+}
+
+function makeVariation(current) {
+  if (current >= 3) {
+    if (current >= 5) {
+      return [/* EA */5];
+    } else {
+      return [
+              /* ML */3,
+              /* L */4
+            ];
+    }
+  } else {
+    return [
+            /* G */0,
+            /* KG */1,
+            /* T */2
+          ];
+  }
+}
+
+var AmountStatus = {
   status_encode: status_encode,
   status_decode: status_decode,
-  options: options
+  options: options,
+  makeDefaultUnit: makeDefaultUnit,
+  makeVariation: makeVariation
 };
 
 function status_encode$1(v) {
@@ -192,9 +251,11 @@ var defaultStyle = "md:w-20 flex items-center border border-border-default-L1 ro
 
 function Select_Product_Option_Unit$Select(Props) {
   var status = Props.status;
+  var availableOptionsOpt = Props.availableOptions;
   var onChange = Props.onChange;
   var forwardRef = Props.forwardRef;
   var disabledOpt = Props.disabled;
+  var availableOptions = availableOptionsOpt !== undefined ? availableOptionsOpt : options;
   var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var displayStatus = toString(status);
   var handleProductOptionUnit = function (e) {
@@ -230,7 +291,7 @@ function Select_Product_Option_Unit$Select(Props) {
                           height: "24",
                           width: "24",
                           fill: "#121212"
-                        })), React.createElement("select", tmp, Garter_Array.map(options, (function (s) {
+                        })), React.createElement("select", tmp, Garter_Array.map(availableOptions, (function (s) {
                             return React.createElement("option", {
                                         key: toString(s),
                                         value: toString(s)
@@ -238,7 +299,7 @@ function Select_Product_Option_Unit$Select(Props) {
                           })))));
 }
 
-var Weight = {
+var Amount = {
   options: options,
   status_encode: status_encode,
   status_decode: status_decode,
@@ -258,9 +319,11 @@ var defaultStyle$1 = "md:w-20 flex items-center border border-border-default-L1 
 
 function Select_Product_Option_Unit$Select$1(Props) {
   var status = Props.status;
+  var availableOptionsOpt = Props.availableOptions;
   var onChange = Props.onChange;
   var forwardRef = Props.forwardRef;
   var disabledOpt = Props.disabled;
+  var availableOptions = availableOptionsOpt !== undefined ? availableOptionsOpt : options$1;
   var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var displayStatus = toString$1(status);
   var handleProductOptionUnit = function (e) {
@@ -296,7 +359,7 @@ function Select_Product_Option_Unit$Select$1(Props) {
                           height: "24",
                           width: "24",
                           fill: "#121212"
-                        })), React.createElement("select", tmp, Garter_Array.map(options$1, (function (s) {
+                        })), React.createElement("select", tmp, Garter_Array.map(availableOptions, (function (s) {
                             return React.createElement("option", {
                                         key: toString$1(s),
                                         value: toString$1(s)
@@ -316,10 +379,9 @@ var Size = {
 
 export {
   Select ,
-  WeightStatus ,
+  AmountStatus ,
   SizeStatus ,
-  Weight ,
+  Amount ,
   Size ,
-  
 }
 /* react Not a pure module */

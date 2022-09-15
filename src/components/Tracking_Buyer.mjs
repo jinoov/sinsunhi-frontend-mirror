@@ -15,15 +15,20 @@ function Tracking_Buyer(Props) {
   var openPopupPostFormData = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   var popUpWindowName = "tacking";
-                  var form = document.getElementById(order.orderProductNo + "-tracking-form");
-                  if (Global.$$window !== undefined && !(form == null)) {
-                    Caml_option.valFromOption(Global.$$window).open("", popUpWindowName, "width=800, height=1000,location=yes,resizable=yes,scrollbars=yes,status=yes");
-                    form.setAttribute("target", popUpWindowName);
-                    form.setAttribute("action", Env.sweettrackerUrl);
-                    form.submit();
+                  var form = document.getElementById("" + order.orderProductNo + "-tracking-form");
+                  if (Global.$$window === undefined) {
                     return ;
                   }
-                  
+                  if (form == null) {
+                    return ;
+                  }
+                  var match = window.ReactNativeWebView;
+                  if (match == null) {
+                    Caml_option.valFromOption(Global.$$window).open("", popUpWindowName, "width=800, height=1000,location=yes,resizable=yes,scrollbars=yes,status=yes");
+                    form.setAttribute("target", popUpWindowName);
+                  }
+                  form.setAttribute("action", Env.sweettrackerUrl);
+                  form.submit();
                 }), param);
   };
   var tmp;
@@ -37,7 +42,7 @@ function Tracking_Buyer(Props) {
       tmp = Belt_Option.getWithDefault(Helper.$$Option.map2(order.courierCode, order.invoice, (function (courierCode, invoice) {
                   return React.createElement(React.Fragment, undefined, React.createElement("form", {
                                   className: "hidden",
-                                  id: order.orderProductNo + "-tracking-form",
+                                  id: "" + order.orderProductNo + "-tracking-form",
                                   action: Env.sweettrackerUrl,
                                   method: "post"
                                 }, React.createElement("input", {
@@ -87,6 +92,5 @@ var make = Tracking_Buyer;
 
 export {
   make ,
-  
 }
 /* Env Not a pure module */

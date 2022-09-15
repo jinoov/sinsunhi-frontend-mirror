@@ -5,12 +5,9 @@ import * as IconSise from "../components/svgs/IconSise.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import Format from "date-fns/format";
 import * as IconNaviBulkSale from "../components/svgs/IconNaviBulkSale.mjs";
-import SetDate from "date-fns/setDate";
 import * as IconDownloadCenter from "../components/svgs/IconDownloadCenter.mjs";
 import * as IconNaviSettlement from "../components/svgs/IconNaviSettlement.mjs";
-import EndOfMonth from "date-fns/endOfMonth";
 import NaviUserSvg from "../../public/assets/navi-user.svg";
 import NaviOrderSvg from "../../public/assets/navi-order.svg";
 import NaviProductSvg from "../../public/assets/navi-product.svg";
@@ -24,8 +21,6 @@ var naviProductIcon = NaviProductSvg;
 
 var naviUserIcon = NaviUserSvg;
 
-var defaultQueryParams = {};
-
 var items = [
   {
     TAG: /* Root */0,
@@ -35,6 +30,7 @@ var items = [
       target: "_self"
     },
     icon: React.createElement("img", {
+          className: "w-5 h-5",
           src: naviDashboardIcon
         }),
     children: []
@@ -47,6 +43,7 @@ var items = [
       target: "_self"
     },
     icon: React.createElement("img", {
+          className: "w-5 h-5",
           src: naviProductIcon
         }),
     children: [
@@ -87,6 +84,7 @@ var items = [
       target: "_self"
     },
     icon: React.createElement("img", {
+          className: "w-5 h-5",
           src: naviOrderIcon
         }),
     children: [
@@ -122,24 +120,6 @@ var items = [
         title: "송장번호 등록",
         anchor: {
           url: "/admin/add-tracking-numbers",
-          target: "_self"
-        },
-        slug: undefined
-      },
-      {
-        TAG: /* Sub */1,
-        title: "오프라인 주문관리",
-        anchor: {
-          url: (defaultQueryParams["created-at-from"] = Format(SetDate(new Date(), 1), "yyyy-MM-dd"), defaultQueryParams["created-at-to"] = Format(EndOfMonth(new Date()), "yyyy-MM-dd"), defaultQueryParams["release-due-date-from"] = Format(SetDate(new Date(), 1), "yyyy-MM-dd"), defaultQueryParams["release-due-date-to"] = Format(EndOfMonth(new Date()), "yyyy-MM-dd"), defaultQueryParams["limit"] = "25", "/admin/offline-orders?" + new URLSearchParams(defaultQueryParams).toString()),
-          target: "_self"
-        },
-        slug: undefined
-      },
-      {
-        TAG: /* Sub */1,
-        title: "오프라인 주문등록",
-        anchor: {
-          url: "/admin/add-offline-orders",
           target: "_self"
         },
         slug: undefined
@@ -220,6 +200,7 @@ var items = [
       target: "_self"
     },
     icon: React.createElement("img", {
+          className: "w-5 h-5",
           src: naviUserIcon
         }),
     children: [
@@ -302,6 +283,5 @@ export {
   naviProductIcon ,
   naviUserIcon ,
   Item ,
-  
 }
 /* naviDashboardIcon Not a pure module */

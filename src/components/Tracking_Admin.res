@@ -15,19 +15,25 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
         )
       switch (Global.window, form) {
       | (Some(window'), Some(form')) => {
-          Global.Window.openLink(
-            window',
-            ~url="",
-            ~windowName=popUpWindowName,
-            ~windowFeatures=popUpWindowFeatures,
-            (),
-          )
+          switch Global.Window.ReactNativeWebView.tOpt {
+          | Some(_) => ()
+          | None => {
+              Global.Window.openLink(
+                window',
+                ~url="",
+                ~windowName=popUpWindowName,
+                ~windowFeatures=popUpWindowFeatures,
+                (),
+              )
+              form'->Webapi.Dom.Element.setAttribute("target", popUpWindowName)
+            }
+          }
 
-          form'->Webapi.Dom.Element.setAttribute("target", popUpWindowName)
           form'->Webapi.Dom.Element.setAttribute("action", Env.sweettrackerUrl)
 
           form'->submitFormData
         }
+
       | _ => ()
       }
     }

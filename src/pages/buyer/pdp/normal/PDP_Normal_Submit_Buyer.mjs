@@ -2,26 +2,30 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as DataGtm from "../../../../utils/DataGtm.mjs";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import * as ChannelTalk from "../../../../bindings/ChannelTalk.mjs";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
+import * as ReactRelay from "react-relay";
+import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
 import * as Product_Parser from "../../../../utils/Product_Parser.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
-import * as PDP_Normal_Gtm_Buyer from "./PDP_Normal_Gtm_Buyer.mjs";
+import * as ToggleOrderAndPayment from "../../../../utils/ToggleOrderAndPayment.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
-import * as RfqCreateRequestButton from "../../../../components/RfqCreateRequestButton.mjs";
+import * as PDP_CTA_Container_Buyer from "../common/PDP_CTA_Container_Buyer.mjs";
+import * as PDP_Normal_RfqBtn_Buyer from "./PDP_Normal_RfqBtn_Buyer.mjs";
 import * as PDPNormalSubmitBuyerFragment_graphql from "../../../../__generated__/PDPNormalSubmitBuyerFragment_graphql.mjs";
+import * as PDPNormalSubmitBuyer_fragment_graphql from "../../../../__generated__/PDPNormalSubmitBuyer_fragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(PDPNormalSubmitBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPNormalSubmitBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalSubmitBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPNormalSubmitBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPNormalSubmitBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -39,25 +43,126 @@ var Fragment = {
   productStatus_decode: Fragment_productStatus_decode,
   productStatus_fromString: Fragment_productStatus_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
+};
+
+function use$1(fRef) {
+  var data = ReactRelay.useFragment(PDPNormalSubmitBuyer_fragment_graphql.node, fRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalSubmitBuyer_fragment_graphql.Internal.convertFragment, data);
+}
+
+function useOpt$1(opt_fRef) {
+  var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
+  var nullableFragmentData = ReactRelay.useFragment(PDPNormalSubmitBuyer_fragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
+  return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
+                if (rawFragment !== undefined) {
+                  return PDPNormalSubmitBuyer_fragment_graphql.Internal.convertFragment(rawFragment);
+                }
+                
+              }), data);
+}
+
+var ButtonFragment = {
+  Types: undefined,
+  Operation: undefined,
+  use: use$1,
+  useOpt: useOpt$1
+};
+
+function make(product, selectedOptions) {
+  var productOptions = product.productOptions;
+  var productId = product.productId;
+  var displayName = product.displayName;
+  var categoryNames = Belt_Array.map(product.category.fullyQualifiedName, (function (param) {
+          return param.name;
+        }));
+  var producerCode = Belt_Option.map(product.producer, (function (param) {
+          return param.producerCode;
+        }));
+  var options = Belt_Array.keepMap(Belt_MapString.toArray(selectedOptions), (function (param) {
+          var quantity = param[1];
+          var optionId = param[0];
+          return Belt_Option.flatMap(productOptions, (function (param) {
+                        var match = Belt_Array.getBy(param.edges, (function (param) {
+                                return param.node.id === optionId;
+                              }));
+                        if (match === undefined) {
+                          return ;
+                        }
+                        var match$1 = match.node;
+                        return {
+                                stockSku: match$1.stockSku,
+                                price: match$1.price,
+                                quantity: quantity
+                              };
+                      }));
+        }));
+  var filterEmptyArr = function (arr) {
+    if (arr.length !== 0) {
+      return arr;
+    }
+    
+  };
+  var makeItems = function (nonEmptyOptions) {
+    return Belt_Array.map(nonEmptyOptions, (function (param) {
+                  return {
+                          currency: "KRW",
+                          item_id: String(productId),
+                          item_name: displayName,
+                          item_brand: Js_null_undefined.fromOption(producerCode),
+                          item_variant: param.stockSku,
+                          price: Js_null_undefined.fromOption(param.price),
+                          quantity: param.quantity,
+                          item_category: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 0)),
+                          item_category2: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 1)),
+                          item_category3: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 2)),
+                          item_category4: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 3)),
+                          item_category5: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 4))
+                        };
+                }));
+  };
+  return Belt_Option.map(filterEmptyArr(options), (function (nonEmptyOptions) {
+                return {
+                        event: "click_purchase",
+                        ecommerce: {
+                          items: makeItems(nonEmptyOptions)
+                        }
+                      };
+              }));
+}
+
+var ClickPurchaseGtm = {
+  make: make
 };
 
 function PDP_Normal_Submit_Buyer$PC$ActionBtn(Props) {
   var query = Props.query;
   var className = Props.className;
-  var selectedOptionId = Props.selectedOptionId;
+  var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
-  var quantity = Props.quantity;
   var children = Props.children;
-  var pushGtmClickBuy = PDP_Normal_Gtm_Buyer.ClickBuy.use(query, selectedOptionId, quantity);
+  var availableButton = ToggleOrderAndPayment.use(undefined);
+  var product = use$1(query);
   var onClick = function (param) {
-    setShowModal(function (param) {
-          return /* Show */{
-                  _0: /* Confirm */1
-                };
-        });
-    return Curry._1(pushGtmClickBuy, undefined);
+    if (availableButton) {
+      Belt_Option.map(make(product, selectedOptions), (function (event$p) {
+              DataGtm.push({
+                    ecommerce: null
+                  });
+              DataGtm.push(DataGtm.mergeUserIdUnsafe(event$p));
+            }));
+      return setShowModal(function (param) {
+                  return /* Show */{
+                          _0: /* Confirm */1
+                        };
+                });
+    } else {
+      window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
+      return ;
+    }
   };
   return React.createElement("button", {
               className: className,
@@ -71,29 +176,29 @@ var ActionBtn = {
 
 function PDP_Normal_Submit_Buyer$PC$OrderBtn(Props) {
   var status = Props.status;
-  var selectedOptionId = Props.selectedOptionId;
+  var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
   var query = Props.query;
-  var quantity = Props.quantity;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var btnStyle = "w-full h-16 rounded-xl flex items-center justify-center bg-primary hover:bg-primary-variant text-lg font-bold text-white";
   var disabledStyle = "w-full h-16 rounded-xl flex items-center justify-center bg-gray-300 text-white font-bold text-xl";
-  var orderStatus = status === "SOLDOUT" ? /* Soldout */1 : (
-      typeof user === "number" ? (
-          user !== 0 ? /* Unauthorized */2 : /* Loading */0
-        ) : (
-          selectedOptionId !== undefined ? /* Fulfilled */({
-                _0: selectedOptionId
-              }) : /* NoOption */3
-        )
-    );
+  var orderStatus;
+  if (status === "SOLDOUT") {
+    orderStatus = /* Soldout */1;
+  } else if (typeof user === "number") {
+    orderStatus = user !== 0 ? /* Unauthorized */2 : /* Loading */0;
+  } else {
+    var match = Belt_MapString.toArray(selectedOptions);
+    orderStatus = match.length !== 0 ? /* Available */({
+          _0: selectedOptions
+        }) : /* NoOption */3;
+  }
   if (typeof orderStatus !== "number") {
     return React.createElement(PDP_Normal_Submit_Buyer$PC$ActionBtn, {
                 query: query,
                 className: btnStyle,
-                selectedOptionId: orderStatus._0,
+                selectedOptions: orderStatus._0,
                 setShowModal: setShowModal,
-                quantity: quantity,
                 children: "구매하기"
               });
   }
@@ -112,24 +217,24 @@ function PDP_Normal_Submit_Buyer$PC$OrderBtn(Props) {
         return React.createElement("button", {
                     className: btnStyle,
                     onClick: (function (param) {
-                        return setShowModal(function (param) {
-                                    return /* Show */{
-                                            _0: /* Unauthorized */{
-                                              _0: "로그인 후에\n구매하실 수 있습니다."
-                                            }
-                                          };
-                                  });
+                        setShowModal(function (param) {
+                              return /* Show */{
+                                      _0: /* Unauthorized */{
+                                        _0: "로그인 후에\n구매하실 수 있습니다."
+                                      }
+                                    };
+                            });
                       })
                   }, "구매하기");
     case /* NoOption */3 :
         return React.createElement("button", {
                     className: btnStyle,
                     onClick: (function (param) {
-                        return setShowModal(function (param) {
-                                    return /* Show */{
-                                            _0: /* NoOption */0
-                                          };
-                                  });
+                        setShowModal(function (param) {
+                              return /* Show */{
+                                      _0: /* NoOption */0
+                                    };
+                            });
                       })
                   }, "구매하기");
     
@@ -140,65 +245,22 @@ var OrderBtn = {
   make: PDP_Normal_Submit_Buyer$PC$OrderBtn
 };
 
-function PDP_Normal_Submit_Buyer$PC$RfqBtn(Props) {
-  var setShowModal = Props.setShowModal;
-  var buttonText = "최저가 견적문의";
-  var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var btnStyle = "mt-4 w-full h-16 rounded-xl bg-primary-light hover:bg-primary-light-variant text-primary text-lg font-bold hover:text-primary-variant";
-  var disabledStyle = "mt-4 w-full h-16 rounded-xl bg-disabled-L2 text-lg font-bold text-white";
-  if (typeof user === "number") {
-    if (user !== 0) {
-      return React.createElement("button", {
-                  className: btnStyle,
-                  onClick: (function (param) {
-                      return setShowModal(function (param) {
-                                  return /* Show */{
-                                          _0: /* Unauthorized */{
-                                            _0: "로그인 후에\n견적을 받으실 수 있습니다."
-                                          }
-                                        };
-                                });
-                    })
-                }, buttonText);
-    } else {
-      return React.createElement("button", {
-                  className: disabledStyle,
-                  disabled: true
-                }, buttonText);
-    }
-  } else if (user._0.role !== 1) {
-    return React.createElement("button", {
-                className: disabledStyle,
-                disabled: true
-              }, buttonText);
-  } else {
-    return React.createElement(RfqCreateRequestButton.make, {
-                className: btnStyle,
-                buttonText: buttonText
-              });
-  }
-}
-
-var RfqBtn = {
-  make: PDP_Normal_Submit_Buyer$PC$RfqBtn
-};
-
 function PDP_Normal_Submit_Buyer$PC(Props) {
   var query = Props.query;
-  var selectedOptionId = Props.selectedOptionId;
+  var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
-  var quantity = Props.quantity;
   var match = use(query);
+  var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   return React.createElement("section", {
               className: "w-full"
             }, React.createElement(PDP_Normal_Submit_Buyer$PC$OrderBtn, {
                   status: match.status,
-                  selectedOptionId: selectedOptionId,
+                  selectedOptions: selectedOptions,
                   setShowModal: setShowModal,
-                  query: match.fragmentRefs,
-                  quantity: quantity
-                }), match$1 === 1 ? React.createElement(PDP_Normal_Submit_Buyer$PC$RfqBtn, {
+                  query: fragmentRefs
+                }), match$1 === 1 ? React.createElement(PDP_Normal_RfqBtn_Buyer.PC.make, {
+                    query: fragmentRefs,
                     setShowModal: setShowModal
                   }) : null);
 }
@@ -206,48 +268,34 @@ function PDP_Normal_Submit_Buyer$PC(Props) {
 var PC = {
   ActionBtn: ActionBtn,
   OrderBtn: OrderBtn,
-  RfqBtn: RfqBtn,
   make: PDP_Normal_Submit_Buyer$PC
-};
-
-function PDP_Normal_Submit_Buyer$MO$CTAContainer(Props) {
-  var children = Props.children;
-  return React.createElement("div", {
-              className: "fixed w-full bottom-0 left-0"
-            }, React.createElement("div", {
-                  className: "w-full max-w-[768px] p-3 mx-auto border-t border-t-gray-100 bg-white"
-                }, React.createElement("div", {
-                      className: "w-full h-14 flex"
-                    }, React.createElement("button", {
-                          onClick: (function (param) {
-                              return ChannelTalk.showMessenger(undefined);
-                            })
-                        }, React.createElement("img", {
-                              className: "w-14 h-14 mr-2",
-                              alt: "cta-cs-btn-mobile",
-                              src: "/icons/cs-gray-square.png"
-                            })), Belt_Option.getWithDefault(children, null))));
-}
-
-var CTAContainer = {
-  make: PDP_Normal_Submit_Buyer$MO$CTAContainer
 };
 
 function PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn(Props) {
   var query = Props.query;
   var className = Props.className;
-  var selectedOptionId = Props.selectedOptionId;
+  var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
-  var quantity = Props.quantity;
   var children = Props.children;
-  var pushGtmClickBuy = PDP_Normal_Gtm_Buyer.ClickBuy.use(query, selectedOptionId, quantity);
+  var availableButton = ToggleOrderAndPayment.use(undefined);
+  var product = use$1(query);
   var onClick = function (param) {
-    setShowModal(function (param) {
-          return /* Show */{
-                  _0: /* Confirm */1
-                };
-        });
-    return Curry._1(pushGtmClickBuy, undefined);
+    if (availableButton) {
+      Belt_Option.map(make(product, selectedOptions), (function (event$p) {
+              DataGtm.push({
+                    ecommerce: null
+                  });
+              DataGtm.push(DataGtm.mergeUserIdUnsafe(event$p));
+            }));
+      return setShowModal(function (param) {
+                  return /* Show */{
+                          _0: /* Confirm */1
+                        };
+                });
+    } else {
+      window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
+      return ;
+    }
   };
   return React.createElement("button", {
               className: className,
@@ -261,29 +309,29 @@ var ActionBtn$1 = {
 
 function PDP_Normal_Submit_Buyer$MO$OrderBtn(Props) {
   var status = Props.status;
-  var selectedOptionId = Props.selectedOptionId;
+  var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
   var query = Props.query;
-  var quantity = Props.quantity;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var btnStyle = "flex flex-1 rounded-xl items-center justify-center bg-primary font-bold text-white";
   var disabledStyle = "flex flex-1 rounded-xl items-center justify-center bg-gray-300 text-white font-bold";
-  var orderStatus = status === "SOLDOUT" ? /* Soldout */1 : (
-      typeof user === "number" ? (
-          user !== 0 ? /* Unauthorized */2 : /* Loading */0
-        ) : (
-          selectedOptionId !== undefined ? /* Fulfilled */({
-                _0: selectedOptionId
-              }) : /* NoOption */3
-        )
-    );
+  var orderStatus;
+  if (status === "SOLDOUT") {
+    orderStatus = /* Soldout */1;
+  } else if (typeof user === "number") {
+    orderStatus = user !== 0 ? /* Unauthorized */2 : /* Loading */0;
+  } else {
+    var match = Belt_MapString.toArray(selectedOptions);
+    orderStatus = match.length !== 0 ? /* Available */({
+          _0: selectedOptions
+        }) : /* NoOption */3;
+  }
   if (typeof orderStatus !== "number") {
     return React.createElement(PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn, {
                 query: query,
                 className: btnStyle,
-                selectedOptionId: orderStatus._0,
+                selectedOptions: orderStatus._0,
                 setShowModal: setShowModal,
-                quantity: quantity,
                 children: "구매하기"
               });
   }
@@ -302,24 +350,24 @@ function PDP_Normal_Submit_Buyer$MO$OrderBtn(Props) {
         return React.createElement("button", {
                     className: btnStyle,
                     onClick: (function (param) {
-                        return setShowModal(function (param) {
-                                    return /* Show */{
-                                            _0: /* Unauthorized */{
-                                              _0: "로그인 후에\n구매하실 수 있습니다."
-                                            }
-                                          };
-                                  });
+                        setShowModal(function (param) {
+                              return /* Show */{
+                                      _0: /* Unauthorized */{
+                                        _0: "로그인 후에\n구매하실 수 있습니다."
+                                      }
+                                    };
+                            });
                       })
                   }, "구매하기");
     case /* NoOption */3 :
         return React.createElement("button", {
                     className: btnStyle,
                     onClick: (function (param) {
-                        return setShowModal(function (param) {
-                                    return /* Show */{
-                                            _0: /* NoOption */0
-                                          };
-                                  });
+                        setShowModal(function (param) {
+                              return /* Show */{
+                                      _0: /* NoOption */0
+                                    };
+                            });
                       })
                   }, "구매하기");
     
@@ -331,98 +379,38 @@ var OrderBtn$1 = {
   make: PDP_Normal_Submit_Buyer$MO$OrderBtn
 };
 
-function PDP_Normal_Submit_Buyer$MO$RfqBtn(Props) {
-  var setShowModal = Props.setShowModal;
-  var buttonText = "최저가 견적문의";
-  var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var btnStyle = "flex flex-1 items-center justify-center rounded-xl bg-white border border-primary text-primary text-lg font-bold";
-  var disabledStyle = "flex flex-1 items-center justify-center rounded-xl bg-disabled-L2 text-lg font-bold text-white";
-  if (typeof user === "number") {
-    if (user !== 0) {
-      return React.createElement(React.Fragment, undefined, React.createElement("button", {
-                      className: btnStyle,
-                      onClick: (function (param) {
-                          return setShowModal(function (param) {
-                                      return /* Show */{
-                                              _0: /* Unauthorized */{
-                                                _0: "로그인 후에\n견적을 받으실 수 있습니다."
-                                              }
-                                            };
-                                    });
-                        })
-                    }, buttonText));
-    } else {
-      return React.createElement("button", {
-                  className: disabledStyle,
-                  disabled: true
-                }, buttonText);
-    }
-  } else if (user._0.role !== 1) {
-    return React.createElement("button", {
-                className: disabledStyle,
-                disabled: true
-              }, buttonText);
-  } else {
-    return React.createElement(RfqCreateRequestButton.make, {
-                className: btnStyle,
-                buttonText: "최저가 견적문의"
-              });
-  }
-}
-
-var RfqBtn$1 = {
-  make: PDP_Normal_Submit_Buyer$MO$RfqBtn
-};
-
 function PDP_Normal_Submit_Buyer$MO(Props) {
   var query = Props.query;
-  var selectedOptionId = Props.selectedOptionId;
+  var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
-  var quantity = Props.quantity;
   var match = use(query);
   var fragmentRefs = match.fragmentRefs;
-  var status = match.status;
-  var __typename = match.__typename;
-  var match$1 = Product_Parser.Type.decode(__typename);
-  var match$2 = Product_Parser.Type.decode(__typename);
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
-                  className: "w-full h-14 flex"
-                }, match$1 === 1 ? React.createElement(React.Fragment, undefined, React.createElement(PDP_Normal_Submit_Buyer$MO$RfqBtn, {
-                            setShowModal: setShowModal
-                          }), React.createElement("div", {
-                            className: "w-2"
-                          })) : null, React.createElement(PDP_Normal_Submit_Buyer$MO$OrderBtn, {
-                      status: status,
-                      selectedOptionId: selectedOptionId,
-                      setShowModal: setShowModal,
-                      query: fragmentRefs,
-                      quantity: quantity
-                    })), React.createElement(PDP_Normal_Submit_Buyer$MO$CTAContainer, {
-                  children: null
-                }, match$2 === 1 ? React.createElement(React.Fragment, undefined, React.createElement(PDP_Normal_Submit_Buyer$MO$RfqBtn, {
-                            setShowModal: setShowModal
-                          }), React.createElement("div", {
-                            className: "w-2"
-                          })) : null, React.createElement(PDP_Normal_Submit_Buyer$MO$OrderBtn, {
-                      status: status,
-                      selectedOptionId: selectedOptionId,
-                      setShowModal: setShowModal,
-                      query: fragmentRefs,
-                      quantity: quantity
-                    })));
+  var match$1 = Product_Parser.Type.decode(match.__typename);
+  return React.createElement(PDP_CTA_Container_Buyer.make, {
+              children: null
+            }, match$1 === 1 ? React.createElement(React.Fragment, undefined, React.createElement(PDP_Normal_RfqBtn_Buyer.MO.make, {
+                        query: fragmentRefs,
+                        setShowModal: setShowModal
+                      }), React.createElement("div", {
+                        className: "w-2"
+                      })) : null, React.createElement(PDP_Normal_Submit_Buyer$MO$OrderBtn, {
+                  status: match.status,
+                  selectedOptions: selectedOptions,
+                  setShowModal: setShowModal,
+                  query: fragmentRefs
+                }));
 }
 
 var MO = {
-  CTAContainer: CTAContainer,
   OrderBtn: OrderBtn$1,
-  RfqBtn: RfqBtn$1,
   make: PDP_Normal_Submit_Buyer$MO
 };
 
 export {
   Fragment ,
+  ButtonFragment ,
+  ClickPurchaseGtm ,
   PC ,
   MO ,
-  
 }
 /* react Not a pure module */

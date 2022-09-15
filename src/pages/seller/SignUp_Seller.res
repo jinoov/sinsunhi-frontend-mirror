@@ -89,7 +89,54 @@ let make = () => {
   ))
   let (isShowConfirmGoBack, setShowConfirmGoBack) = React.Uncurried.useState(_ => Dialog.Hide)
 
-  let onSubmit = ({state}: Form.onSubmitAPI) => {
+  let signIn = ({state}: Form.onSubmitAPI) => {
+    let username = state.values->FormFields.get(FormFields.Phone)
+    let password = state.values->FormFields.get(FormFields.Password)
+
+    let {makeWithArray, makeWithDict, toString, get} = module(Webapi.Url.URLSearchParams)
+
+    let redirectUrl = router.query->makeWithDict->get("redirect")->Option.getWithDefault("/seller")
+
+    let urlSearchParams =
+      [
+        ("grant-type", "password"),
+        ("username", username->Helper.PhoneNumber.removeDash),
+        ("password", password),
+      ]
+      ->makeWithArray
+      ->toString
+
+    FetchHelper.postWithURLSearchParams(
+      ~url=`${Env.restApiUrl}/user/token`,
+      ~urlSearchParams,
+      ~onSuccess={
+        res => {
+          let result = FetchHelper.responseToken_decode(res)
+          switch result {
+          | Ok(res) => {
+              LocalStorageHooks.AccessToken.set(res.token)
+              LocalStorageHooks.RefreshToken.set(res.refreshToken)
+
+              // 로그인 성공 시, 웹뷰에 Braze 푸시 기기 토큰 등록을 위한 userId를 postMessage 합니다.
+              switch res.token->CustomHooks.Auth.decodeJwt->CustomHooks.Auth.user_decode {
+              | Ok(user) =>
+                Global.Window.ReactNativeWebView.PostMessage.signUp(user.id->Int.toString)
+                Global.Window.ReactNativeWebView.PostMessage.signIn(user.id->Int.toString)
+              | Error(_) => ()
+              }
+
+              Redirect.setHref(redirectUrl)
+            }
+
+          | Error(_) => router->Next.Router.push("/seller/signin")
+          }
+        }
+      },
+      ~onFailure={_ => router->Next.Router.push("/seller/signin")},
+    )->ignore
+  }
+
+  let onSubmit = ({state} as formApi: Form.onSubmitAPI) => {
     switch (isPhoneNumberVerifed, isTermsConfirmed) {
     | (Verified, true) =>
       let payload = {
@@ -97,7 +144,7 @@ let make = () => {
         address: `${state.values->FormFields.get(FormFields.Address)} ${detailedAddress}`,
         producerType: producerType->Option.map(stringifyProducerType)->Option.getWithDefault(""),
         terms: isMarketing ? ["marketing"] : [],
-        businessRegistrationNumber: businessRegistrationNumber,
+        businessRegistrationNumber,
       }
       payload
       ->Js.Json.stringifyAny
@@ -105,7 +152,7 @@ let make = () => {
         FetchHelper.post(
           ~url=`${Env.restApiUrl}/user/register`,
           ~body,
-          ~onSuccess={_ => router->Next.Router.push("/seller/signin")},
+          ~onSuccess={_ => signIn(formApi)},
           ~onFailure={
             err => {
               let customError = err->FetchHelper.convertFromJsPromiseError
@@ -137,7 +184,7 @@ let make = () => {
           nonEmpty(Phone, ~error=`휴대전화 번호를 입력해주세요.`),
           regExp(
             Password,
-            ~matches="^(?=.*\d)(?=.*[a-zA-Z]).{6,15}$",
+            ~matches="^(?=.*\\d)(?=.*[a-zA-Z]).{6,15}$",
             ~error=`비밀번호가 형식에 맞지 않습니다.`,
           ),
           nonEmpty(Address, ~error=`주소를 입력해주세요.`),
@@ -244,7 +291,7 @@ let make = () => {
       className=%twc(
         "container mx-auto max-w-lg min-h-screen flex flex-col justify-center items-center relative py-20"
       )>
-      <img src="/assets/sinsunhi-logo.svg" width="164" height="42" alt=`신선하이 로고` />
+      <img src="/assets/sinsunhi-logo.svg" width="164" height="42" alt={`신선하이 로고`} />
       <div className=%twc("text-text-L2 mt-2")>
         <span> {`농축산물 생산자 `->React.string} </span>
         <span className=%twc("font-semibold")> {` 판로개척 플랫폼`->React.string} </span>
@@ -269,7 +316,7 @@ let make = () => {
                 name="username"
                 type_="text"
                 size=Input.Large
-                placeholder=`업체명 (개인생산자일 경우 대표자 성함)`
+                placeholder={`업체명 (개인생산자일 경우 대표자 성함)`}
                 onChange={FormFields.Name->form.handleChange->ReForm.Helpers.handleChange}
                 error={FormFields.Name->Form.ReSchema.Field->form.getFieldError}
               />
@@ -284,7 +331,7 @@ let make = () => {
                   size=Input.Large
                   className=%twc("flex-1")
                   defaultValue={form.values->FormFields.get(FormFields.Address)}
-                  placeholder=`주소`
+                  placeholder={`주소`}
                   error=None
                   disabled=true
                 />
@@ -302,7 +349,7 @@ let make = () => {
                 name="address2"
                 className=%twc("mt-2")
                 size=Input.Large
-                placeholder=`상세주소`
+                placeholder={`상세주소`}
                 value=detailedAddress
                 onChange=handleOnChangeDetailedAddress
                 error=None
@@ -313,7 +360,7 @@ let make = () => {
                 name="email"
                 type_="email"
                 size=Input.Large
-                placeholder=`이메일`
+                placeholder={`이메일`}
                 onChange={FormFields.Email->form.handleChange->ReForm.Helpers.handleChange}
                 error={FormFields.Email->Form.ReSchema.Field->form.getFieldError}
               />
@@ -322,7 +369,7 @@ let make = () => {
                 name="password"
                 size=Input.Large
                 className=%twc("mt-2")
-                placeholder=`비밀번호 (영문, 숫자 조합 6~15자)`
+                placeholder={`비밀번호 (영문, 숫자 조합 6~15자)`}
                 onChange={FormFields.Password->form.handleChange->ReForm.Helpers.handleChange}
                 error={FormFields.Password->Form.ReSchema.Field->form.getFieldError}
               />
@@ -333,7 +380,7 @@ let make = () => {
                 className=%twc("mt-2")
                 value=passwordConfirm
                 onChange=handleOnChangePasswordConfirm
-                placeholder=`비밀번호 재입력`
+                placeholder={`비밀번호 재입력`}
                 error=None
               />
               {isPasswordConfirmed()
@@ -348,7 +395,7 @@ let make = () => {
             <div className=%twc("flex flex-col py-4 gap-3")>
               <Select
                 t=productType
-                title=`판매상품`
+                title={`판매상품`}
                 display=displayProductType
                 onChange=handleOnChangeProductType
                 values=[`농산물`, `축산물`, `수산물`]
@@ -360,7 +407,7 @@ let make = () => {
               {productType->Option.isSome
                 ? <Select
                     t=producerType
-                    title=`직업군`
+                    title={`직업군`}
                     display=displayProducerType
                     onChange=handleOnChangeProducerType
                     values={optionValues(productType)}
@@ -413,10 +460,10 @@ let make = () => {
     </Dialog>
     <Dialog
       isShow=isShowConfirmGoBack
-      textOnCancel=`닫기`
+      textOnCancel={`닫기`}
       onCancel={_ => setShowConfirmGoBack(._ => Dialog.Hide)}
       kindOfConfirm=Dialog.Negative
-      textOnConfirm=`그만두기`
+      textOnConfirm={`그만두기`}
       onConfirm={_ => router->Next.Router.push("/seller/signin")}>
       <p className=%twc("text-text-L1 text-center whitespace-pre-wrap")>
         {`회원가입을 진행중이에요,\n회원가입을 중단하시겠어요?`->React.string}

@@ -19,6 +19,7 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ProductForm from "../utils/ProductForm.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RelayRuntime from "relay-runtime";
@@ -28,7 +29,6 @@ import * as ReactHookForm$1 from "react-hook-form";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
 import * as Select_Tax_Status from "./Select_Tax_Status.mjs";
 import EndOfDay from "date-fns/endOfDay";
-import * as Hooks from "react-relay/hooks";
 import Async from "react-select/async";
 import StartOfDay from "date-fns/startOfDay";
 import * as Product_Detail_Editor from "./Product_Detail_Editor.mjs";
@@ -42,17 +42,19 @@ import * as ReactToastNotifications from "react-toast-notifications";
 import * as Product_Detail_Basic_Admin from "./Product_Detail_Basic_Admin.mjs";
 import * as Select_Product_Operation_Status from "./Select_Product_Operation_Status.mjs";
 import * as Product_Detail_Display_Categories from "./Product_Detail_Display_Categories.mjs";
+import * as Select_Product_NotationType_Admin from "./Select_Product_NotationType_Admin.mjs";
+import * as Select_Product_QuotationType_Admin from "./Select_Product_QuotationType_Admin.mjs";
 import * as UpdateNormalProductFormAdminFragment_graphql from "../__generated__/UpdateNormalProductFormAdminFragment_graphql.mjs";
 import * as UpdateNormalProductFormAdminMutation_graphql from "../__generated__/UpdateNormalProductFormAdminMutation_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(UpdateNormalProductFormAdminFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(UpdateNormalProductFormAdminFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(UpdateNormalProductFormAdminFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(UpdateNormalProductFormAdminFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(UpdateNormalProductFormAdminFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -66,6 +68,14 @@ var Fragment_displayCategoryType_decode = UpdateNormalProductFormAdminFragment_g
 
 var Fragment_displayCategoryType_fromString = UpdateNormalProductFormAdminFragment_graphql.Utils.displayCategoryType_fromString;
 
+var Fragment_productNotationInformationType_decode = UpdateNormalProductFormAdminFragment_graphql.Utils.productNotationInformationType_decode;
+
+var Fragment_productNotationInformationType_fromString = UpdateNormalProductFormAdminFragment_graphql.Utils.productNotationInformationType_fromString;
+
+var Fragment_productSalesType_decode = UpdateNormalProductFormAdminFragment_graphql.Utils.productSalesType_decode;
+
+var Fragment_productSalesType_fromString = UpdateNormalProductFormAdminFragment_graphql.Utils.productSalesType_fromString;
+
 var Fragment_productStatus_decode = UpdateNormalProductFormAdminFragment_graphql.Utils.productStatus_decode;
 
 var Fragment_productStatus_fromString = UpdateNormalProductFormAdminFragment_graphql.Utils.productStatus_fromString;
@@ -73,14 +83,17 @@ var Fragment_productStatus_fromString = UpdateNormalProductFormAdminFragment_gra
 var Fragment = {
   displayCategoryType_decode: Fragment_displayCategoryType_decode,
   displayCategoryType_fromString: Fragment_displayCategoryType_fromString,
+  productNotationInformationType_decode: Fragment_productNotationInformationType_decode,
+  productNotationInformationType_fromString: Fragment_productNotationInformationType_fromString,
+  productSalesType_decode: Fragment_productSalesType_decode,
+  productSalesType_fromString: Fragment_productSalesType_fromString,
   productStatus_decode: Fragment_productStatus_decode,
   productStatus_fromString: Fragment_productStatus_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
-
-var makeVariables = UpdateNormalProductFormAdminMutation_graphql.Utils.makeVariables;
 
 function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
   return RelayRuntime.commitMutation(environment, {
@@ -101,14 +114,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? UpdateNormalProductFormAdminMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, UpdateNormalProductFormAdminMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, UpdateNormalProductFormAdminMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use$1(param) {
-  var match = Hooks.useMutation(UpdateNormalProductFormAdminMutation_graphql.node);
+  var match = ReactRelay.useMutation(UpdateNormalProductFormAdminMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -116,13 +129,13 @@ function use$1(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, UpdateNormalProductFormAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, UpdateNormalProductFormAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? UpdateNormalProductFormAdminMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, UpdateNormalProductFormAdminMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, UpdateNormalProductFormAdminMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: UpdateNormalProductFormAdminMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -133,23 +146,38 @@ function use$1(param) {
         ];
 }
 
+var Mutation_errorCode_decode = UpdateNormalProductFormAdminMutation_graphql.Utils.errorCode_decode;
+
+var Mutation_errorCode_fromString = UpdateNormalProductFormAdminMutation_graphql.Utils.errorCode_fromString;
+
 var Mutation_normalProductType_decode = UpdateNormalProductFormAdminMutation_graphql.Utils.normalProductType_decode;
 
 var Mutation_normalProductType_fromString = UpdateNormalProductFormAdminMutation_graphql.Utils.normalProductType_fromString;
+
+var Mutation_productNotationInformationType_decode = UpdateNormalProductFormAdminMutation_graphql.Utils.productNotationInformationType_decode;
+
+var Mutation_productNotationInformationType_fromString = UpdateNormalProductFormAdminMutation_graphql.Utils.productNotationInformationType_fromString;
+
+var Mutation_productSalesType_decode = UpdateNormalProductFormAdminMutation_graphql.Utils.productSalesType_decode;
+
+var Mutation_productSalesType_fromString = UpdateNormalProductFormAdminMutation_graphql.Utils.productSalesType_fromString;
 
 var Mutation_productStatus_decode = UpdateNormalProductFormAdminMutation_graphql.Utils.productStatus_decode;
 
 var Mutation_productStatus_fromString = UpdateNormalProductFormAdminMutation_graphql.Utils.productStatus_fromString;
 
-var Mutation_make_imageInput = UpdateNormalProductFormAdminMutation_graphql.Utils.make_imageInput;
-
 var Mutation = {
+  errorCode_decode: Mutation_errorCode_decode,
+  errorCode_fromString: Mutation_errorCode_fromString,
   normalProductType_decode: Mutation_normalProductType_decode,
   normalProductType_fromString: Mutation_normalProductType_fromString,
+  productNotationInformationType_decode: Mutation_productNotationInformationType_decode,
+  productNotationInformationType_fromString: Mutation_productNotationInformationType_fromString,
+  productSalesType_decode: Mutation_productSalesType_decode,
+  productSalesType_fromString: Mutation_productSalesType_fromString,
   productStatus_decode: Mutation_productStatus_decode,
   productStatus_fromString: Mutation_productStatus_fromString,
-  make_imageInput: Mutation_make_imageInput,
-  makeVariables: makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use$1
@@ -228,6 +256,14 @@ function submit_encode(v) {
               [
                 "description-html",
                 Spice.stringToJson(v.editor)
+              ],
+              [
+                "notation-information-type",
+                Select_Product_NotationType_Admin.Notation.status_encode(v.notationInformationType)
+              ],
+              [
+                "sales-type",
+                Spice.optionToJson(Select_Product_QuotationType_Admin.QuotationType.t_encode, v.salesType)
               ]
             ]);
 }
@@ -271,174 +307,200 @@ function submit_decode(v) {
                             if (documentURL.TAG === /* Ok */0) {
                               var editor = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "description-html"), null));
                               if (editor.TAG === /* Ok */0) {
+                                var notationInformationType = Select_Product_NotationType_Admin.Notation.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "notation-information-type"), null));
+                                if (notationInformationType.TAG === /* Ok */0) {
+                                  var salesType = Spice.optionFromJson(Select_Product_QuotationType_Admin.QuotationType.t_decode, Belt_Option.getWithDefault(Js_dict.get(dict$1, "sales-type"), null));
+                                  if (salesType.TAG === /* Ok */0) {
+                                    return {
+                                            TAG: /* Ok */0,
+                                            _0: {
+                                              producerProductName: producerProductName._0,
+                                              buyerProductName: buyerProductName._0,
+                                              basePrice: basePrice._0,
+                                              origin: origin._0,
+                                              productCategory: productCategory._0,
+                                              displayCategories: displayCategories._0,
+                                              operationStatus: operationStatus._0,
+                                              delivery: delivery._0,
+                                              quotable: quotable._0,
+                                              notice: notice._0,
+                                              noticeStartAt: noticeStartAt._0,
+                                              noticeEndAt: noticeEndAt._0,
+                                              thumbnail: thumbnail._0,
+                                              documentURL: documentURL._0,
+                                              editor: editor._0,
+                                              notationInformationType: notationInformationType._0,
+                                              salesType: salesType._0
+                                            }
+                                          };
+                                  }
+                                  var e = salesType._0;
+                                  return {
+                                          TAG: /* Error */1,
+                                          _0: {
+                                            path: ".sales-type" + e.path,
+                                            message: e.message,
+                                            value: e.value
+                                          }
+                                        };
+                                }
+                                var e$1 = notationInformationType._0;
                                 return {
-                                        TAG: /* Ok */0,
+                                        TAG: /* Error */1,
                                         _0: {
-                                          producerProductName: producerProductName._0,
-                                          buyerProductName: buyerProductName._0,
-                                          basePrice: basePrice._0,
-                                          origin: origin._0,
-                                          productCategory: productCategory._0,
-                                          displayCategories: displayCategories._0,
-                                          operationStatus: operationStatus._0,
-                                          delivery: delivery._0,
-                                          quotable: quotable._0,
-                                          notice: notice._0,
-                                          noticeStartAt: noticeStartAt._0,
-                                          noticeEndAt: noticeEndAt._0,
-                                          thumbnail: thumbnail._0,
-                                          documentURL: documentURL._0,
-                                          editor: editor._0
+                                          path: ".notation-information-type" + e$1.path,
+                                          message: e$1.message,
+                                          value: e$1.value
                                         }
                                       };
                               }
-                              var e = editor._0;
+                              var e$2 = editor._0;
                               return {
                                       TAG: /* Error */1,
                                       _0: {
-                                        path: ".description-html" + e.path,
-                                        message: e.message,
-                                        value: e.value
+                                        path: ".description-html" + e$2.path,
+                                        message: e$2.message,
+                                        value: e$2.value
                                       }
                                     };
                             }
-                            var e$1 = documentURL._0;
+                            var e$3 = documentURL._0;
                             return {
                                     TAG: /* Error */1,
                                     _0: {
-                                      path: ".document-url" + e$1.path,
-                                      message: e$1.message,
-                                      value: e$1.value
+                                      path: ".document-url" + e$3.path,
+                                      message: e$3.message,
+                                      value: e$3.value
                                     }
                                   };
                           }
-                          var e$2 = thumbnail._0;
+                          var e$4 = thumbnail._0;
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: ".thumbnail" + e$2.path,
-                                    message: e$2.message,
-                                    value: e$2.value
+                                    path: ".thumbnail" + e$4.path,
+                                    message: e$4.message,
+                                    value: e$4.value
                                   }
                                 };
                         }
-                        var e$3 = noticeEndAt._0;
+                        var e$5 = noticeEndAt._0;
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: ".notice-date-to" + e$3.path,
-                                  message: e$3.message,
-                                  value: e$3.value
+                                  path: ".notice-date-to" + e$5.path,
+                                  message: e$5.message,
+                                  value: e$5.value
                                 }
                               };
                       }
-                      var e$4 = noticeStartAt._0;
+                      var e$6 = noticeStartAt._0;
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: ".notice-date-from" + e$4.path,
-                                message: e$4.message,
-                                value: e$4.value
+                                path: ".notice-date-from" + e$6.path,
+                                message: e$6.message,
+                                value: e$6.value
                               }
                             };
                     }
-                    var e$5 = notice._0;
+                    var e$7 = notice._0;
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: ".notice" + e$5.path,
-                              message: e$5.message,
-                              value: e$5.value
+                              path: ".notice" + e$7.path,
+                              message: e$7.message,
+                              value: e$7.value
                             }
                           };
                   }
-                  var e$6 = quotable._0;
+                  var e$8 = quotable._0;
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".product-quotable" + e$6.path,
-                            message: e$6.message,
-                            value: e$6.value
+                            path: ".product-quotable" + e$8.path,
+                            message: e$8.message,
+                            value: e$8.value
                           }
                         };
                 }
-                var e$7 = delivery._0;
+                var e$9 = delivery._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".product-delivery" + e$7.path,
-                          message: e$7.message,
-                          value: e$7.value
+                          path: ".product-delivery" + e$9.path,
+                          message: e$9.message,
+                          value: e$9.value
                         }
                       };
               }
-              var e$8 = operationStatus._0;
+              var e$10 = operationStatus._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".product-operation-status" + e$8.path,
-                        message: e$8.message,
-                        value: e$8.value
+                        path: ".product-operation-status" + e$10.path,
+                        message: e$10.message,
+                        value: e$10.value
                       }
                     };
             }
-            var e$9 = displayCategories._0;
+            var e$11 = displayCategories._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".display-categories" + e$9.path,
-                      message: e$9.message,
-                      value: e$9.value
+                      path: ".display-categories" + e$11.path,
+                      message: e$11.message,
+                      value: e$11.value
                     }
                   };
           }
-          var e$10 = productCategory._0;
+          var e$12 = productCategory._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".product-category" + e$10.path,
-                    message: e$10.message,
-                    value: e$10.value
+                    path: ".product-category" + e$12.path,
+                    message: e$12.message,
+                    value: e$12.value
                   }
                 };
         }
-        var e$11 = origin._0;
+        var e$13 = origin._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".origin" + e$11.path,
-                  message: e$11.message,
-                  value: e$11.value
+                  path: ".origin" + e$13.path,
+                  message: e$13.message,
+                  value: e$13.value
                 }
               };
       }
-      var e$12 = basePrice._0;
+      var e$14 = basePrice._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".base-price" + e$12.path,
-                message: e$12.message,
-                value: e$12.value
+                path: ".base-price" + e$14.path,
+                message: e$14.message,
+                value: e$14.value
               }
             };
     }
-    var e$13 = buyerProductName._0;
+    var e$15 = buyerProductName._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".buyer-product-name" + e$13.path,
-              message: e$13.message,
-              value: e$13.value
+              path: ".buyer-product-name" + e$15.path,
+              message: e$15.message,
+              value: e$15.value
             }
           };
   }
-  var e$14 = producerProductName._0;
+  var e$16 = producerProductName._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".producer-product-name" + e$14.path,
-            message: e$14.message,
-            value: e$14.value
+            path: ".producer-product-name" + e$16.path,
+            message: e$16.message,
+            value: e$16.value
           }
         };
 }
@@ -458,7 +520,9 @@ var Form_formName = {
   noticeDateFrom: "notice-date-from",
   thumbnail: "thumbnail",
   documentURL: "document-url",
-  editor: "description-html"
+  editor: "description-html",
+  notationInformationType: "notation-information-type",
+  salesType: "sales-type"
 };
 
 var Form = {
@@ -515,7 +579,7 @@ var ReadOnlyProducer = {
   make: Update_Normal_Product_Form_Admin$ReadOnlyProducer
 };
 
-function Update_Normal_Product_Form_Admin$ReadOnlyCategory(Props) {
+function Update_Normal_Product_Form_Admin$Category(Props) {
   var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
@@ -529,12 +593,12 @@ function Update_Normal_Product_Form_Admin$ReadOnlyCategory(Props) {
                     }, "*")), React.createElement(Select_Product_Categories.make, {
                   control: match.control,
                   name: name,
-                  disabled: true
+                  disabled: false
                 }));
 }
 
-var ReadOnlyCategory = {
-  make: Update_Normal_Product_Form_Admin$ReadOnlyCategory
+var Category = {
+  make: Update_Normal_Product_Form_Admin$Category
 };
 
 function Update_Normal_Product_Form_Admin$DisplayCategoryInput(Props) {
@@ -718,7 +782,7 @@ function Update_Normal_Product_Form_Admin$DisplayPriceInput(Props) {
                                       var validValue = Belt_Option.getWithDefault(Belt_Option.map(localeStringToFloat(value), (function (prim) {
                                                   return prim;
                                                 })), "");
-                                      return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, validValue));
+                                      Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, validValue));
                                     })
                                 });
                     }),
@@ -809,15 +873,15 @@ function Update_Normal_Product_Form_Admin$OperationStatusInput(Props) {
                   isShow: match$1[0],
                   children: React.createElement("p", undefined, "영구판매중지 상태를 선택 후 저장하시면", React.createElement("br", undefined), "추후 해당 상품을 수정할 수 없습니다.", React.createElement("br", undefined), React.createElement("br", undefined), "영구판매중지 상태로 변경할까요?"),
                   onCancel: (function (param) {
-                      return setShowProductOperationNoSale(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowProductOperationNoSale(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       setValue(name, Select_Product_Operation_Status.Base.status_encode(/* RETIRE */3));
-                      return setShowProductOperationNoSale(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowProductOperationNoSale(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "닫기",
                   textOnConfirm: "확인",
@@ -882,6 +946,61 @@ var OriginInput = {
   make: Update_Normal_Product_Form_Admin$OriginInput
 };
 
+function Update_Normal_Product_Form_Admin$NotationTypeInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var errors = match.formState.errors;
+  var tmp = {
+    name: name,
+    control: match.control,
+    render: (function (param) {
+        var match = param.field;
+        var onChange = match.onChange;
+        return React.createElement("div", undefined, React.createElement(Select_Product_NotationType_Admin.Notation.make, {
+                        status: Belt_Result.mapWithDefault(Select_Product_NotationType_Admin.Notation.status_decode(match.value), undefined, (function (status) {
+                                return status;
+                              })),
+                        onChange: (function (param) {
+                            return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_NotationType_Admin.Notation.status_encode(param)));
+                          }),
+                        forwardRef: match.ref
+                      }), React.createElement(ErrorMessage.ErrorMessage, {
+                        name: name,
+                        errors: errors,
+                        render: (function (param) {
+                            return React.createElement("span", {
+                                        className: "flex"
+                                      }, React.createElement(IconError.make, {
+                                            width: "20",
+                                            height: "20"
+                                          }), React.createElement("span", {
+                                            className: "text-sm text-notice ml-1"
+                                          }, "필수 표기정보 유형을 선택해주세요."));
+                          })
+                      }));
+      }),
+    rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+  };
+  var tmp$1 = Belt_Option.map(defaultValue, Select_Product_NotationType_Admin.Notation.status_encode);
+  if (tmp$1 !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(tmp$1);
+  }
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 max-w-md w-1/3"
+            }, React.createElement("div", undefined, React.createElement("span", {
+                      className: "font-bold"
+                    }, "필수 표기정보 유형"), React.createElement("span", {
+                      className: "text-notice"
+                    }, "*")), React.createElement(ReactHookForm$1.Controller, tmp));
+}
+
+var NotationTypeInput = {
+  make: Update_Normal_Product_Form_Admin$NotationTypeInput
+};
+
 function Update_Normal_Product_Form_Admin$ReadOnlyIsVat(Props) {
   var status = Props.status;
   return React.createElement("div", {
@@ -928,7 +1047,7 @@ function Update_Normal_Product_Form_Admin$IsCourierAvailableInput(Props) {
                                               return status;
                                             })),
                                       onChange: (function (e) {
-                                          return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
+                                          Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
                                         }),
                                       forwardRef: match.ref,
                                       disabled: disabled
@@ -990,6 +1109,66 @@ var QuotableCheckbox = {
   make: Update_Normal_Product_Form_Admin$QuotableCheckbox
 };
 
+function Update_Normal_Product_Form_Admin$QuotationTypeInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var quotableCheckboxName = Props.quotableCheckboxName;
+  var defaultQuotable = Props.defaultQuotable;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var errors = match.formState.errors;
+  var quotableCheckboxValue = ReactHookForm$1.useWatch({
+        name: quotableCheckboxName,
+        defaultValue: defaultQuotable
+      });
+  var disabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
+  var t = Belt_Option.map(defaultValue, Select_Product_QuotationType_Admin.QuotationType.t_encode);
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 max-w-md w-1/3"
+            }, React.createElement("div", undefined, React.createElement("span", {
+                      className: disabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "견적 유형"), React.createElement("span", {
+                      className: disabled ? "text-gray-400" : "text-notice"
+                    }, "*")), React.createElement(ReactHookForm$1.Controller, {
+                  name: name,
+                  control: match.control,
+                  render: (function (param) {
+                      var match = param.field;
+                      var onChange = match.onChange;
+                      return React.createElement("div", undefined, React.createElement(Select_Product_QuotationType_Admin.make, {
+                                      status: Belt_Result.mapWithDefault(Select_Product_QuotationType_Admin.QuotationType.t_decode(match.value), undefined, (function (status) {
+                                              return status;
+                                            })),
+                                      onChange: (function (s) {
+                                          Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_QuotationType_Admin.QuotationType.t_encode(s)));
+                                        }),
+                                      forwardRef: match.ref,
+                                      disabled: disabled
+                                    }), React.createElement(ErrorMessage.ErrorMessage, {
+                                      name: name,
+                                      errors: errors,
+                                      render: (function (param) {
+                                          return React.createElement("span", {
+                                                      className: "flex"
+                                                    }, React.createElement(IconError.make, {
+                                                          width: "20",
+                                                          height: "20"
+                                                        }), React.createElement("span", {
+                                                          className: "text-sm text-notice ml-1"
+                                                        }, "견적 유형을 선택해주세요."));
+                                        })
+                                    }));
+                    }),
+                  defaultValue: t !== undefined ? Caml_option.valFromOption(t) : null,
+                  rules: ReactHookForm.Rules.make(!disabled, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                }));
+}
+
+var QuotationTypeInput = {
+  make: Update_Normal_Product_Form_Admin$QuotationTypeInput
+};
+
 function Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput(Props) {
   var name = Props.name;
   var minDate = Props.minDate;
@@ -1017,7 +1196,7 @@ function Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput(Props) {
                   var tmp = {
                     id: match.name,
                     onChange: (function (e) {
-                        return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
+                        Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
                       }),
                     firstDayOfWeek: 0
                   };
@@ -1146,7 +1325,7 @@ function Update_Normal_Product_Form_Admin$ThumbnailUploadInput(Props) {
                           return React.createElement(Upload_Thumbnail_Admin.make, {
                                       name: match.name,
                                       updateFn: (function (imageUrls) {
-                                          return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Upload_Thumbnail_Admin.Form.image_encode(imageUrls)));
+                                          Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Upload_Thumbnail_Admin.Form.image_encode(imageUrls)));
                                         }),
                                       value: Belt_Result.getWithDefault(Upload_Thumbnail_Admin.Form.image_decode(match.value), Upload_Thumbnail_Admin.Form.resetImage),
                                       disabled: disabled
@@ -1272,7 +1451,7 @@ function producerToReactSelected(p) {
   return /* Selected */{
           value: p.id,
           label: Belt_Option.mapWithDefault(p.bossName, p.name, (function (bn) {
-                  return p.name + "(" + bn + ")";
+                  return "" + p.name + "(" + bn + ")";
                 }))
         };
 }
@@ -1368,7 +1547,8 @@ function toImage(image) {
           thumb100x100: image.thumb100x100,
           thumb1920x1920: image.thumb1920x1920,
           thumb400x400: image.thumb400x400,
-          thumb800x800: image.thumb800x800
+          thumb800x800: image.thumb800x800,
+          thumb800xall: Belt_Option.getWithDefault(image.thumb800xall, image.thumb1920x1920)
         };
 }
 
@@ -1404,40 +1584,88 @@ function decodeStatus(s) {
   }
 }
 
+function decodeNotationInformationType(v) {
+  if (v === "WHOLE_FOOD") {
+    return /* WHOLE_FOOD */1;
+  } else if (v === "PROCESSED_FOOD") {
+    return /* PROCESSED_FOOD */0;
+  } else {
+    return ;
+  }
+}
+
+function decodeSalesType(s) {
+  if (s === "RFQ_LIVESTOCK") {
+    return /* RFQ_LIVESTOCK */1;
+  } else if (s === "TRADEMATCH_AQUATIC") {
+    return /* TRADEMATCH_AQUATIC */0;
+  } else {
+    return ;
+  }
+}
+
 function makeNormalProductVariables(productId, form) {
-  return Curry.app(makeVariables, [
-              productId,
-              form.editor,
-              ProductForm.makeDisplayCategoryIds(form.displayCategories),
-              form.buyerProductName,
-              {
-                original: form.thumbnail.original,
-                thumb100x100: form.thumbnail.thumb100x100,
-                thumb400x400: form.thumbnail.thumb400x400,
-                thumb800x800: form.thumbnail.thumb800x800,
-                thumb1000x1000: form.thumbnail.thumb1000x1000,
-                thumb1920x1920: form.thumbnail.thumb1920x1920
-              },
-              Select_Delivery.toBool(form.delivery),
-              form.producerProductName,
-              Belt_Option.keep(form.notice, (function (str) {
-                      return str !== "";
-                    })),
-              ProductForm.makeNoticeDate(form.noticeEndAt, (function (prim) {
-                      return EndOfDay(prim);
-                    })),
-              ProductForm.makeNoticeDate(form.noticeStartAt, (function (prim) {
-                      return StartOfDay(prim);
-                    })),
-              form.origin,
-              form.basePrice,
-              Belt_Option.keep(form.documentURL, (function (str) {
-                      return str !== "";
-                    })),
-              encodeStatus(form.operationStatus),
-              form.quotable ? "QUOTABLE" : "NORMAL",
-              undefined
-            ]);
+  var match = form.notationInformationType;
+  var tmp;
+  if (form.quotable) {
+    var match$1 = form.salesType;
+    tmp = match$1 !== undefined ? (
+        match$1 ? "RFQ_LIVESTOCK" : "TRADEMATCH_AQUATIC"
+      ) : undefined;
+  } else {
+    tmp = undefined;
+  }
+  var tmp$1 = {
+    categoryId: ProductForm.makeCategoryId(form.productCategory.c5),
+    description: form.editor,
+    displayCategoryIds: ProductForm.makeDisplayCategoryIds(form.displayCategories),
+    displayName: form.buyerProductName,
+    id: productId,
+    image: {
+      original: form.thumbnail.original,
+      thumb1000x1000: form.thumbnail.thumb1000x1000,
+      thumb100x100: form.thumbnail.thumb100x100,
+      thumb1920x1920: form.thumbnail.thumb1920x1920,
+      thumb400x400: form.thumbnail.thumb400x400,
+      thumb800x800: form.thumbnail.thumb800x800,
+      thumb800xall: form.thumbnail.thumb800xall
+    },
+    isCourierAvailable: Select_Delivery.toBool(form.delivery),
+    name: form.producerProductName,
+    notationInformationType: match ? "WHOLE_FOOD" : "PROCESSED_FOOD",
+    origin: form.origin,
+    price: form.basePrice,
+    status: encodeStatus(form.operationStatus),
+    type_: form.quotable ? "QUOTABLE" : "NORMAL"
+  };
+  var tmp$2 = Belt_Option.keep(form.notice, (function (str) {
+          return str !== "";
+        }));
+  if (tmp$2 !== undefined) {
+    tmp$1.notice = tmp$2;
+  }
+  var tmp$3 = ProductForm.makeNoticeDate(form.noticeEndAt, (function (prim) {
+          return EndOfDay(prim);
+        }));
+  if (tmp$3 !== undefined) {
+    tmp$1.noticeEndAt = tmp$3;
+  }
+  var tmp$4 = ProductForm.makeNoticeDate(form.noticeStartAt, (function (prim) {
+          return StartOfDay(prim);
+        }));
+  if (tmp$4 !== undefined) {
+    tmp$1.noticeStartAt = tmp$4;
+  }
+  var tmp$5 = Belt_Option.keep(form.documentURL, (function (str) {
+          return str !== "";
+        }));
+  if (tmp$5 !== undefined) {
+    tmp$1.salesDocument = tmp$5;
+  }
+  if (tmp !== undefined) {
+    tmp$1.salesType = Caml_option.valFromOption(tmp);
+  }
+  return tmp$1;
 }
 
 function Update_Normal_Product_Form_Admin(Props) {
@@ -1455,9 +1683,17 @@ function Update_Normal_Product_Form_Admin(Props) {
       });
   var setShowUpdateSuccess = match$2[1];
   var match$3 = React.useState(function () {
+        return [
+                /* Hide */1,
+                undefined
+              ];
+      });
+  var setErrorStatus = match$3[1];
+  var errorStatus = match$3[0];
+  var match$4 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowInitialize = match$3[1];
+  var setShowInitialize = match$4[1];
   var disabled = product.status === "RETIRE";
   var methods = ReactHookForm$1.useForm({
         mode: "onChange",
@@ -1474,50 +1710,72 @@ function Update_Normal_Product_Form_Admin(Props) {
               ]
             ])
       }, undefined);
+  var quotable = "product-quotable";
   var onSubmit = function (data, param) {
-    var result = Belt_Result.map(submit_decode(data), (function (data$p) {
-            Curry.app(normalMutate, [
-                  undefined,
-                  (function (param, param$1) {
-                      return setShowUpdateSuccess(function (param) {
-                                  return /* Show */0;
-                                });
-                    }),
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  makeNormalProductVariables(product.id, data$p),
-                  undefined,
-                  undefined
-                ]);
-            
-          }));
-    if (result.TAG === /* Ok */0) {
+    var data$1 = submit_decode(data);
+    if (data$1.TAG === /* Ok */0) {
+      Curry.app(normalMutate, [
+            undefined,
+            (function (param, param$1) {
+                var updateProduct = param.updateProduct;
+                if (typeof updateProduct === "object") {
+                  var variant = updateProduct.NAME;
+                  if (variant === "UpdateProductResult") {
+                    return setShowUpdateSuccess(function (param) {
+                                return /* Show */0;
+                              });
+                  }
+                  if (variant === "Error") {
+                    var message = updateProduct.VAL.message;
+                    return setErrorStatus(function (param) {
+                                return [
+                                        /* Show */0,
+                                        message
+                                      ];
+                              });
+                  }
+                  
+                }
+                setErrorStatus(function (param) {
+                      return [
+                              /* Show */0,
+                              undefined
+                            ];
+                    });
+              }),
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            makeNormalProductVariables(product.id, data$1._0),
+            undefined,
+            undefined
+          ]);
       return ;
     }
-    console.log(result._0);
-    return addToast(React.createElement("div", {
-                    className: "flex items-center"
-                  }, React.createElement(IconError.make, {
-                        width: "24",
-                        height: "24",
-                        className: "mr-2"
-                      }), "오류가 발생하였습니다. 수정내용을 확인하세요."), {
-                appearance: "error"
-              });
+    console.log(data$1._0);
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), "오류가 발생하였습니다. 수정내용을 확인하세요."), {
+          appearance: "error"
+        });
   };
   var handleReset = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setShowInitialize(function (param) {
-                              return /* Show */0;
-                            });
+                  setShowInitialize(function (param) {
+                        return /* Show */0;
+                      });
                 }), param);
   };
   var producer$p = product.producer;
   var s = Belt_Option.getWithDefault(product.isVat, false);
   var s$1 = Belt_Option.getWithDefault(product.isCourierAvailable, false);
-  var match$4 = product.status;
+  var match$5 = product.status;
+  var errorMessage = errorStatus[1];
   return React.createElement(ReactHookForm.Provider.make, {
               children: null,
               methods: methods
@@ -1533,7 +1791,7 @@ function Update_Normal_Product_Form_Admin(Props) {
                               className: "flex flex-col space-y-6 py-6"
                             }, producer$p !== undefined ? React.createElement(Update_Normal_Product_Form_Admin$ReadOnlyProducer, {
                                     value: producerToReactSelected(producer$p)
-                                  }) : null, React.createElement(Update_Normal_Product_Form_Admin$ReadOnlyCategory, {
+                                  }) : null, React.createElement(Update_Normal_Product_Form_Admin$Category, {
                                   name: "product-category"
                                 }), React.createElement(Update_Normal_Product_Form_Admin$DisplayCategoryInput, {
                                   name: "display-categories",
@@ -1564,6 +1822,9 @@ function Update_Normal_Product_Form_Admin(Props) {
                                       name: "origin",
                                       defaultValue: product.origin,
                                       disabled: disabled
+                                    }), React.createElement(Update_Normal_Product_Form_Admin$NotationTypeInput, {
+                                      name: "notation-information-type",
+                                      defaultValue: Belt_Option.flatMap(product.notationInformationType, decodeNotationInformationType)
                                     })), React.createElement("div", {
                                   className: "flex gap-2 text-sm"
                                 }, React.createElement(Update_Normal_Product_Form_Admin$ReadOnlyIsVat, {
@@ -1573,11 +1834,16 @@ function Update_Normal_Product_Form_Admin(Props) {
                                       defaultValue: s$1 ? /* AVAILABLE */0 : /* UNAVAILABLE */1,
                                       disabled: disabled
                                     }))), React.createElement("div", {
-                              className: "py-6 flex flex-col space-y-6"
+                              className: "py-6 flex space-y-6"
                             }, React.createElement(Update_Normal_Product_Form_Admin$QuotableCheckbox, {
-                                  name: "product-quotable",
+                                  name: quotable,
                                   defaultValue: isQuotable,
                                   disabled: disabled
+                                }), React.createElement(Update_Normal_Product_Form_Admin$QuotationTypeInput, {
+                                  name: "sales-type",
+                                  defaultValue: Belt_Option.flatMap(product.salesType, decodeSalesType),
+                                  quotableCheckboxName: quotable,
+                                  defaultQuotable: isQuotable
                                 })))), React.createElement("section", {
                       className: "p-7 mt-4 mx-4 mb-7 bg-white rounded shadow-gl"
                     }, React.createElement("h2", {
@@ -1606,7 +1872,7 @@ function Update_Normal_Product_Form_Admin(Props) {
                               disabled: disabled
                             }))), React.createElement("div", {
                       className: "fixed bottom-0 h-16 max-w-gnb-panel bg-white flex items-center gap-2 justify-end pr-10 w-full z-50"
-                    }, match$4 === "RETIRE" ? React.createElement("button", {
+                    }, match$5 === "RETIRE" ? React.createElement("button", {
                             className: "px-3 py-2 bg-disabled-L2 text-white rounded-lg focus:outline-none",
                             disabled: true,
                             type: "submit"
@@ -1620,18 +1886,18 @@ function Update_Normal_Product_Form_Admin(Props) {
                                 disabled: isNormalMutating,
                                 type: "submit"
                               }, "상품 수정")))), React.createElement(Dialog.make, {
-                  isShow: match$3[0],
+                  isShow: match$4[0],
                   children: React.createElement("p", undefined, "수정한 모든 내용을 초기화 하시겠어요?"),
                   onCancel: (function (param) {
-                      return setShowInitialize(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowInitialize(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       router.reload(router.pathname);
-                      return setShowInitialize(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowInitialize(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "닫기",
                   textOnConfirm: "초기화",
@@ -1647,7 +1913,21 @@ function Update_Normal_Product_Form_Admin(Props) {
                             return /* Hide */1;
                           });
                       router.reload(router.pathname);
-                      
+                    }),
+                  textOnCancel: "확인",
+                  boxStyle: "text-center rounded-2xl"
+                }), React.createElement(Dialog.make, {
+                  isShow: errorStatus[0],
+                  children: React.createElement("div", {
+                        className: "text-gray-500 text-center whitespace-pre-wrap"
+                      }, "상품정보 수정에 실패하였습니다.", errorMessage !== undefined ? React.createElement("p", undefined, errorMessage) : null),
+                  onCancel: (function (param) {
+                      setErrorStatus(function (param) {
+                            return [
+                                    /* Hide */1,
+                                    undefined
+                                  ];
+                          });
                     }),
                   textOnCancel: "확인",
                   boxStyle: "text-center rounded-2xl"
@@ -1662,16 +1942,18 @@ export {
   getTextInputStyle ,
   Form ,
   ReadOnlyProducer ,
-  ReadOnlyCategory ,
+  Category ,
   DisplayCategoryInput ,
   ProductNameInputs ,
   ReadOnlyProductId ,
   DisplayPriceInput ,
   OperationStatusInput ,
   OriginInput ,
+  NotationTypeInput ,
   ReadOnlyIsVat ,
   IsCourierAvailableInput ,
   QuotableCheckbox ,
+  QuotationTypeInput ,
   NoticeAndDateInput ,
   ThumbnailUploadInput ,
   SalesDocumentURLInput ,
@@ -1684,8 +1966,9 @@ export {
   toImage ,
   encodeStatus ,
   decodeStatus ,
+  decodeNotationInformationType ,
+  decodeSalesType ,
   makeNormalProductVariables ,
   make ,
-  
 }
 /* react Not a pure module */

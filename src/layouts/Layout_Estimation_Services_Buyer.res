@@ -14,7 +14,8 @@ let make = (~children) => {
 
   // 구매요청(Tradematch) 서비스
   | (Some("tradematch"), _, Some("apply"))
-  | (Some("tradematch"), _, Some("applied")) => children
+  | (Some("tradematch"), _, Some("applied"))
+  | (Some("tradematch"), Some("buy"), Some("products")) => children
 
   | _ => <Layout_Buyer> children </Layout_Buyer>
   }

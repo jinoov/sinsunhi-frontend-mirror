@@ -10,10 +10,9 @@ import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as IconArrowSelect from "./svgs/IconArrowSelect.mjs";
-import Format from "date-fns/format";
-import SubDays from "date-fns/subDays";
 import * as ChannelTalkHelper from "../utils/ChannelTalkHelper.mjs";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
+import ArrowRightSvg from "../../public/assets/arrow-right.svg";
 
 function Header$User(Props) {
   var kind = Props.kind;
@@ -146,15 +145,6 @@ function Header$Seller(Props) {
                             }))), React.createElement("div", {
                       className: "flex flex-row overflow-x-scroll scrollbar-hide"
                     }, React.createElement(Link, {
-                          href: "/seller/shipments?from=" + Format(SubDays(new Date(), 7), "yyyy-MM-dd") + "&to=" + Format(new Date(), "yyyy-MM-dd"),
-                          passHref: true,
-                          children: React.createElement("a", {
-                                className: "text-lg font-bold text-green-gl px-2 cursor-pointer min-w-max"
-                              }, React.createElement("span", {
-                                    className: tab === "shipments" ? tabActive : tabInactive,
-                                    id: "button"
-                                  }, "출하내역"))
-                        }), React.createElement(Link, {
                           href: "/seller/orders?status=CREATE&sort=created",
                           passHref: true,
                           children: React.createElement("a", {
@@ -192,6 +182,27 @@ var Seller = {
   make: Header$Seller
 };
 
+var arrowRight = ArrowRightSvg;
+
+function Header$SellerActivateUser(Props) {
+  var router = Router.useRouter();
+  return React.createElement("nav", {
+              className: "w-full max-w-3xl mx-auto h-14 bg-white pl-4 pr-5 flex items-center"
+            }, React.createElement("button", {
+                  onClick: (function (param) {
+                      router.back();
+                    })
+                }, React.createElement("img", {
+                      className: "w-6 h-6 rotate-180",
+                      src: arrowRight
+                    })));
+}
+
+var SellerActivateUser = {
+  arrowRight: arrowRight,
+  make: Header$SellerActivateUser
+};
+
 function Header$Admin(Props) {
   return React.createElement("nav", undefined, React.createElement("ol", {
                   className: "px-4 shadow-inner-b-1 shadow-gray flex justify-between items-center h-16 sm:px-10 md:px-20"
@@ -211,7 +222,7 @@ var Admin = {
 export {
   User ,
   Seller ,
+  SellerActivateUser ,
   Admin ,
-  
 }
-/* Env Not a pure module */
+/* arrowRight Not a pure module */

@@ -2,138 +2,51 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as Global from "../../components/Global.mjs";
 import Head from "next/head";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as Footer_Buyer from "../../components/Footer_Buyer.mjs";
 import * as Header_Buyer from "../../components/Header_Buyer.mjs";
-import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
-import * as RelayRuntime from "relay-runtime";
 import * as ChannelTalkHelper from "../../utils/ChannelTalkHelper.mjs";
-import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as ShopSearchInput_Buyer from "../../components/ShopSearchInput_Buyer.mjs";
-import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ShopMain_SubBanner_Buyer from "../../components/ShopMain_SubBanner_Buyer.mjs";
 import * as ShopMain_MainBanner_Buyer from "../../components/ShopMain_MainBanner_Buyer.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
-import * as ShopMainBuyerQuery_graphql from "../../__generated__/ShopMainBuyerQuery_graphql.mjs";
 import * as ShopMain_CategoryList_Buyer from "../../components/ShopMain_CategoryList_Buyer.mjs";
-import * as ShopMainBuyerFragment_graphql from "../../__generated__/ShopMainBuyerFragment_graphql.mjs";
 import * as ShopMainSpecialShowcaseList_Buyer from "../../components/ShopMainSpecialShowcaseList_Buyer.mjs";
 
-function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(ShopMainBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(ShopMainBuyerQuery_graphql.Internal.convertVariables(variables)), {
-        fetchKey: fetchKey,
-        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
-        networkCacheConfig: networkCacheConfig
-      });
-  return RescriptRelay_Internal.internal_useConvertedValue(ShopMainBuyerQuery_graphql.Internal.convertResponse, data);
+function ShopMain_Buyer$Placeholder(Props) {
+  var deviceType = Props.deviceType;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.Placeholder.make, {});
+    case /* Mobile */2 :
+        return React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.Placeholder.make, {});
+    
+  }
 }
 
-function useLoader(param) {
-  var match = Hooks.useQueryLoader(ShopMainBuyerQuery_graphql.node);
-  var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
-          return function (param, param$1, param$2, param$3) {
-            return Curry._2(loadQueryFn, ShopMainBuyerQuery_graphql.Internal.convertVariables(param), {
-                        fetchPolicy: param$1,
-                        networkCacheConfig: param$2
-                      });
-          };
-        }), [loadQueryFn]);
-  return [
-          Caml_option.nullable_to_opt(match[0]),
-          loadQuery,
-          match[2]
-        ];
-}
-
-function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, ShopMainBuyerQuery_graphql.node, ShopMainBuyerQuery_graphql.Internal.convertVariables(variables), {
-          networkCacheConfig: networkCacheConfig,
-          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
-        }).subscribe({
-        next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: ShopMainBuyerQuery_graphql.Internal.convertResponse(res)
-                      });
-          }),
-        error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
-          })
-      });
-  
-}
-
-function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, ShopMainBuyerQuery_graphql.node, ShopMainBuyerQuery_graphql.Internal.convertVariables(variables), {
-          networkCacheConfig: networkCacheConfig,
-          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
-        }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(ShopMainBuyerQuery_graphql.Internal.convertResponse(res));
-            });
-}
-
-function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(ShopMainBuyerQuery_graphql.node, queryRef);
-  return RescriptRelay_Internal.internal_useConvertedValue(ShopMainBuyerQuery_graphql.Internal.convertResponse, data);
-}
-
-function retain(environment, variables) {
-  var operationDescriptor = RelayRuntime.createOperationDescriptor(ShopMainBuyerQuery_graphql.node, ShopMainBuyerQuery_graphql.Internal.convertVariables(variables));
-  return environment.retain(operationDescriptor);
-}
-
-var Query_makeVariables = ShopMainBuyerQuery_graphql.Utils.makeVariables;
-
-var Query = {
-  makeVariables: Query_makeVariables,
-  Types: undefined,
-  use: use,
-  useLoader: useLoader,
-  $$fetch: $$fetch,
-  fetchPromised: fetchPromised,
-  usePreloaded: usePreloaded,
-  retain: retain
-};
-
-function use$1(fRef) {
-  var data = Hooks.useFragment(ShopMainBuyerFragment_graphql.node, fRef);
-  return RescriptRelay_Internal.internal_useConvertedValue(ShopMainBuyerFragment_graphql.Internal.convertFragment, data);
-}
-
-function useOpt(opt_fRef) {
-  var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(ShopMainBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
-  var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
-  return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
-                if (rawFragment !== undefined) {
-                  return ShopMainBuyerFragment_graphql.Internal.convertFragment(rawFragment);
-                }
-                
-              }), data);
-}
-
-var Fragment = {
-  Types: undefined,
-  use: use$1,
-  useOpt: useOpt
+var Placeholder = {
+  make: ShopMain_Buyer$Placeholder
 };
 
 function ShopMain_Buyer$PC(Props) {
-  var query = Props.query;
+  var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var mainBanners = Props.mainBanners;
+  var subBanners = Props.subBanners;
+  var categories = Props.categories;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  var match = use$1(query);
-  var fragmentRefs = match.fragmentRefs;
+  var isCsr = CustomHooks.useCsr(undefined);
   return React.createElement("div", {
               className: "w-full min-w-[1280px] min-h-screen"
             }, React.createElement(Header_Buyer.PC.make, {
+                  gnbBanners: gnbBanners,
+                  displayCategories: displayCategories,
                   key: router.asPath
                 }), React.createElement("main", {
                   className: "w-full bg-white pt-12 pb-20"
@@ -144,18 +57,26 @@ function ShopMain_Buyer$PC(Props) {
                         }, React.createElement("div", {
                               className: "w-[920px]"
                             }, React.createElement(ShopMain_MainBanner_Buyer.PC.make, {
-                                  query: fragmentRefs
+                                  mainBanners: mainBanners
                                 })), React.createElement("div", {
                               className: "ml-5 w-[310px]"
                             }, React.createElement(ShopMain_SubBanner_Buyer.PC.make, {
-                                  query: fragmentRefs
+                                  subBanners: subBanners
                                 }))), React.createElement("div", {
                           className: "w-full mt-20"
                         }, React.createElement(ShopMain_CategoryList_Buyer.PC.make, {
-                              query: fragmentRefs
-                            })))), React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.make, {
-                  query: fragmentRefs
-                }), React.createElement(Footer_Buyer.PC.make, {}));
+                              categories: categories
+                            })))), isCsr ? React.createElement(RescriptReactErrorBoundary.make, {
+                    children: React.createElement(React.Suspense, {
+                          children: React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.make, {}),
+                          fallback: React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.Placeholder.make, {})
+                        }),
+                    fallback: (function (param) {
+                        return React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.Placeholder.make, {});
+                      })
+                  }) : React.createElement(ShopMain_Buyer$Placeholder, {
+                    deviceType: deviceType
+                  }), React.createElement(Footer_Buyer.PC.make, {}));
 }
 
 var PC = {
@@ -163,10 +84,14 @@ var PC = {
 };
 
 function ShopMain_Buyer$MO(Props) {
-  var query = Props.query;
+  var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var mainBanners = Props.mainBanners;
+  var subBanners = Props.subBanners;
+  var categories = Props.categories;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  var match = use$1(query);
-  var fragmentRefs = match.fragmentRefs;
+  var isCsr = CustomHooks.useCsr(undefined);
   return React.createElement("div", {
               className: "w-full min-h-screen"
             }, React.createElement("div", {
@@ -174,6 +99,8 @@ function ShopMain_Buyer$MO(Props) {
                 }, React.createElement("div", {
                       className: "w-full max-w-3xl mx-auto bg-white min-h-screen"
                     }, React.createElement(Header_Buyer.Mobile.GnbHome.make, {
+                          gnbBanners: gnbBanners,
+                          displayCategories: displayCategories,
                           key: router.asPath
                         }), React.createElement("div", {
                           className: "w-full p-3 pt-1 bg-white sticky top-0 z-10"
@@ -184,87 +111,60 @@ function ShopMain_Buyer$MO(Props) {
                             }, React.createElement("div", {
                                   className: "mt-5"
                                 }, React.createElement(ShopMain_MainBanner_Buyer.MO.make, {
-                                      query: fragmentRefs
+                                      mainBanners: mainBanners
                                     })), React.createElement("div", {
                                   className: "mt-3"
                                 }, React.createElement(ShopMain_SubBanner_Buyer.MO.make, {
-                                      query: fragmentRefs
+                                      subBanners: subBanners
                                     }))), React.createElement("section", {
                               className: "w-full mt-12"
                             }, React.createElement(ShopMain_CategoryList_Buyer.MO.make, {
-                                  query: fragmentRefs
-                                })), React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.make, {
-                              query: fragmentRefs
-                            })), React.createElement(Footer_Buyer.MO.make, {}))));
+                                  categories: categories
+                                })), isCsr ? React.createElement(RescriptReactErrorBoundary.make, {
+                                children: React.createElement(React.Suspense, {
+                                      children: React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.make, {}),
+                                      fallback: React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.Placeholder.make, {})
+                                    }),
+                                fallback: (function (param) {
+                                    return React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.Placeholder.make, {});
+                                  })
+                              }) : React.createElement(ShopMain_Buyer$Placeholder, {
+                                deviceType: deviceType
+                              })), React.createElement(Footer_Buyer.MO.make, {}))));
 }
 
 var MO = {
   make: ShopMain_Buyer$MO
 };
 
-function ShopMain_Buyer$Placeholder(Props) {
-  var deviceType = Props.deviceType;
-  var router = Router.useRouter();
-  switch (deviceType) {
-    case /* Unknown */0 :
-        return null;
-    case /* PC */1 :
-        return React.createElement("div", {
-                    className: "w-full min-w-[1280px] min-h-screen"
-                  }, React.createElement(Header_Buyer.PC.make, {
-                        key: router.asPath
-                      }), React.createElement("main", {
-                        className: "w-full bg-white pt-12 pb-20"
-                      }, React.createElement("div", {
-                            className: "w-[1280px] mx-auto"
-                          }, React.createElement("div", {
-                                className: "flex gap-5 px-5"
-                              }, React.createElement("div", {
-                                    className: "w-[920px]"
-                                  }, React.createElement(ShopMain_MainBanner_Buyer.PC.Placeholder.make, {})), React.createElement("div", {
-                                    className: "w-[300px]"
-                                  }, React.createElement(ShopMain_SubBanner_Buyer.PC.Placeholder.make, {}))), React.createElement("div", {
-                                className: "w-full mt-20"
-                              }, React.createElement(ShopMain_CategoryList_Buyer.PC.Placeholder.make, {}))), React.createElement("div", {
-                            className: "mt-12"
-                          }, React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.Placeholder.make, {}))), React.createElement(Footer_Buyer.PC.make, {}));
-    case /* Mobile */2 :
-        return React.createElement("div", {
-                    className: "w-full min-h-screen"
-                  }, React.createElement(Header_Buyer.Mobile.GnbHome.make, {
-                        key: router.asPath
-                      }), React.createElement("div", {
-                        className: "w-full p-3 pt-1 bg-white sticky top-0 z-10"
-                      }, React.createElement(ShopSearchInput_Buyer.MO.make, {})), React.createElement("div", {
-                        className: "bg-white pt-5 px-5"
-                      }, React.createElement(ShopMain_MainBanner_Buyer.MO.Placeholder.make, {})), React.createElement("div", {
-                        className: "mt-3 px-5"
-                      }, React.createElement(ShopMain_SubBanner_Buyer.MO.Placeholder.make, {})), React.createElement("div", {
-                        className: "mt-12 pb-12"
-                      }, React.createElement(ShopMain_CategoryList_Buyer.MO.Placeholder.make, {})), React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.Placeholder.make, {}), React.createElement(Footer_Buyer.MO.make, {}));
-    
-  }
-}
-
-var Placeholder = {
-  make: ShopMain_Buyer$Placeholder
-};
-
 function ShopMain_Buyer$Container(Props) {
   var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var mainBanners = Props.mainBanners;
+  var subBanners = Props.subBanners;
+  var categories = Props.categories;
+  var displayCategories = Props.displayCategories;
   ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
-  var match = use(undefined, /* StoreAndNetwork */2, undefined, undefined, undefined);
-  var fragmentRefs = match.fragmentRefs;
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
         return React.createElement(ShopMain_Buyer$PC, {
-                    query: fragmentRefs
+                    deviceType: deviceType,
+                    gnbBanners: gnbBanners,
+                    mainBanners: mainBanners,
+                    subBanners: subBanners,
+                    categories: categories,
+                    displayCategories: displayCategories
                   });
     case /* Mobile */2 :
         return React.createElement(ShopMain_Buyer$MO, {
-                    query: fragmentRefs
+                    deviceType: deviceType,
+                    gnbBanners: gnbBanners,
+                    mainBanners: mainBanners,
+                    subBanners: subBanners,
+                    categories: categories,
+                    displayCategories: displayCategories
                   });
     
   }
@@ -276,25 +176,26 @@ var Container = {
 
 function ShopMain_Buyer(Props) {
   var deviceType = Props.deviceType;
-  var match = React.useState(function () {
-        return false;
-      });
-  var setIsCsr = match[1];
+  var gnbBanners = Props.gnbBanners;
+  var mainBanners = Props.mainBanners;
+  var subBanners = Props.subBanners;
+  var categories = Props.categories;
+  var displayCategories = Props.displayCategories;
   React.useEffect((function () {
-          setIsCsr(function (param) {
-                return true;
-              });
-          
+          Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "VIEW_HOME", undefined, undefined);
         }), []);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "신선하이")
                 }), React.createElement(RescriptReactErrorBoundary.make, {
                   children: React.createElement(React.Suspense, {
-                        children: match[0] ? React.createElement(ShopMain_Buyer$Container, {
-                                deviceType: deviceType
-                              }) : React.createElement(ShopMain_Buyer$Placeholder, {
-                                deviceType: deviceType
-                              }),
+                        children: React.createElement(ShopMain_Buyer$Container, {
+                              deviceType: deviceType,
+                              gnbBanners: gnbBanners,
+                              mainBanners: mainBanners,
+                              subBanners: subBanners,
+                              categories: categories,
+                              displayCategories: displayCategories
+                            }),
                         fallback: React.createElement(ShopMain_Buyer$Placeholder, {
                               deviceType: deviceType
                             })
@@ -310,13 +211,10 @@ function ShopMain_Buyer(Props) {
 var make = ShopMain_Buyer;
 
 export {
-  Query ,
-  Fragment ,
+  Placeholder ,
   PC ,
   MO ,
-  Placeholder ,
   Container ,
   make ,
-  
 }
 /* react Not a pure module */

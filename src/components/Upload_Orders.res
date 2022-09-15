@@ -41,7 +41,6 @@ let make = (~onSuccess, ~onFailure, ~startIndex) => {
   let handleUpload = () => {
     switch file {
     | Some(file') =>
-      DataGtm.push({"event": "select_purchase_order"})
       UploadFileToS3PresignedUrl.upload(
         ~kind=UploadFileToS3PresignedUrl.Buyer,
         ~file=file',
@@ -109,16 +108,21 @@ let make = (~onSuccess, ~onFailure, ~startIndex) => {
           <h4 className=%twc("font-semibold")>
             {j`${(startIndex + 1)->Int.toString}. 주문서 업로드`->React.string}
           </h4>
-          <button
-            className={file->Option.isSome
-              ? %twc(
+          <DataGtm dataGtm="click_upload_btn">
+            <button
+              className={switch file->Option.isSome {
+              | true =>
+                %twc(
                   "text-white font-bold p-3 w-28 bg-green-gl rounded-xl focus:outline-none hover:bg-green-gl-dark"
                 )
-              : %twc("text-white font-bold p-3 w-28 bg-gray-300 rounded-xl focus:outline-none")}
-            onClick={_ => handleUpload()}
-            disabled={file->Option.isNone}>
-            {j`업로드`->React.string}
-          </button>
+              | false =>
+                %twc("text-white font-bold p-3 w-28 bg-gray-300 rounded-xl focus:outline-none")
+              }}
+              onClick={_ => handleUpload()}
+              disabled={file->Option.isNone}>
+              {j`업로드`->React.string}
+            </button>
+          </DataGtm>
         </div>
       </div>
     </section>

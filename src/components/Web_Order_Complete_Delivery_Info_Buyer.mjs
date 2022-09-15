@@ -5,21 +5,21 @@ import * as Skeleton from "./Skeleton.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ReactRelay from "react-relay";
 import Format from "date-fns/format";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import SubMinutes from "date-fns/subMinutes";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as WebOrderCompleteDeliveryInfoBuyerFragment_graphql from "../__generated__/WebOrderCompleteDeliveryInfoBuyerFragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(WebOrderCompleteDeliveryInfoBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(WebOrderCompleteDeliveryInfoBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(WebOrderCompleteDeliveryInfoBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(WebOrderCompleteDeliveryInfoBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(WebOrderCompleteDeliveryInfoBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -37,6 +37,7 @@ var Fragment = {
   wosDeliveryType_decode: Fragment_wosDeliveryType_decode,
   wosDeliveryType_fromString: Fragment_wosDeliveryType_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
@@ -54,11 +55,27 @@ function deliveryTypetoString(d) {
 }
 
 function Web_Order_Complete_Delivery_Info_Buyer$Placeholder(Props) {
+  var deviceType = Props.deviceType;
+  var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "배송 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "배송 정보");
+        break;
+    
+  }
   return React.createElement("section", {
               className: "flex flex-col gap-5 bg-white rounded-sm"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "배송 정보"), React.createElement("ul", {
+            }, tmp, React.createElement("ul", {
                   className: "flex flex-col"
                 }, React.createElement("li", {
                       className: "flex gap-5"
@@ -105,6 +122,7 @@ var Placeholder = {
 
 function Web_Order_Complete_Delivery_Info_Buyer(Props) {
   var query = Props.query;
+  var deviceType = Props.deviceType;
   var match = use(query);
   var toPhoneNumberForm = function (s) {
     return s.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
@@ -113,24 +131,45 @@ function Web_Order_Complete_Delivery_Info_Buyer(Props) {
           return Belt_Array.get(wosOrder$p.orderProducts, 0);
         }));
   if (match$1 === undefined) {
-    return React.createElement(Web_Order_Complete_Delivery_Info_Buyer$Placeholder, {});
+    return React.createElement(Web_Order_Complete_Delivery_Info_Buyer$Placeholder, {
+                deviceType: deviceType
+              });
   }
   var match$2 = Caml_option.valFromOption(match$1);
   if (match$2 === undefined) {
-    return React.createElement(Web_Order_Complete_Delivery_Info_Buyer$Placeholder, {});
+    return React.createElement(Web_Order_Complete_Delivery_Info_Buyer$Placeholder, {
+                deviceType: deviceType
+              });
   }
-  var deliveryMessage = match$2.deliveryMessage;
-  var receiverAddress = match$2.receiverAddress;
   var receiverPhone = match$2.receiverPhone;
   var receiverName = match$2.receiverName;
-  var deliveryDesiredDate = match$2.deliveryDesiredDate;
+  var receiverAddress = match$2.receiverAddress;
   var deliveryType = match$2.deliveryType;
+  var deliveryMessage = match$2.deliveryMessage;
+  var deliveryDesiredDate = match$2.deliveryDesiredDate;
   var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "배송 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "배송 정보");
+        break;
+    
+  }
+  var tmp$1;
   if (deliveryType === "PARCEL" || deliveryDesiredDate === undefined) {
-    tmp = null;
+    tmp$1 = null;
   } else {
     var timezone = new Date(Date.now()).getTimezoneOffset();
-    tmp = React.createElement("li", {
+    tmp$1 = React.createElement("li", {
           className: "flex"
         }, React.createElement("span", {
               className: "w-23 font-bold"
@@ -138,15 +177,13 @@ function Web_Order_Complete_Delivery_Info_Buyer(Props) {
   }
   return React.createElement("section", {
               className: "flex flex-col gap-5 bg-white rounded-sm"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "배송 정보"), React.createElement("ul", {
+            }, tmp, React.createElement("ul", {
                   className: "flex flex-col text-sm gap-2"
                 }, React.createElement("li", {
                       className: "flex"
                     }, React.createElement("span", {
                           className: "w-23 font-bold"
-                        }, "배송방법"), React.createElement("span", undefined, deliveryTypetoString(deliveryType))), tmp, deliveryType === "SELF" || receiverName === undefined ? null : React.createElement("li", {
+                        }, "배송방법"), React.createElement("span", undefined, deliveryTypetoString(deliveryType))), tmp$1, deliveryType === "SELF" || receiverName === undefined ? null : React.createElement("li", {
                         className: "flex"
                       }, React.createElement("span", {
                             className: "w-23 font-bold"
@@ -178,6 +215,5 @@ export {
   deliveryTypetoString ,
   Placeholder ,
   make ,
-  
 }
 /* react Not a pure module */

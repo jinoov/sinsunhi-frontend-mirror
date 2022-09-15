@@ -454,3 +454,80 @@ module Tabs = {
     ) => React.element = "Content"
   }
 }
+
+module Switch = {
+  module Root = {
+    @module("@radix-ui/react-switch") @react.component
+    external make: (
+      ~children: React.element,
+      ~checked: bool=?,
+      ~className: string=?,
+      ~defaultChecked: bool=?,
+      ~onCheckedChange: bool => unit=?,
+      ~disabled: bool=?,
+      ~required: bool=?,
+      ~name: string=?,
+      ~value: string=?,
+    ) => React.element = "Root"
+  }
+
+  module Thumb = {
+    @module("@radix-ui/react-switch") @react.component
+    external make: (~children: React.element=?, ~className: string=?) => React.element = "Thumb"
+  }
+}
+
+module Slider = {
+  module Root = {
+    type orientation = [#horizontal | #vertical]
+
+    @module("@radix-ui/react-slider") @react.component
+    external make: (
+      ~children: React.element,
+      ~defaultValue: array<int>=?,
+      ~value: array<int>=?,
+      ~onValueChange: array<int> => unit=?,
+      ~name: string=?,
+      ~disabled: bool=?,
+      ~className: string=?,
+      ~min: int=?,
+      ~max: int=?,
+      ~step: int=?,
+      ~orientation: orientation=?,
+    ) => React.element = "Root"
+  }
+
+  module Track = {
+    @module("@radix-ui/react-slider") @react.component
+    external make: (
+      ~asChild: bool=?,
+      ~className: string=?,
+      ~children: React.element=?,
+    ) => React.element = "Track"
+  }
+
+  module Range = {
+    @module("@radix-ui/react-slider") @react.component
+    external make: (
+      ~asChild: bool=?,
+      ~className: string=?,
+      ~children: React.element=?,
+    ) => React.element = "Range"
+  }
+
+  module Thumb = {
+    @module("@radix-ui/react-slider") @react.component
+    external make: (
+      ~asChild: bool=?,
+      ~className: string=?,
+      ~children: React.element=?,
+    ) => React.element = "Thumb"
+  }
+}
+
+module Portal = {
+  module Root = {
+    @module("@radix-ui/react-portal") @react.component
+    external make: (~children: React.element=?, ~className: string=?) => React.element = "Root"
+  }
+}

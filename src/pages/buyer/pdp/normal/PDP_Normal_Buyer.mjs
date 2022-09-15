@@ -2,15 +2,18 @@
 
 import * as React from "react";
 import * as Editor from "../../../../components/Editor.mjs";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Footer_Buyer from "../../../../components/Footer_Buyer.mjs";
 import * as Header_Buyer from "../../../../components/Header_Buyer.mjs";
+import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
 import * as PDP_Image_Buyer from "../common/PDP_Image_Buyer.mjs";
+import * as PDP_Header_Buyer from "../PDP_Header_Buyer.mjs";
 import * as PDP_Notice_Buyer from "../common/PDP_Notice_Buyer.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as PDP_Normal_Title_Buyer from "./PDP_Normal_Title_Buyer.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PDP_Normal_Modals_Buyer from "./PDP_Normal_Modals_Buyer.mjs";
@@ -20,17 +23,18 @@ import * as PDP_Normal_Details_Buyer from "./PDP_Normal_Details_Buyer.mjs";
 import * as PDP_Normal_TotalPrice_Buyer from "./PDP_Normal_TotalPrice_Buyer.mjs";
 import * as PDP_Normal_SelectOption_Buyer from "./PDP_Normal_SelectOption_Buyer.mjs";
 import * as PDPNormalBuyerFragment_graphql from "../../../../__generated__/PDPNormalBuyerFragment_graphql.mjs";
+import * as PDP_Normal_ContentsGuide_Buyer from "./PDP_Normal_ContentsGuide_Buyer.mjs";
 import * as PDP_Normal_DeliveryGuide_Buyer from "./PDP_Normal_DeliveryGuide_Buyer.mjs";
-import * as PDP_Normal_QuantityInput_Buyer from "./PDP_Normal_QuantityInput_Buyer.mjs";
+import * as PDP_Normal_SelectedOptionItem_Buyer from "./PDP_Normal_SelectedOptionItem_Buyer.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(PDPNormalBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPNormalBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPNormalBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPNormalBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -48,31 +52,33 @@ var Fragment = {
   productStatus_decode: Fragment_productStatus_decode,
   productStatus_fromString: Fragment_productStatus_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
 
 function PDP_Normal_Buyer$PC(Props) {
   var query = Props.query;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   var match = use(query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = React.useState(function () {
-        return 1;
+        return Belt_MapString.fromArray([]);
       });
-  var setQuantity = match$1[1];
-  var quantity = match$1[0];
+  var setSelectedOptions = match$1[1];
+  var selectedOptions = match$1[0];
   var match$2 = React.useState(function () {
-        
-      });
-  var selectedOptionId = match$2[0];
-  var match$3 = React.useState(function () {
         return /* Hide */0;
       });
-  var setShowModal = match$3[1];
+  var setShowModal = match$2[1];
+  var nonEmptyOptions = Belt_MapString.toArray(selectedOptions);
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full min-w-[1280px] min-h-screen"
                 }, React.createElement(Header_Buyer.PC.make, {
+                      gnbBanners: gnbBanners,
+                      displayCategories: displayCategories,
                       key: router.asPath
                     }), React.createElement("div", {
                       className: "w-[1280px] mx-auto min-h-full"
@@ -88,11 +94,13 @@ function PDP_Normal_Buyer$PC(Props) {
                                                   });
                                       }))), React.createElement("div", {
                                   className: "w-full"
-                                }, React.createElement(PDP_Normal_Title_Buyer.PC.make, {
-                                      displayName: match.displayName,
-                                      price: match.price,
-                                      isSoldout: match.status === "SOLDOUT"
-                                    }), React.createElement("section", {
+                                }, React.createElement("section", {
+                                      className: "pb-4"
+                                    }, React.createElement(PDP_Normal_Title_Buyer.PC.make, {
+                                          displayName: match.displayName,
+                                          price: match.price,
+                                          isSoldout: match.status === "SOLDOUT"
+                                        })), React.createElement("section", {
                                       className: "border border-gray-200 rounded-xl divide-y"
                                     }, React.createElement("div", {
                                           className: "px-6 py-8 divide-y"
@@ -100,39 +108,64 @@ function PDP_Normal_Buyer$PC(Props) {
                                               query: fragmentRefs
                                             }), React.createElement("div", {
                                               className: "flex flex-col gap-6 py-6"
-                                            }, React.createElement(PDP_Normal_DeliveryGuide_Buyer.PC.make, {}), React.createElement(PDP_Normal_SelectOption_Buyer.PC.make, {
+                                            }, React.createElement(PDP_Normal_DeliveryGuide_Buyer.PC.make, {
+                                                  query: fragmentRefs
+                                                }), React.createElement(PDP_Normal_SelectOption_Buyer.PC.make, {
                                                   query: fragmentRefs,
-                                                  onSelect: match$2[1],
+                                                  setSelectedOptions: setSelectedOptions,
                                                   setShowModal: setShowModal
-                                                })), React.createElement(PDP_Normal_QuantityInput_Buyer.PC.make, {
-                                              query: fragmentRefs,
-                                              selectedOptionId: selectedOptionId,
-                                              quantity: quantity,
-                                              setQuantity: setQuantity
-                                            })), React.createElement(PDP_Normal_TotalPrice_Buyer.PC.make, {
+                                                })), nonEmptyOptions.length !== 0 ? React.createElement("section", {
+                                                className: "pt-1"
+                                              }, Belt_Array.map(nonEmptyOptions, (function (param) {
+                                                      var id = param[0];
+                                                      return React.createElement(React.Suspense, {
+                                                                  children: React.createElement(PDP_Normal_SelectedOptionItem_Buyer.PC.make, {
+                                                                        id: id,
+                                                                        quantity: param[1],
+                                                                        onChange: (function (optionId, quantity) {
+                                                                            setSelectedOptions(function (prev) {
+                                                                                  return Belt_MapString.set(prev, optionId, quantity);
+                                                                                });
+                                                                          }),
+                                                                        onRemove: (function (optionId) {
+                                                                            setSelectedOptions(function (prev) {
+                                                                                  return Belt_MapString.remove(prev, optionId);
+                                                                                });
+                                                                          })
+                                                                      }),
+                                                                  fallback: null,
+                                                                  key: id
+                                                                });
+                                                    }))) : null), React.createElement(PDP_Normal_TotalPrice_Buyer.PC.make, {
                                           query: fragmentRefs,
-                                          selectedOptionId: selectedOptionId,
-                                          quantity: quantity
+                                          selectedOptions: selectedOptions
                                         })), React.createElement("section", {
                                       className: "w-full mt-4"
                                     }, React.createElement(PDP_Normal_Submit_Buyer.PC.make, {
                                           query: fragmentRefs,
-                                          selectedOptionId: selectedOptionId,
-                                          setShowModal: setShowModal,
-                                          quantity: quantity
+                                          selectedOptions: selectedOptions,
+                                          setShowModal: setShowModal
                                         })))), React.createElement("section", {
                               className: "pt-16"
-                            }, React.createElement("span", {
-                                  className: "text-2xl font-bold text-gray-800"
-                                }, "상세 설명"), React.createElement(PDP_Notice_Buyer.PC.make, {
-                                  notice: match.notice,
-                                  noticeStartAt: match.noticeStartAt,
-                                  noticeEndAt: match.noticeEndAt
-                                }), React.createElement("div", {
-                                  className: "py-16"
-                                }, React.createElement(Editor.Viewer.make, {
-                                      value: match.description
-                                    }))), React.createElement("section", {
+                            }, React.createElement("div", undefined, React.createElement("span", {
+                                      className: "text-2xl font-bold text-gray-800"
+                                    }, "필수표기 정보"), React.createElement("div", {
+                                      className: "mt-7"
+                                    }, React.createElement(PDP_Normal_ContentsGuide_Buyer.PC.make, {
+                                          query: fragmentRefs
+                                        }))), React.createElement("div", {
+                                  className: "pt-16"
+                                }, React.createElement("span", {
+                                      className: "text-2xl font-bold text-gray-800"
+                                    }, "상세 설명"), React.createElement(PDP_Notice_Buyer.PC.make, {
+                                      notice: match.notice,
+                                      noticeStartAt: match.noticeStartAt,
+                                      noticeEndAt: match.noticeEndAt
+                                    }), React.createElement("div", {
+                                      className: "py-16"
+                                    }, React.createElement(Editor.Viewer.make, {
+                                          value: match.description
+                                        })))), React.createElement("section", {
                               className: "w-full py-16 flex justify-center"
                             }, React.createElement("div", {
                                   className: "w-full max-w-[600px] aspect-[209/1361]"
@@ -141,11 +174,11 @@ function PDP_Normal_Buyer$PC(Props) {
                                       alt: "pdp-delivery-guide-mo",
                                       src: "https://public.sinsunhi.com/images/20220616/f15dcb82-7b3e-482d-a32a-ab56791617da/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%89%E1%85%A6%20CS%E1%84%80%E1%85%A9%E1%86%BC%E1%84%90%E1%85%A9%E1%86%BC%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A7%E1%86%A8%20%E1%84%8E%E1%85%AC%E1%84%8E%E1%85%AC%E1%84%8C%E1%85%A9%E1%86%BC.jpg"
                                     }))))), React.createElement(Footer_Buyer.PC.make, {})), React.createElement(PDP_Normal_Modals_Buyer.PC.make, {
-                  show: match$3[0],
+                  show: match$2[0],
                   setShow: setShowModal,
-                  selectedOptionId: selectedOptionId,
-                  quantity: quantity,
-                  setQuantity: setQuantity
+                  selectedOptions: selectedOptions,
+                  setSelectedOptions: setSelectedOptions,
+                  query: fragmentRefs
                 }));
 }
 
@@ -159,36 +192,29 @@ function PDP_Normal_Buyer$MO(Props) {
   var match = use(query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = React.useState(function () {
-        return 1;
+        return Belt_MapString.fromArray([]);
       });
-  var setQuantity = match$1[1];
-  var quantity = match$1[0];
+  var setSelectedOptions = match$1[1];
+  var selectedOptions = match$1[0];
   var match$2 = React.useState(function () {
-        
-      });
-  var selectedOptionId = match$2[0];
-  var match$3 = React.useState(function () {
         return /* Hide */0;
       });
-  var setShowModal = match$3[1];
+  var setShowModal = match$2[1];
+  var nonEmptyOptions = Belt_MapString.toArray(selectedOptions);
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full min-h-screen"
                 }, React.createElement("div", {
                       className: "w-full bg-white"
                     }, React.createElement("div", {
                           className: "w-full max-w-3xl mx-auto bg-white min-h-screen"
-                        }, React.createElement(Header_Buyer.Mobile.make, {
+                        }, React.createElement(PDP_Header_Buyer.make, {
                               key: router.asPath
-                            }), React.createElement("section", {
-                              className: "flex flex-col gap-5"
-                            }, React.createElement(PDP_Image_Buyer.MO.make, {
-                                  src: match.image.thumb1000x1000
-                                })), React.createElement("section", {
-                              className: "px-5 divide-y"
-                            }, React.createElement("div", {
-                                  className: "w-full divide-y"
+                            }), React.createElement(PDP_Image_Buyer.MO.make, {
+                              src: match.image.thumb1000x1000
+                            }), React.createElement("section", undefined, React.createElement("div", {
+                                  className: "px-5"
                                 }, React.createElement("section", {
-                                      className: "pt-5 pb-8"
+                                      className: "py-6"
                                     }, React.createElement(PDP_Normal_Title_Buyer.MO.make, {
                                           displayName: match.displayName,
                                           price: match.price,
@@ -197,36 +223,74 @@ function PDP_Normal_Buyer$MO(Props) {
                                           className: "pt-4"
                                         }, React.createElement(PDP_Normal_SelectOption_Buyer.MO.make, {
                                               query: fragmentRefs,
-                                              onSelect: match$2[1],
+                                              selectedOptions: selectedOptions,
+                                              setSelectedOptions: setSelectedOptions,
                                               setShowModal: setShowModal
-                                            }))), React.createElement(PDP_Normal_QuantityInput_Buyer.MO.make, {
-                                      query: fragmentRefs,
-                                      selectedOptionId: selectedOptionId,
-                                      quantity: quantity,
-                                      setQuantity: setQuantity
-                                    }), React.createElement("section", {
-                                      className: "py-8 flex flex-col gap-6"
-                                    }, React.createElement(PDP_Normal_TotalPrice_Buyer.MO.make, {
-                                          query: fragmentRefs,
-                                          selectedOptionId: selectedOptionId,
-                                          quantity: quantity
-                                        }), React.createElement(PDP_Normal_Submit_Buyer.MO.make, {
-                                          query: fragmentRefs,
-                                          selectedOptionId: selectedOptionId,
-                                          setShowModal: setShowModal,
-                                          quantity: quantity
-                                        })), React.createElement("section", {
+                                            })), nonEmptyOptions.length !== 0 ? React.createElement(React.Fragment, undefined, React.createElement("div", {
+                                                className: "mt-6 w-full h-[1px] bg-gray-100"
+                                              }), React.createElement("section", {
+                                                className: "py-1"
+                                              }, Belt_Array.map(nonEmptyOptions, (function (param) {
+                                                      var id = param[0];
+                                                      return React.createElement(React.Suspense, {
+                                                                  children: React.createElement(PDP_Normal_SelectedOptionItem_Buyer.MO.make, {
+                                                                        id: id,
+                                                                        quantity: param[1],
+                                                                        onChange: (function (optionId, quantity) {
+                                                                            setSelectedOptions(function (prev) {
+                                                                                  return Belt_MapString.set(prev, optionId, quantity);
+                                                                                });
+                                                                          }),
+                                                                        onRemove: (function (optionId) {
+                                                                            setSelectedOptions(function (prev) {
+                                                                                  return Belt_MapString.remove(prev, optionId);
+                                                                                });
+                                                                          })
+                                                                      }),
+                                                                  fallback: null,
+                                                                  key: id
+                                                                });
+                                                    })))) : null, React.createElement("div", {
+                                          className: "mt-6 w-full h-[1px] bg-gray-100"
+                                        }), React.createElement("section", {
+                                          className: "pt-6"
+                                        }, React.createElement(PDP_Normal_TotalPrice_Buyer.MO.make, {
+                                              query: fragmentRefs,
+                                              selectedOptions: selectedOptions
+                                            })))), React.createElement("div", {
+                                  className: "w-full h-3 bg-gray-100"
+                                }), React.createElement("div", {
+                                  className: "w-full px-5 divide-y"
+                                }, React.createElement("section", {
                                       className: "py-8"
                                     }, React.createElement(PDP_Normal_Details_Buyer.MO.make, {
                                           query: fragmentRefs
-                                        })), React.createElement("section", {
+                                        }), React.createElement("div", {
+                                          className: "mt-4 w-full flex items-center justify-center"
+                                        }, React.createElement("button", {
+                                              className: "px-4 py-2 flex items-center text-gray-800 bg-gray-100 rounded-full",
+                                              onClick: (function (param) {
+                                                  setShowModal(function (param) {
+                                                        return /* Show */{
+                                                                _0: /* ContentGuide */2
+                                                              };
+                                                      });
+                                                })
+                                            }, "필수 표기정보", React.createElement("img", {
+                                                  className: "w-3 h-3 ml-1",
+                                                  src: "/assets/arrow-right.svg"
+                                                })))), React.createElement("section", {
                                       className: "py-8"
-                                    }, React.createElement(PDP_Normal_DeliveryGuide_Buyer.MO.make, {}))), Belt_Option.mapWithDefault(match.salesDocument, null, (function (salesDocument$p) {
-                                    return React.createElement(PDP_SalesDocument_Buyer.MO.make, {
-                                                salesDocument: salesDocument$p
-                                              });
-                                  })), React.createElement("div", {
-                                  className: "flex flex-col gap-5 py-8"
+                                    }, React.createElement(PDP_Normal_DeliveryGuide_Buyer.MO.make, {
+                                          query: fragmentRefs
+                                        }))), Belt_Option.mapWithDefault(match.salesDocument, null, (function (salesDocument$p) {
+                                    return React.createElement("section", {
+                                                className: "px-5"
+                                              }, React.createElement(PDP_SalesDocument_Buyer.MO.make, {
+                                                    salesDocument: salesDocument$p
+                                                  }));
+                                  })), React.createElement("section", {
+                                  className: "px-5 flex flex-col gap-5 py-8"
                                 }, React.createElement("h1", {
                                       className: "text-text-L1 text-base font-bold"
                                     }, "상세설명"), React.createElement(PDP_Notice_Buyer.MO.make, {
@@ -245,12 +309,16 @@ function PDP_Normal_Buyer$MO(Props) {
                                       className: "w-full h-full object-cover",
                                       alt: "pdp-delivery-guide-mo",
                                       src: "https://public.sinsunhi.com/images/20220616/f15dcb82-7b3e-482d-a32a-ab56791617da/%E1%84%89%E1%85%A1%E1%86%BC%E1%84%89%E1%85%A6%20CS%E1%84%80%E1%85%A9%E1%86%BC%E1%84%90%E1%85%A9%E1%86%BC%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8B%E1%85%A7%E1%86%A8%20%E1%84%8E%E1%85%AC%E1%84%8E%E1%85%AC%E1%84%8C%E1%85%A9%E1%86%BC.jpg"
-                                    }))), React.createElement(Footer_Buyer.MO.make, {})))), React.createElement(PDP_Normal_Modals_Buyer.MO.make, {
-                  show: match$3[0],
+                                    }))), React.createElement(Footer_Buyer.MO.make, {})))), React.createElement(PDP_Normal_Submit_Buyer.MO.make, {
+                  query: fragmentRefs,
+                  selectedOptions: selectedOptions,
+                  setShowModal: setShowModal
+                }), React.createElement(PDP_Normal_Modals_Buyer.MO.make, {
+                  show: match$2[0],
                   setShow: setShowModal,
-                  selectedOptionId: selectedOptionId,
-                  quantity: quantity,
-                  setQuantity: setQuantity
+                  selectedOptions: selectedOptions,
+                  setSelectedOptions: setSelectedOptions,
+                  query: fragmentRefs
                 }));
 }
 
@@ -261,12 +329,16 @@ var MO = {
 function PDP_Normal_Buyer(Props) {
   var deviceType = Props.deviceType;
   var query = Props.query;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
         return React.createElement(PDP_Normal_Buyer$PC, {
-                    query: query
+                    query: query,
+                    gnbBanners: gnbBanners,
+                    displayCategories: displayCategories
                   });
     case /* Mobile */2 :
         return React.createElement(PDP_Normal_Buyer$MO, {
@@ -283,6 +355,5 @@ export {
   PC ,
   MO ,
   make ,
-  
 }
 /* react Not a pure module */

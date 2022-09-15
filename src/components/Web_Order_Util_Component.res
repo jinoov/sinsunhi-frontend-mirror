@@ -74,27 +74,82 @@ module Tooltip = {
 
 module RadioButton = {
   module PlaceHolder = {
-    @react.component
-    let make = () => {
-      open Skeleton
-      <Box className=%twc("w-24 xl:w-32 min-h-[2.75rem] rounded-xl") />
+    open Skeleton
+    module PC = {
+      @react.component
+      let make = () => {
+        <Box className=%twc("w-32 min-h-[2.75rem] rounded-xl") />
+      }
+    }
+    module MO = {
+      @react.component
+      let make = () => {
+        <Box className=%twc("w-24 min-h-[2.75rem] rounded-xl") />
+      }
     }
   }
+
+  module PC = {
+    @react.component
+    let make = (~checked, ~name) => {
+      <span
+        className={checked
+          ? %twc(
+              "w-32 h-11 pl-1 flex justify-center items-center text-base text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer"
+            )
+          : %twc(
+              "w-32 h-11 flex justify-center items-center text-base text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
+            )}>
+        {name->React.string}
+        {checked
+          ? <IconCheck width="30" height="20" fill="#12b564" className=%twc("mb-1") />
+          : React.null}
+      </span>
+    }
+  }
+
+  module MO = {
+    @react.component
+    let make = (~checked, ~name) => {
+      <span
+        className={checked
+          ? %twc(
+              "w-24 h-11 pl-1 flex justify-center items-center text-sm text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer"
+            )
+          : %twc(
+              "w-24 h-11 flex justify-center items-center text-sm text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
+            )}>
+        {name->React.string}
+        {checked
+          ? <IconCheck width="30" height="20" fill="#12b564" className=%twc("mb-1") />
+          : React.null}
+      </span>
+    }
+  }
+
   @react.component
-  let make = (~watchValue, ~name, ~value) => {
+  let make = (~watchValue, ~name, ~value, ~deviceType) => {
     let checked = watchValue->Option.mapWithDefault(false, watch => watch == value)
-    <span
-      className={checked
-        ? %twc(
-            "w-24 xl:w-32 h-11 pl-1 flex justify-center items-center text-sm xl:text-base text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer"
-          )
-        : %twc(
-            "w-24 xl:w-32 h-11 flex justify-center items-center text-sm xl:text-base text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
-          )}>
-      {name->React.string}
-      {checked
-        ? <IconCheck width="30" height="20" fill="#12b564" className=%twc("mb-1") />
-        : React.null}
-    </span>
+
+    {
+      switch deviceType {
+      | DeviceDetect.Unknown => React.null
+      | DeviceDetect.PC => <PC checked name />
+      | DeviceDetect.Mobile => <MO checked name />
+      }
+    }
+  }
+}
+open ReactHookForm
+module Hidden = {
+  @react.component
+  let make = (~value, ~inputName, ~isNumber=false) => {
+    let {register} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#all, ()), ())
+    let {ref, name} = register(.
+      inputName,
+      isNumber ? Some(Hooks.Register.config(~valueAsNumber=true, ())) : None,
+    )
+
+    <input type_="hidden" id=name ref name defaultValue=?value />
   }
 }

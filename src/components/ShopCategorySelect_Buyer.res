@@ -13,6 +13,7 @@ module Query = %relay(`
       name
       children {
         id
+        name
       }
     }
   }
@@ -27,48 +28,16 @@ module Query = %relay(`
  */
 
 module Mobile = {
-  module Query = %relay(`
-  query ShopCategorySelectBuyerMobileQuery(
-    $parentId: ID
-    $types: [DisplayCategoryType!]
-    $onlyDisplayable: Boolean
-  ) {
-    displayCategories(
-      types: $types
-      parentId: $parentId
-      onlyDisplayable: $onlyDisplayable
-    ) {
-      id
-      name
-      children {
-        id
-      }
-    }
-  
-    gnbBanners {
-      id
-      title
-      landingUrl
-      isNewTabMobile
-    }
-  } 
-  `)
   module Sub = {
     @react.component
-    let make = (~parentId) => {
-      let {displayCategories} = Query.use(
-        ~variables=Query.makeVariables(~types=[#NORMAL], ~parentId, ~onlyDisplayable=true, ()),
-        (),
-      )
-
-      let parentQueryStr = {
-        [("category-id", parentId)]
-        ->Webapi.Url.URLSearchParams.makeWithArray
-        ->Webapi.Url.URLSearchParams.toString
-      }
-
+    let make = (
+      ~parentId,
+      ~displayCategories: array<
+        ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories_children,
+      >,
+    ) => {
       <>
-        <Next.Link href={`/buyer/products?${parentQueryStr}`}>
+        <Next.Link href={`/categories/${parentId}`}>
           <button
             className=%twc(
               "text-left px-5 py-3 bg-white flex justify-between items-center active:bg-bg-pressed-L2"
@@ -79,18 +48,13 @@ module Mobile = {
         </Next.Link>
         {displayCategories
         ->Array.map(({id, name}) => {
-          let queryStr = {
-            [("category-id", id)]
-            ->Webapi.Url.URLSearchParams.makeWithArray
-            ->Webapi.Url.URLSearchParams.toString
-          }
-
-          <Next.Link href={`/buyer/products?${queryStr}`} key=id>
+          <Next.Link href={`/categories/${id}`} key=id>
             <button
               className=%twc(
                 "text-left px-5 py-3 bg-white flex justify-between items-center active:bg-bg-pressed-L2"
               )>
-              {name->React.string} <IconArrow width="16" height="16" stroke="#B2B2B2" />
+              {name->React.string}
+              <IconArrow width="16" height="16" stroke="#B2B2B2" />
             </button>
           </Next.Link>
         })
@@ -100,13 +64,14 @@ module Mobile = {
   }
 
   @react.component
-  let make = () => {
+  let make = (
+    ~gnbBanners: array<GnbBannerListBuyerQuery_graphql.Types.response_gnbBanners>,
+    ~displayCategories: array<
+      ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories,
+    >,
+  ) => {
     let (isOpen, setOpen) = React.Uncurried.useState(_ => false)
     let close = () => setOpen(._ => false)
-    let {displayCategories, gnbBanners} = Query.use(
-      ~variables=Query.makeVariables(~types=[#NORMAL], ~onlyDisplayable=true, ()),
-      (),
-    )
 
     let defaultParentId = displayCategories->Array.get(0)->Option.map(({id}) => id)
     let (parentId, setParentId) = React.Uncurried.useState(_ => defaultParentId)
@@ -122,7 +87,7 @@ module Mobile = {
 
     <>
       <button onClick={_ => setOpen(._ => true)}>
-        <IconHamburger width="28" height="28" fill="#12B564" />
+        <IconHamburger width="24" height="24" fill="#12B564" />
       </button>
       {switch isOpen {
       | true =>
@@ -142,6 +107,17 @@ module Mobile = {
                 <div className=%twc("flex flex-col")>
                   <div className=%twc("grid grid-cols-10 border-y min-h-[432px] text-[15px]")>
                     <div className=%twc("col-span-4 flex flex-col bg-surface")>
+                      <Next.Link href="/products">
+                        <a
+                          className={cx([
+                            %twc(
+                              "text-left px-5 py-3 border-b last:border-none active:bg-bg-pressed-L2"
+                            ),
+                            clickedStyle("buyer-products"),
+                          ])}>
+                          {`전체 상품`->React.string}
+                        </a>
+                      </Next.Link>
                       {displayCategories
                       ->Array.map(({id, name}) =>
                         <button
@@ -159,11 +135,15 @@ module Mobile = {
                       ->React.array}
                     </div>
                     <div className=%twc("col-span-6 flex flex-col border-none")>
-                      <React.Suspense fallback={<div />}>
-                        {parentId->Option.mapWithDefault(React.null, parentId' => {
-                          <Sub parentId=parentId' />
-                        })}
-                      </React.Suspense>
+                      {parentId->Option.mapWithDefault(React.null, parentId' => {
+                        <Sub
+                          parentId=parentId'
+                          displayCategories={displayCategories
+                          ->Array.keep(displayCategory => displayCategory.id == parentId')
+                          ->Garter.Array.first
+                          ->Option.mapWithDefault([], displayCategory => displayCategory.children)}
+                        />
+                      })}
                     </div>
                   </div>
                   {gnbBanners
@@ -199,43 +179,27 @@ module Mobile = {
  */
 
 module PC = {
-  module type RecursiveCategories = {
+  module Sub = {
     @react.component
-    let make: (~parentId: option<string>) => React.element
-  }
-  module rec RecursiveCategories: RecursiveCategories = {
-    @react.component
-    let make = (~parentId) => {
-      let {pushObj, useRouter} = module(Next.Router)
+    let make = (
+      ~displayCategories: array<
+        ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories_children,
+      >,
+    ) => {
+      let {push, useRouter} = module(Next.Router)
       let router = useRouter()
-
-      let {displayCategories} = Query.use(
-        ~variables=Query.makeVariables(~types=[#NORMAL], ~parentId?, ~onlyDisplayable=true, ()),
-        (),
-      )
-      let (hoveredId, setHoveredId) = React.Uncurried.useState((_): option<string> => None)
-
-      let makeHoverChange = (~id, ~children, _) => {
-        switch children {
-        | [] => setHoveredId(._ => None)
-        | _ => setHoveredId(._ => Some(id))
-        }
-      }
 
       switch displayCategories {
       | [] => React.null
-      | _ => <>
+      | _ =>
+        <>
           <div className=%twc("w-[222px] px-8 py-5 flex flex-col")>
             {displayCategories
-            ->Array.map(({id, name, children}) => {
-              <Hoverable
-                key=id className=%twc("mt-3") onHoverChange={makeHoverChange(~id, ~children)}>
+            ->Array.map(({id, name}) => {
+              <Hoverable key=id className=%twc("mt-3")>
                 <div
                   onClick={ReactEvents.interceptingHandler(_ => {
-                    router->pushObj({
-                      pathname: `/buyer/products`,
-                      query: [("category-id", id)]->Js.Dict.fromArray,
-                    })
+                    router->push(`/categories/${id}`)
                   })}
                   className=%twc(
                     "w-full flex items-center justify-between group cursor-pointer group"
@@ -259,37 +223,48 @@ module PC = {
             })
             ->React.array}
           </div>
-          {hoveredId->Option.mapWithDefault(React.null, hoveredId' => {
-            <React.Suspense fallback={<div className=%twc("w-[222px]") />}>
-              <RecursiveCategories key=hoveredId' parentId=Some(hoveredId') />
-            </React.Suspense>
-          })}
         </>
       }
     }
   }
 
   @react.component
-  let make = () => {
+  let make = (
+    ~displayCategories: array<
+      ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories,
+    >,
+  ) => {
+    let {push, useRouter} = module(Next.Router)
+    let router = useRouter()
+
     let (isHovered, setIsHovered) = React.Uncurried.useState(_ => false)
+    let (hoveredId, setHoveredId) = React.Uncurried.useState((_): option<string> => None)
 
     let triggerStyle = %twc("flex items-center w-56 h-[54px] px-7 ")
     let textStyle = %twc("mx-2 text-lg font-bold ")
+
+    let makeHoverChange = (~id, ~children, _) => {
+      switch children {
+      | [] => setHoveredId(._ => None)
+      | _ => setHoveredId(._ => Some(id))
+      }
+    }
 
     <div>
       <Hoverable onHoverChange={to_ => setIsHovered(._ => to_)}>
         {switch isHovered {
         | false =>
           <div className={triggerStyle ++ %twc("border-t border-x border-transparent")}>
-            <IconHamburger width="24" height="18" />
+            <IconHamburger width="24" height="24" fill="#12B564" />
             <span className={textStyle ++ %twc("text-text-L1")}>
               {`전체 카테고리`->React.string}
             </span>
             <IconArrow className=%twc("rotate-90") fill="#B2B2B2" width="20" height="20" />
           </div>
-        | true => <>
+        | true =>
+          <>
             <div className={triggerStyle ++ %twc("border-t border-x border-primary")}>
-              <IconHamburger width="24" height="18" />
+              <IconHamburger width="24" height="24" fill="#12B564" />
               <span className={textStyle ++ %twc("text-primary")}>
                 {`전체 카테고리`->React.string}
               </span>
@@ -300,9 +275,71 @@ module PC = {
                 className=%twc(
                   "h-[434px] bg-white absolute top-0 border border-green-500 flex divide-x"
                 )>
-                <React.Suspense fallback={<div className=%twc("w-[222px]") />}>
-                  <RecursiveCategories parentId=None />
-                </React.Suspense>
+                <div className=%twc("w-[222px] px-8 py-5 flex flex-col")>
+                  <Hoverable
+                    className=%twc("mt-3")
+                    onHoverChange={makeHoverChange(~id="buyer-products", ~children=[])}>
+                    <Next.Link href="/products">
+                      <a
+                        className=%twc(
+                          "w-full flex items-center justify-between group cursor-pointer group"
+                        )>
+                        <span
+                          className=%twc(
+                            "text-[15px] text-gray-800 group-hover:text-green-600 group-hover:font-bold"
+                          )>
+                          {`전체 상품`->React.string}
+                        </span>
+                        <span className=%twc("w-4 h-4")>
+                          <IconArrow
+                            className=%twc("hidden group-hover:block")
+                            width="16"
+                            height="16"
+                            stroke="#12B564"
+                          />
+                        </span>
+                      </a>
+                    </Next.Link>
+                  </Hoverable>
+                  {displayCategories
+                  ->Array.map(({id, name, children}) => {
+                    <Hoverable
+                      key=id className=%twc("mt-3") onHoverChange={makeHoverChange(~id, ~children)}>
+                      <div
+                        onClick={ReactEvents.interceptingHandler(_ => {
+                          router->push(`/categories/${id}`)
+                        })}
+                        className=%twc(
+                          "w-full flex items-center justify-between group cursor-pointer group"
+                        )>
+                        <span
+                          className=%twc(
+                            "text-[15px] text-gray-800 group-hover:text-green-600 group-hover:font-bold"
+                          )>
+                          {name->React.string}
+                        </span>
+                        <span className=%twc("w-4 h-4")>
+                          <IconArrow
+                            className=%twc("hidden group-hover:block")
+                            width="16"
+                            height="16"
+                            stroke="#12B564"
+                          />
+                        </span>
+                      </div>
+                    </Hoverable>
+                  })
+                  ->React.array}
+                </div>
+                {hoveredId->Option.mapWithDefault(React.null, hoveredId' => {
+                  <Sub
+                    key=hoveredId'
+                    displayCategories={displayCategories
+                    ->Array.keep(displayCategory => displayCategory.id == hoveredId')
+                    ->Garter.Array.first
+                    ->Option.mapWithDefault([], displayCategory => displayCategory.children)}
+                  />
+                })}
               </div>
               <div className=%twc("w-[222px] bg-white absolute top-0 left-[1px] h-1") />
             </div>

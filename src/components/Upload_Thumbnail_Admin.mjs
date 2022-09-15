@@ -9,10 +9,10 @@ import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
+import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as IconCloseInput from "./svgs/IconCloseInput.mjs";
-import * as Hooks from "react-relay/hooks";
 import * as UploadFileToS3PresignedUrl from "../utils/UploadFileToS3PresignedUrl.mjs";
 import * as UploadThumbnailAdminMutation_graphql from "../__generated__/UploadThumbnailAdminMutation_graphql.mjs";
 
@@ -35,14 +35,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? UploadThumbnailAdminMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, UploadThumbnailAdminMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, UploadThumbnailAdminMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use(param) {
-  var match = Hooks.useMutation(UploadThumbnailAdminMutation_graphql.node);
+  var match = ReactRelay.useMutation(UploadThumbnailAdminMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -50,13 +50,13 @@ function use(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, UploadThumbnailAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, UploadThumbnailAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? UploadThumbnailAdminMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, UploadThumbnailAdminMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, UploadThumbnailAdminMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: UploadThumbnailAdminMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -67,10 +67,8 @@ function use(param) {
         ];
 }
 
-var Mutation_makeVariables = UploadThumbnailAdminMutation_graphql.Utils.makeVariables;
-
 var Mutation = {
-  makeVariables: Mutation_makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use
@@ -101,6 +99,10 @@ function image_encode(v) {
               [
                 "thumb800x800",
                 Spice.stringToJson(v.thumb800x800)
+              ],
+              [
+                "thumb800xall",
+                Spice.stringToJson(v.thumb800xall)
               ]
             ]);
 }
@@ -126,75 +128,88 @@ function image_decode(v) {
           if (thumb400x400.TAG === /* Ok */0) {
             var thumb800x800 = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "thumb800x800"), null));
             if (thumb800x800.TAG === /* Ok */0) {
+              var thumb800xall = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "thumb800xall"), null));
+              if (thumb800xall.TAG === /* Ok */0) {
+                return {
+                        TAG: /* Ok */0,
+                        _0: {
+                          original: original._0,
+                          thumb1000x1000: thumb1000x1000._0,
+                          thumb100x100: thumb100x100._0,
+                          thumb1920x1920: thumb1920x1920._0,
+                          thumb400x400: thumb400x400._0,
+                          thumb800x800: thumb800x800._0,
+                          thumb800xall: thumb800xall._0
+                        }
+                      };
+              }
+              var e = thumb800xall._0;
               return {
-                      TAG: /* Ok */0,
+                      TAG: /* Error */1,
                       _0: {
-                        original: original._0,
-                        thumb1000x1000: thumb1000x1000._0,
-                        thumb100x100: thumb100x100._0,
-                        thumb1920x1920: thumb1920x1920._0,
-                        thumb400x400: thumb400x400._0,
-                        thumb800x800: thumb800x800._0
+                        path: ".thumb800xall" + e.path,
+                        message: e.message,
+                        value: e.value
                       }
                     };
             }
-            var e = thumb800x800._0;
+            var e$1 = thumb800x800._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".thumb800x800" + e.path,
-                      message: e.message,
-                      value: e.value
+                      path: ".thumb800x800" + e$1.path,
+                      message: e$1.message,
+                      value: e$1.value
                     }
                   };
           }
-          var e$1 = thumb400x400._0;
+          var e$2 = thumb400x400._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".thumb400x400" + e$1.path,
-                    message: e$1.message,
-                    value: e$1.value
+                    path: ".thumb400x400" + e$2.path,
+                    message: e$2.message,
+                    value: e$2.value
                   }
                 };
         }
-        var e$2 = thumb1920x1920._0;
+        var e$3 = thumb1920x1920._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".thumb1920x1920" + e$2.path,
-                  message: e$2.message,
-                  value: e$2.value
+                  path: ".thumb1920x1920" + e$3.path,
+                  message: e$3.message,
+                  value: e$3.value
                 }
               };
       }
-      var e$3 = thumb100x100._0;
+      var e$4 = thumb100x100._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".thumb100x100" + e$3.path,
-                message: e$3.message,
-                value: e$3.value
+                path: ".thumb100x100" + e$4.path,
+                message: e$4.message,
+                value: e$4.value
               }
             };
     }
-    var e$4 = thumb1000x1000._0;
+    var e$5 = thumb1000x1000._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".thumb1000x1000" + e$4.path,
-              message: e$4.message,
-              value: e$4.value
+              path: ".thumb1000x1000" + e$5.path,
+              message: e$5.message,
+              value: e$5.value
             }
           };
   }
-  var e$5 = original._0;
+  var e$6 = original._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".original" + e$5.path,
-            message: e$5.message,
-            value: e$5.value
+            path: ".original" + e$6.path,
+            message: e$6.message,
+            value: e$6.value
           }
         };
 }
@@ -205,7 +220,8 @@ var resetImage = {
   thumb100x100: "",
   thumb1920x1920: "",
   thumb400x400: "",
-  thumb800x800: ""
+  thumb800x800: "",
+  thumb800xall: ""
 };
 
 var Form = {
@@ -221,7 +237,8 @@ function mutationImageToFormImage(image) {
           thumb100x100: image.thumb100x100,
           thumb1920x1920: image.thumb1920x1920,
           thumb400x400: image.thumb400x400,
-          thumb800x800: image.thumb800x800
+          thumb800x800: image.thumb800x800,
+          thumb800xall: Belt_Option.getWithDefault(image.thumb800xall, image.thumb1920x1920)
         };
 }
 
@@ -242,9 +259,7 @@ function Upload_Thumbnail_Admin(Props) {
     var inputFile = document.getElementById("thumbnail");
     Belt_Option.map((inputFile == null) ? undefined : Caml_option.some(inputFile), (function (inputFile$p) {
             inputFile$p.value = "";
-            
           }));
-    
   };
   var onFailureWithReset = function (resetFn, updateFn, param) {
     setThumbnailURL(function (param) {
@@ -255,9 +270,9 @@ function Upload_Thumbnail_Admin(Props) {
   };
   var imageUrlStateReset = function (param) {
     Curry._1(updateFn, resetImage);
-    return setThumbnailURL(function (param) {
-                return /* Loading */1;
-              });
+    setThumbnailURL(function (param) {
+          return /* Loading */1;
+        });
   };
   var handleOnChangeFile = function (e) {
     var files = e.target.files;
@@ -271,7 +286,7 @@ function Upload_Thumbnail_Admin(Props) {
     Curry.app(mutate, [
           (function (err) {
               console.log(err);
-              return onFailureWithReset(resetFile, updateFn, err);
+              onFailureWithReset(resetFile, updateFn, err);
             }),
           (function (param, param$1) {
               var res = param.createPresignedUrlForImage;
@@ -289,11 +304,10 @@ function Upload_Thumbnail_Admin(Props) {
                                     _0: filename
                                   };
                           });
-                      return Curry._1(updateFn, imageUrls);
+                      Curry._1(updateFn, imageUrls);
                     }), (function (err) {
-                      return onFailureWithReset(resetFile, updateFn, err);
+                      onFailureWithReset(resetFile, updateFn, err);
                     }), undefined);
-              
             }),
           undefined,
           undefined,
@@ -305,7 +319,6 @@ function Upload_Thumbnail_Admin(Props) {
           undefined,
           undefined
         ]);
-    
   };
   var displayName = Belt_Option.flatMap(Belt_Option.flatMap(Belt_Option.map(Caml_option.null_to_opt(/[^/]+$/.exec(value.original)), (function (prim) {
                   return prim;
@@ -327,7 +340,7 @@ function Upload_Thumbnail_Admin(Props) {
                         }, "대표 이미지 선택하기"), React.createElement("input", {
                           className: "file:hidden sr-only",
                           id: name,
-                          accept: ".png,.jpg",
+                          accept: ".png,.jpg,.webp",
                           disabled: Belt_Option.getWithDefault(disabled, false) || isThumbnailUploading,
                           name: name,
                           type: "file",
@@ -339,7 +352,7 @@ function Upload_Thumbnail_Admin(Props) {
                         onClick: (function (param) {
                             return ReactEvents.interceptingHandler((function (param) {
                                           resetFile(undefined);
-                                          return Curry._1(updateFn, resetImage);
+                                          Curry._1(updateFn, resetImage);
                                         }), param);
                           })
                       }, React.createElement(IconCloseInput.make, {
@@ -363,6 +376,5 @@ export {
   Form ,
   mutationImageToFormImage ,
   make ,
-  
 }
 /* react Not a pure module */

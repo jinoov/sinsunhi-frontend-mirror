@@ -21,7 +21,7 @@ let make = () =>
               {j`주문서 업로드 사용설명서`->React.string}
             </h4>
             <div className=%twc("flex mt-5")>
-              <a href="/buyer/products/advanced-search" target="_blank" className=%twc("flex-1")>
+              <a href="/products/advanced-search" target="_blank" className=%twc("flex-1")>
                 <span
                   className=%twc(
                     "block text-center p-3 rounded-xl border border-green-gl text-base font-bold text-green-gl mr-2 bg-white"
@@ -51,7 +51,7 @@ let make = () =>
                       <div className=%twc("inline sm:whitespace-pre-wrap")>
                         <a
                           id="link-of-upload-guide"
-                          href="/buyer/products/advanced-search"
+                          href="/products/advanced-search"
                           target="_blank">
                           <p className=%twc("inline cursor-pointer hover:underline")>
                             {`상품 페이지(클릭)`->React.string}
@@ -77,10 +77,7 @@ let make = () =>
                   {j`*`->React.string}
                   <span className=%twc("sm:whitespace-pre-wrap")>
                     {j`일부 상품은 출고시간이 상이한 경우가 있으므로 \n상품별 출고 마감시간은 `->React.string}
-                    <a
-                      id="link-of-upload-guide"
-                      href="/buyer/products/advanced-search"
-                      target="_blank">
+                    <a id="link-of-upload-guide" href="/products/advanced-search" target="_blank">
                       <p className=%twc("inline cursor-pointer hover:underline")>
                         {`상품 페이지(클릭)`->React.string}
                       </p>

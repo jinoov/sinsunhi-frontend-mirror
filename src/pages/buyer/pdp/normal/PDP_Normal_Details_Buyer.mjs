@@ -5,20 +5,20 @@ import * as React from "react";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ReactRelay from "react-relay";
 import * as PDP_Parser_Buyer from "../../../../utils/PDP_Parser_Buyer.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PDPNormalDetailsBuyerFragment_graphql from "../../../../__generated__/PDPNormalDetailsBuyerFragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(PDPNormalDetailsBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPNormalDetailsBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalDetailsBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPNormalDetailsBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPNormalDetailsBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -28,14 +28,15 @@ function useOpt(opt_fRef) {
               }), data);
 }
 
-var Fragment_weightUnit_decode = PDPNormalDetailsBuyerFragment_graphql.Utils.weightUnit_decode;
+var Fragment_amountUnit_decode = PDPNormalDetailsBuyerFragment_graphql.Utils.amountUnit_decode;
 
-var Fragment_weightUnit_fromString = PDPNormalDetailsBuyerFragment_graphql.Utils.weightUnit_fromString;
+var Fragment_amountUnit_fromString = PDPNormalDetailsBuyerFragment_graphql.Utils.amountUnit_fromString;
 
 var Fragment = {
-  weightUnit_decode: Fragment_weightUnit_decode,
-  weightUnit_fromString: Fragment_weightUnit_fromString,
+  amountUnit_decode: Fragment_amountUnit_decode,
+  amountUnit_fromString: Fragment_amountUnit_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
@@ -63,11 +64,11 @@ function PDP_Normal_Details_Buyer$PC(Props) {
   var productOptions = match.productOptions;
   var category = match.category;
   var categoryLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeCategoryLabel, category.item, category.kind);
-  var weightLabel = productOptions !== undefined ? Curry._1(PDP_Parser_Buyer.Product.Normal.makeWeightLabel, Belt_Array.map(productOptions.edges, (function (param) {
+  var amountLabel = productOptions !== undefined ? Curry._1(PDP_Parser_Buyer.Product.Normal.makeAmountLabel, Belt_Array.map(productOptions.edges, (function (param) {
                 var match = param.node;
                 return [
-                        match.weight,
-                        match.weightUnit
+                        match.amount,
+                        match.amountUnit
                       ];
               }))) : "-";
   var gradeLabel = Belt_Option.flatMap(Belt_Option.map(Belt_Option.map(productOptions, (function (po) {
@@ -88,7 +89,7 @@ function PDP_Normal_Details_Buyer$PC(Props) {
                 }), React.createElement(PDP_Normal_Details_Buyer$PC$Column, {
                   className: "mt-2",
                   label: "중량단위",
-                  value: weightLabel
+                  value: amountLabel
                 }), Belt_Option.mapWithDefault(gradeLabel, null, (function (gradeLabel$p) {
                     return React.createElement(PDP_Normal_Details_Buyer$PC$Column, {
                                 className: "mt-5",
@@ -132,11 +133,11 @@ function PDP_Normal_Details_Buyer$MO(Props) {
   var productOptions = match.productOptions;
   var category = match.category;
   var categoryLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeCategoryLabel, category.item, category.kind);
-  var weightLabel = productOptions !== undefined ? Curry._1(PDP_Parser_Buyer.Product.Normal.makeWeightLabel, Belt_Array.map(productOptions.edges, (function (param) {
+  var weightLabel = productOptions !== undefined ? Curry._1(PDP_Parser_Buyer.Product.Normal.makeAmountLabel, Belt_Array.map(productOptions.edges, (function (param) {
                 var match = param.node;
                 return [
-                        match.weight,
-                        match.weightUnit
+                        match.amount,
+                        match.amountUnit
                       ];
               }))) : "-";
   var gradeLabel = Belt_Option.flatMap(Belt_Option.map(Belt_Option.map(productOptions, (function (po) {
@@ -180,6 +181,5 @@ export {
   Fragment ,
   PC ,
   MO ,
-  
 }
 /* react Not a pure module */

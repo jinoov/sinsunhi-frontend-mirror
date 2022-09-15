@@ -57,7 +57,7 @@ module Scroll = {
         let currentScrollTop = Dom.window->Dom.Window.scrollY
 
         if currentScrollTop > 0.0 {
-          // 애플기기의 scroll bound 효과로 인해 currentScrollTop이 음수 값을 가질 여지가 있음
+          // 애플기기의 scroll bounce 효과로 인해 currentScrollTop이 음수 값을 가질 여지가 있음
           // 바운스효과에는 반응하지 않도록 하기 위해 currentScrollTop이 양수일 때만 처리한다.
           let direction = switch currentScrollTop -. prevScrollTop.current {
           | diff' if diff' > 0.0 => ScrollDown
@@ -207,7 +207,14 @@ module IntersectionObserver = {
 }
 
 module Auth = {
-  @module("jwt-decode") external decodeJwt: string => Js.Json.t = "default"
+  @module("jwt-decode") external decodeJwtExn: string => Js.Json.t = "default"
+
+  let decodeJwt = s =>
+    try {
+      decodeJwtExn(s)
+    } catch {
+    | _ => Js.Json.null
+    }
 
   type role = Seller | Buyer | Admin
 
@@ -257,6 +264,14 @@ module Auth = {
     | LoggedIn(user) => Some(user)
     | NotLoggedIn | Unknown => None
     }
+
+  let getUser = () => {
+    let accessToken = LocalStorageHooks.AccessToken.get()
+    switch accessToken->decodeJwt->user_decode {
+    | Ok(user) => Some(user)
+    | Error(_) => None
+    }
+  }
 
   let use = (): status => {
     let (token, setToken) = React.Uncurried.useState(_ => Unknown)
@@ -1475,7 +1490,7 @@ module Costs = {
   type result = Loading | Loaded(Js.Json.t) | Error(FetchHelper.customError)
 
   @spice
-  type contractType = | @spice.as("bulk-sale") Bulksale | @spice.as("online") Online
+  type contractType = | @spice.as("bulksale") Bulksale | @spice.as("online") Online
 
   @spice
   type cost = {
@@ -1765,274 +1780,6 @@ module Downloads = {
   }
 }
 
-module Shipments = {
-  type result = Loading | Loaded(Js.Json.t) | Error(FetchHelper.customError)
-
-  @spice
-  type marketType =
-    | @spice.as("online") ONLINE | @spice.as("wholesale") WHOLESALE | @spice.as("offline") OFFLINE
-
-  @spice
-  type shipment = {
-    @spice.key("shipment-date") date: string,
-    @spice.key("market-type") marketType: marketType,
-    @spice.key("item") crop: string,
-    @spice.key("kind") cultivar: string,
-    @spice.key("weight") weight: option<float>,
-    @spice.key("weight-unit") weightUnit: option<Products.weightUnit>,
-    @spice.key("package-type") packageType: option<string>,
-    @spice.key("grade") grade: option<string>,
-    @spice.key("total-quantity") totalQuantity: float,
-    @spice.key("total-price") totalPrice: float,
-    sku: string,
-  }
-
-  @spice
-  type shipments = {
-    data: array<shipment>,
-    count: int,
-    offset: int,
-    limit: int,
-  }
-
-  let use = queryParams => {
-    let fetcherOptions = Swr.fetcherOptions(~onErrorRetry, ())
-
-    let {data, error} = Swr.useSwr(
-      `${Env.restApiUrl}/shipment?${queryParams}`,
-      FetchHelper.fetcher,
-      fetcherOptions,
-    )
-
-    let result = switch error {
-    | Some(error') => Error(error')
-    | None =>
-      switch data {
-      | Some(data') => Loaded(data')
-      | None => Loading
-      }
-    }
-
-    result
-  }
-}
-
-module ShipmentSummary = {
-  type result = Loading | Loaded(Js.Json.t) | Error(FetchHelper.customError)
-
-  @spice
-  type response = {
-    @spice.key("data") price: float,
-    message: string,
-  }
-
-  let use = queryParam => {
-    let fetcherOptions = Swr.fetcherOptions(~onErrorRetry, ())
-
-    let {data, error} = Swr.useSwr(
-      `${Env.restApiUrl}/shipment/amounts?${queryParam}`,
-      FetchHelper.fetcher,
-      fetcherOptions,
-    )
-
-    let result = switch error {
-    | Some(error') => Error(error')
-    | None =>
-      switch data {
-      | Some(data') => Loaded(data')
-      | None => Loading
-      }
-    }
-
-    result
-  }
-}
-
-module ShipmentMontlyAmount = {
-  type result = Loading | Loaded(Js.Json.t) | Error(FetchHelper.customError)
-
-  @spice
-  type response = {
-    @spice.key("data") price: float,
-    message: string,
-  }
-
-  let use = () => {
-    let fetcherOptions = Swr.fetcherOptions(~onErrorRetry, ())
-
-    let {data, error} = Swr.useSwr(
-      `${Env.restApiUrl}/shipment/monthly-amounts?market-type=all`,
-      FetchHelper.fetcher,
-      fetcherOptions,
-    )
-
-    let result = switch error {
-    | Some(error') => Error(error')
-    | None =>
-      switch data {
-      | Some(data') => Loaded(data')
-      | None => Loading
-      }
-    }
-
-    result
-  }
-}
-
-module OfflineOrders = {
-  type result = Loading | Loaded(Js.Json.t) | Error(FetchHelper.customError)
-
-  @spice
-  type offlineOrder = {
-    id: int,
-    @spice.key("order-product-no") orderProductNo: string,
-    @spice.key("sku") sku: string,
-    @spice.key("created-at") createdAt: string,
-    @spice.key("release-date") releaseDate: option<string>,
-    @spice.key("order-no") orderNo: string,
-    @spice.key("order-quantity-complete") confirmedOrderQuantity: option<float>,
-    @spice.key("order-quantity") orderQuantity: float,
-    @spice.key("buyer-sell-price") price: float,
-    @spice.key("producer-name") producerName: string,
-    @spice.key("producer-id") producerId: int,
-    @spice.key("buyer-name") buyerName: string,
-    @spice.key("buyer-id") buyerId: int,
-    @spice.key("producer-product-cost") cost: float,
-    @spice.key("item") crop: string,
-    @spice.key("order-product-id") orderProductId: string,
-    @spice.key("release-due-date") releaseDueDate: string,
-    @spice.key("kind") cultivar: string,
-    @spice.key("weight") weight: option<float>,
-    @spice.key("weight-unit") weightUnit: Products.weightUnit,
-    @spice.key("package-type") packageType: option<string>,
-    @spice.key("grade") grade: option<string>,
-  }
-
-  @spice
-  type offlineOrders = {
-    data: array<offlineOrder>,
-    count: int,
-    offset: int,
-    limit: int,
-  }
-
-  let use = queryParams => {
-    let fetcherOptions = Swr.fetcherOptions(~onErrorRetry, ())
-
-    let {data, error} = Swr.useSwr(
-      `${Env.restApiUrl}/offline-order?${queryParams}`,
-      FetchHelper.fetcher,
-      fetcherOptions,
-    )
-
-    let result = switch error {
-    | Some(error') => Error(error')
-    | None =>
-      switch data {
-      | Some(data') => Loaded(data')
-      | None => Loading
-      }
-    }
-
-    result
-  }
-}
-
-module OfflineUploadStatus = {
-  type status = Loading | Loaded(Js.Json.t) | Error(FetchHelper.customError)
-
-  @spice
-  type errorCode =
-    | Sku(string)
-    | EncryptedDocument(string)
-    | Role(string)
-    | Columns(string)
-    | BuyerId(string)
-    | ReleaseDueDate(string)
-    | ProductDetail(string)
-    | Etc(string)
-
-  let encoderErrorCode = v =>
-    switch v {
-    | Sku(s) => s
-    | EncryptedDocument(s) => s
-    | Role(s) => s
-    | Columns(s) => s
-    | BuyerId(s) => s
-    | ReleaseDueDate(s) => s
-    | ProductDetail(s) => s
-    | Etc(s) => s
-    }->Js.Json.string
-
-  let decoderErrorCode = json => {
-    switch json |> Js.Json.classify {
-    | Js.Json.JSONString(str) =>
-      switch str {
-      | "encrypted-document" =>
-        EncryptedDocument(`엑셀 파일에 암호가 걸려 있습니다.`)->Ok
-      | "sku" => Sku(`옵션코드(C열)에 문제를 발견하였습니다.`)->Ok
-      | "role" =>
-        Role(`유저 role 유효성검증이 실패하였습다.(admin이 아닌 유저)`)->Ok
-      | "columns" => Columns(`엑셀데이터 유효성검증에 실패하였습니다.`)->Ok
-      | "buyer-id" => BuyerId(`바이어id 유효성검증에 실패하였습니다.`)->Ok
-      | "release-due-date" =>
-        ReleaseDueDate(`출고예정일 유효성검증에 실패하였습니다.`)->Ok
-      | "product-detail" =>
-        ProductDetail(`등록할 상품 상세정보를 기입해주세요.`)->Ok
-      | "etc" => Etc(`알 수 없는 오류가 발생하였습니다.`)->Ok
-      | _ => Error({Spice.path: "", message: "Expected JSONString", value: json})
-      }
-    | _ => Error({Spice.path: "", message: "Expected JSONString", value: json})
-    }
-  }
-
-  let codecErrorCode: Spice.codec<errorCode> = (encoderErrorCode, decoderErrorCode)
-
-  @spice
-  type data = {
-    @spice.key("created-at") createdAt: string,
-    @spice.key("upload-no") uploadNo: string,
-    status: UploadStatus.uploadStatus,
-    @spice.key("file-name") filename: string,
-    @spice.key("error-code") errorCode: option<@spice.codec(codecErrorCode) errorCode>,
-    @spice.key("error-msg") errorMsg: option<string>,
-    @spice.key("fail-data-json") fileDataRows: option<array<int>>,
-  }
-
-  @spice
-  type response = {
-    message: string,
-    data: array<data>,
-  }
-
-  let use = () => {
-    let fetcherOptions = Swr.fetcherOptions(
-      ~onErrorRetry,
-      ~revalidateOnFocus=false,
-      ~revalidateOnReconnect=false,
-      ~refreshInterval=3000,
-      (),
-    )
-
-    let {data, error} = Swr.useSwr(
-      `${Env.restApiUrl}/offline-order/recent-uploads`,
-      FetchHelper.fetcher,
-      fetcherOptions,
-    )
-
-    let status = switch error {
-    | Some(error') => Error(error')
-    | None =>
-      switch data {
-      | Some(data') => Loaded(data')
-      | None => Loading
-      }
-    }
-
-    status
-  }
-}
-
 module AdminS3PresignedUrl = {
   @spice
   type response = {
@@ -2249,7 +1996,7 @@ module AfterPayCredit = {
         | Error(e) => {
             data'->Js.log
             e->Js.log
-            Error({status: 500, info: Js.Json.string("decode failed"), message: None})
+            Error({status: 500, info: Js.Json.string("decode failed")})
           }
         }
       | None => Loading
@@ -2304,7 +2051,7 @@ module AfterPayAgreement = {
         | Error(e) => {
             data'->Js.log
             e->Js.log
-            Error({status: 500, info: Js.Json.string("decode failed"), message: None})
+            Error({status: 500, info: Js.Json.string("decode failed")})
           }
         }
       | None => Loading
@@ -2380,7 +2127,7 @@ module AfterPayOrdersList = {
         | Error(e) => {
             data'->Js.log
             e->Js.log
-            Error({status: 500, info: Js.Json.string("decode failed"), message: None})
+            Error({status: 500, info: Js.Json.string("decode failed")})
           }
         }
       | None => Loading
@@ -2405,81 +2152,241 @@ let useSmoothScroll = () => {
   })
 }
 
-module Tradematch = {
-  let stepsOrder = ["grade", "count", "price", "cycle", "requirement", "shipping"]
+module type ProductSteps = {
+  type t
 
-  type usePageStepsReturnType = {
-    totalStepLength: int,
-    firstStep: string,
-    currentStep: string,
-    currentStepIndex: int,
+  let first: t
+  let last: t
+  let length: int
+  // DELETE ME
+  let type_: string
+
+  let getNext: t => option<t>
+  let getPrev: t => option<t>
+
+  let tToJs: t => int
+  let fromString: string => Result.t<t, string>
+  let toString: t => string
+}
+
+module TradematchStep = (Steps: ProductSteps) => {
+  type toNext = unit => unit
+  type toPrev = unit => unit
+  type toFirst = unit => unit
+  type push = Steps.t => unit
+  type replace = Steps.t => unit
+
+  type router = {
+    toNext: toNext,
+    toPrev: toPrev,
+    toFirst: toFirst,
+    push: push,
+    replace: replace,
+  }
+  type output = {
+    first: Steps.t,
+    current: Steps.t,
+    currentIndex: int,
+    next: option<Steps.t>,
+    nextIndex: int,
+    length: int,
+    isFirst: bool,
     isLast: bool,
-    nextStepIndex: int,
-    nextStep: option<string>,
+    router: router,
   }
 
-  type useNavigateStepReturnType = {
-    navigateToFirstStep: unit => unit,
-    navigateToNextStep: unit => unit,
-    replaceToStep: string => unit,
-  }
-
-  let usePageSteps = (): usePageStepsReturnType => {
+  let use = () => {
     let router = Next.Router.useRouter()
-
-    let totalStepLength = stepsOrder->Js.Array2.length
-    let firstStep = stepsOrder->Garter_Array.firstExn
-    let currentStep = router.query->Js.Dict.get("step")->Option.mapWithDefault(firstStep, x => x)
-    let currentStepIndex =
-      stepsOrder->Array.getIndexBy(x => x === currentStep)->Option.mapWithDefault(0, x => x)
-    let nextStepIndex = currentStepIndex + 1
-    let nextStep = stepsOrder->Array.get(nextStepIndex)
-    let isLast = stepsOrder->Array.length - 1 === currentStepIndex
-
-    {
-      totalStepLength,
-      firstStep,
-      currentStep,
-      currentStepIndex,
-      nextStepIndex,
-      nextStep,
-      isLast,
-    }
-  }
-
-  let useNavigateStep = (): useNavigateStepReturnType => {
     let {makeWithDict, toString} = module(Webapi.Url.URLSearchParams)
-    let router = Next.Router.useRouter()
-    let {nextStep, firstStep} = usePageSteps()
 
-    let navigateToNextStep = () => {
-      switch nextStep {
-      | Some(nextStep') => {
-          router.query->Js.Dict.set("step", nextStep')
-          let newQueryString = router.query->makeWithDict->toString
+    let getStepQueryString = step => {
+      router.query->Js.Dict.set("step", step->Steps.toString)
+      router.query->makeWithDict->toString
+    }
+
+    let currentStep = switch router.query->Js.Dict.get("step")->Option.map(Steps.fromString) {
+    | Some(Result.Ok(step)) => step
+    | Some(Result.Error(_)) => Steps.first
+    | None => Steps.first
+    }
+
+    let toNext = () =>
+      switch currentStep->Steps.getNext {
+      | Some(nextStep) => {
+          let newQueryString = nextStep->getStepQueryString
           router->Next.Router.push(`${router.pathname}?${newQueryString}`)
         }
 
-      | None => router->Next.Router.push(`/buyer/tradematch/ask-to-buy/applied`)
+      | None => {
+          let path = Js.String2.replaceByRe(router.asPath, %re("/(\d+)\/apply(.*)/"), "$1/applied")
+          // DELETE ME
+          /*
+           * 상품 쿼리로 판단하게 되면 지우기
+           */
+          let newQueries = Js.Dict.empty()
+          newQueries->Js.Dict.set("type", Steps.type_)
+
+          let newQueryString =
+            newQueries->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString
+
+          router->Next.Router.push(`${path}?${newQueryString}`)
+        }
       }
-    }
 
-    let navigateToFirstStep = () => {
-      router.query->Js.Dict.set("step", firstStep)
-      let newQueryString = router.query->makeWithDict->toString
-      router->Next.Router.replace(`${router.pathname}?${newQueryString}`)
-    }
+    let toPrev = () =>
+      switch currentStep->Steps.getPrev {
+      | Some(prevStep) => {
+          let newQueryString = prevStep->getStepQueryString
+          router->Next.Router.push(`${router.pathname}?${newQueryString}`)
+        }
 
-    let replaceToStep = (step: string) => {
-      router.query->Js.Dict.set("step", step)
-      let newQueryString = router.query->makeWithDict->toString
-      router->Next.Router.replace(`${router.pathname}?${newQueryString}`)
-    }
+      | None => router->Next.Router.back
+      }
+
+    let toFirst = () =>
+      router->Next.Router.replace(`${router.pathname}?${Steps.first->getStepQueryString}`)
+
+    let push = step => router->Next.Router.push(`${router.pathname}?${step->getStepQueryString}`)
+
+    let replace = step =>
+      router->Next.Router.replace(`${router.pathname}?${step->getStepQueryString}`)
 
     {
-      navigateToNextStep,
-      navigateToFirstStep,
-      replaceToStep,
+      first: Steps.first,
+      current: currentStep,
+      currentIndex: currentStep->Steps.tToJs,
+      next: currentStep->Steps.getNext,
+      nextIndex: currentStep->Steps.tToJs + 1,
+      length: Steps.length,
+      isFirst: currentStep == Steps.first,
+      isLast: currentStep == Steps.last,
+      router: {
+        toNext,
+        toPrev,
+        toFirst,
+        push,
+        replace,
+      },
     }
   }
+}
+
+module FarmProductSteps = {
+  @deriving(jsConverter)
+  type t = Grade | Count | Price | Cycle | Requirement | Shipping
+
+  let first = Grade
+  let last = Shipping
+  let length = 6
+  let type_ = "farm"
+
+  let getNext = step =>
+    switch step {
+    | Grade => Some(Count)
+    | Count => Some(Price)
+    | Price => Some(Cycle)
+    | Cycle => Some(Requirement)
+    | Requirement => Some(Shipping)
+    | Shipping => None
+    }
+
+  let getPrev = step =>
+    switch step {
+    | Shipping => Some(Requirement)
+    | Requirement => Some(Cycle)
+    | Cycle => Some(Price)
+    | Price => Some(Count)
+    | Count => Some(Grade)
+    | Grade => None
+    }
+
+  let fromString = str =>
+    switch str {
+    | "grade" => Result.Ok(Grade)
+    | "count" => Result.Ok(Count)
+    | "price" => Result.Ok(Price)
+    | "cycle" => Result.Ok(Cycle)
+    | "requirement" => Result.Ok(Requirement)
+    | "shipping" => Result.Ok(Shipping)
+    | _ => Result.Error("parse error")
+    }
+
+  let toString = step =>
+    switch step {
+    | Grade => "grade"
+    | Count => "count"
+    | Price => "price"
+    | Cycle => "cycle"
+    | Requirement => "requirement"
+    | Shipping => "shipping"
+    }
+}
+
+module AquaProductSteps = {
+  @deriving(jsConverter)
+  type t = Origin | Weight | Price | StorageMethod | Cycle | Requirement | Shipping
+
+  let first = Origin
+  let last = Shipping
+  let length = 7
+  let type_ = "aqua"
+
+  let getNext = step =>
+    switch step {
+    | Origin => Some(Weight)
+    | Weight => Some(Price)
+    | Price => Some(StorageMethod)
+    | StorageMethod => Some(Cycle)
+    | Cycle => Some(Requirement)
+    | Requirement => Some(Shipping)
+    | Shipping => None
+    }
+
+  let getPrev = step =>
+    switch step {
+    | Shipping => Some(Requirement)
+    | Requirement => Some(Cycle)
+    | Cycle => Some(StorageMethod)
+    | StorageMethod => Some(Price)
+    | Price => Some(Weight)
+    | Weight => Some(Origin)
+    | Origin => None
+    }
+
+  let fromString = str =>
+    switch str {
+    | "origin" => Result.Ok(Origin)
+    | "weight" => Result.Ok(Weight)
+    | "price" => Result.Ok(Price)
+    | "storage-method" => Result.Ok(StorageMethod)
+    | "cycle" => Result.Ok(Cycle)
+    | "requirement" => Result.Ok(Requirement)
+    | "shipping" => Result.Ok(Shipping)
+    | _ => Result.Error("parse error")
+    }
+
+  let toString = step =>
+    switch step {
+    | Origin => "origin"
+    | Weight => "weight"
+    | Price => "price"
+    | StorageMethod => "storage-method"
+    | Cycle => "cycle"
+    | Requirement => "requirement"
+    | Shipping => "shipping"
+    }
+}
+
+module FarmTradematchStep = TradematchStep(FarmProductSteps)
+module AquaTradematchStep = TradematchStep(AquaProductSteps)
+
+let useCsr = () => {
+  let (isCsr, setCsr) = React.Uncurried.useState(_ => false)
+
+  React.useEffect0(_ => {
+    setCsr(._ => true)
+    None
+  })
+
+  isCsr
 }

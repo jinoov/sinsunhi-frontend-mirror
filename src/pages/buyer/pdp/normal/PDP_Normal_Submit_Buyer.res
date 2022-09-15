@@ -11,26 +11,151 @@ module Fragment = %relay(`
     __typename
     status
   
-    ...PDPNormalGtmBuyer_ClickBuy_Fragment
+    ...PDPNormalSubmitBuyer_fragment
+    ...PDPNormalRfqBtnBuyer_fragment
   }
 `)
 
+module ButtonFragment = %relay(`
+    fragment PDPNormalSubmitBuyer_fragment on Product
+    @argumentDefinitions(
+      first: { type: "Int", defaultValue: 20 }
+      after: { type: "ID", defaultValue: null }
+    ) {
+      productId: number
+      displayName
+      category {
+        fullyQualifiedName {
+          name
+        }
+      }
+      ... on NormalProduct {
+        producer {
+          producerCode
+        }
+    
+        productOptions(first: $first, after: $after) {
+          edges {
+            node {
+              id
+              stockSku
+              price
+            }
+          }
+        }
+      }
+      ... on QuotableProduct {
+        producer {
+          producerCode
+        }
+    
+        productOptions(first: $first, after: $after) {
+          edges {
+            node {
+              id
+              stockSku
+              price
+            }
+          }
+        }
+      }
+    }
+  `)
+
+// 구매 가능 상태
 type orderStatus =
   | Loading // SSR
   | Soldout // 상품 품절
   | Unauthorized // 미인증
   | NoOption // 선택한 단품이 없음
-  | Fulfilled(string) // 구매 가능 상태
+  | Available(Map.String.t<int>) // 구매 가능 상태 (k: string(optionId) / v: int(quantity))
+
+module ClickPurchaseGtm = {
+  type option = {
+    stockSku: string,
+    price: option<int>,
+    quantity: int,
+  }
+
+  let make = (product: PDPNormalSubmitBuyer_fragment_graphql.Types.fragment, ~selectedOptions) => {
+    let {productId, displayName, producer, category, productOptions} = product
+    let categoryNames = category.fullyQualifiedName->Array.map(({name}) => name)
+    let producerCode = producer->Option.map(({producerCode}) => producerCode)
+
+    let options = {
+      selectedOptions
+      ->Map.String.toArray
+      ->Array.keepMap(((optionId, quantity)) => {
+        productOptions->Option.flatMap(({edges}) => {
+          switch edges->Array.getBy(({node: {id}}) => id == optionId) {
+          | None => None
+          | Some({node: {stockSku, price}}) => {stockSku, price, quantity}->Some
+          }
+        })
+      })
+    }
+
+    let filterEmptyArr = arr => {
+      switch arr {
+      | [] => None
+      | nonEmpty => nonEmpty->Some
+      }
+    }
+
+    let makeItems = nonEmptyOptions => {
+      nonEmptyOptions->Array.map(({stockSku, price, quantity}) =>
+        {
+          "currency": "KRW", // 화폐 KRW 고정
+          "item_id": productId->Int.toString, // 상품 코드
+          "item_name": displayName, // 상품명
+          "item_brand": producerCode->Js.Nullable.fromOption, // maker - 생산자코드
+          "item_variant": stockSku, // 단품 코드
+          "price": price->Js.Nullable.fromOption, // 상품 가격 (바이어 판매가) - nullable
+          "quantity": quantity, // 수량
+          "item_category": categoryNames->Array.get(0)->Js.Nullable.fromOption, // 표준 카테고리 Depth 1
+          "item_category2": categoryNames->Array.get(1)->Js.Nullable.fromOption, // 표준 카테고리 Depth 2
+          "item_category3": categoryNames->Array.get(2)->Js.Nullable.fromOption, // 표준 카테고리 Depth 3
+          "item_category4": categoryNames->Array.get(3)->Js.Nullable.fromOption, // 표준 카테고리 Depth 4
+          "item_category5": categoryNames->Array.get(4)->Js.Nullable.fromOption, // 표준 카테고리 Depth 5
+        }
+      )
+    }
+
+    options
+    ->filterEmptyArr
+    ->Option.map(nonEmptyOptions => {
+      {
+        "event": "click_purchase", // 이벤트 타입: 상품 구매 클릭 시
+        "ecommerce": {
+          "items": nonEmptyOptions->makeItems,
+        },
+      }
+    })
+  }
+}
 
 module PC = {
   module ActionBtn = {
     @react.component
-    let make = (~query, ~className, ~selectedOptionId, ~setShowModal, ~quantity, ~children) => {
-      let pushGtmClickBuy = PDP_Normal_Gtm_Buyer.ClickBuy.use(~query, ~selectedOptionId, ~quantity)
+    let make = (~query, ~className, ~selectedOptions, ~setShowModal, ~children) => {
+      let availableButton = ToggleOrderAndPayment.use()
+      let product = query->ButtonFragment.use
 
       let onClick = _ => {
-        setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
-        pushGtmClickBuy()
+        switch availableButton {
+        | true =>
+          product
+          ->ClickPurchaseGtm.make(~selectedOptions)
+          ->Option.map(event' => {
+            {"ecommerce": Js.Nullable.null}->DataGtm.push
+            event'->DataGtm.mergeUserIdUnsafe->DataGtm.push
+          })
+          ->ignore
+          setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
+
+        | false =>
+          Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
+        }
       }
 
       <button className onClick> children </button>
@@ -39,7 +164,7 @@ module PC = {
 
   module OrderBtn = {
     @react.component
-    let make = (~status, ~selectedOptionId, ~setShowModal, ~query, ~quantity) => {
+    let make = (~status, ~selectedOptions, ~setShowModal, ~query) => {
       let user = CustomHooks.User.Buyer.use2()
 
       let btnStyle = %twc(
@@ -51,12 +176,15 @@ module PC = {
       )
 
       let orderStatus = {
-        switch (status, user, selectedOptionId) {
-        | (#SOLDOUT, _, _) => Soldout
-        | (_, Unknown, _) => Loading
-        | (_, NotLoggedIn, _) => Unauthorized
-        | (_, LoggedIn(_), None) => NoOption
-        | (_, LoggedIn(_), Some(selectedOptionId')) => Fulfilled(selectedOptionId')
+        switch (status, user) {
+        | (#SOLDOUT, _) => Soldout
+        | (_, Unknown) => Loading
+        | (_, NotLoggedIn) => Unauthorized
+        | (_, LoggedIn(_)) =>
+          switch selectedOptions->Map.String.toArray {
+          | [] => NoOption
+          | _ => Available(selectedOptions)
+          }
         }
       }
 
@@ -88,63 +216,22 @@ module PC = {
         </button>
 
       // 구매 가능
-      | Fulfilled(selectedOptionId') =>
-        <ActionBtn
-          className=btnStyle query selectedOptionId=selectedOptionId' setShowModal quantity>
+      | Available(options) =>
+        <ActionBtn className=btnStyle query selectedOptions=options setShowModal>
           {`구매하기`->React.string}
         </ActionBtn>
       }
     }
   }
 
-  module RfqBtn = {
-    @react.component
-    let make = (~setShowModal) => {
-      let buttonText = `최저가 견적문의`
-      let user = CustomHooks.User.Buyer.use2()
-
-      let btnStyle = %twc(
-        "mt-4 w-full h-16 rounded-xl bg-primary-light hover:bg-primary-light-variant text-primary text-lg font-bold hover:text-primary-variant"
-      )
-
-      let disabledStyle = %twc(
-        "mt-4 w-full h-16 rounded-xl bg-disabled-L2 text-lg font-bold text-white"
-      )
-
-      switch user {
-      | Unknown =>
-        <button disabled=true className=disabledStyle> {buttonText->React.string} </button>
-
-      | NotLoggedIn =>
-        <button
-          className=btnStyle
-          onClick={_ => {
-            setShowModal(._ => PDP_Normal_Modals_Buyer.Show(
-              Unauthorized(`로그인 후에\n견적을 받으실 수 있습니다.`),
-            ))
-          }}>
-          {buttonText->React.string}
-        </button>
-
-      | LoggedIn({role}) =>
-        switch role {
-        | Admin | Seller =>
-          <button disabled=true className=disabledStyle> {buttonText->React.string} </button>
-
-        | Buyer => <RfqCreateRequestButton className=btnStyle buttonText />
-        }
-      }
-    }
-  }
-
   @react.component
-  let make = (~query, ~selectedOptionId, ~setShowModal, ~quantity) => {
+  let make = (~query, ~selectedOptions, ~setShowModal) => {
     let {status, __typename, fragmentRefs} = query->Fragment.use
 
     <section className=%twc("w-full")>
-      <OrderBtn status selectedOptionId setShowModal quantity query=fragmentRefs />
+      <OrderBtn query=fragmentRefs status selectedOptions setShowModal />
       {switch __typename->Product_Parser.Type.decode {
-      | Some(Quotable) => <RfqBtn setShowModal />
+      | Some(Quotable) => <PDP_Normal_RfqBtn_Buyer.PC query=fragmentRefs setShowModal />
       | _ => React.null
       }}
     </section>
@@ -152,39 +239,29 @@ module PC = {
 }
 
 module MO = {
-  module CTAContainer = {
-    @react.component
-    let make = (~children=?) => {
-      <div className=%twc("fixed w-full bottom-0 left-0")>
-        <div className=%twc("w-full max-w-[768px] p-3 mx-auto border-t border-t-gray-100 bg-white")>
-          <div className=%twc("w-full h-14 flex")>
-            <button onClick={_ => ChannelTalk.showMessenger()}>
-              <img
-                src="/icons/cs-gray-square.png"
-                className=%twc("w-14 h-14 mr-2")
-                alt="cta-cs-btn-mobile"
-              />
-            </button>
-            {children->Option.getWithDefault(React.null)}
-          </div>
-        </div>
-      </div>
-    }
-  }
-
   module OrderBtn = {
     module ActionBtn = {
       @react.component
-      let make = (~query, ~className, ~selectedOptionId, ~setShowModal, ~quantity, ~children) => {
-        let pushGtmClickBuy = PDP_Normal_Gtm_Buyer.ClickBuy.use(
-          ~query,
-          ~selectedOptionId,
-          ~quantity,
-        )
+      let make = (~query, ~className, ~selectedOptions, ~setShowModal, ~children) => {
+        let availableButton = ToggleOrderAndPayment.use()
+        let product = query->ButtonFragment.use
 
         let onClick = _ => {
-          setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
-          pushGtmClickBuy()
+          switch availableButton {
+          | true => {
+              product
+              ->ClickPurchaseGtm.make(~selectedOptions)
+              ->Option.map(event' => {
+                {"ecommerce": Js.Nullable.null}->DataGtm.push
+                event'->DataGtm.mergeUserIdUnsafe->DataGtm.push
+              })
+              ->ignore
+              setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
+            }
+
+          | false =>
+            Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
+          }
         }
 
         <button className onClick> children </button>
@@ -192,7 +269,7 @@ module MO = {
     }
 
     @react.component
-    let make = (~status, ~selectedOptionId, ~setShowModal, ~query, ~quantity) => {
+    let make = (~status, ~selectedOptions, ~setShowModal, ~query) => {
       let user = CustomHooks.User.Buyer.use2()
 
       let btnStyle = %twc(
@@ -204,12 +281,15 @@ module MO = {
       )
 
       let orderStatus = {
-        switch (status, user, selectedOptionId) {
-        | (#SOLDOUT, _, _) => Soldout
-        | (_, Unknown, _) => Loading
-        | (_, NotLoggedIn, _) => Unauthorized
-        | (_, LoggedIn(_), None) => NoOption
-        | (_, LoggedIn(_), Some(selectedOptionId')) => Fulfilled(selectedOptionId')
+        switch (status, user) {
+        | (#SOLDOUT, _) => Soldout
+        | (_, Unknown) => Loading
+        | (_, NotLoggedIn) => Unauthorized
+        | (_, LoggedIn(_)) =>
+          switch selectedOptions->Map.String.toArray {
+          | [] => NoOption
+          | _ => Available(selectedOptions)
+          }
         }
       }
 
@@ -241,86 +321,28 @@ module MO = {
         </button>
 
       // 구매 가능
-      | Fulfilled(selectedOptionId') =>
-        <ActionBtn
-          className=btnStyle query selectedOptionId=selectedOptionId' setShowModal quantity>
+      | Available(options) =>
+        <ActionBtn className=btnStyle query selectedOptions=options setShowModal>
           {`구매하기`->React.string}
         </ActionBtn>
       }
     }
   }
 
-  module RfqBtn = {
-    @react.component
-    let make = (~setShowModal) => {
-      let buttonText = `최저가 견적문의`
-      let user = CustomHooks.User.Buyer.use2()
-
-      let btnStyle = %twc(
-        "flex flex-1 items-center justify-center rounded-xl bg-white border border-primary text-primary text-lg font-bold"
-      )
-      let disabledStyle = %twc(
-        "flex flex-1 items-center justify-center rounded-xl bg-disabled-L2 text-lg font-bold text-white"
-      )
-
-      switch user {
-      | Unknown =>
-        <button disabled=true className=disabledStyle> {buttonText->React.string} </button>
-
-      | NotLoggedIn =>
-        <>
-          <button
-            className=btnStyle
-            onClick={_ => {
-              setShowModal(._ => PDP_Normal_Modals_Buyer.Show(
-                Unauthorized(`로그인 후에\n견적을 받으실 수 있습니다.`),
-              ))
-            }}>
-            {buttonText->React.string}
-          </button>
-        </>
-
-      | LoggedIn({role}) =>
-        switch role {
-        | Admin | Seller =>
-          <button disabled=true className=disabledStyle> {buttonText->React.string} </button>
-
-        | Buyer =>
-          <RfqCreateRequestButton className=btnStyle buttonText={`최저가 견적문의`} />
-        }
-      }
-    }
-  }
-
   @react.component
-  let make = (~query, ~selectedOptionId, ~setShowModal, ~quantity) => {
+  let make = (~query, ~selectedOptions, ~setShowModal) => {
     let {__typename, status, fragmentRefs} = query->Fragment.use
 
-    <>
-      // 컨텐츠 내 버튼
-      <div className=%twc("w-full h-14 flex")>
-        {switch __typename->Product_Parser.Type.decode {
-        | Some(Quotable) =>
-          <>
-            <RfqBtn setShowModal />
-            <div className=%twc("w-2") />
-          </>
-        | _ => React.null
-        }}
-        <OrderBtn status selectedOptionId setShowModal query=fragmentRefs quantity />
-      </div>
-      // 플로팅 영역
-      <CTAContainer>
-        {switch __typename->Product_Parser.Type.decode {
-        | Some(Quotable) =>
-          <>
-            <RfqBtn setShowModal />
-            <div className=%twc("w-2") />
-          </>
-        | _ => React.null
-        }}
-        <OrderBtn status selectedOptionId setShowModal query=fragmentRefs quantity />
-      </CTAContainer>
-    </>
+    <PDP_CTA_Container_Buyer>
+      {switch __typename->Product_Parser.Type.decode {
+      | Some(Quotable) =>
+        <>
+          <PDP_Normal_RfqBtn_Buyer.MO query=fragmentRefs setShowModal />
+          <div className=%twc("w-2") />
+        </>
+      | _ => React.null
+      }}
+      <OrderBtn status selectedOptions setShowModal query=fragmentRefs />
+    </PDP_CTA_Container_Buyer>
   }
 }

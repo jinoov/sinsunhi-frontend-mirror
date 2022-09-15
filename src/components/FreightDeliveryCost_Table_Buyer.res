@@ -33,7 +33,7 @@ module TitleAndCloseButton = {
         {j`화물배송 운송비용 표`->React.string}
       </h3>
       <button onClick={_ => close()} className=%twc("cursor-pointer border-none")>
-        <IconClose height="1.5rem" width="1.5rem" fill="#262626" />
+        <IconClose height="24" width="24" fill="#262626" />
       </button>
     </div>
   }
@@ -120,10 +120,12 @@ let make = () => {
           className=%twc(
             "flex flex-1 px-4 items-center justify-between border-div-border-L2 border border-y-0 border-x-0 xl:border-r-[1px]"
           )>
-          <span> {`거리`->React.string} </span> <span> {`금액`->React.string} </span>
+          <span> {`거리`->React.string} </span>
+          <span> {`금액`->React.string} </span>
         </div>
         <div className=%twc("hidden xl:flex flex-1 px-4 items-center justify-between")>
-          <span> {`거리`->React.string} </span> <span> {`금액`->React.string} </span>
+          <span> {`거리`->React.string} </span>
+          <span> {`금액`->React.string} </span>
         </div>
       </div>
       <div className=%twc("flex flex-wrap")> {selectedValues->TableRow.render(true)} </div>
@@ -131,7 +133,7 @@ let make = () => {
         {j``->React.string}
       </RadixUI.Dialog.Close>
       <span className=%twc("md:hidden")>
-        <Dialog.ButtonBox textOnCancel=`닫기` onCancel={_ => close()} />
+        <Dialog.ButtonBox textOnCancel={`닫기`} onCancel={_ => close()} />
       </span>
     </RadixUI.Dialog.Content>
   </RadixUI.Dialog.Root>

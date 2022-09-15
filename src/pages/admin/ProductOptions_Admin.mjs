@@ -4,13 +4,15 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Authorization from "../../utils/Authorization.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
-import * as Hooks from "react-relay/hooks";
 import * as Select_CountPerPage from "../../components/Select_CountPerPage.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as Product_Option_List_Admin from "../../components/Product_Option_List_Admin.mjs";
@@ -20,7 +22,7 @@ import * as Excel_Download_Request_Button from "../../components/Excel_Download_
 import * as ProductOptionsAdminQuery_graphql from "../../__generated__/ProductOptionsAdminQuery_graphql.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(ProductOptionsAdminQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(ProductOptionsAdminQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(ProductOptionsAdminQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(ProductOptionsAdminQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -29,7 +31,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(ProductOptionsAdminQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(ProductOptionsAdminQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -47,38 +49,37 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, ProductOptionsAdminQuery_graphql.node, ProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, ProductOptionsAdminQuery_graphql.node, ProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: ProductOptionsAdminQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: ProductOptionsAdminQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, ProductOptionsAdminQuery_graphql.node, ProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, ProductOptionsAdminQuery_graphql.node, ProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(ProductOptionsAdminQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(ProductOptionsAdminQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(ProductOptionsAdminQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(ProductOptionsAdminQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(ProductOptionsAdminQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -95,14 +96,12 @@ var Query_productOptionStatus_decode = ProductOptionsAdminQuery_graphql.Utils.pr
 
 var Query_productOptionStatus_fromString = ProductOptionsAdminQuery_graphql.Utils.productOptionStatus_fromString;
 
-var Query_makeVariables = ProductOptionsAdminQuery_graphql.Utils.makeVariables;
-
 var Query = {
   productOptionSort_decode: Query_productOptionSort_decode,
   productOptionSort_fromString: Query_productOptionSort_fromString,
   productOptionStatus_decode: Query_productOptionStatus_decode,
   productOptionStatus_fromString: Query_productOptionStatus_fromString,
-  makeVariables: Query_makeVariables,
+  Operation: undefined,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -128,15 +127,16 @@ var Skeleton = {
   make: ProductOptions_Admin$Skeleton
 };
 
+function isEmptyString(str) {
+  return str !== "";
+}
+
 function ProductOptions_Admin$ProductOptions(Props) {
   var router = Router.useRouter();
   var match = Js_dict.get(router.query, "status");
   var tmp;
   if (match !== undefined) {
     switch (match) {
-      case "HIDDEN_SALE" :
-          tmp = "HIDDEN_SALE";
-          break;
       case "NOSALE" :
           tmp = "NOSALE";
           break;
@@ -155,28 +155,54 @@ function ProductOptions_Admin$ProductOptions(Props) {
   } else {
     tmp = undefined;
   }
-  var queryData = use({
-        sort: "SKU_DESC",
-        limit: Belt_Option.getWithDefault(Belt_Option.flatMap(Js_dict.get(router.query, "limit"), Belt_Int.fromString), 25),
-        offset: Belt_Option.flatMap(Js_dict.get(router.query, "offset"), Belt_Int.fromString),
-        producerName: Belt_Option.flatMap(Js_dict.get(router.query, "producer-name"), (function (a) {
-                if (a === "") {
-                  return ;
-                } else {
-                  return a;
-                }
-              })),
-        status: tmp,
-        productName: Belt_Option.flatMap(Js_dict.get(router.query, "product-name"), (function (a) {
-                if (a === "") {
-                  return ;
-                } else {
-                  return a;
-                }
-              })),
-        categoryId: Belt_Option.flatMap(Js_dict.get(router.query, "category-id"), Belt_Int.fromString)
-      }, /* StoreAndNetwork */2, undefined, undefined, undefined);
-  console.log(router);
+  var tmp$1 = {
+    limit: Belt_Option.getWithDefault(Belt_Option.flatMap(Js_dict.get(router.query, "limit"), Belt_Int.fromString), 25),
+    sort: "SKU_DESC"
+  };
+  var tmp$2 = Belt_Option.flatMap(Js_dict.get(router.query, "category-id"), Belt_Int.fromString);
+  if (tmp$2 !== undefined) {
+    tmp$1.categoryId = tmp$2;
+  }
+  var tmp$3 = Belt_Option.flatMap(Js_dict.get(router.query, "offset"), Belt_Int.fromString);
+  if (tmp$3 !== undefined) {
+    tmp$1.offset = tmp$3;
+  }
+  var tmp$4 = Belt_Option.flatMap(Js_dict.get(router.query, "producer-name"), (function (a) {
+          if (a === "") {
+            return ;
+          } else {
+            return a;
+          }
+        }));
+  if (tmp$4 !== undefined) {
+    tmp$1.producerName = tmp$4;
+  }
+  var tmp$5 = Belt_Option.flatMap(Js_dict.get(router.query, "product-name"), (function (a) {
+          if (a === "") {
+            return ;
+          } else {
+            return a;
+          }
+        }));
+  if (tmp$5 !== undefined) {
+    tmp$1.productName = tmp$5;
+  }
+  var tmp$6 = Belt_Option.map(Belt_Option.keep(Js_dict.get(router.query, "product-nos"), isEmptyString), (function (productNos) {
+          return Belt_Array.keepMap(decodeURIComponent(productNos).split(","), Belt_Int.fromString);
+        }));
+  if (tmp$6 !== undefined) {
+    tmp$1.productNos = Caml_option.valFromOption(tmp$6);
+  }
+  var tmp$7 = Belt_Option.map(Belt_Option.keep(Js_dict.get(router.query, "sku-nos"), isEmptyString), (function (skuNos) {
+          return decodeURIComponent(skuNos).split(",");
+        }));
+  if (tmp$7 !== undefined) {
+    tmp$1.skuNos = Caml_option.valFromOption(tmp$7);
+  }
+  if (tmp !== undefined) {
+    tmp$1.status = Caml_option.valFromOption(tmp);
+  }
+  var match$1 = use(tmp$1, /* StoreAndNetwork */2, undefined, undefined, undefined);
   return React.createElement("div", {
               className: "max-w-gnb-panel overflow-auto overflow-x-scroll bg-div-shape-L1 min-h-screen"
             }, React.createElement("header", {
@@ -193,7 +219,7 @@ function ProductOptions_Admin$ProductOptions(Props) {
                               className: "font-bold"
                             }, "내역", React.createElement("span", {
                                   className: "ml-1 text-green-gl font-normal"
-                                }, String(queryData.productOptions.totalCount) + "건")), React.createElement("div", {
+                                }, "" + String(match$1.productOptions.totalCount) + "건")), React.createElement("div", {
                               className: "flex"
                             }, React.createElement(Select_CountPerPage.make, {
                                   className: "mr-2"
@@ -201,11 +227,12 @@ function ProductOptions_Admin$ProductOptions(Props) {
                                   userType: /* Admin */2,
                                   requestUrl: "/product/request-excel"
                                 })))), React.createElement(Product_Option_List_Admin.make, {
-                      query: queryData.fragmentRefs
+                      query: match$1.fragmentRefs
                     })));
 }
 
 var ProductOptions = {
+  isEmptyString: isEmptyString,
   make: ProductOptions_Admin$ProductOptions
 };
 
@@ -234,6 +261,5 @@ export {
   Skeleton ,
   ProductOptions ,
   make ,
-  
 }
 /* react Not a pure module */

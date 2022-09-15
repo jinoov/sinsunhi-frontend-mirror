@@ -3,7 +3,7 @@
  *    PLP (전시 카테고리 내 상품 리스트 페이지) 헤더
  *
  * 2. 역할
- *    쿼리 파라메터로 전달된 display-category-id를 활용하여, 전시 카테고리 이름을 조회, Gnb에 표현합니다
+ *    쿼리 파라메터로 전달된 display-category-id 또는 `/categories/[cid]`를 활용하여, 전시 카테고리 이름을 조회, Gnb에 표현합니다
  *
  */
 module DisplayCategoryName = {
@@ -11,7 +11,14 @@ module DisplayCategoryName = {
     query PLPHeaderBuyerQuery($displayCategoryId: ID!) {
       node(id: $displayCategoryId) {
         ... on DisplayCategory {
+          parent {
+            name
+          }
+          id
           name
+          children {
+            id
+          }
         }
       }
     }
@@ -21,17 +28,26 @@ module DisplayCategoryName = {
   let make = (~displayCategoryId) => {
     let {node} = Query.use(~variables=Query.makeVariables(~displayCategoryId), ())
 
-    switch node {
-    | None => <span />
-    | Some({name}) => <span className=%twc("font-bold text-xl")> {name->React.string} </span>
+    let title = switch node {
+    | None => ""
+    | Some(node) =>
+      switch node.children {
+      | [] => node.parent->Option.mapWithDefault("", parent => parent.name)
+      | _ => node.name
+      }
     }
+
+    <span className=%twc("font-bold text-xl")> {title->React.string} </span>
   }
 }
 
 @react.component
 let make = () => {
   let router = Next.Router.useRouter()
-  let displayCategoryId = router.query->Js.Dict.get("category-id")
+  let displayCategoryId = switch router.query->Js.Dict.get("cid") {
+  | Some(_) as cid => cid
+  | None => router.query->Js.Dict.get("category-id")
+  }
 
   let (isCsr, setIsCsr) = React.Uncurried.useState(_ => false)
 
@@ -48,29 +64,26 @@ let make = () => {
           <button onClick={_ => router->Next.Router.back}>
             <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
           </button>
-          <div>
-            {switch isCsr {
-            | false => <span />
-
-            | true =>
-              switch displayCategoryId {
-              // 전체 상품 리스트
-              | None =>
+          {switch isCsr {
+          | false => <span />
+          | true =>
+            switch displayCategoryId {
+            // 전체 상품 리스트
+            | None =>
+              <>
                 <span className=%twc("font-bold text-xl")> {`전체 상품`->React.string} </span>
-
-              // 특정 전시카테고리 내 상품 리스트
-              | Some(displayCategoryId') =>
-                <RescriptReactErrorBoundary fallback={_ => <span />}>
-                  <React.Suspense fallback={<span />}>
-                    <DisplayCategoryName displayCategoryId=displayCategoryId' />
-                  </React.Suspense>
-                </RescriptReactErrorBoundary>
-              }
-            }}
-          </div>
-          <button onClick={_ => router->Next.Router.push("/buyer")}>
-            <IconHome height="24" width="24" fill="#262626" />
-          </button>
+                <CartLinkIcon />
+              </>
+            // 특정 전시카테고리 내 상품 리스트
+            | Some(displayCategoryId') =>
+              <RescriptReactErrorBoundary fallback={_ => <span />}>
+                <React.Suspense fallback={<span />}>
+                  <DisplayCategoryName displayCategoryId=displayCategoryId' />
+                </React.Suspense>
+                <CartLinkIcon />
+              </RescriptReactErrorBoundary>
+            }
+          }}
         </div>
       </header>
     </div>

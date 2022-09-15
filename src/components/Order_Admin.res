@@ -158,9 +158,9 @@ module Item = {
         // 다이얼로그
         <Dialog
           isShow=isShowCancelConfirm
-          textOnCancel=`취소`
+          textOnCancel=`닫기`
           onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-          textOnConfirm=`확인`
+          textOnConfirm=`취소 완료하기`
           onConfirm={_ => {
             setShowCancelConfirm(._ => Dialog.Hide)
             onClickCancel([order.orderProductNo])

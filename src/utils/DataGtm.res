@@ -12,3 +12,16 @@ let push = (data: {..}) => {
 let make = (~children, ~dataGtm: string) => {
   <ReactUtil.SpreadProps props={"data-gtm": dataGtm}> {children} </ReactUtil.SpreadProps>
 }
+
+// Object에 {"user_id": user.id}를 merge 합니다.
+// user.id가 없는 경우 null을 merge 합니다.
+let mergeUserIdUnsafe = data => {
+  let userIdOrNull =
+    CustomHooks.Auth.getUser()->Option.mapWithDefault(Js.Nullable.null, user =>
+      Js.Nullable.return(user.id)
+    )
+
+  data->Js.Obj.assign({
+    "user_id": userIdOrNull,
+  })
+}

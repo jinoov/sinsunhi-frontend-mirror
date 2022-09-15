@@ -112,7 +112,9 @@ module Content = {
       <section className=%twc("w-full px-4 py-8")>
         <span className=%twc("text-base text-black")> {description->React.string} </span>
       </section>
-      <section className=%twc("px-4")> <Divider className=%twc("h-[2px] bg-gray-100") /> </section>
+      <section className=%twc("px-4")>
+        <Divider className=%twc("h-[2px] bg-gray-100") />
+      </section>
       <section className=%twc("w-full px-4 divide-y divide-dashed pb-14")>
         {sugar->Option.mapWithDefault(React.null, sugar' => {
           <div className=%twc("w-full flex py-4")>
@@ -179,6 +181,33 @@ module Content = {
   }
 }
 
+module Trigger = {
+  @react.component
+  let make = (~onClick, ~className=?) => {
+    <div
+      className={%twc("w-full bg-green-50 rounded-xl p-6 ") ++
+      className->Option.getWithDefault("")}>
+      <div className=%twc("flex items-center")>
+        <img src="/icons/grade-green-circle@3x.png" className=%twc("w-6 h-6 object-contain mr-2") />
+        <h1 className=%twc("text-black font-bold text-base")>
+          {`신선하이 등급으로 필요한 시세를 한눈에`->React.string}
+        </h1>
+      </div>
+      <div className=%twc("mt-2 flex flex-col ")>
+        <span className=%twc("text-sm text-gray-600")>
+          {`고객의 구매 목적을 고려한 신선하이 등급을 통해\n상품의 품질별 시세의 흐름을 한눈에 파악할 수 있습니다.`->ReactNl2br.nl2br}
+        </span>
+      </div>
+      <button onClick className=%twc("mt-4 flex items-center")>
+        <span className=%twc("text-sm text-primary font-bold")>
+          {`신선하이 등급보러가기`->React.string}
+        </span>
+        <IconArrow width="16" height="16" fill="#12b564" />
+      </button>
+    </div>
+  }
+}
+
 module Divider = {
   @react.component
   let make = (~className=?) => <RadixUI.Separator.Root ?className />
@@ -195,9 +224,9 @@ let make = (~query) => {
     <RadixUI.Tabs.Root
       defaultValue="high" onValueChange={selected => setSelectedTab(._ => selected)}>
       <RadixUI.Tabs.List className=%twc("mt-6 w-full h-11 flex items-center justify-between px-4")>
-        <Tab label=`가격 상위 그룹` value="high" isSelected={selectedTab == "high"} />
-        <Tab label=`가격 중위 그룹` value="medium" isSelected={selectedTab == "medium"} />
-        <Tab label=`가격 하위 그룹` value="low" isSelected={selectedTab == "low"} />
+        <Tab label={`가격 상위 그룹`} value="high" isSelected={selectedTab == "high"} />
+        <Tab label={`가격 중위 그룹`} value="medium" isSelected={selectedTab == "medium"} />
+        <Tab label={`가격 하위 그룹`} value="low" isSelected={selectedTab == "low"} />
       </RadixUI.Tabs.List>
       <Divider className=%twc("h-[1px] bg-gray-50 m-0") />
       <Content

@@ -2,30 +2,35 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as Global from "../../../components/Global.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
-import * as Layout_Buyer from "../../../layouts/Layout_Buyer.mjs";
+import * as ReactRelay from "react-relay";
+import * as Footer_Buyer from "../../../components/Footer_Buyer.mjs";
+import * as Header_Buyer from "../../../components/Header_Buyer.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
+import * as PLP_SortSelect from "./PLP_SortSelect.mjs";
+import * as PLP_FilterOption from "./PLP_FilterOption.mjs";
+import * as PLP_Header_Buyer from "./PLP_Header_Buyer.mjs";
 import * as ChannelTalkHelper from "../../../utils/ChannelTalkHelper.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
+import * as PLP_Scrollable_Header from "./PLP_Scrollable_Header.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
+import * as PLP_SectionCheckBoxGroup from "./PLP_SectionCheckBoxGroup.mjs";
 import * as ShopProductListItem_Buyer from "../../../components/ShopProductListItem_Buyer.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
-import * as ShopProductsSortSelect_Buyer from "../../../components/ShopProductsSortSelect_Buyer.mjs";
 import * as PLPDisplayCategoryBuyerQuery_graphql from "../../../__generated__/PLPDisplayCategoryBuyerQuery_graphql.mjs";
 import * as PLPDisplayCategoryBuyerFragment_graphql from "../../../__generated__/PLPDisplayCategoryBuyerFragment_graphql.mjs";
 import * as PLPDisplayCategoryBuyerRefetchQuery_graphql from "../../../__generated__/PLPDisplayCategoryBuyerRefetchQuery_graphql.mjs";
 
-var makeVariables = PLPDisplayCategoryBuyerQuery_graphql.Utils.makeVariables;
-
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(PLPDisplayCategoryBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PLPDisplayCategoryBuyerQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(PLPDisplayCategoryBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PLPDisplayCategoryBuyerQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -34,7 +39,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(PLPDisplayCategoryBuyerQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(PLPDisplayCategoryBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -52,38 +57,37 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, PLPDisplayCategoryBuyerQuery_graphql.node, PLPDisplayCategoryBuyerQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, PLPDisplayCategoryBuyerQuery_graphql.node, PLPDisplayCategoryBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: PLPDisplayCategoryBuyerQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: PLPDisplayCategoryBuyerQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, PLPDisplayCategoryBuyerQuery_graphql.node, PLPDisplayCategoryBuyerQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, PLPDisplayCategoryBuyerQuery_graphql.node, PLPDisplayCategoryBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(PLPDisplayCategoryBuyerQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(PLPDisplayCategoryBuyerQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(PLPDisplayCategoryBuyerQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(PLPDisplayCategoryBuyerQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PLPDisplayCategoryBuyerQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -96,10 +100,16 @@ var Query_displayCategoryProductsSort_decode = PLPDisplayCategoryBuyerQuery_grap
 
 var Query_displayCategoryProductsSort_fromString = PLPDisplayCategoryBuyerQuery_graphql.Utils.displayCategoryProductsSort_fromString;
 
+var Query_productType_decode = PLPDisplayCategoryBuyerQuery_graphql.Utils.productType_decode;
+
+var Query_productType_fromString = PLPDisplayCategoryBuyerQuery_graphql.Utils.productType_fromString;
+
 var Query = {
   displayCategoryProductsSort_decode: Query_displayCategoryProductsSort_decode,
   displayCategoryProductsSort_fromString: Query_displayCategoryProductsSort_fromString,
-  makeVariables: makeVariables,
+  productType_decode: Query_productType_decode,
+  productType_fromString: Query_productType_fromString,
+  Operation: undefined,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -123,27 +133,27 @@ function internal_makeRefetchableFnOpts(fetchPolicy, onComplete, param) {
 }
 
 function useRefetchable(fRef) {
-  var match = Hooks.useRefetchableFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fRef);
+  var match = ReactRelay.useRefetchableFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fRef);
   var refetchFn = match[1];
   var data = RescriptRelay_Internal.internal_useConvertedValue(PLPDisplayCategoryBuyerFragment_graphql.Internal.convertFragment, match[0]);
   return [
           data,
           React.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
-                    return Curry._2(refetchFn, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PLPDisplayCategoryBuyerRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
+                    return Curry._2(refetchFn, RescriptRelay_Internal.internal_removeUndefinedAndConvertNullsRaw(PLPDisplayCategoryBuyerRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
                 }), [refetchFn])
         ];
 }
 
 function use$1(fRef) {
-  var data = Hooks.useFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PLPDisplayCategoryBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -154,7 +164,7 @@ function useOpt(opt_fRef) {
 }
 
 function usePagination(fr) {
-  var p = Hooks.usePaginationFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fr);
+  var p = ReactRelay.usePaginationFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fr);
   var data = RescriptRelay_Internal.internal_useConvertedValue(PLPDisplayCategoryBuyerFragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
@@ -185,7 +195,7 @@ function usePagination(fr) {
 }
 
 function useBlockingPagination(fRef) {
-  var p = Hooks.useBlockingPaginationFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fRef);
+  var p = ReactRelay.useBlockingPaginationFragment(PLPDisplayCategoryBuyerFragment_graphql.node, fRef);
   var data = RescriptRelay_Internal.internal_useConvertedValue(PLPDisplayCategoryBuyerFragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
@@ -228,6 +238,7 @@ var Fragment = {
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,
+  Operation: undefined,
   use: use$1,
   useOpt: useOpt,
   usePagination: usePagination,
@@ -235,33 +246,22 @@ var Fragment = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-function PLP_DisplayCategory_Buyer$PC$Empty(Props) {
-  var name = Props.name;
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
-                  className: "font-bold text-3xl text-gray-800"
-                }, name), React.createElement("div", {
-                  className: "pt-20 flex flex-col items-center justify-center text-gray-800"
-                }, React.createElement("h1", {
-                      className: "text-3xl"
-                    }, "상품이 존재하지 않습니다"), React.createElement("span", {
-                      className: "mt-7"
-                    }, "해당 카테고리에 상품이 존재하지 않습니다."), React.createElement("span", undefined, "다른 카테고리를 선택해 주세요.")));
-}
-
-var Empty = {
-  make: PLP_DisplayCategory_Buyer$PC$Empty
-};
-
 function PLP_DisplayCategory_Buyer$PC(Props) {
   var query = Props.query;
+  var displayCategoryId = Props.displayCategoryId;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var router = Router.useRouter();
   var match = usePagination(query);
   var hasNext = match.hasNext;
   var loadNext = match.loadNext;
   var match$1 = match.data;
-  var products = match$1.products;
   var name = match$1.name;
   var loadMoreRef = React.useRef(null);
   var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
+  var isNoneSectionType = Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "section-type"), (function (sectionType) {
+              return sectionType === "none";
+            })), false);
   React.useEffect((function () {
           if (hasNext && isIntersecting) {
             Curry._3(loadNext, 20, undefined, undefined);
@@ -271,152 +271,314 @@ function PLP_DisplayCategory_Buyer$PC(Props) {
         hasNext,
         isIntersecting
       ]);
-  if (products.edges.length === 0) {
-    return React.createElement(PLP_DisplayCategory_Buyer$PC$Empty, {
-                name: name
-              });
+  React.useEffect((function () {
+          Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "VIEW_PRODUCT_LIST", {
+                listID: displayCategoryId,
+                action: name
+              }, undefined);
+        }), []);
+  var match$2 = match$1.products.edges;
+  var tmp;
+  var exit = 0;
+  if (isNoneSectionType || match$2.length === 0) {
+    exit = 1;
   } else {
-    return React.createElement("div", {
-                className: "w-[1280px] pt-20 px-5 pb-16 mx-auto min-h-full"
-              }, React.createElement("div", {
-                    className: "font-bold text-3xl text-gray-800"
-                  }, name), React.createElement("div", {
-                    className: "mt-[88px]"
-                  }, match$1.type_ === "NORMAL" ? React.createElement("div", {
-                          className: "mb-12 w-full flex items-center justify-end"
-                        }, React.createElement(ShopProductsSortSelect_Buyer.make, {})) : null, React.createElement("ol", {
-                        className: "grid grid-cols-4 gap-x-10 gap-y-16"
-                      }, Belt_Array.map(products.edges, (function (param) {
-                              return React.createElement(ShopProductListItem_Buyer.PC.make, {
-                                          query: param.node.fragmentRefs,
-                                          key: param.cursor
-                                        });
-                            }))), React.createElement("div", {
-                        ref: loadMoreRef,
-                        className: "h-20 w-full"
-                      })));
+    tmp = React.createElement("div", {
+          className: "w-[1280px] pt-20 px-5 pb-16 mx-auto min-h-full"
+        }, React.createElement(PLP_Scrollable_Header.PC.make, {
+              parentId: displayCategoryId
+            }), React.createElement("div", {
+              className: "mt-[64px]"
+            }, match$1.type_ === "NORMAL" ? React.createElement("div", {
+                    className: "mb-12 w-full flex items-center justify-between"
+                  }, React.createElement(PLP_SectionCheckBoxGroup.PC.make, {}), React.createElement(PLP_SortSelect.PC.make, {})) : null, React.createElement("ol", {
+                  className: "grid grid-cols-4 gap-x-10 gap-y-16"
+                }, Belt_Array.map(match$2, (function (param) {
+                        return React.createElement(ShopProductListItem_Buyer.PC.make, {
+                                    query: param.node.fragmentRefs,
+                                    key: param.cursor
+                                  });
+                      }))), React.createElement("div", {
+                  ref: loadMoreRef,
+                  className: "h-20 w-full"
+                })));
   }
+  if (exit === 1) {
+    tmp = React.createElement(React.Fragment, undefined, React.createElement("div", {
+              className: "w-[1280px] pt-20 px-5 pb-16 mx-auto min-h-full"
+            }, React.createElement(PLP_Scrollable_Header.PC.make, {
+                  parentId: displayCategoryId
+                }), React.createElement("div", {
+                  className: "mt-[64px]"
+                }, React.createElement("div", {
+                      className: "mb-12 w-full flex items-center justify-between"
+                    }, React.createElement(PLP_SectionCheckBoxGroup.PC.make, {}))), React.createElement("div", {
+                  className: "pt-20 flex flex-col items-center justify-center text-gray-800"
+                }, React.createElement("h1", {
+                      className: "text-3xl"
+                    }, "상품이 존재하지 않습니다"), React.createElement("span", {
+                      className: "mt-7"
+                    }, "해당 카테고리에 상품이 존재하지 않습니다."), React.createElement("span", undefined, "다른 카테고리를 선택해 주세요."))));
+  }
+  return React.createElement("div", {
+              className: "w-full min-w-[1280px] min-h-screen"
+            }, React.createElement(Header_Buyer.PC.make, {
+                  gnbBanners: gnbBanners,
+                  displayCategories: displayCategories,
+                  key: router.asPath
+                }), tmp, React.createElement(Footer_Buyer.PC.make, {}));
 }
 
 var PC = {
-  Empty: Empty,
   make: PLP_DisplayCategory_Buyer$PC
 };
 
-function PLP_DisplayCategory_Buyer$MO$Empty(Props) {
-  return React.createElement("div", {
-              className: "pt-[126px] flex flex-col items-center justify-center text-gray-800 px-5"
+function PLP_DisplayCategory_Buyer$MO(Props) {
+  var query = Props.query;
+  var displayCategoryId = Props.displayCategoryId;
+  var router = Router.useRouter();
+  var match = usePagination(query);
+  var hasNext = match.hasNext;
+  var loadNext = match.loadNext;
+  var match$1 = match.data;
+  var name = match$1.name;
+  var loadMoreRef = React.useRef(null);
+  var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
+  var isNoneSectionType = Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "section-type"), (function (sectionType) {
+              return sectionType === "none";
+            })), false);
+  React.useEffect((function () {
+          if (hasNext && isIntersecting) {
+            Curry._3(loadNext, 20, undefined, undefined);
+          }
+          
+        }), [
+        hasNext,
+        isIntersecting
+      ]);
+  React.useEffect((function () {
+          Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "VIEW_PRODUCT_LIST", {
+                listID: displayCategoryId,
+                action: name
+              }, undefined);
+        }), []);
+  var match$2 = match$1.products.edges;
+  var tmp;
+  var exit = 0;
+  if (isNoneSectionType || match$2.length === 0) {
+    exit = 1;
+  } else {
+    tmp = React.createElement("div", {
+          className: "w-full pt-[18px] px-5"
+        }, match$1.type_ === "NORMAL" ? React.createElement("div", {
+                className: "mb-4 w-full flex items-center justify-between"
+              }, React.createElement(PLP_SectionCheckBoxGroup.MO.make, {}), React.createElement(PLP_SortSelect.MO.make, {})) : null, React.createElement("ol", {
+              className: "grid grid-cols-2 gap-x-4 gap-y-8"
+            }, Belt_Array.map(match$2, (function (param) {
+                    return React.createElement(ShopProductListItem_Buyer.MO.make, {
+                                query: param.node.fragmentRefs,
+                                key: param.cursor
+                              });
+                  }))), React.createElement("div", {
+              ref: loadMoreRef,
+              className: "h-20 w-full"
+            }));
+  }
+  if (exit === 1) {
+    tmp = React.createElement("div", {
+          className: "w-full pt-[18px] px-5"
+        }, React.createElement("div", {
+              className: "mb-4 w-full flex items-center justify-between"
+            }, React.createElement(PLP_SectionCheckBoxGroup.MO.make, {})), React.createElement("div", {
+              className: "py-[126px] flex flex-col items-center justify-center text-gray-800 px-5"
             }, React.createElement("h1", {
                   className: "text-xl"
                 }, "상품이 존재하지 않습니다"), React.createElement("span", {
                   className: "mt-2 text-sm text-gray-600 text-center"
                 }, "해당 카테고리에 상품이 존재하지 않습니다."), React.createElement("span", {
                   className: "mt-2 text-sm text-gray-600 text-center"
-                }, "다른 카테고리를 선택해 주세요."));
-}
-
-var Empty$1 = {
-  make: PLP_DisplayCategory_Buyer$MO$Empty
-};
-
-function PLP_DisplayCategory_Buyer$MO(Props) {
-  var query = Props.query;
-  var match = usePagination(query);
-  var hasNext = match.hasNext;
-  var loadNext = match.loadNext;
-  var match$1 = match.data;
-  var products = match$1.products;
-  var loadMoreRef = React.useRef(null);
-  var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
-  React.useEffect((function () {
-          if (hasNext && isIntersecting) {
-            Curry._3(loadNext, 20, undefined, undefined);
-          }
-          
-        }), [
-        hasNext,
-        isIntersecting
-      ]);
-  if (products.edges.length === 0) {
-    return React.createElement(PLP_DisplayCategory_Buyer$MO$Empty, {});
-  } else {
-    return React.createElement("div", {
-                className: "w-full pt-4 px-5"
-              }, match$1.type_ === "NORMAL" ? React.createElement("div", {
-                      className: "mb-4 w-full flex items-center justify-end"
-                    }, React.createElement(ShopProductsSortSelect_Buyer.MO.make, {})) : null, React.createElement("ol", {
-                    className: "grid grid-cols-2 gap-x-4 gap-y-8"
-                  }, Belt_Array.map(products.edges, (function (param) {
-                          return React.createElement(ShopProductListItem_Buyer.MO.make, {
-                                      query: param.node.fragmentRefs,
-                                      key: param.cursor
-                                    });
-                        }))), React.createElement("div", {
-                    ref: loadMoreRef,
-                    className: "h-20 w-full"
-                  }));
+                }, "다른 카테고리를 선택해 주세요.")));
   }
+  return React.createElement("div", {
+              className: "w-full min-h-screen bg-white"
+            }, React.createElement("div", {
+                  className: "w-full max-w-3xl mx-auto bg-white min-h-screen"
+                }, React.createElement(PLP_Header_Buyer.make, {
+                      key: router.asPath
+                    }), React.createElement(PLP_Scrollable_Header.MO.make, {
+                      parentId: displayCategoryId
+                    }), tmp, React.createElement(Footer_Buyer.MO.make, {})));
 }
 
 var MO = {
-  Empty: Empty$1,
   make: PLP_DisplayCategory_Buyer$MO
 };
 
 function PLP_DisplayCategory_Buyer$Placeholder(Props) {
-  return React.createElement(Layout_Buyer.Responsive.make, {
-              pc: React.createElement("div", {
-                    className: "w-[1280px] pt-20 px-5 pb-16 mx-auto"
+  var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var router = Router.useRouter();
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement("div", {
+                    className: "w-full min-w-[1280px] min-h-screen"
+                  }, React.createElement(Header_Buyer.PC.make, {
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories,
+                        key: router.asPath
+                      }), React.createElement("div", {
+                        className: "w-[1280px] pt-[92px] px-5 pb-16 mx-auto"
+                      }, React.createElement(PLP_Scrollable_Header.PC.Skeleton.make, {}), React.createElement("section", {
+                            className: "w-full mt-[64px]"
+                          }, React.createElement("ol", {
+                                className: "grid grid-cols-4 gap-x-10 gap-y-16"
+                              }, Belt_Array.map(Belt_Array.range(1, 300), (function (number) {
+                                      return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
+                                                  key: "box-" + String(number) + ""
+                                                });
+                                    }))))), React.createElement(Footer_Buyer.PC.make, {}));
+    case /* Mobile */2 :
+        return React.createElement("div", {
+                    className: "w-full min-h-screen bg-white"
                   }, React.createElement("div", {
-                        className: "w-[160px] h-[44px] rounded-lg animate-pulse bg-gray-150"
-                      }), React.createElement("section", {
-                        className: "w-full mt-[88px]"
-                      }, React.createElement("ol", {
-                            className: "grid grid-cols-4 gap-x-10 gap-y-16"
-                          }, Belt_Array.map(Belt_Array.range(1, 300), (function (number) {
-                                  return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
-                                              key: "box-" + String(number)
-                                            });
-                                }))))),
-              mobile: React.createElement("div", {
-                    className: "w-full py-4 px-5"
-                  }, React.createElement("div", {
-                        className: "mb-4 w-full flex items-center justify-end"
-                      }, React.createElement("div", {
-                            className: "w-12 h-5 bg-gray-150 rounded-lg animate-pulse"
-                          })), React.createElement("ol", {
-                        className: "grid grid-cols-2 gap-x-4 gap-y-8"
-                      }, Belt_Array.map(Belt_Array.range(1, 300), (function (num) {
-                              return React.createElement(ShopProductListItem_Buyer.MO.Placeholder.make, {
-                                          key: "list-item-skeleton-" + String(num)
-                                        });
-                            }))))
-            });
+                        className: "w-full max-w-3xl mx-auto bg-white min-h-screen"
+                      }, React.createElement(Header_Buyer.Mobile.make, {
+                            key: router.asPath
+                          }), React.createElement("div", {
+                            className: "w-full py-4 px-5"
+                          }, React.createElement("div", {
+                                className: "mb-4 w-full flex items-center justify-end"
+                              }, React.createElement("div", {
+                                    className: "w-12 h-5 bg-gray-150 rounded-lg animate-pulse"
+                                  })), React.createElement("ol", {
+                                className: "grid grid-cols-2 gap-x-4 gap-y-8"
+                              }, Belt_Array.map(Belt_Array.range(1, 300), (function (num) {
+                                      return React.createElement(ShopProductListItem_Buyer.MO.Placeholder.make, {
+                                                  key: "list-item-skeleton-" + String(num) + ""
+                                                });
+                                    })))), React.createElement(Footer_Buyer.MO.make, {})));
+    
+  }
 }
 
 var Placeholder = {
   make: PLP_DisplayCategory_Buyer$Placeholder
 };
 
+function PLP_DisplayCategory_Buyer$NotFound(Props) {
+  var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var router = Router.useRouter();
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement("div", {
+                    className: "w-full min-w-[1280px] min-h-screen"
+                  }, React.createElement(Header_Buyer.PC.make, {
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories,
+                        key: router.asPath
+                      }), React.createElement("div", {
+                        className: "pt-20 flex flex-col items-center justify-center text-gray-800"
+                      }, React.createElement("h1", {
+                            className: "text-3xl"
+                          }, "카테고리를 찾을 수 없습니다"), React.createElement("span", {
+                            className: "mt-7"
+                          }, "해당 카테고리를 찾을 수 없습니다."), React.createElement("span", undefined, "다른 카테고리를 선택해 주세요.")), React.createElement(Footer_Buyer.PC.make, {}));
+    case /* Mobile */2 :
+        return React.createElement("div", {
+                    className: "w-full min-h-screen bg-white"
+                  }, React.createElement("div", {
+                        className: "w-full max-w-3xl mx-auto bg-white min-h-screen"
+                      }, React.createElement(Header_Buyer.Mobile.make, {
+                            key: router.asPath
+                          }), React.createElement("div", {
+                            className: "pt-[126px] flex flex-col items-center justify-center text-gray-800 px-5"
+                          }, React.createElement("h1", {
+                                className: "text-xl"
+                              }, "카테고리를 찾을 수 없습니다"), React.createElement("span", {
+                                className: "mt-2 text-sm text-gray-600 text-center"
+                              }, "해당 카테고리를 찾을 수 없습니다."), React.createElement("span", {
+                                className: "mt-2 text-sm text-gray-600 text-center"
+                              }, "다른 카테고리를 선택해 주세요.")), React.createElement(Footer_Buyer.MO.make, {})));
+    
+  }
+}
+
+var NotFound = {
+  make: PLP_DisplayCategory_Buyer$NotFound
+};
+
+function PLP_DisplayCategory_Buyer$Presenter(Props) {
+  var deviceType = Props.deviceType;
+  var query = Props.query;
+  var displayCategoryId = Props.displayCategoryId;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement(PLP_DisplayCategory_Buyer$PC, {
+                    query: query,
+                    displayCategoryId: displayCategoryId,
+                    gnbBanners: gnbBanners,
+                    displayCategories: displayCategories
+                  });
+    case /* Mobile */2 :
+        return React.createElement(PLP_DisplayCategory_Buyer$MO, {
+                    query: query,
+                    displayCategoryId: displayCategoryId
+                  });
+    
+  }
+}
+
+var Presenter = {
+  make: PLP_DisplayCategory_Buyer$Presenter
+};
+
 function PLP_DisplayCategory_Buyer$Container(Props) {
+  var deviceType = Props.deviceType;
   var displayCategoryId = Props.displayCategoryId;
   var sort = Props.sort;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
-  var variables = Curry._6(makeVariables, displayCategoryId, undefined, 20, sort, true, undefined);
+  var router = Router.useRouter();
+  var productType = PLP_FilterOption.Section.toQueryParam(PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type")));
+  var tmp = {
+    count: 20,
+    displayCategoryId: displayCategoryId,
+    onlyBuyable: true,
+    productType: productType
+  };
+  if (sort !== undefined) {
+    tmp.sort = Caml_option.valFromOption(sort);
+  }
+  var variables = tmp;
   var match = use(variables, /* StoreOrNetwork */1, undefined, undefined, undefined);
   var node = match.node;
-  if (node === undefined) {
-    return null;
+  if (node !== undefined) {
+    return React.createElement(PLP_DisplayCategory_Buyer$Presenter, {
+                deviceType: deviceType,
+                query: node.fragmentRefs,
+                displayCategoryId: displayCategoryId,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
+              });
+  } else {
+    return React.createElement(PLP_DisplayCategory_Buyer$NotFound, {
+                deviceType: deviceType,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
+              });
   }
-  var fragmentRefs = node.fragmentRefs;
-  return React.createElement(Layout_Buyer.Responsive.make, {
-              pc: React.createElement(PLP_DisplayCategory_Buyer$PC, {
-                    query: fragmentRefs
-                  }),
-              mobile: React.createElement(PLP_DisplayCategory_Buyer$MO, {
-                    query: fragmentRefs
-                  })
-            });
 }
 
 var Container = {
@@ -424,19 +586,36 @@ var Container = {
 };
 
 function PLP_DisplayCategory_Buyer(Props) {
+  var deviceType = Props.deviceType;
   var displayCategoryId = Props.displayCategoryId;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  var sort = Belt_Option.flatMap(Js_dict.get(router.query, "sort"), ShopProductsSortSelect_Buyer.decodeSort);
+  var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type"));
+  var sort = Belt_Option.map(Js_dict.get(router.query, "sort"), (function (sort) {
+          return PLP_FilterOption.Sort.decodeSort(sectionType, sort);
+        }));
   return React.createElement(RescriptReactErrorBoundary.make, {
               children: React.createElement(React.Suspense, {
                     children: React.createElement(PLP_DisplayCategory_Buyer$Container, {
+                          deviceType: deviceType,
                           displayCategoryId: displayCategoryId,
-                          sort: sort
+                          sort: sort,
+                          gnbBanners: gnbBanners,
+                          displayCategories: displayCategories
                         }),
-                    fallback: React.createElement(PLP_DisplayCategory_Buyer$Placeholder, {})
+                    fallback: React.createElement(PLP_DisplayCategory_Buyer$Placeholder, {
+                          deviceType: deviceType,
+                          gnbBanners: gnbBanners,
+                          displayCategories: displayCategories
+                        })
                   }),
               fallback: (function (param) {
-                  return React.createElement(PLP_DisplayCategory_Buyer$Placeholder, {});
+                  return React.createElement(PLP_DisplayCategory_Buyer$Placeholder, {
+                              deviceType: deviceType,
+                              gnbBanners: gnbBanners,
+                              displayCategories: displayCategories
+                            });
                 })
             });
 }
@@ -449,8 +628,9 @@ export {
   PC ,
   MO ,
   Placeholder ,
+  NotFound ,
+  Presenter ,
   Container ,
   make ,
-  
 }
 /* react Not a pure module */

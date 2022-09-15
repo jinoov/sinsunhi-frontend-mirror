@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Script from "next/script";
-import { make as RfqShippingBuyer } from "src/pages/buyer/rfq/RfqShipping_Buyer.mjs";
+import { make as RfqShippingBuyer } from "src/pages/buyer/rfq/CreateRequest/RfqShipping_Buyer.mjs";
 
 export default function Index(props) {
   const router = useRouter();

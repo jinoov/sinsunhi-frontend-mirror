@@ -11,6 +11,10 @@
     {
       "dir": "__tests__",
       "type": "dev"
+    },
+    {
+      "dir": "styles",
+      "type": "dev"
     }
   ],
   "package-specs": [

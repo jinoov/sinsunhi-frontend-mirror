@@ -15,7 +15,6 @@ import * as IconCheck from "../../components/svgs/IconCheck.mjs";
 import Head from "next/head";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
-import JwtDecode from "jwt-decode";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as FetchHelper from "../../utils/FetchHelper.mjs";
@@ -46,7 +45,7 @@ function makeOnCheckedChange(fn, e) {
 }
 
 function makeTermUrl(termId) {
-  return "https://sinsun-policy.oopy.io/" + termId;
+  return "https://sinsun-policy.oopy.io/" + termId + "";
 }
 
 function SignUp_Buyer(Props) {
@@ -127,56 +126,9 @@ function SignUp_Buyer(Props) {
                 });
     }
   };
-  var signIn = function (param) {
-    var state = param.state;
-    var email = SignUp_Buyer_Form.FormFields.get(state.values, /* Email */0);
-    var password = SignUp_Buyer_Form.FormFields.get(state.values, /* Password */1);
-    var urlSearchParams = new URLSearchParams([
-            [
-              "grant-type",
-              "password"
-            ],
-            [
-              "username",
-              email
-            ],
-            [
-              "password",
-              password
-            ]
-          ]).toString();
-    FetchHelper.postWithURLSearchParams(Env.restApiUrl + "/user/token", urlSearchParams, (function (res) {
-            var redirectUrlWithWelcome = Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "redirect"), (function (url) {
-                        if (url.includes("?")) {
-                          return url + "&welcome";
-                        } else {
-                          return url + "?welcome";
-                        }
-                      })), "/?welcome");
-            var res$1 = FetchHelper.responseToken_decode(res);
-            if (res$1.TAG === /* Ok */0) {
-              var res$2 = res$1._0;
-              Curry._1(LocalStorageHooks.AccessToken.set, res$2.token);
-              Curry._1(LocalStorageHooks.RefreshToken.set, res$2.refreshToken);
-              ChannelTalkHelper.bootWithProfile(undefined);
-              var user = CustomHooks.Auth.user_decode(JwtDecode(res$2.token));
-              if (user.TAG === /* Ok */0) {
-                Curry._1(Global.$$Window.ReactNativeWebView.PostMessage.storeBrazeUserId, String(user._0.id));
-              }
-              return Redirect.setHref(redirectUrlWithWelcome);
-            }
-            router.push("/buyer/signin");
-            
-          }), (function (param) {
-            router.push("/buyer/signin");
-            
-          }));
-    
-  };
   var handleSubmit = function (formApi) {
-    var state = formApi.state;
     if (emailExisted !== undefined && emailExisted && phoneNumberStatus === 2 && phoneNumberExistedStatus !== undefined && phoneNumberExistedStatus && !businessNumberStatus && isRequiredTermsAgreed) {
-      var init = state.values;
+      var init = formApi.state.values;
       var payload_email = init.email;
       var payload_password = init.password;
       var payload_name = init.name;
@@ -194,7 +146,7 @@ function SignUp_Buyer(Props) {
         terms: payload_terms
       };
       Belt_Option.map(JSON.stringify(payload), (function (body) {
-              return FetchHelper.post(Env.restApiUrl + "/user/register/new-buyer", body, (function (param) {
+              return FetchHelper.post("" + Env.restApiUrl + "/user/register/new-buyer", body, (function (param) {
                             addToast(React.createElement("div", {
                                       className: "flex items-center"
                                     }, React.createElement(IconCheck.make, {
@@ -205,17 +157,61 @@ function SignUp_Buyer(Props) {
                                         }), "회원가입이 완료되었습니다."), {
                                   appearance: "success"
                                 });
-                            signIn(formApi);
-                            var businessRegistrationNumber = SignUp_Buyer_Form.FormFields.get(state.values, /* BusinessRegistrationNumber */5);
-                            return DataGtm.push({
-                                        method: "normal",
-                                        business_number: businessRegistrationNumber,
-                                        marketing: Belt_SetString.has(agreedTerms, "marketing")
-                                      });
+                            var state = formApi.state;
+                            var email = SignUp_Buyer_Form.FormFields.get(state.values, /* Email */0);
+                            var password = SignUp_Buyer_Form.FormFields.get(state.values, /* Password */1);
+                            var urlSearchParams = new URLSearchParams([
+                                    [
+                                      "grant-type",
+                                      "password"
+                                    ],
+                                    [
+                                      "username",
+                                      email
+                                    ],
+                                    [
+                                      "password",
+                                      password
+                                    ]
+                                  ]).toString();
+                            FetchHelper.postWithURLSearchParams("" + Env.restApiUrl + "/user/token", urlSearchParams, (function (res) {
+                                    var redirectUrlWithWelcome = Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "redirect"), (function (url) {
+                                                if (url.includes("?")) {
+                                                  return "" + url + "&welcome";
+                                                } else {
+                                                  return "" + url + "?welcome";
+                                                }
+                                              })), "/?welcome");
+                                    var res$1 = FetchHelper.responseToken_decode(res);
+                                    if (res$1.TAG === /* Ok */0) {
+                                      var res$2 = res$1._0;
+                                      Curry._1(LocalStorageHooks.AccessToken.set, res$2.token);
+                                      Curry._1(LocalStorageHooks.RefreshToken.set, res$2.refreshToken);
+                                      ChannelTalkHelper.bootWithProfile(undefined);
+                                      var user = CustomHooks.Auth.user_decode(CustomHooks.Auth.decodeJwt(res$2.token));
+                                      if (user.TAG === /* Ok */0) {
+                                        var user$1 = user._0;
+                                        Curry._1(Global.$$Window.ReactNativeWebView.PostMessage.signUp, String(user$1.id));
+                                        Curry._1(Global.$$Window.ReactNativeWebView.PostMessage.signIn, String(user$1.id));
+                                        var businessRegistrationNumber = SignUp_Buyer_Form.FormFields.get(state.values, /* BusinessRegistrationNumber */5);
+                                        DataGtm.push({
+                                              event: "sign_up",
+                                              user_id: user$1.id,
+                                              method: "normal",
+                                              business_number: businessRegistrationNumber,
+                                              marketing: Belt_SetString.has(agreedTerms, "marketing")
+                                            });
+                                      }
+                                      return Redirect.setHref(redirectUrlWithWelcome);
+                                    }
+                                    router.push("/buyer/signin");
+                                  }), (function (param) {
+                                    router.push("/buyer/signin");
+                                  }));
                           }), (function (param) {
-                            return setShowErr(function (param) {
-                                        return /* Show */0;
-                                      });
+                            setShowErr(function (param) {
+                                  return /* Show */0;
+                                });
                           }));
             }));
     }
@@ -251,7 +247,7 @@ function SignUp_Buyer(Props) {
     setPhoneNumberExistedStatus(function (param) {
           return isExisted;
         });
-    return Curry._4(form.setFieldValue, /* Phone */4, phoneNumber, true, undefined);
+    Curry._4(form.setFieldValue, /* Phone */4, phoneNumber, true, undefined);
   };
   var onBusinessNumberChange = function (businessNumber) {
     if (businessNumber !== undefined) {
@@ -270,7 +266,7 @@ function SignUp_Buyer(Props) {
   var isSubmitDisabled = emailExisted !== undefined && emailExisted && !(phoneNumberStatus !== 2 || !(phoneNumberExistedStatus !== undefined && phoneNumberExistedStatus && !(businessNumberStatus || !(isRequiredTermsAgreed && !match$8)))) ? false : true;
   var onSubmit = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return Curry._1(form.submit, undefined);
+                  Curry._1(form.submit, undefined);
                 }), param);
   };
   var user = CustomHooks.Auth.use(undefined);
@@ -339,9 +335,9 @@ function SignUp_Buyer(Props) {
                                         }), React.createElement("span", {
                                           className: "ml-2",
                                           onClick: (function (param) {
-                                              return setShowPwd(function (prev) {
-                                                          return !prev;
-                                                        });
+                                              setShowPwd(function (prev) {
+                                                    return !prev;
+                                                  });
                                             })
                                         }, "비밀번호 표시")))), React.createElement("div", {
                               className: "mt-7"
@@ -426,7 +422,7 @@ function SignUp_Buyer(Props) {
                                         }, "신선하이 이용약관 (필수)", React.createElement("span", {
                                               className: "ml-0.5 text-notice"
                                             }, "*"))), React.createElement(Link, {
-                                      href: "https://sinsun-policy.oopy.io/" + "a9f5ca47-9dda-4a34-929c-60e1ce1dfbe5",
+                                      href: "https://sinsun-policy.oopy.io/a9f5ca47-9dda-4a34-929c-60e1ce1dfbe5",
                                       children: React.createElement("a", {
                                             target: "_blank"
                                           }, React.createElement(IconArrow.make, {
@@ -450,7 +446,7 @@ function SignUp_Buyer(Props) {
                                         }, "개인정보 수집이용 동의 (필수)", React.createElement("span", {
                                               className: "ml-0.5 text-notice"
                                             }, "*"))), React.createElement(Link, {
-                                      href: "https://sinsun-policy.oopy.io/" + "7d920089-18ba-4ca6-a806-f83ec8f6c335",
+                                      href: "https://sinsun-policy.oopy.io/7d920089-18ba-4ca6-a806-f83ec8f6c335",
                                       children: React.createElement("a", {
                                             target: "_blank"
                                           }, React.createElement(IconArrow.make, {
@@ -472,7 +468,7 @@ function SignUp_Buyer(Props) {
                                         }), React.createElement("span", {
                                           className: "ml-2 text-base"
                                         }, "맞춤 소싱 제안 등 마케팅 정보 수신 (선택)")), React.createElement(Link, {
-                                      href: "https://sinsun-policy.oopy.io/" + "4f08bfe5-9ba7-4d1d-ba34-04281414ee00",
+                                      href: "https://sinsun-policy.oopy.io/4f08bfe5-9ba7-4d1d-ba34-04281414ee00",
                                       children: React.createElement("a", {
                                             target: "_blank"
                                           }, React.createElement(IconArrow.make, {
@@ -501,9 +497,9 @@ function SignUp_Buyer(Props) {
                         className: "text-text-L1 text-center whitespace-pre-wrap"
                       }, "입력한 정보를 확인해주세요.\n\n이미 가입하신 경우\n비밀번호 찾기를 통해 로그인하실 수 있으며\n관련 문의사항은 채널톡으로 문의해주세요."),
                   onCancel: (function (param) {
-                      return setShowErr(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowErr(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "닫기",
                   boxStyle: "rounded-xl"
@@ -517,6 +513,5 @@ export {
   makeOnCheckedChange ,
   makeTermUrl ,
   make ,
-  
 }
 /* Env Not a pure module */

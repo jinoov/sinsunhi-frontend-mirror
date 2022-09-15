@@ -7,6 +7,7 @@ import * as React from "react";
 import * as Helper from "../utils/Helper.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Float from "rescript/lib/es6/belt_Float.js";
@@ -41,8 +42,8 @@ function each_encode(v) {
                 Select_Product_Option_Unit.Size.status_encode(v.sizeUnit)
               ],
               [
-                "weightUnit",
-                Select_Product_Option_Unit.Weight.status_encode(v.weightUnit)
+                "amountUnit",
+                Select_Product_Option_Unit.Amount.status_encode(v.amountUnit)
               ]
             ]);
 }
@@ -66,8 +67,8 @@ function each_decode(v) {
         if (sizeMax.TAG === /* Ok */0) {
           var sizeUnit = Select_Product_Option_Unit.Size.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "sizeUnit"), null));
           if (sizeUnit.TAG === /* Ok */0) {
-            var weightUnit = Select_Product_Option_Unit.Weight.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "weightUnit"), null));
-            if (weightUnit.TAG === /* Ok */0) {
+            var amountUnit = Select_Product_Option_Unit.Amount.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "amountUnit"), null));
+            if (amountUnit.TAG === /* Ok */0) {
               return {
                       TAG: /* Ok */0,
                       _0: {
@@ -76,15 +77,15 @@ function each_decode(v) {
                         sizeMin: sizeMin._0,
                         sizeMax: sizeMax._0,
                         sizeUnit: sizeUnit._0,
-                        weightUnit: weightUnit._0
+                        amountUnit: amountUnit._0
                       }
                     };
             }
-            var e = weightUnit._0;
+            var e = amountUnit._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".weightUnit" + e.path,
+                      path: ".amountUnit" + e.path,
                       message: e.message,
                       value: e.value
                     }
@@ -143,18 +144,18 @@ function each_decode(v) {
 
 function getNamesWithPrefix(prefix) {
   return {
-          unitWeight: prefix + ".each.weightUnit",
-          minSize: prefix + ".each.sizeMin",
-          maxSize: prefix + ".each.sizeMax",
-          unitSize: prefix + ".each.sizeUnit",
-          minNum: prefix + ".each.numMin",
-          maxNum: prefix + ".each.numMax",
-          values: prefix + ".each"
+          unitAmount: "" + prefix + ".each.amountUnit",
+          minSize: "" + prefix + ".each.sizeMin",
+          maxSize: "" + prefix + ".each.sizeMax",
+          unitSize: "" + prefix + ".each.sizeUnit",
+          minNum: "" + prefix + ".each.numMin",
+          maxNum: "" + prefix + ".each.numMax",
+          values: "" + prefix + ".each"
         };
 }
 
 var Form_names = {
-  unitWeight: "weightUnit",
+  unitAmount: "amountUnit",
   minSize: "sizeMin",
   maxSize: "sizeMax",
   unitSize: "sizeUnit",
@@ -174,22 +175,28 @@ function divideNum(baseUnit, currentUnit) {
   switch (baseUnit) {
     case /* G */0 :
         switch (currentUnit) {
-          case /* G */0 :
-              return 1;
           case /* KG */1 :
               return 1000;
           case /* T */2 :
               return 1000000;
+          case /* G */0 :
+          case /* ML */3 :
+          case /* L */4 :
+          case /* EA */5 :
+              return 1;
           
         }
     case /* KG */1 :
         switch (currentUnit) {
           case /* G */0 :
               return 1 / 1000;
-          case /* KG */1 :
-              return 1;
           case /* T */2 :
               return 1000;
+          case /* KG */1 :
+          case /* ML */3 :
+          case /* L */4 :
+          case /* EA */5 :
+              return 1;
           
         }
     case /* T */2 :
@@ -199,34 +206,59 @@ function divideNum(baseUnit, currentUnit) {
           case /* KG */1 :
               return 1 / 1000;
           case /* T */2 :
+          case /* ML */3 :
+          case /* L */4 :
+          case /* EA */5 :
               return 1;
           
+        }
+    case /* ML */3 :
+        if (currentUnit < 3) {
+          return 1;
+        }
+        switch (currentUnit) {
+          case /* L */4 :
+              return 1000;
+          case /* ML */3 :
+          case /* EA */5 :
+              return 1;
+          
+        }
+    case /* L */4 :
+        if (currentUnit < 3) {
+          return 1;
+        }
+        switch (currentUnit) {
+          case /* ML */3 :
+              return 1 / 1000;
+          case /* L */4 :
+          case /* EA */5 :
+              return 1;
+          
+        }
+    case /* EA */5 :
+        if (currentUnit >= 5) {
+          return 1;
+        } else {
+          return 1;
         }
     
   }
 }
 
-function getPerWeight(weight, weightUnit, perNum, unitWeight) {
-  var decodeUnit = Belt_Option.getWithDefault(unitWeight, /* KG */1);
-  var baseWeight = weight / divideNum(weightUnit, decodeUnit);
-  return Belt_Option.mapWithDefault(Belt_Float.fromString((baseWeight / perNum).toFixed(2)), "", (function (prim) {
+function getPerAmount(amount, amountUnit, perNum, unitAmount) {
+  var decodedUnit = Belt_Option.getWithDefault(unitAmount, /* KG */1);
+  var baseAmount = amount / divideNum(amountUnit, decodedUnit);
+  return Belt_Option.mapWithDefault(Belt_Float.fromString((baseAmount / perNum).toFixed(2)), "", (function (prim) {
                 return String(prim);
               }));
 }
 
 function Product_Option_Each_Admin(Props) {
   var prefix = Props.prefix;
-  var weightFormName = Props.weightFormName;
-  var wieghtUnitFormName = Props.wieghtUnitFormName;
+  var amountInputName = Props.amountInputName;
+  var amountUnitInputName = Props.amountUnitInputName;
   var readOnlyOpt = Props.readOnly;
-  var defaultMinNum = Props.defaultMinNum;
-  var defaultMaxNum = Props.defaultMaxNum;
-  var defaultMinWeight = Props.defaultMinWeight;
-  var defaultMaxWeight = Props.defaultMaxWeight;
-  var defaultEachWeightUnit = Props.defaultEachWeightUnit;
-  var defaultMinSize = Props.defaultMinSize;
-  var defaultMaxSize = Props.defaultMaxSize;
-  var defaultUnitSize = Props.defaultUnitSize;
   var readOnly = readOnlyOpt !== undefined ? readOnlyOpt : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
@@ -235,13 +267,13 @@ function Product_Option_Each_Admin(Props) {
   var setValue = match.setValue;
   var errors = match.formState.errors;
   var control = match.control;
-  var weightAndUnit = ReactHookForm$1.useWatch({
+  var amountAndUnit = ReactHookForm$1.useWatch({
         name: [
-          weightFormName,
-          wieghtUnitFormName
+          amountInputName,
+          amountUnitInputName
         ]
       });
-  var match$1 = Belt_Option.getWithDefault(Belt_Option.map(Belt_Option.flatMap(Belt_Option.flatMap(Belt_Option.map(weightAndUnit, (function (a) {
+  var match$1 = Belt_Option.getWithDefault(Belt_Option.map(Belt_Option.flatMap(Belt_Option.flatMap(Belt_Option.map(amountAndUnit, (function (a) {
                           return Belt_Array.map(a, (function (prim) {
                                         if (prim == null) {
                                           return ;
@@ -255,23 +287,23 @@ function Product_Option_Each_Admin(Props) {
                   if (v.length !== 2) {
                     return ;
                   }
-                  var weight = v[0];
+                  var amount = v[0];
                   var unit = v[1];
                   return [
-                          weight,
+                          amount,
                           unit
                         ];
                 })), (function (param) {
               return [
                       Belt_Float.fromString(param[0]),
-                      Belt_Result.getWithDefault(Select_Product_Option_Unit.Weight.fromString(param[1]), /* G */0)
+                      Belt_Result.getWithDefault(Select_Product_Option_Unit.Amount.fromString(param[1]), /* G */0)
                     ];
             })), [
         undefined,
         /* G */0
       ]);
-  var weightUnit = match$1[1];
-  var weight = match$1[0];
+  var amountUnit = match$1[1];
+  var amount = match$1[0];
   var inputNames = getNamesWithPrefix(prefix);
   var eachValues = ReactHookForm$1.useWatch({
         name: inputNames.values
@@ -284,7 +316,7 @@ function Product_Option_Each_Admin(Props) {
       match$4.numMin,
       match$4.numMax,
       match$4.sizeMin,
-      match$4.weightUnit
+      match$4.amountUnit
     ];
   } else {
     match$3 = [
@@ -294,7 +326,7 @@ function Product_Option_Each_Admin(Props) {
       undefined
     ];
   }
-  var watchWeightUnit = match$3[3];
+  var watchAmountUnit = match$3[3];
   var watchMaxNum = match$3[1];
   var watchMinNum = match$3[0];
   var eachMinNum = register(inputNames.minNum, {
@@ -322,10 +354,25 @@ function Product_Option_Each_Admin(Props) {
         valueAsNumber: true
       });
   React.useEffect((function () {
-          setValue(inputNames.unitSize, Select_Product_Option_Unit.Size.status_encode(Belt_Option.getWithDefault(defaultUnitSize, /* MM */0)));
-          setValue(inputNames.unitWeight, Select_Product_Option_Unit.Weight.status_encode(Belt_Option.getWithDefault(defaultEachWeightUnit, /* KG */1)));
-          
+          setValue(inputNames.unitSize, Select_Product_Option_Unit.Size.status_encode(/* MM */0));
         }), []);
+  React.useEffect((function () {
+          if (watchAmountUnit !== undefined) {
+            var availableOptions = Select_Product_Option_Unit.AmountStatus.makeVariation(amountUnit);
+            var match = Belt_Array.getBy(availableOptions, (function (option) {
+                    return Caml_obj.equal(option, watchAmountUnit);
+                  }));
+            if (match !== undefined) {
+              
+            } else {
+              setValue(inputNames.unitAmount, Select_Product_Option_Unit.Amount.status_encode(Select_Product_Option_Unit.AmountStatus.makeDefaultUnit(amountUnit)));
+            }
+          }
+          
+        }), [
+        amountUnit,
+        watchAmountUnit
+      ]);
   return React.createElement("div", {
               className: "py-6 flex flex-col gap-2"
             }, React.createElement("div", {
@@ -334,13 +381,11 @@ function Product_Option_Each_Admin(Props) {
                       className: "block"
                     }, "입수 정보"), React.createElement("div", {
                       className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 leading-4.5"
-                    }, Belt_Option.mapWithDefault(weight, "", (function (prim) {
+                    }, "" + Belt_Option.mapWithDefault(amount, "", (function (prim) {
                             return String(prim);
-                          })) + "\n          " + Select_Product_Option_Unit.Weight.toString(weightUnit)), React.createElement("div", undefined, React.createElement("input", {
+                          })) + "\n          " + Select_Product_Option_Unit.Amount.toString(amountUnit) + ""), React.createElement("div", undefined, React.createElement("input", {
                           ref: eachMinNum.ref,
-                          defaultValue: Belt_Option.mapWithDefault(defaultMinNum, "0", (function (prim) {
-                                  return String(prim);
-                                })),
+                          defaultValue: String(1.0),
                           className: Cx.cx([
                                 "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none",
                                 readOnly ? "bg-disabled-L3" : "bg-white"
@@ -367,9 +412,7 @@ function Product_Option_Each_Admin(Props) {
                             })
                         })), React.createElement("span", undefined, "~"), React.createElement("div", undefined, React.createElement("input", {
                           ref: eachMaxNum.ref,
-                          defaultValue: Belt_Option.mapWithDefault(defaultMaxNum, "0", (function (prim) {
-                                  return String(prim);
-                                })),
+                          defaultValue: String(1.0),
                           className: Cx.cx([
                                 "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none",
                                 readOnly ? "bg-disabled-L3" : "bg-white"
@@ -402,40 +445,32 @@ function Product_Option_Each_Admin(Props) {
                           className: "block shrink-0"
                         }, "개당 무게"), React.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
-                        }, Belt_Option.getWithDefault(Belt_Option.map(defaultMinWeight, (function (prim) {
-                                    return String(prim);
-                                  })), weight !== undefined ? (
-                                watchMaxNum !== undefined ? getPerWeight(weight, weightUnit, watchMaxNum, watchWeightUnit) : "자동계산"
-                              ) : "자동계산")), React.createElement("span", undefined, "~"), React.createElement("div", {
+                        }, amount !== undefined && watchMaxNum !== undefined ? getPerAmount(amount, amountUnit, watchMaxNum, watchAmountUnit) : "자동계산"), React.createElement("span", undefined, "~"), React.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
-                        }, Belt_Option.getWithDefault(Belt_Option.map(defaultMaxWeight, (function (prim) {
-                                    return String(prim);
-                                  })), weight !== undefined ? (
-                                watchMinNum !== undefined ? getPerWeight(weight, weightUnit, watchMinNum, watchWeightUnit) : "자동계산"
-                              ) : "자동계산")), React.createElement(ReactHookForm$1.Controller, {
-                          name: inputNames.unitWeight,
+                        }, amount !== undefined && watchMinNum !== undefined ? getPerAmount(amount, amountUnit, watchMinNum, watchAmountUnit) : "자동계산"), React.createElement(ReactHookForm$1.Controller, {
+                          name: inputNames.unitAmount,
                           control: control,
                           render: (function (param) {
                               var match = param.field;
                               var onChange = match.onChange;
-                              return React.createElement(Select_Product_Option_Unit.Weight.make, {
-                                          status: Belt_Result.getWithDefault(Select_Product_Option_Unit.Weight.status_decode(match.value), /* KG */1),
+                              return React.createElement(Select_Product_Option_Unit.Amount.make, {
+                                          status: Belt_Result.getWithDefault(Select_Product_Option_Unit.Amount.status_decode(match.value), Select_Product_Option_Unit.AmountStatus.makeDefaultUnit(amountUnit)),
+                                          availableOptions: Select_Product_Option_Unit.AmountStatus.makeVariation(amountUnit),
                                           onChange: (function (status) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Weight.status_encode(status)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Amount.status_encode(status)));
                                             }),
                                           forwardRef: match.ref,
                                           disabled: readOnly
                                         });
-                            })
+                            }),
+                          defaultValue: Select_Product_Option_Unit.Amount.status_encode(amountUnit)
                         })), React.createElement("div", {
                       className: "flex gap-2 items-center"
                     }, React.createElement("label", {
                           className: "block shrink-0"
                         }, "개당 크기"), React.createElement("div", undefined, React.createElement("input", {
                               ref: eachMinSize.ref,
-                              defaultValue: Belt_Option.mapWithDefault(defaultMinSize, "0", (function (prim) {
-                                      return String(prim);
-                                    })),
+                              defaultValue: String(0.0),
                               className: Cx.cx([
                                     "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none shrink",
                                     readOnly ? "bg-disabled-L3" : "bg-white"
@@ -462,9 +497,7 @@ function Product_Option_Each_Admin(Props) {
                                 })
                             })), React.createElement("span", undefined, "~"), React.createElement("div", undefined, React.createElement("input", {
                               ref: eachMaxSize.ref,
-                              defaultValue: Belt_Option.mapWithDefault(defaultMaxSize, "0", (function (prim) {
-                                      return String(prim);
-                                    })),
+                              defaultValue: String(0.0),
                               className: Cx.cx([
                                     "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none shrink",
                                     readOnly ? "bg-disabled-L3" : "bg-white"
@@ -498,7 +531,7 @@ function Product_Option_Each_Admin(Props) {
                               return React.createElement(Select_Product_Option_Unit.Size.make, {
                                           status: Belt_Result.getWithDefault(Select_Product_Option_Unit.Size.status_decode(match.value), /* MM */0),
                                           onChange: (function (status) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Size.status_encode(status)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Size.status_encode(status)));
                                             }),
                                           forwardRef: match.ref,
                                           disabled: readOnly
@@ -507,16 +540,12 @@ function Product_Option_Each_Admin(Props) {
                         }))));
 }
 
-var Select_Unit;
-
 var make = Product_Option_Each_Admin;
 
 export {
-  Select_Unit ,
   Form ,
   divideNum ,
-  getPerWeight ,
+  getPerAmount ,
   make ,
-  
 }
 /* react Not a pure module */

@@ -1,20 +1,38 @@
+type placementType = [
+  | #"top-left"
+  | #"top-center"
+  | #"top-right"
+  | #"bottom-left"
+  | #"bottom-center"
+  | #"bottom-right"
+]
 module Custom = {
   module Styles = {
     open CssJs
 
-    let container = style(. [
-      position(#fixed),
-      top(px(20)),
-      left(pct(50.0)),
-      transform(translateX(pct(-50.0))),
-      zIndex(1000),
-      width(pct(100.0)),
-      maxWidth(px(728)),
-      maxHeight(pct(100.0)),
-      paddingRight(px(16)),
-      paddingLeft(px(16)),
-      overflow(#hidden),
-    ])
+    let placements = placement =>
+      switch placement {
+      | #"top-left" => [top(px(0)), left(px(0))]
+      | #"top-center" => [top(px(0)), left(pct(50.)), transform(translateX(pct(-50.)))]
+      | #"top-right" => [top(px(0)), right(px(0))]
+      | #"bottom-left" => [bottom(px(0)), left(px(0))]
+      | #"bottom-center" => [bottom(px(0)), left(pct(50.)), transform(translateX(pct(-50.)))]
+      | #"bottom-right" => [bottom(px(0)), right(px(0))]
+      }
+
+    let container = placement =>
+      style(.
+        [
+          position(#fixed),
+          zIndex(1000),
+          width(pct(100.0)),
+          maxWidth(px(728)),
+          maxHeight(pct(100.0)),
+          paddingRight(px(16)),
+          paddingLeft(px(16)),
+          overflow(#hidden),
+        ]->Array.concat(placements(placement)),
+      )
 
     let toast = (transitionDuration, transitionState) =>
       style(. [
@@ -47,8 +65,8 @@ module Custom = {
 
   module ToastContainer = {
     @react.component
-    let make = (~children) => {
-      <div className=Styles.container> {children} </div>
+    let make = (~children, ~placement) => {
+      <div className={Styles.container(placement)}> {children} </div>
     }
   }
 
@@ -63,7 +81,7 @@ module Custom = {
 }
 
 module ToastProvider = {
-  type componentProps = {
+  type containerProps = {
     // autoDismiss,
     // autoDismissTimeout,
     // isRunning,
@@ -71,14 +89,20 @@ module ToastProvider = {
     // onMouseLeave,
     // appearance,
     // onDismiss,
-    // placement,
+    placement: placementType,
+    transitionDuration: int,
+    transitionState: string,
+    children: React.element,
+  }
+
+  type componentProps = {
     transitionDuration: int,
     transitionState: string,
     children: React.element,
   }
 
   type components = {
-    "ToastContainer": componentProps => React.element,
+    "ToastContainer": containerProps => React.element,
     "Toast": componentProps => React.element,
   }
 
@@ -88,7 +112,7 @@ module ToastProvider = {
       ~autoDismissTimeout: int,
       ~autoDismiss: bool,
       ~components: components,
-      ~placement: string=?,
+      ~placement: placementType,
       ~portalTargetSelector: option<string>,
       ~transitionDuration: option<int>,
       ~children: React.element,
@@ -100,7 +124,7 @@ module ToastProvider = {
     // ~autoDismissTimeout=?,
     // ~autoDismiss=?,
     // ~components=?,
-    ~placement=?,
+    ~placement: placementType=#"top-center",
     ~portalTargetSelector=?,
     ~transitionDuration=?,
     ~children,
@@ -109,15 +133,12 @@ module ToastProvider = {
       autoDismissTimeout=2000
       autoDismiss=true
       components={{
-        "ToastContainer": ({children}) =>
-          <Custom.ToastContainer> {children} </Custom.ToastContainer>,
+        "ToastContainer": ({children, placement}) =>
+          <Custom.ToastContainer placement> {children} </Custom.ToastContainer>,
         "Toast": ({children, transitionDuration, transitionState}) =>
           <Custom.Toast transitionDuration transitionState> {children} </Custom.Toast>,
       }}
-      placement={switch placement {
-      | Some(p) => p
-      | None => "top-center"
-      }}
+      placement
       portalTargetSelector
       transitionDuration>
       {children}

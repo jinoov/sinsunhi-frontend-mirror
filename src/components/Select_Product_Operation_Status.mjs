@@ -250,7 +250,7 @@ function toDisplay$1(status) {
     case /* RETIRE */4 :
         return "영구판매중지";
     case /* HIDDEN_SALE */5 :
-        return "전시판매중지";
+        return "전시판매숨김";
     
   }
 }
@@ -433,6 +433,5 @@ export {
   SearchStatus ,
   Base ,
   Search ,
-  
 }
 /* react Not a pure module */

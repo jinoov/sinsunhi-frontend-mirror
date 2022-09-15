@@ -2,13 +2,21 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as Global from "../../../components/Global.mjs";
+import * as DataGtm from "../../../utils/DataGtm.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
+import * as RelayEnv from "../../../constants/RelayEnv.mjs";
 import Head from "next/head";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
+import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
+import * as DeviceDetect from "../../../bindings/DeviceDetect.mjs";
 import * as Footer_Buyer from "../../../components/Footer_Buyer.mjs";
 import * as Header_Buyer from "../../../components/Header_Buyer.mjs";
-import * as PDP_Gtm_Buyer from "./PDP_Gtm_Buyer.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as Product_Parser from "../../../utils/Product_Parser.mjs";
@@ -16,16 +24,18 @@ import * as PDP_Normal_Buyer from "./normal/PDP_Normal_Buyer.mjs";
 import * as PDP_Quoted_Buyer from "./quoted/PDP_Quoted_Buyer.mjs";
 import * as ChannelTalkHelper from "../../../utils/ChannelTalkHelper.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as PDP_Matching_Buyer from "./matching/PDP_Matching_Buyer.mjs";
+import * as GnbBannerList_Buyer from "../../../components/GnbBannerList_Buyer.mjs";
 import * as PDPBuyerQuery_graphql from "../../../__generated__/PDPBuyerQuery_graphql.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PDPBuyerFragment_graphql from "../../../__generated__/PDPBuyerFragment_graphql.mjs";
+import * as ShopCategorySelect_Buyer from "../../../components/ShopCategorySelect_Buyer.mjs";
 import * as ReactSeparator from "@radix-ui/react-separator";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
+import * as PDPBuyerRedirectQuery_graphql from "../../../__generated__/PDPBuyerRedirectQuery_graphql.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(PDPBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PDPBuyerQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(PDPBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PDPBuyerQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -34,7 +44,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(PDPBuyerQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(PDPBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -52,38 +62,37 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, PDPBuyerQuery_graphql.node, PDPBuyerQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, PDPBuyerQuery_graphql.node, PDPBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: PDPBuyerQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: PDPBuyerQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, PDPBuyerQuery_graphql.node, PDPBuyerQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, PDPBuyerQuery_graphql.node, PDPBuyerQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(PDPBuyerQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(PDPBuyerQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(PDPBuyerQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(PDPBuyerQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPBuyerQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -92,10 +101,8 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
-var Query_makeVariables = PDPBuyerQuery_graphql.Utils.makeVariables;
-
 var Query = {
-  makeVariables: Query_makeVariables,
+  Operation: undefined,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -106,13 +113,13 @@ var Query = {
 };
 
 function use$1(fRef) {
-  var data = Hooks.useFragment(PDPBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -124,12 +131,61 @@ function useOpt(opt_fRef) {
 
 var Fragment = {
   Types: undefined,
+  Operation: undefined,
   use: use$1,
   useOpt: useOpt
 };
 
+function make(product) {
+  var categoryNames = Belt_Array.map(product.category.fullyQualifiedName, (function (param) {
+          return param.name;
+        }));
+  var producerCode = Belt_Option.map(product.producer, (function (param) {
+          return param.producerCode;
+        }));
+  var typename;
+  switch (product.__typename) {
+    case "MatchingProduct" :
+        typename = "매칭";
+        break;
+    case "NormalProduct" :
+    case "QuotableProduct" :
+        typename = "일반";
+        break;
+    case "QuotedProduct" :
+        typename = "견적";
+        break;
+    default:
+      typename = undefined;
+  }
+  return {
+          event: "view_item",
+          ecommerce: {
+            items: [{
+                item_id: String(product.productId),
+                item_type: Js_null_undefined.fromOption(typename),
+                item_name: product.displayName,
+                currency: "KRW",
+                price: Js_null_undefined.fromOption(product.price),
+                item_brand: Js_null_undefined.fromOption(producerCode),
+                item_category: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 0)),
+                item_category2: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 1)),
+                item_category3: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 2)),
+                item_category4: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 3)),
+                item_category5: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 4))
+              }]
+          }
+        };
+}
+
+var PageViewGtm = {
+  make: make
+};
+
 function PDP_Buyer$Placeholder(Props) {
   var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   switch (deviceType) {
     case /* Unknown */0 :
@@ -138,6 +194,8 @@ function PDP_Buyer$Placeholder(Props) {
         return React.createElement("div", {
                     className: "w-full min-w-[1280px] min-h-screen"
                   }, React.createElement(Header_Buyer.PC.make, {
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories,
                         key: router.asPath
                       }), React.createElement("div", {
                         className: "w-[1280px] mx-auto min-h-full"
@@ -252,17 +310,21 @@ var Placeholder = {
 
 function PDP_Buyer$NotFound(Props) {
   var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
         return React.createElement("div", {
-                    className: "w-full min-w-[1280px] min-h-screen"
+                    className: "w-full min-w-[1280px] min-h-screen flex flex-col"
                   }, React.createElement(Header_Buyer.PC.make, {
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories,
                         key: router.asPath
                       }), React.createElement("div", {
-                        className: "w-[1280px] px-5 py-16 mx-auto"
+                        className: "flex flex-col flex-1 w-[1280px] px-5 py-16 mx-auto"
                       }, React.createElement("div", {
                             className: "mt-14"
                           }, React.createElement("div", {
@@ -302,6 +364,8 @@ var NotFound = {
 
 function PDP_Buyer$Error(Props) {
   var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   switch (deviceType) {
     case /* Unknown */0 :
@@ -310,6 +374,8 @@ function PDP_Buyer$Error(Props) {
         return React.createElement("div", {
                     className: "w-full min-w-[1280px] min-h-screen"
                   }, React.createElement(Header_Buyer.PC.make, {
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories,
                         key: router.asPath
                       }), React.createElement("div", {
                         className: "w-[1280px] px-5 py-16 mx-auto"
@@ -353,24 +419,41 @@ var $$Error = {
 function PDP_Buyer$Presenter(Props) {
   var deviceType = Props.deviceType;
   var query = Props.query;
-  var match = use$1(query);
-  var fragmentRefs = match.fragmentRefs;
-  var pushGtmPageView = PDP_Gtm_Buyer.PageView.use(query);
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var product = use$1(query);
+  var fragmentRefs = product.fragmentRefs;
+  var productId = product.productId;
+  var id = product.id;
+  var displayName = product.displayName;
+  var categoryName = product.category.name;
   ChannelTalkHelper.Hook.use(/* PcOnly */1, {
         eventName: "최근 본 상품",
         eventProperty: {
-          productId: match.id,
-          productName: match.name
+          productId: id,
+          productName: product.name
         }
       }, undefined);
   React.useEffect((function () {
-          Curry._1(pushGtmPageView, undefined);
-          
+          Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "VIEW_PRODUCT_DETAIL", {
+                products: [{
+                    ID: id,
+                    number: productId,
+                    name: displayName,
+                    category: categoryName
+                  }]
+              }, undefined);
         }), []);
-  var match$1 = Product_Parser.Type.decode(match.__typename);
-  if (match$1 !== undefined) {
-    if (match$1 !== 2) {
-      if (match$1 >= 3) {
+  React.useEffect((function () {
+          DataGtm.push({
+                ecommerce: null
+              });
+          DataGtm.push(DataGtm.mergeUserIdUnsafe(make(product)));
+        }), [product]);
+  var match = Product_Parser.Type.decode(product.__typename);
+  if (match !== undefined) {
+    if (match !== 2) {
+      if (match >= 3) {
         return React.createElement(PDP_Matching_Buyer.make, {
                     deviceType: deviceType,
                     query: fragmentRefs
@@ -378,13 +461,17 @@ function PDP_Buyer$Presenter(Props) {
       } else {
         return React.createElement(PDP_Normal_Buyer.make, {
                     deviceType: deviceType,
-                    query: fragmentRefs
+                    query: fragmentRefs,
+                    gnbBanners: gnbBanners,
+                    displayCategories: displayCategories
                   });
       }
     } else {
       return React.createElement(PDP_Quoted_Buyer.make, {
                   deviceType: deviceType,
-                  query: fragmentRefs
+                  query: fragmentRefs,
+                  gnbBanners: gnbBanners,
+                  displayCategories: displayCategories
                 });
     }
   } else {
@@ -398,19 +485,25 @@ var Presenter = {
 
 function PDP_Buyer$Container(Props) {
   var deviceType = Props.deviceType;
-  var nodeId = Props.nodeId;
+  var productId = Props.productId;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var match = use({
-        id: nodeId
+        number: productId
       }, /* StoreAndNetwork */2, undefined, undefined, undefined);
-  var node = match.node;
-  if (node !== undefined) {
+  var product = match.product;
+  if (product !== undefined) {
     return React.createElement(PDP_Buyer$Presenter, {
                 deviceType: deviceType,
-                query: node.fragmentRefs
+                query: product.fragmentRefs,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
               });
   } else {
     return React.createElement(PDP_Buyer$NotFound, {
-                deviceType: deviceType
+                deviceType: deviceType,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
               });
   }
 }
@@ -419,8 +512,151 @@ var Container = {
   make: PDP_Buyer$Container
 };
 
-function PDP_Buyer(Props) {
+function use$2(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
+  var data = ReactRelay.useLazyLoadQuery(PDPBuyerRedirectQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PDPBuyerRedirectQuery_graphql.Internal.convertVariables(variables)), {
+        fetchKey: fetchKey,
+        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
+        networkCacheConfig: networkCacheConfig
+      });
+  return RescriptRelay_Internal.internal_useConvertedValue(PDPBuyerRedirectQuery_graphql.Internal.convertResponse, data);
+}
+
+function useLoader$1(param) {
+  var match = ReactRelay.useQueryLoader(PDPBuyerRedirectQuery_graphql.node);
+  var loadQueryFn = match[1];
+  var loadQuery = React.useMemo((function () {
+          return function (param, param$1, param$2, param$3) {
+            return Curry._2(loadQueryFn, PDPBuyerRedirectQuery_graphql.Internal.convertVariables(param), {
+                        fetchPolicy: param$1,
+                        networkCacheConfig: param$2
+                      });
+          };
+        }), [loadQueryFn]);
+  return [
+          Caml_option.nullable_to_opt(match[0]),
+          loadQuery,
+          match[2]
+        ];
+}
+
+function $$fetch$1(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
+  ReactRelay.fetchQuery(environment, PDPBuyerRedirectQuery_graphql.node, PDPBuyerRedirectQuery_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).subscribe({
+        next: (function (res) {
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: PDPBuyerRedirectQuery_graphql.Internal.convertResponse(res)
+                });
+          }),
+        error: (function (err) {
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
+          })
+      });
+}
+
+function fetchPromised$1(environment, variables, networkCacheConfig, fetchPolicy, param) {
+  var __x = ReactRelay.fetchQuery(environment, PDPBuyerRedirectQuery_graphql.node, PDPBuyerRedirectQuery_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).toPromise();
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(PDPBuyerRedirectQuery_graphql.Internal.convertResponse(res));
+              }), __x);
+}
+
+function usePreloaded$1(queryRef, param) {
+  var data = ReactRelay.usePreloadedQuery(PDPBuyerRedirectQuery_graphql.node, queryRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(PDPBuyerRedirectQuery_graphql.Internal.convertResponse, data);
+}
+
+function retain$1(environment, variables) {
+  var operationDescriptor = RelayRuntime.createOperationDescriptor(PDPBuyerRedirectQuery_graphql.node, PDPBuyerRedirectQuery_graphql.Internal.convertVariables(variables));
+  return environment.retain(operationDescriptor);
+}
+
+var Query$1 = {
+  Operation: undefined,
+  Types: undefined,
+  use: use$2,
+  useLoader: useLoader$1,
+  $$fetch: $$fetch$1,
+  fetchPromised: fetchPromised$1,
+  usePreloaded: usePreloaded$1,
+  retain: retain$1
+};
+
+function PDP_Buyer$RedirectOldUrl$Redirector(Props) {
+  var nodeId = Props.nodeId;
   var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var router = Router.useRouter();
+  var match = use$2({
+        id: nodeId
+      }, undefined, undefined, undefined, undefined);
+  var node = match.node;
+  if (node === undefined) {
+    return React.createElement(PDP_Buyer$NotFound, {
+                deviceType: deviceType,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
+              });
+  }
+  var number = node.number;
+  if (number === undefined) {
+    return React.createElement(PDP_Buyer$NotFound, {
+                deviceType: deviceType,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
+              });
+  }
+  var prim1 = "/products/" + String(number) + "";
+  router.replace(prim1);
+  return React.createElement(React.Fragment, undefined);
+}
+
+var Redirector = {
+  Query: Query$1,
+  make: PDP_Buyer$RedirectOldUrl$Redirector
+};
+
+function PDP_Buyer$RedirectOldUrl(Props) {
+  var pid = Props.pid;
+  var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var productId = Belt_Int.fromString(pid);
+  if (productId !== undefined) {
+    return React.createElement(PDP_Buyer$Container, {
+                deviceType: deviceType,
+                productId: productId,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
+              });
+  } else {
+    return React.createElement(PDP_Buyer$RedirectOldUrl$Redirector, {
+                nodeId: pid,
+                deviceType: deviceType,
+                gnbBanners: gnbBanners,
+                displayCategories: displayCategories
+              });
+  }
+}
+
+var RedirectOldUrl = {
+  Redirector: Redirector,
+  make: PDP_Buyer$RedirectOldUrl
+};
+
+function $$default(props) {
+  var displayCategories = props.displayCategories;
+  var gnbBanners = props.gnbBanners;
+  var deviceType = props.deviceType;
   var router = Router.useRouter();
   var pid = Js_dict.get(router.query, "pid");
   var match = React.useState(function () {
@@ -431,37 +667,71 @@ function PDP_Buyer(Props) {
           setIsCsr(function (param) {
                 return true;
               });
-          
         }), []);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "신선하이")
                 }), React.createElement(RescriptReactErrorBoundary.make, {
                   children: React.createElement(React.Suspense, {
-                        children: match[0] && pid !== undefined ? React.createElement(PDP_Buyer$Container, {
+                        children: match[0] && pid !== undefined ? React.createElement(PDP_Buyer$RedirectOldUrl, {
+                                pid: pid,
                                 deviceType: deviceType,
-                                nodeId: pid
+                                gnbBanners: gnbBanners,
+                                displayCategories: displayCategories
                               }) : null,
                         fallback: null
                       }),
                   fallback: (function (param) {
                       return React.createElement(PDP_Buyer$Error, {
-                                  deviceType: deviceType
+                                  deviceType: deviceType,
+                                  gnbBanners: gnbBanners,
+                                  displayCategories: displayCategories
                                 });
                     })
                 }));
 }
 
-var make = PDP_Buyer;
+function getServerSideProps(ctx) {
+  var deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req);
+  return Js_promise.$$catch((function (err) {
+                console.log("에러 GnbBannerListBuyerQuery", err);
+                return Promise.resolve({
+                            props: {
+                              query: ctx.query,
+                              deviceType: deviceType,
+                              gnbBanners: [],
+                              displayCategories: []
+                            }
+                          });
+              }), Js_promise.then_((function (res) {
+                    return Js_promise.then_((function (res1) {
+                                  return Promise.resolve({
+                                              props: {
+                                                query: ctx.query,
+                                                deviceType: deviceType,
+                                                gnbBanners: res.gnbBanners,
+                                                displayCategories: res1.displayCategories
+                                              }
+                                            });
+                                }), ShopCategorySelect_Buyer.Query.fetchPromised(RelayEnv.envSinsunMarket, {
+                                    onlyDisplayable: true,
+                                    parentId: undefined,
+                                    types: ["NORMAL"]
+                                  }, undefined, undefined, undefined));
+                  }), GnbBannerList_Buyer.Query.fetchPromised(RelayEnv.envSinsunMarket, undefined, undefined, undefined, undefined)));
+}
 
 export {
   Query ,
   Fragment ,
+  PageViewGtm ,
   Placeholder ,
   NotFound ,
   $$Error ,
   Presenter ,
   Container ,
-  make ,
-  
+  RedirectOldUrl ,
+  $$default ,
+  $$default as default,
+  getServerSideProps ,
 }
 /* react Not a pure module */

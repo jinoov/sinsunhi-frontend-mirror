@@ -210,17 +210,17 @@ module SummaryAndList = {
       ) = getRouterQuery(router)
 
       let searchInput: BulkSaleProducersAdminSearchSummaryRefetchQuery_graphql.Types.refetchVariables = {
-        progresses: progresses,
-        applicantNameMatch: applicantName,
-        businessNameMatch: businessName,
-        farmAddressMatch: farmAddress,
-        cropIds: cropId,
-        productCategoryIds: productCategoryId,
+        progresses: Some(progresses),
+        applicantNameMatch: Some(applicantName),
+        businessNameMatch: Some(businessName),
+        farmAddressMatch: Some(farmAddress),
+        cropIds: Some(cropId),
+        productCategoryIds: Some(productCategoryId),
         productCategoryNameMatch: None,
-        appliedDateGe: appliedDateGe,
-        appliedDateLe: appliedDateLe,
-        isTest: isTest,
-        staffIds: staffIds,
+        appliedDateGe: Some(appliedDateGe),
+        appliedDateLe: Some(appliedDateLe),
+        isTest: Some(isTest),
+        staffIds: Some(staffIds),
       }
 
       refetchTotal(~variables=(), ~fetchPolicy=RescriptRelay.StoreAndNetwork, ())->ignore
@@ -271,17 +271,17 @@ module Producers = {
     ) = getRouterQuery(router)
 
     let searchInput: Query.Types.variables = {
-      progresses: progresses,
+      progresses,
       applicantNameMatch: applicantName,
       businessNameMatch: businessName,
       farmAddressMatch: farmAddress,
       cropIds: cropId,
       productCategoryIds: productCategoryId,
       productCategoryNameMatch: None,
-      appliedDateGe: appliedDateGe,
-      appliedDateLe: appliedDateLe,
-      isTest: isTest,
-      staffIds: staffIds,
+      appliedDateGe,
+      appliedDateLe,
+      isTest,
+      staffIds,
     }
 
     let queryData = Query.use(~variables=searchInput, ())
@@ -302,11 +302,13 @@ module Producers = {
 
 @react.component
 let make = () => {
-  <Authorization.Admin title=`생산자 소싱 관리`>
+  <Authorization.Admin title={`생산자 소싱 관리`}>
     // TODO: 에러 표시 컴포넌트 필요
     <RescriptRelay.Context.Provider environment=RelayEnv.envFMBridge>
       <RescriptReactErrorBoundary fallback={_ => <div> {j`에러 발생`->React.string} </div>}>
-        <React.Suspense fallback={<Skeleton />}> <Producers /> </React.Suspense>
+        <React.Suspense fallback={<Skeleton />}>
+          <Producers />
+        </React.Suspense>
       </RescriptReactErrorBoundary>
     </RescriptRelay.Context.Provider>
   </Authorization.Admin>

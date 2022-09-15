@@ -24,12 +24,20 @@ let deliveryTypetoString = d =>
 
 module Placeholder = {
   @react.component
-  let make = () => {
+  let make = (~deviceType) => {
     open Skeleton
     <section className=%twc("flex flex-col gap-5 bg-white rounded-sm")>
-      <span className=%twc("text-lg xl:text-xl text-enabled-L1 font-bold")>
-        {`배송 정보`->React.string}
-      </span>
+      {switch deviceType {
+      | DeviceDetect.Unknown => React.null
+      | DeviceDetect.PC =>
+        <span className=%twc("text-xl text-enabled-L1 font-bold")>
+          {`배송 정보`->React.string}
+        </span>
+      | DeviceDetect.Mobile =>
+        <span className=%twc("text-lg text-enabled-L1 font-bold")>
+          {`배송 정보`->React.string}
+        </span>
+      }}
       <ul className=%twc("flex flex-col")>
         <li className=%twc("flex gap-5")>
           <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
@@ -55,7 +63,7 @@ module Placeholder = {
 }
 
 @react.component
-let make = (~query) => {
+let make = (~query, ~deviceType) => {
   let {wosOrder} = Fragment.use(query)
 
   let toPhoneNumberForm = s =>
@@ -74,9 +82,17 @@ let make = (~query) => {
       deliveryMessage,
     })) =>
     <section className=%twc("flex flex-col gap-5 bg-white rounded-sm")>
-      <span className=%twc("text-lg xl:text-xl text-enabled-L1 font-bold")>
-        {`배송 정보`->React.string}
-      </span>
+      {switch deviceType {
+      | DeviceDetect.Unknown => React.null
+      | DeviceDetect.PC =>
+        <span className=%twc("text-xl text-enabled-L1 font-bold")>
+          {`배송 정보`->React.string}
+        </span>
+      | DeviceDetect.Mobile =>
+        <span className=%twc("text-lg text-enabled-L1 font-bold")>
+          {`배송 정보`->React.string}
+        </span>
+      }}
       <ul className=%twc("flex flex-col text-sm gap-2")>
         <li className=%twc("flex")>
           <span className=%twc("w-23 font-bold")> {`배송방법`->React.string} </span>
@@ -139,6 +155,6 @@ let make = (~query) => {
         }}
       </ul>
     </section>
-  | _ => <Placeholder />
+  | _ => <Placeholder deviceType />
   }
 }

@@ -30,12 +30,20 @@ let makePrice = (o, d, m) =>
 
 module Placeholder = {
   @react.component
-  let make = () => {
+  let make = (~deviceType) => {
     open Skeleton
     <section className=%twc("flex flex-col rounded-sm bg-white w-full p-7 gap-7")>
-      <span className=%twc("text-lg xl:text-xl text-enabled-L1 font-bold")>
-        {`결제 정보`->React.string}
-      </span>
+      {switch deviceType {
+      | DeviceDetect.Unknown => React.null
+      | DeviceDetect.PC =>
+        <span className=%twc("text-xl text-enabled-L1 font-bold")>
+          {`결제 정보`->React.string}
+        </span>
+      | DeviceDetect.Mobile =>
+        <span className=%twc("text-lg text-enabled-L1 font-bold")>
+          {`결제 정보`->React.string}
+        </span>
+      }}
       <ul className=%twc("text-sm flex flex-col gap-5")>
         <li key="payment-method" className=%twc("flex justify-between items-center")>
           <span className=%twc("text-text-L2")> {`결제 수단`->React.string} </span>
@@ -60,7 +68,7 @@ module Placeholder = {
 }
 
 @react.component
-let make = (~query) => {
+let make = (~query, ~deviceType) => {
   let {wosOrder} = Fragment.use(query)
 
   switch wosOrder {
@@ -74,9 +82,17 @@ let make = (~query) => {
       )
 
     <section className=%twc("flex flex-col rounded-sm bg-white w-full p-7 gap-7")>
-      <span className=%twc("text-lg xl:text-xl text-enabled-L1 font-bold")>
-        {`결제 정보`->React.string}
-      </span>
+      {switch deviceType {
+      | DeviceDetect.Unknown => React.null
+      | DeviceDetect.PC =>
+        <span className=%twc("text-xl text-enabled-L1 font-bold")>
+          {`결제 정보`->React.string}
+        </span>
+      | DeviceDetect.Mobile =>
+        <span className=%twc("text-lg text-enabled-L1 font-bold")>
+          {`결제 정보`->React.string}
+        </span>
+      }}
       <ul className=%twc("text-sm flex flex-col gap-5")>
         <li key="payment-method" className=%twc("flex justify-between items-center h-6")>
           <span className=%twc("text-text-L2")> {`결제 수단`->React.string} </span>
@@ -99,12 +115,20 @@ let make = (~query) => {
         // </li>
         <li key="total-price" className=%twc("flex justify-between items-center h-6")>
           <span className=%twc("text-text-L2")> {`총 결제금액`->React.string} </span>
-          <span className=%twc("text-xl xl:text-lg text-primary font-bold")>
-            {`${(productPrice + deliveryPrice)->Locale.Int.show}원`->React.string}
-          </span>
+          {switch deviceType {
+          | DeviceDetect.Unknown => React.null
+          | DeviceDetect.PC =>
+            <span className=%twc("text-lg text-primary font-bold")>
+              {`${(productPrice + deliveryPrice)->Locale.Int.show}원`->React.string}
+            </span>
+          | DeviceDetect.Mobile =>
+            <span className=%twc("text-xl text-primary font-bold")>
+              {`${(productPrice + deliveryPrice)->Locale.Int.show}원`->React.string}
+            </span>
+          }}
         </li>
       </ul>
     </section>
-  | _ => <Placeholder />
+  | _ => <Placeholder deviceType />
   }
 }

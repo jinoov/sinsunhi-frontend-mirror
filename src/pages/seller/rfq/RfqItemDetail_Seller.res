@@ -71,6 +71,14 @@ module Query = %relay(`
             }
           }
         }
+        brands {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
       }
     }
     rfqRecommendedPriceForMeat(rfqRequestItemId: $itemId) {
@@ -189,7 +197,7 @@ let displayPackageMethod = (v: MeatItemTypes.enum_RfqMeatPackageMethod) =>
   | _ => ``
   }
 
-let displayMadeInMethod = (v: MeatItemTypes.enum_MeatMadeIn) =>
+let displayMadeInMethod = (v: MeatItemTypes.enum_CountryCode) =>
   switch v {
   | #KR => `국내산`
   | #US => `미국산`
@@ -303,7 +311,7 @@ module Detail = {
               x.isDomestic ? `국내` : `수입`
             )}
             subTitle={switch itemMeat.requestItemStatus {
-            | #WAITING_FOR_QUOTATION => `오늘 16:00까지 수정 가능합니다.`
+            | #WAITING_FOR_QUOTATION => `아직 견적서를 수정할 수 있어요`
             | _ => ``
             }}
           />
@@ -447,9 +455,25 @@ module Detail = {
               {itemMeat.storageMethod->Option.mapWithDefault(React.null, x => {
                 <Item title={`보관상태`} value={x->displayStorageMethod} />
               })}
-              {itemMeat.preferredBrand === ""
-                ? React.null
-                : <Item title={`선호브랜드`} value={itemMeat.preferredBrand} />}
+              {
+                // Brand 선택 개선 전의 레거시 코드
+                // preferredBrand 필드는 더 이상 유저가 입력하지 않음.
+                // 그러나 개선 이전의 주문건에 대해 보여주기 위해 필요함.
+                itemMeat.preferredBrand === ""
+                  ? React.null
+                  : <Item title={`선호브랜드`} value={itemMeat.preferredBrand} />
+              }
+              {switch // Brand 선택 개선 이후 - 새롭게 추가된 필드의 데이터를 보여줌.
+              itemMeat.brands.edges->Garter.Array.isEmpty {
+              | true => <Item title={`브랜드`} value={`브랜드 무관`} />
+              | false =>
+                <Item
+                  title={`브랜드`}
+                  value={itemMeat.brands.edges->Array.map(edge => {
+                    edge.node.name
+                  }) |> Js.Array.joinWith(", ")}
+                />
+              }}
               <li className=%twc("h-0.5 bg-border-disabled") />
               <Item
                 title={`납품 희망일자`}
@@ -521,23 +545,38 @@ module Detail = {
         ()
       }
 
-      let handleClickCreateQuotationButton = () => {
+      let handleClickQuotationButton = () => {
         switch isGradeIgnore {
         | true => setDrawerShow(._ => true)
         | false => navigatePriceFormPage()
         }
       }
 
+      let trackData = () => {
+        switch hasSubmittedQuotation {
+        | true => ()
+        | false =>
+          {
+            "event": "click_rfq_livestock_quotation",
+            "request_id": itemMeat.request.id,
+            "quotation_id": itemMeat.id,
+          }
+          ->DataGtm.mergeUserIdUnsafe
+          ->DataGtm.push
+        }
+      }
+
       <>
-        <DS_ButtonContainer.Floating1
-          dataGtm={`Click_RFQ_Livestock_Quotation`}
-          disabled={switch itemMeat.requestItemStatus {
-          | #WAITING_FOR_QUOTATION => false
-          | _ => true
-          }}
-          label={`견적서 ${hasSubmittedQuotation ? `수정` : `작성`}하기`}
-          onClick={_ => handleClickCreateQuotationButton()}
-        />
+        <div onClick={_ => trackData()}>
+          <DS_ButtonContainer.Floating1
+            disabled={switch itemMeat.requestItemStatus {
+            | #WAITING_FOR_QUOTATION => false
+            | _ => true
+            }}
+            label={`견적서 ${hasSubmittedQuotation ? `수정` : `작성`}하기`}
+            onClick={_ => handleClickQuotationButton()}
+          />
+        </div>
         <DS_BottomDrawer.Root isShow=isDrawerShow onClose={_ => setDrawerShow(._ => !isDrawerShow)}>
           <DS_BottomDrawer.Header />
           <DS_BottomDrawer.Body>
@@ -585,6 +624,18 @@ module Detail = {
 
   @react.component
   let make = (~itemMeat: MeatItemTypes.response_node) => {
+    React.useEffect0(() => {
+      {
+        "event": "view_rfq_livestock_quotation_detail",
+        "request_id": itemMeat.request.id,
+        "quotation_id": itemMeat.id,
+      }
+      ->DataGtm.mergeUserIdUnsafe
+      ->DataGtm.push
+
+      None
+    })
+
     <section
       className=%twc("relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl bg-gray-50")>
       <Title itemMeat={itemMeat} />
@@ -638,6 +689,20 @@ module Apply = {
       }
     }
 
+    let trackDataInMutation = (mutationType: mutationType) => {
+      switch mutationType {
+      | Create =>
+        {
+          "event": "click_yes_rfq_livestock_enteraprice_check_popup",
+          "request_id": itemMeat.request.id,
+          "quotation_id": itemMeat.id,
+        }
+        ->DataGtm.mergeUserIdUnsafe
+        ->DataGtm.push
+      | Update => ()
+      }
+    }
+
     let handleSubmit = _ => {
       switch submittedQuotation {
       | Some(submittedQuotation') => {
@@ -660,6 +725,7 @@ module Apply = {
                 | #RfqQuotationMeatMutationPayload(payload) =>
                   switch payload.result {
                   | Some(_) =>
+                    trackDataInMutation(Update)
                     addToastWhenAfterMutate(Update, false)
                     router->Next.Router.replace(`/seller/rfq/request/${itemMeat.id}`)
                   | None => addToastWhenAfterMutate(Update, true)
@@ -692,6 +758,7 @@ module Apply = {
                 | #RfqQuotationMeatMutationPayload(payload) =>
                   switch payload.result {
                   | Some(_) =>
+                    trackDataInMutation(Create)
                     addToastWhenAfterMutate(Create, false)
                     router->Next.Router.replace(`/seller/rfq/request/${itemMeat.id}`)
                   | None => addToastWhenAfterMutate(Create, true)
@@ -704,6 +771,21 @@ module Apply = {
             (),
           )->ignore
         }
+      }
+    }
+
+    let trackDataWhenNextButton = () => {
+      switch hasSubmittedQuotation {
+      | true => ()
+      | false =>
+        {
+          "event": "click_rfq_livestock_enteraprice",
+          "request_id": itemMeat.request.id,
+          "quotation_id": itemMeat.id,
+          "seller_price_per_kg": price,
+        }
+        ->DataGtm.mergeUserIdUnsafe
+        ->DataGtm.push
       }
     }
 
@@ -749,14 +831,9 @@ module Apply = {
       </section>
       <DS_Dialog.Popup.Root>
         <DS_Dialog.Popup.Trigger asChild=false>
-          <DS_ButtonContainer.Full1
-            dataGtm={`Click_RFQ_Livestock_EnteraPrice`}
-            disabled={price->Option.isNone}
-            label={`다음`}
-            onClick={_ => {
-              DataGtm.push({"event": "Expose_view_RFQ_Livestock_EnteraPrice_Check_Popup"})
-            }}
-          />
+          <div onClick={_ => trackDataWhenNextButton()}>
+            <DS_ButtonContainer.Full1 disabled={price->Option.isNone} label={`다음`} />
+          </div>
         </DS_Dialog.Popup.Trigger>
         <DS_Dialog.Popup.Portal>
           <DS_Dialog.Popup.Overlay />
@@ -782,16 +859,10 @@ module Apply = {
             </DS_Dialog.Popup.Description>
             <DS_Dialog.Popup.Buttons>
               <DS_Dialog.Popup.Close asChild=true>
-                <div className=%twc("w-full")>
-                  <DS_Button.Normal.Large1 buttonType=#white label={`아니오`} />
-                </div>
+                <DS_Button.Normal.Large1 buttonType=#white label={`아니오`} />
               </DS_Dialog.Popup.Close>
               <DS_Dialog.Popup.Close asChild=true>
-                <DataGtm dataGtm={`Click_Yes_RFQ_Livestock_EnteraPrice_Check_Popup`}>
-                  <div onClick={_ => ()} className=%twc("w-full")>
-                    <DS_Button.Normal.Large1 label={`네`} onClick={handleSubmit} />
-                  </div>
-                </DataGtm>
+                <DS_Button.Normal.Large1 label={`네`} onClick={handleSubmit} />
               </DS_Dialog.Popup.Close>
             </DS_Dialog.Popup.Buttons>
           </DS_Dialog.Popup.Content>
@@ -823,23 +894,18 @@ module DetailPageRouter = {
               ->Array.getBy(x => x.node.id === selectedGradeId')
 
             switch (sellerSelectedGradeNode, itemStatus) {
-            | (Some(sellerSelectedGradeNode'), #WAITING_FOR_QUOTATION) => {
-                DataGtm.push({"event": "Expose_view_RFQ_Livestock_EnteraPrice"})
-                <Apply
-                  itemMeat={itemMeat}
-                  rfqRecommendedPriceForMeat={rfqRecommendedPriceForMeat}
-                  sellerSelectedGradeNode={sellerSelectedGradeNode'.node}
-                />
-              }
+            | (Some(sellerSelectedGradeNode'), #WAITING_FOR_QUOTATION) =>
+              <Apply
+                itemMeat={itemMeat}
+                rfqRecommendedPriceForMeat={rfqRecommendedPriceForMeat}
+                sellerSelectedGradeNode={sellerSelectedGradeNode'.node}
+              />
 
             | _ => <DS_None.Default message={`잘못된 접근입니다.`} />
             }
           }
 
-        | None => {
-            DataGtm.push({"event": "Expose_view_RFQ_Livestock_Quotation"})
-            <Detail itemMeat={itemMeat} />
-          }
+        | None => <Detail itemMeat={itemMeat} />
         }
       | None => <DS_None.Default message={`견적서 정보가 없습니다.`} />
       }

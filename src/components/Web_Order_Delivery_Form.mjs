@@ -6,6 +6,8 @@ import * as Web_Order_Inputs_Buyer from "./Web_Order_Inputs_Buyer.mjs";
 
 function Web_Order_Delivery_Form(Props) {
   var watchValue = Props.watchValue;
+  var prefix = Props.prefix;
+  var deviceType = Props.deviceType;
   if (watchValue === undefined) {
     return null;
   }
@@ -16,8 +18,18 @@ function Web_Order_Delivery_Form(Props) {
   var decode$p$1 = decode$p._0;
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "py-7 flex flex-col gap-5 border border-div-border-L2 border-x-0"
-                }, decode$p$1 === "PARCEL" ? React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Inputs_Buyer.ReceiverNameInput.make, {}), React.createElement(Web_Order_Inputs_Buyer.ReceiverPhoneInput.make, {}), React.createElement(Web_Order_Inputs_Buyer.ReceiverAddressInput.make, {}), React.createElement(Web_Order_Inputs_Buyer.DeliveryMessageInput.make, {})) : (
+                }, decode$p$1 === "PARCEL" ? React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Inputs_Buyer.ReceiverNameInput.make, {
+                            prefix: prefix
+                          }), React.createElement(Web_Order_Inputs_Buyer.ReceiverPhoneInput.make, {
+                            prefix: prefix
+                          }), React.createElement(Web_Order_Inputs_Buyer.ReceiverAddressInput.make, {
+                            prefix: prefix,
+                            deviceType: deviceType
+                          }), React.createElement(Web_Order_Inputs_Buyer.DeliveryMessageInput.make, {
+                            prefix: prefix
+                          })) : (
                     decode$p$1 === "SELF" ? React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Inputs_Buyer.DeliveryDesiredDateSelection.make, {
+                                prefix: prefix,
                                 selfMode: true
                               }), React.createElement("div", {
                                 className: "flex flex-col xl:flex-row items-baseline"
@@ -26,9 +38,24 @@ function Web_Order_Delivery_Form(Props) {
                                   }, "수령지"), React.createElement("span", {
                                     className: "gap-1 xl:w-3/4 text-sm text-text-L1"
                                   }, "상품을 수령하실 수 있는 주소지는 결제 후, 담당MD가 직접 연락드려 전달드릴 예정입니다.")), React.createElement(Web_Order_Inputs_Buyer.DeliveryMessageInput.make, {
+                                prefix: prefix,
                                 selfMode: true
-                              })) : React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Inputs_Buyer.DeliveryDesiredDateSelection.make, {}), React.createElement(Web_Order_Inputs_Buyer.ReceiverNameInput.make, {}), React.createElement(Web_Order_Inputs_Buyer.ReceiverPhoneInput.make, {}), React.createElement(Web_Order_Inputs_Buyer.ReceiverAddressInput.make, {}), React.createElement(Web_Order_Inputs_Buyer.DeliveryMessageInput.make, {}))
-                  )), React.createElement(Web_Order_Inputs_Buyer.PaymentMethodSelection.make, {}));
+                              })) : React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Inputs_Buyer.DeliveryDesiredDateSelection.make, {
+                                prefix: prefix
+                              }), React.createElement(Web_Order_Inputs_Buyer.ReceiverNameInput.make, {
+                                prefix: prefix
+                              }), React.createElement(Web_Order_Inputs_Buyer.ReceiverPhoneInput.make, {
+                                prefix: prefix
+                              }), React.createElement(Web_Order_Inputs_Buyer.ReceiverAddressInput.make, {
+                                prefix: prefix,
+                                deviceType: deviceType
+                              }), React.createElement(Web_Order_Inputs_Buyer.DeliveryMessageInput.make, {
+                                prefix: prefix
+                              }))
+                  )), React.createElement(Web_Order_Inputs_Buyer.PaymentMethodSelection.make, {
+                  prefix: prefix,
+                  deviceType: deviceType
+                }));
 }
 
 var Form;
@@ -38,6 +65,5 @@ var make = Web_Order_Delivery_Form;
 export {
   Form ,
   make ,
-  
 }
 /* react Not a pure module */

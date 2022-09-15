@@ -36,17 +36,8 @@ module MO = {
         {switch user {
         | Unknown => React.null
 
-        | LoggedIn(_) =>
-          <Next.Link href=salesDocument>
-            <a target="_blank" className=btnStyle>
-              <IconDownloadCenter
-                width="24" height="24" className=%twc("fill-green-500 group-hover:fill-green-600")
-              />
-              <span className=labelStyle> {`판매자료 다운받기`->React.string} </span>
-            </a>
-          </Next.Link>
-
-        | NotLoggedIn => <>
+        | NotLoggedIn =>
+          <>
             <button onClick={_ => setShowWarning(._ => Show)} className=btnStyle>
               <IconDownloadCenter
                 width="24" height="24" className=%twc("fill-green-500 group-hover:fill-green-600")
@@ -57,8 +48,8 @@ module MO = {
               isShow=showWarning
               onCancel={_ => setShowWarning(._ => Hide)}
               onConfirm={_ => router->push(`/buyer/signin`)}
-              cancelText=`취소`
-              confirmText=`로그인`>
+              cancelText={`취소`}
+              confirmText={`로그인`}>
               <div
                 className=%twc(
                   "w-full h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-gray-800"
@@ -68,6 +59,16 @@ module MO = {
               </div>
             </ShopDialog_Buyer.Mo>
           </>
+
+        | LoggedIn(_) =>
+          <Next.Link href=salesDocument>
+            <a target="_blank" className=btnStyle>
+              <IconDownloadCenter
+                width="24" height="24" className=%twc("fill-green-500 group-hover:fill-green-600")
+              />
+              <span className=labelStyle> {`판매자료 다운받기`->React.string} </span>
+            </a>
+          </Next.Link>
         }}
       </div>
     </section>
@@ -104,17 +105,8 @@ module PC = {
         {switch user {
         | Unknown => React.null
 
-        | LoggedIn(_) =>
-          <Next.Link href=salesDocument>
-            <a target="_blank" className=btnStyle>
-              <IconDownloadCenter
-                width="24" height="24" className=%twc("fill-green-500 group-hover:fill-green-600")
-              />
-              <span className=labelStyle> {`판매자료 다운받기`->React.string} </span>
-            </a>
-          </Next.Link>
-
-        | NotLoggedIn => <>
+        | NotLoggedIn =>
+          <>
             <button onClick={_ => setShowWarning(._ => Show)} className=btnStyle>
               <IconDownloadCenter
                 width="24" height="24" className=%twc("fill-green-500 group-hover:fill-green-600")
@@ -125,8 +117,8 @@ module PC = {
               isShow=showWarning
               onCancel={_ => setShowWarning(._ => Hide)}
               onConfirm={_ => router->push(`/buyer/signin`)}
-              cancelText=`취소`
-              confirmText=`로그인`>
+              cancelText={`취소`}
+              confirmText={`로그인`}>
               <div
                 className=%twc(
                   "w-full h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-gray-800"
@@ -136,6 +128,16 @@ module PC = {
               </div>
             </ShopDialog_Buyer>
           </>
+
+        | LoggedIn(_) =>
+          <Next.Link href=salesDocument>
+            <a target="_blank" className=btnStyle>
+              <IconDownloadCenter
+                width="24" height="24" className=%twc("fill-green-500 group-hover:fill-green-600")
+              />
+              <span className=labelStyle> {`판매자료 다운받기`->React.string} </span>
+            </a>
+          </Next.Link>
         }}
       </div>
       <div className=%twc("mt-4 text-gray-600")>

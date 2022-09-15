@@ -16,11 +16,11 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ProductForm from "../utils/ProductForm.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as ReactHookForm$1 from "react-hook-form";
 import EndOfDay from "date-fns/endOfDay";
-import * as Hooks from "react-relay/hooks";
 import StartOfDay from "date-fns/startOfDay";
 import * as Product_Detail_Editor from "./Product_Detail_Editor.mjs";
 import * as Upload_Thumbnail_Admin from "./Upload_Thumbnail_Admin.mjs";
@@ -34,8 +34,6 @@ import * as Select_Product_Operation_Status from "./Select_Product_Operation_Sta
 import * as Product_Detail_Description_Admin from "./Product_Detail_Description_Admin.mjs";
 import * as Product_Detail_Display_Categories from "./Product_Detail_Display_Categories.mjs";
 import * as AddMatchingProductFormAdminMutation_graphql from "../__generated__/AddMatchingProductFormAdminMutation_graphql.mjs";
-
-var makeVariables = AddMatchingProductFormAdminMutation_graphql.Utils.makeVariables;
 
 function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
   return RelayRuntime.commitMutation(environment, {
@@ -56,14 +54,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? AddMatchingProductFormAdminMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, AddMatchingProductFormAdminMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, AddMatchingProductFormAdminMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use(param) {
-  var match = Hooks.useMutation(AddMatchingProductFormAdminMutation_graphql.node);
+  var match = ReactRelay.useMutation(AddMatchingProductFormAdminMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -71,13 +69,13 @@ function use(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, AddMatchingProductFormAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, AddMatchingProductFormAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? AddMatchingProductFormAdminMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, AddMatchingProductFormAdminMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, AddMatchingProductFormAdminMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: AddMatchingProductFormAdminMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -96,15 +94,12 @@ var Mutation_productStatus_decode = AddMatchingProductFormAdminMutation_graphql.
 
 var Mutation_productStatus_fromString = AddMatchingProductFormAdminMutation_graphql.Utils.productStatus_fromString;
 
-var Mutation_make_imageInput = AddMatchingProductFormAdminMutation_graphql.Utils.make_imageInput;
-
 var Mutation = {
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
   productStatus_decode: Mutation_productStatus_decode,
   productStatus_fromString: Mutation_productStatus_fromString,
-  make_imageInput: Mutation_make_imageInput,
-  makeVariables: makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use
@@ -657,15 +652,15 @@ function Add_Matching_Product_Form_Admin$OperationStatusInput(Props) {
                   isShow: match$1[0],
                   children: React.createElement("p", undefined, "영구판매중지 상태를 선택 후 저장하시면", React.createElement("br", undefined), "추후 해당 상품을 수정할 수 없습니다.", React.createElement("br", undefined), React.createElement("br", undefined), "영구판매중지 상태로 변경할까요?"),
                   onCancel: (function (param) {
-                      return setShowProductOperationNoSale(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowProductOperationNoSale(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       setValue(name, Select_Product_Operation_Status.Base.status_encode(/* RETIRE */3));
-                      return setShowProductOperationNoSale(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowProductOperationNoSale(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "닫기",
                   textOnConfirm: "확인",
@@ -845,7 +840,7 @@ function Add_Matching_Product_Form_Admin$NoticeAndDateInput$DateInput(Props) {
                   var tmp = {
                     id: match.name,
                     onChange: (function (e) {
-                        return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
+                        Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
                       }),
                     firstDayOfWeek: 0
                   };
@@ -950,7 +945,7 @@ function Add_Matching_Product_Form_Admin$ThumbnailUploadInput(Props) {
                           return React.createElement(Upload_Thumbnail_Admin.make, {
                                       name: match.name,
                                       updateFn: (function (imageUrls) {
-                                          return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Upload_Thumbnail_Admin.Form.image_encode(imageUrls)));
+                                          Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Upload_Thumbnail_Admin.Form.image_encode(imageUrls)));
                                         }),
                                       value: Belt_Result.getWithDefault(Upload_Thumbnail_Admin.Form.image_decode(match.value), Upload_Thumbnail_Admin.Form.resetImage)
                                     });
@@ -1054,7 +1049,6 @@ function Add_Matching_Product_Form_Admin$MatchingSuccessDialog(Props) {
                   }, React.createElement("span", undefined, "매칭상품등록이 완료되었습니다.")),
               onCancel: (function (param) {
                   router.push("/admin/products");
-                  
                 }),
               textOnCancel: "확인",
               kindOfConfirm: /* Positive */0,
@@ -1087,38 +1081,51 @@ function makeMatchingProductVariables(form) {
         break;
     
   }
-  return Curry.app(makeVariables, [
-              ProductForm.makeCategoryId(form.productCategory.c5),
-              form.editor,
-              ProductForm.makeDisplayCategoryIds(form.displayCategories),
-              form.buyerProductName,
-              {
-                original: form.thumbnail.original,
-                thumb100x100: form.thumbnail.thumb100x100,
-                thumb400x400: form.thumbnail.thumb400x400,
-                thumb800x800: form.thumbnail.thumb800x800,
-                thumb1000x1000: form.thumbnail.thumb1000x1000,
-                thumb1920x1920: form.thumbnail.thumb1920x1920
-              },
-              form.producerProductName,
-              Belt_Option.keep(form.notice, (function (str) {
-                      return str !== "";
-                    })),
-              ProductForm.makeNoticeDate(form.noticeEndAt, (function (prim) {
-                      return EndOfDay(prim);
-                    })),
-              ProductForm.makeNoticeDate(form.noticeStartAt, (function (prim) {
-                      return StartOfDay(prim);
-                    })),
-              form.origin,
-              Belt_Option.keep(form.documentURL, (function (str) {
-                      return str !== "";
-                    })),
-              tmp,
-              form.shipmentTo | 0,
-              form.shipmentFrom | 0,
-              undefined
-            ]);
+  var tmp$1 = {
+    categoryId: ProductForm.makeCategoryId(form.productCategory.c5),
+    description: form.editor,
+    displayCategoryIds: ProductForm.makeDisplayCategoryIds(form.displayCategories),
+    displayName: form.buyerProductName,
+    image: {
+      original: form.thumbnail.original,
+      thumb1000x1000: form.thumbnail.thumb1000x1000,
+      thumb100x100: form.thumbnail.thumb100x100,
+      thumb1920x1920: form.thumbnail.thumb1920x1920,
+      thumb400x400: form.thumbnail.thumb400x400,
+      thumb800x800: form.thumbnail.thumb800x800,
+      thumb800xall: form.thumbnail.thumb800xall
+    },
+    name: form.producerProductName,
+    origin: form.origin,
+    releaseEndMonth: form.shipmentTo | 0,
+    releaseStartMonth: form.shipmentFrom | 0,
+    status: tmp
+  };
+  var tmp$2 = Belt_Option.keep(form.notice, (function (str) {
+          return str !== "";
+        }));
+  if (tmp$2 !== undefined) {
+    tmp$1.notice = tmp$2;
+  }
+  var tmp$3 = ProductForm.makeNoticeDate(form.noticeEndAt, (function (prim) {
+          return EndOfDay(prim);
+        }));
+  if (tmp$3 !== undefined) {
+    tmp$1.noticeEndAt = tmp$3;
+  }
+  var tmp$4 = ProductForm.makeNoticeDate(form.noticeStartAt, (function (prim) {
+          return StartOfDay(prim);
+        }));
+  if (tmp$4 !== undefined) {
+    tmp$1.noticeStartAt = tmp$4;
+  }
+  var tmp$5 = Belt_Option.keep(form.documentURL, (function (str) {
+          return str !== "";
+        }));
+  if (tmp$5 !== undefined) {
+    tmp$1.salesDocument = tmp$5;
+  }
+  return tmp$1;
 }
 
 function Add_Matching_Product_Form_Admin(Props) {
@@ -1149,50 +1156,75 @@ function Add_Matching_Product_Form_Admin(Props) {
         return /* Hide */1;
       });
   var setShowMatchingSuccess = match$3[1];
+  var match$4 = React.useState(function () {
+        return [
+                /* Hide */1,
+                undefined
+              ];
+      });
+  var setErrStatus = match$4[1];
+  var errStatus = match$4[0];
   var onSubmit = function (data, param) {
-    var result = Belt_Result.map(submit_decode(data), (function (data$p) {
-            Curry.app(matchingMutate, [
-                  undefined,
-                  (function (param, param$1) {
-                      var createMatchingProduct = param.createMatchingProduct;
-                      if (typeof createMatchingProduct === "object" && createMatchingProduct.NAME === "CreateMatchingProductResult") {
-                        return setShowMatchingSuccess(function (param) {
-                                    return /* Show */0;
-                                  });
-                      }
-                      
-                    }),
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  makeMatchingProductVariables(data$p),
-                  undefined,
-                  undefined
-                ]);
-            
-          }));
-    if (result.TAG === /* Ok */0) {
+    var data$1 = submit_decode(data);
+    if (data$1.TAG === /* Ok */0) {
+      Curry.app(matchingMutate, [
+            undefined,
+            (function (param, param$1) {
+                var createMatchingProduct = param.createMatchingProduct;
+                if (typeof createMatchingProduct === "object") {
+                  var variant = createMatchingProduct.NAME;
+                  if (variant === "Error") {
+                    var message = createMatchingProduct.VAL.message;
+                    return setErrStatus(function (param) {
+                                return [
+                                        /* Show */0,
+                                        message
+                                      ];
+                              });
+                  }
+                  if (variant === "CreateMatchingProductResult") {
+                    return setShowMatchingSuccess(function (param) {
+                                return /* Show */0;
+                              });
+                  }
+                  
+                }
+                setErrStatus(function (param) {
+                      return [
+                              /* Show */0,
+                              undefined
+                            ];
+                    });
+              }),
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            makeMatchingProductVariables(data$1._0),
+            undefined,
+            undefined
+          ]);
       return ;
     }
-    console.log(result._0);
-    return addToast(React.createElement("div", {
-                    className: "flex items-center"
-                  }, React.createElement(IconError.make, {
-                        width: "24",
-                        height: "24",
-                        className: "mr-2"
-                      }), "오류가 발생하였습니다. 등록내용을 확인하세요."), {
-                appearance: "error"
-              });
+    console.log(data$1._0);
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), "오류가 발생하였습니다. 등록내용을 확인하세요."), {
+          appearance: "error"
+        });
   };
   var handleReset = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setShowReset(function (param) {
-                              return /* Show */0;
-                            });
+                  setShowReset(function (param) {
+                        return /* Show */0;
+                      });
                 }), param);
   };
+  var errMsg = errStatus[1];
   return React.createElement(ReactHookForm.Provider.make, {
               children: React.createElement("form", {
                     onSubmit: methods.handleSubmit(onSubmit)
@@ -1255,15 +1287,15 @@ function Add_Matching_Product_Form_Admin(Props) {
                         isShow: match$2[0],
                         children: React.createElement("p", undefined, "모든 내용을 초기화 하시겠어요?"),
                         onCancel: (function (param) {
-                            return setShowReset(function (param) {
-                                        return /* Hide */1;
-                                      });
+                            setShowReset(function (param) {
+                                  return /* Hide */1;
+                                });
                           }),
                         onConfirm: (function (param) {
                             reset(undefined);
-                            return setShowReset(function (param) {
-                                        return /* Hide */1;
-                                      });
+                            setShowReset(function (param) {
+                                  return /* Hide */1;
+                                });
                           }),
                         textOnCancel: "닫기",
                         textOnConfirm: "초기화",
@@ -1271,6 +1303,20 @@ function Add_Matching_Product_Form_Admin(Props) {
                         boxStyle: "text-center rounded-2xl"
                       }), React.createElement(Add_Matching_Product_Form_Admin$MatchingSuccessDialog, {
                         isShow: match$3[0]
+                      }), React.createElement(Dialog.make, {
+                        isShow: errStatus[0],
+                        children: React.createElement("div", undefined, React.createElement("p", undefined, "\"매칭 상품 생성에 실패하였습니다.\""), errMsg !== undefined ? errMsg : null),
+                        onCancel: (function (param) {
+                            setErrStatus(function (param) {
+                                  return [
+                                          /* Hide */1,
+                                          undefined
+                                        ];
+                                });
+                          }),
+                        textOnCancel: "확인",
+                        kindOfConfirm: /* Negative */1,
+                        boxStyle: "text-center rounded-2xl"
                       })),
               methods: methods
             });
@@ -1296,6 +1342,5 @@ export {
   MatchingSuccessDialog ,
   makeMatchingProductVariables ,
   make ,
-  
 }
 /* react Not a pure module */

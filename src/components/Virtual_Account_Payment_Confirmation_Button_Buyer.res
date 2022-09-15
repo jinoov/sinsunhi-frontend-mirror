@@ -37,7 +37,7 @@ module TitleAndCloseButton = {
     <div className=%twc("flex mb-5 md:mb-10 justify-between items-center")>
       <h3 className=%twc("font-bold text-xl")> {j`가상계좌 결제 확인`->React.string} </h3>
       <button onClick={_ => close()} className=%twc("cursor-pointer border-none")>
-        <IconClose height="1.5rem" width="1.5rem" fill="#262626" />
+        <IconClose height="24" width="24" fill="#262626" />
       </button>
     </div>
   }
@@ -200,7 +200,7 @@ let make = () => {
         {j``->React.string}
       </RadixUI.Dialog.Close>
       <span className=%twc("md:hidden")>
-        <Dialog.ButtonBox textOnCancel=`닫기` onCancel={_ => close()} />
+        <Dialog.ButtonBox textOnCancel={`닫기`} onCancel={_ => close()} />
       </span>
     </RadixUI.Dialog.Content>
   </RadixUI.Dialog.Root>

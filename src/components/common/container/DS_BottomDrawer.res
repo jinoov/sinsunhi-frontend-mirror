@@ -12,10 +12,12 @@ let useLockBodyScroll = isLock => {
         el->Dom.Element.setClassName("overflow-hidden")
         Some(() => el->Dom.Element.setClassName(""))
       }
+
     | (false, Some(el)) => {
         el->Dom.Element.setClassName("")
         None
       }
+
     | _ => None
     }
   }, [isLock])
@@ -56,7 +58,7 @@ module Header = {
     <header className=%twc("flex justify-between items-center")>
       <div className=%twc("m-4")> {children->Option.getWithDefault(React.null)} </div>
       <span onClick={_ => handleClose()} className=%twc("cursor-pointer p-4")>
-        <DS_Icon.Common.CloseLarge2 height="24" width="24" />
+        <IconClose width="24" height="24" />
       </span>
     </header>
   }
@@ -69,24 +71,34 @@ module Body = {
   }
 }
 
+type dimLocation =
+  | Body
+  | Declared
+
 module Root = {
   @react.component
-  let make = (~isShow, ~onClose, ~children, ~full=false) => {
+  let make = (~isShow, ~onClose, ~children, ~full=false, ~dimLocation=Declared) => {
     useLockBodyScroll(isShow)
     let showStyle = isShow->toStyle(%twc("bottom-0"), %twc("-bottom-full"))
 
-    <BottomDrawerContext.Provider value={onClose}>
-      <Overlay isShow={isShow} />
-      <div
-        ariaHidden={!isShow}
-        className={cx([
-          full ? "h-full" : "max-h-[85vh]",
-          %twc(
-            "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
-          ),
-        ])->showStyle}>
-        children
-      </div>
-    </BottomDrawerContext.Provider>
+    let content =
+      <BottomDrawerContext.Provider value={onClose}>
+        <Overlay isShow={isShow} />
+        <div
+          ariaHidden={!isShow}
+          className={cx([
+            full ? "h-full" : "max-h-[85vh]",
+            %twc(
+              "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
+            ),
+          ])->showStyle}>
+          children
+        </div>
+      </BottomDrawerContext.Provider>
+
+    switch dimLocation {
+    | Body => <RadixUI.Portal.Root> {content} </RadixUI.Portal.Root>
+    | Declared => content
+    }
   }
 }

@@ -3,26 +3,32 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as IconClose from "./svgs/IconClose.mjs";
 import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as DatePicker from "./DatePicker.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
+import * as Router from "next/router";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
 import Format from "date-fns/format";
 import * as ReactHookForm$1 from "react-hook-form";
 import AddDays from "date-fns/addDays";
 import AddHours from "date-fns/addHours";
+import * as SearchAddressEmbed from "./SearchAddressEmbed.mjs";
 import * as Web_Order_Buyer_Form from "./Web_Order_Buyer_Form.mjs";
+import * as ReactDialog from "@radix-ui/react-dialog";
 import * as ErrorMessage from "@hookform/error-message";
 import * as Web_Order_Util_Component from "./Web_Order_Util_Component.mjs";
 import * as FreightDeliveryCost_Table_Buyer from "./FreightDeliveryCost_Table_Buyer.mjs";
 
 function Web_Order_Inputs_Buyer$ReceiverNameInput(Props) {
+  var prefix = Props.prefix;
+  var formNames = Web_Order_Buyer_Form.names(prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(Web_Order_Buyer_Form.names.receiverName, {
+  var match$1 = match.register(formNames.receiverName, {
         required: true,
         maxLength: 50
       });
@@ -32,9 +38,11 @@ function Web_Order_Inputs_Buyer$ReceiverNameInput(Props) {
             }, React.createElement("label", {
                   className: "xl:w-1/4 block font-bold text-text-L1",
                   htmlFor: name
-                }, "이름"), React.createElement("div", undefined, React.createElement("input", {
+                }, "이름"), React.createElement("div", {
+                  className: "w-full xl:w-3/4"
+                }, React.createElement("input", {
                       ref: match$1.ref,
-                      className: "w-80 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg",
+                      className: "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg",
                       id: name,
                       name: name,
                       placeholder: "배송 받으실 분의 이름을 입력해주세요",
@@ -61,6 +69,8 @@ var ReceiverNameInput = {
 };
 
 function Web_Order_Inputs_Buyer$ReceiverPhoneInput(Props) {
+  var prefix = Props.prefix;
+  var formNames = Web_Order_Buyer_Form.names(prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -72,19 +82,21 @@ function Web_Order_Inputs_Buyer$ReceiverPhoneInput(Props) {
             ).replace("--", "-");
   };
   return React.createElement("div", {
-              className: "flex flex-col gap-2 xl:gap-0 xl:flex-row xl:items-baseline"
+              className: "flex flex-col gap-2 xl:gap-0 xl:max-w-full xl:flex-row text-text-L1 xl:items-baseline"
             }, React.createElement("label", {
-                  className: "xl:w-1/4 block font-bold text-text-L1",
-                  htmlFor: Web_Order_Buyer_Form.names.receiverPhone
-                }, "연락처"), React.createElement("div", undefined, React.createElement(ReactHookForm$1.Controller, {
-                      name: Web_Order_Buyer_Form.names.receiverPhone,
+                  className: "xl:w-1/4 block font-bold",
+                  htmlFor: formNames.receiverPhone
+                }, "연락처"), React.createElement("div", {
+                  className: "w-full xl:w-3/4"
+                }, React.createElement(ReactHookForm$1.Controller, {
+                      name: formNames.receiverPhone,
                       control: match.control,
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
                           return React.createElement(React.Fragment, undefined, React.createElement("input", {
                                           ref: match.ref,
-                                          className: "w-80 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg",
+                                          className: "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg",
                                           placeholder: "배송 받으실 분의 연락처를 입력해주세요",
                                           value: Belt_Option.getWithDefault(Js_json.decodeString(match.value), ""),
                                           onChange: (function (param) {
@@ -115,115 +127,175 @@ var ReceiverPhoneInput = {
 };
 
 function Web_Order_Inputs_Buyer$ReceiverAddressInput(Props) {
-  var match = ReactHookForm$1.useFormContext({
+  var prefix = Props.prefix;
+  var deviceType = Props.deviceType;
+  var router = Router.useRouter();
+  var match = React.useState(function () {
+        return false;
+      });
+  var setShowSearchAddress = match[1];
+  var isShowSearchAddress = match[0];
+  var formNames = Web_Order_Buyer_Form.names(prefix);
+  var match$1 = ReactHookForm$1.useFormContext({
         mode: "all"
       }, undefined);
-  var register = match.register;
-  var setValue = match.setValue;
-  var errors = match.formState.errors;
-  var zipcodeRegister = register(Web_Order_Buyer_Form.names.receiverZipCode, {
+  var register = match$1.register;
+  var setValue = match$1.setValue;
+  var errors = match$1.formState.errors;
+  var zipcodeRegister = register(formNames.receiverZipCode, {
         required: true
       });
-  var addressRegister = register(Web_Order_Buyer_Form.names.receiverAddress, undefined);
-  var detailAdressRegister = register(Web_Order_Buyer_Form.names.receiverDetailAddress, {
+  var addressRegister = register(formNames.receiverAddress, undefined);
+  var detailAdressRegister = register(formNames.receiverDetailAddress, {
         required: true,
         maxLength: 50
       });
   var handleOnClickSearchAddress = function (changeFn) {
     return function (param) {
       return ReactEvents.interceptingHandler((function (param) {
+                    if (deviceType !== 1) {
+                      if (!router.asPath.includes("#search-address-opened")) {
+                        router.push("" + router.asPath + "#search-address-opened");
+                      }
+                      return setShowSearchAddress(function (param) {
+                                  return true;
+                                });
+                    }
                     var option = {
                       oncomplete: (function (data) {
                           Curry._1(changeFn, Curry._1(ReactHookForm.Controller.OnChangeArg.value, data.zonecode));
-                          return setValue(Web_Order_Buyer_Form.names.receiverAddress, data.address);
+                          setValue(formNames.receiverAddress, data.address);
                         })
                     };
                     var daumPostCode = new (daum.Postcode)(option);
                     var openOption = {
-                      popupName: "\xec\x9a\xb0\xed\x8e\xb8\xeb\xb2\x88\xed\x98\xb8 \xea\xb2\x80\xec\x83\x89"
+                      popupName: "우편번호 검색"
                     };
                     daumPostCode.open(openOption);
-                    
                   }), param);
     };
   };
-  return React.createElement("div", {
-              className: "flex flex-col gap-2 xl:flex-row xl:gap-0 xl:items-baseline"
-            }, React.createElement("label", {
-                  className: "block font-bold text-text-L1 xl:w-1/4"
-                }, "주소"), React.createElement("div", {
-                  className: "flex flex-col gap-2 w-full xl:w-3/4 max-w-[320px] xl:max-w-full"
-                }, React.createElement("div", {
-                      className: "flex flex-col gap-1"
-                    }, React.createElement(ReactHookForm$1.Controller, {
-                          name: zipcodeRegister.name,
-                          control: match.control,
+  React.useEffect((function () {
+          if (!router.asPath.includes("#search-address-opened") && isShowSearchAddress) {
+            setShowSearchAddress(function (param) {
+                  return false;
+                });
+          }
+          
+        }), [router.asPath]);
+  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+                  className: "flex flex-col gap-2 xl:flex-row xl:gap-0 xl:items-baseline"
+                }, React.createElement("label", {
+                      className: "block font-bold text-text-L1 xl:w-1/4"
+                    }, "주소"), React.createElement("div", {
+                      className: "flex flex-col gap-2 w-full xl:w-3/4"
+                    }, React.createElement("div", {
+                          className: "flex flex-col gap-1"
+                        }, React.createElement(ReactHookForm$1.Controller, {
+                              name: zipcodeRegister.name,
+                              control: match$1.control,
+                              render: (function (param) {
+                                  var match = param.field;
+                                  var onChange = match.onChange;
+                                  var name = match.name;
+                                  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+                                                  className: "flex gap-1"
+                                                }, React.createElement("input", {
+                                                      ref: match.ref,
+                                                      className: "w-full xl:w-40 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1",
+                                                      id: name,
+                                                      name: name,
+                                                      placeholder: "우편번호",
+                                                      readOnly: true,
+                                                      value: Belt_Option.getWithDefault(Js_json.decodeString(match.value), ""),
+                                                      onBlur: zipcodeRegister.onBlur
+                                                    }), React.createElement("button", {
+                                                      className: "px-3 min-w-max py-1.5 h-13 xl:h-9 text-white bg-blue-gray-700 rounded-lg",
+                                                      type: "button",
+                                                      onClick: handleOnClickSearchAddress(onChange)
+                                                    }, "주소검색")), React.createElement(ErrorMessage.ErrorMessage, {
+                                                  name: formNames.receiverZipCode,
+                                                  errors: errors,
+                                                  render: (function (param) {
+                                                      return React.createElement("span", {
+                                                                  className: "flex"
+                                                                }, React.createElement(IconError.make, {
+                                                                      width: "20",
+                                                                      height: "20"
+                                                                    }), React.createElement("span", {
+                                                                      className: "text-sm text-notice ml-1"
+                                                                    }, "'주소검색'을 통해 우편번호를 입력해주세요"));
+                                                    })
+                                                }), React.createElement(ReactDialog.Root, {
+                                                  children: null,
+                                                  open: isShowSearchAddress
+                                                }, React.createElement(ReactDialog.Overlay, {
+                                                      className: "dialog-overlay"
+                                                    }), React.createElement(ReactDialog.Content, {
+                                                      children: null,
+                                                      className: "dialog-content-plain top-0 bottom-0 left-0 right-0"
+                                                    }, React.createElement("section", {
+                                                          className: "h-14 w-full xl:h-auto xl:w-auto xl:mt-10"
+                                                        }, React.createElement("div", {
+                                                              className: "flex items-center justify-between px-5 w-full py-4 xl:h-14 xl:w-full xl:pb-10"
+                                                            }, React.createElement("div", {
+                                                                  className: "w-6 xl:hidden"
+                                                                }), React.createElement("div", undefined, React.createElement("span", {
+                                                                      className: "font-bold xl:text-2xl"
+                                                                    }, "주소 검색")), React.createElement(ReactDialog.Close, {
+                                                                  onClick: (function (param) {
+                                                                      router.back();
+                                                                    }),
+                                                                  children: React.createElement(IconClose.make, {
+                                                                        height: "24",
+                                                                        width: "24",
+                                                                        fill: "#262626"
+                                                                      }),
+                                                                  className: "focus:outline-none"
+                                                                }))), React.createElement(SearchAddressEmbed.make, {
+                                                          onComplete: (function (param) {
+                                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, param.zonecode));
+                                                              setValue(formNames.receiverAddress, param.address);
+                                                              return setShowSearchAddress(function (param) {
+                                                                          return false;
+                                                                        });
+                                                            }),
+                                                          isShow: true
+                                                        }))));
+                                }),
+                              defaultValue: "",
+                              rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                            })), React.createElement("input", {
+                          ref: addressRegister.ref,
+                          className: "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1",
+                          id: addressRegister.name,
+                          name: addressRegister.name,
+                          placeholder: "우편번호 찾기를 통해 주소입력이 가능합니다.",
+                          readOnly: true,
+                          onBlur: addressRegister.onBlur,
+                          onChange: addressRegister.onChange
+                        }), React.createElement("input", {
+                          ref: detailAdressRegister.ref,
+                          className: "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg ",
+                          id: detailAdressRegister.name,
+                          name: detailAdressRegister.name,
+                          placeholder: "상세주소를 입력해주세요.",
+                          onBlur: detailAdressRegister.onBlur,
+                          onChange: detailAdressRegister.onChange
+                        }), React.createElement(ErrorMessage.ErrorMessage, {
+                          name: detailAdressRegister.name,
+                          errors: errors,
                           render: (function (param) {
-                              var match = param.field;
-                              var name = match.name;
-                              return React.createElement(React.Fragment, undefined, React.createElement("div", {
-                                              className: "flex gap-1"
-                                            }, React.createElement("input", {
-                                                  ref: match.ref,
-                                                  className: "w-full xl:w-40 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1",
-                                                  id: name,
-                                                  name: name,
-                                                  placeholder: "우편번호",
-                                                  readOnly: true,
-                                                  value: Belt_Option.getWithDefault(Js_json.decodeString(match.value), ""),
-                                                  onBlur: zipcodeRegister.onBlur
-                                                }), React.createElement("button", {
-                                                  className: "px-3 min-w-max py-1.5 h-13 xl:h-9 text-white bg-blue-gray-700 rounded-lg",
-                                                  type: "button",
-                                                  onClick: handleOnClickSearchAddress(match.onChange)
-                                                }, "주소검색")), React.createElement(ErrorMessage.ErrorMessage, {
-                                              name: Web_Order_Buyer_Form.names.receiverZipCode,
-                                              errors: errors,
-                                              render: (function (param) {
-                                                  return React.createElement("span", {
-                                                              className: "flex"
-                                                            }, React.createElement(IconError.make, {
-                                                                  width: "20",
-                                                                  height: "20"
-                                                                }), React.createElement("span", {
-                                                                  className: "text-sm text-notice ml-1"
-                                                                }, "'주소검색'을 통해 우편번호를 입력해주세요"));
-                                                })
-                                            }));
-                            }),
-                          defaultValue: "",
-                          rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
-                        })), React.createElement("input", {
-                      ref: addressRegister.ref,
-                      className: "w-full xl:w-3/4 xl:min-w-[20rem] h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1",
-                      id: addressRegister.name,
-                      name: addressRegister.name,
-                      placeholder: "우편번호 찾기를 통해 주소입력이 가능합니다.",
-                      readOnly: true,
-                      onBlur: addressRegister.onBlur,
-                      onChange: addressRegister.onChange
-                    }), React.createElement("input", {
-                      ref: detailAdressRegister.ref,
-                      className: "w-full xl:w-3/4 xl:min-w-[20rem] h-13 xl:h-9 px-3 border border-gray-300 rounded-lg ",
-                      id: detailAdressRegister.name,
-                      name: detailAdressRegister.name,
-                      placeholder: "상세주소를 입력해주세요.",
-                      onBlur: detailAdressRegister.onBlur,
-                      onChange: detailAdressRegister.onChange
-                    }), React.createElement(ErrorMessage.ErrorMessage, {
-                      name: detailAdressRegister.name,
-                      errors: errors,
-                      render: (function (param) {
-                          return React.createElement("span", {
-                                      className: "flex mt-1"
-                                    }, React.createElement(IconError.make, {
-                                          width: "20",
-                                          height: "20"
-                                        }), React.createElement("span", {
-                                          className: "text-sm text-notice ml-1"
-                                        }, "상세주소를 입력해주세요"));
-                        })
-                    })));
+                              return React.createElement("span", {
+                                          className: "flex mt-1"
+                                        }, React.createElement(IconError.make, {
+                                              width: "20",
+                                              height: "20"
+                                            }), React.createElement("span", {
+                                              className: "text-sm text-notice ml-1"
+                                            }, "상세주소를 입력해주세요"));
+                            })
+                        }))));
 }
 
 var ReceiverAddressInput = {
@@ -231,30 +303,32 @@ var ReceiverAddressInput = {
 };
 
 function Web_Order_Inputs_Buyer$DeliveryMessageInput(Props) {
+  var prefix = Props.prefix;
   var selfModeOpt = Props.selfMode;
   var selfMode = selfModeOpt !== undefined ? selfModeOpt : false;
+  var formNames = Web_Order_Buyer_Form.names(prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(Web_Order_Buyer_Form.names.deliveryMessage, {
+  var match$1 = match.register(formNames.deliveryMessage, {
         maxLength: 100
       });
   var name = match$1.name;
   return React.createElement("div", {
-              className: "flex flex-col gap-2 xl:gap-0 max-w-[320px] xl:max-w-full xl:flex-row text-text-L1 xl:items-baseline"
+              className: "flex flex-col gap-2 xl:gap-0 xl:max-w-full xl:flex-row text-text-L1 xl:items-baseline"
             }, React.createElement("label", {
                   className: "xl:w-1/4 block font-bold",
                   htmlFor: name
-                }, (
+                }, "" + (
                   selfMode ? "수령시" : "배송"
                 ) + " 요청사항"), React.createElement("div", {
                   className: "w-full xl:w-3/4"
                 }, React.createElement("input", {
                       ref: match$1.ref,
-                      className: "w-full xl:w-3/4 xl:min-w-[20rem] h-13 xl:h-9 px-3 border border-gray-300 rounded-lg",
+                      className: "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg",
                       id: name,
                       name: name,
-                      placeholder: (
+                      placeholder: "" + (
                         selfMode ? "수령" : "배송"
                       ) + "시 요청사항을 입력해주세요 (최대 100자)",
                       onBlur: match$1.onBlur,
@@ -280,8 +354,10 @@ var DeliveryMessageInput = {
 };
 
 function Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection(Props) {
+  var prefix = Props.prefix;
   var selfModeOpt = Props.selfMode;
   var selfMode = selfModeOpt !== undefined ? selfModeOpt : false;
+  var formNames = Web_Order_Buyer_Form.names(prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -291,17 +367,17 @@ function Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection(Props) {
       match$1 !== 6 ? t : AddDays(t, 2)
     ) : AddDays(t, 1);
   return React.createElement("div", {
-              className: "flex flex-col xl:flex-row gap-2 xl:gap-0 w-80 xl:w-full xl:items-baseline"
+              className: "flex flex-col xl:flex-row gap-2 xl:gap-0 xl:w-full xl:items-baseline"
             }, React.createElement("label", {
                   className: "xl:w-1/4 block font-bold"
-                }, (
+                }, "" + (
                   selfMode ? "수령" : "배송"
                 ) + " 희망일"), React.createElement("div", {
-                  className: "flex flex-col gap-1 xl:w-3/4"
+                  className: "flex flex-col gap-1 w-full xl:w-3/4"
                 }, React.createElement("div", {
                       className: "flex gap-2"
                     }, React.createElement(ReactHookForm$1.Controller, {
-                          name: Web_Order_Buyer_Form.names.deliveryDesiredDate,
+                          name: formNames.deliveryDesiredDate,
                           control: match.control,
                           render: (function (param) {
                               var onChange = param.field.onChange;
@@ -337,10 +413,13 @@ var DeliveryDesiredDateSelection = {
 };
 
 function Web_Order_Inputs_Buyer$PaymentMethodSelection(Props) {
+  var prefix = Props.prefix;
+  var deviceType = Props.deviceType;
+  var formNames = Web_Order_Buyer_Form.names(prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(Web_Order_Buyer_Form.names.paymentMethod, {
+  var match$1 = match.register(formNames.paymentMethod, {
         required: true
       });
   var name = match$1.name;
@@ -348,7 +427,7 @@ function Web_Order_Inputs_Buyer$PaymentMethodSelection(Props) {
   var onBlur = match$1.onBlur;
   var onChange = match$1.onChange;
   var watchValue = ReactHookForm$1.useWatch({
-        name: Web_Order_Buyer_Form.names.paymentMethod
+        name: formNames.paymentMethod
       });
   return React.createElement("section", {
               className: "flex flex-col gap-5 bg-white text-enabled-L1"
@@ -383,7 +462,8 @@ function Web_Order_Inputs_Buyer$PaymentMethodSelection(Props) {
                                       }), React.createElement(Web_Order_Util_Component.RadioButton.make, {
                                         watchValue: watchValue,
                                         name: n,
-                                        value: value
+                                        value: value,
+                                        deviceType: deviceType
                                       }));
                       }))), React.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
@@ -415,6 +495,5 @@ export {
   DeliveryMessageInput ,
   DeliveryDesiredDateSelection ,
   PaymentMethodSelection ,
-  
 }
 /* react Not a pure module */

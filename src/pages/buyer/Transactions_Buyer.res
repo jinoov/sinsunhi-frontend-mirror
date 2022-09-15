@@ -58,7 +58,7 @@ module Summary = {
             buttonClassName=%twc(
               "px-3 mt-2 lg:mt-0 h-9 max-w-fit rounded-lg text-white whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-150 focus:ring-offset-1 bg-primary"
             )
-            buttonText=j`결제하기`
+            buttonText={j`결제하기`}
           />
         </span>
       </div>
@@ -72,9 +72,8 @@ module List = {
     switch status {
     | Error(error) => <ErrorPanel error />
     | Loading => <div> {j`로딩 중..`->React.string} </div>
-    | Loaded(
-        transactions,
-      ) => // 1024px 이하에서는 PC뷰의 레이아웃이 사용성을 해칠 수 밖에 없다고 판단되어
+    | Loaded(transactions) =>
+      // 1024px 이하에서는 PC뷰의 레이아웃이 사용성을 해칠 수 밖에 없다고 판단되어
       // breakpoint lg(1024px)을 기준으로 구분한다.
 
       <>
@@ -280,10 +279,12 @@ module Transactions = {
                           ~revalidation=Some(true),
                         )
                       }
+
                     | #Error(error) => {
                         closeEventKCP()
                         handleError(~message=error.message->Option.getWithDefault(""), ())
                       }
+
                     | _ => {
                         closeEventKCP()
                         handleError(~message="", ())
@@ -348,39 +349,6 @@ module Transactions = {
           <List status />
         </div>
       </div>
-      <form id="order_info" name="order_info" method="post" action="">
-        // KCP 결제를 처리할 숨겨진 주문정보 form
-        // 우리 API에 주문을 생성을 요청하고 응답 데이터로 채울 input들
-        <input type_="hidden" id="ordr_idxx" name="ordr_idxx" value="TEST12345" maxLength=40 />
-        <input type_="hidden" id="good_name" name="good_name" value=`신선하이` />
-        <input type_="hidden" id="good_mny" name="good_mny" value="0" maxLength=12 />
-        <input type_="hidden" id="currency" name="currency" value="0" maxLength=9 />
-        <input type_="hidden" id="shop_user_id" name="shop_user_id" value="" />
-        <input type_="hidden" id="buyr_name" name="buyr_name" value="" />
-        <input type_="hidden" name="quotaopt" value="0" /> // 최대 할부 개월수
-        // Optional 파라미터들
-        // <input type_="hidden" id="buyr_tel1" name="buyr_tel1" value="02-0000-0000" />
-        // <input type_="hidden" id="buyr_tel2" name="buyr_tel2" value="010-0000-0000" />
-        // <input type_="hidden" id="buyr_mail" name="buyr_mail" value="test@test.co.kr" />
-        // 신용카드 + 가상계좌
-        // 신용카드 : 100000000000
-        // 가상계좌 : 001000000000
-        // 신용카드 + 가상계좌를 모두 표시하는 경우 101000000000
-        <input type_="hidden" id="pay_method" name="pay_method" value="101000000000" />
-        // 신선하이 KCP 정보
-        <input type_="hidden" id="site_cd" name="site_cd" value="T0000" />
-        <input type_="hidden" id="site_name" name="site_name" value="Sinsun Market" />
-        <input type_="hidden" id="site_key" name="site_key" value="" />
-        <input type_="hidden" id="site_logo" name="site_logo" value=Env.logo150x50 />
-        // KCP의 GetField 함수가 데이터를 채울 input들
-        <input type_="hidden" id="res_cd" name="res_cd" value="" />
-        <input type_="hidden" id="res_msg" name="res_msg" value="" />
-        <input type_="hidden" id="enc_info" name="enc_info" value="" />
-        <input type_="hidden" id="enc_data" name="enc_data" value="" />
-        <input type_="hidden" id="ret_pay_method" name="ret_pay_method" value="" />
-        <input type_="hidden" id="tran_cd" name="tran_cd" value="" />
-        <input type_="hidden" id="use_pay_method" name="use_pay_method" value="" />
-      </form>
       <Dialog
         isShow=isShowErrorForDownload onConfirm={_ => setShowErrorForDownload(._ => Dialog.Hide)}>
         <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
@@ -393,7 +361,7 @@ module Transactions = {
 
 @react.component
 let make = () =>
-  <Authorization.Buyer title=j`결제내역`>
+  <Authorization.Buyer title={j`결제내역`}>
     <RescriptReactErrorBoundary fallback={_ => <div> {`에러 발생`->React.string} </div>}>
       <React.Suspense fallback={<div> {j`로딩중..`->React.string} </div>}>
         <Transactions />

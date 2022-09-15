@@ -6,42 +6,56 @@
   {인증}/{유저 롤} 등을 고려한 구매 신청하기 버튼을 제공합니다.
 */
 
-module MO = {
-  module CTAContainer = {
-    @react.component
-    let make = (~children=?) => {
-      <div className=%twc("fixed w-full bottom-0 left-0")>
-        <div className=%twc("w-full max-w-[768px] p-3 mx-auto border-t border-t-gray-100 bg-white")>
-          <div className=%twc("w-full h-14 flex")>
-            <button onClick={_ => ChannelTalk.showMessenger()}>
-              <img
-                src="/icons/cs-gray-square.png"
-                className=%twc("w-14 h-14 mr-2")
-                alt="cta-cs-btn-mobile"
-              />
-            </button>
-            {children->Option.getWithDefault(React.null)}
-          </div>
-        </div>
-      </div>
+module Fragment = %relay(`
+  fragment PDPMatchingSubmitBuyer_fragment on MatchingProduct {
+    productId: number
+    displayName
+    category {
+      fullyQualifiedName {
+        name
+      }
     }
   }
+`)
 
+module RequestQuotationGtm = {
+  let make = (
+    ~displayName,
+    ~productId,
+    ~category: PDPMatchingSubmitBuyer_fragment_graphql.Types.fragment_category,
+  ) => {
+    let categoryNames = category.fullyQualifiedName->Array.map(({name}) => name)
+    {
+      "event": "request_quotation", // 이벤트 타입: 견적 버튼 클릭 시
+      "click_rfq_btn": {
+        "item_type": `견적`, // 상품 유형
+        "item_id": productId->Int.toString, // 상품 코드
+        "item_name": displayName, // 상품명
+        "item_category": categoryNames->Array.get(0)->Js.Nullable.fromOption, // 표준 카테고리 Depth 1
+        "item_category2": categoryNames->Array.get(1)->Js.Nullable.fromOption, // 표준 카테고리 Depth 2
+        "item_category3": categoryNames->Array.get(2)->Js.Nullable.fromOption, // 표준 카테고리 Depth 3
+        "item_category4": categoryNames->Array.get(3)->Js.Nullable.fromOption, // 표준 카테고리 Depth 4
+        "item_category5": categoryNames->Array.get(4)->Js.Nullable.fromOption, // 표준 카테고리 Depth 5
+      },
+    }
+  }
+}
+
+module MO = {
   @react.component
-  let make = (~setShowModal, ~selectedGroup) => {
+  let make = (~setShowModal, ~selectedGroup, ~query) => {
     let buttonText = `최저가 견적받기`
 
     let {useRouter, pushObj} = module(Next.Router)
     let router = useRouter()
-    let pid = router.query->Js.Dict.get("pid")
-
     let user = CustomHooks.User.Buyer.use2()
 
-    let btnStyle = %twc("h-14 w-full rounded-xl bg-primary text-white text-lg font-bold")
+    let {productId, displayName, category} = query->Fragment.use
 
+    let btnStyle = %twc("h-14 w-full rounded-xl bg-primary text-white text-lg font-bold")
     let disabledStyle = %twc("h-14 w-full rounded-xl bg-disabled-L2 text-white text-lg font-bold")
 
-    <CTAContainer>
+    <PDP_CTA_Container_Buyer>
       {switch user {
       | Unknown =>
         <button disabled=true className=disabledStyle> {buttonText->React.string} </button>
@@ -66,21 +80,19 @@ module MO = {
 
         // 바이어
         | Buyer =>
-          <button
-            className=btnStyle
-            onClick={_ =>
-              pid
-              ->Option.map(pid' => {
-                router->pushObj({
-                  pathname: `/buyer/tradematch/ask-to-buy/apply/${pid'}`,
-                  query: Js.Dict.fromArray([("grade", selectedGroup)]),
-                })
-              })
-              ->ignore}>
-            {buttonText->React.string}
-          </button>
+          let onClick = _ => {
+            RequestQuotationGtm.make(~productId, ~displayName, ~category)
+            ->DataGtm.mergeUserIdUnsafe
+            ->DataGtm.push
+
+            router->pushObj({
+              pathname: `/buyer/tradematch/buy/products/${productId->Int.toString}/apply`,
+              query: Js.Dict.fromArray([("grade", selectedGroup)]),
+            })
+          }
+          <button className=btnStyle onClick> {buttonText->React.string} </button>
         }
       }}
-    </CTAContainer>
+    </PDP_CTA_Container_Buyer>
   }
 }

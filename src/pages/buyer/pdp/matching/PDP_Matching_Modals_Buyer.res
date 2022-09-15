@@ -9,38 +9,66 @@
 type contentType =
   | Unauthorized(string) // 미인증
   | GradeGuide // 등급 안내
+  | ServiceGuide // 서비스 안내
 
 type visible =
   | Show(contentType)
   | Hide
 
+module Scroll = {
+  @react.component
+  let make = (~children) => {
+    open RadixUI.ScrollArea
+    <Root className=%twc("h-screen flex flex-col overflow-hidden")>
+      <Viewport className=%twc("w-full h-full")> {children} </Viewport>
+      <Scrollbar>
+        <Thumb />
+      </Scrollbar>
+    </Root>
+  }
+}
+
+module ModalHeader = {
+  @react.component
+  let make = (~title, ~closeFn) => {
+    <section className=%twc("w-full h-14 flex items-center px-4")>
+      <div className=%twc("w-10 h-10") />
+      <div className=%twc("flex flex-1 items-center justify-center")>
+        <h1 className=%twc("font-bold text-black")> {title->React.string} </h1>
+      </div>
+      <button onClick=closeFn className=%twc("w-10 h-10 flex items-center justify-center ")>
+        <IconClose width="24" height="24" fill="#262626" />
+      </button>
+    </section>
+  }
+}
+
+module ServiceGuide = {
+  @react.component
+  let make = (~show, ~closeFn) => {
+    let _open = switch show {
+    | Show(ServiceGuide) => true
+    | _ => false
+    }
+
+    open RadixUI.Dialog
+    <Root _open>
+      <Portal>
+        <Overlay className=%twc("dialog-overlay") />
+        <Content
+          onPointerDownOutside=closeFn
+          className=%twc("dialog-content-base w-full max-w-[768px] min-h-screen")>
+          <Scroll>
+            <ModalHeader title={`신선하이 매칭 소개`} closeFn />
+            <PDP_Matching_ServiceGuide_Buyer.Content />
+          </Scroll>
+        </Content>
+      </Portal>
+    </Root>
+  }
+}
+
 module GradeGuide = {
-  module Scroll = {
-    @react.component
-    let make = (~children) => {
-      open RadixUI.ScrollArea
-      <Root className=%twc("h-screen flex flex-col overflow-hidden")>
-        <Viewport className=%twc("w-full h-full")> {children} </Viewport>
-        <Scrollbar> <Thumb /> </Scrollbar>
-      </Root>
-    }
-  }
-
-  module GredeGuideHeader = {
-    @react.component
-    let make = (~closeFn) => {
-      <section className=%twc("w-full h-14 flex items-center px-4")>
-        <div className=%twc("w-10 h-10") />
-        <div className=%twc("flex flex-1 items-center justify-center")>
-          <h1 className=%twc("font-bold text-black")> {`신선하이 등급`->React.string} </h1>
-        </div>
-        <button onClick=closeFn className=%twc("w-10 h-10 flex items-center justify-center ")>
-          <IconClose width="24" height="24" fill="#262626" />
-        </button>
-      </section>
-    }
-  }
-
   @react.component
   let make = (~show, ~closeFn, ~query) => {
     let _open = switch show {
@@ -52,8 +80,13 @@ module GradeGuide = {
     <Root _open>
       <Portal>
         <Overlay className=%twc("dialog-overlay") />
-        <Content className=%twc("dialog-content-base w-full max-w-[768px] min-h-screen")>
-          <Scroll> <GredeGuideHeader closeFn /> <PDP_Matching_GradeGuide_Buyer query /> </Scroll>
+        <Content
+          onPointerDownOutside=closeFn
+          className=%twc("dialog-content-base w-full max-w-[768px] min-h-screen")>
+          <Scroll>
+            <ModalHeader title={`신선하이 등급`} closeFn />
+            <PDP_Matching_GradeGuide_Buyer query />
+          </Scroll>
         </Content>
       </Portal>
     </Root>
@@ -73,11 +106,9 @@ module Unauthorized = {
 
     <ShopDialog_Buyer.Mo
       isShow
-      cancelText=`취소`
-      onCancel={_ => {
-        closeFn()
-      }}
-      confirmText=`로그인`
+      cancelText={`취소`}
+      onCancel={_ => closeFn()}
+      confirmText={`로그인`}
       onConfirm={_ => {
         let {makeWithDict, toString} = module(Webapi.Url.URLSearchParams)
         let redirectUrl = [("redirect", router.asPath)]->Js.Dict.fromArray->makeWithDict->toString
@@ -97,6 +128,10 @@ module MO = {
   @react.component
   let make = (~show, ~setShow, ~query) => {
     let closeFn = _ => setShow(._ => Hide)
-    <> <GradeGuide show closeFn query /> <Unauthorized show closeFn /> </>
+    <>
+      <Unauthorized show closeFn />
+      <GradeGuide show closeFn query />
+      <ServiceGuide show closeFn />
+    </>
   }
 }

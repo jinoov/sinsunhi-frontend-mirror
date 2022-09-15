@@ -1,46 +1,36 @@
 module Query = %relay(`
-  query WebOrderBuyerQuery($productNodeId: ID!, $productOptionNodeId: ID!) {
-    productNode: node(id: $productNodeId) {
-      ... on NormalProduct {
-        isCourierAvailable
-      }
-  
-      ... on QuotableProduct {
-        isCourierAvailable
+    query WebOrderBuyer_TempWosOrder_Query($tempWosOrderId: Int!) {
+      tempWosOrder(tempWosOrderId: $tempWosOrderId) {
+        data {
+          productOptions {
+            quantity
+            productId
+            stockSku
+            cartUpdatedAt
+          }
+        }
       }
     }
-    ...WebOrderProductInfoBuyerFragment
-      @arguments(
-        productNodeId: $productNodeId
-        productOptionNodeId: $productOptionNodeId
-      )
-    ...WebOrderPaymentInfoBuyerFragment
-      @arguments(productOptionNodeId: $productOptionNodeId)
-    ...WebOrderHiddenInputBuyerFragment
-      @arguments(
-        productNodeId: $productNodeId
-        productOptionNodeId: $productOptionNodeId
-      )
-    ...WebOrderDeliveryMethodSelectionBuyerFragment
-      @arguments(productNodeId: $productNodeId)
-  }
 `)
 
-module Mutation = %relay(`
-  mutation WebOrderBuyerMutation(
+module Mutation = {
+  module UpdateTempWosOrder = %relay(`
+  mutation WebOrderBuyer_UpdateTempWosOrder_Mutation(
     $orderUserId: Int!
     $paymentPurpose: String!
     $productOptions: [WosProductOptionInput!]!
     $totalDeliveryCost: Int!
     $totalOrderPrice: Int!
+    $tempOrderId: Int!
   ) {
-    createWosOrder(
+    updateTempWosOrder(
       input: {
         orderUserId: $orderUserId
         paymentPurpose: $paymentPurpose
         productOptions: $productOptions
         totalDeliveryCost: $totalDeliveryCost
         totalOrderPrice: $totalOrderPrice
+        tempOrderId: $tempOrderId
       }
     ) {
       ... on CreateWosOrderResult {
@@ -61,6 +51,87 @@ module Mutation = %relay(`
     }
   }
 `)
+  module RequestPayment = %relay(`
+  mutation WebOrderBuyer_RequestPayment_Mutation(
+    $paymentMethod: PaymentMethod!
+    $amount: Int!
+    $purpose: PaymentPurpose!
+  ) {
+    requestPayment(
+      input: { paymentMethod: $paymentMethod, amount: $amount, purpose: $purpose }
+    ) {
+      ... on RequestPaymentKCPResult {
+        siteCd
+        siteKey
+        siteName
+        ordrIdxx
+        currency
+        shopUserId
+        buyrName
+      }
+      ... on RequestPaymentTossPaymentsResult {
+        orderId
+        amount
+        clientKey
+        customerName
+        customerEmail
+        paymentId
+      }
+      ... on Error {
+        code
+        message
+      }
+    }
+  }
+`)
+}
+
+open ReactHookForm
+module Form = Web_Order_Buyer_Form
+module PlaceHolder = Web_Order_Item_Buyer.PlaceHolder
+
+let makeMutationVariable = (formData: Form.formData, tempOrderId) => {
+  let {productInfos} = formData
+  let totalOrderPrice = productInfos->Array.map(info => info.totalPrice)->Garter_Math.sum_int
+  let totalDeliveryCost =
+    productInfos
+    ->Array.map(info =>
+      info.productOptions->Array.map(({deliveryCost, quantity}) => deliveryCost * quantity)
+    )
+    ->Array.concatMany
+    ->Garter_Math.sum_int
+  Mutation.UpdateTempWosOrder.makeVariables(
+    ~orderUserId=formData.orderUserId,
+    ~paymentPurpose="ORDER",
+    ~totalDeliveryCost,
+    ~totalOrderPrice,
+    ~tempOrderId,
+    ~productOptions=productInfos
+    ->Array.map(info => info.productOptions)
+    ->Array.concatMany
+    ->Array.map(option => {
+      Mutation.UpdateTempWosOrder.make_wosProductOptionInput(
+        ~deliveryCost=option.deliveryCost,
+        ~deliveryDesiredDate=?formData.deliveryDesiredDate,
+        ~deliveryMessage=?formData.deliveryMessage,
+        ~deliveryType=formData.deliveryType,
+        ~isTaxFree=option.isTaxFree,
+        ~ordererName=formData.ordererName,
+        ~ordererPhone=formData.ordererPhone,
+        ~productId=option.productId,
+        ~receiverAddress={
+          formData.receiverAddress->Option.getWithDefault("") ++
+            formData.receiverDetailAddress->Option.mapWithDefault("", str => ` ${str}`)
+        },
+        ~receiverName=?formData.receiverName,
+        ~receiverPhone=?formData.receiverPhone,
+        ~receiverZipCode=?formData.receiverZipCode,
+        ~stockSku=option.stockSku,
+        (),
+      )
+    }),
+  )
+}
 
 module Dialog = {
   @react.component
@@ -75,10 +146,8 @@ module Dialog = {
           <span className=%twc("whitespace-pre text-center text-text-L1 pt-3")>
             {`화물배송의 경우 배송지에 따라
 추가배송비(화물비)가 후청구 됩니다.
-
 담당MD가 화물비를 알려드리기 위해
 별도로 연락을 드릴 예정입니다.
-
 위 사항이 확인되셨다면
 결제를 눌러 다음 단계를 진행해 주세요.`->React.string}
           </span>
@@ -107,91 +176,50 @@ external pathname: string = "pathname"
 @val @scope(("window", "location"))
 external search: string = "search"
 
-type cashReceipt = {"type": string}
-
-type tossRequest = {
-  amount: int,
-  orderId: string,
-  orderName: string,
-  customerName: string,
-  successUrl: string,
-  failUrl: string,
-  taxFreeAmount: int,
-  validHours: option<int>,
-  cashReceipt: option<cashReceipt>,
-}
-
-@val @scope(("window", "tossPayments"))
-external requestTossPayment: (. string, tossRequest) => unit = "requestPayment"
-
-open ReactHookForm
-module Form = Web_Order_Buyer_Form
-module PlaceHolder = Web_Order_Item_Buyer.PlaceHolder
-
-let makeProductOption = (d: Form.productOptions) => {
-  Mutation.make_wosProductOptionInput(
-    ~deliveryCost=?{d.deliveryCost},
-    ~deliveryDesiredDate=?{d.deliveryDesiredDate},
-    ~deliveryMessage=?{d.deliveryMessage},
-    ~deliveryType=d.deliveryType,
-    ~grade=?{d.grade},
-    ~isTaxFree=d.isTaxFree,
-    ~ordererName=d.ordererName,
-    ~ordererPhone=d.ordererPhone,
-    ~price=d.price,
-    ~productId=d.productId,
-    ~productName=d.productName,
-    ~productOptionName=d.productOptionName,
-    ~quantity=d.quantity,
-    ~receiverName=?{d.receiverName},
-    ~receiverPhone=?{d.receiverPhone},
-    ~receiverAddress={
-      d.receiverAddress->Option.getWithDefault("") ++
-        d.receiverDetailAddress->Option.mapWithDefault("", str => ` ${str}`)
-    },
-    ~receiverZipCode=?{d.receiverZipCode},
-    ~stockSku=d.stockSku,
-    (),
-  )
-}
-
-let paymentMethodToTossValue = c =>
-  switch c {
-  | #CREDIT_CARD => `카드`
-  | #VIRTUAL_ACCOUNT => `가상계좌`
-  | #TRANSFER => `계좌이체`
-  }
-
-let tossPaymentsValidHours = c =>
-  switch c {
-  | #VIRTUAL_ACCOUNT => Some(24)
-  | _ => None
-  }
-
-let tossPaymentsCashReceipt = c =>
-  switch c {
-  | #VIRTUAL_ACCOUNT => Some({"type": `미발행`})
-  | _ => None
-  }
-
 module Container = {
   @react.component
-  let make = (~productId, ~productOptionId, ~quantity) => {
-    let queryData = Query.use(
-      ~variables={
-        productNodeId: productId,
-        productOptionNodeId: productOptionId,
-      },
-      ~fetchPolicy=RescriptRelay.StoreAndNetwork,
-      (),
-    )
-    let (mutate, _) = Mutation.use()
+  let make = (~tempOrderId, ~deviceType) => {
+    let {tempWosOrder} = Query.use(~variables={tempWosOrderId: tempOrderId}, ())
 
-    let (requestPaymentMutate, _) = Web_Order_Item_Buyer.Mutation.use()
+    let skuNos =
+      tempWosOrder
+      ->Option.flatMap(t =>
+        t.data->Option.map(data' =>
+          data'.productOptions->Array.keepMap(option =>
+            option->Option.map(option' => option'.stockSku)
+          )
+        )
+      )
+      ->Option.getWithDefault([])
+      ->Set.String.fromArray
+
+    let productNos =
+      tempWosOrder->Option.flatMap(t =>
+        t.data->Option.map(data' =>
+          data'.productOptions->Array.keepMap(a => a->Option.flatMap(a' => a'.productId))
+        )
+      )
+
+    let skuMap =
+      tempWosOrder
+      ->Option.flatMap(t =>
+        t.data->Option.map(data' =>
+          data'.productOptions->Array.keepMap(a =>
+            a->Option.map(a' => (a'.stockSku, (a'.quantity, a'.cartUpdatedAt)))
+          )
+        )
+      )
+      ->Option.getWithDefault([])
+      ->Map.String.fromArray
+
+    let (updateTempWosOrderMutate, _) = Mutation.UpdateTempWosOrder.use()
+
+    let (requestPaymentMutate, _) = Mutation.RequestPayment.use()
     let (freightDialogShow, setFreightDialogShow) = React.Uncurried.useState(_ => false)
     let (confirmFn, setConfirmFn) = React.Uncurried.useState(_ => ignore)
 
     let {addToast} = ReactToastNotifications.useToasts()
+    let availableButton = ToggleOrderAndPayment.use()
 
     let handleOnCancel = ReactEvents.interceptingHandler(_ => {
       setFreightDialogShow(._ => false)
@@ -215,13 +243,7 @@ module Container = {
         ~defaultValues=[
           (
             Form.name,
-            switch queryData.productNode {
-            | Some(#NormalProduct({isCourierAvailable})) => [
-                ("payment-method", Js.Json.string("card")),
-                ("product-options", [Form.defaultValue(isCourierAvailable)]->Js.Json.array),
-              ]
-            | _ => [("web-order", Js.Json.null)]
-            }
+            [("payment-method", Js.Json.string("card")), Form.defaultValue(false)]
             ->Js.Dict.fromArray
             ->Js.Json.object_,
           ),
@@ -235,144 +257,188 @@ module Container = {
     let {handleSubmit} = methods
 
     let onSubmit = (data: Js.Json.t, _) => {
-      Js.log(data) // TODO: QA 시작전 지우기
-      switch data->Form.submit_decode {
-      | Ok({webOrder: data'}) =>
-        let confirm = () =>
-          {
-            setFreightDialogShow(._ => false)
-            // 토스 페이먼츠 결제 화면을 띄우기 직전에 화물배송확인 dialog를 닫는다
-            mutate(
-              ~variables={
-                orderUserId: data'.orderUserId,
-                paymentPurpose: data'.paymentPurpose,
-                productOptions: data'.productOptions->Array.map(makeProductOption),
-                totalDeliveryCost: data'.totalDeliveryCost,
-                totalOrderPrice: data'.totalOrderPrice,
-              },
-              ~onCompleted={
-                ({createWosOrder}, _) => {
-                  switch createWosOrder {
-                  | Some(result) =>
-                    switch result {
-                    | #CreateWosOrderResult({orderNo, tempOrderId}) =>
-                      let (orderName, isTaxFree) = switch data'.productOptions->Array.get(0) {
-                      | Some(option) => (option.productName, option.isTaxFree)
-                      | None => ("", false)
-                      }
-                      requestPaymentMutate(
-                        ~variables={
-                          paymentMethod: data'.paymentMethod,
-                          amount: data'.totalOrderPrice,
-                          purpose: #ORDER,
-                        },
-                        ~onCompleted={
-                          ({requestPayment}, _) => {
-                            switch requestPayment {
-                            | Some(result) =>
-                              switch result {
-                              | #RequestPaymentTossPaymentsResult(tossPaymentResult) =>
-                                requestTossPayment(.
-                                  data'.paymentMethod->paymentMethodToTossValue,
-                                  {
-                                    amount: data'.totalOrderPrice,
-                                    orderId: orderNo,
-                                    orderName: orderName,
-                                    taxFreeAmount: isTaxFree ? data'.totalOrderPrice : 0,
-                                    customerName: tossPaymentResult.customerName,
-                                    validHours: data'.paymentMethod->tossPaymentsValidHours,
-                                    successUrl: `${origin}/buyer/toss-payments/success?product-id=${productId}&product-option-id=${productOptionId}&quantity=${quantity->Int.toString}&payment-id=${tossPaymentResult.paymentId->Int.toString}&temp-order-id=${tempOrderId->Int.toString}`,
-                                    failUrl: `${origin}/buyer/toss-payments/fail?product-id=${productId}&product-option-id=${productOptionId}&quantity=${quantity->Int.toString}`,
-                                    cashReceipt: data'.paymentMethod->tossPaymentsCashReceipt,
-                                  },
-                                )
-                              | #Error(err) =>
-                                err.message->Option.forEach(message => handleError(~message, ()))
-                              | _ =>
+      switch availableButton {
+      | true =>
+        switch data->Form.submit_decode {
+        | Ok({webOrder: data'}) =>
+          let confirm = () =>
+            {
+              let {productInfos} = data'
+              setFreightDialogShow(._ => false)
+              // 토스 페이먼츠 결제 화면을 띄우기 직전에 화물배송확인 dialog를 닫는다
+              updateTempWosOrderMutate(
+                ~variables=makeMutationVariable(data', tempOrderId),
+                ~onCompleted={
+                  ({updateTempWosOrder}, _) => {
+                    switch updateTempWosOrder {
+                    | Some(result) =>
+                      switch result {
+                      | #CreateWosOrderResult({orderNo, tempOrderId}) =>
+                        let taxFreeAmount = Some(
+                          productInfos
+                          ->Array.map(info =>
+                            switch info.isTaxFree {
+                            | true => info.totalPrice
+                            | false => 0
+                            }
+                          )
+                          ->Garter_Math.sum_int,
+                        )
+
+                        let totalOrderPrice =
+                          productInfos->Array.map(info => info.totalPrice)->Garter_Math.sum_int
+
+                        requestPaymentMutate(
+                          ~variables={
+                            paymentMethod: data'.paymentMethod,
+                            amount: totalOrderPrice,
+                            purpose: #ORDER,
+                          },
+                          ~onCompleted={
+                            ({requestPayment}, _) => {
+                              switch requestPayment {
+                              | Some(result) =>
+                                switch result {
+                                | #RequestPaymentTossPaymentsResult(tossPaymentResult) => {
+                                    let productOptions =
+                                      productInfos
+                                      ->Array.map(info => info.productOptions)
+                                      ->Array.concatMany
+
+                                    let orderName = switch productOptions->Array.get(0) {
+                                    | None => `신선하이`
+                                    | Some(productOption) =>
+                                      productOption.productOptionName ++
+                                      switch productOptions->Array.length {
+                                      | num if num > 1 => ` 외 ${(num - 1)->Int.toString}건`
+                                      | _ => ""
+                                      }
+                                    }
+
+                                    Payments.requestTossPayment(.
+                                      data'.paymentMethod->Payments.methodToTossValue,
+                                      {
+                                        amount: totalOrderPrice,
+                                        orderId: orderNo,
+                                        orderName: orderName,
+                                        taxFreeAmount: taxFreeAmount,
+                                        customerName: tossPaymentResult.customerName,
+                                        validHours: data'.paymentMethod->Payments.tossPaymentsValidHours,
+                                        successUrl: `${origin}/buyer/toss-payments/success?payment-id=${tossPaymentResult.paymentId->Int.toString}&temp-order-id=${tempOrderId->Int.toString}`,
+                                        failUrl: `${origin}/buyer/toss-payments/fail?temp-order-id=${tempOrderId->Int.toString}`,
+                                        cashReceipt: data'.paymentMethod->Payments.tossPaymentsCashReceipt,
+                                        appScheme: Global.Window.ReactNativeWebView.tOpt->Option.map(
+                                          _ =>
+                                            Js.Global.encodeURIComponent(
+                                              `sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?payment-id=${tossPaymentResult.paymentId->Int.toString}&temp-order-id=${tempOrderId->Int.toString}`,
+                                            ),
+                                        ),
+                                      },
+                                    )
+                                  }
+                                | #Error(err) =>
+                                  err.message->Option.forEach(message => handleError(~message, ()))
+                                  Js.log(err)
+                                | _ =>
+                                  handleError(
+                                    ~message=`주문 생성에 실패하였습니다.`,
+                                    (),
+                                  )
+                                }
+                              | None =>
                                 handleError(~message=`주문 생성에 실패하였습니다.`, ())
                               }
-                            | None =>
-                              handleError(~message=`주문 생성에 실패하였습니다.`, ())
                             }
-                          }
-                        },
-                        ~onError={
-                          err => handleError(~message=err.message, ())
-                        },
-                        (),
-                      )->ignore
-                    | #WosError({code, _}) =>
-                      switch code {
-                      | #INVALID_DELIVERY =>
-                        handleError(~message=`유효하지 않은 배송 정보입니다.`, ())
-                      | #INVALID_ORDER =>
-                        handleError(~message=`유효하지 않은 주문 정보입니다.`, ())
-                      | #INVALID_PAYMENT_PURPOSE =>
-                        handleError(~message=`유효하지 않은 결제 목적입니다.`, ())
-                      | #INVALID_PRODUCT =>
-                        handleError(~message=`유효하지 않은 상품 정보입니다.`, ())
-                      | _ => handleError()
+                          },
+                          ~onError={
+                            err => handleError(~message=err.message, ())
+                          },
+                          (),
+                        )->ignore
+                      | #WosError({code, _}) =>
+                        switch code {
+                        | #INVALID_DELIVERY =>
+                          handleError(~message=`유효하지 않은 배송 정보입니다.`, ())
+                        | #INVALID_ORDER =>
+                          handleError(~message=`유효하지 않은 주문 정보입니다.`, ())
+                        | #INVALID_PAYMENT_PURPOSE =>
+                          handleError(~message=`유효하지 않은 결제 목적입니다.`, ())
+                        | #INVALID_PRODUCT =>
+                          handleError(~message=`유효하지 않은 상품 정보입니다.`, ())
+                        | _ => handleError()
+                        }
+                      | #Error(_)
+                      | _ =>
+                        handleError(~message=`주문 생성 에러`, ())
                       }
-                    | #Error(_)
-                    | _ =>
-                      handleError(~message=`주문 생성 에러`, ())
+                    | _ => handleError(~message=`주문 생성 요청 실패`, ())
                     }
-                  | _ => handleError(~message=`주문 생성 요청 실패`, ())
                   }
-                }
-              },
-              ~onError={
-                err => handleError(~message=err.message, ())
-              },
-              (),
-            )
-          }->ignore
+                },
+                ~onError={
+                  err => handleError(~message=err.message, ())
+                },
+                (),
+              )
+            }->ignore
 
-        switch data'.productOptions->Array.get(0) {
-        | Some({deliveryType}) =>
-          switch deliveryType {
+          switch data'.deliveryType {
           | #FREIGHT => {
               setConfirmFn(._ => confirm)
               setFreightDialogShow(._ => true)
             }
           | _ => confirm()
           }
-        | None => ()
-        }
 
-      | Error(msg) => {
-          Js.log(msg)
-          handleError(~message=msg.message, ())
+        | Error(msg) => {
+            Js.log(msg)
+            handleError(~message=msg.message, ())
+          }
         }
+      | false =>
+        Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
       }
     }
+
     <>
       <Dialog confirmFn cancel=handleOnCancel show=freightDialogShow />
       <ReactHookForm.Provider methods>
         <form onSubmit={handleSubmit(. onSubmit)}>
-          <Web_Order_Item_Buyer query={queryData.fragmentRefs} quantity />
+          {switch productNos {
+          | Some(productNos') =>
+            <Web_Order_Item_Buyer productNos=productNos' skuNos skuMap deviceType />
+          | None => <PlaceHolder deviceType />
+          }}
         </form>
       </ReactHookForm.Provider>
     </>
   }
 }
 
-@react.component
-let make = () => {
+type props = {deviceType: DeviceDetect.deviceType}
+type params
+type previewData
+
+let default = (~props) => {
+  let {deviceType} = props
+
   let router = Next.Router.useRouter()
-  let productId = router.query->Js.Dict.get("pid")
-  let productOptionId = router.query->Js.Dict.get("oid")
-  let quantity = router.query->Js.Dict.get("quantity")->Option.flatMap(Int.fromString)
+  let tid = router.query->Js.Dict.get("tid")->Option.flatMap(Int.fromString)
 
-  <Authorization.Buyer title=j`주문하기` fallback={<PlaceHolder />}>
+  <Authorization.Buyer title=j`주문하기` fallback={<PlaceHolder deviceType />}>
     <Next.Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
-    <React.Suspense fallback={<PlaceHolder />}>
-      {switch (productId, productOptionId, quantity) {
-      | (Some(pid), Some(oid), Some(q)) =>
-        <Container productId=pid productOptionId=oid quantity=q />
-
-      | _ => <PlaceHolder />
+    <React.Suspense fallback={<PlaceHolder deviceType />}>
+      {switch tid {
+      | Some(tempOrderId) => <Container tempOrderId deviceType />
+      | _ => <PlaceHolder deviceType />
       }}
     </React.Suspense>
   </Authorization.Buyer>
+}
+
+let getServerSideProps = (ctx: Next.GetServerSideProps.context<props, params, previewData>) => {
+  let deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req)
+  Js.Promise.resolve({
+    "props": {"deviceType": deviceType},
+  })
 }

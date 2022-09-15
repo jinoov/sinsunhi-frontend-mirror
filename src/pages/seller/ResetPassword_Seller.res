@@ -68,7 +68,7 @@ let make = () => {
     let phoneNumber =
       state.values
       ->VerifyPhoneNumberFormFields.get(VerifyPhoneNumberFormFields.PhoneNumber)
-      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\-", ~flags="g"), "")
+      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\\-", ~flags="g"), "")
 
     {"uid": phoneNumber}
     ->Js.Json.stringifyAny
@@ -99,7 +99,7 @@ let make = () => {
         [
           regExp(
             PhoneNumber,
-            ~matches="^\d{3}-\d{3,4}-\d{4}$",
+            ~matches="^\\d{3}-\\d{3,4}-\\d{4}$",
             ~error=`전화번호 형식이 맞지 않습니다.`,
           ),
         ]->Array.concatMany,
@@ -115,7 +115,7 @@ let make = () => {
     let phoneNumber =
       verifyPhoneNumberForm.values
       ->VerifyPhoneNumberFormFields.get(VerifyPhoneNumberFormFields.PhoneNumber)
-      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\-", ~flags="g"), "")
+      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\\-", ~flags="g"), "")
     let code = state.values->ResetPasswordFormFields.get(ResetPasswordFormFields.VerificationCode)
     let password = state.values->ResetPasswordFormFields.get(ResetPasswordFormFields.Password)
 
@@ -158,7 +158,7 @@ let make = () => {
           nonEmpty(VerificationCode, ~error=`인증번호를 입력해주세요.`),
           regExp(
             Password,
-            ~matches="^(?=.*\d)(?=.*[a-zA-Z]).{6,15}$",
+            ~matches="^(?=.*\\d)(?=.*[a-zA-Z]).{6,15}$",
             ~error=`비밀번호가 형식에 맞지 않습니다.`,
           ),
         ]->Array.concatMany,
@@ -175,6 +175,7 @@ let make = () => {
           resetPasswordForm.resetForm()
           setPasswordConfirm(._ => "")
         }
+
       | FailedRequestVerificationCode
       | BeforeRequestVerificationCode =>
         verifyPhoneNumberForm.submit()
@@ -264,6 +265,7 @@ let make = () => {
           setStatusRequestVerificationCode(._ => BeforeRequestVerificationCode)
           setStatusRequestReset(._ => BeforeRequestReset)
         }
+
       | _ => ()
       }
     | _ => ()
@@ -293,7 +295,9 @@ let make = () => {
       )>
       <div className=%twc("w-full flex-auto flex flex-col sm:justify-center items-center sm:pt-10")>
         <div className=%twc("hidden sm:block")>
-          <img src="/assets/sinsunhi-logo.svg" width="164" height="42" alt=`신선하이 로고` />
+          <img
+            src="/assets/sinsunhi-logo.svg" width="164" height="42" alt={`신선하이 로고`}
+          />
         </div>
         <div className="hidden text-gray-500 sm:block mt-2">
           <span> {`농축산물 생산자 `->React.string} </span>
@@ -318,7 +322,7 @@ let make = () => {
                 type_="text"
                 name="phone-number"
                 size=Input.Large
-                placeholder=`-없이 숫자로만 입력`
+                placeholder={`-없이 숫자로만 입력`}
                 value={verifyPhoneNumberForm.values->VerifyPhoneNumberFormFields.get(
                   VerifyPhoneNumberFormFields.PhoneNumber,
                 )}
@@ -351,7 +355,7 @@ let make = () => {
                 type_="number"
                 name="verify-number"
                 size=Input.Large
-                placeholder=`인증번호 6자리 숫자 입력`
+                placeholder={`인증번호 6자리 숫자 입력`}
                 value={resetPasswordForm.values->ResetPasswordFormFields.get(
                   ResetPasswordFormFields.VerificationCode,
                 )}
@@ -380,7 +384,7 @@ let make = () => {
                 type_="password"
                 name="password"
                 size=Input.Large
-                placeholder=`비밀번호 (영문, 숫자 조합 6~15자)`
+                placeholder={`비밀번호 (영문, 숫자 조합 6~15자)`}
                 value={resetPasswordForm.values->ResetPasswordFormFields.get(
                   ResetPasswordFormFields.Password,
                 )}
@@ -399,7 +403,7 @@ let make = () => {
                 value=passwordConfirm
                 onChange=handleOnChangePasswordConfirm
                 size=Input.Large
-                placeholder=`비밀번호 확인`
+                placeholder={`비밀번호 확인`}
                 error=None
                 disabled=isDisabledResetPasswordForm
               />
@@ -430,7 +434,7 @@ let make = () => {
     <Dialog
       isShow=isShowConfirmGoBack
       onConfirm={_ => goToSignIn()}
-      textOnConfirm=`그만하기`
+      textOnConfirm={`그만하기`}
       onCancel={_ => setShowConfirmGoBack(._ => Dialog.Hide)}
       kindOfConfirm=Dialog.Negative>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
@@ -440,12 +444,12 @@ let make = () => {
     <Dialog
       isShow=isShowSendingVerificationCodeError
       onCancel={_ => setShowSendingVerificationCodeError(._ => Dialog.Hide)}
-      textOnCancel=`확인`>
+      textOnCancel={`확인`}>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
         {`문자 전송이 실패했습니다.\n다시한번 시도해주세요.`->React.string}
       </p>
     </Dialog>
-    <Dialog isShow=isShowResetSuccess onConfirm={_ => goToSignIn()} textOnConfirm=`확인`>
+    <Dialog isShow=isShowResetSuccess onConfirm={_ => goToSignIn()} textOnConfirm={`확인`}>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
         {`비밀번호 재설정이\n완료되었습니다.`->React.string}
       </p>
@@ -453,7 +457,7 @@ let make = () => {
     <Dialog
       isShow=isShowResetError
       onConfirm={_ => setShowResetError(._ => Dialog.Hide)}
-      textOnConfirm=`확인`>
+      textOnConfirm={`확인`}>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
         {`비밀번호 재설정 요청이 실패하였습니다.\n다시 시도해주세요.`->React.string}
       </p>

@@ -23,11 +23,11 @@ module Fragment = %relay(`
     perSizeMax
     perSizeMin
     perSizeUnit
-    perWeightMax
-    perWeightMin
-    perWeightUnit
-    weight
-    weightUnit
+    perAmountMax
+    perAmountMin
+    perAmountUnit
+    amount
+    amountUnit
     status
     cutOffTime
     memo
@@ -35,26 +35,35 @@ module Fragment = %relay(`
     productOptionCost {
       isFreeShipping
     }
+    shippingUnitQuantity
     ...UpdateProductOptionAdminAutoGenNameFragment
   }
 `)
 
 module DecodeProductOption = {
-  let weightUnit = unit => {
+  let amountUnit = unit => {
+    open Select_Unit.AmountStatus
     switch unit {
-    | #G => Select_Unit.WeightStatus.G
-    | #KG => Select_Unit.WeightStatus.KG
-    | #T => Select_Unit.WeightStatus.T
-    | _ => Select_Unit.WeightStatus.G
+    | #G => G
+    | #KG => KG
+    | #T => T
+    | #ML => ML
+    | #L => L
+    | #EA => EA
+    | _ => G
     }
   }
 
-  let perWeightUnit = unit => {
+  let perAmountUnit = unit => {
+    open Select_Unit.AmountStatus
     switch unit {
-    | #G => Select_Unit.WeightStatus.G
-    | #KG => Select_Unit.WeightStatus.KG
-    | #T => Select_Unit.WeightStatus.T
-    | _ => Select_Unit.WeightStatus.G
+    | #G => G
+    | #KG => KG
+    | #T => T
+    | #ML => ML
+    | #L => L
+    | #EA => EA
+    | _ => G
     }
   }
 
@@ -69,12 +78,11 @@ module DecodeProductOption = {
 
   let status = statusFromApi => {
     switch statusFromApi {
-    | #SALE => Select_Product_Operation_Status.BaseStatus.SALE
-    | #SOLDOUT => Select_Product_Operation_Status.BaseStatus.SOLDOUT
-    | #NOSALE => Select_Product_Operation_Status.BaseStatus.NOSALE
-    | #HIDDEN_SALE => Select_Product_Operation_Status.BaseStatus.HIDDEN_SALE
-    | #RETIRE => Select_Product_Operation_Status.BaseStatus.RETIRE
-    | _ => Select_Product_Operation_Status.BaseStatus.SALE
+    | #SALE => Select_ProductOption_Operation_Status.BaseStatus.SALE
+    | #SOLDOUT => Select_ProductOption_Operation_Status.BaseStatus.SOLDOUT
+    | #NOSALE => Select_ProductOption_Operation_Status.BaseStatus.NOSALE
+    | #RETIRE => Select_ProductOption_Operation_Status.BaseStatus.RETIRE
+    | _ => Select_ProductOption_Operation_Status.BaseStatus.SALE
     }
   }
 
@@ -83,7 +91,6 @@ module DecodeProductOption = {
     | #SALE => "SALE"
     | #SOLDOUT => "SOLDOUT"
     | #NOSALE => "NOSALE"
-    | #HIDDEN_SALE => "HIDDEN_SALE"
     | #RETIRE => "RETIRE"
     | _ => "SALE"
     }
@@ -95,7 +102,7 @@ module DecodeProductOption = {
     ~perSizeMax: option<float>,
     ~perSizeMin: option<float>,
     ~perSizeUnit: option<Select_Unit.Size.status>,
-    ~perWeightUnit: option<Select_Unit.Weight.status>,
+    ~perAmountUnit: option<Select_Unit.Amount.status>,
   ) => {
     //입수 관련 값이 하나라도 있으면 입수 내용을 보여준다.
     switch (
@@ -104,7 +111,7 @@ module DecodeProductOption = {
       perSizeMax,
       perSizeMin,
       perSizeUnit,
-      perWeightUnit,
+      perAmountUnit,
     ) {
     | (None, None, None, None, None, None) => false
     | _ => true
@@ -117,11 +124,11 @@ module Each = {
   let make = (
     ~minNum: option<int>,
     ~maxNum: option<int>,
-    ~weight: option<float>,
-    ~weightUnit: option<Select_Unit.Weight.status>,
-    ~perWeightMin: option<float>,
-    ~perWeightMax: option<float>,
-    ~perWeightUnit: option<Select_Unit.Weight.status>,
+    ~amount: option<float>,
+    ~amountUnit: option<Select_Unit.Amount.status>,
+    ~perAmountMin: option<float>,
+    ~perAmountMax: option<float>,
+    ~perAmountUnit: option<Select_Unit.Amount.status>,
     ~minSize: option<float>,
     ~maxSize: option<float>,
     ~sizeUnit: option<Select_Unit.Size.status>,
@@ -133,8 +140,8 @@ module Each = {
           className=%twc(
             "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 leading-4.5"
           )>
-          {`${weight->Option.mapWithDefault("", Float.toString)}
-          ${weightUnit->Option.mapWithDefault("", Select_Unit.Weight.toString)}`->React.string}
+          {`${amount->Option.mapWithDefault("", Float.toString)}
+          ${amountUnit->Option.mapWithDefault("", Select_Unit.Amount.toString)}`->React.string}
         </div>
         <div>
           <div
@@ -161,18 +168,18 @@ module Each = {
             className=%twc(
               "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
             )>
-            {perWeightMin->Option.mapWithDefault("", Float.toString)->React.string}
+            {perAmountMin->Option.mapWithDefault("", Float.toString)->React.string}
           </div>
           <span> {`~`->React.string} </span>
           <div
             className=%twc(
               "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
             )>
-            {perWeightMax->Option.mapWithDefault("", Float.toString)->React.string}
+            {perAmountMax->Option.mapWithDefault("", Float.toString)->React.string}
           </div>
-          <Select_Unit.Weight
+          <Select_Unit.Amount
             disabled=true
-            status={perWeightUnit->Option.getWithDefault(Select_Unit.WeightStatus.G)}
+            status={perAmountUnit->Option.getWithDefault(Select_Unit.AmountStatus.G)}
             onChange={_ => ()}
           />
         </div>
@@ -211,11 +218,13 @@ module Form = {
   type submit = {
     id: string,
     name: option<string>,
-    @spice.key("operation-status") operationStatus: Select_Product_Operation_Status.Base.status,
+    @spice.key("operation-status")
+    operationStatus: Select_ProductOption_Operation_Status.Base.status,
     @spice.key("cut-off-time") cutOffTime: option<string>,
     @spice.key("memo") memo: option<string>,
     @spice.key("auto-generated-name") autoGenName: string,
     @spice.key("is-free-shipping") isFreeShipping: Select_Product_Shipping_Type.status,
+    @spice.key("shipping-unit-quantity") shippingUnitQuantity: int,
   }
 
   type inputNames = {
@@ -226,6 +235,7 @@ module Form = {
     memo: string,
     autoGenName: string,
     isFreeShipping: string,
+    shippingUnitQuantity: string,
   }
 
   let makeInputNames = prefix => {
@@ -236,6 +246,7 @@ module Form = {
     memo: `${prefix}.memo`,
     autoGenName: `${prefix}.auto-generated-name`,
     isFreeShipping: `${prefix}.is-free-shipping`,
+    shippingUnitQuantity: `${prefix}.shipping-unit-quantity`,
   }
 
   // 단품 수정 폼 정보를 이용하여 단품 생성 폼을 만든다
@@ -248,9 +259,9 @@ module Form = {
     ~perSizeMax,
     ~perSizeMin,
     ~perSizeUnit,
-    ~perWeightUnit,
-    ~weight,
-    ~weightUnit,
+    ~perAmountUnit,
+    ~amount,
+    ~amountUnit,
   ) => {
     let names = Add_ProductOption_Admin.Form.names
 
@@ -258,14 +269,14 @@ module Form = {
       (names.name, values.name->Option.mapWithDefault(Js.Json.null, Js.Json.string)),
       (names.grade, grade->Option.mapWithDefault(Js.Json.null, Js.Json.string)),
       (names.package, packageType->Option.mapWithDefault(Js.Json.null, Js.Json.string)),
-      (names.weight, weight->Option.mapWithDefault(Js.Json.null, Js.Json.number)),
+      (names.amount, amount->Option.mapWithDefault(Js.Json.null, Js.Json.number)),
       (
-        names.weightUnit,
-        weightUnit->Option.mapWithDefault(Js.Json.null, Select_Unit.Weight.status_encode),
+        names.amountUnit,
+        amountUnit->Option.mapWithDefault(Js.Json.null, Select_Unit.Amount.status_encode),
       ),
       (
         names.operationStatus,
-        values.operationStatus->Select_Product_Operation_Status.Base.status_encode,
+        values.operationStatus->Select_ProductOption_Operation_Status.Base.status_encode,
       ),
       (names.isFreeShipping, values.isFreeShipping->Select_Product_Shipping_Type.status_encode),
       (names.buyerPrice, Js.Json.null),
@@ -291,7 +302,7 @@ module Form = {
       ~perSizeMax,
       ~perSizeMin,
       ~perSizeUnit,
-      ~perWeightUnit,
+      ~perAmountUnit,
     ) {
     | true => {
         let names = Product_Option_Each_Admin.Form.names
@@ -302,10 +313,10 @@ module Form = {
             "each",
             [
               (
-                names.unitWeight,
-                perWeightUnit
-                ->Option.getWithDefault(Select_Unit.WeightStatus.KG)
-                ->Select_Unit.Weight.status_encode,
+                names.unitAmount,
+                perAmountUnit
+                ->Option.getWithDefault(Select_Unit.AmountStatus.KG)
+                ->Select_Unit.Amount.status_encode,
               ),
               (names.minSize, perSizeMin->Option.mapWithDefault(Js.Json.null, Js.Json.number)),
               (names.maxSize, perSizeMax->Option.mapWithDefault(Js.Json.null, Js.Json.number)),
@@ -333,6 +344,7 @@ module Form = {
           ),
         ]
       }
+
     | false => []
     }
 
@@ -370,7 +382,7 @@ module EditName = {
         %twc("px-3 py-2 border border-gray-300 rounded-lg h-9 w-1/3 max-w-sm"),
         disabledStyle,
       ])}
-      placeholder=`단품명 입력(커스텀)`
+      placeholder={`단품명 입력(커스텀)`}
       defaultValue
     />
   }
@@ -381,9 +393,9 @@ module ReadOnlyAutoGenName = {
   fragment UpdateProductOptionAdminAutoGenNameFragment on ProductOption {
     grade
     packageType
-    weight
-    weightUnit
-    perWeightUnit
+    amount
+    amountUnit
+    perAmountUnit
     countPerPackageMin
     countPerPackageMax
     perSizeMin
@@ -396,11 +408,11 @@ module ReadOnlyAutoGenName = {
     let {
       grade,
       packageType,
-      weight,
-      weightUnit,
+      amount,
+      amountUnit,
       countPerPackageMin,
       countPerPackageMax,
-      perWeightUnit,
+      perAmountUnit,
       perSizeUnit,
       perSizeMin,
       perSizeMax,
@@ -409,20 +421,20 @@ module ReadOnlyAutoGenName = {
     let {register} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
     let {ref, name} = register(. inputName, None)
 
-    let parsedWeightUnit = weightUnit->Option.map(DecodeProductOption.weightUnit)
-    let parsedPerWeightUnit = perWeightUnit->Option.map(DecodeProductOption.perWeightUnit)
+    let parsedAmountUnit = amountUnit->DecodeProductOption.amountUnit
+    let parsedPerAmountUnit = perAmountUnit->Option.map(DecodeProductOption.perAmountUnit)
     let parsedPerSizeUnit = perSizeUnit->Option.map(DecodeProductOption.perSizeUnit)
 
     let autoGenName = Add_ProductOption_Admin.makeAutoGeneratedName(
       ~grade,
       ~package={packageType},
-      ~weight={weight->Option.map(Float.toString)},
+      ~amount={Some(amount->Float.toString)},
       ~numMin={countPerPackageMin->Option.map(Int.toString)},
       ~numMax={countPerPackageMax->Option.map(Int.toString)},
       ~sizeMin={perSizeMin->Option.map(Float.toString)},
       ~sizeMax={perSizeMax->Option.map(Float.toString)},
-      ~weightUnit={parsedWeightUnit->Option.map(Select_Unit.Weight.toString)},
-      ~perWeightUnit={parsedPerWeightUnit->Option.map(Select_Unit.Weight.toString)},
+      ~amountUnit={Some(parsedAmountUnit->Select_Unit.Amount.toString)},
+      ~perAmountUnit={parsedPerAmountUnit->Option.map(Select_Unit.Amount.toString)},
       ~sizeUnit={parsedPerSizeUnit->Option.map(Select_Unit.Size.toString)},
       ~showEach={true},
       (),
@@ -437,7 +449,7 @@ module ReadOnlyAutoGenName = {
       name
       defaultValue=autoGenName
       readOnly=true
-      placeholder=`자동생성 단품명(자동으로 생성)`
+      placeholder={`자동생성 단품명(자동으로 생성)`}
     />
   }
 }
@@ -478,7 +490,7 @@ module ReadOnlyPackage = {
   }
 }
 
-module ReadOnlyWeight = {
+module ReadOnlyAmount = {
   @react.component
   let make = (~value, ~unit, ~showEach) => {
     <div className=%twc("py-6 flex flex-col gap-2")>
@@ -493,11 +505,11 @@ module ReadOnlyWeight = {
               {value->Option.mapWithDefault("", Float.toString)->React.string}
             </div>
           </div>
-          <Select_Unit.Weight
+          <Select_Unit.Amount
             disabled=true
             status={unit->Option.mapWithDefault(
-              Select_Unit.WeightStatus.G,
-              DecodeProductOption.weightUnit,
+              Select_Unit.AmountStatus.G,
+              DecodeProductOption.amountUnit,
             )}
             onChange={_ => ()}
           />
@@ -520,12 +532,14 @@ module EditStatus = {
     )
 
     let toJson = statusFromApi => {
-      statusFromApi->DecodeProductOption.status->Select_Product_Operation_Status.Base.status_encode
+      statusFromApi
+      ->DecodeProductOption.status
+      ->Select_ProductOption_Operation_Status.Base.status_encode
     }
 
     let toStatus = statusFromSelect => {
       statusFromSelect
-      ->Select_Product_Operation_Status.Base.status_decode
+      ->Select_ProductOption_Operation_Status.Base.status_decode
       ->Result.mapWithDefault(None, v => Some(v))
     }
 
@@ -542,12 +556,12 @@ module EditStatus = {
           rules={Rules.make(~required=true, ())}
           render={({field: {ref, name, value, onChange}}) => {
             <div>
-              <Select_Product_Operation_Status.Base
+              <Select_ProductOption_Operation_Status.Base
                 forwardRef=ref
                 status={value->toStatus}
                 onChange={selected => {
                   selected
-                  ->Select_Product_Operation_Status.Base.status_encode
+                  ->Select_ProductOption_Operation_Status.Base.status_encode
                   ->Controller.OnChangeArg.value
                   ->onChange
                 }}
@@ -631,6 +645,52 @@ module EditIsFreeShipping = {
   }
 }
 
+module EditShippingUnitQuantity = {
+  @react.component
+  let make = (~inputName, ~defaultValue) => {
+    let {register, formState: {errors}} = Hooks.Context.use(.
+      ~config=Hooks.Form.config(~mode=#onChange, ()),
+      (),
+    )
+
+    let {ref, name, onChange, onBlur} = register(.
+      inputName,
+      Some(Hooks.Register.config(~required=true, ~valueAsNumber=true, ~min=1, ())),
+    )
+
+    <div className=%twc("flex flex-col w-[158px] min-w-[158px]")>
+      <label className=%twc("block") htmlFor=name>
+        <span className=%twc("font-bold")> {`배송 합포장 단위`->React.string} </span>
+        <span className=%twc("text-red-500")> {`*`->React.string} </span>
+      </label>
+      <input
+        ref
+        id=name
+        type_="number"
+        name
+        onChange
+        onBlur
+        className=%twc(
+          "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none"
+        )
+        placeholder=`배송 합포장 단위 입력`
+        defaultValue={defaultValue->Int.toString}
+      />
+      <ErrorMessage
+        errors
+        name
+        render={e =>
+          <span className=%twc("flex")>
+            <IconError width="20" height="20" />
+            <span className=%twc("text-sm text-notice ml-1")>
+              {`합포장 단위를 입력해주세요. (1 미만 입력 불가)`->React.string}
+            </span>
+          </span>}
+      />
+    </div>
+  }
+}
+
 module EditCutOffTime = {
   @react.component
   let make = (~inputName, ~disabled, ~defaultValue) => {
@@ -660,7 +720,7 @@ module EditCutOffTime = {
           %twc("px-3 py-2 border border-gray-300 rounded-lg focus:outline-none h-9"),
           disabledStyle,
         ])}
-        placeholder=`출고기준시간 입력(최대 100자)`
+        placeholder={`출고기준시간 입력(최대 100자)`}
         defaultValue={defaultValue->Option.getWithDefault("")}
       />
       <ErrorMessage
@@ -707,7 +767,7 @@ module EditMemo = {
           %twc("px-3 py-2 border border-gray-300 rounded-lg focus:outline-none h-9"),
           disabledStyle,
         ])}
-        placeholder=`메모사항 입력(최대 100자)`
+        placeholder={`메모사항 입력(최대 100자)`}
         defaultValue={defaultValue->Option.getWithDefault("")}
       />
       <ErrorMessage
@@ -744,8 +804,8 @@ let make = (
 
   let inputNames = Form.makeInputNames(prefix)
 
-  let weightUnit = productOption.weightUnit->Option.map(DecodeProductOption.weightUnit)
-  let perWeightUnit = productOption.perWeightUnit->Option.map(DecodeProductOption.perWeightUnit)
+  let amountUnit = Some(productOption.amountUnit->DecodeProductOption.amountUnit)
+  let perAmountUnit = productOption.perAmountUnit->Option.map(DecodeProductOption.perAmountUnit)
   let perSizeUnit = productOption.perSizeUnit->Option.map(DecodeProductOption.perSizeUnit)
 
   let showEach = DecodeProductOption.hasEach(
@@ -754,7 +814,7 @@ let make = (
     ~perSizeMax=productOption.perSizeMax,
     ~perSizeMin=productOption.perSizeMin,
     ~perSizeUnit,
-    ~perWeightUnit,
+    ~perAmountUnit,
   )
 
   let onClickCopy = ReactEvents.interceptingHandler(_ => {
@@ -770,7 +830,7 @@ let make = (
           countPerPackageMax,
           perSizeMax,
           perSizeMin,
-          weight,
+          amount,
         } = productOption
         prepend(.
           Form.makeAddProductOptionDefaultValue(
@@ -781,15 +841,16 @@ let make = (
             ~countPerPackageMin,
             ~perSizeMax,
             ~perSizeMin,
-            ~weight,
+            ~amount=Some(amount),
             ~perSizeUnit,
-            ~perWeightUnit,
-            ~weightUnit,
+            ~perAmountUnit,
+            ~amountUnit,
           ),
           ~focusOptions=Hooks.FieldArray.focusOptions(~shouldFocus=true, ()),
           (),
         )->ignore
       }
+
     | _ => ()
     }->ignore
   })
@@ -824,7 +885,7 @@ let make = (
               <div className=%twc("flex items-center cursor-pointer relative gap-1")>
                 <span className=%twc("underline")> {`단품정보 접기`->React.string} </span>
                 <IconArrow
-                  height="15" width="15" stroke="#000000" className=%twc("transform -rotate-90")
+                  height="16" width="16" fill="#000000" className=%twc("transform -rotate-90")
                 />
               </div>
             </RadixUI.Collapsible.Trigger>
@@ -850,16 +911,18 @@ let make = (
             <ReadOnlyGrade value=productOption.grade />
             <ReadOnlyPackage value=productOption.packageType />
           </div>
-          <ReadOnlyWeight value=productOption.weight unit=productOption.weightUnit showEach />
+          <ReadOnlyAmount
+            value=Some(productOption.amount) unit=Some(productOption.amountUnit) showEach
+          />
           {showEach
             ? <Each
                 minNum={productOption.countPerPackageMin}
                 maxNum={productOption.countPerPackageMax}
-                weight={productOption.weight}
-                weightUnit={weightUnit}
-                perWeightMin={productOption.perWeightMin}
-                perWeightMax={productOption.perWeightMax}
-                perWeightUnit={perWeightUnit}
+                amount={Some(productOption.amount)}
+                amountUnit={amountUnit}
+                perAmountMin={productOption.perAmountMin}
+                perAmountMax={productOption.perAmountMax}
+                perAmountUnit={perAmountUnit}
                 minSize={productOption.perSizeMin}
                 maxSize={productOption.perSizeMax}
                 sizeUnit={perSizeUnit}
@@ -886,6 +949,10 @@ let make = (
                   }
                 }
                 disabled
+              />
+              <EditShippingUnitQuantity
+                inputName={inputNames.shippingUnitQuantity}
+                defaultValue=productOption.shippingUnitQuantity
               />
             </div>
           </div>

@@ -4,13 +4,14 @@ module Form = Web_Order_Buyer_Form
 
 module ReceiverNameInput = {
   @react.component
-  let make = () => {
+  let make = (~prefix) => {
+    let formNames = Form.names(prefix)
     let {register, formState: {errors}} = Hooks.Context.use(.
       ~config=Hooks.Form.config(~mode=#onChange, ()),
       (),
     )
     let {ref, name, onChange, onBlur} = register(.
-      Form.names.receiverName,
+      formNames.receiverName,
       Some(Hooks.Register.config(~required=true, ~maxLength=50, ())),
     )
 
@@ -18,15 +19,17 @@ module ReceiverNameInput = {
       <label htmlFor=name className=%twc("xl:w-1/4 block font-bold text-text-L1")>
         {`이름`->React.string}
       </label>
-      <div>
+      <div className=%twc("w-full xl:w-3/4")>
         <input
           id=name
           ref
           name
           onChange
           onBlur
-          className=%twc("w-80 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg")
-          placeholder=`배송 받으실 분의 이름을 입력해주세요`
+          className=%twc(
+            "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg"
+          )
+          placeholder={`배송 받으실 분의 이름을 입력해주세요`}
         />
         <ErrorMessage
           name
@@ -46,7 +49,8 @@ module ReceiverNameInput = {
 
 module ReceiverPhoneInput = {
   @react.component
-  let make = () => {
+  let make = (~prefix) => {
+    let formNames = Form.names(prefix)
     let {control, formState: {errors}} = Hooks.Context.use(.
       ~config=Hooks.Form.config(~mode=#onChange, ()),
       (),
@@ -70,14 +74,16 @@ module ReceiverPhoneInput = {
 
     let toPhoneFormat = (fn, e) => fn(Controller.OnChangeArg.value(e->newValue->Js.Json.string))
 
-    <div className=%twc("flex flex-col gap-2 xl:gap-0 xl:flex-row xl:items-baseline")>
-      <label
-        htmlFor=Form.names.receiverPhone className=%twc("xl:w-1/4 block font-bold text-text-L1")>
+    <div
+      className=%twc(
+        "flex flex-col gap-2 xl:gap-0 xl:max-w-full xl:flex-row text-text-L1 xl:items-baseline"
+      )>
+      <label htmlFor=formNames.receiverPhone className=%twc("xl:w-1/4 block font-bold")>
         {`연락처`->React.string}
       </label>
-      <div>
+      <div className=%twc("w-full xl:w-3/4")>
         <Controller
-          name=Form.names.receiverPhone
+          name=formNames.receiverPhone
           defaultValue={Js.Json.string("")}
           rules={Rules.make(~required=true, ~minLength=10, ())}
           control
@@ -85,8 +91,10 @@ module ReceiverPhoneInput = {
             <input
               ref
               value={value->Js.Json.decodeString->Option.getWithDefault("")}
-              className=%twc("w-80 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg")
-              placeholder=`배송 받으실 분의 연락처를 입력해주세요`
+              className=%twc(
+                "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg"
+              )
+              placeholder={`배송 받으실 분의 연락처를 입력해주세요`}
               onChange={toPhoneFormat(onChange)}
             />
             <ErrorMessage
@@ -109,139 +117,209 @@ module ReceiverPhoneInput = {
 
 module ReceiverAddressInput = {
   @react.component
-  let make = () => {
+  let make = (~prefix, ~deviceType) => {
+    let router = Next.Router.useRouter()
+
+    let (isShowSearchAddress, setShowSearchAddress) = React.Uncurried.useState(_ => false)
+
+    let formNames = Form.names(prefix)
     let {register, setValue, control, formState: {errors}} = Hooks.Context.use(.
       ~config=Hooks.Form.config(~mode=#all, ()),
       (),
     )
     let zipcodeRegister = register(.
-      Form.names.receiverZipCode,
+      formNames.receiverZipCode,
       Some(Hooks.Register.config(~required=true, ())),
     )
-    let addressRegister = register(. Form.names.receiverAddress, None)
+    let addressRegister = register(. formNames.receiverAddress, None)
 
     let detailAdressRegister = register(.
-      Form.names.receiverDetailAddress,
+      formNames.receiverDetailAddress,
       Some(Hooks.Register.config(~required=true, ~maxLength=50, ())),
     )
 
     let handleOnClickSearchAddress = changeFn =>
       {
         _ => {
-          open DaumPostCode
-          let option = makeOption(~oncomplete=data => {
-            changeFn(Controller.OnChangeArg.value(Js.Json.string(data.zonecode)))
-            setValue(. Form.names.receiverAddress, Js.Json.string(data.address))
-          }, ())
-          let daumPostCode = option->make
+          switch deviceType {
+          | DeviceDetect.PC => {
+              open DaumPostCode
+              let option = makeOption(~oncomplete=data => {
+                changeFn(Controller.OnChangeArg.value(Js.Json.string(data.zonecode)))
+                setValue(. formNames.receiverAddress, Js.Json.string(data.address))
+              }, ())
+              let daumPostCode = option->make
 
-          let openOption = makeOpenOption(~popupName="우편번호 검색", ())
-          daumPostCode->openPostCode(openOption)
+              let openOption = makeOpenOption(~popupName="우편번호 검색", ())
+              daumPostCode->openPostCode(openOption)
+            }
+
+          | DeviceDetect.Mobile | DeviceDetect.Unknown => {
+              // #search-address-opened 해시를 이용해서 모달이 열렸을 때 history를 추가해준다.
+              // 뒤로가기 했을 경우 모달을 닫는데 활용한다.
+              if !(router.asPath->Js.String2.includes("#search-address-opened")) {
+                router->Next.Router.push(`${router.asPath}#search-address-opened`)
+              }
+              setShowSearchAddress(._ => true)
+            }
+          }
         }
       }->ReactEvents.interceptingHandler
 
-    <div className=%twc("flex flex-col gap-2 xl:flex-row xl:gap-0 xl:items-baseline")>
-      <label className=%twc("block font-bold text-text-L1 xl:w-1/4")>
-        {`주소`->React.string}
-      </label>
-      <div className=%twc("flex flex-col gap-2 w-full xl:w-3/4 max-w-[320px] xl:max-w-full")>
-        <div className=%twc("flex flex-col gap-1")>
-          <Controller
-            name=zipcodeRegister.name
-            control
-            defaultValue={Js.Json.string("")}
-            rules={Rules.make(~required=true, ())}
-            render={({field: {onChange, value, name, ref}}) => <>
-              <div className=%twc("flex gap-1")>
-                <input
-                  readOnly=true
-                  id=name
-                  ref
-                  value={value->Js.Json.decodeString->Option.getWithDefault("")}
-                  name
-                  onBlur=zipcodeRegister.onBlur
-                  className=%twc(
-                    "w-full xl:w-40 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1"
-                  )
-                  placeholder=`우편번호`
+    let onCompleteSearchAddress = (changeFn, data: DaumPostCode.oncompleteResponse) => {
+      changeFn(Controller.OnChangeArg.value(Js.Json.string(data.zonecode)))
+      setValue(. formNames.receiverAddress, Js.Json.string(data.address))
+      setShowSearchAddress(._ => false)
+    }
+
+    // #search-address-opened가 없는데(즉, 모달이 켜져있는 상태에서 뒤로 가기 했을 때)
+    // isShowSearchAddress 상태값이 true이 경우, false로 변경하여 모달을 닫는다.
+    // 반대의 경우는 고려하지 않는다. 즉, #search-address-opened가 있다고 해서 모달을 열지 않는다.
+    React.useEffect1(_ => {
+      if !(router.asPath->Js.String2.includes("#search-address-opened")) && isShowSearchAddress {
+        setShowSearchAddress(._ => false)
+      }
+
+      None
+    }, [router.asPath])
+
+    <>
+      <div className=%twc("flex flex-col gap-2 xl:flex-row xl:gap-0 xl:items-baseline")>
+        <label className=%twc("block font-bold text-text-L1 xl:w-1/4")>
+          {`주소`->React.string}
+        </label>
+        <div className=%twc("flex flex-col gap-2 w-full xl:w-3/4")>
+          <div className=%twc("flex flex-col gap-1")>
+            <Controller
+              name=zipcodeRegister.name
+              control
+              defaultValue={Js.Json.string("")}
+              rules={Rules.make(~required=true, ())}
+              render={({field: {onChange, value, name, ref}}) => <>
+                <div className=%twc("flex gap-1")>
+                  <input
+                    readOnly=true
+                    id=name
+                    ref
+                    value={value->Js.Json.decodeString->Option.getWithDefault("")}
+                    name
+                    onBlur=zipcodeRegister.onBlur
+                    className=%twc(
+                      "w-full xl:w-40 h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1"
+                    )
+                    placeholder={`우편번호`}
+                  />
+                  <button
+                    type_="button"
+                    className=%twc(
+                      "px-3 min-w-max py-1.5 h-13 xl:h-9 text-white bg-blue-gray-700 rounded-lg"
+                    )
+                    onClick={handleOnClickSearchAddress(onChange)}>
+                    {`주소검색`->React.string}
+                  </button>
+                </div>
+                <ErrorMessage
+                  name=formNames.receiverZipCode
+                  errors
+                  render={_ =>
+                    <span className=%twc("flex")>
+                      <IconError width="20" height="20" />
+                      <span className=%twc("text-sm text-notice ml-1")>
+                        {`'주소검색'을 통해 우편번호를 입력해주세요`->React.string}
+                      </span>
+                    </span>}
                 />
-                <button
-                  type_="button"
-                  className=%twc(
-                    "px-3 min-w-max py-1.5 h-13 xl:h-9 text-white bg-blue-gray-700 rounded-lg"
-                  )
-                  onClick={handleOnClickSearchAddress(onChange)}>
-                  {`주소검색`->React.string}
-                </button>
-              </div>
-              <ErrorMessage
-                name=Form.names.receiverZipCode
-                errors
-                render={_ =>
-                  <span className=%twc("flex")>
-                    <IconError width="20" height="20" />
-                    <span className=%twc("text-sm text-notice ml-1")>
-                      {`'주소검색'을 통해 우편번호를 입력해주세요`->React.string}
-                    </span>
-                  </span>}
-              />
-            </>}
+                {
+                  // 모바일의 경우 팝업을 이용한 방식에 이슈가 발생하여(특히, RN 웹뷰에서)
+                  // iframe embed 방식으로 처리합니다.
+                  open RadixUI
+                  <Dialog.Root _open={isShowSearchAddress}>
+                    <Dialog.Overlay className=%twc("dialog-overlay") />
+                    <Dialog.Content
+                      className=%twc("dialog-content-plain top-0 bottom-0 left-0 right-0")>
+                      <section className=%twc("h-14 w-full xl:h-auto xl:w-auto xl:mt-10")>
+                        <div
+                          className=%twc(
+                            "flex items-center justify-between px-5 w-full py-4 xl:h-14 xl:w-full xl:pb-10"
+                          )>
+                          <div className=%twc("w-6 xl:hidden") />
+                          <div>
+                            <span className=%twc("font-bold xl:text-2xl")>
+                              {`주소 검색`->React.string}
+                            </span>
+                          </div>
+                          <Dialog.Close
+                            className=%twc("focus:outline-none")
+                            onClick={_ => router->Next.Router.back}>
+                            <IconClose height="24" width="24" fill="#262626" />
+                          </Dialog.Close>
+                        </div>
+                      </section>
+                      <SearchAddressEmbed
+                        isShow=true onComplete={onCompleteSearchAddress(onChange)}
+                      />
+                    </Dialog.Content>
+                  </Dialog.Root>
+                }
+              </>}
+            />
+          </div>
+          <input
+            readOnly=true
+            id=addressRegister.name
+            ref=addressRegister.ref
+            name=addressRegister.name
+            onChange=addressRegister.onChange
+            onBlur=addressRegister.onBlur
+            className=%twc(
+              "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1"
+            )
+            placeholder={`우편번호 찾기를 통해 주소입력이 가능합니다.`}
+          />
+          <input
+            id=detailAdressRegister.name
+            ref=detailAdressRegister.ref
+            name=detailAdressRegister.name
+            onChange=detailAdressRegister.onChange
+            onBlur=detailAdressRegister.onBlur
+            className=%twc(
+              "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg "
+            )
+            placeholder={`상세주소를 입력해주세요.`}
+          />
+          <ErrorMessage
+            name=detailAdressRegister.name
+            errors
+            render={_ =>
+              <span className=%twc("flex mt-1")>
+                <IconError width="20" height="20" />
+                <span className=%twc("text-sm text-notice ml-1")>
+                  {`상세주소를 입력해주세요`->React.string}
+                </span>
+              </span>}
           />
         </div>
-        <input
-          readOnly=true
-          id=addressRegister.name
-          ref=addressRegister.ref
-          name=addressRegister.name
-          onChange=addressRegister.onChange
-          onBlur=addressRegister.onBlur
-          className=%twc(
-            "w-full xl:w-3/4 xl:min-w-[20rem] h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1"
-          )
-          placeholder=`우편번호 찾기를 통해 주소입력이 가능합니다.`
-        />
-        <input
-          id=detailAdressRegister.name
-          ref=detailAdressRegister.ref
-          name=detailAdressRegister.name
-          onChange=detailAdressRegister.onChange
-          onBlur=detailAdressRegister.onBlur
-          className=%twc(
-            "w-full xl:w-3/4 xl:min-w-[20rem] h-13 xl:h-9 px-3 border border-gray-300 rounded-lg "
-          )
-          placeholder=`상세주소를 입력해주세요.`
-        />
-        <ErrorMessage
-          name=detailAdressRegister.name
-          errors
-          render={_ =>
-            <span className=%twc("flex mt-1")>
-              <IconError width="20" height="20" />
-              <span className=%twc("text-sm text-notice ml-1")>
-                {`상세주소를 입력해주세요`->React.string}
-              </span>
-            </span>}
-        />
       </div>
-    </div>
+    </>
   }
 }
 
 module DeliveryMessageInput = {
   @react.component
-  let make = (~selfMode=false) => {
+  let make = (~prefix, ~selfMode=false) => {
+    let formNames = Form.names(prefix)
     let {register, formState: {errors}} = Hooks.Context.use(.
       ~config=Hooks.Form.config(~mode=#onChange, ()),
       (),
     )
     let {ref, name, onChange, onBlur} = register(.
-      Form.names.deliveryMessage,
+      formNames.deliveryMessage,
       Some(Hooks.Register.config(~maxLength=100, ())),
     )
 
     <div
       className=%twc(
-        "flex flex-col gap-2 xl:gap-0 max-w-[320px] xl:max-w-full xl:flex-row text-text-L1 xl:items-baseline"
+        "flex flex-col gap-2 xl:gap-0 xl:max-w-full xl:flex-row text-text-L1 xl:items-baseline"
       )>
       <label htmlFor=name className=%twc("xl:w-1/4 block font-bold")>
         {`${selfMode ? `수령시` : `배송`} 요청사항`->React.string}
@@ -254,7 +332,7 @@ module DeliveryMessageInput = {
           onChange
           onBlur
           className=%twc(
-            "w-full xl:w-3/4 xl:min-w-[20rem] h-13 xl:h-9 px-3 border border-gray-300 rounded-lg"
+            "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg"
           )
           placeholder={`${selfMode
               ? `수령`
@@ -278,7 +356,8 @@ module DeliveryMessageInput = {
 
 module DeliveryDesiredDateSelection = {
   @react.component
-  let make = (~selfMode=false) => {
+  let make = (~prefix, ~selfMode=false) => {
+    let formNames = Form.names(prefix)
     let {control} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
 
     let handleOnChangeDate = (fn, e) => {
@@ -302,14 +381,14 @@ module DeliveryDesiredDateSelection = {
       )
 
     <div
-      className=%twc("flex flex-col xl:flex-row gap-2 xl:gap-0 w-80 xl:w-full xl:items-baseline")>
+      className=%twc("flex flex-col xl:flex-row gap-2 xl:gap-0 xl:w-full xl:items-baseline")>
       <label className=%twc("xl:w-1/4 block font-bold")>
         {`${selfMode ? `수령` : `배송`} 희망일`->React.string}
       </label>
-      <div className=%twc("flex flex-col gap-1 xl:w-3/4")>
+      <div className=%twc("flex flex-col gap-1 w-full xl:w-3/4")>
         <div className=%twc("flex gap-2")>
           <Controller
-            name={Form.names.deliveryDesiredDate}
+            name={formNames.deliveryDesiredDate}
             control
             shouldUnregister=true
             defaultValue={Js.Json.string(minDate->DateFns.format("yyy-MM-dd"))}
@@ -341,19 +420,20 @@ module DeliveryDesiredDateSelection = {
 
 module PaymentMethodSelection = {
   @react.component
-  let make = () => {
+  let make = (~prefix, ~deviceType) => {
+    let formNames = Form.names(prefix)
     let {register, formState: {errors}} = Hooks.Context.use(.
       ~config=Hooks.Form.config(~mode=#onChange, ()),
       (),
     )
     let {ref, name, onChange, onBlur} = register(.
-      Form.names.paymentMethod,
+      formNames.paymentMethod,
       Some(Hooks.Register.config(~required=true, ())),
     )
 
     let watchValue = Hooks.WatchValues.use(
       Hooks.WatchValues.Text,
-      ~config=Hooks.WatchValues.config(~name=Form.names.paymentMethod, ()),
+      ~config=Hooks.WatchValues.config(~name=formNames.paymentMethod, ()),
       (),
     )
 
@@ -370,7 +450,7 @@ module PaymentMethodSelection = {
               "focus:outline-none focus-within:bg-primary-light focus-within:outline-none focus-within:rounded-xl"
             )>
             <input className=%twc("sr-only") type_="radio" id=name ref name onChange onBlur value />
-            <RadioButton watchValue name=n value />
+            <RadioButton watchValue name=n value deviceType />
           </label>
         )
         ->React.array}

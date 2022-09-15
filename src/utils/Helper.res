@@ -29,7 +29,7 @@ module Result = {
 
 module Filename = {
   let parseFilename = value => {
-    Js.Re.fromString(`filename\\\*?=['"]?(?:UTF-\\\d['"]*)?([^;\r\n"']*)['"]?;?`)
+    Js.Re.fromString(`filename\\*?=['"]?(?:UTF-\\d['"]*)?([^;\r\n"']*)['"]?;?`)
     ->Js.Re.exec_(value)
     ->Option.map(Js.Re.captures)
     ->Option.flatMap(strings => strings->Garter.Array.get(1))
@@ -64,7 +64,7 @@ module PhoneNumber = {
     "^(02|031|032|033|041|042|043|044|051|052|053|054|055|061|062|063|064)([0-9]{3,4})([0-9]{4})",
   )
   let regexOfVoIP = Js.Re.fromString("^(070)([0-9]{3,4})([0-9]{4})")
-  let regexOfONO = Js.Re.fromString("^(050\d|060\d)([0-9]{3,4})([0-9]{4})")
+  let regexOfONO = Js.Re.fromString("^(050\\d|060\\d)([0-9]{3,4})([0-9]{4})")
 
   let regexs = [
     Mobile(regexOfMobile),
@@ -74,7 +74,7 @@ module PhoneNumber = {
   ]
 
   let removeDash = phoneNumber =>
-    phoneNumber->Js.String2.replaceByRe(Js.Re.fromStringWithFlags("\-", ~flags="g"), "")
+    phoneNumber->Js.String2.replaceByRe(Js.Re.fromStringWithFlags("\\-", ~flags="g"), "")
 
   let extract = (regex, s): option<t> => {
     switch regex {
@@ -115,7 +115,7 @@ module PhoneNumber = {
 
 module Debounce = {
   @new external makeExn: Js.Promise.error => exn = "Error"
-  let make1 = (fun, await) => {
+  let make1 = (fun, ms) => {
     let timeoutId = ref(None)
 
     args => {
@@ -134,7 +134,7 @@ module Debounce = {
               ->Js.Promise.then_(res => Js.Promise.resolve(resolve(. res)), _)
               ->Js.Promise.catch(error => Js.Promise.resolve(reject(. makeExn(error))), _)
               ->ignore,
-            await,
+            ms,
           )->Some
       })
     }

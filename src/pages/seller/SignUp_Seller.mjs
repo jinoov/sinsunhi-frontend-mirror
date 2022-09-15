@@ -5,16 +5,22 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as Input from "../../components/common/Input.mjs";
 import * as React from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
+import * as Global from "../../components/Global.mjs";
+import * as Helper from "../../utils/Helper.mjs";
+import * as Redirect from "../../components/Redirect.mjs";
 import * as IconArrow from "../../components/svgs/IconArrow.mjs";
 import * as IconError from "../../components/svgs/IconError.mjs";
 import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as FetchHelper from "../../utils/FetchHelper.mjs";
 import * as ReactEvents from "../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as IconArrowSelect from "../../components/svgs/IconArrowSelect.mjs";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
+import * as LocalStorageHooks from "../../utils/LocalStorageHooks.mjs";
 import * as VerifyPhoneNumber from "../../components/VerifyPhoneNumber.mjs";
 import * as SignUp_Seller_Form from "../../components/SignUp_Seller_Form.mjs";
 import * as SignUp_Seller_Terms from "../../components/SignUp_Seller_Terms.mjs";
@@ -42,7 +48,7 @@ function SignUp_Seller$Select(Props) {
                           className: "flex items-center text-disabled-L1"
                         }, React.createElement("span", {
                               className: "block truncate"
-                            }, Belt_Option.getWithDefault(Belt_Option.map(t, Curry.__1(display)), title + " 선택"))), React.createElement("span", {
+                            }, Belt_Option.getWithDefault(Belt_Option.map(t, Curry.__1(display)), "" + title + " 선택"))), React.createElement("span", {
                           className: "absolute top-2 right-3"
                         }, React.createElement(IconArrowSelect.make, {
                               height: "28",
@@ -50,7 +56,7 @@ function SignUp_Seller$Select(Props) {
                               fill: "#121212"
                             }))), React.createElement("select", {
                       className: "absolute left-0 w-full py-3 opacity-0",
-                      value: Belt_Option.getWithDefault(Belt_Option.map(t, Curry.__1(display)), title + " 선택"),
+                      value: Belt_Option.getWithDefault(Belt_Option.map(t, Curry.__1(display)), "" + title + " 선택"),
                       onChange: onChange
                     }, React.createElement("option", {
                           value: title
@@ -66,7 +72,7 @@ function SignUp_Seller$Select(Props) {
                         height: "20"
                       }), React.createElement("span", {
                         className: "text-sm text-notice ml-1"
-                      }, title + "을 선택해주세요.")) : null);
+                      }, "" + title + "을 선택해주세요.")) : null);
 }
 
 var Select = {
@@ -126,15 +132,15 @@ function SignUp_Seller(Props) {
         return /* Hide */1;
       });
   var setShowConfirmGoBack = match$10[1];
-  var onSubmit = function (param) {
-    var state = param.state;
+  var onSubmit = function (formApi) {
+    var state = formApi.state;
     if (!isPhoneNumberVerifed && isTermsConfirmed) {
       var init = state.values;
       var payload_name = init.name;
       var payload_phone = init.phone;
       var payload_email = init.email;
       var payload_password = init.password;
-      var payload_address = SignUp_Seller_Form.FormFields.get(state.values, /* Address */4) + " " + detailedAddress;
+      var payload_address = "" + SignUp_Seller_Form.FormFields.get(state.values, /* Address */4) + " " + detailedAddress + "";
       var payload_zip$code = init["zip-code"];
       var payload_role = init.role;
       var payload_producer$type = Belt_Option.getWithDefault(Belt_Option.map(producerType, SignUp_Seller_Form.stringifyProducerType), "");
@@ -152,9 +158,44 @@ function SignUp_Seller(Props) {
         terms: payload_terms
       };
       Belt_Option.map(JSON.stringify(payload), (function (body) {
-              return FetchHelper.post(Env.restApiUrl + "/user/register", body, (function (param) {
-                            router.push("/seller/signin");
-                            
+              return FetchHelper.post("" + Env.restApiUrl + "/user/register", body, (function (param) {
+                            var state = formApi.state;
+                            var username = SignUp_Seller_Form.FormFields.get(state.values, /* Phone */1);
+                            var password = SignUp_Seller_Form.FormFields.get(state.values, /* Password */3);
+                            var prim0 = new URLSearchParams(router.query);
+                            var redirectUrl = Belt_Option.getWithDefault(Caml_option.nullable_to_opt(prim0.get("redirect")), "/seller");
+                            var urlSearchParams = new URLSearchParams([
+                                    [
+                                      "grant-type",
+                                      "password"
+                                    ],
+                                    [
+                                      "username",
+                                      Helper.PhoneNumber.removeDash(username)
+                                    ],
+                                    [
+                                      "password",
+                                      password
+                                    ]
+                                  ]).toString();
+                            FetchHelper.postWithURLSearchParams("" + Env.restApiUrl + "/user/token", urlSearchParams, (function (res) {
+                                    var result = FetchHelper.responseToken_decode(res);
+                                    if (result.TAG === /* Ok */0) {
+                                      var res$1 = result._0;
+                                      Curry._1(LocalStorageHooks.AccessToken.set, res$1.token);
+                                      Curry._1(LocalStorageHooks.RefreshToken.set, res$1.refreshToken);
+                                      var user = CustomHooks.Auth.user_decode(CustomHooks.Auth.decodeJwt(res$1.token));
+                                      if (user.TAG === /* Ok */0) {
+                                        var user$1 = user._0;
+                                        Curry._1(Global.$$Window.ReactNativeWebView.PostMessage.signUp, String(user$1.id));
+                                        Curry._1(Global.$$Window.ReactNativeWebView.PostMessage.signIn, String(user$1.id));
+                                      }
+                                      return Redirect.setHref(redirectUrl);
+                                    }
+                                    router.push("/seller/signin");
+                                  }), (function (param) {
+                                    router.push("/seller/signin");
+                                  }));
                           }), (function (err) {
                             if (err.status === 409) {
                               return setShowErrorWithMessage(function (param) {
@@ -189,20 +230,20 @@ function SignUp_Seller(Props) {
       }, onSubmit, undefined, undefined, /* OnChange */0, undefined);
   var handleOnSubmit = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return Curry._1(form.submit, undefined);
+                  Curry._1(form.submit, undefined);
                 }), param);
   };
   var handleOnChangePasswordConfirm = function (e) {
     var value = e.target.value;
-    return setPasswordConfirm(function (param) {
-                return value;
-              });
+    setPasswordConfirm(function (param) {
+          return value;
+        });
   };
   var handleOnChangeDetailedAddress = function (e) {
     var value = e.target.value;
-    return setDetailedAddress(function (param) {
-                return value;
-              });
+    setDetailedAddress(function (param) {
+          return value;
+        });
   };
   var handleOnChangeProducerType = function (e) {
     var value = e.currentTarget.value;
@@ -210,48 +251,47 @@ function SignUp_Seller(Props) {
     setProducerType(function (param) {
           return parsed;
         });
-    return Curry._4(form.setFieldValue, /* ProducerType */8, Belt_Option.mapWithDefault(parsed, "", SignUp_Seller_Form.stringifyProducerType), true, undefined);
+    Curry._4(form.setFieldValue, /* ProducerType */8, Belt_Option.mapWithDefault(parsed, "", SignUp_Seller_Form.stringifyProducerType), true, undefined);
   };
   var handleOnChangeProductType = function (e) {
     var value = e.currentTarget.value;
     setProductType(function (param) {
           return SignUp_Seller_Form.parseProductType(value);
         });
-    return setProducerType(function (param) {
-                
-              });
+    setProducerType(function (param) {
+          
+        });
   };
   var handleOnChangeBusinessRegistrationNumber = function (e) {
     var value = e.target.value;
-    return setBusinessRegistrationNumber(function (param) {
-                return value;
-              });
+    setBusinessRegistrationNumber(function (param) {
+          return value;
+        });
   };
   var handleOnChangeTerms = function (c) {
-    return setTermsConfirmed(function (param) {
-                return c;
-              });
+    setTermsConfirmed(function (param) {
+          return c;
+        });
   };
   var handleVerifiedPhoneNumber = function (n) {
     setPhoneNumberVerified(function (param) {
           return /* Verified */0;
         });
-    return Curry._4(form.setFieldValue, /* Phone */1, n, true, undefined);
+    Curry._4(form.setFieldValue, /* Phone */1, n, true, undefined);
   };
   var handleOnClickSearchAddress = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   var option = {
                     oncomplete: (function (data) {
                         Curry._4(form.setFieldValue, /* Address */4, data.address, true, undefined);
-                        return Curry._4(form.setFieldValue, /* Zipcode */5, data.zonecode, true, undefined);
+                        Curry._4(form.setFieldValue, /* Zipcode */5, data.zonecode, true, undefined);
                       })
                   };
                   var daumPostCode = new (daum.Postcode)(option);
                   var openOption = {
-                    popupName: "\xec\x8b\xa0\xec\x84\xa0\xed\x95\x98\xec\x9d\xb4 \xed\x9a\x8c\xec\x9b\x90\xea\xb0\x80\xec\x9e\x85 \xec\xa3\xbc\xec\x86\x8c \xea\xb2\x80\xec\x83\x89"
+                    popupName: "신선하이 회원가입 주소 검색"
                   };
                   daumPostCode.open(openOption);
-                  
                 }), param);
   };
   var isPasswordConfirmed = function (param) {
@@ -264,9 +304,9 @@ function SignUp_Seller(Props) {
   };
   var handleOnClickBackButton = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setShowConfirmGoBack(function (param) {
-                              return /* Show */0;
-                            });
+                  setShowConfirmGoBack(function (param) {
+                        return /* Show */0;
+                      });
                 }), param);
   };
   var match$11 = form.isSubmitting;
@@ -458,12 +498,12 @@ function SignUp_Seller(Props) {
                         className: "text-text-L1 text-center whitespace-pre-wrap"
                       }, Belt_Option.getWithDefault(match$9[1], "회원가입에 실패하였습니다.\n다시 한번 입력해주세요.")),
                   onConfirm: (function (param) {
-                      return setShowErrorWithMessage(function (param) {
-                                  return [
-                                          /* Hide */1,
-                                          undefined
-                                        ];
-                                });
+                      setShowErrorWithMessage(function (param) {
+                            return [
+                                    /* Hide */1,
+                                    undefined
+                                  ];
+                          });
                     })
                 }), React.createElement(Dialog.make, {
                   isShow: match$10[0],
@@ -471,13 +511,12 @@ function SignUp_Seller(Props) {
                         className: "text-text-L1 text-center whitespace-pre-wrap"
                       }, "회원가입을 진행중이에요,\n회원가입을 중단하시겠어요?"),
                   onCancel: (function (param) {
-                      return setShowConfirmGoBack(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowConfirmGoBack(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       router.push("/seller/signin");
-                      
                     }),
                   textOnCancel: "닫기",
                   textOnConfirm: "그만두기",
@@ -517,6 +556,5 @@ export {
   optionValues ,
   Select ,
   make ,
-  
 }
 /* Env Not a pure module */

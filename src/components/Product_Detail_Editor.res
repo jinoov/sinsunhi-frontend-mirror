@@ -8,6 +8,7 @@ module Mutation = %relay(`
         image {
           original
           thumb1920x1920
+          thumb800xall
         }
       }
     }
@@ -31,12 +32,14 @@ let make = (~control, ~name, ~defaultValue=?, ~disabled=?) => {
         ({createPresignedUrlForImage: res}, _) => {
           switch res {
           | #CreatePresignedUrlForImageResult(res') =>
+            let resizedImg =
+              res'.image.thumb800xall->Option.getWithDefault(res'.image.thumb1920x1920)
             UploadFileToS3PresignedUrl.uploadImage(
               ~file=blobInfo.blob(),
               ~original=res'.url,
-              ~thumb1920=res'.image.thumb1920x1920,
+              ~resizedImg,
               ~onSuccess={
-                _ => success(res'.image.thumb1920x1920)->ignore
+                _ => success(resizedImg)->ignore
               },
               ~onFailure={onFailWithRemove},
               (),

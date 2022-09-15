@@ -9,7 +9,16 @@ type props = {query: Js.Dict.t<string>}
 type params
 type previewData
 
+@spice
+type info = {
+  message: option<string>,
+  @spice.key("activation-method") activationMethod: option<array<string>>,
+  email: option<string>,
+}
+
 let default = (~props) => {
+  let {addToast} = ReactToastNotifications.useToasts()
+
   let uid = props.query->Js.Dict.get("uid")
   let {useRouter, push} = module(Next.Router)
   let router = useRouter()
@@ -50,14 +59,14 @@ let default = (~props) => {
               // 로그인 성공 시, 웹뷰에 Braze 푸시 기기 토큰 등록을 위한 userId를 postMessage 합니다.
               switch res.token->CustomHooks.Auth.decodeJwt->CustomHooks.Auth.user_decode {
               | Ok(user) =>
-                Global.Window.ReactNativeWebView.PostMessage.storeBrazeUserId(user.id->Int.toString)
+                Global.Window.ReactNativeWebView.PostMessage.signIn(user.id->Int.toString)
+                // GTM
+                DataGtm.push({"event": "login", "user_id": user.id, "method": "normal"})
               | Error(_) => ()
               }
 
-              Redirect.setHref(redirectUrl)
-
-              // GTM
-              DataGtm.push({"login_status": true, "method": "normal"})
+              // gtm 전송을 보장하기 위한 시간 차 페이지 이동
+              let _ = Js.Global.setTimeout(_ => Redirect.setHref(redirectUrl), 1000)
             }
 
           | Error(_) => setShowForError(._ => Dialog.Show)
@@ -67,7 +76,27 @@ let default = (~props) => {
       ~onFailure={
         err => {
           let customError = err->FetchHelper.convertFromJsPromiseError
-          if customError.status === 409 {
+          if customError.status == 401 {
+            let mode = switch customError.info->info_decode {
+            | Ok(info) =>
+              info.activationMethod->Option.map(method => method->Js.Array2.joinWith(","))
+            | Error(_) => None
+            }->Option.map(methods => "mode=" ++ methods)
+            let activationEmail = switch customError.info->info_decode {
+            | Ok(info) => info.email
+            | Error(_) => None
+            }
+
+            switch (mode, activationEmail) {
+            | (Some(mode), Some(activationEmail)) =>
+              router->Next.Router.push(
+                `/buyer/activate-user?${mode}&uid=${email}&email=${activationEmail}&role=buyer`,
+              )
+            | (Some(mode), None) =>
+              router->Next.Router.push(`/buyer/activate-user?${mode}&uid=${email}&role=buyer`)
+            | (None, _) => router->Next.Router.push(`/buyer/activate-user?uid=${email}&role=buyer`)
+            }
+          } else if customError.status === 409 {
             setShowForExisted(._ => Dialog.Show)
             // 비밀번호 최초 설정이 필요한 유저의 경우, 비밀번호 재설정 유도 팝업을 띄우고,
             // 입력한 비밀번호는 지운다.
@@ -76,9 +105,6 @@ let default = (~props) => {
           } else {
             setShowForError(._ => Dialog.Show)
           }
-
-          // GTM
-          DataGtm.push({"login_status": false, "method": "normal"})
         }
       },
     )->ignore
@@ -166,13 +192,56 @@ let default = (~props) => {
     None
   }, [user])
 
+  // 휴면 계정 해제 토큰 처리
+  React.useEffect1(_ => {
+    let activationToken = router.query->Js.Dict.get("dormant_reset_token")
+    let activate = (~token) => {
+      {
+        "dormant-reset-token": token,
+      }
+      ->Js.Json.stringifyAny
+      ->Option.map(body => {
+        FetchHelper.post(
+          ~url=`${Env.restApiUrl}/user/dormant/reset-email`,
+          ~body,
+          ~onSuccess={
+            _ =>
+              addToast(.
+                <div className=%twc("flex items-center")>
+                  <IconCheck height="24" width="24" fill="#12B564" className=%twc("mr-2") />
+                  {`휴면 계정이 해제되었어요!`->React.string}
+                </div>,
+                {appearance: "success"},
+              )
+          },
+          ~onFailure={
+            err => {
+              addToast(.
+                <div className=%twc("flex items-center")>
+                  <IconError height="24" width="24" className=%twc("mr-2") />
+                  {`휴면 계정 해제에 실패했어요`->React.string}
+                </div>,
+                {appearance: "error"},
+              )
+            }
+          },
+        )
+      })
+      ->ignore
+    }
+    switch activationToken {
+    | Some(activationToken) => activate(~token=activationToken)
+    | None => ()
+    }
+
+    None
+  }, [router.query])
+
   // 채널톡 버튼 사용
   ChannelTalkHelper.Hook.use()
 
   <>
-    <Next.Head>
-      <title> {j`바이어 로그인 - 신선하이`->React.string} </title>
-    </Next.Head>
+    <Next.Head> <title> {j`바이어 로그인 - 신선하이`->React.string} </title> </Next.Head>
     <div
       className=%twc(
         "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"
@@ -215,12 +284,12 @@ let default = (~props) => {
               </span>
               <span className=%twc("divide-x")>
                 <Next.Link href="/buyer/signin/find-id-password?mode=find-id">
-                  <span className="text-sm text-gray-700 pr-2">
+                  <span className="text-sm text-gray-700 p-1 m-1 cursor-pointer">
                     {`아이디 찾기`->React.string}
                   </span>
                 </Next.Link>
                 <Next.Link href="/buyer/signin/find-id-password?mode=reset-password">
-                  <span className="text-sm text-gray-700 pl-2">
+                  <span className="text-sm text-gray-700 pl-2 mr-1 mt-1 mb-1 cursor-pointer">
                     {`비밀번호 재설정`->React.string}
                   </span>
                 </Next.Link>

@@ -63,7 +63,7 @@ let make = (~onChange) => {
     let businessNumber =
       state.values
       ->FormFields.get(FormFields.BusinessNumber)
-      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\-", ~flags="g"), "")
+      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\\-", ~flags="g"), "")
 
     let queryStr = list{("b-no", businessNumber)}->Js.Dict.fromList->dictToQueryStr
     FetchHelper.get(
@@ -93,7 +93,7 @@ let make = (~onChange) => {
         [
           Form.Validation.regExp(
             BusinessNumber,
-            ~matches="^\d{3}-\d{2}-\d{5}$",
+            ~matches="^\\d{3}-\\d{2}-\\d{5}$",
             ~error=`사업자 등록번호 형식을 확인해주세요.`,
           ),
         ]->Array.concatMany,
@@ -138,7 +138,7 @@ let make = (~onChange) => {
         name="business-number"
         type_="text"
         size=Input.Large
-        placeholder=`사업자 등록번호 입력`
+        placeholder={`사업자 등록번호 입력`}
         value={form.values->FormFields.get(FormFields.BusinessNumber)}
         onChange={onChangeBusinessNumber}
         error={errorMessage}

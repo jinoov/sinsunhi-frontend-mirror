@@ -56,14 +56,16 @@ let errorMessage = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
   | Some(EncryptedDocument(_)) =>
     `양식에 맞지 않은 주문서입니다.
 아래와 같은 이유로 실패할 수 있습니다.\n\n`->React.string
-  | Some(Deposit(_)) => <>
+  | Some(Deposit(_)) =>
+    <>
       {`주문가능금액이 부족해
 발주에 실패했습니다.
 추가 결제를 진행해 주시기 바랍니다.
 `->React.string}
     </>
   | Some(ProductId(s))
-  | Some(Sku(s)) => <>
+  | Some(Sku(s)) =>
+    <>
       {`업로드한 주문서 `->React.string}
       <span className=%twc("font-bold")> {s->React.string} </span>
       {`\n상품코드를 재확인하신 후 업로드해주세요.`->React.string}
@@ -71,7 +73,8 @@ let errorMessage = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
   | Some(OrderProductNo(s)) => `${s}\n`->React.string
   | Some(OrdererId(s)) => `${s}\n`->React.string
   | Some(Etc(s)) => `${s}\n`->React.string
-  | Some(AfterPay(_)) => <>
+  | Some(AfterPay(_)) =>
+    <>
       {`나중결제 잔여 한도 부족으로 발주에 실패했습니다.
 주문 금액을 조정하여 다시 재업로드해주세요.
 `->React.string}
@@ -82,7 +85,7 @@ let linkOfGuide = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
   switch errorCode {
   | Some(Deposit(_)) => "/buyer/transactions"
   | Some(ProductId(_))
-  | Some(Sku(_)) => "/buyer/products/advanced-search"
+  | Some(Sku(_)) => "/products/advanced-search"
   | Some(S3GetObject(_))
   | Some(RequiredColumns(_))
   | Some(ExcelCell(_))
@@ -154,7 +157,8 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
       | Error(_) => <div> {j`에러가 발생하였습니다.`->React.string} </div>
       | Loaded(data) =>
         switch data->CustomHooks.UploadStatus.response_decode {
-        | Ok(data') => <>
+        | Ok(data') =>
+          <>
             {if data'.data->Garter.Array.isEmpty {
               <div> {j`업로드 한 내역이 없습니다.`->React.string} </div>
             } else {
@@ -213,7 +217,7 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
     <Dialog
       isShow={errorDetail.isShow}
       textOnConfirm={textOnConfirmButton(errorDetail.errorCode)}
-      textOnCancel=`닫기`
+      textOnCancel={`닫기`}
       onConfirm={_ => {
         setErrorDetail(._ => {isShow: Dialog.Hide, errorCode: None})
         switch errorDetail.errorCode {
@@ -245,14 +249,12 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
         </p>
       | _ => React.null
       }}
-      {
-        // 나중결제 등록 성공에 대한 메시지
-        switch (uploadType, errorDetail.errorCode) {
-        | (CustomHooks.UploadStatus.OrderAfterPay, None) =>
-          `나중결제로 주문을 등록했어요. 맨 상단 [내역보기]를 눌러 만기일 및 상환필요금액을 확인하세요.`->React.string
-        | _ => React.null
-        }
-      }
+      {switch // 나중결제 등록 성공에 대한 메시지
+      (uploadType, errorDetail.errorCode) {
+      | (CustomHooks.UploadStatus.OrderAfterPay, None) =>
+        `나중결제로 주문을 등록했어요. 맨 상단 [내역보기]를 눌러 만기일 및 상환필요금액을 확인하세요.`->React.string
+      | _ => React.null
+      }}
     </Dialog>
   </>
 }

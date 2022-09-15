@@ -24,22 +24,57 @@ module Window = {
     @send
     external postMessage: (t, string) => unit = "postMessage"
 
+    // Airbridge
+    // "VIEW_HOME"
+    // "VIEW_PRODUCT_LIST"
+    // "VIEW_PRODUCT_DETAIL"
+    // "VIEW_SEARCH_RESULT"
+    // "ADD_TO_CART"
+    // "PURCHASE"
+    // "CUSTOM_EVENT"
     module PostMessage = {
-      let storeBrazeUserId = userId => {
+      let signUp = userId =>
         switch tOpt {
-        | Some(webView) => {
-            let dict = Js.Dict.empty()
-            dict->Js.Dict.set("type", "STORE_BRAZE_USER_ID"->Js.Json.string)
-            dict->Js.Dict.set("userId", userId->Js.Json.string)
-
-            webView->postMessage(dict->Js.Json.object_->Js.Json.stringify)
-          }
+        | Some(webView) =>
+          {"type": "SIGN_UP", "userId": userId}
+          ->Js.Json.stringifyAny
+          ->Option.forEach(payload => webView->postMessage(payload))
         | None => ()
         }
-      }
+      let signIn = userId =>
+        switch tOpt {
+        | Some(webView) =>
+          {"type": "SIGN_IN", "userId": userId}
+          ->Js.Json.stringifyAny
+          ->Option.forEach(payload => webView->postMessage(payload))
+        | None => ()
+        }
+      let airbridgeWithPayload = (
+        ~kind: [
+          | #VIEW_HOME
+          | #VIEW_PRODUCT_LIST
+          | #VIEW_PRODUCT_DETAIL
+          | #VIEW_SEARCH_RESULT
+          | #ADD_TO_CART
+          | #PURCHASE
+          | #CUSTOM_EVENT
+        ],
+        ~payload=?,
+        (),
+      ) =>
+        switch tOpt {
+        | Some(webView) =>
+          {"type": kind, "payload": payload}
+          ->Js.Json.stringifyAny
+          ->Option.forEach(payload => webView->postMessage(payload))
+        | None => ()
+        }
     }
   }
 }
 
 @val
 external import_: string => Js.Promise.t<Js.Nullable.t<'a>> = "import"
+
+@val @scope("window")
+external jsAlert: string => unit = "alert"

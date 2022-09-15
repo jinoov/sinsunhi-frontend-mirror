@@ -4,25 +4,23 @@ import * as React from "react";
 import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ReactRelay from "react-relay";
 import * as ReactHookForm from "react-hook-form";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as Web_Order_Buyer_Form from "./Web_Order_Buyer_Form.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ErrorMessage from "@hookform/error-message";
-import * as Web_Order_Delivery_Form from "./Web_Order_Delivery_Form.mjs";
 import * as Web_Order_Util_Component from "./Web_Order_Util_Component.mjs";
-import * as Web_Order_Hidden_Input_Buyer from "./Web_Order_Hidden_Input_Buyer.mjs";
 import * as WebOrderDeliveryMethodSelectionBuyerFragment_graphql from "../__generated__/WebOrderDeliveryMethodSelectionBuyerFragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(WebOrderDeliveryMethodSelectionBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(WebOrderDeliveryMethodSelectionBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(WebOrderDeliveryMethodSelectionBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(WebOrderDeliveryMethodSelectionBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(WebOrderDeliveryMethodSelectionBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -34,64 +32,73 @@ function useOpt(opt_fRef) {
 
 var Fragment = {
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
 
-function Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder(Props) {
+function Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$PC(Props) {
   return React.createElement("section", {
               className: "flex flex-col p-7 gap-5 bg-white rounded-sm"
             }, React.createElement("span", {
-                  className: "flex items-center gap-1 text-lg xl:text-xl text-enabled-L1 font-bold"
+                  className: "flex items-center gap-1 text-xl text-enabled-L1 font-bold"
                 }, "배송 방식 선택", React.createElement(Web_Order_Util_Component.Tooltip.PC.make, {
-                      children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.",
-                      className: "hidden xl:flex"
-                    }), React.createElement(Web_Order_Util_Component.Tooltip.Mobile.make, {
-                      children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.",
-                      className: "flex xl:hidden"
+                      children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다."
                     })), React.createElement("div", {
                   className: "flex gap-2"
-                }, React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.make, {}), React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.make, {}), React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.make, {})));
+                }, React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.PC.make, {}), React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.PC.make, {}), React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.PC.make, {})));
 }
 
+var PC = {
+  make: Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$PC
+};
+
+function Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$MO(Props) {
+  return React.createElement("section", {
+              className: "flex flex-col p-7 gap-5 bg-white rounded-sm"
+            }, React.createElement("span", {
+                  className: "flex items-center gap-1 text-lg text-enabled-L1 font-bold"
+                }, "배송 방식 선택", React.createElement(Web_Order_Util_Component.Tooltip.Mobile.make, {
+                      children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다."
+                    })), React.createElement("div", {
+                  className: "flex gap-2"
+                }, React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.MO.make, {}), React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.MO.make, {}), React.createElement(Web_Order_Util_Component.RadioButton.PlaceHolder.MO.make, {})));
+}
+
+var MO = {
+  make: Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$MO
+};
+
 var PlaceHoder = {
-  make: Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder
+  PC: PC,
+  MO: MO
 };
 
 function Web_Order_Delivery_Method_Selection_Buyer(Props) {
-  var query = Props.query;
-  var quantity = Props.quantity;
+  var isSameCourierAvailable = Props.isSameCourierAvailable;
+  var isCourierAvailable = Props.isCourierAvailable;
+  var prefix = Props.prefix;
+  var deviceType = Props.deviceType;
+  var formNames = Web_Order_Buyer_Form.names(prefix);
   var match = ReactHookForm.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = use(query);
-  var productNode = match$1.productNode;
-  var match$2 = match.register(Web_Order_Buyer_Form.names.deliveryType, {
+  var match$1 = match.register(formNames.deliveryType, {
         required: true
       });
-  var name = match$2.name;
-  var ref = match$2.ref;
-  var onBlur = match$2.onBlur;
-  var onChange = match$2.onChange;
+  var name = match$1.name;
+  var ref = match$1.ref;
+  var onBlur = match$1.onBlur;
+  var onChange = match$1.onChange;
   var watchValue = ReactHookForm.useWatch({
-        name: Web_Order_Buyer_Form.names.deliveryType
+        name: formNames.deliveryType
       });
-  return React.createElement("section", {
-              className: "flex flex-col gap-5 p-7 bg-white rounded-sm"
-            }, React.createElement("span", {
-                  className: "flex items-center gap-1 text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "배송 방식 선택", React.createElement(Web_Order_Util_Component.Tooltip.PC.make, {
-                      children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.",
-                      className: "hidden xl:flex"
-                    }), React.createElement(Web_Order_Util_Component.Tooltip.Mobile.make, {
-                      children: "선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.",
-                      className: "flex xl:hidden"
-                    })), React.createElement("div", {
+  return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "flex gap-2"
-                }, Belt_Array.map(productNode !== undefined ? (
-                        typeof productNode === "object" ? (
-                            productNode.NAME === "NormalProduct" ? (
-                                productNode.VAL.isCourierAvailable ? [
+                }, Belt_Array.map(isSameCourierAvailable !== undefined ? (
+                        isSameCourierAvailable ? (
+                            isCourierAvailable !== undefined ? (
+                                isCourierAvailable ? [
                                     [
                                       "parcel",
                                       "택배배송"
@@ -134,7 +141,8 @@ function Web_Order_Delivery_Method_Selection_Buyer(Props) {
                                       }), React.createElement(Web_Order_Util_Component.RadioButton.make, {
                                         watchValue: watchValue,
                                         name: n,
-                                        value: value
+                                        value: value,
+                                        deviceType: deviceType
                                       }));
                       }))), React.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
@@ -149,12 +157,6 @@ function Web_Order_Delivery_Method_Selection_Buyer(Props) {
                                       className: "text-sm text-notice ml-1"
                                     }, "배송 방식을 선택해주세요"));
                     })
-                }), React.createElement(Web_Order_Delivery_Form.make, {
-                  watchValue: watchValue
-                }), React.createElement(Web_Order_Hidden_Input_Buyer.make, {
-                  query: query,
-                  quantity: quantity,
-                  watchValue: watchValue
                 }));
 }
 
@@ -167,6 +169,5 @@ export {
   Fragment ,
   PlaceHoder ,
   make ,
-  
 }
 /* react Not a pure module */

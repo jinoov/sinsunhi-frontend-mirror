@@ -718,6 +718,7 @@ let makeMatchingProductVariables = (form: Form.submit) =>
       thumb1920x1920: form.thumbnail.thumb1920x1920,
       thumb400x400: form.thumbnail.thumb400x400,
       thumb800x800: form.thumbnail.thumb800x800,
+      thumb800xall: form.thumbnail.thumb800xall,
     },
     ~name=form.producerProductName,
     ~notice=?{form.notice->Option.keep(str => str != "")},
@@ -767,6 +768,7 @@ let make = () => {
 
   let (isShowReset, setShowReset) = React.Uncurried.useState(_ => Dialog.Hide)
   let (isShowMatchingSuccess, setShowMatchingSuccess) = React.Uncurried.useState(_ => Dialog.Hide)
+  let (errStatus, setErrStatus) = React.Uncurried.useState(_ => (Dialog.Hide, None))
 
   let {
     producerProductName,
@@ -786,25 +788,21 @@ let make = () => {
   } = Form.formName
 
   let onSubmit = (data: Js.Json.t, _) => {
-    let result =
-      data
-      ->Form.submit_decode
-      ->Result.map(data' =>
-        matchingMutate(
-          ~variables=makeMatchingProductVariables(data'),
-          ~onCompleted=({createMatchingProduct}, _) => {
-            switch createMatchingProduct {
-            | #CreateMatchingProductResult(_) => setShowMatchingSuccess(._ => Dialog.Show)
-            | _ => ()
-            }
-          },
-          (),
-        )->ignore
-      )
-
-    switch result {
-    | Error(e) => {
-        Js.log(e)
+    switch data->Form.submit_decode {
+    | Ok(data) =>
+      matchingMutate(
+        ~variables=makeMatchingProductVariables(data),
+        ~onCompleted=({createMatchingProduct}, _) => {
+          switch createMatchingProduct {
+          | #CreateMatchingProductResult(_) => setShowMatchingSuccess(._ => Dialog.Show)
+          | #Error({message}) => setErrStatus(._ => (Dialog.Show, message))
+          | _ => setErrStatus(._ => (Dialog.Show, None))
+          }
+        },
+        (),
+      )->ignore
+    | Error(error) => {
+        Js.log(error)
         addToast(.
           <div className=%twc("flex items-center")>
             <IconError height="24" width="24" className=%twc("mr-2") />
@@ -813,7 +811,6 @@ let make = () => {
           {appearance: "error"},
         )
       }
-    | _ => ()
     }
   }
 
@@ -887,6 +884,23 @@ let make = () => {
         <p> {`모든 내용을 초기화 하시겠어요?`->React.string} </p>
       </Dialog>
       <MatchingSuccessDialog isShow={isShowMatchingSuccess} />
+      {
+        let (isShowErr, errMsg) = errStatus
+        <Dialog
+          boxStyle=%twc("text-center rounded-2xl")
+          isShow={isShowErr}
+          textOnCancel=`확인`
+          kindOfConfirm=Dialog.Negative
+          onCancel={_ => setErrStatus(._ => (Dialog.Hide, None))}>
+          <div>
+            <p> {`"매칭 상품 생성에 실패하였습니다."`->React.string} </p>
+            {switch errMsg {
+            | Some(msg) => msg->React.string
+            | None => React.null
+            }}
+          </div>
+        </Dialog>
+      }
     </form>
   </ReactHookForm.Provider>
 }

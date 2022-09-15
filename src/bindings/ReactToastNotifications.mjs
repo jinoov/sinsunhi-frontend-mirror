@@ -2,21 +2,57 @@
 
 import * as CssJs from "bs-css-emotion/src/CssJs.mjs";
 import * as React from "react";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as ReactToastNotifications from "react-toast-notifications";
 
-var container = CssJs.style([
-      CssJs.position("fixed"),
-      CssJs.top(CssJs.px(20)),
-      CssJs.left(CssJs.pct(50.0)),
-      CssJs.transform(CssJs.translateX(CssJs.pct(-50.0))),
-      CssJs.zIndex(1000),
-      CssJs.width(CssJs.pct(100.0)),
-      CssJs.maxWidth(CssJs.px(728)),
-      CssJs.maxHeight(CssJs.pct(100.0)),
-      CssJs.paddingRight(CssJs.px(16)),
-      CssJs.paddingLeft(CssJs.px(16)),
-      CssJs.overflow("hidden")
-    ]);
+function placements(placement) {
+  if (placement === "top-left") {
+    return [
+            CssJs.top(CssJs.px(0)),
+            CssJs.left(CssJs.px(0))
+          ];
+  } else if (placement === "top-center") {
+    return [
+            CssJs.top(CssJs.px(0)),
+            CssJs.left(CssJs.pct(50)),
+            CssJs.transform(CssJs.translateX(CssJs.pct(-50)))
+          ];
+  } else if (placement === "top-right") {
+    return [
+            CssJs.top(CssJs.px(0)),
+            CssJs.right(CssJs.px(0))
+          ];
+  } else if (placement === "bottom-left") {
+    return [
+            CssJs.bottom(CssJs.px(0)),
+            CssJs.left(CssJs.px(0))
+          ];
+  } else if (placement === "bottom-right") {
+    return [
+            CssJs.bottom(CssJs.px(0)),
+            CssJs.right(CssJs.px(0))
+          ];
+  } else {
+    return [
+            CssJs.bottom(CssJs.px(0)),
+            CssJs.left(CssJs.pct(50)),
+            CssJs.transform(CssJs.translateX(CssJs.pct(-50)))
+          ];
+  }
+}
+
+function container(placement) {
+  return CssJs.style(Belt_Array.concat([
+                  CssJs.position("fixed"),
+                  CssJs.zIndex(1000),
+                  CssJs.width(CssJs.pct(100.0)),
+                  CssJs.maxWidth(CssJs.px(728)),
+                  CssJs.maxHeight(CssJs.pct(100.0)),
+                  CssJs.paddingRight(CssJs.px(16)),
+                  CssJs.paddingLeft(CssJs.px(16)),
+                  CssJs.overflow("hidden")
+                ], placements(placement)));
+}
 
 function toast(transitionDuration, transitionState) {
   var tmp = transitionState === "entered" ? 1.0 : 0.0;
@@ -48,8 +84,9 @@ var p = CssJs.style([
 
 function ReactToastNotifications$Custom$ToastContainer(Props) {
   var children = Props.children;
+  var placement = Props.placement;
   return React.createElement("div", {
-              className: container
+              className: container(placement)
             }, children);
 }
 
@@ -75,17 +112,19 @@ var Toast = {
 var Component = {};
 
 function ReactToastNotifications$ToastProvider(Props) {
-  var placement = Props.placement;
+  var placementOpt = Props.placement;
   var portalTargetSelector = Props.portalTargetSelector;
   var transitionDuration = Props.transitionDuration;
   var children = Props.children;
+  var placement = placementOpt !== undefined ? placementOpt : "top-center";
   return React.createElement(ReactToastNotifications.ToastProvider, {
               autoDismissTimeout: 2000,
               autoDismiss: true,
               components: {
                 ToastContainer: (function (param) {
                     return React.createElement(ReactToastNotifications$Custom$ToastContainer, {
-                                children: param.children
+                                children: param.children,
+                                placement: param.placement
                               });
                   }),
                 Toast: (function (param) {
@@ -96,7 +135,7 @@ function ReactToastNotifications$ToastProvider(Props) {
                               });
                   })
               },
-              placement: placement !== undefined ? placement : "top-center",
+              placement: placement,
               portalTargetSelector: portalTargetSelector,
               transitionDuration: transitionDuration,
               children: children
@@ -116,6 +155,5 @@ var Custom = {
 export {
   Custom ,
   ToastProvider ,
-  
 }
-/* container Not a pure module */
+/* p Not a pure module */

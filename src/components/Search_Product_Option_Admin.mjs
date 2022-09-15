@@ -17,6 +17,11 @@ import * as Select_Crop_Search_Std from "./Select_Crop_Search_Std.mjs";
 import * as Query_Product_Form_Admin from "./Query_Product_Form_Admin.mjs";
 import * as Select_Product_Option_Status from "./Select_Product_Option_Status.mjs";
 
+function set(old, k, v) {
+  old[k] = v;
+  return old;
+}
+
 function Search_Product_Option_Admin(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
@@ -31,19 +36,17 @@ function Search_Product_Option_Admin(Props) {
   var selectedCrop = match$1[0];
   var handleOnChageStatus = function (e) {
     var newStatus = e.target.value;
-    return setStatus(function (param) {
-                return Belt_Option.getWithDefault(Select_Product_Option_Status.decodeStatus(newStatus), /* ALL */0);
-              });
+    setStatus(function (param) {
+          return Belt_Option.getWithDefault(Select_Product_Option_Status.decodeStatus(newStatus), /* ALL */0);
+        });
   };
   var onSubmit = function (param) {
     var state = param.state;
     var producerName = Query_Product_Form_Admin.FormFields.get(state.values, /* ProducerName */0);
     var productName = Query_Product_Form_Admin.FormFields.get(state.values, /* ProductName */1);
     var std = Query_Product_Form_Admin.FormFields.get(state.values, /* Std */2);
-    router.query["producer-name"] = producerName;
-    router.query["product-name"] = productName;
-    router.query["status"] = Select_Product_Option_Status.encodeStatus(status);
-    router.query["crop-search-std"] = std;
+    var productNos = encodeURIComponent(Query_Product_Form_Admin.FormFields.get(state.values, /* ProductNos */3).replace(/ /g, ""));
+    var skuNos = encodeURIComponent(Query_Product_Form_Admin.FormFields.get(state.values, /* SkuNos */4).replace(/ /g, ""));
     var match = Belt_Option.mapWithDefault(ReactSelect.toOption(selectedCrop), [
           "",
           ""
@@ -53,43 +56,42 @@ function Search_Product_Option_Admin(Props) {
                     v.label
                   ];
           }));
-    router.query["category-id"] = match[0];
-    router.query["label"] = match[1];
-    router.query["offset"] = "0";
-    router.push(router.pathname + "?" + new URLSearchParams(router.query).toString());
-    
+    var newQueryString = new URLSearchParams(set(set(set(set(set(set(set(set(set(router.query, "producer-name", producerName), "product-name", productName), "status", Select_Product_Option_Status.encodeStatus(status)), "crop-search-std", std), "category-id", match[0]), "label", match[1]), "product-nos", productNos), "sku-nos", skuNos), "offset", "0")).toString();
+    router.push("" + router.pathname + "?" + newQueryString + "");
   };
   var form = Curry._7(Query_Product_Form_Admin.Form.use, Query_Product_Form_Admin.initialState, /* Schema */{
-        _0: Belt_Array.concatMany([])
+        _0: Belt_Array.concatMany([
+              Curry._4(Query_Product_Form_Admin.Form.ReSchema.Validation.regExp, "숫자(\",\"로 구분 가능)만 입력해주세요", "^([0-9]| |,){0,}$", undefined, /* ProductNos */3),
+              Curry._4(Query_Product_Form_Admin.Form.ReSchema.Validation.regExp, "숫자(\",\"로 구분 가능)만 입력해주세요", "^([0-9]| |,){0,}$", undefined, /* SkuNos */4)
+            ])
       }, onSubmit, undefined, undefined, /* OnChange */0, undefined);
   var handleOnChangeCropOrCultivar = function (e) {
     ReForm__Helpers.handleChange(Curry._1(form.handleChange, /* Std */2), e);
-    return setSelectedCrop(function (param) {
-                return /* NotSelected */0;
-              });
-  };
-  var handleOnSubmit = function (param) {
-    return ReactEvents.interceptingHandler((function (param) {
-                  return Curry._1(form.submit, undefined);
-                }), param);
+    setSelectedCrop(function (param) {
+          return /* NotSelected */0;
+        });
   };
   React.useEffect((function () {
           Curry._1(form.resetForm, undefined);
           Garter_Array.forEach(Js_dict.entries(router.query), (function (entry) {
                   var v = entry[1];
-                  var k = entry[0];
-                  if (k === "producer-name") {
-                    return Curry._4(form.setFieldValue, /* ProducerName */0, v, false, undefined);
-                  } else if (k === "product-name") {
-                    return Curry._4(form.setFieldValue, /* ProductName */1, v, false, undefined);
-                  } else if (k === "status") {
-                    return setStatus(function (param) {
-                                return Belt_Option.getWithDefault(Select_Product_Option_Status.decodeStatus(v), /* ALL */0);
-                              });
-                  } else if (k === "crop-search-std") {
-                    return Curry._4(form.setFieldValue, /* Std */2, v, false, undefined);
-                  } else {
-                    return ;
+                  switch (entry[0]) {
+                    case "crop-search-std" :
+                        return Curry._4(form.setFieldValue, /* Std */2, v, false, undefined);
+                    case "producer-name" :
+                        return Curry._4(form.setFieldValue, /* ProducerName */0, v, false, undefined);
+                    case "product-name" :
+                        return Curry._4(form.setFieldValue, /* ProductName */1, v, false, undefined);
+                    case "product-nos" :
+                        return Curry._4(form.setFieldValue, /* ProductNos */3, decodeURIComponent(v).split(",").join(", "), false, undefined);
+                    case "sku-nos" :
+                        return Curry._4(form.setFieldValue, /* SkuNos */4, decodeURIComponent(v).split(",").join(", "), false, undefined);
+                    case "status" :
+                        return setStatus(function (param) {
+                                    return Belt_Option.getWithDefault(Select_Product_Option_Status.decodeStatus(v), /* ALL */0);
+                                  });
+                    default:
+                      return ;
                   }
                 }));
           Helper.$$Option.map2(Js_dict.get(router.query, "crop"), Js_dict.get(router.query, "label"), (function (value, label) {
@@ -103,7 +105,6 @@ function Search_Product_Option_Admin(Props) {
                   }
                   
                 }));
-          
         }), [router.query]);
   var handleOnReset = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
@@ -113,22 +114,30 @@ function Search_Product_Option_Admin(Props) {
                   setStatus(function (param) {
                         return /* ALL */0;
                       });
-                  return setSelectedCrop(function (param) {
-                              return /* NotSelected */0;
-                            });
+                  setSelectedCrop(function (param) {
+                        return /* NotSelected */0;
+                      });
+                  Curry._4(form.setFieldValue, /* ProductNos */3, "", false, undefined);
+                  Curry._4(form.setFieldValue, /* SkuNos */4, "", false, undefined);
                 }), param);
   };
   var handleChangeCrop = function (selection) {
-    return setSelectedCrop(function (param) {
-                return selection;
-              });
+    setSelectedCrop(function (param) {
+          return selection;
+        });
   };
   var partial_arg = Curry._1(form.handleChange, /* ProducerName */0);
   var partial_arg$1 = Curry._1(form.handleChange, /* ProductName */1);
+  var partial_arg$2 = Curry._1(form.handleChange, /* ProductNos */3);
+  var partial_arg$3 = Curry._1(form.handleChange, /* SkuNos */4);
   return React.createElement("div", {
               className: "p-7 mt-4 mx-4 bg-white rounded shadow-gl"
             }, React.createElement("form", {
-                  onSubmit: handleOnSubmit
+                  onSubmit: (function (param) {
+                      return ReactEvents.interceptingHandler((function (param) {
+                                    Curry._1(form.submit, undefined);
+                                  }), param);
+                    })
                 }, React.createElement("div", {
                       className: "py-3 flex flex-col text-sm bg-gray-gl rounded-xl"
                     }, React.createElement("div", {
@@ -203,7 +212,47 @@ function Search_Product_Option_Admin(Props) {
                                         }, "판매상태"), React.createElement(Select_Product_Option_Status.make, {
                                           status: status,
                                           onChange: handleOnChageStatus
-                                        })))))), React.createElement("div", {
+                                        }))), React.createElement("div", {
+                                  className: "flex"
+                                }, React.createElement("div", {
+                                      className: "flex mt-3"
+                                    }, React.createElement("div", {
+                                          className: "w-64 flex items-center mr-16"
+                                        }, React.createElement("label", {
+                                              className: "whitespace-nowrap mr-2",
+                                              htmlFor: "product-nos"
+                                            }, "상품번호"), React.createElement(Input.make, {
+                                              type_: "text",
+                                              name: "product-nos",
+                                              placeholder: "상품번호 입력 (\",\"로 구분 가능)",
+                                              value: Query_Product_Form_Admin.FormFields.get(form.values, /* ProductNos */3),
+                                              onChange: (function (param) {
+                                                  return ReForm__Helpers.handleChange(partial_arg$2, param);
+                                                }),
+                                              error: Curry._1(form.getFieldError, /* Field */{
+                                                    _0: /* ProductNos */3
+                                                  }),
+                                              tabIndex: 3
+                                            }))), React.createElement("div", {
+                                      className: "flex mt-3"
+                                    }, React.createElement("div", {
+                                          className: "w-64 flex items-center mr-16"
+                                        }, React.createElement("label", {
+                                              className: "whitespace-nowrap mr-2",
+                                              htmlFor: "sku-nos"
+                                            }, "단품번호"), React.createElement(Input.make, {
+                                              type_: "text",
+                                              name: "sku-nos",
+                                              placeholder: "단품번호 입력 (\",\"로 구분 가능)",
+                                              value: Query_Product_Form_Admin.FormFields.get(form.values, /* SkuNos */4),
+                                              onChange: (function (param) {
+                                                  return ReForm__Helpers.handleChange(partial_arg$3, param);
+                                                }),
+                                              error: Curry._1(form.getFieldError, /* Field */{
+                                                    _0: /* SkuNos */4
+                                                  }),
+                                              tabIndex: 4
+                                            }))))))), React.createElement("div", {
                       className: "flex justify-center mt-5"
                     }, React.createElement("input", {
                           className: "w-20 py-2 bg-gray-button-gl text-black-gl rounded-xl ml-2 hover:bg-gray-button-gl focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-gl focus:ring-opacity-100",
@@ -234,7 +283,7 @@ export {
   Form ,
   Select ,
   Select_Crop_Std ,
+  set ,
   make ,
-  
 }
 /* Input Not a pure module */

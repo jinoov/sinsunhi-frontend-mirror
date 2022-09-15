@@ -19,7 +19,7 @@ module Fragment = %relay(`
     displayName
     name
     displayName
-    productId
+    productId: number
     status
     origin
     grade
@@ -38,16 +38,19 @@ module Fragment = %relay(`
       thumb1920x1920
       thumb400x400
       thumb800x800
+      thumb800xall
     }
     salesDocument
     noticeStartAt
     noticeEndAt
+    salesType
   }
 `)
 
 module Mutation = %relay(`
    mutation UpdateQuotedProductFormAdminMutation(
      $id: ID!
+     $categoryId: ID!
      $description: String!
      $displayCategoryIds: [ID!]!
      $displayName: String!
@@ -60,10 +63,12 @@ module Mutation = %relay(`
      $salesDocument: String
      $status: ProductStatus!
      $grade: String!
+     $salesType: ProductSalesType!
    ) {
      updateQuotedProduct(
        input: {
          id: $id
+         categoryId: $categoryId
          description: $description
          displayCategoryIds: $displayCategoryIds
          displayName: $displayName
@@ -76,12 +81,17 @@ module Mutation = %relay(`
          salesDocument: $salesDocument
          status: $status
          grade: $grade
+         salesType: $salesType
        }
      ) {
        ... on UpdateQuotedProductResult {
          product {
            id
          }
+       }
+       ... on Error {
+         code
+         message
        }
      }
    } 
@@ -111,6 +121,7 @@ module Form = {
     thumbnail: string,
     documentURL: string,
     editor: string,
+    salesType: string,
   }
 
   let formName = {
@@ -127,6 +138,7 @@ module Form = {
     thumbnail: "thumbnail",
     documentURL: "document-url",
     editor: "description-html",
+    salesType: "sales-type",
   }
 
   @spice
@@ -147,6 +159,7 @@ module Form = {
     @spice.key(formName.thumbnail) thumbnail: Upload_Thumbnail_Admin.Form.image,
     @spice.key(formName.documentURL) documentURL: option<string>,
     @spice.key(formName.editor) editor: string,
+    @spice.key(formName.salesType) salesType: Select_Product_QuotationType_Admin.QuotationType.t,
   }
 }
 
@@ -194,7 +207,7 @@ module ReadOnlyProducer = {
 }
 
 // 표준카테고리
-module ReadOnlyCategory = {
+module Category = {
   @react.component
   let make = (~name) => {
     let {control} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
@@ -204,7 +217,7 @@ module ReadOnlyCategory = {
         <span className=%twc(" font-bold")> {`표준카테고리`->React.string} </span>
         <span className=%twc("text-notice")> {`*`->React.string} </span>
       </div>
-      <Select_Product_Categories control name disabled=true />
+      <Select_Product_Categories control name disabled=false />
     </div>
   }
 }
@@ -266,7 +279,7 @@ module ProductNameInputs = {
             ref=producerProductNameInput.ref
             className={getTextInputStyle(disabled)}
             disabled
-            placeholder=`생산자용 상품명 입력(최대 100자)`
+            placeholder={`생산자용 상품명 입력(최대 100자)`}
           />
           <ErrorMessage
             name=producerProductNameInput.name
@@ -296,7 +309,7 @@ module ProductNameInputs = {
           ref=buyerProductNameInput.ref
           className={getTextInputStyle(disabled)}
           disabled
-          placeholder=`바이어용 상품명 입력, 상품매장에 노출됨(최대 100자)`
+          placeholder={`바이어용 상품명 입력, 상품매장에 노출됨(최대 100자)`}
         />
         <ErrorMessage
           name=buyerProductNameInput.name
@@ -395,8 +408,8 @@ module OperationStatusInput = {
       </div>
       <Dialog
         isShow=isShowProductOperationNoSale
-        textOnConfirm=`확인`
-        textOnCancel=`닫기`
+        textOnConfirm={`확인`}
+        textOnCancel={`닫기`}
         boxStyle=%twc("rounded-2xl text-center")
         kindOfConfirm=Dialog.Negative
         onConfirm={_ => {
@@ -441,7 +454,7 @@ module OriginInput = {
         onBlur=productOrigin.onBlur
         ref=productOrigin.ref
         className={getTextInputStyle(disabled)}
-        placeholder=`원산지 입력`
+        placeholder={`원산지 입력`}
         disabled
       />
       <ErrorMessage
@@ -454,6 +467,57 @@ module OriginInput = {
               {`원산지를 입력해주세요.`->React.string}
             </span>
           </span>}
+      />
+    </div>
+  }
+}
+
+// 견적 유형 선택
+module QuotationTypeInput = {
+  @react.component
+  let make = (~name, ~defaultValue) => {
+    let {control, formState: {errors}} = Hooks.Context.use(.
+      ~config=Hooks.Form.config(~mode=#onChange, ()),
+      (),
+    )
+
+    <div className=%twc("flex flex-col gap-2 max-w-md w-1/3")>
+      <div>
+        <span className=%twc("font-bold")> {`견적 유형`->React.string} </span>
+        <span className=%twc("text-notice")> {`*`->React.string} </span>
+      </div>
+      <Controller
+        name
+        control
+        defaultValue=?{defaultValue->Option.map(
+          Select_Product_QuotationType_Admin.QuotationType.t_encode,
+        )}
+        rules={Rules.make(~required=true, ())}
+        render={({field: {onChange, value, ref}}) =>
+          <div>
+            <Select_Product_QuotationType_Admin
+              forwardRef=ref
+              status={value
+              ->Select_Product_QuotationType_Admin.QuotationType.t_decode
+              ->Result.mapWithDefault(None, status => Some(status))}
+              onChange={s =>
+                s
+                ->Select_Product_QuotationType_Admin.QuotationType.t_encode
+                ->Controller.OnChangeArg.value
+                ->onChange}
+            />
+            <ErrorMessage
+              errors
+              name
+              render={_ =>
+                <span className=%twc("flex")>
+                  <IconError width="20" height="20" />
+                  <span className=%twc("text-sm text-notice ml-1")>
+                    {`견적 유형을 선택해주세요.`->React.string}
+                  </span>
+                </span>}
+            />
+          </div>}
       />
     </div>
   }
@@ -483,7 +547,7 @@ module GradeInput = {
         onBlur=grade.onBlur
         ref=grade.ref
         className={getTextInputStyle(disabled)}
-        placeholder=`등급 입력`
+        placeholder={`등급 입력`}
       />
       <ErrorMessage
         errors
@@ -577,7 +641,7 @@ module NoticeAndDateInput = {
           className=%twc(
             "px-3 py-2 border border-border-default-L1 rounded-lg h-24 focus:outline-none min-w-1/2 max-w-2xl"
           )
-          placeholder=`공지사항 또는 메모 입력(최대 1000자)`
+          placeholder={`공지사항 또는 메모 입력(최대 1000자)`}
           disabled
         />
         <ErrorMessage
@@ -822,6 +886,7 @@ let toImage: UpdateQuotedProductFormAdminFragment_graphql.Types.fragment_image =
   thumb1920x1920: image.thumb1920x1920,
   thumb400x400: image.thumb400x400,
   thumb800x800: image.thumb800x800,
+  thumb800xall: image.thumb800xall->Option.getWithDefault(image.thumb1920x1920),
 }
 
 let encodeStatus = (status: Select_Product_Operation_Status.Base.status) => {
@@ -847,9 +912,20 @@ let decodeStatus = (
   }
 }
 
-let makeQuotedProductVariables = (productId, form: Form.submit) =>
+let decodeSalesType = (
+  s: UpdateQuotedProductFormAdminFragment_graphql.Types.enum_ProductSalesType,
+): option<Select_Product_QuotationType_Admin.QuotationType.t> => {
+  switch s {
+  | #RFQ_LIVESTOCK => RFQ_LIVESTOCK->Some
+  | #TRADEMATCH_AQUATIC => TRADEMATCH_AQUATIC->Some
+  | _ => None
+  }
+}
+
+let makeQuotedProductVariables = (productId, form: Form.submit) => {
   Mutation.makeVariables(
     ~id=productId,
+    ~categoryId=form.productCategory.c5->ProductForm.makeCategoryId,
     ~displayCategoryIds=form.displayCategories->ProductForm.makeDisplayCategoryIds,
     ~displayName=form.buyerProductName,
     ~image={
@@ -859,6 +935,7 @@ let makeQuotedProductVariables = (productId, form: Form.submit) =>
       thumb1920x1920: form.thumbnail.thumb1920x1920,
       thumb400x400: form.thumbnail.thumb400x400,
       thumb800x800: form.thumbnail.thumb800x800,
+      thumb800xall: form.thumbnail.thumb800xall,
     },
     ~description=form.editor,
     ~name=form.producerProductName,
@@ -869,8 +946,15 @@ let makeQuotedProductVariables = (productId, form: Form.submit) =>
     ~origin=form.origin,
     ~salesDocument=?{form.documentURL->Option.keep(str => str != "")},
     ~status=form.operationStatus->encodeStatus,
+    ~salesType={
+      switch form.salesType {
+      | RFQ_LIVESTOCK => #RFQ_LIVESTOCK
+      | TRADEMATCH_AQUATIC => #TRADEMATCH_AQUATIC
+      }
+    },
     (),
   )
+}
 
 @react.component
 let make = (~query) => {
@@ -879,6 +963,7 @@ let make = (~query) => {
   let (quotedlMutate, isQuotedlMutating) = Mutation.use()
   let {addToast} = ReactToastNotifications.useToasts()
   let (isShowUpdateSuccess, setShowUpdateSuccess) = React.Uncurried.useState(_ => Dialog.Hide)
+  let (errorStatus, setErrorStatus) = React.Uncurried.useState(_ => (Dialog.Hide, None))
   let (isShowInitalize, setShowInitialize) = React.Uncurried.useState(_ => Dialog.Hide)
 
   let methods = Hooks.Form.use(.
@@ -926,23 +1011,27 @@ let make = (~query) => {
     thumbnail,
     documentURL,
     editor,
+    salesType,
   } = Form.formName
 
   let onSubmit = (data: Js.Json.t, _) => {
-    let result =
-      data
-      ->Form.submit_decode
-      ->Result.map(data' =>
-        quotedlMutate(
-          ~variables=makeQuotedProductVariables(product.id, data'),
-          ~onCompleted={(_, _) => setShowUpdateSuccess(._ => Dialog.Show)},
-          (),
-        )->ignore
-      )
-
-    switch result {
-    | Error(e) => {
-        Js.log(e)
+    switch data->Form.submit_decode {
+    | Ok(data) =>
+      quotedlMutate(
+        ~variables=makeQuotedProductVariables(product.id, data),
+        ~onCompleted={
+          ({updateQuotedProduct}, _) => {
+            switch updateQuotedProduct {
+            | #UpdateQuotedProductResult(_) => setShowUpdateSuccess(._ => Dialog.Show)
+            | #Error({message}) => setErrorStatus(._ => (Dialog.Show, message))
+            | _ => setErrorStatus(._ => (Dialog.Show, None))
+            }
+          }
+        },
+        (),
+      )->ignore
+    | Error(error) => {
+        Js.log(error)
         addToast(.
           <div className=%twc("flex items-center")>
             <IconError height="24" width="24" className=%twc("mr-2") />
@@ -951,7 +1040,6 @@ let make = (~query) => {
           {appearance: "error"},
         )
       }
-    | _ => ()
     }
   }
 
@@ -966,7 +1054,7 @@ let make = (~query) => {
         <div className=%twc("divide-y text-sm")>
           <div className=%twc("flex flex-col space-y-6 py-6")>
             <ReadOnlyProducer value={product.producer->producerToReactSelected} />
-            <ReadOnlyCategory name=productCategory />
+            <Category name=productCategory />
             <DisplayCategoryInput name=displayCategories disabled />
           </div>
           <div className=%twc("flex flex-col space-y-6 py-6")>
@@ -984,9 +1072,12 @@ let make = (~query) => {
               <OperationStatusInput
                 name=operationStatus defaultValue={product.status->decodeStatus} disabled
               />
-              <OriginInput name=origin defaultValue={product.origin} disabled />
+              <QuotationTypeInput
+                name=salesType defaultValue={product.salesType->decodeSalesType}
+              />
             </div>
             <div className=%twc("flex gap-2 text-sm")>
+              <OriginInput name=origin defaultValue={product.origin} disabled />
               <GradeInput name=grade defaultValue={product.grade} disabled />
             </div>
           </div>
@@ -1046,8 +1137,8 @@ let make = (~query) => {
     <Dialog
       boxStyle=%twc("text-center rounded-2xl")
       isShow={isShowInitalize}
-      textOnCancel=`닫기`
-      textOnConfirm=`초기화`
+      textOnCancel={`닫기`}
+      textOnConfirm={`초기화`}
       kindOfConfirm=Dialog.Negative
       onConfirm={_ => {
         router->Next.Router.reload(router.pathname)
@@ -1059,7 +1150,7 @@ let make = (~query) => {
     <Dialog
       boxStyle=%twc("text-center rounded-2xl")
       isShow={isShowUpdateSuccess}
-      textOnCancel=`확인`
+      textOnCancel={`확인`}
       onCancel={_ => {
         setShowUpdateSuccess(._ => Dialog.Hide)
         router->Next.Router.reload(router.pathname)
@@ -1068,5 +1159,21 @@ let make = (~query) => {
         {`상품정보가 수정되었습니다.`->React.string}
       </p>
     </Dialog>
+    {
+      let (isShow, errorMessage) = errorStatus
+      <Dialog
+        boxStyle=%twc("text-center rounded-2xl")
+        isShow={isShow}
+        textOnCancel={`확인`}
+        onCancel={_ => setErrorStatus(._ => (Dialog.Hide, None))}>
+        <div className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+          {`상품정보 수정에 실패하였습니다.`->React.string}
+          {switch errorMessage {
+          | Some(msg) => <p> {msg->React.string} </p>
+          | None => React.null
+          }}
+        </div>
+      </Dialog>
+    }
   </ReactHookForm.Provider>
 }

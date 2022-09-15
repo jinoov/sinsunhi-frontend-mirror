@@ -81,6 +81,30 @@ const config = {
     scrollRestoration: true,
     images: { layoutRaw: true },
   },
+  async redirects() {
+    return [
+      {
+        source: "/buyer",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/buyer/search",
+        destination: "/search",
+        permanent: true,
+      },
+      {
+        source: "/buyer/products",
+        destination: "/products",
+        permanent: true,
+      },
+      {
+        source: "/buyer/products/:id",
+        destination: "/products/:id",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 if (process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {

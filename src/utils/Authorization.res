@@ -7,13 +7,13 @@ module type UserHook = {
 
 module Layout = (UserHook: UserHook) => {
   @react.component
-  let make = (~children, ~title, ~fallback=?) => {
+  let make = (~children, ~title, ~fallback=?, ~ssrFallback=React.null) => {
     let user = UserHook.use()
     <>
       <Next.Head> <title> {j`${title} - 신선하이`->React.string} </title> </Next.Head>
       {switch user {
       // TODO 로딩상태 페이지 추가 필요
-      | Unknown => React.null
+      | Unknown => ssrFallback
       | NotLoggedIn => fallback->getFallback
       | LoggedIn(_) => children
       }}

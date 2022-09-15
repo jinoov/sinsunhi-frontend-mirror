@@ -99,7 +99,7 @@ let make = (~onReset, ~onQuery) => {
         [
           regExp(
             ProducerCodes,
-            ~matches="^(G-[0-9]+([,\n\s]+)?)*$",
+            ~matches="^(G-[0-9]+([,\n\\s]+)?)*$",
             ~error=`숫자(Enter 또는 ","로 구분 가능)만 입력해주세요`,
           ),
         ]->Array.concatMany,
@@ -128,11 +128,11 @@ let make = (~onReset, ~onQuery) => {
       } else if k === "settlement-cycle" {
         v
         ->parseSettlementCycle
-        ->Option.forEach(settlementCycle' => setSettlementCycle(._ => settlementCycle'))
+        ->Option.forEach(settlementCycle' => setSettlementCycle(. _ => settlementCycle'))
       } else if k === "from" {
-        setQuery(.prev => {...prev, from: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
+        setQuery(. prev => {...prev, from: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
       } else if k === "to" {
-        setQuery(.prev => {...prev, to_: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
+        setQuery(. prev => {...prev, to_: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
       }
     })
 
@@ -182,7 +182,7 @@ let make = (~onReset, ~onQuery) => {
                 <Input
                   type_="text"
                   name="buyer-name"
-                  placeholder=`생산자명`
+                  placeholder={`생산자명`}
                   value={form.values->FormFields.get(FormFields.ProducerName)}
                   onChange={FormFields.ProducerName->form.handleChange->ReForm.Helpers.handleChange}
                   error=None
@@ -196,7 +196,7 @@ let make = (~onReset, ~onQuery) => {
                 <Textarea
                   type_="text"
                   name="orderer-name"
-                  placeholder=`생산자번호 입력(Enter 또는 “,”로 구분 가능, 최대 100개 입력 가능)`
+                  placeholder={`생산자번호 입력(Enter 또는 “,”로 구분 가능, 최대 100개 입력 가능)`}
                   className=%twc("flex-1")
                   value={form.values->FormFields.get(FormFields.ProducerCodes)}
                   onChange={FormFields.ProducerCodes
@@ -229,9 +229,9 @@ let make = (~onReset, ~onQuery) => {
                     value={stringifySettlementCycle(settlementCycle)}
                     className=%twc("block w-full h-full absolute top-0 opacity-0")
                     onChange={handleOnSelectSettlementCycle(setSettlementCycle)}>
-                    <option value=`1주`> {j`1주`->React.string} </option>
-                    <option value=`15일`> {j`15일`->React.string} </option>
-                    <option value=`1개월`> {j`1개월`->React.string} </option>
+                    <option value={`1주`}> {j`1주`->React.string} </option>
+                    <option value={`15일`}> {j`15일`->React.string} </option>
+                    <option value={`1개월`}> {j`1개월`->React.string} </option>
                   </select>
                 </div>
               </div>
@@ -272,13 +272,13 @@ let make = (~onReset, ~onQuery) => {
           <input
             type_="button"
             className=%twc("btn-level6")
-            value=`초기화`
+            value={`초기화`}
             onClick={handleOnReset}
             tabIndex=7
           />
         </span>
         <span className=%twc("w-20 h-11 flex")>
-          <input type_="submit" className=%twc("btn-level1") value=`검색` tabIndex=6 />
+          <input type_="submit" className=%twc("btn-level1") value={`검색`} tabIndex=6 />
         </span>
       </div>
     </form>

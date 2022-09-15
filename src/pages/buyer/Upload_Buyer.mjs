@@ -2,8 +2,10 @@
 
 import * as Env from "../../constants/Env.mjs";
 import * as Swr from "swr";
+import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
+import * as Global from "../../components/Global.mjs";
 import * as Locale from "../../utils/Locale.mjs";
 import * as Skeleton from "../../components/Skeleton.mjs";
 import * as IconArrow from "../../components/svgs/IconArrow.mjs";
@@ -28,7 +30,7 @@ function Upload_Buyer$UserDeposit(Props) {
         });
   } else if (status.TAG === /* Loaded */0) {
     var deposit$p = CustomHooks.UserDeposit.response_decode(status._0);
-    tmp = deposit$p.TAG === /* Ok */0 ? Locale.Float.show(undefined, deposit$p._0.data.deposit, 0) + "원" : React.createElement(Skeleton.Box.make, {
+    tmp = deposit$p.TAG === /* Ok */0 ? "" + Locale.Float.show(undefined, deposit$p._0.data.deposit, 0) + "원" : React.createElement(Skeleton.Box.make, {
             className: "w-40"
           });
   } else {
@@ -153,6 +155,15 @@ function Upload_Buyer(Props) {
         return /* Hide */1;
       });
   var setShowError = match$2[1];
+  var scrollIntoView = function (target) {
+    var el = document.getElementById(target);
+    Belt_Option.mapWithDefault((el == null) ? undefined : Caml_option.some(el), undefined, (function (el$p) {
+            el$p.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start"
+                });
+          }));
+  };
   ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
   return React.createElement(Authorization.Buyer.make, {
               children: null,
@@ -194,21 +205,16 @@ function Upload_Buyer(Props) {
                               setShowSuccess(function (param) {
                                     return /* Show */0;
                                   });
-                              mutate(Env.restApiUrl + "/order/recent-uploads?upload-type=order&pay-type=PAID", undefined, undefined);
-                              var target = "upload-status";
-                              var el = document.getElementById(target);
-                              return Belt_Option.mapWithDefault((el == null) ? undefined : Caml_option.some(el), undefined, (function (el$p) {
-                                            el$p.scrollIntoView({
-                                                  behavior: "smooth",
-                                                  block: "start"
-                                                });
-                                            
-                                          }));
+                              mutate("" + Env.restApiUrl + "/order/recent-uploads?upload-type=order&pay-type=PAID", undefined, undefined);
+                              scrollIntoView("upload-status");
+                              Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "CUSTOM_EVENT", {
+                                    action: "order_uploaded"
+                                  }, undefined);
                             }),
                           onFailure: (function (param) {
-                              return setShowError(function (param) {
-                                          return /* Show */0;
-                                        });
+                              setShowError(function (param) {
+                                    return /* Show */0;
+                                  });
                             }),
                           startIndex: 1
                         }), React.createElement("section", {
@@ -222,7 +228,12 @@ function Upload_Buyer(Props) {
                                     }, "*이 양식으로 작성된 주문서만 업로드 가능")), React.createElement("a", {
                                   href: Env.buyerOrderExcelFormUri
                                 }, React.createElement("span", {
-                                      className: "inline-block text-center text-green-gl font-bold py-2 w-28 border border-green-gl rounded-xl focus:outline-none hover:text-green-gl-dark hover:border-green-gl-dark"
+                                      className: "inline-block text-center text-green-gl font-bold py-2 w-28 border border-green-gl rounded-xl focus:outline-none hover:text-green-gl-dark hover:border-green-gl-dark",
+                                      onClick: (function (param) {
+                                          Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "CUSTOM_EVENT", {
+                                                action: "order_templete_download"
+                                              }, undefined);
+                                        })
                                     }, "양식 다운로드")))))), React.createElement("div", {
                   className: "container max-w-lg mx-auto p-7 sm:shadow-gl sm:mt-4",
                   id: "upload-status"
@@ -235,7 +246,7 @@ function Upload_Buyer(Props) {
                         }, "*가장 최근 요청한 3가지 등록건만 노출됩니다.")), React.createElement(UploadStatus_Buyer.make, {
                       kind: /* Buyer */1,
                       onChangeLatestUpload: (function (param) {
-                          return mutate(Env.restApiUrl + "/user/deposit?" + new URLSearchParams(router.query).toString(), undefined, true);
+                          mutate("" + Env.restApiUrl + "/user/deposit?" + new URLSearchParams(router.query).toString() + "", undefined, true);
                         }),
                       uploadType: /* Order */0
                     }), React.createElement("p", {
@@ -246,9 +257,9 @@ function Upload_Buyer(Props) {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "주문서 업로드가 실행되었습니다. 성공여부를 꼭 주문서 업로드 결과에서 확인해주세요."),
                   onConfirm: (function (param) {
-                      return setShowSuccess(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowSuccess(function (param) {
+                            return /* Hide */1;
+                          });
                     })
                 }), React.createElement(Dialog.make, {
                   isShow: match$2[0],
@@ -256,9 +267,9 @@ function Upload_Buyer(Props) {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "파일 업로드에 실패하였습니다."),
                   onConfirm: (function (param) {
-                      return setShowError(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowError(function (param) {
+                            return /* Hide */1;
+                          });
                     })
                 }));
 }
@@ -272,6 +283,5 @@ export {
   UserDeposit ,
   Tab ,
   make ,
-  
 }
 /* Env Not a pure module */

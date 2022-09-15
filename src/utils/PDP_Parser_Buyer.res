@@ -1,9 +1,9 @@
 // 단품
 module ProductOption = {
   // 중량
-  let makeWeightLabel = (weight, unit) => {
-    let weightToStr = w => {
-      w->Locale.Float.round1->Float.toString
+  let makeAmountLabel = (amount, unit) => {
+    let amountToStr = a => {
+      a->Locale.Float.round1->Float.toString
     }
 
     let unitToStr = u => {
@@ -11,14 +11,14 @@ module ProductOption = {
       | #G => "g"
       | #KG => "kg"
       | #T => "t"
+      | #ML => "ml"
+      | #L => "l"
+      | #EA => "ea"
       | _ => ""
       }
     }
 
-    Helper.Option.map2(weight->Option.map(weightToStr), unit->Option.map(unitToStr), (
-      wLabel,
-      uLabel,
-    ) => `${wLabel}${uLabel}`)
+    `${amount->amountToStr}${unit->unitToStr}`
   }
 
   // 입수: (min은 라벨 표현에 이용되지 않음)
@@ -41,27 +41,6 @@ module ProductOption = {
       mLabel,
       uLabel,
     ) => `최대 ${mLabel}${uLabel}`)
-  }
-
-  // 개당 중량: (min은 라벨 표현에 이용되지 않음)
-  let makePerWeightLabel = (max, unit) => {
-    let maxWeightToStr = w => {
-      w->Locale.Float.round1->Float.toString
-    }
-
-    let unitToStr = u => {
-      switch u {
-      | #G => "g"
-      | #KG => "kg"
-      | #T => "t"
-      | _ => ""
-      }
-    }
-
-    Helper.Option.map2(max->Option.map(maxWeightToStr), unit->Option.map(unitToStr), (
-      wLabel,
-      uLabel,
-    ) => `최대 ${wLabel}${uLabel}`)
   }
 
   let makeOptionPrice = (~price, ~deliveryCost, ~isFreeShipping) => {
@@ -92,9 +71,9 @@ module Product = {
   // 일반상품
   module Normal = {
     // 일반상품 중량 variation: 단품의 중량정보를 취합하여 중복제거 후 join하여 표현
-    let makeWeightLabel = weightOptions => {
-      weightOptions
-      ->Array.keepMap(((weight, unit)) => ProductOption.makeWeightLabel(weight, unit))
+    let makeAmountLabel = amountOptions => {
+      amountOptions
+      ->Array.map(((amount, unit)) => ProductOption.makeAmountLabel(amount, unit))
       ->Set.String.fromArray
       ->Set.String.toArray
       ->Array.joinWith("/", x => x)

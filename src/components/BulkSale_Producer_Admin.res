@@ -446,10 +446,17 @@ module Item = {
             }
           </p>
           <p>
-            {`(${application.farmmorningUser.phoneNumber
-              ->Helper.PhoneNumber.parse
-              ->Option.flatMap(Helper.PhoneNumber.format)
-              ->Option.getWithDefault(application.farmmorningUser.phoneNumber)})`->React.string}
+            {
+              let phoneNumber = application.bulkSaleProducerDetail->Option.map(d => d.phoneNumber)
+              let parsedPhoneNumber =
+                phoneNumber
+                ->Option.flatMap(p => p->Helper.PhoneNumber.parse)
+                ->Option.flatMap(Helper.PhoneNumber.format)
+
+              `(${parsedPhoneNumber->Option.getWithDefault(
+                  phoneNumber->Option.getWithDefault(application.farmmorningUser.phoneNumber),
+                )})`->React.string
+            }
           </p>
           <p className=%twc("text-text-L3")>
             {Helper.Option.map2(application.farm.address, application.farm.addressDetail, (
@@ -503,17 +510,33 @@ module Item = {
       @react.component
       let make = () => {
         <li className=%twc("grid grid-cols-7-admin-bulk-sale-product")>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Checkbox /> </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
-            <Box className=%twc("w-20") /> <Box /> <Box className=%twc("w-12") />
+            <Checkbox />
           </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> <Box /> </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
-            <Box /> <Box className=%twc("w-2/3") /> <Box className=%twc("w-8") />
+            <Box className=%twc("w-20") />
+            <Box />
+            <Box className=%twc("w-12") />
           </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> <Box /> </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+            <Box className=%twc("w-2/3") />
+            <Box className=%twc("w-8") />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+            <Box />
+          </div>
         </li>
       }
     }

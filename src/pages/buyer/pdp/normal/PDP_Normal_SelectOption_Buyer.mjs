@@ -3,14 +3,18 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Locale from "../../../../utils/Locale.mjs";
+import * as Checkbox from "../../../../components/common/Checkbox.mjs";
+import * as IconClose from "../../../../components/svgs/IconClose.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
+import * as ReactRelay from "react-relay";
+import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
+import * as DS_BottomDrawer from "../../../../components/common/container/DS_BottomDrawer.mjs";
 import * as IconArrowSelect from "../../../../components/svgs/IconArrowSelect.mjs";
 import * as PDP_Parser_Buyer from "../../../../utils/PDP_Parser_Buyer.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactScrollArea from "@radix-ui/react-scroll-area";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -18,13 +22,13 @@ import * as PDPNormalSelectOptionBuyerFragment_graphql from "../../../../__gener
 import * as PDPNormalSelectOptionBuyerItemFragment_graphql from "../../../../__generated__/PDPNormalSelectOptionBuyerItemFragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(PDPNormalSelectOptionBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPNormalSelectOptionBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalSelectOptionBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPNormalSelectOptionBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPNormalSelectOptionBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -42,18 +46,19 @@ var List = {
   productStatus_decode: List_productStatus_decode,
   productStatus_fromString: List_productStatus_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
 
 function use$1(fRef) {
-  var data = Hooks.useFragment(PDPNormalSelectOptionBuyerItemFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPNormalSelectOptionBuyerItemFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalSelectOptionBuyerItemFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt$1(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPNormalSelectOptionBuyerItemFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPNormalSelectOptionBuyerItemFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -71,6 +76,7 @@ var Item = {
   productOptionStatus_decode: Item_productOptionStatus_decode,
   productOptionStatus_fromString: Item_productOptionStatus_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use$1,
   useOpt: useOpt$1
 };
@@ -97,16 +103,16 @@ var Scroll = {
   make: PDP_Normal_SelectOption_Buyer$Scroll
 };
 
-function PDP_Normal_SelectOption_Buyer$Item(Props) {
+function PDP_Normal_SelectOption_Buyer$PC$Item(Props) {
   var query = Props.query;
-  var onSelect = Props.onSelect;
+  var setSelectedOptions = Props.setSelectedOptions;
   var match = use$1(query);
   var match$1 = match.productOptionCost;
   var optionName = match.optionName;
   var id = match.id;
   var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match$1.deliveryCost, match$1.isFreeShipping);
   var optionPriceLabel = Belt_Option.mapWithDefault(optionPrice, "", (function (optionPrice$p) {
-          return Locale.Float.show(undefined, optionPrice$p, 0) + "원";
+          return "" + Locale.Float.show(undefined, optionPrice$p, 0) + "원";
         }));
   if (match.status === "SOLDOUT") {
     return React.createElement("div", {
@@ -121,9 +127,13 @@ function PDP_Normal_SelectOption_Buyer$Item(Props) {
                 children: React.createElement("div", {
                       className: "rounded-lg py-3 px-2 hover:bg-gray-100",
                       onClick: (function (param) {
-                          return onSelect(function (param) {
-                                      return id;
-                                    });
+                          setSelectedOptions(function (prev) {
+                                if (Belt_MapString.has(prev, id)) {
+                                  return prev;
+                                } else {
+                                  return Belt_MapString.set(prev, id, 1);
+                                }
+                              });
                         })
                     }, React.createElement("span", {
                           className: "text-gray-800"
@@ -136,41 +146,71 @@ function PDP_Normal_SelectOption_Buyer$Item(Props) {
 }
 
 var Item$1 = {
-  make: PDP_Normal_SelectOption_Buyer$Item
+  make: PDP_Normal_SelectOption_Buyer$PC$Item
 };
 
 function PDP_Normal_SelectOption_Buyer$PC(Props) {
   var query = Props.query;
-  var onSelect = Props.onSelect;
+  var setSelectedOptions = Props.setSelectedOptions;
   var setShowModal = Props.setShowModal;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = use(query);
-  var productOptions = match.productOptions;
-  return React.createElement("div", {
+  var selectableStatus = user === 0 ? /* Loading */0 : (
+      match.status === "SOLDOUT" ? /* Soldout */2 : (
+          typeof user === "number" ? /* Unauthorized */1 : /* Available */3
+        )
+    );
+  var tmp;
+  switch (selectableStatus) {
+    case /* Loading */0 :
+        tmp = React.createElement("div", {
+              className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl"
+            }, React.createElement("span", {
+                  className: "text-gray-600"
+                }, "선택해주세요"), React.createElement(IconArrowSelect.make, {
+                  height: "20",
+                  width: "20",
+                  fill: "#121212"
+                }));
+        break;
+    case /* Unauthorized */1 :
+        tmp = React.createElement("div", {
+              className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl",
+              onClick: (function (param) {
+                  setShowModal(function (param) {
+                        return /* Show */{
+                                _0: /* Unauthorized */{
+                                  _0: "로그인 후에\n단품을 선택하실 수 있습니다."
+                                }
+                              };
+                      });
+                })
+            }, React.createElement("span", {
+                  className: "text-gray-600"
+                }, "선택해주세요"), React.createElement(IconArrowSelect.make, {
+                  height: "20",
+                  width: "20",
+                  fill: "#121212"
+                }));
+        break;
+    case /* Soldout */2 :
+        tmp = React.createElement("div", {
+              className: "h-13 p-3 flex items-center justify-between border border-gray-300 rounded-xl bg-gray-100"
+            }, React.createElement("span", {
+                  className: "text-gray-400"
+                }, "선택해주세요"), React.createElement(IconArrowSelect.make, {
+                  height: "20",
+                  width: "20",
+                  fill: "#B2B2B2"
+                }));
+        break;
+    case /* Available */3 :
+        tmp = React.createElement("div", {
               className: "w-full"
-            }, React.createElement("h1", {
-                  className: "text-base font-bold text-text-L1"
-                }, "단품 선택"), React.createElement("div", {
-                  className: "w-full mt-4"
-                }, typeof user === "number" ? (
-                    user !== 0 ? React.createElement(React.Fragment, undefined, React.createElement("div", {
-                                className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl",
-                                onClick: (function (param) {
-                                    return setShowModal(function (param) {
-                                                return /* Show */{
-                                                        _0: /* Unauthorized */{
-                                                          _0: "로그인 후에\n단품을 선택하실 수 있습니다."
-                                                        }
-                                                      };
-                                              });
-                                  })
-                              }, React.createElement("span", {
-                                    className: "text-gray-600"
-                                  }, "선택해주세요"), React.createElement(IconArrowSelect.make, {
-                                    height: "20",
-                                    width: "20",
-                                    fill: "#121212"
-                                  }))) : React.createElement("div", {
+            }, React.createElement(ReactDropdownMenu.Root, {
+                  children: null
+                }, React.createElement(ReactDropdownMenu.Trigger, {
+                      children: React.createElement("div", {
                             className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl"
                           }, React.createElement("span", {
                                 className: "text-gray-600"
@@ -178,139 +218,271 @@ function PDP_Normal_SelectOption_Buyer$PC(Props) {
                                 height: "20",
                                 width: "20",
                                 fill: "#121212"
-                              }))
-                  ) : React.createElement("div", {
-                        className: "w-full"
-                      }, React.createElement(ReactDropdownMenu.Root, {
-                            children: null
-                          }, match.status === "SOLDOUT" ? React.createElement("div", {
-                                  className: "h-13 p-3 flex items-center justify-between border border-gray-300 rounded-xl bg-gray-100"
-                                }, React.createElement("span", {
-                                      className: "text-gray-400"
-                                    }, "선택해주세요"), React.createElement(IconArrowSelect.make, {
-                                      height: "20",
-                                      width: "20",
-                                      fill: "#B2B2B2"
-                                    })) : React.createElement(ReactDropdownMenu.Trigger, {
-                                  children: React.createElement("div", {
-                                        className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl"
-                                      }, React.createElement("span", {
-                                            className: "text-gray-600"
-                                          }, "선택해주세요"), React.createElement(IconArrowSelect.make, {
-                                            height: "20",
-                                            width: "20",
-                                            fill: "#121212"
-                                          })),
-                                  className: "w-full focus:outline-none"
-                                }), React.createElement(ReactDropdownMenu.Content, {
-                                children: React.createElement(PDP_Normal_SelectOption_Buyer$Scroll, {
-                                      children: productOptions !== undefined ? Belt_Array.map(productOptions.edges, (function (param) {
-                                                var match = param.node;
-                                                return React.createElement(PDP_Normal_SelectOption_Buyer$Item, {
-                                                            query: match.fragmentRefs,
-                                                            onSelect: onSelect,
-                                                            key: "sku-" + match.stockSku
-                                                          });
-                                              })) : []
-                                    }),
-                                align: "start",
-                                className: "dropdown-content w-[446px] bg-white border rounded-lg shadow-md p-1",
-                                sideOffset: 4
-                              })))));
+                              })),
+                      className: "w-full focus:outline-none"
+                    }), React.createElement(ReactDropdownMenu.Content, {
+                      children: React.createElement(PDP_Normal_SelectOption_Buyer$Scroll, {
+                            children: Belt_Option.mapWithDefault(match.productOptions, null, (function (param) {
+                                    return Belt_Array.map(param.edges, (function (param) {
+                                                  var match = param.node;
+                                                  return React.createElement(PDP_Normal_SelectOption_Buyer$PC$Item, {
+                                                              query: match.fragmentRefs,
+                                                              setSelectedOptions: setSelectedOptions,
+                                                              key: "sku-" + match.stockSku + ""
+                                                            });
+                                                }));
+                                  }))
+                          }),
+                      align: "start",
+                      className: "dropdown-content w-[446px] bg-white border rounded-lg shadow-md p-1",
+                      sideOffset: 4
+                    })));
+        break;
+    
+  }
+  return React.createElement("div", {
+              className: "w-full"
+            }, React.createElement("h1", {
+                  className: "text-base font-bold text-text-L1"
+                }, "단품 선택"), React.createElement("div", {
+                  className: "w-full mt-4"
+                }, tmp));
 }
 
 var PC = {
+  Item: Item$1,
   make: PDP_Normal_SelectOption_Buyer$PC
+};
+
+function PDP_Normal_SelectOption_Buyer$MO$Item(Props) {
+  var query = Props.query;
+  var checked = Props.checked;
+  var onChange = Props.onChange;
+  var match = use$1(query);
+  var match$1 = match.productOptionCost;
+  var optionName = match.optionName;
+  var id = match.id;
+  var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match$1.deliveryCost, match$1.isFreeShipping);
+  var optionPriceLabel = Belt_Option.mapWithDefault(optionPrice, "", (function (optionPrice$p) {
+          return "" + Locale.Float.show(undefined, optionPrice$p, 0) + "원";
+        }));
+  if (match.status === "SOLDOUT") {
+    return React.createElement("div", {
+                className: "py-4 flex justify-between items-center"
+              }, React.createElement("label", {
+                    className: "w-full flex items-start mr-3",
+                    htmlFor: id
+                  }, React.createElement("span", {
+                        className: "text-gray-400"
+                      }, optionName, React.createElement("span", {
+                            className: "ml-2 whitespace-nowrap"
+                          }, optionPriceLabel), " - 품절")), React.createElement(Checkbox.make, {
+                    id: id,
+                    checked: checked,
+                    onChange: onChange,
+                    disabled: true
+                  }));
+  } else {
+    return React.createElement("div", {
+                className: "py-4 flex justify-between items-center"
+              }, React.createElement("label", {
+                    className: "w-full flex items-start mr-3",
+                    htmlFor: id
+                  }, React.createElement("span", {
+                        className: "text-gray-800"
+                      }, optionName, React.createElement("span", {
+                            className: "ml-2 whitespace-nowrap"
+                          }, optionPriceLabel))), React.createElement(Checkbox.make, {
+                    id: id,
+                    checked: checked,
+                    onChange: onChange
+                  }));
+  }
+}
+
+var Item$2 = {
+  make: PDP_Normal_SelectOption_Buyer$MO$Item
+};
+
+function PDP_Normal_SelectOption_Buyer$MO$OptionList(Props) {
+  var productOptions = Props.productOptions;
+  var selectedOptions = Props.selectedOptions;
+  var setSelectedOptions = Props.setSelectedOptions;
+  var onClose = Props.onClose;
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
+                  className: "px-4"
+                }, React.createElement(PDP_Normal_SelectOption_Buyer$Scroll, {
+                      children: Belt_Array.map(productOptions.edges, (function (param) {
+                              var match = param.node;
+                              var id = match.id;
+                              return React.createElement(PDP_Normal_SelectOption_Buyer$MO$Item, {
+                                          query: match.fragmentRefs,
+                                          checked: Belt_MapString.has(selectedOptions, id),
+                                          onChange: (function (param) {
+                                              if (Belt_MapString.has(selectedOptions, id)) {
+                                                return setSelectedOptions(function (prev) {
+                                                            return Belt_MapString.remove(prev, id);
+                                                          });
+                                              } else {
+                                                return setSelectedOptions(function (prev) {
+                                                            return Belt_MapString.set(prev, id, 1);
+                                                          });
+                                              }
+                                            }),
+                                          key: id
+                                        });
+                            }))
+                    })), React.createElement("section", {
+                  className: "w-full px-4 py-5"
+                }, React.createElement("button", {
+                      className: "w-full h-14 rounded-xl bg-primary text-white font-bold text-base",
+                      onClick: (function (param) {
+                          Curry._1(onClose, undefined);
+                        })
+                    }, "확인")));
+}
+
+var OptionList = {
+  make: PDP_Normal_SelectOption_Buyer$MO$OptionList
+};
+
+function PDP_Normal_SelectOption_Buyer$MO$BottomSheet(Props) {
+  var isShow = Props.isShow;
+  var onClose = Props.onClose;
+  var query = Props.query;
+  var selectedOptions = Props.selectedOptions;
+  var setSelectedOptions = Props.setSelectedOptions;
+  var match = use(query);
+  var productOptions = match.productOptions;
+  return React.createElement(DS_BottomDrawer.Root.make, {
+              isShow: isShow,
+              onClose: onClose,
+              children: null
+            }, React.createElement("section", {
+                  className: "w-full h-16 px-3 flex items-center"
+                }, React.createElement("div", {
+                      className: "w-10"
+                    }), React.createElement("div", {
+                      className: "flex flex-1 items-center justify-center text-base text-black font-bold"
+                    }, "옵션 선택"), React.createElement("button", {
+                      className: "w-10 h-10 flex items-center justify-center",
+                      onClick: (function (param) {
+                          Curry._1(onClose, undefined);
+                        })
+                    }, React.createElement(IconClose.make, {
+                          height: "24",
+                          width: "24",
+                          fill: "#000"
+                        }))), React.createElement(DS_BottomDrawer.Body.make, {
+                  children: productOptions !== undefined ? React.createElement(PDP_Normal_SelectOption_Buyer$MO$OptionList, {
+                          productOptions: productOptions,
+                          selectedOptions: selectedOptions,
+                          setSelectedOptions: setSelectedOptions,
+                          onClose: onClose
+                        }) : null
+                }));
+}
+
+var BottomSheet = {
+  make: PDP_Normal_SelectOption_Buyer$MO$BottomSheet
 };
 
 function PDP_Normal_SelectOption_Buyer$MO(Props) {
   var query = Props.query;
-  var onSelect = Props.onSelect;
+  var selectedOptions = Props.selectedOptions;
+  var setSelectedOptions = Props.setSelectedOptions;
   var setShowModal = Props.setShowModal;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = use(query);
-  var productOptions = match.productOptions;
-  return React.createElement("div", {
-              className: "w-full flex flex-col gap-4"
-            }, React.createElement("h1", {
-                  className: "text-base font-bold text-text-L1"
-                }, "단품선택"), React.createElement("section", undefined, typeof user === "number" ? (
-                    user !== 0 ? React.createElement("div", {
-                            className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl",
-                            onClick: (function (param) {
-                                return setShowModal(function (param) {
-                                            return /* Show */{
-                                                    _0: /* Unauthorized */{
-                                                      _0: "로그인 후에\n단품을 선택하실 수 있습니다."
-                                                    }
-                                                  };
-                                          });
-                              })
-                          }, React.createElement("span", {
-                                className: "text-gray-600"
-                              }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
-                                height: "20",
-                                width: "20",
-                                fill: "#121212"
-                              })) : React.createElement("div", {
-                            className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl"
-                          }, React.createElement("span", {
-                                className: "text-gray-600"
-                              }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
-                                height: "20",
-                                width: "20",
-                                fill: "#121212"
-                              }))
-                  ) : React.createElement("div", {
-                        className: "flex flex-col"
-                      }, React.createElement(ReactDropdownMenu.Root, {
-                            children: null
-                          }, match.status === "SOLDOUT" ? React.createElement("div", {
-                                  className: "h-13 p-3 flex items-center justify-between border border-gray-300 rounded-xl bg-gray-100"
-                                }, React.createElement("span", {
-                                      className: "text-gray-400"
-                                    }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
-                                      height: "20",
-                                      width: "20",
-                                      fill: "#B2B2B2"
-                                    })) : React.createElement(ReactDropdownMenu.Trigger, {
-                                  children: React.createElement("div", {
-                                        className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl"
-                                      }, React.createElement("span", {
-                                            className: "text-gray-600"
-                                          }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
-                                            height: "20",
-                                            width: "20",
-                                            fill: "#121212"
-                                          })),
-                                  className: "focus:outline-none"
-                                }), React.createElement(ReactDropdownMenu.Content, {
-                                children: React.createElement(PDP_Normal_SelectOption_Buyer$Scroll, {
-                                      children: productOptions !== undefined ? Belt_Array.map(productOptions.edges, (function (param) {
-                                                var match = param.node;
-                                                return React.createElement(PDP_Normal_SelectOption_Buyer$Item, {
-                                                            query: match.fragmentRefs,
-                                                            onSelect: onSelect,
-                                                            key: "sku-" + match.stockSku
-                                                          });
-                                              })) : []
-                                    }),
-                                align: "start",
-                                className: "dropdown-content w-[calc(100vw-40px)] max-w-[calc(768px-40px)] bg-white border rounded-lg shadow-md p-1",
-                                sideOffset: 4
-                              })))));
+  var match$1 = React.useState(function () {
+        return false;
+      });
+  var setShowBottomSheet = match$1[1];
+  var selectableStatus = user === 0 ? /* Loading */0 : (
+      match.status === "SOLDOUT" ? /* Soldout */2 : (
+          typeof user === "number" ? /* Unauthorized */1 : /* Available */3
+        )
+    );
+  switch (selectableStatus) {
+    case /* Loading */0 :
+        return React.createElement("div", {
+                    className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl"
+                  }, React.createElement("span", {
+                        className: "text-gray-600"
+                      }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
+                        height: "20",
+                        width: "20",
+                        fill: "#121212"
+                      }));
+    case /* Unauthorized */1 :
+        return React.createElement("div", {
+                    className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl",
+                    onClick: (function (param) {
+                        setShowModal(function (param) {
+                              return /* Show */{
+                                      _0: /* Unauthorized */{
+                                        _0: "로그인 후에\n단품을 선택하실 수 있습니다."
+                                      }
+                                    };
+                            });
+                      })
+                  }, React.createElement("span", {
+                        className: "text-gray-600"
+                      }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
+                        height: "20",
+                        width: "20",
+                        fill: "#121212"
+                      }));
+    case /* Soldout */2 :
+        return React.createElement("div", {
+                    className: "h-13 p-3 flex items-center justify-between border border-gray-300 rounded-xl bg-gray-100"
+                  }, React.createElement("span", {
+                        className: "text-gray-400"
+                      }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
+                        height: "20",
+                        width: "20",
+                        fill: "#B2B2B2"
+                      }));
+    case /* Available */3 :
+        return React.createElement(React.Fragment, undefined, React.createElement("div", {
+                        className: "w-full h-13 p-3 flex items-center justify-between border rounded-xl",
+                        onClick: (function (param) {
+                            setShowBottomSheet(function (param) {
+                                  return true;
+                                });
+                          })
+                      }, React.createElement("span", {
+                            className: "text-gray-600"
+                          }, "단품을 선택해 주세요"), React.createElement(IconArrowSelect.make, {
+                            height: "20",
+                            width: "20",
+                            fill: "#121212"
+                          })), React.createElement(PDP_Normal_SelectOption_Buyer$MO$BottomSheet, {
+                        isShow: match$1[0],
+                        onClose: (function (param) {
+                            setShowBottomSheet(function (param) {
+                                  return false;
+                                });
+                          }),
+                        query: query,
+                        selectedOptions: selectedOptions,
+                        setSelectedOptions: setSelectedOptions
+                      }));
+    
+  }
 }
 
 var MO = {
+  Item: Item$2,
+  OptionList: OptionList,
+  BottomSheet: BottomSheet,
   make: PDP_Normal_SelectOption_Buyer$MO
 };
 
 export {
   Fragments ,
   Scroll ,
-  Item$1 as Item,
   PC ,
   MO ,
-  
 }
 /* react Not a pure module */

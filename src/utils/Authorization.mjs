@@ -4,6 +4,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import Head from "next/head";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "./CustomHooks.mjs";
 
 function getFallback(fallback) {
@@ -15,11 +16,13 @@ function Layout(UserHook) {
     var children = Props.children;
     var title = Props.title;
     var fallback = Props.fallback;
+    var ssrFallbackOpt = Props.ssrFallback;
+    var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
     var user = Curry._1(UserHook.use, undefined);
     return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                    children: React.createElement("title", undefined, title + " - 신선하이")
+                    children: React.createElement("title", undefined, "" + title + " - 신선하이")
                   }), typeof user === "number" ? (
-                  user !== 0 ? getFallback(fallback) : null
+                  user !== 0 ? getFallback(fallback) : ssrFallback
                 ) : children);
   };
   return {
@@ -33,11 +36,13 @@ function Authorization$Layout(Props) {
   var children = Props.children;
   var title = Props.title;
   var fallback = Props.fallback;
+  var ssrFallbackOpt = Props.ssrFallback;
+  var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, title + " - 신선하이")
+                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
                 }), typeof user === "number" ? (
-                user !== 0 ? getFallback(fallback) : null
+                user !== 0 ? getFallback(fallback) : ssrFallback
               ) : children);
 }
 
@@ -51,11 +56,13 @@ function Authorization$Layout$1(Props) {
   var children = Props.children;
   var title = Props.title;
   var fallback = Props.fallback;
+  var ssrFallbackOpt = Props.ssrFallback;
+  var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook$1.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, title + " - 신선하이")
+                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
                 }), typeof user === "number" ? (
-                user !== 0 ? getFallback(fallback) : null
+                user !== 0 ? getFallback(fallback) : ssrFallback
               ) : children);
 }
 
@@ -69,11 +76,13 @@ function Authorization$Layout$2(Props) {
   var children = Props.children;
   var title = Props.title;
   var fallback = Props.fallback;
+  var ssrFallbackOpt = Props.ssrFallback;
+  var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook$2.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, title + " - 신선하이")
+                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
                 }), typeof user === "number" ? (
-                user !== 0 ? getFallback(fallback) : null
+                user !== 0 ? getFallback(fallback) : ssrFallback
               ) : children);
 }
 
@@ -87,6 +96,5 @@ export {
   Admin ,
   Buyer ,
   Seller ,
-  
 }
 /* react Not a pure module */

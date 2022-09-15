@@ -37,7 +37,7 @@ function Guide_Upload_Buyer(Props) {
                                     className: "flex mt-5"
                                   }, React.createElement("a", {
                                         className: "flex-1",
-                                        href: "/buyer/products/advanced-search",
+                                        href: "/products/advanced-search",
                                         target: "_blank"
                                       }, React.createElement("span", {
                                             className: "block text-center p-3 rounded-xl border border-green-gl text-base font-bold text-green-gl mr-2 bg-white"
@@ -63,7 +63,7 @@ function Guide_Upload_Buyer(Props) {
                                                         className: "inline sm:whitespace-pre-wrap"
                                                       }, React.createElement("a", {
                                                             id: "link-of-upload-guide",
-                                                            href: "/buyer/products/advanced-search",
+                                                            href: "/products/advanced-search",
                                                             target: "_blank"
                                                           }, React.createElement("p", {
                                                                 className: "inline cursor-pointer hover:underline"
@@ -77,7 +77,7 @@ function Guide_Upload_Buyer(Props) {
                                                 className: "sm:whitespace-pre-wrap"
                                               }, "일부 상품은 출고시간이 상이한 경우가 있으므로 \n상품별 출고 마감시간은 ", React.createElement("a", {
                                                     id: "link-of-upload-guide",
-                                                    href: "/buyer/products/advanced-search",
+                                                    href: "/products/advanced-search",
                                                     target: "_blank"
                                                   }, React.createElement("p", {
                                                         className: "inline cursor-pointer hover:underline"
@@ -124,6 +124,5 @@ var make = Guide_Upload_Buyer;
 
 export {
   make ,
-  
 }
 /* Env Not a pure module */

@@ -204,6 +204,7 @@ let make = (~defaultValue: defaultValue, ~defaultCategoryQuery) => {
 
         router->Next.Router.push(`${router.pathname}?${router.query->makeWithDict->toString}`)
       }
+
     | Error(err) => Js.log(err)
     }
   }
@@ -246,15 +247,15 @@ let make = (~defaultValue: defaultValue, ~defaultCategoryQuery) => {
                     </label>
                     <div className=%twc("h-9 w-80")>
                       <input
-                        name=producerName.name
-                        onBlur=producerName.onBlur
-                        onChange=producerName.onChange
-                        ref=producerName.ref
                         id=producerName.name
+                        ref=producerName.ref
+                        name=producerName.name
+                        onChange=producerName.onChange
+                        onBlur=producerName.onBlur
                         className=%twc(
                           "w-44 py-2 px-3 border border-border-default-L1 bg-white rounded-md h-9 focus:outline-none"
                         )
-                        placeholder=`생산자명 입력`
+                        placeholder={`생산자명 입력`}
                       />
                     </div>
                   </div>
@@ -262,16 +263,16 @@ let make = (~defaultValue: defaultValue, ~defaultCategoryQuery) => {
                     <label htmlFor="producer-ids">
                       <span className=%twc("mr-2")> {`생산자번호`->React.string} </span>
                     </label>
-                    <textarea
-                      name=producerCodes.name
-                      onBlur=producerCodes.onBlur
-                      onChange=producerCodes.onChange
-                      ref=producerCodes.ref
+                    <input
                       id=producerCodes.name
+                      ref=producerCodes.ref
+                      name=producerCodes.name
+                      onChange=producerCodes.onChange
+                      onBlur=producerCodes.onBlur
                       className=%twc(
                         "w-auto py-2 px-3 border border-border-default-L1 bg-white rounded-md h-9 focus:outline-none grow"
                       )
-                      placeholder=`생산자번호 입력(Enter 또는 “,”로 구분 가능, 최대 100개 입력 가능)`
+                      placeholder={`생산자번호 입력(“,”로 구분 가능, 최대 100개 입력 가능)`}
                     />
                   </div>
                 </div>
@@ -279,32 +280,32 @@ let make = (~defaultValue: defaultValue, ~defaultCategoryQuery) => {
                   <label htmlFor="product-name">
                     <span className=%twc("mr-5")> {`상품명`->React.string} </span>
                   </label>
-                  <textarea
-                    name=productName.name
-                    onBlur=productName.onBlur
-                    onChange=productName.onChange
-                    ref=productName.ref
+                  <input
                     id=productName.name
+                    ref=productName.ref
+                    name=productName.name
+                    onChange=productName.onChange
+                    onBlur=productName.onBlur
                     className=%twc(
                       "w-auto py-2 px-3 border border-border-default-L1 bg-white rounded-md h-9 focus:outline-none grow-[0.25]"
                     )
-                    placeholder=`상품명 입력`
+                    placeholder={`상품명 입력`}
                   />
                 </div>
                 <div className=%twc("flex items-center gap-2")>
                   <label htmlFor="product-nos">
                     <span className=%twc("")> {`상품번호`->React.string} </span>
                   </label>
-                  <textarea
-                    name=productNos.name
-                    onBlur=productNos.onBlur
-                    onChange=productNos.onChange
-                    ref=productNos.ref
+                  <input
                     id=productNos.name
+                    ref=productNos.ref
+                    name=productNos.name
+                    onChange=productNos.onChange
+                    onBlur=productNos.onBlur
                     className=%twc(
                       "grow-[0.25] w-auto py-2 px-3 border border-border-default-L1 bg-white rounded-md h-9 focus:outline-none "
                     )
-                    placeholder=`상품번호 입력(Enter 또는 “,”로 구분 가능, 최대 100개 입력 가능)`
+                    placeholder={`상품번호 입력(“,”로 구분 가능, 최대 100개 입력 가능)`}
                   />
                   <ErrorMessage
                     errors
@@ -405,7 +406,7 @@ let make = (~defaultValue: defaultValue, ~defaultCategoryQuery) => {
             className=%twc(
               "w-20 py-2 bg-gray-button-gl text-black-gl rounded-xl ml-2 hover:bg-gray-button-gl focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-gl focus:ring-opacity-100 outline-none"
             )
-            value=`초기화`
+            value={`초기화`}
             onClick={_ =>
               reset(.
                 Some(
@@ -442,7 +443,7 @@ let make = (~defaultValue: defaultValue, ~defaultCategoryQuery) => {
             className=%twc(
               "w-20 py-2 bg-green-gl text-white font-bold rounded-xl ml-2 hover:bg-green-gl-dark focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-gl focus:ring-opacity-100"
             )
-            value=`검색`
+            value={`검색`}
             tabIndex=4
           />
         </div>

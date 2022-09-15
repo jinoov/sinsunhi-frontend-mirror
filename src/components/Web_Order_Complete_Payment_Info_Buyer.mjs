@@ -6,19 +6,19 @@ import * as Skeleton from "./Skeleton.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ReactRelay from "react-relay";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as WebOrderCompletePaymentInfoBuyerFragment_graphql from "../__generated__/WebOrderCompletePaymentInfoBuyerFragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(WebOrderCompletePaymentInfoBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(WebOrderCompletePaymentInfoBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(WebOrderCompletePaymentInfoBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(WebOrderCompletePaymentInfoBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(WebOrderCompletePaymentInfoBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -42,6 +42,7 @@ var Fragment = {
   wosDeliveryType_decode: Fragment_wosDeliveryType_decode,
   wosDeliveryType_fromString: Fragment_wosDeliveryType_fromString,
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
@@ -82,11 +83,27 @@ function makePrice(o, d, m) {
 }
 
 function Web_Order_Complete_Payment_Info_Buyer$Placeholder(Props) {
+  var deviceType = Props.deviceType;
+  var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "결제 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "결제 정보");
+        break;
+    
+  }
   return React.createElement("section", {
               className: "flex flex-col rounded-sm bg-white w-full p-7 gap-7"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "결제 정보"), React.createElement("ul", {
+            }, tmp, React.createElement("ul", {
                   className: "text-sm flex flex-col gap-5"
                 }, React.createElement("li", {
                       key: "payment-method",
@@ -111,13 +128,16 @@ var Placeholder = {
 
 function Web_Order_Complete_Payment_Info_Buyer(Props) {
   var query = Props.query;
+  var deviceType = Props.deviceType;
   var match = use(query);
   var wosOrder = match.wosOrder;
   if (wosOrder === undefined) {
-    return React.createElement(Web_Order_Complete_Payment_Info_Buyer$Placeholder, {});
+    return React.createElement(Web_Order_Complete_Payment_Info_Buyer$Placeholder, {
+                deviceType: deviceType
+              });
   }
-  var totalDeliveryCost = wosOrder.totalDeliveryCost;
   var totalOrderPrice = wosOrder.totalOrderPrice;
+  var totalDeliveryCost = wosOrder.totalDeliveryCost;
   var deliveryType = Belt_Option.flatMap(Belt_Array.get(wosOrder.orderProducts, 0), (function (a) {
           return Belt_Option.map(a, (function (b) {
                         return b.deliveryType;
@@ -129,11 +149,45 @@ function Web_Order_Complete_Payment_Info_Buyer(Props) {
       ], (function (d) {
           return makePrice(totalOrderPrice, Belt_Option.getWithDefault(totalDeliveryCost, 0), d);
         }));
+  var deliveryPrice = match$1[1];
+  var productPrice = match$1[0];
+  var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "결제 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "결제 정보");
+        break;
+    
+  }
+  var tmp$1;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp$1 = null;
+        break;
+    case /* PC */1 :
+        tmp$1 = React.createElement("span", {
+              className: "text-lg text-primary font-bold"
+            }, "" + Locale.Int.show(undefined, productPrice + deliveryPrice | 0) + "원");
+        break;
+    case /* Mobile */2 :
+        tmp$1 = React.createElement("span", {
+              className: "text-xl text-primary font-bold"
+            }, "" + Locale.Int.show(undefined, productPrice + deliveryPrice | 0) + "원");
+        break;
+    
+  }
   return React.createElement("section", {
               className: "flex flex-col rounded-sm bg-white w-full p-7 gap-7"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "결제 정보"), React.createElement("ul", {
+            }, tmp, React.createElement("ul", {
                   className: "text-sm flex flex-col gap-5"
                 }, React.createElement("li", {
                       key: "payment-method",
@@ -147,9 +201,7 @@ function Web_Order_Complete_Payment_Info_Buyer(Props) {
                       className: "flex justify-between items-center h-6"
                     }, React.createElement("span", {
                           className: "text-text-L2"
-                        }, "총 결제금액"), React.createElement("span", {
-                          className: "text-xl xl:text-lg text-primary font-bold"
-                        }, Locale.Int.show(undefined, match$1[0] + match$1[1] | 0) + "원"))));
+                        }, "총 결제금액"), tmp$1)));
 }
 
 var make = Web_Order_Complete_Payment_Info_Buyer;
@@ -160,6 +212,5 @@ export {
   makePrice ,
   Placeholder ,
   make ,
-  
 }
 /* react Not a pure module */

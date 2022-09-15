@@ -1,4 +1,5 @@
 type env = {
+  "NEXT_PUBLIC_VERCEL_ENV": string,
   "NEXT_PUBLIC_API_URL": string,
   "NEXT_PUBLIC_IMWEB_PAY_URL": string,
   "NEXT_PUBLIC_CHANNEL_TALK_KEY": string,
@@ -16,9 +17,14 @@ type env = {
   "NEXT_PUBLIC_STATUSPAGE_KEY": string,
   "NEXT_PUBLIC_STATUSPAGE_PAGE_ID": string,
   "NEXT_PUBLIC_BRAZE_WEB_API_KEY": string,
+  "NEXT_PUBLIC_TOGGLE_ORDER_BUTTON": string,
+  "NEXT_PUBLIC_ORDER_ADMINS": string,
 }
 
 @val external env: env = "process.env"
+
+let vercelEnv = env["NEXT_PUBLIC_VERCEL_ENV"]
+// "development", "preview", "production"
 
 let apiUrl = env["NEXT_PUBLIC_API_URL"]
 let restApiUrl = apiUrl
@@ -73,3 +79,9 @@ let statusPageKey = env["NEXT_PUBLIC_STATUSPAGE_KEY"]
 
 let statusPagePageId = env["NEXT_PUBLIC_STATUSPAGE_PAGE_ID"]
 let brazeWebApiKey = env["NEXT_PUBLIC_BRAZE_WEB_API_KEY"]
+
+// 장바구니 배포 전,후 주문-결제 기능 관련 환경변수 (삭제예정)
+let toggleOrderButton = env["NEXT_PUBLIC_TOGGLE_ORDER_BUTTON"]
+// e.g. ON 또는 OFF
+let orderAdmins = env["NEXT_PUBLIC_ORDER_ADMINS"]
+// e.g. abc@greenlabs.co.kr, abc.abc@example.com

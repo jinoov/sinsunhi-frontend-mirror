@@ -1,11 +1,11 @@
 module Fragment = %relay(`
   fragment ProductOptionAdminFragment on ProductOption {
     id
-    weight
-    weightUnit
-    perWeightMin
-    perWeightMax
-    perWeightUnit
+    amount
+    amountUnit
+    perAmountMin
+    perAmountMax
+    perAmountUnit
     perSizeUnit
     perSizeMin
     perSizeMax
@@ -15,7 +15,8 @@ module Fragment = %relay(`
     product {
       id
       name
-      productId
+      productId: number
+      status
   
       ... on NormalProduct {
         producer {
@@ -53,11 +54,14 @@ module Item = {
     let make = (~query) => {
       let productOption = Fragment.use(query)
 
-      let weightUnitToString = unit =>
+      let amountUnitToString = unit =>
         switch unit {
         | #G => "g"
         | #KG => "kg"
         | #T => "t"
+        | #ML => "ml"
+        | #L => "l"
+        | #EA => "ea"
         | _ => "g"
         }
 
@@ -73,10 +77,19 @@ module Item = {
         <li className=%twc("grid grid-cols-15-admin-product text-gray-700")>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
             <Product_Badge.V2
+              status={switch productOption.product.status {
+              | #SALE => SALE
+              | #SOLDOUT => SOLDOUT
+              | #NOSALE => NOSALE
+              | #RETIRE => RETIRE
+              | _ => SALE
+              }}
+            />
+            <Product_Badge.V2
+              className=%twc("mt-1")
               status={switch productOption.status {
               | #SALE => SALE
               | #SOLDOUT => SOLDOUT
-              | #HIDDEN_SALE => HIDDEN_SALE
               | #NOSALE => NOSALE
               | #RETIRE => RETIRE
               | _ => SALE
@@ -127,14 +140,7 @@ module Item = {
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2 ml-4")>
             <span className=%twc("block")>
-              {productOption.weight
-              ->Option.mapWithDefault("", w =>
-                `${w->Float.toString}${productOption.weightUnit->Option.mapWithDefault(
-                    "",
-                    weightUnitToString,
-                  )}`
-              )
-              ->React.string}
+              {`${productOption.amount->Float.toString}${productOption.amountUnit->amountUnitToString}`->React.string}
             </span>
             <span className=%twc("block")>
               {switch (productOption.countPerPackageMin, productOption.countPerPackageMax) {
@@ -149,8 +155,8 @@ module Item = {
             <span className=%twc("block")>
               {
                 let unit =
-                  productOption.perWeightUnit->Option.mapWithDefault("", weightUnitToString)
-                switch (productOption.perWeightMin, productOption.perWeightMax) {
+                  productOption.perAmountUnit->Option.mapWithDefault("", amountUnitToString)
+                switch (productOption.perAmountMin, productOption.perAmountMax) {
                 | (Some(min), Some(max)) => `${min->Float.toString} ~ ${max->Float.toString}${unit}`
                 | (Some(min), None) => `${min->Float.toString} ~ ${unit}`
                 | (None, Some(max)) => `~ ${max->Float.toString}${unit}`

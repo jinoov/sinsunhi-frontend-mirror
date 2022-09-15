@@ -2,14 +2,23 @@
 
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import * as RelayEnv from "../../../constants/RelayEnv.mjs";
 import Head from "next/head";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Router from "next/router";
+import * as DeviceDetect from "../../../bindings/DeviceDetect.mjs";
 import * as PLP_All_Buyer from "./PLP_All_Buyer.mjs";
+import * as GnbBannerList_Buyer from "../../../components/GnbBannerList_Buyer.mjs";
+import * as ShopCategorySelect_Buyer from "../../../components/ShopCategorySelect_Buyer.mjs";
 import * as PLP_DisplayCategory_Buyer from "./PLP_DisplayCategory_Buyer.mjs";
 
-function PLP_Buyer(Props) {
+function $$default(props) {
+  var displayCategories = props.displayCategories;
+  var gnbBanners = props.gnbBanners;
+  var deviceType = props.deviceType;
   var router = Router.useRouter();
-  var displayCategoryId = Js_dict.get(router.query, "category-id");
+  var cid = Js_dict.get(router.query, "cid");
+  var displayCategoryId = cid !== undefined ? cid : Js_dict.get(router.query, "category-id");
   var match = React.useState(function () {
         return false;
       });
@@ -18,21 +27,60 @@ function PLP_Buyer(Props) {
           setIsCsr(function (param) {
                 return true;
               });
-          
         }), []);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "신선하이")
                 }), match[0] ? (
                 displayCategoryId !== undefined ? React.createElement(PLP_DisplayCategory_Buyer.make, {
-                        displayCategoryId: displayCategoryId
-                      }) : React.createElement(PLP_All_Buyer.make, {})
-              ) : React.createElement(PLP_DisplayCategory_Buyer.Placeholder.make, {}));
+                        deviceType: deviceType,
+                        displayCategoryId: displayCategoryId,
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories
+                      }) : React.createElement(PLP_All_Buyer.make, {
+                        deviceType: deviceType,
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories
+                      })
+              ) : React.createElement(PLP_DisplayCategory_Buyer.Placeholder.make, {
+                    deviceType: deviceType,
+                    gnbBanners: gnbBanners,
+                    displayCategories: displayCategories
+                  }));
 }
 
-var make = PLP_Buyer;
+function getServerSideProps(ctx) {
+  var deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req);
+  return Js_promise.$$catch((function (err) {
+                console.log("에러 GnbBannerListBuyerQuery", err);
+                return Promise.resolve({
+                            props: {
+                              query: ctx.query,
+                              deviceType: deviceType,
+                              gnbBanners: [],
+                              displayCategories: []
+                            }
+                          });
+              }), Js_promise.then_((function (res1) {
+                    return Js_promise.then_((function (res2) {
+                                  return Promise.resolve({
+                                              props: {
+                                                query: ctx.query,
+                                                deviceType: deviceType,
+                                                gnbBanners: res1.gnbBanners,
+                                                displayCategories: res2.displayCategories
+                                              }
+                                            });
+                                }), ShopCategorySelect_Buyer.Query.fetchPromised(RelayEnv.envSinsunMarket, {
+                                    onlyDisplayable: true,
+                                    parentId: undefined,
+                                    types: ["NORMAL"]
+                                  }, undefined, undefined, undefined));
+                  }), GnbBannerList_Buyer.Query.fetchPromised(RelayEnv.envSinsunMarket, undefined, undefined, undefined, undefined)));
+}
 
 export {
-  make ,
-  
+  $$default ,
+  $$default as default,
+  getServerSideProps ,
 }
 /* react Not a pure module */

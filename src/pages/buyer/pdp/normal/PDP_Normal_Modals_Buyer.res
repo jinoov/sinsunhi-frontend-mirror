@@ -7,13 +7,67 @@
 */
 
 type contentType =
-  | Unauthorized(string) // 미인증
+  | Unauthorized(string) // 미인증 (message: string)
   | NoOption // 단품을 선택하지 않음
   | Confirm // 컨펌
+  | ContentGuide // 법적 필수 표기정보 안내
 
 type visible =
   | Show(contentType)
   | Hide
+
+module ContentsGuide = {
+  module Scroll = {
+    @react.component
+    let make = (~children) => {
+      open RadixUI.ScrollArea
+      <Root className=%twc("h-screen flex flex-col overflow-hidden")>
+        <Viewport className=%twc("w-full h-full")> {children} </Viewport>
+        <Scrollbar> <Thumb /> </Scrollbar>
+      </Root>
+    }
+  }
+
+  module ContentsGuideHeader = {
+    @react.component
+    let make = (~closeFn) => {
+      <section className=%twc("w-full h-14 flex items-center px-4")>
+        <div className=%twc("w-10 h-10") />
+        <div className=%twc("flex flex-1 items-center justify-center")>
+          <h1 className=%twc("font-bold text-gray-800 text-xl")>
+            {`필수 표기정보`->React.string}
+          </h1>
+        </div>
+        <button onClick=closeFn className=%twc("w-10 h-10 flex items-center justify-center ")>
+          <IconClose width="24" height="24" fill="#262626" />
+        </button>
+      </section>
+    }
+  }
+
+  @react.component
+  let make = (~show, ~closeFn, ~query) => {
+    let _open = switch show {
+    | Show(ContentGuide) => true
+    | _ => false
+    }
+
+    open RadixUI.Dialog
+    <Root _open>
+      <Portal>
+        <Overlay className=%twc("dialog-overlay") />
+        <Content className=%twc("dialog-content-base w-full max-w-[768px] min-h-screen")>
+          <Scroll>
+            <ContentsGuideHeader closeFn />
+            <div className=%twc("w-full px-5 py-2")>
+              <PDP_Normal_ContentsGuide_Buyer.MO query />
+            </div>
+          </Scroll>
+        </Content>
+      </Portal>
+    </Root>
+  }
+}
 
 module Unauthorized = {
   module PC = {
@@ -92,24 +146,29 @@ module Unauthorized = {
 module Confirm = {
   module MO = {
     @react.component
-    let make = (~show, ~closeFn, ~selectedOptionId, ~quantity, ~setQuantity) => {
+    let make = (~show, ~closeFn, ~query, ~selectedOptions, ~setSelectedOptions) => {
       let isShow = switch show {
       | Show(Confirm) => true
       | _ => false
       }
 
+      React.useEffect1(() => {
+        switch selectedOptions->Map.String.toArray {
+        | [] => closeFn() // 선택한 단품이 하나도 없으면 모달/바텀시트 close
+        | _ => ()
+        }
+        None
+      }, [selectedOptions])
+
       <DS_BottomDrawer.Root isShow onClose=closeFn>
         <DS_BottomDrawer.Header />
         <DS_BottomDrawer.Body>
-          <div className=%twc("px-4 pb-9")>
-            {switch selectedOptionId {
-            | Some(id) =>
-              <React.Suspense fallback={<PDP_Normal_OrderSpecification_Buyer.Placeholder />}>
-                <PDP_Normal_OrderSpecification_Buyer selectedSkuId=id quantity setQuantity />
-              </React.Suspense>
-
-            | None => React.null
-            }}
+          <div className=%twc("pb-9")>
+            <React.Suspense fallback={<PDP_Normal_OrderSpecification_Buyer.Placeholder />}>
+              <PDP_Normal_OrderSpecification_Buyer
+                query selectedOptions setSelectedOptions closeFn
+              />
+            </React.Suspense>
           </div>
         </DS_BottomDrawer.Body>
       </DS_BottomDrawer.Root>
@@ -118,11 +177,19 @@ module Confirm = {
 
   module PC = {
     @react.component
-    let make = (~show, ~closeFn, ~selectedOptionId, ~quantity, ~setQuantity) => {
+    let make = (~show, ~closeFn, ~query, ~selectedOptions, ~setSelectedOptions) => {
       let _open = switch show {
       | Show(Confirm) => true
       | _ => false
       }
+
+      React.useEffect1(() => {
+        switch selectedOptions->Map.String.toArray {
+        | [] => closeFn() // 선택한 단품이 하나도 없으면 모달/바텀시트 close
+        | _ => ()
+        }
+        None
+      }, [selectedOptions])
 
       <RadixUI.Dialog.Root _open>
         <RadixUI.Dialog.Portal>
@@ -131,22 +198,19 @@ module Confirm = {
             className=%twc(
               "dialog-content-base bg-white rounded-xl w-[calc(100vw-40px)] max-w-[calc(768px-40px)]"
             )
-            onPointerDownOutside=closeFn>
-            <div className=%twc("px-5")>
-              <section className=%twc("w-full h-14 flex justify-end items-center")>
-                <button onClick=closeFn>
+            onPointerDownOutside={_ => closeFn()}>
+            <div>
+              <section className=%twc("w-full h-14 flex justify-end items-center px-4")>
+                <button onClick={_ => closeFn()}>
                   <DS_Icon.Common.CloseLarge2 height="24" width="24" />
                 </button>
               </section>
               <section className=%twc("mt-4")>
-                {switch selectedOptionId {
-                | Some(id) =>
-                  <React.Suspense fallback={<PDP_Normal_OrderSpecification_Buyer.Placeholder />}>
-                    <PDP_Normal_OrderSpecification_Buyer selectedSkuId=id quantity setQuantity />
-                  </React.Suspense>
-
-                | None => React.null
-                }}
+                <React.Suspense fallback={<PDP_Normal_OrderSpecification_Buyer.Placeholder />}>
+                  <PDP_Normal_OrderSpecification_Buyer
+                    query selectedOptions setSelectedOptions closeFn
+                  />
+                </React.Suspense>
               </section>
             </div>
           </RadixUI.Dialog.Content>
@@ -208,11 +272,11 @@ module NoOption = {
 
 module PC = {
   @react.component
-  let make = (~show, ~setShow, ~selectedOptionId, ~quantity, ~setQuantity) => {
+  let make = (~show, ~setShow, ~selectedOptions, ~setSelectedOptions, ~query) => {
     let closeFn = _ => setShow(._ => Hide)
 
     <>
-      <Confirm.PC show selectedOptionId quantity setQuantity closeFn />
+      <Confirm.PC show closeFn query selectedOptions setSelectedOptions />
       <Unauthorized.PC show closeFn />
       <NoOption.PC show closeFn />
     </>
@@ -221,12 +285,13 @@ module PC = {
 
 module MO = {
   @react.component
-  let make = (~show, ~setShow, ~selectedOptionId, ~quantity, ~setQuantity) => {
+  let make = (~show, ~setShow, ~selectedOptions, ~setSelectedOptions, ~query) => {
     let closeFn = _ => setShow(._ => Hide)
     <>
-      <Confirm.MO show selectedOptionId quantity setQuantity closeFn />
+      <Confirm.MO show closeFn query selectedOptions setSelectedOptions />
       <Unauthorized.MO show closeFn />
       <NoOption.MO show closeFn />
+      <ContentsGuide show closeFn query />
     </>
   }
 }

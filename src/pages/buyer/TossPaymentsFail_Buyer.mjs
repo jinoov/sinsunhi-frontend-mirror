@@ -2,10 +2,8 @@
 
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
-import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
-import Link from "next/link";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
@@ -68,6 +66,7 @@ function TossPaymentsFail_Buyer$ErrorDialog(Props) {
   var children = Props.children;
   var show = Props.show;
   var href = Props.href;
+  var router = Router.useRouter();
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
                     children: null
@@ -76,12 +75,13 @@ function TossPaymentsFail_Buyer$ErrorDialog(Props) {
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
                         className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
-                      }, children, React.createElement(Link, {
-                            href: href,
-                            children: React.createElement("a", {
-                                  className: "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
-                                }, "닫기")
-                          }))),
+                      }, children, React.createElement("button", {
+                            className: "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1",
+                            type: "button",
+                            onClick: (function (param) {
+                                router.replace(href);
+                              })
+                          }, "닫기"))),
               open: show
             });
 }
@@ -107,23 +107,19 @@ function TossPaymentsFail_Buyer(Props) {
   React.useEffect((function () {
           var params = new URLSearchParams(router.query);
           var code = Belt_Option.map(Caml_option.nullable_to_opt(params.get("code")), tossPaymentsErrorCode_decode);
-          var productId = Js_dict.get(router.query, "product-id");
-          var productOptionId = Js_dict.get(router.query, "product-option-id");
-          var quantity = Belt_Option.flatMap(Js_dict.get(router.query, "quantity"), Belt_Int.fromString);
-          var exit = 0;
-          if (productId !== undefined && productOptionId !== undefined && quantity !== undefined) {
+          var tempOrderId = Belt_Option.flatMap(Caml_option.nullable_to_opt(params.get("temp-order-id")), Belt_Int.fromString);
+          var from = params.get("from");
+          var from$1 = (from == null) ? undefined : Caml_option.some(from);
+          if (tempOrderId !== undefined) {
             setRedirect(function (param) {
-                  return "/buyer/web-order/" + productId + "/" + productOptionId + "?quantity=" + String(quantity);
+                  return "/buyer/web-order/" + String(tempOrderId) + "";
                 });
           } else {
-            exit = 1;
-          }
-          if (exit === 1) {
             setRedirect(function (param) {
-                  return "/buyer/transactions";
+                  return "/buyer" + Belt_Option.getWithDefault(from$1, "");
                 });
           }
-          var exit$1 = 0;
+          var exit = 0;
           if (code !== undefined && code.TAG === /* Ok */0) {
             var decode$p = code._0;
             setErrMsg(function (param) {
@@ -133,9 +129,9 @@ function TossPaymentsFail_Buyer(Props) {
                   return true;
                 });
           } else {
-            exit$1 = 1;
+            exit = 1;
           }
-          if (exit$1 === 1) {
+          if (exit === 1) {
             setShowErr(function (param) {
                   return true;
                 });
@@ -165,6 +161,5 @@ export {
   codeToString ,
   ErrorDialog ,
   make ,
-  
 }
 /* react Not a pure module */

@@ -3,16 +3,20 @@
 import * as Env from "../../constants/Env.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Input from "../../components/common/Input.mjs";
+import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
 import * as Global from "../../components/Global.mjs";
 import * as Helper from "../../utils/Helper.mjs";
+import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Checkbox from "../../components/common/Checkbox.mjs";
 import * as Redirect from "../../components/Redirect.mjs";
+import * as IconCheck from "../../components/svgs/IconCheck.mjs";
+import * as IconError from "../../components/svgs/IconError.mjs";
 import Head from "next/head";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
-import JwtDecode from "jwt-decode";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
@@ -23,21 +27,100 @@ import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import * as ChannelTalkHelper from "../../utils/ChannelTalkHelper.mjs";
 import * as LocalStorageHooks from "../../utils/LocalStorageHooks.mjs";
 import * as SignIn_Seller_Form from "../../components/SignIn_Seller_Form.mjs";
+import * as ReactToastNotifications from "react-toast-notifications";
 
-function SignIn_Seller(Props) {
+function info_encode(v) {
+  return Js_dict.fromArray([
+              [
+                "message",
+                Spice.optionToJson(Spice.stringToJson, v.message)
+              ],
+              [
+                "activation-method",
+                Spice.optionToJson((function (param) {
+                        return Spice.arrayToJson(Spice.stringToJson, param);
+                      }), v.activationMethod)
+              ],
+              [
+                "email",
+                Spice.optionToJson(Spice.stringToJson, v.email)
+              ]
+            ]);
+}
+
+function info_decode(v) {
+  var dict = Js_json.classify(v);
+  if (typeof dict === "number") {
+    return Spice.error(undefined, "Not an object", v);
+  }
+  if (dict.TAG !== /* JSONObject */2) {
+    return Spice.error(undefined, "Not an object", v);
+  }
+  var dict$1 = dict._0;
+  var message = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "message"), null));
+  if (message.TAG === /* Ok */0) {
+    var activationMethod = Spice.optionFromJson((function (param) {
+            return Spice.arrayFromJson(Spice.stringFromJson, param);
+          }), Belt_Option.getWithDefault(Js_dict.get(dict$1, "activation-method"), null));
+    if (activationMethod.TAG === /* Ok */0) {
+      var email = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "email"), null));
+      if (email.TAG === /* Ok */0) {
+        return {
+                TAG: /* Ok */0,
+                _0: {
+                  message: message._0,
+                  activationMethod: activationMethod._0,
+                  email: email._0
+                }
+              };
+      }
+      var e = email._0;
+      return {
+              TAG: /* Error */1,
+              _0: {
+                path: ".email" + e.path,
+                message: e.message,
+                value: e.value
+              }
+            };
+    }
+    var e$1 = activationMethod._0;
+    return {
+            TAG: /* Error */1,
+            _0: {
+              path: ".activation-method" + e$1.path,
+              message: e$1.message,
+              value: e$1.value
+            }
+          };
+  }
+  var e$2 = message._0;
+  return {
+          TAG: /* Error */1,
+          _0: {
+            path: ".message" + e$2.path,
+            message: e$2.message,
+            value: e$2.value
+          }
+        };
+}
+
+function $$default(param) {
+  var match = ReactToastNotifications.useToasts();
+  var addToast = match.addToast;
   var router = Router.useRouter();
-  var match = React.useState(function () {
+  var match$1 = React.useState(function () {
         return true;
       });
-  var setCheckedSavePhone = match[1];
-  var isCheckedSavePhone = match[0];
-  var match$1 = React.useState(function () {
+  var setCheckedSavePhone = match$1[1];
+  var isCheckedSavePhone = match$1[0];
+  var match$2 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowForError = match$1[1];
+  var setShowForError = match$2[1];
   var onSubmit = function (param) {
     var state = param.state;
-    var username = SignIn_Seller_Form.FormFields.get(state.values, /* Phone */0);
+    var username = Helper.PhoneNumber.removeDash(SignIn_Seller_Form.FormFields.get(state.values, /* Phone */0));
     var password = SignIn_Seller_Form.FormFields.get(state.values, /* Password */1);
     var prim0 = new URLSearchParams(router.query);
     var redirectUrl = Belt_Option.getWithDefault(Caml_option.nullable_to_opt(prim0.get("redirect")), "/seller");
@@ -48,14 +131,14 @@ function SignIn_Seller(Props) {
             ],
             [
               "username",
-              Helper.PhoneNumber.removeDash(username)
+              username
             ],
             [
               "password",
               password
             ]
           ]).toString();
-    FetchHelper.postWithURLSearchParams(Env.restApiUrl + "/user/token", urlSearchParams, (function (res) {
+    FetchHelper.postWithURLSearchParams("" + Env.restApiUrl + "/user/token", urlSearchParams, (function (res) {
             var result = FetchHelper.responseToken_decode(res);
             if (result.TAG !== /* Ok */0) {
               return setShowForError(function (param) {
@@ -65,17 +148,38 @@ function SignIn_Seller(Props) {
             var res$1 = result._0;
             Curry._1(LocalStorageHooks.AccessToken.set, res$1.token);
             Curry._1(LocalStorageHooks.RefreshToken.set, res$1.refreshToken);
-            var user = CustomHooks.Auth.user_decode(JwtDecode(res$1.token));
+            var user = CustomHooks.Auth.user_decode(CustomHooks.Auth.decodeJwt(res$1.token));
             if (user.TAG === /* Ok */0) {
-              Curry._1(Global.$$Window.ReactNativeWebView.PostMessage.storeBrazeUserId, String(user._0.id));
+              Curry._1(Global.$$Window.ReactNativeWebView.PostMessage.signIn, String(user._0.id));
             }
-            return Redirect.setHref(redirectUrl);
-          }), (function (param) {
-            return setShowForError(function (param) {
-                        return /* Show */0;
-                      });
+            Redirect.setHref(redirectUrl);
+          }), (function (err) {
+            if (err.status !== 401) {
+              return setShowForError(function (param) {
+                          return /* Show */0;
+                        });
+            }
+            var info = info_decode(err.info);
+            var tmp;
+            tmp = info.TAG === /* Ok */0 ? Belt_Option.map(info._0.activationMethod, (function (method) {
+                      return method.join(",");
+                    })) : undefined;
+            var mode = Belt_Option.map(tmp, (function (methods) {
+                    return "mode=" + methods;
+                  }));
+            var info$1 = info_decode(err.info);
+            var activationEmail;
+            activationEmail = info$1.TAG === /* Ok */0 ? info$1._0.email : undefined;
+            if (mode !== undefined) {
+              if (activationEmail !== undefined) {
+                router.push("/seller/activate-user?" + mode + "&uid=" + username + "&email=" + activationEmail + "&role=farmer");
+              } else {
+                router.push("/seller/activate-user?" + mode + "&uid=" + username + "&role=farmer");
+              }
+            } else {
+              router.push("/seller/activate-user?uid=" + username + "&role=farmer");
+            }
           }));
-    
   };
   var form = Curry._7(SignIn_Seller_Form.Form.use, SignIn_Seller_Form.initialState, /* Schema */{
         _0: Belt_Array.concatMany([
@@ -88,24 +192,23 @@ function SignIn_Seller(Props) {
                   var phone = SignIn_Seller_Form.FormFields.get(form.values, /* Phone */0);
                   if (isCheckedSavePhone) {
                     Belt_Option.forEach(Belt_Option.flatMap(Helper.PhoneNumber.parse(phone), Helper.PhoneNumber.format), (function (phoneNumber) {
-                            return Curry._1(LocalStorageHooks.PhoneNumber.set, phoneNumber);
+                            Curry._1(LocalStorageHooks.PhoneNumber.set, phoneNumber);
                           }));
                   } else {
                     Curry._1(LocalStorageHooks.PhoneNumber.remove, undefined);
                   }
-                  return Curry._1(form.submit, undefined);
+                  Curry._1(form.submit, undefined);
                 }), param);
   };
   var handleOnCheckSavePhone = function (e) {
     var checked = e.target.checked;
-    return setCheckedSavePhone(function (param) {
-                return checked;
-              });
+    setCheckedSavePhone(function (param) {
+          return checked;
+        });
   };
   var handleNavigateToSignUp = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   router.push("/seller/signup");
-                  
                 }), param);
   };
   React.useEffect((function () {
@@ -129,7 +232,7 @@ function SignIn_Seller(Props) {
   };
   var handleOnChangePhoneNumber = function (e) {
     var newValue = e.currentTarget.value.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
-    return Curry._4(form.setFieldValue, /* Phone */0, newValue, true, undefined);
+    Curry._4(form.setFieldValue, /* Phone */0, newValue, true, undefined);
   };
   var user = CustomHooks.Auth.use(undefined);
   React.useEffect((function () {
@@ -149,6 +252,41 @@ function SignIn_Seller(Props) {
           }
           
         }), [user]);
+  React.useEffect((function () {
+          var activationToken = Js_dict.get(router.query, "dormant_reset_token");
+          var activate = function (token) {
+            Belt_Option.map(JSON.stringify({
+                      "dormant-reset-token": token
+                    }), (function (body) {
+                    return FetchHelper.post("" + Env.restApiUrl + "/user/dormant/reset-email", body, (function (param) {
+                                  addToast(React.createElement("div", {
+                                            className: "flex items-center"
+                                          }, React.createElement(IconCheck.make, {
+                                                height: "24",
+                                                width: "24",
+                                                fill: "#12B564",
+                                                className: "mr-2"
+                                              }), "휴면 계정이 해제되었어요!"), {
+                                        appearance: "success"
+                                      });
+                                }), (function (err) {
+                                  addToast(React.createElement("div", {
+                                            className: "flex items-center"
+                                          }, React.createElement(IconError.make, {
+                                                width: "24",
+                                                height: "24",
+                                                className: "mr-2"
+                                              }), "휴면 계정 해제에 실패했어요"), {
+                                        appearance: "error"
+                                      });
+                                }));
+                  }));
+          };
+          if (activationToken !== undefined) {
+            activate(activationToken);
+          }
+          
+        }), [router.query]);
   ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
   var partial_arg = Curry._1(form.handleChange, /* Password */1);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
@@ -233,14 +371,14 @@ function SignIn_Seller(Props) {
                                     }, " 회원가입"))))), React.createElement("div", {
                       className: "text-sm text-gray-400 py-4"
                     }, "ⓒ Copyright Greenlabs All Reserved. (주)그린랩스")), React.createElement(Dialog.make, {
-                  isShow: match$1[0],
+                  isShow: match$2[0],
                   children: React.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "로그인 정보가 일치하지 않거나 없는 계정입니다. 다시 한번 입력해주세요."),
                   onConfirm: (function (param) {
-                      return setShowForError(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowForError(function (param) {
+                            return /* Hide */1;
+                          });
                     })
                 }));
 }
@@ -249,12 +387,12 @@ var FormFields;
 
 var Form;
 
-var make = SignIn_Seller;
-
 export {
   FormFields ,
   Form ,
-  make ,
-  
+  info_encode ,
+  info_decode ,
+  $$default ,
+  $$default as default,
 }
 /* Env Not a pure module */

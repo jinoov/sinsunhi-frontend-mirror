@@ -101,7 +101,7 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user, ~className: option<string>
         [
           regExp(
             Phone,
-            ~matches="^$|^\d{3}-\d{3,4}-\d{4}$",
+            ~matches="^$|^\\d{3}-\\d{3,4}-\\d{4}$",
             ~error=`전화번호 형식이 맞지 않습니다.`,
           ),
         ]->Array.concatMany,
@@ -172,7 +172,7 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user, ~className: option<string>
               <Input
                 type_="text"
                 name="rep"
-                placeholder=`대표자명을 입력해주세요`
+                placeholder={`대표자명을 입력해주세요`}
                 value={form.values->FormFields.get(FormFields.Rep)}
                 onChange={FormFields.Rep->form.handleChange->ReForm.Helpers.handleChange}
                 error=None
@@ -185,7 +185,7 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user, ~className: option<string>
               <Input
                 type_="text"
                 name="mannger"
-                placeholder=`담당자명을 입력해주세요`
+                placeholder={`담당자명을 입력해주세요`}
                 value={form.values->FormFields.get(FormFields.Manager)}
                 onChange={FormFields.Manager->form.handleChange->ReForm.Helpers.handleChange}
                 error=None
@@ -198,7 +198,7 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user, ~className: option<string>
               <Input
                 type_="text"
                 name="Mannger-phone-number"
-                placeholder=`담당자명을 연락처를 입력해주세요(010-0000-0000)`
+                placeholder={`담당자명을 연락처를 입력해주세요(010-0000-0000)`}
                 value={form.values->FormFields.get(FormFields.Phone)}
                 onChange={handleOnChangePhone}
                 error={FormFields.Phone->Form.ReSchema.Field->form.getFieldError}
@@ -211,7 +211,7 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user, ~className: option<string>
               <Textarea
                 type_="text"
                 name="etc"
-                placeholder=`메모를 작성해주세요(어드민에서 최대 2줄까지 노출되며 그 이상은 말줄임 처리되어 엑셀 다운로드시 모든 내용을 확인할 수 있습니다.)`
+                placeholder={`메모를 작성해주세요(어드민에서 최대 2줄까지 노출되며 그 이상은 말줄임 처리되어 엑셀 다운로드시 모든 내용을 확인할 수 있습니다.)`}
                 maxLength=200
                 rows=4
                 value={form.values->FormFields.get(FormFields.Etc)}

@@ -27,6 +27,16 @@ let detectDeviceFromCtx = ctx => {
   }
 }
 
+let detectDeviceFromCtx2 = req => {
+  let userAgent = req["headers"]["user-agent"]
+  let selector = userAgent->getSelectorsByUserAgent
+
+  switch selector.isMobile {
+  | true => Mobile
+  | false => PC
+  }
+}
+
 let detectDevice = () => {
   switch isMobile {
   | true => Mobile

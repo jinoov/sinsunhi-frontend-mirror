@@ -25,9 +25,9 @@ function ShopSearchInput_Buyer(Props) {
           "text-green-500"
         ]) : $$default;
   var onChangeKeyword = function (e) {
-    return setKeyword(function (param) {
-                return e.target.value;
-              });
+    setKeyword(function (param) {
+          return e.target.value;
+        });
   };
   var submit = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
@@ -39,28 +39,26 @@ function ShopSearchInput_Buyer(Props) {
                           encodeURIComponent(keyword)
                         ]]);
                   var prim1 = {
-                    pathname: "/buyer/search",
+                    pathname: "/search",
                     query: prim1_query
                   };
                   router.push(prim1);
-                  
                 }), param);
   };
   React.useEffect((function () {
-          if (router.pathname === "/buyer/search") {
+          if (router.pathname === "/search") {
             Belt_Option.map(Belt_Option.map(Js_dict.get(router.query, "keyword"), (function (prim) {
                         return decodeURIComponent(prim);
                       })), (function (keyword$p) {
-                    return setKeyword(function (param) {
-                                return keyword$p;
-                              });
+                    setKeyword(function (param) {
+                          return keyword$p;
+                        });
                   }));
           } else {
             setKeyword(function (param) {
                   return "";
                 });
           }
-          
         }), [router]);
   return React.createElement("form", {
               onSubmit: submit
@@ -73,23 +71,23 @@ function ShopSearchInput_Buyer(Props) {
                       type: "text",
                       value: keyword,
                       onFocus: (function (param) {
-                          return setEditing(function (param) {
-                                      return true;
-                                    });
+                          setEditing(function (param) {
+                                return true;
+                              });
                         }),
                       onBlur: (function (param) {
-                          return setEditing(function (param) {
-                                      return false;
-                                    });
+                          setEditing(function (param) {
+                                return false;
+                              });
                         }),
                       onChange: onChangeKeyword
                     }), React.createElement("button", {
                       className: "absolute right-0 h-[52px] bg-green-500 rounded-full focus:outline-none flex items-center justify-center px-6",
                       type: "submit"
                     }, React.createElement(IconSearch.make, {
-                          width: "36",
-                          height: "36",
-                          stroke: "#fff"
+                          width: "24",
+                          height: "24",
+                          fill: "#fff"
                         }), React.createElement("span", {
                           className: "text-white font-bold"
                         }, "검색"))));
@@ -112,9 +110,9 @@ function ShopSearchInput_Buyer$MO(Props) {
           "text-green-500"
         ]) : $$default;
   var onChangeKeyword = function (e) {
-    return setKeyword(function (param) {
-                return e.target.value;
-              });
+    setKeyword(function (param) {
+          return e.target.value;
+        });
   };
   var submit = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
@@ -126,37 +124,35 @@ function ShopSearchInput_Buyer$MO(Props) {
                           encodeURIComponent(keyword)
                         ]]);
                   var prim1 = {
-                    pathname: "/buyer/search",
+                    pathname: "/search",
                     query: prim1_query
                   };
                   router.push(prim1);
-                  
                 }), param);
   };
   React.useEffect((function () {
-          if (router.pathname === "/buyer/search") {
+          if (router.pathname === "/search") {
             Belt_Option.map(Belt_Option.map(Js_dict.get(router.query, "keyword"), (function (prim) {
                         return decodeURIComponent(prim);
                       })), (function (keyword$p) {
-                    return setKeyword(function (param) {
-                                return keyword$p;
-                              });
+                    setKeyword(function (param) {
+                          return keyword$p;
+                        });
                   }));
           } else {
             setKeyword(function (param) {
                   return "";
                 });
           }
-          
         }), [router]);
   var tmp = keyword === "" ? null : React.createElement("img", {
           className: "absolute w-6 h-6 right-10 top-1/2 translate-y-[-50%]",
           src: "/icons/reset-input-gray-circle@3x.png",
           onClick: (function (param) {
               return ReactEvents.interceptingHandler((function (param) {
-                            return setKeyword(function (param) {
-                                        return "";
-                                      });
+                            setKeyword(function (param) {
+                                  return "";
+                                });
                           }), param);
             })
         });
@@ -172,14 +168,14 @@ function ShopSearchInput_Buyer$MO(Props) {
                       type: "text",
                       value: keyword,
                       onFocus: (function (param) {
-                          return setEditing(function (param) {
-                                      return true;
-                                    });
+                          setEditing(function (param) {
+                                return true;
+                              });
                         }),
                       onBlur: (function (param) {
-                          return setEditing(function (param) {
-                                      return false;
-                                    });
+                          setEditing(function (param) {
+                                return false;
+                              });
                         }),
                       onChange: onChangeKeyword
                     }), tmp, React.createElement("button", {
@@ -188,7 +184,7 @@ function ShopSearchInput_Buyer$MO(Props) {
                     }, React.createElement(IconSearch.make, {
                           width: "24",
                           height: "24",
-                          stroke: "#12B564"
+                          fill: "#12B564"
                         }))));
 }
 
@@ -201,6 +197,5 @@ var make = ShopSearchInput_Buyer;
 export {
   make ,
   MO ,
-  
 }
 /* react Not a pure module */

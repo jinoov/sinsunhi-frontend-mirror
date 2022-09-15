@@ -42,7 +42,7 @@ let make = (~onSuccess, ~onError) => {
         [
           regExp(
             Password,
-            ~matches="^(?=.*\d)(?=.*[a-zA-Z]).{6,15}$",
+            ~matches="^(?=.*\\d)(?=.*[a-zA-Z]).{6,15}$",
             ~error=`비밀번호가 형식에 맞지 않습니다.`,
           ),
         ]->Array.concatMany,
@@ -87,7 +87,7 @@ let make = (~onSuccess, ~onError) => {
         name="new-password1"
         className=%twc("mt-3")
         size=Input.Large
-        placeholder=`비밀번호(영문·숫자 조합 6~15자)`
+        placeholder={`비밀번호(영문·숫자 조합 6~15자)`}
         onChange={FormFields.Password->form.handleChange->ReForm.Helpers.handleChange}
         error={FormFields.Password->Form.ReSchema.Field->form.getFieldError}
       />
@@ -98,7 +98,7 @@ let make = (~onSuccess, ~onError) => {
         value=passwordConfirm
         onChange=handleOnChangePasswordConfirm
         className=%twc("w-full border rounded-xl py-3 px-3")
-        placeholder=`비밀번호 확인`
+        placeholder={`비밀번호 확인`}
       />
       {switch isPasswordConfirmed() {
       | Waiting

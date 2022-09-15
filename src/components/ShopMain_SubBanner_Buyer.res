@@ -6,8 +6,8 @@
  *    기획전 정보를 리스트 형태로 표현합니다.
  *
  */
-module Fragment = %relay(`
-  fragment ShopMainSubBannerBuyer on Query {
+module Query = %relay(`
+  query ShopMainSubBannerBuyerQuery {
     subBanners {
       id
       imageUrlPc
@@ -37,18 +37,20 @@ module PC = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {subBanners} = Fragment.use(query)
-
+  let make = (
+    ~subBanners: array<ShopMainSubBannerBuyerQuery_graphql.Types.response_subBanners>,
+  ) => {
     <div className=%twc("w-full flex flex-col gap-3")>
       {subBanners
       ->Array.map(({id, imageUrlPc, isNewTabPc, landingUrl}) => {
         let key = `sub-banner-${id}`
         let target = isNewTabPc ? "_blank" : "_self"
         <div key className=%twc("flex flex-1 aspect-[300/124] rounded-xl overflow-hidden")>
-          <a href=landingUrl target className=%twc("w-full h-full")>
-            <img src=imageUrlPc className=%twc("w-full h-full object-cover") alt=key />
-          </a>
+          <Next.Link href=landingUrl>
+            <a target className=%twc("w-full h-full")>
+              <img src=imageUrlPc className=%twc("w-full h-full object-cover") alt=key />
+            </a>
+          </Next.Link>
         </div>
       })
       ->React.array}
@@ -74,18 +76,20 @@ module MO = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {subBanners} = Fragment.use(query)
-
+  let make = (
+    ~subBanners: array<ShopMainSubBannerBuyerQuery_graphql.Types.response_subBanners>,
+  ) => {
     <div className=%twc("w-full flex items-center gap-[10px]")>
       {subBanners
       ->Array.map(({id, imageUrlMobile, isNewTabMobile, landingUrl}) => {
         let key = `sub-banner-${id}`
         let target = isNewTabMobile ? "_blank" : "_self"
         <div key className=%twc("flex flex-1 aspect-[228/168] rounded-xl overflow-hidden")>
-          <a href=landingUrl target className=%twc("w-full h-full")>
-            <img src=imageUrlMobile className=%twc("w-full h-full object-cover") alt=key />
-          </a>
+          <Next.Link href=landingUrl>
+            <a target className=%twc("w-full h-full")>
+              <img src=imageUrlMobile className=%twc("w-full h-full object-cover") alt=key />
+            </a>
+          </Next.Link>
         </div>
       })
       ->React.array}

@@ -97,7 +97,19 @@ let make = () => {
               // 로그인 성공 시, 웹뷰에 Braze 푸시 기기 토큰 등록을 위한 userId를 postMessage 합니다.
               switch res.token->CustomHooks.Auth.decodeJwt->CustomHooks.Auth.user_decode {
               | Ok(user) =>
-                Global.Window.ReactNativeWebView.PostMessage.storeBrazeUserId(user.id->Int.toString)
+                Global.Window.ReactNativeWebView.PostMessage.signUp(user.id->Int.toString)
+                Global.Window.ReactNativeWebView.PostMessage.signIn(user.id->Int.toString)
+
+                // GTM
+                let businessRegistrationNumber =
+                  state.values->FormFields.get(FormFields.BusinessRegistrationNumber)
+                DataGtm.push({
+                  "event": "sign_up",
+                  "user_id": user.id,
+                  "method": "normal",
+                  "business_number": businessRegistrationNumber,
+                  "marketing": agreedTerms->Belt.Set.String.has("marketing"),
+                })
               | Error(_) => ()
               }
 
@@ -149,17 +161,9 @@ let make = () => {
                   </div>,
                   {appearance: "success"},
                 )
+
                 // 회원가입 이후 자동 로그인 처리
                 signIn(formApi)
-
-                // GTM
-                let businessRegistrationNumber =
-                  state.values->FormFields.get(FormFields.BusinessRegistrationNumber)
-                DataGtm.push({
-                  "method": "normal",
-                  "business_number": businessRegistrationNumber,
-                  "marketing": agreedTerms->Belt.Set.String.has("marketing"),
-                })
               }
             },
             ~onFailure={_ => setShowErr(._ => Dialog.Show)},
@@ -185,7 +189,7 @@ let make = () => {
           email(Email, ~error=`올바른 이메일 주소를 입력해주세요.`),
           regExp(
             Password,
-            ~matches="^(?=.*\d)(?=.*[a-zA-Z]).{6,15}$",
+            ~matches="^(?=.*\\d)(?=.*[a-zA-Z]).{6,15}$",
             ~error=`영문, 숫자 조합 6~15자로 입력해 주세요.`,
           ),
           nonEmpty(Name, ~error=`회사명을 입력해주세요.`),

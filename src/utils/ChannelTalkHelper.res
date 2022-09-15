@@ -7,10 +7,13 @@ module Query = %relay(`
       bootEvent {
         memberId
         pluginKey
+        unsubscribeTexting
+        unsubscribeEmail
         profile {
           joinTime
           mobileNumber
           name
+          lastCheckoutAmount
           purchasedAmount
           purchasedCount
         }
@@ -27,15 +30,18 @@ let bootWithProfile = () => {
   ) |> Js.Promise.then_((res: ChannelTalkHelper_channelIO_Query_graphql.Types.response) => {
     Js.Promise.resolve(
       res.channelIO->Option.forEach(({bootEvent}) =>
-        bootEvent->Option.forEach(({profile} as bootEvent) =>
-          make(.
-            "boot",
-            {
-              "pluginKey": Env.channelTalkKey,
-              "memberId": bootEvent.memberId,
-              "profile": profile,
-            },
-          )
+        bootEvent->Option.forEach(
+          ({profile} as bootEvent) =>
+            make(.
+              "boot",
+              {
+                "pluginKey": Env.channelTalkKey,
+                "memberId": bootEvent.memberId,
+                "unsubscribeTexting": bootEvent.unsubscribeTexting,
+                "unsubscribeEmail": bootEvent.unsubscribeEmail,
+                "profile": profile,
+              },
+            ),
         )
       ),
     )
@@ -50,14 +56,15 @@ let updateProfile = () => {
   ) |> Js.Promise.then_((res: ChannelTalkHelper_channelIO_Query_graphql.Types.response) => {
     Js.Promise.resolve(
       res.channelIO->Option.forEach(({bootEvent}) =>
-        bootEvent->Option.forEach(({profile}) =>
-          make(.
-            "updateUser",
-            {
-              "language": "ko",
-              "profile": profile,
-            },
-          )
+        bootEvent->Option.forEach(
+          ({profile}) =>
+            make(.
+              "updateUser",
+              {
+                "language": "ko",
+                "profile": profile,
+              },
+            ),
         )
       ),
     )

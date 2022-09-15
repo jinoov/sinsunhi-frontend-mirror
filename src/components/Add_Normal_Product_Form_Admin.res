@@ -18,6 +18,8 @@ module Mutation = %relay(`
     $salesDocument: String
     $status: ProductStatus!
     $type_: NormalProductType!
+    $notationInformationType: ProductNotationInformationType!
+    $salesType: ProductSalesType
   ) {
     createProduct(
       input: {
@@ -38,6 +40,8 @@ module Mutation = %relay(`
         salesDocument: $salesDocument
         status: $status
         type: $type_
+        notationInformationType: $notationInformationType
+        salesType: $salesType
       }
     ) {
       ... on CreateProductResult {
@@ -74,6 +78,8 @@ module Form = {
     thumbnail: string,
     documentURL: string,
     editor: string,
+    notationInformationType: string,
+    salesType: string,
   }
 
   let formName = {
@@ -94,6 +100,8 @@ module Form = {
     thumbnail: "thumbnail",
     documentURL: "document-url",
     editor: "description-html",
+    notationInformationType: "notation-information-type",
+    salesType: "sales-type",
   }
 
   @spice
@@ -118,6 +126,10 @@ module Form = {
     @spice.key(formName.thumbnail) thumbnail: Upload_Thumbnail_Admin.Form.image,
     @spice.key(formName.documentURL) documentURL: option<string>,
     @spice.key(formName.editor) editor: string,
+    @spice.key(formName.notationInformationType)
+    notationInformationType: Select_Product_NotationType_Admin.Notation.status,
+    @spice.key(formName.salesType)
+    salesType: option<Select_Product_QuotationType_Admin.QuotationType.t>,
   }
 }
 
@@ -560,6 +572,54 @@ module OriginInput = {
   }
 }
 
+// 필수고지정보 타입
+module NotationTypeInput = {
+  @react.component
+  let make = (~name) => {
+    let {control, formState: {errors}} = Hooks.Context.use(.
+      ~config=Hooks.Form.config(~mode=#onChange, ()),
+      (),
+    )
+
+    <div className=%twc("flex flex-col gap-2 max-w-md w-1/3")>
+      <div>
+        <span className=%twc("font-bold")> {`필수 표기정보 유형`->React.string} </span>
+        <span className=%twc("text-notice")> {`*`->React.string} </span>
+      </div>
+      <Controller
+        name
+        control
+        rules={Rules.make(~required=true, ())}
+        render={({field: {onChange, value, ref}}) =>
+          <div>
+            <Select_Product_NotationType_Admin.Notation
+              status={value
+              ->Select_Product_NotationType_Admin.Notation.status_decode
+              ->Result.mapWithDefault(None, status => Some(status))}
+              onChange={s =>
+                s
+                ->Select_Product_NotationType_Admin.Notation.status_encode
+                ->Controller.OnChangeArg.value
+                ->onChange}
+              forwardRef={ref}
+            />
+            <ErrorMessage
+              errors
+              name
+              render={_ =>
+                <span className=%twc("flex")>
+                  <IconError width="20" height="20" />
+                  <span className=%twc("text-sm text-notice ml-1")>
+                    {`필수 표기정보 유형을 선택해주세요.`->React.string}
+                  </span>
+                </span>}
+            />
+          </div>}
+      />
+    </div>
+  }
+}
+
 // 과세여부
 module IsVatInput = {
   @react.component
@@ -672,6 +732,71 @@ module QuotableChackbox = {
           {`견적 문의(가격 문의하기) 버튼 노출하기`->React.string}
         </label>
       </div>
+    </div>
+  }
+}
+
+// 견적 유형 선택
+module QuotationTypeInput = {
+  @react.component
+  let make = (~name, ~quotableCheckboxName) => {
+    let {control, formState: {errors}} = Hooks.Context.use(.
+      ~config=Hooks.Form.config(~mode=#onChange, ()),
+      (),
+    )
+
+    let quotableCheckboxValue = Hooks.WatchValues.use(
+      Hooks.WatchValues.Checkbox,
+      ~config=Hooks.WatchValues.config(~name=quotableCheckboxName, ()),
+      (),
+    )
+
+    let disabled = switch quotableCheckboxValue {
+    | Some(true) => false
+    | _ => true
+    }
+
+    <div className=%twc("flex flex-col gap-2 max-w-md w-1/3")>
+      <div>
+        <span className={disabled ? %twc("font-bold text-gray-400") : %twc("font-bold")}>
+          {`견적 유형`->React.string}
+        </span>
+        <span className={disabled ? %twc("text-gray-400") : %twc("text-notice")}>
+          {`*`->React.string}
+        </span>
+      </div>
+      <Controller
+        name
+        control
+        rules={Rules.make(~required=!disabled, ())}
+        defaultValue={Js.Json.null}
+        render={({field: {onChange, value, ref}}) =>
+          <div>
+            <Select_Product_QuotationType_Admin
+              forwardRef=ref
+              disabled
+              status={value
+              ->Select_Product_QuotationType_Admin.QuotationType.t_decode
+              ->Result.mapWithDefault(None, status => Some(status))}
+              onChange={s =>
+                s
+                ->Select_Product_QuotationType_Admin.QuotationType.t_encode
+                ->Controller.OnChangeArg.value
+                ->onChange}
+            />
+            <ErrorMessage
+              errors
+              name
+              render={_ =>
+                <span className=%twc("flex")>
+                  <IconError width="20" height="20" />
+                  <span className=%twc("text-sm text-notice ml-1")>
+                    {`견적 유형을 선택해주세요.`->React.string}
+                  </span>
+                </span>}
+            />
+          </div>}
+      />
     </div>
   }
 }
@@ -917,7 +1042,7 @@ module NormalSuccessDialog = {
   }
 }
 
-let makeNormalProductVariables = (form: Form.submit) =>
+let makeNormalProductVariables = (form: Form.submit) => {
   Mutation.makeVariables(
     ~categoryId=form.productCategory.c5->ProductForm.makeCategoryId,
     ~displayCategoryIds=form.displayCategories->ProductForm.makeDisplayCategoryIds,
@@ -930,6 +1055,7 @@ let makeNormalProductVariables = (form: Form.submit) =>
       thumb1920x1920: form.thumbnail.thumb1920x1920,
       thumb400x400: form.thumbnail.thumb400x400,
       thumb800x800: form.thumbnail.thumb800x800,
+      thumb800xall: form.thumbnail.thumb800xall,
     },
     ~isVat={form.tax->Select_Tax_Status.toBool},
     ~isCourierAvailable={form.delivery->Select_Delivery.toBool},
@@ -952,8 +1078,24 @@ let makeNormalProductVariables = (form: Form.submit) =>
     | true => #QUOTABLE
     | false => #NORMAL
     },
+    ~notationInformationType=switch form.notationInformationType {
+    | PROCESSED_FOOD => #PROCESSED_FOOD
+    | WHOLE_FOOD => #WHOLE_FOOD
+    },
+    ~salesType=?{
+      switch form.quotable {
+      | false => None
+      | true =>
+        switch form.salesType {
+        | None => None
+        | Some(RFQ_LIVESTOCK) => #RFQ_LIVESTOCK->Some
+        | Some(TRADEMATCH_AQUATIC) => #TRADEMATCH_AQUATIC->Some
+        }
+      }
+    },
     (),
   )
+}
 
 @react.component
 let make = () => {
@@ -984,36 +1126,31 @@ let make = () => {
   let {handleSubmit, reset} = methods
 
   let (isShowReset, setShowReset) = React.Uncurried.useState(_ => Dialog.Hide)
-  let (isShowNormalSuccess, setShowNormalSucess) = React.Uncurried.useState(_ =>
+  let (isShowNormalSuccess, setShowNormalSuccess) = React.Uncurried.useState(_ =>
     NormalSuccessDialog.Hide
   )
+  let (errorStatus, setErrorStatus) = React.Uncurried.useState(_ => (Dialog.Hide, None))
 
   let handleReset = ReactEvents.interceptingHandler(_ => {
     setShowReset(._ => Dialog.Show)
   })
 
   let onSubmit = (data: Js.Json.t, _) => {
-    Js.log(data)
-
-    let result =
-      data
-      ->Form.submit_decode
-      ->Result.map(data' =>
-        normalMutate(
-          ~variables=makeNormalProductVariables(data'),
-          ~onCompleted=({createProduct}, _) => {
-            switch createProduct {
-            | #CreateProductResult({product}) => setShowNormalSucess(._ => Show(product.id))
-            | _ => ()
-            }
-          },
-          (),
-        )->ignore
-      )
-
-    switch result {
-    | Error(e) => {
-        Js.log(e)
+    switch data->Form.submit_decode {
+    | Ok(data) =>
+      normalMutate(
+        ~variables=makeNormalProductVariables(data),
+        ~onCompleted=({createProduct}, _) => {
+          switch createProduct {
+          | #CreateProductResult({product}) => setShowNormalSuccess(._ => Show(product.id))
+          | #Error({message}) => setErrorStatus(._ => (Dialog.Show, message))
+          | _ => setErrorStatus(._ => (Dialog.Show, None))
+          }
+        },
+        (),
+      )->ignore
+    | Error(error) => {
+        Js.log(error)
         addToast(.
           <div className=%twc("flex items-center")>
             <IconError height="24" width="24" className=%twc("mr-2") />
@@ -1022,7 +1159,6 @@ let make = () => {
           {appearance: "error"},
         )
       }
-    | _ => ()
     }
   }
 
@@ -1044,6 +1180,8 @@ let make = () => {
     thumbnail,
     documentURL,
     editor,
+    notationInformationType,
+    salesType,
   } = Form.formName
 
   <ReactHookForm.Provider methods>
@@ -1063,14 +1201,17 @@ let make = () => {
           </div>
           <div className=%twc("py-6 flex flex-col space-y-6")>
             <div className=%twc("flex gap-2")>
-              <OperationStatusInput name=operationStatus /> <OriginInput name=origin />
+              <OperationStatusInput name=operationStatus />
+              <OriginInput name=origin />
+              <NotationTypeInput name=notationInformationType />
             </div>
             <div className=%twc("flex gap-2")>
               <IsVatInput name=tax /> <IsCourierAvailableInput name=delivery />
             </div>
           </div>
-          <div className=%twc("py-6 flex flex-col space-y-6")>
-            <QuotableChackbox name={quotable} />
+          <div className=%twc("py-6 flex space-y-6")>
+            <QuotableChackbox name=quotable />
+            <QuotationTypeInput name=salesType quotableCheckboxName=quotable />
           </div>
         </div>
       </section>
@@ -1121,6 +1262,22 @@ let make = () => {
         <p> {`모든 내용을 초기화 하시겠어요?`->React.string} </p>
       </Dialog>
       <NormalSuccessDialog showWithId={isShowNormalSuccess} />
+      {
+        let (isShow, errorMessage) = errorStatus
+        <Dialog
+          boxStyle=%twc("text-center rounded-2xl")
+          isShow={isShow}
+          textOnCancel=`확인`
+          onCancel={_ => setErrorStatus(._ => (Dialog.Hide, None))}>
+          <div className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+            {`상품정보 등록에 실패하였습니다.`->React.string}
+            {switch errorMessage {
+            | Some(msg) => <p> {msg->React.string} </p>
+            | None => React.null
+            }}
+          </div>
+        </Dialog>
+      }
     </form>
   </ReactHookForm.Provider>
 }

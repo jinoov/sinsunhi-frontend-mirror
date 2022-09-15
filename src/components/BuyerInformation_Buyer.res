@@ -34,18 +34,25 @@ module SectorAndSale = {
     `)
 
     @react.component
-    let make = (~selected, ~onClick, ~hasSelected) => {
+    let make = (
+      ~selected,
+      ~onClick,
+      ~hasSelected,
+      ~queriedSectors: React.ref<
+        option<
+          array<
+            BuyerInformationBuyerBusinessSectorListingQuery_graphql.Types.response_selfReportedBusinessSectorListing,
+          >,
+        >,
+      >,
+    ) => {
       let queryData = Query.use(~variables=(), ())
+      queriedSectors.current = queryData.selfReportedBusinessSectorListing
       let onClick = (item, _) => onClick(item)
 
       <>
         <section>
-          <h3 className=%twc("font-bold")>
-            {`업종`->React.string}
-            <span className=%twc("ml-1 text-sm font-normal text-text-L2")>
-              {`*최대 3개 선택가능`->React.string}
-            </span>
-          </h3>
+          <h3 className=%twc("font-bold")> {`업종`->React.string} </h3>
         </section>
         <section className=%twc("flex flex-wrap gap-2 mt-5")>
           {switch queryData.selfReportedBusinessSectorListing {
@@ -84,9 +91,22 @@ module SectorAndSale = {
     `)
 
     @react.component
-    let make = (~selected, ~onClick) => {
+    let make = (
+      ~selected,
+      ~onClick,
+      ~queriedSales: React.ref<
+        option<
+          array<
+            BuyerInformationBuyerSalesBinQuery_graphql.Types.response_selfReportedSalesBinListing,
+          >,
+        >,
+      >,
+    ) => {
       let queryData = Query.use(~variables=(), ())
       let onClick = (item, _) => onClick(item)
+
+      queriedSales.current = queryData.selfReportedSalesBinListing
+
       <>
         <section className=%twc("mt-12")>
           <h3 className=%twc("font-bold")> {`연매출`->React.string} </h3>
@@ -123,6 +143,14 @@ module SectorAndSale = {
           value
           label
         }
+  
+        viewer {
+          id
+          selfReportedSalesBin {
+            id
+            label
+          }
+        }
       }
       ... on Error {
         code
@@ -138,6 +166,14 @@ module SectorAndSale = {
           label
           value
         }
+  
+        viewer {
+          id
+          selfReportedBusinessSectors {
+            id
+            label
+          }
+        }
       }
       ... on Error {
         code
@@ -148,19 +184,19 @@ module SectorAndSale = {
   `)
 
   @react.component
-  let make = (~selected, ~close) => {
+  let make = (~selected, ~changeModeToInterestedItemCategory=?, ~close=?) => {
     let {addToast} = ReactToastNotifications.useToasts()
 
-    let selectedSet = switch selected {
+    let selectedSector = switch selected {
     | Some(bs, _) =>
-      bs->Option.mapWithDefault(Set.String.empty, bs => {
+      bs->Option.flatMap(bs => {
         bs
-        ->Array.map((
+        ->Garter.Array.first
+        ->Option.map((
           i: BuyerInformationBuyerQuery_graphql.Types.response_viewer_selfReportedBusinessSectors,
         ) => i.id)
-        ->Set.String.fromArray
       })
-    | None => Set.String.empty
+    | None => None
     }
     let selectedBin = switch selected {
     | Some(_, sb) =>
@@ -170,28 +206,12 @@ module SectorAndSale = {
     | _ => None
     }
 
-    let (businessSectorSet, setBusinessSectorSet) = React.Uncurried.useState(_ => selectedSet)
+    let (businessSector, setBusinessSector) = React.Uncurried.useState(_ => selectedSector)
     let (salesBin, setSalesBin) = React.Uncurried.useState(_ => selectedBin)
 
     let (mutate, isMutating) = Mutation.use()
 
-    let handleClickBusiSect = item =>
-      setBusinessSectorSet(.prev =>
-        if prev->Set.String.has(item) {
-          prev->Set.String.remove(item)
-        } else if prev->Set.String.size < 3 {
-          prev->Set.String.add(item)
-        } else {
-          addToast(.
-            <div className=%twc("flex items-center")>
-              <IconWarning height="24" width="24" className=%twc("mr-2") stroke="#FED925" />
-              {`선택 가능한 최대 품목수를 넘었습니다. (최대3개)`->React.string}
-            </div>,
-            {appearance: "error"},
-          )
-          prev
-        }
-      )
+    let handleClickBusiSector = item => setBusinessSector(._ => Some(item))
     let handleClickSalesBin = item =>
       setSalesBin(.prev => {
         if prev == item {
@@ -201,15 +221,43 @@ module SectorAndSale = {
         }
       })
 
-    let hasItem = (set, item) => set->Set.String.has(item)
+    let hasItem = (selected, item) =>
+      switch selected {
+      | Some(selected) => selected == item
+      | None => false
+      }
+
+    let queriedSectors = React.useRef(None)
+    let queriedSales = React.useRef(None)
 
     let save = () => {
-      switch (salesBin, businessSectorSet->Set.String.size > 0) {
-      | (Some(salesBin), true) =>
+      let labelsOfSales = queriedSales.current->Option.flatMap((
+        sales: array<
+          BuyerInformationBuyerSalesBinQuery_graphql.Types.response_selfReportedSalesBinListing,
+        >,
+      ) => {
+        sales
+        ->Array.keep(sale => Some(sale.id) == salesBin)
+        ->Garter.Array.first
+        ->Option.map(sale => sale.label)
+      })
+      let labelOfSectors =
+        queriedSectors.current->Option.map((
+          sectors: array<
+            BuyerInformationBuyerBusinessSectorListingQuery_graphql.Types.response_selfReportedBusinessSectorListing,
+          >,
+        ) =>
+          sectors
+          ->Array.keep(sector => businessSector == Some(sector.id))
+          ->Array.map(sector => sector.label)
+        )
+
+      switch (salesBin, businessSector) {
+      | (Some(salesBin), Some(businessSector)) =>
         mutate(
           ~variables={
             binId: salesBin,
-            businessSectors: businessSectorSet->Set.String.toArray,
+            businessSectors: [businessSector],
           },
           ~onCompleted={
             (_, _) => {
@@ -220,7 +268,18 @@ module SectorAndSale = {
                 </div>,
                 {appearance: "success"},
               )
-              close()
+              changeModeToInterestedItemCategory->Option.forEach(changeMode => changeMode())
+              close->Option.forEach(close => close())
+
+              // GTM
+              {
+                "event": "save_buyer_info_business_sectors_sales",
+                "selected_sectors": labelOfSectors,
+                "selected_sales": labelsOfSales,
+                "location": "login",
+              }
+              ->DataGtm.mergeUserIdUnsafe
+              ->DataGtm.push
             }
           },
           ~onError={
@@ -235,7 +294,7 @@ module SectorAndSale = {
           },
           (),
         )->ignore
-      | (None, true) =>
+      | (None, Some(_)) =>
         addToast(.
           <div className=%twc("flex items-center")>
             <IconWarning height="24" width="24" className=%twc("mr-2") />
@@ -244,7 +303,7 @@ module SectorAndSale = {
           {appearance: "success"},
         )
 
-      | (Some(_), false) =>
+      | (Some(_), None) =>
         addToast(.
           <div className=%twc("flex items-center")>
             <IconWarning height="24" width="24" className=%twc("mr-2") />
@@ -252,7 +311,7 @@ module SectorAndSale = {
           </div>,
           {appearance: "success"},
         )
-      | (None, false) =>
+      | (None, None) =>
         addToast(.
           <div className=%twc("flex items-center")>
             <IconWarning height="24" width="24" className=%twc("mr-2") />
@@ -280,8 +339,10 @@ module SectorAndSale = {
         </article>
       </section>
       <section className=%twc("p-5 text-text-L1")>
-        <Sector selected=businessSectorSet onClick=handleClickBusiSect hasSelected=hasItem />
-        <Sale selected=salesBin onClick=handleClickSalesBin />
+        <Sector
+          selected=businessSector onClick=handleClickBusiSector hasSelected=hasItem queriedSectors
+        />
+        <Sale selected=salesBin onClick=handleClickSalesBin queriedSales />
       </section>
       <section className=%twc("p-5")>
         <Button disabled=isMutating onClick={_ => save()} label={`저장`} />
@@ -333,9 +394,9 @@ module InterestedCategories = {
             className=%twc("pl-11")
           />
           <IconSearch
-            width="28"
-            height="28"
-            stroke="#262626"
+            width="24"
+            height="24"
+            fill="#262626"
             className=%twc("absolute left-3 top-1/2 transform -translate-y-1/2")
           />
           {if search->Js.String2.length > 0 {
@@ -506,7 +567,9 @@ module InterestedCategories = {
           | None => `검색 결과가 없습니다.`->React.string
           }}
         </ul>
-        <DS_ButtonContainer.Floating1 disabled=isMutating label={`저장`} onClick={_ => save()} />
+        <DS_ButtonContainer.Floating1
+          isFixed=false disabled=isMutating label={`저장`} onClick={_ => save()}
+        />
       </>
     }
   }
@@ -521,6 +584,7 @@ module InterestedCategories = {
       ~selected,
       ~onClickItem,
       ~hasItem,
+      ~clickCategoryIds: React.ref<array<string>>,
     ) => {
       let initialSelectedDepth0Category =
         data.interestedCategoryListing
@@ -571,7 +635,10 @@ module InterestedCategories = {
               ->Array.map(({id, name}) => {
                 <DS_Tab.LeftTab.Item key={id} className=%twc("mx-2 first:ml-0 last:mr-0")>
                   <DS_Button.Tab.LeftTab1
-                    onClick={_ => setSelectedDepth0Category(._ => Some(id))}
+                    onClick={_ => {
+                      setSelectedDepth0Category(._ => Some(id))
+                      clickCategoryIds.current = clickCategoryIds.current->Array.concat([id])
+                    }}
                     text=name
                     selected={Some(id) == selectedDepth0Category}
                     labelNumber={countOfSelected(id)}
@@ -593,7 +660,9 @@ module InterestedCategories = {
           />
         </React.Suspense>
         <div className=%twc("h-[56px]") />
-        <DS_ButtonContainer.Floating1 disabled=isMutating label={`저장`} onClick={_ => save()} />
+        <DS_ButtonContainer.Floating1
+          isFixed=false disabled=isMutating label={`저장`} onClick={_ => save()}
+        />
       </>
     }
   }
@@ -605,6 +674,13 @@ module InterestedCategories = {
       setInterestedItemCategories(input: { itemCategoryIds: $itemCategoryIds }) {
         ... on SetInterestedItemCategoriesResponse {
           itemCategoryIds
+          viewer {
+            id
+            interestedItemCategories {
+              id
+              name
+            }
+          }
         }
         ... on Error {
           code
@@ -621,7 +697,8 @@ module InterestedCategories = {
       ~selected: option<
         array<BuyerInformationBuyerQuery_graphql.Types.response_viewer_interestedItemCategories>,
       >,
-      ~changeModeToSectorSale,
+      ~changeModeToSectorSale=?,
+      ~close=?,
     ) => {
       let {addToast} = ReactToastNotifications.useToasts()
 
@@ -632,6 +709,8 @@ module InterestedCategories = {
       let (selected, setSelected) = React.Uncurried.useState(_ => selected)
 
       let (mutate, isMutating) = Mutation.use()
+
+      let clickCategoryIds = React.useRef([])
 
       let save = () => {
         if selected->Garter.Array.length > 0 {
@@ -648,7 +727,18 @@ module InterestedCategories = {
                   </div>,
                   {appearance: "success"},
                 )
-                changeModeToSectorSale()
+
+                {
+                  "event": "save_buyer_info_interested_item_category",
+                  "selected_item_ids": selected,
+                  "click_category_ids": clickCategoryIds.current,
+                  "location": "login",
+                }
+                ->DataGtm.mergeUserIdUnsafe
+                ->DataGtm.push
+
+                changeModeToSectorSale->Option.forEach(changeMode => changeMode())
+                close->Option.forEach(close => close())
               }
             },
             ~onError={
@@ -726,7 +816,15 @@ module InterestedCategories = {
             />
           </React.Suspense>
         } else {
-          <List selected data isMutating save onClickItem=handleClickItemCategory hasItem />
+          <List
+            selected
+            data
+            isMutating
+            save
+            onClickItem=handleClickItemCategory
+            hasItem
+            clickCategoryIds
+          />
         }}
       </>
     }
@@ -748,7 +846,7 @@ module InterestedCategories = {
   `)
 
   @react.component
-  let make = (~selected, ~changeModeToSectorSale) => {
+  let make = (~selected, ~changeModeToSectorSale=?, ~close=?) => {
     let queryData = Query.use(~variables=(), ())
 
     React.useEffect0(_ => {
@@ -770,7 +868,7 @@ module InterestedCategories = {
         </article>
       </section>
       <section className=%twc("p-5 text-text-L1")>
-        <SearchAndList data=queryData selected changeModeToSectorSale />
+        <SearchAndList data=queryData selected ?changeModeToSectorSale ?close />
       </section>
     </>
   }
@@ -846,7 +944,9 @@ module Fetcher = {
           if (
             lastShownDate == "" ||
             userId != Some(id) ||
-            date->Option.mapWithDefault(true, d => d->DateFns.parseISO->DateFns.isYesterday)
+            date->Option.mapWithDefault(true, d =>
+              d->DateFns.parseISO->DateFns.isBefore(Js.Date.make()->DateFns.startOfDay)
+            )
           ) {
             let isSalesBinInput =
               queryData.viewer->Option.flatMap(viewer => viewer.selfReportedSalesBin)
@@ -859,8 +959,15 @@ module Fetcher = {
                 viewer.interestedItemCategories->Option.map(arr => !Garter.Array.isEmpty(arr))
               )
             switch (isSalesBinInput, isBusiniessSectorsInput, isInterestedItemCategoriesInput) {
+            // | (Some(_), Some(true), Some(true)) => ()
+            // | (Some(_) | None, Some(false) | None, Some(true)) => {
+            //     setOpen(._ => Show)
+            //     setMode(._ => SectorAndSale)
+            //     LocalStorageHooks.BuyerInfoLastShown.set(makeLastShown(id))
+            //   }
             | (Some(_), Some(true), Some(true)) => ()
-            | (Some(_) | None, Some(false) | None, Some(true)) => {
+            | (None, _, _)
+            | (_, None, _) => {
                 setOpen(._ => Show)
                 setMode(._ => SectorAndSale)
                 LocalStorageHooks.BuyerInfoLastShown.set(makeLastShown(id))
@@ -882,17 +989,26 @@ module Fetcher = {
       None
     }, (queryData, user))
 
-    let changeModeToSectorSale = () => setMode(._ => SectorAndSale)
+    let _changeModeToSectorSale = () => setMode(._ => SectorAndSale)
+    let changeModeToInterestedItemCategory = () => setMode(._ => InterestedCategories)
     let close = () => setOpen(._ => Hide)
 
-    let hasInputBusinessSectorsAndSalesBin = queryData.viewer->Option.mapWithDefault(false, v => {
-      let bs = v.selfReportedBusinessSectors->Option.map(arr => !(arr->Garter.Array.isEmpty))
-      let sb = v.selfReportedSalesBin
-      switch (bs, sb) {
-      | (Some(true), Some(_)) => true
-      | _ => false
-      }
-    })
+    // A/B 테스트를 위한 주석 처리
+    // let hasInputBusinessSectorsAndSalesBin = queryData.viewer->Option.mapWithDefault(false, v => {
+    //   let bs = v.selfReportedBusinessSectors->Option.map(arr => !(arr->Garter.Array.isEmpty))
+    //   let sb = v.selfReportedSalesBin
+    //   switch (bs, sb) {
+    //   | (Some(true), Some(_)) => true
+    //   | _ => false
+    //   }
+    // })
+
+    let hasInputInterestedItemCategory =
+      queryData.viewer->Option.mapWithDefault(false, v =>
+        v.interestedItemCategories->Option.mapWithDefault(false, arr =>
+          !(arr->Garter.Array.isEmpty)
+        )
+      )
 
     let contentStyle = switch mode {
     | SectorAndSale => %twc("dialog-content-detail overflow-y-auto rounded-2xl")
@@ -911,8 +1027,14 @@ module Fetcher = {
             <Dialog.Close
               className=%twc("p-2 m-3 mb-0 focus:outline-none ml-auto")
               onClick={_ => {
-                if mode == InterestedCategories && !hasInputBusinessSectorsAndSalesBin {
-                  setMode(._ => SectorAndSale)
+                // A/B 테스트를 위한 주석 처리
+                // if mode == InterestedCategories && !hasInputBusinessSectorsAndSalesBin {
+                //   setMode(._ => SectorAndSale)
+                // } else {
+                //   setOpen(._ => Hide)
+                // }
+                if mode == SectorAndSale && !hasInputInterestedItemCategory {
+                  setMode(._ => InterestedCategories)
                 } else {
                   setOpen(._ => Hide)
                 }
@@ -928,12 +1050,11 @@ module Fetcher = {
               v.selfReportedBusinessSectors,
               v.selfReportedSalesBin,
             ))}
-            close
+            changeModeToInterestedItemCategory
           />
         | InterestedCategories =>
           <InterestedCategories
-            selected={queryData.viewer->Option.flatMap(v => v.interestedItemCategories)}
-            changeModeToSectorSale
+            selected={queryData.viewer->Option.flatMap(v => v.interestedItemCategories)} close
           />
         }}
       </Dialog.Content>
@@ -947,7 +1068,7 @@ let make = () => {
 
   switch user {
   | LoggedIn({role: Buyer}) =>
-    <React.Suspense fallback={<div> {`!!!`->React.string} </div>}>
+    <React.Suspense fallback={React.null}>
       <Fetcher />
     </React.Suspense>
   | _ => React.null

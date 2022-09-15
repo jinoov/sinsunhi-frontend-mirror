@@ -1,6 +1,6 @@
 module GetServerSideProps = {
   module Req = {
-    type t
+    type t = {"headers": {"user-agent": string}}
   }
 
   module Res = {

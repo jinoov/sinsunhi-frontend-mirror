@@ -22,7 +22,7 @@ function Checkbox(Props) {
   }
   if (exit === 1) {
     style = checked !== undefined ? (
-        checked ? "w-5 h-5 bg-green-gl rounded flex justify-center items-center" : "w-5 h-5 bg-white border-2 border-gray-300 rounded flex justify-center items-center"
+        checked ? "w-5 h-5 bg-green-gl rounded flex justify-center items-center cursor-pointer" : "w-5 h-5 bg-white border-2 border-gray-300 rounded flex justify-center items-center cursor-pointer"
       ) : "w-5 h-5 border-2 border-gray-200 bg-gray-100 rounded flex justify-center items-center";
   }
   var tmp = {
@@ -109,6 +109,5 @@ export {
   inputCheckIcon ,
   make ,
   Uncontrolled ,
-  
 }
 /* inputCheckIcon Not a pure module */

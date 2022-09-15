@@ -1,7 +1,6 @@
 /* This is just a custom exception to indicate that something went wrong. */
 exception Graphql_error(string)
 
-
 // A standard fetch that sends our operation and variables to the
 // GraphQL server, and then decodes and returns the response.
 type api = SinsunMarket(string) | FMBridge(string)

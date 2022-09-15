@@ -2,39 +2,97 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ReactRelay from "react-relay";
 import ReactSlick from "react-slick";
-import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
+import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
+import * as RelayRuntime from "relay-runtime";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
-import * as ShopMainMainBannerBuyerFragment_graphql from "../__generated__/ShopMainMainBannerBuyerFragment_graphql.mjs";
+import * as ShopMainMainBannerBuyerQuery_graphql from "../__generated__/ShopMainMainBannerBuyerQuery_graphql.mjs";
 import ArrowWhiteLeftSvg from "../../public/assets/arrow-white-left.svg";
 
 var arrowWhiteLeftIcon = ArrowWhiteLeftSvg;
 
-function use(fRef) {
-  var data = Hooks.useFragment(ShopMainMainBannerBuyerFragment_graphql.node, fRef);
-  return RescriptRelay_Internal.internal_useConvertedValue(ShopMainMainBannerBuyerFragment_graphql.Internal.convertFragment, data);
+function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
+  var data = ReactRelay.useLazyLoadQuery(ShopMainMainBannerBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(ShopMainMainBannerBuyerQuery_graphql.Internal.convertVariables(variables)), {
+        fetchKey: fetchKey,
+        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
+        networkCacheConfig: networkCacheConfig
+      });
+  return RescriptRelay_Internal.internal_useConvertedValue(ShopMainMainBannerBuyerQuery_graphql.Internal.convertResponse, data);
 }
 
-function useOpt(opt_fRef) {
-  var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(ShopMainMainBannerBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
-  var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
-  return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
-                if (rawFragment !== undefined) {
-                  return ShopMainMainBannerBuyerFragment_graphql.Internal.convertFragment(rawFragment);
-                }
-                
-              }), data);
+function useLoader(param) {
+  var match = ReactRelay.useQueryLoader(ShopMainMainBannerBuyerQuery_graphql.node);
+  var loadQueryFn = match[1];
+  var loadQuery = React.useMemo((function () {
+          return function (param, param$1, param$2, param$3) {
+            return Curry._2(loadQueryFn, ShopMainMainBannerBuyerQuery_graphql.Internal.convertVariables(param), {
+                        fetchPolicy: param$1,
+                        networkCacheConfig: param$2
+                      });
+          };
+        }), [loadQueryFn]);
+  return [
+          Caml_option.nullable_to_opt(match[0]),
+          loadQuery,
+          match[2]
+        ];
 }
 
-var Fragment = {
+function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
+  ReactRelay.fetchQuery(environment, ShopMainMainBannerBuyerQuery_graphql.node, ShopMainMainBannerBuyerQuery_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).subscribe({
+        next: (function (res) {
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: ShopMainMainBannerBuyerQuery_graphql.Internal.convertResponse(res)
+                });
+          }),
+        error: (function (err) {
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
+          })
+      });
+}
+
+function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
+  var __x = ReactRelay.fetchQuery(environment, ShopMainMainBannerBuyerQuery_graphql.node, ShopMainMainBannerBuyerQuery_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).toPromise();
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(ShopMainMainBannerBuyerQuery_graphql.Internal.convertResponse(res));
+              }), __x);
+}
+
+function usePreloaded(queryRef, param) {
+  var data = ReactRelay.usePreloadedQuery(ShopMainMainBannerBuyerQuery_graphql.node, queryRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(ShopMainMainBannerBuyerQuery_graphql.Internal.convertResponse, data);
+}
+
+function retain(environment, variables) {
+  var operationDescriptor = RelayRuntime.createOperationDescriptor(ShopMainMainBannerBuyerQuery_graphql.node, ShopMainMainBannerBuyerQuery_graphql.Internal.convertVariables(variables));
+  return environment.retain(operationDescriptor);
+}
+
+var Query = {
+  Operation: undefined,
   Types: undefined,
   use: use,
-  useOpt: useOpt
+  useLoader: useLoader,
+  $$fetch: $$fetch,
+  fetchPromised: fetchPromised,
+  usePreloaded: usePreloaded,
+  retain: retain
 };
 
 function ShopMain_MainBanner_Buyer$PC$PrevBtn(Props) {
@@ -43,7 +101,6 @@ function ShopMain_MainBanner_Buyer$PC$PrevBtn(Props) {
     Belt_Option.map(onClick, (function (onClick$p) {
             return Curry._1(onClick$p, undefined);
           }));
-    
   };
   return React.createElement("button", {
               className: "absolute z-[5] left-3 top-1/2 translate-y-[-50%]",
@@ -63,7 +120,6 @@ function ShopMain_MainBanner_Buyer$PC$NextBtn(Props) {
     Belt_Option.map(onClick, (function (onClick$p) {
             return Curry._1(onClick$p, undefined);
           }));
-    
   };
   return React.createElement("button", {
               className: "absolute rotate-180 z-[5] right-3 top-1/2 translate-y-[-50%]",
@@ -84,7 +140,7 @@ function ShopMain_MainBanner_Buyer$PC$PageIndex(Props) {
               className: "absolute bottom-3 right-3 rounded-full bg-gray-800 bg-opacity-20 px-4 py-1 flex items-center justify-center"
             }, React.createElement("span", {
                   className: "text-white text-2xs"
-                }, String(current + 1 | 0) + " / " + String(total)));
+                }, "" + String(current + 1 | 0) + " / " + String(total) + ""));
 }
 
 var PageIndex = {
@@ -99,7 +155,7 @@ function ShopMain_MainBanner_Buyer$PC$Dots(Props) {
             }, Belt_Array.map(Belt_Array.range(0, total - 1 | 0), (function (idx) {
                     var style = current === idx ? "w-2 h-2 rounded-full bg-white bg-opacity-70" : "w-2 h-2 rounded-full bg-white bg-opacity-50";
                     return React.createElement("div", {
-                                key: "banner-dot-" + String(idx),
+                                key: "banner-dot-" + String(idx) + "",
                                 className: style
                               });
                   })));
@@ -120,19 +176,17 @@ var Placeholder = {
 };
 
 function ShopMain_MainBanner_Buyer$PC(Props) {
-  var query = Props.query;
-  var match = use(query);
-  var mainBanners = match.mainBanners;
+  var mainBanners = Props.mainBanners;
   var total = mainBanners.length;
-  var match$1 = React.useState(function () {
+  var match = React.useState(function () {
         return 0;
       });
-  var setCurrent = match$1[1];
-  var current = match$1[0];
+  var setCurrent = match[1];
+  var current = match[0];
   var afterChange = function (changedTo) {
-    return setCurrent(function (param) {
-                return changedTo;
-              });
+    setCurrent(function (param) {
+          return changedTo;
+        });
   };
   return React.createElement("div", {
               className: "relative"
@@ -147,17 +201,19 @@ function ShopMain_MainBanner_Buyer$PC(Props) {
                   nextArrow: React.createElement(ShopMain_MainBanner_Buyer$PC$NextBtn, {}),
                   prevArrow: React.createElement(ShopMain_MainBanner_Buyer$PC$PrevBtn, {}),
                   children: mainBanners.length !== 0 ? Belt_Array.map(mainBanners, (function (param) {
-                            var key = "main-banner-" + param.id;
+                            var key = "main-banner-" + param.id + "";
                             var target = param.isNewTabPc ? "_blank" : "_self";
-                            return React.createElement("a", {
-                                        key: key,
+                            return React.createElement(Link, {
                                         href: param.landingUrl,
-                                        target: target
-                                      }, React.createElement("img", {
-                                            className: "w-full aspect-[920/396] mb-[-7px] object-cover",
-                                            alt: key,
-                                            src: param.imageUrlPc
-                                          }));
+                                        children: React.createElement("a", {
+                                              target: target
+                                            }, React.createElement("img", {
+                                                  className: "w-full aspect-[920/396] mb-[-7px] object-cover",
+                                                  alt: key,
+                                                  src: param.imageUrlPc
+                                                })),
+                                        key: key
+                                      });
                           })) : React.createElement(ShopMain_MainBanner_Buyer$PC$Placeholder, {}),
                   afterChange: afterChange
                 }), React.createElement(ShopMain_MainBanner_Buyer$PC$PageIndex, {
@@ -195,7 +251,7 @@ function ShopMain_MainBanner_Buyer$MO$PageIndex(Props) {
               className: "absolute bottom-3 right-3 rounded-full bg-gray-800 bg-opacity-20 px-2 py-0.5 flex items-center justify-center"
             }, React.createElement("span", {
                   className: "text-white text-2xs"
-                }, String(current + 1 | 0) + " / " + String(total)));
+                }, "" + String(current + 1 | 0) + " / " + String(total) + ""));
 }
 
 var PageIndex$1 = {
@@ -210,7 +266,7 @@ function ShopMain_MainBanner_Buyer$MO$Dots(Props) {
             }, Belt_Array.map(Belt_Array.range(0, total - 1 | 0), (function (idx) {
                     var style = current === idx ? "w-[6px] h-[6px] rounded-full bg-white bg-opacity-70" : "w-[6px] h-[6px] rounded-full bg-white bg-opacity-50";
                     return React.createElement("div", {
-                                key: "banner-dot-" + String(idx),
+                                key: "banner-dot-" + String(idx) + "",
                                 className: style
                               });
                   })));
@@ -221,19 +277,17 @@ var Dots$1 = {
 };
 
 function ShopMain_MainBanner_Buyer$MO(Props) {
-  var query = Props.query;
-  var match = use(query);
-  var mainBanners = match.mainBanners;
+  var mainBanners = Props.mainBanners;
   var total = mainBanners.length;
-  var match$1 = React.useState(function () {
+  var match = React.useState(function () {
         return 0;
       });
-  var setCurrent = match$1[1];
-  var current = match$1[0];
+  var setCurrent = match[1];
+  var current = match[0];
   var afterChange = function (changedTo) {
-    return setCurrent(function (param) {
-                return changedTo;
-              });
+    setCurrent(function (param) {
+          return changedTo;
+        });
   };
   return React.createElement("div", {
               className: "relative"
@@ -246,17 +300,19 @@ function ShopMain_MainBanner_Buyer$MO(Props) {
                   autoplaySpeed: 5000,
                   arrows: false,
                   children: mainBanners.length !== 0 ? Belt_Array.map(mainBanners, (function (param) {
-                            var key = "main-banner-" + param.id;
+                            var key = "main-banner-" + param.id + "";
                             var target = param.isNewTabMobile ? "_blank" : "_self";
-                            return React.createElement("a", {
-                                        key: key,
+                            return React.createElement(Link, {
                                         href: param.landingUrl,
-                                        target: target
-                                      }, React.createElement("img", {
-                                            className: "w-full aspect-[320/164] mb-[-7px] object-cover",
-                                            alt: key,
-                                            src: param.imageUrlMobile
-                                          }));
+                                        children: React.createElement("a", {
+                                              target: target
+                                            }, React.createElement("img", {
+                                                  className: "w-full aspect-[320/164] mb-[-7px] object-cover",
+                                                  alt: key,
+                                                  src: param.imageUrlMobile
+                                                })),
+                                        key: key
+                                      });
                           })) : React.createElement(ShopMain_MainBanner_Buyer$MO$Placeholder, {}),
                   afterChange: afterChange
                 }), React.createElement(ShopMain_MainBanner_Buyer$MO$PageIndex, {
@@ -277,9 +333,8 @@ var MO = {
 
 export {
   arrowWhiteLeftIcon ,
-  Fragment ,
+  Query ,
   PC ,
   MO ,
-  
 }
 /* arrowWhiteLeftIcon Not a pure module */

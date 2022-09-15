@@ -4,42 +4,50 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
+import * as Payments from "../../../bindings/Payments.mjs";
 import * as IconError from "../../../components/svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as Garter_Math from "@greenlabs/garter/src/Garter_Math.mjs";
 import * as ReactEvents from "../../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import Script from "next/script";
+import * as ReactRelay from "react-relay";
+import * as DeviceDetect from "../../../bindings/DeviceDetect.mjs";
 import * as Authorization from "../../../utils/Authorization.mjs";
 import * as ReactHookForm from "../../../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
+import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
+import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
 import * as ReactHookForm$1 from "react-hook-form";
-import * as Hooks from "react-relay/hooks";
 import * as Web_Order_Buyer_Form from "../../../components/Web_Order_Buyer_Form.mjs";
 import * as Web_Order_Item_Buyer from "../../../components/Web_Order_Item_Buyer.mjs";
+import * as ToggleOrderAndPayment from "../../../utils/ToggleOrderAndPayment.mjs";
 import * as ReactDialog from "@radix-ui/react-dialog";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactToastNotifications from "react-toast-notifications";
-import * as WebOrderBuyerQuery_graphql from "../../../__generated__/WebOrderBuyerQuery_graphql.mjs";
-import * as WebOrderBuyerMutation_graphql from "../../../__generated__/WebOrderBuyerMutation_graphql.mjs";
+import * as WebOrderBuyer_TempWosOrder_Query_graphql from "../../../__generated__/WebOrderBuyer_TempWosOrder_Query_graphql.mjs";
+import * as WebOrderBuyer_RequestPayment_Mutation_graphql from "../../../__generated__/WebOrderBuyer_RequestPayment_Mutation_graphql.mjs";
+import * as WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql from "../../../__generated__/WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(WebOrderBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(WebOrderBuyerQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(WebOrderBuyer_TempWosOrder_Query_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
       });
-  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderBuyerQuery_graphql.Internal.convertResponse, data);
+  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertResponse, data);
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(WebOrderBuyerQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(WebOrderBuyer_TempWosOrder_Query_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
-            return Curry._2(loadQueryFn, WebOrderBuyerQuery_graphql.Internal.convertVariables(param), {
+            return Curry._2(loadQueryFn, WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
                         networkCacheConfig: param$2
                       });
@@ -53,50 +61,47 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, WebOrderBuyerQuery_graphql.node, WebOrderBuyerQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, WebOrderBuyer_TempWosOrder_Query_graphql.node, WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: WebOrderBuyerQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, WebOrderBuyerQuery_graphql.node, WebOrderBuyerQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, WebOrderBuyer_TempWosOrder_Query_graphql.node, WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(WebOrderBuyerQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(WebOrderBuyerQuery_graphql.node, queryRef);
-  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderBuyerQuery_graphql.Internal.convertResponse, data);
+  var data = ReactRelay.usePreloadedQuery(WebOrderBuyer_TempWosOrder_Query_graphql.node, queryRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertResponse, data);
 }
 
 function retain(environment, variables) {
-  var operationDescriptor = RelayRuntime.createOperationDescriptor(WebOrderBuyerQuery_graphql.node, WebOrderBuyerQuery_graphql.Internal.convertVariables(variables));
+  var operationDescriptor = RelayRuntime.createOperationDescriptor(WebOrderBuyer_TempWosOrder_Query_graphql.node, WebOrderBuyer_TempWosOrder_Query_graphql.Internal.convertVariables(variables));
   return environment.retain(operationDescriptor);
 }
 
-var Query_makeVariables = WebOrderBuyerQuery_graphql.Utils.makeVariables;
-
 var Query = {
-  makeVariables: Query_makeVariables,
+  Operation: undefined,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -106,15 +111,13 @@ var Query = {
   retain: retain
 };
 
-var make_wosProductOptionInput = WebOrderBuyerMutation_graphql.Utils.make_wosProductOptionInput;
-
 function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
   return RelayRuntime.commitMutation(environment, {
-              mutation: WebOrderBuyerMutation_graphql.node,
-              variables: WebOrderBuyerMutation_graphql.Internal.convertVariables(variables),
+              mutation: WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.node,
+              variables: WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertVariables(variables),
               onCompleted: (function (res, err) {
                   if (onCompleted !== undefined) {
-                    return Curry._2(onCompleted, WebOrderBuyerMutation_graphql.Internal.convertResponse(res), (err == null) ? undefined : Caml_option.some(err));
+                    return Curry._2(onCompleted, WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertResponse(res), (err == null) ? undefined : Caml_option.some(err));
                   }
                   
                 }),
@@ -124,17 +127,17 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
                   }
                   
                 }),
-              optimisticResponse: optimisticResponse !== undefined ? WebOrderBuyerMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
+              optimisticResponse: optimisticResponse !== undefined ? WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, WebOrderBuyerMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use$1(param) {
-  var match = Hooks.useMutation(WebOrderBuyerMutation_graphql.node);
+  var match = ReactRelay.useMutation(WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -142,15 +145,15 @@ function use$1(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, WebOrderBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
-                                optimisticResponse: param$3 !== undefined ? WebOrderBuyerMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
+                                optimisticResponse: param$3 !== undefined ? WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, WebOrderBuyerMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
-                                variables: WebOrderBuyerMutation_graphql.Internal.convertVariables(param$6),
+                                variables: WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
                               });
                   };
@@ -159,27 +162,156 @@ function use$1(param) {
         ];
 }
 
-var Mutation_wosDeliveryType_decode = WebOrderBuyerMutation_graphql.Utils.wosDeliveryType_decode;
+var UpdateTempWosOrder_wosDeliveryType_decode = WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Utils.wosDeliveryType_decode;
 
-var Mutation_wosDeliveryType_fromString = WebOrderBuyerMutation_graphql.Utils.wosDeliveryType_fromString;
+var UpdateTempWosOrder_wosDeliveryType_fromString = WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Utils.wosDeliveryType_fromString;
 
-var Mutation_wosErrorCode_decode = WebOrderBuyerMutation_graphql.Utils.wosErrorCode_decode;
+var UpdateTempWosOrder_wosErrorCode_decode = WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Utils.wosErrorCode_decode;
 
-var Mutation_wosErrorCode_fromString = WebOrderBuyerMutation_graphql.Utils.wosErrorCode_fromString;
+var UpdateTempWosOrder_wosErrorCode_fromString = WebOrderBuyer_UpdateTempWosOrder_Mutation_graphql.Utils.wosErrorCode_fromString;
 
-var Mutation_makeVariables = WebOrderBuyerMutation_graphql.Utils.makeVariables;
-
-var Mutation = {
-  wosDeliveryType_decode: Mutation_wosDeliveryType_decode,
-  wosDeliveryType_fromString: Mutation_wosDeliveryType_fromString,
-  wosErrorCode_decode: Mutation_wosErrorCode_decode,
-  wosErrorCode_fromString: Mutation_wosErrorCode_fromString,
-  make_wosProductOptionInput: make_wosProductOptionInput,
-  makeVariables: Mutation_makeVariables,
+var UpdateTempWosOrder = {
+  wosDeliveryType_decode: UpdateTempWosOrder_wosDeliveryType_decode,
+  wosDeliveryType_fromString: UpdateTempWosOrder_wosDeliveryType_fromString,
+  wosErrorCode_decode: UpdateTempWosOrder_wosErrorCode_decode,
+  wosErrorCode_fromString: UpdateTempWosOrder_wosErrorCode_fromString,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use$1
 };
+
+function commitMutation$1(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
+  return RelayRuntime.commitMutation(environment, {
+              mutation: WebOrderBuyer_RequestPayment_Mutation_graphql.node,
+              variables: WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertVariables(variables),
+              onCompleted: (function (res, err) {
+                  if (onCompleted !== undefined) {
+                    return Curry._2(onCompleted, WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertResponse(res), (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              onError: (function (err) {
+                  if (onError !== undefined) {
+                    return Curry._1(onError, (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              optimisticResponse: optimisticResponse !== undefined ? WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
+              optimisticUpdater: optimisticUpdater,
+              updater: updater !== undefined ? (function (store, r) {
+                    Curry._2(updater, store, WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertResponse(r));
+                  }) : undefined,
+              uploadables: uploadables
+            });
+}
+
+function use$2(param) {
+  var match = ReactRelay.useMutation(WebOrderBuyer_RequestPayment_Mutation_graphql.node);
+  var mutate = match[0];
+  return [
+          React.useMemo((function () {
+                  return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
+                    return Curry._1(mutate, {
+                                onError: param,
+                                onCompleted: param$1 !== undefined ? (function (r, errors) {
+                                      Curry._2(param$1, WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                    }) : undefined,
+                                onUnsubscribe: param$2,
+                                optimisticResponse: param$3 !== undefined ? WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
+                                optimisticUpdater: param$4,
+                                updater: param$5 !== undefined ? (function (store, r) {
+                                      Curry._2(param$5, store, WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertResponse(r));
+                                    }) : undefined,
+                                variables: WebOrderBuyer_RequestPayment_Mutation_graphql.Internal.convertVariables(param$6),
+                                uploadables: param$7
+                              });
+                  };
+                }), [mutate]),
+          match[1]
+        ];
+}
+
+var RequestPayment_errorCode_decode = WebOrderBuyer_RequestPayment_Mutation_graphql.Utils.errorCode_decode;
+
+var RequestPayment_errorCode_fromString = WebOrderBuyer_RequestPayment_Mutation_graphql.Utils.errorCode_fromString;
+
+var RequestPayment_paymentMethod_decode = WebOrderBuyer_RequestPayment_Mutation_graphql.Utils.paymentMethod_decode;
+
+var RequestPayment_paymentMethod_fromString = WebOrderBuyer_RequestPayment_Mutation_graphql.Utils.paymentMethod_fromString;
+
+var RequestPayment_paymentPurpose_decode = WebOrderBuyer_RequestPayment_Mutation_graphql.Utils.paymentPurpose_decode;
+
+var RequestPayment_paymentPurpose_fromString = WebOrderBuyer_RequestPayment_Mutation_graphql.Utils.paymentPurpose_fromString;
+
+var RequestPayment = {
+  errorCode_decode: RequestPayment_errorCode_decode,
+  errorCode_fromString: RequestPayment_errorCode_fromString,
+  paymentMethod_decode: RequestPayment_paymentMethod_decode,
+  paymentMethod_fromString: RequestPayment_paymentMethod_fromString,
+  paymentPurpose_decode: RequestPayment_paymentPurpose_decode,
+  paymentPurpose_fromString: RequestPayment_paymentPurpose_fromString,
+  Operation: undefined,
+  Types: undefined,
+  commitMutation: commitMutation$1,
+  use: use$2
+};
+
+var Mutation = {
+  UpdateTempWosOrder: UpdateTempWosOrder,
+  RequestPayment: RequestPayment
+};
+
+function makeMutationVariable(formData, tempOrderId) {
+  var productInfos = formData.productInfos;
+  var totalOrderPrice = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
+              return info.totalPrice;
+            })));
+  var totalDeliveryCost = Garter_Math.sum_int(Belt_Array.concatMany(Belt_Array.map(productInfos, (function (info) {
+                  return Belt_Array.map(info.productOptions, (function (param) {
+                                return Math.imul(param.deliveryCost, param.quantity);
+                              }));
+                }))));
+  return {
+          orderUserId: formData.orderUserId,
+          paymentPurpose: "ORDER",
+          productOptions: Belt_Array.map(Belt_Array.concatMany(Belt_Array.map(productInfos, (function (info) {
+                          return info.productOptions;
+                        }))), (function (option) {
+                  var tmp = {
+                    deliveryCost: option.deliveryCost,
+                    deliveryType: formData.deliveryType,
+                    isTaxFree: option.isTaxFree,
+                    ordererName: formData.ordererName,
+                    ordererPhone: formData.ordererPhone,
+                    productId: option.productId,
+                    receiverAddress: Belt_Option.getWithDefault(formData.receiverAddress, "") + Belt_Option.mapWithDefault(formData.receiverDetailAddress, "", (function (str) {
+                            return " " + str + "";
+                          })),
+                    stockSku: option.stockSku
+                  };
+                  if (formData.deliveryDesiredDate !== undefined) {
+                    tmp.deliveryDesiredDate = formData.deliveryDesiredDate;
+                  }
+                  if (formData.deliveryMessage !== undefined) {
+                    tmp.deliveryMessage = formData.deliveryMessage;
+                  }
+                  if (formData.receiverName !== undefined) {
+                    tmp.receiverName = formData.receiverName;
+                  }
+                  if (formData.receiverPhone !== undefined) {
+                    tmp.receiverPhone = formData.receiverPhone;
+                  }
+                  if (formData.receiverZipCode !== undefined) {
+                    tmp.receiverZipCode = formData.receiverZipCode;
+                  }
+                  return tmp;
+                })),
+          tempOrderId: tempOrderId,
+          totalDeliveryCost: totalDeliveryCost,
+          totalOrderPrice: totalOrderPrice
+        };
+}
 
 function Web_Order_Buyer$Dialog(Props) {
   var show = Props.show;
@@ -195,7 +327,7 @@ function Web_Order_Buyer$Dialog(Props) {
                         className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
                       }, React.createElement("span", {
                             className: "whitespace-pre text-center text-text-L1 pt-3"
-                          }, "화물배송의 경우 배송지에 따라\n추가배송비(화물비)가 후청구 됩니다.\n\n담당MD가 화물비를 알려드리기 위해\n별도로 연락을 드릴 예정입니다.\n\n위 사항이 확인되셨다면\n결제를 눌러 다음 단계를 진행해 주세요."), React.createElement("div", {
+                          }, "화물배송의 경우 배송지에 따라\n추가배송비(화물비)가 후청구 됩니다.\n담당MD가 화물비를 알려드리기 위해\n별도로 연락을 드릴 예정입니다.\n위 사항이 확인되셨다면\n결제를 눌러 다음 단계를 진행해 주세요."), React.createElement("div", {
                             className: "flex w-full justify-center items-center gap-2"
                           }, React.createElement("button", {
                                 className: "w-1/2 rounded-xl h-13 bg-enabled-L5",
@@ -204,7 +336,7 @@ function Web_Order_Buyer$Dialog(Props) {
                                 className: "w-1/2 rounded-xl h-13 bg-primary text-inverted font-bold",
                                 onClick: (function (param) {
                                     return ReactEvents.interceptingHandler((function (param) {
-                                                  return Curry._1(confirmFn, undefined);
+                                                  Curry._1(confirmFn, undefined);
                                                 }), param);
                                   })
                               }, "결제")))),
@@ -216,93 +348,73 @@ var Dialog = {
   make: Web_Order_Buyer$Dialog
 };
 
-function makeProductOption(d) {
-  return Curry.app(make_wosProductOptionInput, [
-              d.deliveryCost,
-              d.deliveryDesiredDate,
-              d.deliveryMessage,
-              d.deliveryType,
-              d.grade,
-              d.isTaxFree,
-              d.ordererName,
-              d.ordererPhone,
-              d.price,
-              d.productId,
-              d.productName,
-              d.productOptionName,
-              d.quantity,
-              Belt_Option.getWithDefault(d.receiverAddress, "") + Belt_Option.mapWithDefault(d.receiverDetailAddress, "", (function (str) {
-                      return " " + str;
-                    })),
-              d.receiverName,
-              d.receiverPhone,
-              d.receiverZipCode,
-              d.stockSku,
-              undefined,
-              undefined
-            ]);
-}
-
-function paymentMethodToTossValue(c) {
-  if (c === "CREDIT_CARD") {
-    return "카드";
-  } else if (c === "TRANSFER") {
-    return "계좌이체";
-  } else {
-    return "가상계좌";
-  }
-}
-
-function tossPaymentsValidHours(c) {
-  if (c === "VIRTUAL_ACCOUNT") {
-    return 24;
-  }
-  
-}
-
-function tossPaymentsCashReceipt(c) {
-  if (c === "VIRTUAL_ACCOUNT") {
-    return {
-            type: "미발행"
-          };
-  }
-  
-}
-
 function Web_Order_Buyer$Container(Props) {
-  var productId = Props.productId;
-  var productOptionId = Props.productOptionId;
-  var quantity = Props.quantity;
-  var queryData = use({
-        productNodeId: productId,
-        productOptionNodeId: productOptionId
-      }, /* StoreAndNetwork */2, undefined, undefined, undefined);
-  var match = use$1(undefined);
-  var mutate = match[0];
-  var match$1 = Web_Order_Item_Buyer.Mutation.use(undefined);
-  var requestPaymentMutate = match$1[0];
-  var match$2 = React.useState(function () {
+  var tempOrderId = Props.tempOrderId;
+  var deviceType = Props.deviceType;
+  var match = use({
+        tempWosOrderId: tempOrderId
+      }, undefined, undefined, undefined, undefined);
+  var tempWosOrder = match.tempWosOrder;
+  var skuNos = Belt_SetString.fromArray(Belt_Option.getWithDefault(Belt_Option.flatMap(tempWosOrder, (function (t) {
+                  return Belt_Option.map(t.data, (function (data$p) {
+                                return Belt_Array.keepMap(data$p.productOptions, (function (option) {
+                                              return Belt_Option.map(option, (function (option$p) {
+                                                            return option$p.stockSku;
+                                                          }));
+                                            }));
+                              }));
+                })), []));
+  var productNos = Belt_Option.flatMap(tempWosOrder, (function (t) {
+          return Belt_Option.map(t.data, (function (data$p) {
+                        return Belt_Array.keepMap(data$p.productOptions, (function (a) {
+                                      return Belt_Option.flatMap(a, (function (a$p) {
+                                                    return a$p.productId;
+                                                  }));
+                                    }));
+                      }));
+        }));
+  var skuMap = Belt_MapString.fromArray(Belt_Option.getWithDefault(Belt_Option.flatMap(tempWosOrder, (function (t) {
+                  return Belt_Option.map(t.data, (function (data$p) {
+                                return Belt_Array.keepMap(data$p.productOptions, (function (a) {
+                                              return Belt_Option.map(a, (function (a$p) {
+                                                            return [
+                                                                    a$p.stockSku,
+                                                                    [
+                                                                      a$p.quantity,
+                                                                      a$p.cartUpdatedAt
+                                                                    ]
+                                                                  ];
+                                                          }));
+                                            }));
+                              }));
+                })), []));
+  var match$1 = use$1(undefined);
+  var updateTempWosOrderMutate = match$1[0];
+  var match$2 = use$2(undefined);
+  var requestPaymentMutate = match$2[0];
+  var match$3 = React.useState(function () {
         return false;
       });
-  var setFreightDialogShow = match$2[1];
-  var match$3 = React.useState(function () {
+  var setFreightDialogShow = match$3[1];
+  var match$4 = React.useState(function () {
         return function (prim) {
           
         };
       });
-  var setConfirmFn = match$3[1];
-  var match$4 = ReactToastNotifications.useToasts();
-  var addToast = match$4.addToast;
+  var setConfirmFn = match$4[1];
+  var match$5 = ReactToastNotifications.useToasts();
+  var addToast = match$5.addToast;
+  var availableButton = ToggleOrderAndPayment.use(undefined);
   var handleOnCancel = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   setFreightDialogShow(function (param) {
                         return false;
                       });
-                  return setConfirmFn(function (param) {
-                              return function (prim) {
-                                
-                              };
-                            });
+                  setConfirmFn(function (param) {
+                        return function (prim) {
+                          
+                        };
+                      });
                 }), param);
   };
   var handleError = function (message, param) {
@@ -311,169 +423,159 @@ function Web_Order_Buyer$Container(Props) {
             
           };
         });
-    return addToast(React.createElement("div", {
-                    className: "flex items-center w-full whitespace-pre-wrap"
-                  }, React.createElement(IconError.make, {
-                        width: "24",
-                        height: "24",
-                        className: "mr-2"
-                      }), "결제가 실패하였습니다. " + Belt_Option.getWithDefault(message, "")), {
-                appearance: "error"
-              });
+    addToast(React.createElement("div", {
+              className: "flex items-center w-full whitespace-pre-wrap"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), "결제가 실패하였습니다. " + Belt_Option.getWithDefault(message, "") + ""), {
+          appearance: "error"
+        });
   };
-  var match$5 = queryData.productNode;
   var methods = ReactHookForm$1.useForm({
         mode: "onSubmit",
         defaultValues: Js_dict.fromArray([[
                 Web_Order_Buyer_Form.name,
-                Js_dict.fromArray(match$5 !== undefined ? (
-                        typeof match$5 === "object" ? (
-                            match$5.NAME === "NormalProduct" ? [
-                                [
-                                  "payment-method",
-                                  "card"
-                                ],
-                                [
-                                  "product-options",
-                                  [Web_Order_Buyer_Form.defaultValue(match$5.VAL.isCourierAvailable)]
-                                ]
-                              ] : [[
-                                  "web-order",
-                                  null
-                                ]]
-                          ) : [[
-                              "web-order",
-                              null
-                            ]]
-                      ) : [[
-                          "web-order",
-                          null
-                        ]])
+                Js_dict.fromArray([
+                      [
+                        "payment-method",
+                        "card"
+                      ],
+                      Web_Order_Buyer_Form.defaultValue(false)
+                    ])
               ]])
       }, undefined);
   var onSubmit = function (data, param) {
-    console.log(data);
-    var msg = Web_Order_Buyer_Form.submit_decode(data);
-    if (msg.TAG === /* Ok */0) {
-      var data$p = msg._0.webOrder;
-      var confirm = function (param) {
-        setFreightDialogShow(function (param) {
-              return false;
-            });
-        Curry.app(mutate, [
-              (function (err) {
-                  return handleError(err.message, undefined);
-                }),
-              (function (param, param$1) {
-                  var createWosOrder = param.createWosOrder;
-                  if (createWosOrder === undefined) {
-                    return handleError("주문 생성 요청 실패", undefined);
-                  }
-                  if (typeof createWosOrder !== "object") {
-                    return handleError("주문 생성 에러", undefined);
-                  }
-                  var variant = createWosOrder.NAME;
-                  if (variant === "WosError") {
-                    var code = createWosOrder.VAL.code;
-                    if (code === "INVALID_DELIVERY") {
-                      return handleError("유효하지 않은 배송 정보입니다.", undefined);
-                    } else if (code === "INVALID_PAYMENT_PURPOSE") {
-                      return handleError("유효하지 않은 결제 목적입니다.", undefined);
-                    } else if (code === "INVALID_ORDER") {
-                      return handleError("유효하지 않은 주문 정보입니다.", undefined);
-                    } else if (code === "INVALID_PRODUCT") {
-                      return handleError("유효하지 않은 상품 정보입니다.", undefined);
-                    } else {
-                      return handleError(undefined, undefined);
+    if (availableButton) {
+      var msg = Web_Order_Buyer_Form.submit_decode(data);
+      if (msg.TAG === /* Ok */0) {
+        var data$p = msg._0.webOrder;
+        var confirm = function (param) {
+          var productInfos = data$p.productInfos;
+          setFreightDialogShow(function (param) {
+                return false;
+              });
+          Curry.app(updateTempWosOrderMutate, [
+                (function (err) {
+                    handleError(err.message, undefined);
+                  }),
+                (function (param, param$1) {
+                    var updateTempWosOrder = param.updateTempWosOrder;
+                    if (updateTempWosOrder === undefined) {
+                      return handleError("주문 생성 요청 실패", undefined);
                     }
-                  }
-                  if (variant !== "CreateWosOrderResult") {
-                    if (variant === "Error") {
-                      return handleError("주문 생성 에러", undefined);
-                    } else {
+                    if (typeof updateTempWosOrder !== "object") {
                       return handleError("주문 생성 에러", undefined);
                     }
-                  }
-                  var match = createWosOrder.VAL;
-                  var tempOrderId = match.tempOrderId;
-                  var orderNo = match.orderNo;
-                  var option = Belt_Array.get(data$p.productOptions, 0);
-                  var match$1 = option !== undefined ? [
-                      option.productName,
-                      option.isTaxFree
-                    ] : [
-                      "",
-                      false
-                    ];
-                  var isTaxFree = match$1[1];
-                  var orderName = match$1[0];
-                  Curry.app(requestPaymentMutate, [
-                        (function (err) {
-                            return handleError(err.message, undefined);
-                          }),
-                        (function (param, param$1) {
-                            var requestPayment = param.requestPayment;
-                            if (requestPayment === undefined) {
-                              return handleError("주문 생성에 실패하였습니다.", undefined);
-                            }
-                            if (typeof requestPayment !== "object") {
-                              return handleError("주문 생성에 실패하였습니다.", undefined);
-                            }
-                            var variant = requestPayment.NAME;
-                            if (variant === "Error") {
-                              return Belt_Option.forEach(requestPayment.VAL.message, (function (message) {
-                                            return handleError(message, undefined);
-                                          }));
-                            }
-                            if (variant !== "RequestPaymentTossPaymentsResult") {
-                              return handleError("주문 생성에 실패하였습니다.", undefined);
-                            }
-                            var tossPaymentResult = requestPayment.VAL;
-                            return window.tossPayments.requestPayment(paymentMethodToTossValue(data$p.paymentMethod), {
-                                        amount: data$p.totalOrderPrice,
-                                        orderId: orderNo,
-                                        orderName: orderName,
-                                        customerName: tossPaymentResult.customerName,
-                                        successUrl: window.location.origin + "/buyer/toss-payments/success?product-id=" + productId + "&product-option-id=" + productOptionId + "&quantity=" + String(quantity) + "&payment-id=" + String(tossPaymentResult.paymentId) + "&temp-order-id=" + String(tempOrderId),
-                                        failUrl: window.location.origin + "/buyer/toss-payments/fail?product-id=" + productId + "&product-option-id=" + productOptionId + "&quantity=" + String(quantity),
-                                        taxFreeAmount: isTaxFree ? data$p.totalOrderPrice : 0,
-                                        validHours: tossPaymentsValidHours(data$p.paymentMethod),
-                                        cashReceipt: tossPaymentsCashReceipt(data$p.paymentMethod)
-                                      });
-                          }),
-                        undefined,
-                        undefined,
-                        undefined,
-                        undefined,
-                        {
-                          paymentMethod: data$p.paymentMethod,
-                          amount: data$p.totalOrderPrice,
-                          purpose: "ORDER"
-                        },
-                        undefined,
-                        undefined
-                      ]);
-                  
-                }),
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              {
-                orderUserId: data$p.orderUserId,
-                paymentPurpose: data$p.paymentPurpose,
-                productOptions: Belt_Array.map(data$p.productOptions, makeProductOption),
-                totalDeliveryCost: data$p.totalDeliveryCost,
-                totalOrderPrice: data$p.totalOrderPrice
-              },
-              undefined,
-              undefined
-            ]);
-        
-      };
-      var match = Belt_Array.get(data$p.productOptions, 0);
-      if (match !== undefined) {
-        if (match.deliveryType === "FREIGHT") {
+                    var variant = updateTempWosOrder.NAME;
+                    if (variant === "WosError") {
+                      var code = updateTempWosOrder.VAL.code;
+                      if (code === "INVALID_DELIVERY") {
+                        return handleError("유효하지 않은 배송 정보입니다.", undefined);
+                      } else if (code === "INVALID_PAYMENT_PURPOSE") {
+                        return handleError("유효하지 않은 결제 목적입니다.", undefined);
+                      } else if (code === "INVALID_ORDER") {
+                        return handleError("유효하지 않은 주문 정보입니다.", undefined);
+                      } else if (code === "INVALID_PRODUCT") {
+                        return handleError("유효하지 않은 상품 정보입니다.", undefined);
+                      } else {
+                        return handleError(undefined, undefined);
+                      }
+                    }
+                    if (variant !== "CreateWosOrderResult") {
+                      return handleError("주문 생성 에러", undefined);
+                    }
+                    var match = updateTempWosOrder.VAL;
+                    var tempOrderId = match.tempOrderId;
+                    var orderNo = match.orderNo;
+                    var taxFreeAmount = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
+                                if (info.isTaxFree) {
+                                  return info.totalPrice;
+                                } else {
+                                  return 0;
+                                }
+                              })));
+                    var totalOrderPrice = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
+                                return info.totalPrice;
+                              })));
+                    Curry.app(requestPaymentMutate, [
+                          (function (err) {
+                              handleError(err.message, undefined);
+                            }),
+                          (function (param, param$1) {
+                              var requestPayment = param.requestPayment;
+                              if (requestPayment === undefined) {
+                                return handleError("주문 생성에 실패하였습니다.", undefined);
+                              }
+                              if (typeof requestPayment !== "object") {
+                                return handleError("주문 생성에 실패하였습니다.", undefined);
+                              }
+                              var variant = requestPayment.NAME;
+                              if (variant === "Error") {
+                                var err = requestPayment.VAL;
+                                Belt_Option.forEach(err.message, (function (message) {
+                                        handleError(message, undefined);
+                                      }));
+                                console.log(err);
+                                return ;
+                              }
+                              if (variant !== "RequestPaymentTossPaymentsResult") {
+                                return handleError("주문 생성에 실패하였습니다.", undefined);
+                              }
+                              var tossPaymentResult = requestPayment.VAL;
+                              var productOptions = Belt_Array.concatMany(Belt_Array.map(productInfos, (function (info) {
+                                          return info.productOptions;
+                                        })));
+                              var productOption = Belt_Array.get(productOptions, 0);
+                              var orderName;
+                              if (productOption !== undefined) {
+                                var num = productOptions.length;
+                                orderName = productOption.productOptionName + (
+                                  num > 1 ? " 외 " + String(num - 1 | 0) + "건" : ""
+                                );
+                              } else {
+                                orderName = "신선하이";
+                              }
+                              window.tossPayments.requestPayment(Payments.methodToTossValue(data$p.paymentMethod), {
+                                    amount: totalOrderPrice,
+                                    orderId: orderNo,
+                                    orderName: orderName,
+                                    taxFreeAmount: taxFreeAmount,
+                                    customerName: tossPaymentResult.customerName,
+                                    successUrl: "" + window.location.origin + "/buyer/toss-payments/success?payment-id=" + String(tossPaymentResult.paymentId) + "&temp-order-id=" + String(tempOrderId) + "",
+                                    failUrl: "" + window.location.origin + "/buyer/toss-payments/fail?temp-order-id=" + String(tempOrderId) + "",
+                                    validHours: Payments.tossPaymentsValidHours(data$p.paymentMethod),
+                                    cashReceipt: Payments.tossPaymentsCashReceipt(data$p.paymentMethod),
+                                    appScheme: Belt_Option.map(Caml_option.nullable_to_opt(window.ReactNativeWebView), (function (param) {
+                                            return encodeURIComponent("sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?payment-id=" + String(tossPaymentResult.paymentId) + "&temp-order-id=" + String(tempOrderId) + "");
+                                          }))
+                                  });
+                            }),
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                          {
+                            amount: totalOrderPrice,
+                            paymentMethod: data$p.paymentMethod,
+                            purpose: "ORDER"
+                          },
+                          undefined,
+                          undefined
+                        ]);
+                  }),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                makeMutationVariable(data$p, tempOrderId),
+                undefined,
+                undefined
+              ]);
+        };
+        var match = data$p.deliveryType;
+        if (match === "FREIGHT") {
           setConfirmFn(function (param) {
                 return confirm;
               });
@@ -483,25 +585,28 @@ function Web_Order_Buyer$Container(Props) {
         } else {
           return confirm(undefined);
         }
-      } else {
-        return ;
       }
+      var msg$1 = msg._0;
+      console.log(msg$1);
+      return handleError(msg$1.message, undefined);
     }
-    var msg$1 = msg._0;
-    console.log(msg$1);
-    return handleError(msg$1.message, undefined);
+    window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
   };
   return React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Buyer$Dialog, {
-                  show: match$2[0],
-                  confirmFn: match$3[0],
+                  show: match$3[0],
+                  confirmFn: match$4[0],
                   cancel: handleOnCancel
                 }), React.createElement(ReactHookForm.Provider.make, {
                   children: React.createElement("form", {
                         onSubmit: methods.handleSubmit(onSubmit)
-                      }, React.createElement(Web_Order_Item_Buyer.make, {
-                            query: queryData.fragmentRefs,
-                            quantity: quantity
-                          })),
+                      }, productNos !== undefined ? React.createElement(Web_Order_Item_Buyer.make, {
+                              productNos: productNos,
+                              skuNos: skuNos,
+                              skuMap: skuMap,
+                              deviceType: deviceType
+                            }) : React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                              deviceType: deviceType
+                            })),
                   methods: methods
                 }));
 }
@@ -510,55 +615,54 @@ var Container = {
   make: Web_Order_Buyer$Container
 };
 
-function Web_Order_Buyer(Props) {
+function $$default(props) {
+  var deviceType = props.deviceType;
   var router = Router.useRouter();
-  var productId = Js_dict.get(router.query, "pid");
-  var productOptionId = Js_dict.get(router.query, "oid");
-  var quantity = Belt_Option.flatMap(Js_dict.get(router.query, "quantity"), Belt_Int.fromString);
-  var tmp;
-  var exit = 0;
-  if (productId !== undefined && productOptionId !== undefined && quantity !== undefined) {
-    tmp = React.createElement(Web_Order_Buyer$Container, {
-          productId: productId,
-          productOptionId: productOptionId,
-          quantity: quantity
-        });
-  } else {
-    exit = 1;
-  }
-  if (exit === 1) {
-    tmp = React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {});
-  }
+  var tid = Belt_Option.flatMap(Js_dict.get(router.query, "tid"), Belt_Int.fromString);
   return React.createElement(Authorization.Buyer.make, {
               children: null,
               title: "주문하기",
-              fallback: React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {})
+              fallback: React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                    deviceType: deviceType
+                  })
             }, React.createElement(Script, {
                   src: "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
                 }), React.createElement(React.Suspense, {
-                  children: tmp,
-                  fallback: React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {})
+                  children: tid !== undefined ? React.createElement(Web_Order_Buyer$Container, {
+                          tempOrderId: tid,
+                          deviceType: deviceType
+                        }) : React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                          deviceType: deviceType
+                        }),
+                  fallback: React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                        deviceType: deviceType
+                      })
                 }));
+}
+
+function getServerSideProps(ctx) {
+  var deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req);
+  return Promise.resolve({
+              props: {
+                deviceType: deviceType
+              }
+            });
 }
 
 var Form;
 
 var PlaceHolder;
 
-var make = Web_Order_Buyer;
-
 export {
   Query ,
   Mutation ,
-  Dialog ,
   Form ,
   PlaceHolder ,
-  makeProductOption ,
-  paymentMethodToTossValue ,
-  tossPaymentsValidHours ,
-  tossPaymentsCashReceipt ,
+  makeMutationVariable ,
+  Dialog ,
   Container ,
-  make ,
-  
+  $$default ,
+  $$default as default,
+  getServerSideProps ,
 }
 /* react Not a pure module */

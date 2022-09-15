@@ -8,6 +8,7 @@ import * as Divider from "./common/Divider.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
+import * as Payments from "../bindings/Payments.mjs";
 import * as IconArrow from "./svgs/IconArrow.mjs";
 import * as IconClose from "./svgs/IconClose.mjs";
 import * as IconError from "./svgs/IconError.mjs";
@@ -15,13 +16,14 @@ import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Float from "rescript/lib/es6/belt_Float.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ReactRelay from "react-relay";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as DetectBrowser from "detect-browser";
 import * as ReactHookForm$1 from "react-hook-form";
-import * as Hooks from "react-relay/hooks";
 import * as InputWithAdornment from "./common/InputWithAdornment.mjs";
 import * as Webapi__Dom__Element from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__Element.mjs";
+import * as ToggleOrderAndPayment from "../utils/ToggleOrderAndPayment.mjs";
 import * as ReactDialog from "@radix-ui/react-dialog";
 import * as ReactToastNotifications from "react-toast-notifications";
 import * as Webapi__Dom__HtmlInputElement from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__HtmlInputElement.mjs";
@@ -43,84 +45,11 @@ var radioFilledIcon = RadioFilledSvg;
 
 var noticeIcon = NoticeSvg;
 
-function paymentMethod_encode(v) {
-  if (v === "CREDIT_CARD") {
-    return "card";
-  } else if (v === "TRANSFER") {
-    return "transfer";
-  } else {
-    return "virtual";
-  }
-}
-
-function paymentMethod_decode(v) {
-  var str = Js_json.classify(v);
-  if (typeof str === "number") {
-    return Spice.error(undefined, "Not a JSONString", v);
-  }
-  if (str.TAG !== /* JSONString */0) {
-    return Spice.error(undefined, "Not a JSONString", v);
-  }
-  var str$1 = str._0;
-  if ("card" === str$1) {
-    return {
-            TAG: /* Ok */0,
-            _0: "CREDIT_CARD"
-          };
-  } else if ("virtual" === str$1) {
-    return {
-            TAG: /* Ok */0,
-            _0: "VIRTUAL_ACCOUNT"
-          };
-  } else if ("transfer" === str$1) {
-    return {
-            TAG: /* Ok */0,
-            _0: "TRANSFER"
-          };
-  } else {
-    return Spice.error(undefined, "Not matched", v);
-  }
-}
-
-function paymentMethodToKCPValue(c) {
-  if (c === "CREDIT_CARD") {
-    return "100000000000";
-  } else {
-    return "001000000000";
-  }
-}
-
-function paymentMethodToTossValue(c) {
-  if (c === "CREDIT_CARD") {
-    return "카드";
-  } else if (c === "TRANSFER") {
-    return "계좌이체";
-  } else {
-    return "가상계좌";
-  }
-}
-
-function tossPaymentsValidHours(c) {
-  if (c === "VIRTUAL_ACCOUNT") {
-    return 24;
-  }
-  
-}
-
-function tossPaymentsCashReceipt(c) {
-  if (c === "VIRTUAL_ACCOUNT") {
-    return {
-            type: "미발행"
-          };
-  }
-  
-}
-
 function form_encode(v) {
   return Js_dict.fromArray([
               [
                 "payment-method",
-                paymentMethod_encode(v.paymentMethod)
+                Payments.paymentMethod_encode(v.paymentMethod)
               ],
               [
                 "amount",
@@ -138,7 +67,7 @@ function form_decode(v) {
     return Spice.error(undefined, "Not an object", v);
   }
   var dict$1 = dict._0;
-  var paymentMethod = paymentMethod_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "payment-method"), null));
+  var paymentMethod = Payments.paymentMethod_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "payment-method"), null));
   if (paymentMethod.TAG === /* Ok */0) {
     var amount = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "amount"), null));
     if (amount.TAG === /* Ok */0) {
@@ -174,9 +103,7 @@ function form_decode(v) {
 function setValueToHtmlInputElement(name, v) {
   Belt_Option.map(Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById(name)), Webapi__Dom__HtmlInputElement.ofElement), (function (e) {
           e.value = v;
-          
         }));
-  
 }
 
 function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
@@ -198,14 +125,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? CashChargeButtonBuyerMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, CashChargeButtonBuyerMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, CashChargeButtonBuyerMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use(param) {
-  var match = Hooks.useMutation(CashChargeButtonBuyerMutation_graphql.node);
+  var match = ReactRelay.useMutation(CashChargeButtonBuyerMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -213,13 +140,13 @@ function use(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, CashChargeButtonBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, CashChargeButtonBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? CashChargeButtonBuyerMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, CashChargeButtonBuyerMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, CashChargeButtonBuyerMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: CashChargeButtonBuyerMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -246,8 +173,6 @@ var MutationCreateCharge_paymentPurpose_decode = CashChargeButtonBuyerMutation_g
 
 var MutationCreateCharge_paymentPurpose_fromString = CashChargeButtonBuyerMutation_graphql.Utils.paymentPurpose_fromString;
 
-var MutationCreateCharge_makeVariables = CashChargeButtonBuyerMutation_graphql.Utils.makeVariables;
-
 var MutationCreateCharge = {
   device_decode: MutationCreateCharge_device_decode,
   device_fromString: MutationCreateCharge_device_fromString,
@@ -257,7 +182,7 @@ var MutationCreateCharge = {
   paymentMethod_fromString: MutationCreateCharge_paymentMethod_fromString,
   paymentPurpose_decode: MutationCreateCharge_paymentPurpose_decode,
   paymentPurpose_fromString: MutationCreateCharge_paymentPurpose_fromString,
-  makeVariables: MutationCreateCharge_makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use
@@ -283,13 +208,13 @@ function Cash_Charge_Button_Buyer(Props) {
         return false;
       });
   var setRequireTerms = match$3[1];
+  var availableButton = ToggleOrderAndPayment.use(undefined);
   var close = function (param) {
     var buttonClose = document.getElementById("btn-close");
     Belt_Option.forEach(Belt_Option.flatMap((buttonClose == null) ? undefined : Caml_option.some(buttonClose), Webapi__Dom__Element.asHtmlElement), (function (buttonClose$p) {
             buttonClose$p.click();
-            
           }));
-    return reset(undefined);
+    reset(undefined);
   };
   var errorElement = React.createElement(React.Fragment, undefined, React.createElement("img", {
             src: noticeIcon
@@ -297,15 +222,15 @@ function Cash_Charge_Button_Buyer(Props) {
             className: "ml-1.5 text-sm"
           }, "최소 결제금액(1,000원 이상)을 입력해주세요."));
   var handleError = function (message, param) {
-    return addToast(React.createElement("div", {
-                    className: "flex items-center"
-                  }, React.createElement(IconError.make, {
-                        width: "24",
-                        height: "24",
-                        className: "mr-2"
-                      }), "결제가 실패하였습니다. " + Belt_Option.getWithDefault(message, "")), {
-                appearance: "error"
-              });
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), "결제가 실패하였습니다. " + Belt_Option.getWithDefault(message, "") + ""), {
+          appearance: "error"
+        });
   };
   var detectIsMobile = function (param) {
     var match = DetectBrowser.detect();
@@ -322,78 +247,85 @@ function Cash_Charge_Button_Buyer(Props) {
                 }));
   };
   var handleConfirm = function (data, param) {
-    var data$p = form_decode(data);
-    if (data$p.TAG === /* Ok */0) {
-      var data$p$1 = data$p._0;
-      setValueToHtmlInputElement("good_mny", String(data$p$1.amount));
-      setValueToHtmlInputElement("pay_method", paymentMethodToKCPValue(data$p$1.paymentMethod));
-      Curry.app(mutate, [
-            (function (err) {
-                return handleError(err.message, undefined);
-              }),
-            (function (param, param$1) {
-                var requestPayment = param.requestPayment;
-                if (requestPayment === undefined) {
-                  return handleError("주문 생성 요청 실패", undefined);
-                }
-                if (typeof requestPayment !== "object") {
-                  return handleError("주문 생성 에러", undefined);
-                }
-                var variant = requestPayment.NAME;
-                if (variant === "Error") {
-                  return handleError("주문 생성 에러", undefined);
-                }
-                if (variant === "RequestPaymentTossPaymentsResult") {
-                  var requestPaymentTossPaymentsResult = requestPayment.VAL;
-                  return window.tossPayments.requestPayment(paymentMethodToTossValue(data$p$1.paymentMethod), {
-                              amount: requestPaymentTossPaymentsResult.amount,
-                              orderId: requestPaymentTossPaymentsResult.orderId,
-                              orderName: "신선하이 " + String(requestPaymentTossPaymentsResult.amount),
-                              customerName: requestPaymentTossPaymentsResult.customerName,
-                              successUrl: window.location.origin + "/buyer/toss-payments/success?payment-id=" + String(requestPaymentTossPaymentsResult.paymentId),
-                              failUrl: window.location.origin + "/buyer/toss-payments/fail",
-                              validHours: tossPaymentsValidHours(data$p$1.paymentMethod),
-                              cashReceipt: tossPaymentsCashReceipt(data$p$1.paymentMethod)
-                            });
-                }
-                if (variant !== "RequestPaymentKCPResult") {
-                  return handleError("주문 생성 에러", undefined);
-                }
-                var requestPaymnetKCPResult = requestPayment.VAL;
-                close(undefined);
-                setValueToHtmlInputElement("site_cd", requestPaymnetKCPResult.siteCd);
-                setValueToHtmlInputElement("site_name", requestPaymnetKCPResult.siteName);
-                setValueToHtmlInputElement("site_key", requestPaymnetKCPResult.siteKey);
-                setValueToHtmlInputElement("ordr_idxx", requestPaymnetKCPResult.ordrIdxx);
-                setValueToHtmlInputElement("currency", requestPaymnetKCPResult.currency);
-                setValueToHtmlInputElement("shop_user_id", requestPaymnetKCPResult.shopUserId);
-                setValueToHtmlInputElement("buyr_name", requestPaymnetKCPResult.buyrName);
-                var orderInfo = document.getElementById("order_info");
-                if (orderInfo == null) {
-                  return handleError("폼 데이터를 찾을 수가 없습니다.", undefined);
-                } else {
-                  window.jsf__pay(orderInfo);
-                  return ;
-                }
-              }),
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            {
-              paymentMethod: data$p$1.paymentMethod,
-              amount: data$p$1.amount,
-              device: detectIsMobile(undefined) ? "MOBILE" : "PC",
-              purpose: "SINSUN_CASH"
-            },
-            undefined,
-            undefined
-          ]);
-      return ;
+    if (availableButton) {
+      var data$p = form_decode(data);
+      if (data$p.TAG === /* Ok */0) {
+        var data$p$1 = data$p._0;
+        setValueToHtmlInputElement("good_mny", String(data$p$1.amount));
+        setValueToHtmlInputElement("pay_method", Payments.methodToKCPValue(data$p$1.paymentMethod));
+        Curry.app(mutate, [
+              (function (err) {
+                  handleError(err.message, undefined);
+                }),
+              (function (param, param$1) {
+                  var requestPayment = param.requestPayment;
+                  if (requestPayment === undefined) {
+                    return handleError("주문 생성 요청 실패", undefined);
+                  }
+                  if (typeof requestPayment !== "object") {
+                    return handleError("주문 생성 에러", undefined);
+                  }
+                  var variant = requestPayment.NAME;
+                  if (variant === "Error") {
+                    return handleError("주문 생성 에러", undefined);
+                  }
+                  if (variant === "RequestPaymentTossPaymentsResult") {
+                    var requestPaymentTossPaymentsResult = requestPayment.VAL;
+                    return window.tossPayments.requestPayment(Payments.methodToTossValue(data$p$1.paymentMethod), {
+                                amount: requestPaymentTossPaymentsResult.amount,
+                                orderId: requestPaymentTossPaymentsResult.orderId,
+                                orderName: "신선하이 " + String(requestPaymentTossPaymentsResult.amount) + "",
+                                taxFreeAmount: undefined,
+                                customerName: requestPaymentTossPaymentsResult.customerName,
+                                successUrl: "" + window.location.origin + "/buyer/toss-payments/success?payment-id=" + String(requestPaymentTossPaymentsResult.paymentId) + "",
+                                failUrl: "" + window.location.origin + "/buyer/toss-payments/fail?from=/transactions",
+                                validHours: Payments.tossPaymentsValidHours(data$p$1.paymentMethod),
+                                cashReceipt: Payments.tossPaymentsCashReceipt(data$p$1.paymentMethod),
+                                appScheme: Belt_Option.map(Caml_option.nullable_to_opt(window.ReactNativeWebView), (function (param) {
+                                        return encodeURIComponent("sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?payment-id=" + String(requestPaymentTossPaymentsResult.paymentId) + "");
+                                      }))
+                              });
+                  }
+                  if (variant !== "RequestPaymentKCPResult") {
+                    return handleError("주문 생성 에러", undefined);
+                  }
+                  var requestPaymnetKCPResult = requestPayment.VAL;
+                  close(undefined);
+                  setValueToHtmlInputElement("site_cd", requestPaymnetKCPResult.siteCd);
+                  setValueToHtmlInputElement("site_name", requestPaymnetKCPResult.siteName);
+                  setValueToHtmlInputElement("site_key", requestPaymnetKCPResult.siteKey);
+                  setValueToHtmlInputElement("ordr_idxx", requestPaymnetKCPResult.ordrIdxx);
+                  setValueToHtmlInputElement("currency", requestPaymnetKCPResult.currency);
+                  setValueToHtmlInputElement("shop_user_id", requestPaymnetKCPResult.shopUserId);
+                  setValueToHtmlInputElement("buyr_name", requestPaymnetKCPResult.buyrName);
+                  var orderInfo = document.getElementById("order_info");
+                  if (orderInfo == null) {
+                    return handleError("폼 데이터를 찾을 수가 없습니다.", undefined);
+                  } else {
+                    window.jsf__pay(orderInfo);
+                    return ;
+                  }
+                }),
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              {
+                amount: data$p$1.amount,
+                device: detectIsMobile(undefined) ? "MOBILE" : "PC",
+                paymentMethod: data$p$1.paymentMethod,
+                purpose: "SINSUN_CASH"
+              },
+              undefined,
+              undefined
+            ]);
+        return ;
+      }
+      var msg = data$p._0;
+      console.log(msg);
+      return handleError(msg.message, undefined);
     }
-    var msg = data$p._0;
-    console.log(msg);
-    return handleError(msg.message, undefined);
+    window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
   };
   var changeToFormattedFloat = function (j) {
     return Belt_Option.mapWithDefault(Js_json.decodeNumber(j), "", (function (f) {
@@ -423,11 +355,11 @@ function Cash_Charge_Button_Buyer(Props) {
                             }, "신선캐시 충전"), React.createElement("button", {
                               className: "cursor-pointer border-none",
                               onClick: (function (param) {
-                                  return close(undefined);
+                                  close(undefined);
                                 })
                             }, React.createElement(IconClose.make, {
-                                  height: "1.5rem",
-                                  width: "1.5rem",
+                                  height: "24",
+                                  width: "24",
                                   fill: "#262626"
                                 }))), React.createElement("div", {
                           className: "flex items-center gap-4 mt-10 font-bold"
@@ -539,10 +471,10 @@ function Cash_Charge_Button_Buyer(Props) {
                                                                 onClick: (function (e) {
                                                                     e.preventDefault();
                                                                     e.stopPropagation();
-                                                                    return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, v));
+                                                                    Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, v));
                                                                   })
                                                               }, React.createElement("img", {
-                                                                    src: Caml_obj.caml_equal(value, v) ? radioFilledIcon : radioDefaultIcon
+                                                                    src: Caml_obj.equal(value, v) ? radioFilledIcon : radioDefaultIcon
                                                                   }), name);
                                                   })));
                                 }),
@@ -553,9 +485,9 @@ function Cash_Charge_Button_Buyer(Props) {
                               }, React.createElement("button", {
                                     className: "flex items-center cursor-pointer",
                                     onClick: (function (param) {
-                                        return setRequireTerms(function (prev) {
-                                                    return !prev;
-                                                  });
+                                        setRequireTerms(function (prev) {
+                                              return !prev;
+                                            });
                                       })
                                   }, React.createElement("img", {
                                         src: match$3[0] ? checkboxCheckedIcon : checkboxUncheckedIcon
@@ -567,7 +499,7 @@ function Cash_Charge_Button_Buyer(Props) {
                                   }, React.createElement(IconArrow.make, {
                                         height: "20",
                                         width: "20",
-                                        stroke: "#B2B2B2",
+                                        fill: "#B2B2B2",
                                         className: "cursor-pointer"
                                       }))) : null, React.createElement("div", {
                               className: "flex justify-between gap-3 mt-10 text-lg"
@@ -576,7 +508,7 @@ function Cash_Charge_Button_Buyer(Props) {
                                   disabled: isMutating,
                                   type: "button",
                                   onClick: (function (param) {
-                                      return close(undefined);
+                                      close(undefined);
                                     })
                                 }, "닫기"), React.createElement("button", {
                                   className: isDirty ? "w-1/2 py-3 btn-level1 font-bold" : "w-1/2 py-3 btn-level1-disabled font-bold",
@@ -593,17 +525,10 @@ export {
   radioDefaultIcon ,
   radioFilledIcon ,
   noticeIcon ,
-  paymentMethod_encode ,
-  paymentMethod_decode ,
-  paymentMethodToKCPValue ,
-  paymentMethodToTossValue ,
-  tossPaymentsValidHours ,
-  tossPaymentsCashReceipt ,
   form_encode ,
   form_decode ,
   setValueToHtmlInputElement ,
   MutationCreateCharge ,
   make ,
-  
 }
 /* checkboxCheckedIcon Not a pure module */

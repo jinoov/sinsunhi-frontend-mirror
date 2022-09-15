@@ -57,7 +57,7 @@ let validate = (vs: array<validator>, data: t): Result.t<t, array<error>> => {
   })
 }
 
-let makeError = (keyName, type_, msg) => {keyName: keyName, type_: type_, message: msg}
+let makeError = (keyName, type_, msg) => {keyName, type_, message: msg}
 
 let makeResolverError: array<error> => {"values": Js.Json.t, "errors": Js.Json.t} = errors => {
   let resolverError = errors->Array.reduce(Js.Dict.empty(), (dict, error) => {

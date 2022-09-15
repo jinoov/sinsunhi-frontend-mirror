@@ -3,6 +3,8 @@ module FormFields = %lenses(
     producerName: string,
     productName: string,
     std: string,
+    productNos: string,
+    skuNos: string,
   }
 )
 
@@ -12,4 +14,6 @@ let initialState: FormFields.state = {
   producerName: "",
   productName: "",
   std: "Crop",
+  productNos: "",
+  skuNos: "",
 }

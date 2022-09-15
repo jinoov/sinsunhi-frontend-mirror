@@ -10,17 +10,18 @@ import * as IconCheck from "../../components/svgs/IconCheck.mjs";
 import * as IconError from "../../components/svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Float from "rescript/lib/es6/belt_Float.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Authorization from "../../utils/Authorization.mjs";
 import * as ReactHookForm from "../../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as ReactHookForm$1 from "react-hook-form";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as Product_Summary_Admin from "../../components/Product_Summary_Admin.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as Add_ProductOption_Admin from "../../components/Add_ProductOption_Admin.mjs";
@@ -34,7 +35,7 @@ import * as AddProductOptionsAdminFragment_graphql from "../../__generated__/Add
 import * as AddProductOptionsAdminMutation_graphql from "../../__generated__/AddProductOptionsAdminMutation_graphql.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(AddProductOptionsAdminQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(AddProductOptionsAdminQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(AddProductOptionsAdminQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(AddProductOptionsAdminQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -43,7 +44,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(AddProductOptionsAdminQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(AddProductOptionsAdminQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -61,38 +62,37 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, AddProductOptionsAdminQuery_graphql.node, AddProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, AddProductOptionsAdminQuery_graphql.node, AddProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: AddProductOptionsAdminQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: AddProductOptionsAdminQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, AddProductOptionsAdminQuery_graphql.node, AddProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, AddProductOptionsAdminQuery_graphql.node, AddProductOptionsAdminQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(AddProductOptionsAdminQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(AddProductOptionsAdminQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(AddProductOptionsAdminQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(AddProductOptionsAdminQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(AddProductOptionsAdminQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -101,10 +101,8 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
-var Query_makeVariables = AddProductOptionsAdminQuery_graphql.Utils.makeVariables;
-
 var Query = {
-  makeVariables: Query_makeVariables,
+  Operation: undefined,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -115,13 +113,13 @@ var Query = {
 };
 
 function use$1(fRef) {
-  var data = Hooks.useFragment(AddProductOptionsAdminFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(AddProductOptionsAdminFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(AddProductOptionsAdminFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(AddProductOptionsAdminFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(AddProductOptionsAdminFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -133,6 +131,7 @@ function useOpt(opt_fRef) {
 
 var Fragment = {
   Types: undefined,
+  Operation: undefined,
   use: use$1,
   useOpt: useOpt
 };
@@ -156,14 +155,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? AddProductOptionsAdminMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, AddProductOptionsAdminMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, AddProductOptionsAdminMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use$2(param) {
-  var match = Hooks.useMutation(AddProductOptionsAdminMutation_graphql.node);
+  var match = ReactRelay.useMutation(AddProductOptionsAdminMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -171,13 +170,13 @@ function use$2(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, AddProductOptionsAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, AddProductOptionsAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? AddProductOptionsAdminMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, AddProductOptionsAdminMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, AddProductOptionsAdminMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: AddProductOptionsAdminMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -187,6 +186,10 @@ function use$2(param) {
           match[1]
         ];
 }
+
+var Mutation_amountUnit_decode = AddProductOptionsAdminMutation_graphql.Utils.amountUnit_decode;
+
+var Mutation_amountUnit_fromString = AddProductOptionsAdminMutation_graphql.Utils.amountUnit_fromString;
 
 var Mutation_errorCode_decode = AddProductOptionsAdminMutation_graphql.Utils.errorCode_decode;
 
@@ -204,23 +207,9 @@ var Mutation_sizeUnit_decode = AddProductOptionsAdminMutation_graphql.Utils.size
 
 var Mutation_sizeUnit_fromString = AddProductOptionsAdminMutation_graphql.Utils.sizeUnit_fromString;
 
-var Mutation_weightUnit_decode = AddProductOptionsAdminMutation_graphql.Utils.weightUnit_decode;
-
-var Mutation_weightUnit_fromString = AddProductOptionsAdminMutation_graphql.Utils.weightUnit_fromString;
-
-var Mutation_make_upsertProductOptionsInput = AddProductOptionsAdminMutation_graphql.Utils.make_upsertProductOptionsInput;
-
-var Mutation_make_createProductOptionInput = AddProductOptionsAdminMutation_graphql.Utils.make_createProductOptionInput;
-
-var Mutation_make_createProductOptionCostInput = AddProductOptionsAdminMutation_graphql.Utils.make_createProductOptionCostInput;
-
-var Mutation_make_updateProductOptionInput = AddProductOptionsAdminMutation_graphql.Utils.make_updateProductOptionInput;
-
-var Mutation_make_updateProductOptionCostInput = AddProductOptionsAdminMutation_graphql.Utils.make_updateProductOptionCostInput;
-
-var Mutation_makeVariables = AddProductOptionsAdminMutation_graphql.Utils.makeVariables;
-
 var Mutation = {
+  amountUnit_decode: Mutation_amountUnit_decode,
+  amountUnit_fromString: Mutation_amountUnit_fromString,
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
   productOptionContractType_decode: Mutation_productOptionContractType_decode,
@@ -229,14 +218,7 @@ var Mutation = {
   productOptionStatus_fromString: Mutation_productOptionStatus_fromString,
   sizeUnit_decode: Mutation_sizeUnit_decode,
   sizeUnit_fromString: Mutation_sizeUnit_fromString,
-  weightUnit_decode: Mutation_weightUnit_decode,
-  weightUnit_fromString: Mutation_weightUnit_fromString,
-  make_upsertProductOptionsInput: Mutation_make_upsertProductOptionsInput,
-  make_createProductOptionInput: Mutation_make_createProductOptionInput,
-  make_createProductOptionCostInput: Mutation_make_createProductOptionCostInput,
-  make_updateProductOptionInput: Mutation_make_updateProductOptionInput,
-  make_updateProductOptionCostInput: Mutation_make_updateProductOptionCostInput,
-  makeVariables: Mutation_makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use$2
@@ -298,8 +280,6 @@ function statusEncode(str) {
     return "SALE";
   } else if (str === "SOLDOUT") {
     return "SOLDOUT";
-  } else if (str === "HIDDEN_SALE") {
-    return "HIDDEN_SALE";
   } else if (str === "NOSALE") {
     return "NOSALE";
   } else if (str === "RETIRE") {
@@ -309,14 +289,20 @@ function statusEncode(str) {
   }
 }
 
-function weightUnitEncode(weightUnit) {
-  switch (weightUnit) {
+function amountUnitEncode(amountUnit) {
+  switch (amountUnit) {
     case /* G */0 :
         return "G";
     case /* KG */1 :
         return "KG";
     case /* T */2 :
         return "T";
+    case /* ML */3 :
+        return "ML";
+    case /* L */4 :
+        return "L";
+    case /* EA */5 :
+        return "EA";
     
   }
 }
@@ -359,7 +345,7 @@ function makeCreateOption(productNodeId, option) {
                 return [
                         param.numMin,
                         param.numMax,
-                        param.weightUnit,
+                        param.amountUnit,
                         param.sizeMin,
                         param.sizeMax,
                         param.sizeUnit
@@ -372,11 +358,11 @@ function makeCreateOption(productNodeId, option) {
           undefined,
           undefined
         ]);
-    tmp = Add_ProductOption_Admin.makeAutoGeneratedName(option.grade, option.package, String(option.weight), Select_Product_Option_Unit.Weight.toString(option.weightUnit), Belt_Option.map(match[0], (function (prim) {
+    tmp = Add_ProductOption_Admin.makeAutoGeneratedName(option.grade, option.package, String(option.amount), Select_Product_Option_Unit.Amount.toString(option.amountUnit), Belt_Option.map(match[0], (function (prim) {
                 return String(prim);
               })), Belt_Option.map(match[1], (function (prim) {
                 return String(prim);
-              })), Belt_Option.map(match[2], Select_Product_Option_Unit.Weight.toString), Belt_Option.map(match[3], (function (prim) {
+              })), Belt_Option.map(match[2], Select_Product_Option_Unit.Amount.toString), Belt_Option.map(match[3], (function (prim) {
                 return String(prim);
               })), Belt_Option.map(match[4], (function (prim) {
                 return String(prim);
@@ -384,6 +370,8 @@ function makeCreateOption(productNodeId, option) {
   }
   var match$1 = option.isFreeShipping;
   return {
+          amount: option.amount,
+          amountUnit: amountUnitEncode(option.amountUnit),
           countPerPackageMax: Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
                       return option.showEach;
                     })), (function (each) {
@@ -399,6 +387,21 @@ function makeCreateOption(productNodeId, option) {
           memo: Belt_Option.keep(option.memo, nonEmptyString),
           optionName: tmp,
           packageType: Belt_Option.keep(option.package, nonEmptyString),
+          perAmountMax: Belt_Option.flatMap(Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
+                          return option.showEach;
+                        })), (function (each) {
+                      return Product_Option_Each_Admin.getPerAmount(option.amount, option.amountUnit, each.numMin, each.amountUnit);
+                    })), Belt_Float.fromString),
+          perAmountMin: Belt_Option.flatMap(Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
+                          return option.showEach;
+                        })), (function (each) {
+                      return Product_Option_Each_Admin.getPerAmount(option.amount, option.amountUnit, each.numMax, each.amountUnit);
+                    })), Belt_Float.fromString),
+          perAmountUnit: Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
+                      return option.showEach;
+                    })), (function (each) {
+                  return amountUnitEncode(each.amountUnit);
+                })),
           perSizeMax: Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
                       return option.showEach;
                     })), (function (each) {
@@ -414,21 +417,6 @@ function makeCreateOption(productNodeId, option) {
                     })), (function (each) {
                   return sizeUnitEncode(each.sizeUnit);
                 })),
-          perWeightMax: Belt_Option.flatMap(Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
-                          return option.showEach;
-                        })), (function (each) {
-                      return Product_Option_Each_Admin.getPerWeight(option.weight, option.weightUnit, each.numMin, each.weightUnit);
-                    })), Belt_Float.fromString),
-          perWeightMin: Belt_Option.flatMap(Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
-                          return option.showEach;
-                        })), (function (each) {
-                      return Product_Option_Each_Admin.getPerWeight(option.weight, option.weightUnit, each.numMax, each.weightUnit);
-                    })), Belt_Float.fromString),
-          perWeightUnit: Belt_Option.map(Belt_Option.keep(option.each, (function (param) {
-                      return option.showEach;
-                    })), (function (each) {
-                  return weightUnitEncode(each.weightUnit);
-                })),
           price: option.cost.buyerPrice,
           productId: productNodeId,
           productOptionCost: {
@@ -438,9 +426,8 @@ function makeCreateOption(productNodeId, option) {
             rawCost: option.cost.rawCost,
             workingCost: option.cost.workingCost
           },
-          status: statusEncode(option.operationStatus),
-          weight: option.weight,
-          weightUnit: weightUnitEncode(option.weightUnit)
+          shippingUnitQuantity: option.shippingUnitQuantity,
+          status: statusEncode(option.operationStatus)
         };
 }
 
@@ -487,15 +474,15 @@ function Add_ProductOptions_Admin$Presenter(Props) {
                         if (decode.TAG === /* Ok */0) {
                           Curry.app(mutate, [
                                 (function (err) {
-                                    return addToast(React.createElement("div", {
-                                                    className: "flex items-center"
-                                                  }, React.createElement(IconError.make, {
-                                                        width: "24",
-                                                        height: "24",
-                                                        className: "mr-2"
-                                                      }), err.message), {
-                                                appearance: "error"
-                                              });
+                                    addToast(React.createElement("div", {
+                                              className: "flex items-center"
+                                            }, React.createElement(IconError.make, {
+                                                  width: "24",
+                                                  height: "24",
+                                                  className: "mr-2"
+                                                }), err.message), {
+                                          appearance: "error"
+                                        });
                                   }),
                                 (function (param, param$1) {
                                     addToast(React.createElement("div", {
@@ -509,7 +496,6 @@ function Add_ProductOptions_Admin$Presenter(Props) {
                                           appearance: "success"
                                         });
                                     router.push("/admin/products");
-                                    
                                   }),
                                 undefined,
                                 undefined,
@@ -539,7 +525,6 @@ function Add_ProductOptions_Admin$Presenter(Props) {
                                     }), err.message), {
                               appearance: "error"
                             });
-                        
                       })
                 }, React.createElement("div", {
                       className: "max-w-gnb-panel overflow-auto bg-div-shape-L1 min-h-screen"
@@ -563,9 +548,9 @@ function Add_ProductOptions_Admin$Presenter(Props) {
                           className: "px-3 py-2 bg-div-shape-L1 rounded-lg focus:outline-none",
                           onClick: (function (param) {
                               return ReactEvents.interceptingHandler((function (param) {
-                                            return setShowGoToList(function (param) {
-                                                        return /* Show */0;
-                                                      });
+                                            setShowGoToList(function (param) {
+                                                  return /* Show */0;
+                                                });
                                           }), param);
                             })
                         }, "목록으로"), React.createElement("div", {
@@ -574,9 +559,9 @@ function Add_ProductOptions_Admin$Presenter(Props) {
                               className: "px-3 py-2 bg-div-shape-L1 rounded-lg focus:outline-none",
                               onClick: (function (param) {
                                   return ReactEvents.interceptingHandler((function (param) {
-                                                return setShowReset(function (param) {
-                                                            return /* Show */0;
-                                                          });
+                                                setShowReset(function (param) {
+                                                      return /* Show */0;
+                                                    });
                                               }), param);
                                 })
                             }, "초기화"), React.createElement("button", {
@@ -586,18 +571,18 @@ function Add_ProductOptions_Admin$Presenter(Props) {
                   isShow: match$3[0],
                   children: React.createElement("p", undefined, "단품등록 페이지를", React.createElement("br", undefined), "초기화 하시겠습니까?"),
                   onCancel: (function (param) {
-                      return setShowReset(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowReset(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       reset(Caml_option.some(Js_dict.fromArray([[
                                       name,
                                       [Add_ProductOption_Admin.Form.defaultValue]
                                     ]])));
-                      return setShowReset(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowReset(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "취소",
                   textOnConfirm: "초기화",
@@ -607,16 +592,15 @@ function Add_ProductOptions_Admin$Presenter(Props) {
                   isShow: match$4[0],
                   children: React.createElement("p", undefined, "기존에 등록하신 단품 정보를 초기화하고", React.createElement("br", undefined), "상품 목록으로 이동하시겠습니까?"),
                   onCancel: (function (param) {
-                      return setShowGoToList(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowGoToList(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       setShowGoToList(function (param) {
                             return /* Hide */1;
                           });
                       router.push("/admin/products");
-                      
                     }),
                   textOnCancel: "취소",
                   textOnConfirm: "상품목록으로",
@@ -677,7 +661,7 @@ export {
   Form ,
   contractTypeEncode ,
   statusEncode ,
-  weightUnitEncode ,
+  amountUnitEncode ,
   sizeUnitEncode ,
   noneToDefaultCutOffTime ,
   nonEmptyString ,
@@ -685,6 +669,5 @@ export {
   Presenter ,
   Container ,
   make ,
-  
 }
 /* react Not a pure module */

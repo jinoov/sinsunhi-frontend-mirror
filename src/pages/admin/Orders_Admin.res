@@ -358,9 +358,9 @@ module Orders = {
       </div>
       <Dialog
         isShow=isShowCancelConfirm
-        textOnCancel=`취소`
+        textOnCancel=`닫기`
         onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-        textOnConfirm=`확인`
+        textOnConfirm=`취소 완료하기`
         onConfirm={_ => cancelOrder(selectedOrders->Set.String.toArray)}>
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           <span className=%twc("font-bold")>

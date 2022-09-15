@@ -1,5 +1,4 @@
 open ReactHookForm
-module Select_Unit = Select_Product_Option_Unit
 
 module Form = {
   @spice
@@ -8,12 +7,12 @@ module Form = {
     numMax: float,
     sizeMin: float,
     sizeMax: float,
-    sizeUnit: Select_Unit.Size.status,
-    weightUnit: Select_Unit.Weight.status,
+    sizeUnit: Select_Product_Option_Unit.Size.status,
+    amountUnit: Select_Product_Option_Unit.Amount.status,
   }
 
   type inputNames = {
-    unitWeight: string,
+    unitAmount: string,
     minSize: string,
     maxSize: string,
     unitSize: string,
@@ -23,7 +22,7 @@ module Form = {
   }
 
   let getNamesWithPrefix = prefix => {
-    unitWeight: `${prefix}.each.weightUnit`,
+    unitAmount: `${prefix}.each.amountUnit`,
     minSize: `${prefix}.each.sizeMin`,
     maxSize: `${prefix}.each.sizeMax`,
     unitSize: `${prefix}.each.sizeUnit`,
@@ -33,7 +32,7 @@ module Form = {
   }
 
   let names = {
-    unitWeight: "weightUnit",
+    unitAmount: "amountUnit",
     minSize: "sizeMin",
     maxSize: "sizeMax",
     unitSize: "sizeUnit",
@@ -43,72 +42,69 @@ module Form = {
   }
 }
 
-let divideNum = (baseUnit, currentUnit) =>
+let divideNum = (baseUnit, currentUnit) => {
+  open Select_Product_Option_Unit.AmountStatus
   switch (baseUnit, currentUnit) {
-  | (Select_Unit.WeightStatus.G, Select_Unit.WeightStatus.G) => 1.
-  | (Select_Unit.WeightStatus.G, Select_Unit.WeightStatus.KG) => 1000.
-  | (Select_Unit.WeightStatus.G, Select_Unit.WeightStatus.T) => 1000000.
-  | (Select_Unit.WeightStatus.KG, Select_Unit.WeightStatus.G) => 1. /. 1000.
-  | (Select_Unit.WeightStatus.KG, Select_Unit.WeightStatus.KG) => 1.
-  | (Select_Unit.WeightStatus.KG, Select_Unit.WeightStatus.T) => 1000.
-  | (Select_Unit.WeightStatus.T, Select_Unit.WeightStatus.G) => 1. /. 1000000.
-  | (Select_Unit.WeightStatus.T, Select_Unit.WeightStatus.KG) => 1. /. 1000.
-  | (Select_Unit.WeightStatus.T, Select_Unit.WeightStatus.T) => 1.
+  | (G, G) => 1.
+  | (G, KG) => 1000.
+  | (G, T) => 1000000.
+  | (KG, G) => 1. /. 1000.
+  | (KG, KG) => 1.
+  | (KG, T) => 1000.
+  | (T, G) => 1. /. 1000000.
+  | (T, KG) => 1. /. 1000.
+  | (T, T) => 1.
+  | (EA, EA) => 1.
+  | (ML, ML) => 1.
+  | (ML, L) => 1000.
+  | (L, ML) => 1. /. 1000.
+  | (L, L) => 1.
+  | _ => 1.
   }
+}
 
-let getPerWeight = (weight, weightUnit, perNum, unitWeight) => {
-  let decodeUnit = unitWeight->Option.getWithDefault(Select_Unit.WeightStatus.KG)
-
-  let baseWeight = weight /. divideNum(weightUnit, decodeUnit)
+let getPerAmount = (amount, amountUnit, perNum, unitAmount) => {
+  open Select_Product_Option_Unit
+  let decodedUnit = unitAmount->Option.getWithDefault(AmountStatus.KG)
+  let baseAmount = amount /. divideNum(amountUnit, decodedUnit)
 
   //FIXED 는 항상 소숫점 n 자리를 유지 -> 이를 최대 n 자리로 바꿈
-  (baseWeight /. perNum)
+  (baseAmount /. perNum)
   ->Js.Float.toFixedWithPrecision(~digits=2)
   ->Float.fromString
   ->Option.mapWithDefault("", Float.toString)
 }
 
 @react.component
-let make = (
-  ~prefix,
-  ~weightFormName,
-  ~wieghtUnitFormName,
-  ~readOnly=false,
-  ~defaultMinNum=?,
-  ~defaultMaxNum=?,
-  ~defaultMinWeight=?,
-  ~defaultMaxWeight=?,
-  ~defaultEachWeightUnit=?,
-  ~defaultMinSize=?,
-  ~defaultMaxSize=?,
-  ~defaultUnitSize=?,
-) => {
+let make = (~prefix, ~amountInputName, ~amountUnitInputName, ~readOnly=false) => {
+  open Select_Product_Option_Unit
+
   let {register, control, formState: {errors}, setValue} = Hooks.Context.use(.
     ~config=Hooks.Form.config(~mode=#onChange, ()),
     (),
   )
 
-  let weightAndUnit = Hooks.WatchValues.use(
+  let amountAndUnit = Hooks.WatchValues.use(
     Hooks.WatchValues.NullableTexts,
-    ~config=Hooks.WatchValues.config(~name=[weightFormName, wieghtUnitFormName], ()),
+    ~config=Hooks.WatchValues.config(~name=[amountInputName, amountUnitInputName], ()),
     (),
   )
 
-  let (weight, weightUnit) =
-    weightAndUnit
+  let (amount, amountUnit) =
+    amountAndUnit
     ->Option.map(a => a->Array.map(Js.Nullable.toOption))
     ->Option.flatMap(v => v->Helper.Option.sequence)
     ->Option.flatMap(v =>
       switch v {
-      | [weight, unit] => (weight, unit)->Some
+      | [amount, unit] => (amount, unit)->Some
       | _ => None
       }
     )
     ->Option.map(((w, u)) => (
       w->Float.fromString,
-      u->Select_Unit.Weight.fromString->Result.getWithDefault(Select_Unit.WeightStatus.G),
+      u->Amount.fromString->Result.getWithDefault(AmountStatus.G),
     ))
-    ->Option.getWithDefault((None, Select_Unit.WeightStatus.G))
+    ->Option.getWithDefault((None, AmountStatus.G))
 
   let inputNames = Form.getNamesWithPrefix(prefix)
 
@@ -118,14 +114,14 @@ let make = (
     (),
   )
 
-  let (watchMinNum, watchMaxNum, watchMinSize, watchWeightUnit) = switch eachValues->Option.map(
+  let (watchMinNum, watchMaxNum, watchMinSize, watchAmountUnit) = switch eachValues->Option.map(
     Form.each_decode,
   ) {
-  | Some(Ok({numMin, numMax, sizeMin, weightUnit})) => (
+  | Some(Ok({numMin, numMax, sizeMin, amountUnit})) => (
       Some(numMin),
       Some(numMax),
       Some(sizeMin),
-      Some(weightUnit),
+      Some(amountUnit),
     )
   | _ => (None, None, None, None)
   }
@@ -165,21 +161,30 @@ let make = (
 
   React.useEffect0(() => {
     //폼에서 디폴트 단위 값 설정
-    setValue(.
-      inputNames.unitSize,
-      defaultUnitSize
-      ->Option.getWithDefault(Select_Unit.SizeStatus.MM)
-      ->Select_Unit.Size.status_encode,
-    )
-    setValue(.
-      inputNames.unitWeight,
-      defaultEachWeightUnit
-      ->Option.getWithDefault(Select_Unit.WeightStatus.KG)
-      ->Select_Unit.Weight.status_encode,
-    )
+    setValue(. inputNames.unitSize, SizeStatus.MM->Size.status_encode)
 
     None
   })
+
+  React.useEffect2(() => {
+    // 측량 단위가 달라질 때, 같은 측량 타입 안에 속하는지 확인한다.
+    switch watchAmountUnit {
+    | None => ()
+    | Some(watchAmountUnit') => {
+        let availableOptions = amountUnit->AmountStatus.makeVariation
+        switch availableOptions->Array.getBy(option => option == watchAmountUnit') {
+        | Some(_) => ()
+        | None =>
+          setValue(.
+            inputNames.unitAmount,
+            amountUnit->AmountStatus.makeDefaultUnit->Amount.status_encode,
+          )
+        }
+      }
+    }
+
+    None
+  }, (amountUnit, watchAmountUnit))
 
   <div className=%twc("py-6 flex flex-col gap-2")>
     <div className=%twc("flex gap-2 items-center")>
@@ -188,16 +193,16 @@ let make = (
         className=%twc(
           "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 leading-4.5"
         )>
-        {`${weight->Option.mapWithDefault("", Float.toString)}
-          ${weightUnit->Select_Unit.Weight.toString}`->React.string}
+        {`${amount->Option.mapWithDefault("", Float.toString)}
+          ${amountUnit->Amount.toString}`->React.string}
       </div>
-      {<div>
+      <div>
         <input
           readOnly
           type_="number"
           id=eachMinNum.name
           name=eachMinNum.name
-          defaultValue={defaultMinNum->Option.mapWithDefault("0", Float.toString)}
+          defaultValue={1.0->Float.toString}
           onChange={eachMinNum.onChange}
           ref=eachMinNum.ref
           onBlur=eachMinNum.onBlur
@@ -218,13 +223,13 @@ let make = (
               </span>
             </span>}
         />
-      </div>}
+      </div>
       <span> {`~`->React.string} </span>
       <div>
         <input
           readOnly
           type_="number"
-          defaultValue={defaultMaxNum->Option.mapWithDefault("0", Float.toString)}
+          defaultValue={1.0->Float.toString}
           id=eachMaxNum.name
           name=eachMaxNum.name
           onChange={eachMaxNum.onChange}
@@ -256,47 +261,39 @@ let make = (
           className=%twc(
             "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
           )>
-          {defaultMinWeight
-          ->Option.map(Float.toString)
-          ->Option.getWithDefault(
-            switch (weight, weightUnit, watchMaxNum, watchWeightUnit) {
-            | (Some(weight'), _, Some(watchMaxNum'), _) =>
-              getPerWeight(weight', weightUnit, watchMaxNum', watchWeightUnit)
-            | _ => `자동계산`
-            },
-          )
-          ->React.string}
+          {switch (amount, amountUnit, watchMaxNum, watchAmountUnit) {
+          | (Some(amount'), _, Some(watchMaxNum'), _) =>
+            getPerAmount(amount', amountUnit, watchMaxNum', watchAmountUnit)
+          | _ => `자동계산`
+          }->React.string}
         </div>
         <span> {`~`->React.string} </span>
         <div
           className=%twc(
             "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
           )>
-          {defaultMaxWeight
-          ->Option.map(Float.toString)
-          ->Option.getWithDefault(
-            switch (weight, weightUnit, watchMinNum, watchWeightUnit) {
-            | (Some(weight'), _, Some(watchMinNum'), _) =>
-              getPerWeight(weight', weightUnit, watchMinNum', watchWeightUnit)
-            | _ => `자동계산`
-            },
-          )
-          ->React.string}
+          {switch (amount, amountUnit, watchMinNum, watchAmountUnit) {
+          | (Some(amount'), _, Some(watchMinNum'), _) =>
+            getPerAmount(amount', amountUnit, watchMinNum', watchAmountUnit)
+          | _ => `자동계산`
+          }->React.string}
         </div>
         <Controller
-          name={inputNames.unitWeight}
+          name=inputNames.unitAmount
+          defaultValue={amountUnit->Amount.status_encode}
           control
-          render={({field: {onChange, value, ref}}) =>
-            <Select_Unit.Weight
+          render={({field: {onChange, value, ref}}) => {
+            <Amount
+              forwardRef=ref
               disabled=readOnly
               status={value
-              ->Select_Unit.Weight.status_decode
-              ->Result.getWithDefault(Select_Unit.WeightStatus.KG)}
-              onChange={status => {
-                onChange(Controller.OnChangeArg.value(status->Select_Unit.Weight.status_encode))
-              }}
-              forwardRef={ref}
-            />}
+              ->Amount.status_decode
+              ->Result.getWithDefault(amountUnit->AmountStatus.makeDefaultUnit)}
+              availableOptions={amountUnit->AmountStatus.makeVariation}
+              onChange={status =>
+                status->Amount.status_encode->Controller.OnChangeArg.value->onChange}
+            />
+          }}
         />
       </div>
       <div className=%twc("flex gap-2 items-center")>
@@ -317,7 +314,7 @@ let make = (
               readOnly ? %twc("bg-disabled-L3") : %twc("bg-white"),
             ])}
             placeholder=`최소 크기`
-            defaultValue={defaultMinSize->Option.mapWithDefault("0", Float.toString)}
+            defaultValue={0.0->Float.toString}
           />
           <ErrorMessage
             errors
@@ -348,7 +345,7 @@ let make = (
               readOnly ? %twc("bg-disabled-L3") : %twc("bg-white"),
             ])}
             placeholder=`최대 크기`
-            defaultValue={defaultMaxSize->Option.mapWithDefault("0", Float.toString)}
+            defaultValue={0.0->Float.toString}
           />
           <ErrorMessage
             errors
@@ -366,13 +363,11 @@ let make = (
           name={inputNames.unitSize}
           control
           render={({field: {onChange, value, ref}}) =>
-            <Select_Unit.Size
+            <Size
               disabled=readOnly
-              status={value
-              ->Select_Unit.Size.status_decode
-              ->Result.getWithDefault(Select_Unit.SizeStatus.MM)}
+              status={value->Size.status_decode->Result.getWithDefault(SizeStatus.MM)}
               onChange={status => {
-                onChange(Controller.OnChangeArg.value(status->Select_Unit.Size.status_encode))
+                onChange(Controller.OnChangeArg.value(status->Size.status_encode))
               }}
               forwardRef=ref
             />}

@@ -3,12 +3,11 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
-import Link from "next/link";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as RelayRuntime from "relay-runtime";
-import * as Hooks from "react-relay/hooks";
 import * as ReactDialog from "@radix-ui/react-dialog";
 import * as TossPaymentsSuccessBuyerMutation_graphql from "../../__generated__/TossPaymentsSuccessBuyerMutation_graphql.mjs";
 
@@ -31,14 +30,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? TossPaymentsSuccessBuyerMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, TossPaymentsSuccessBuyerMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, TossPaymentsSuccessBuyerMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use(param) {
-  var match = Hooks.useMutation(TossPaymentsSuccessBuyerMutation_graphql.node);
+  var match = ReactRelay.useMutation(TossPaymentsSuccessBuyerMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -46,13 +45,13 @@ function use(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, TossPaymentsSuccessBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, TossPaymentsSuccessBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? TossPaymentsSuccessBuyerMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, TossPaymentsSuccessBuyerMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, TossPaymentsSuccessBuyerMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: TossPaymentsSuccessBuyerMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -67,12 +66,10 @@ var Mutation_errorCode_decode = TossPaymentsSuccessBuyerMutation_graphql.Utils.e
 
 var Mutation_errorCode_fromString = TossPaymentsSuccessBuyerMutation_graphql.Utils.errorCode_fromString;
 
-var Mutation_makeVariables = TossPaymentsSuccessBuyerMutation_graphql.Utils.makeVariables;
-
 var Mutation = {
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
-  makeVariables: Mutation_makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use
@@ -82,6 +79,7 @@ function TossPaymentsSuccess_Buyer$Dialog(Props) {
   var children = Props.children;
   var show = Props.show;
   var href = Props.href;
+  var router = Router.useRouter();
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
                     children: null
@@ -90,12 +88,13 @@ function TossPaymentsSuccess_Buyer$Dialog(Props) {
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
                         className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
-                      }, children, React.createElement(Link, {
-                            href: href,
-                            children: React.createElement("a", {
-                                  className: "flex w-full xl:w-1/2 h-13 mt-5 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1"
-                                }, "확인")
-                          }))),
+                      }, children, React.createElement("button", {
+                            className: "flex w-full xl:w-1/2 h-13 mt-5 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1",
+                            type: "button",
+                            onClick: (function (param) {
+                                router.replace(href);
+                              })
+                          }, "확인"))),
               open: show
             });
 }
@@ -109,93 +108,79 @@ function TossPaymentsSuccess_Buyer(Props) {
   var match = React.useState(function () {
         return false;
       });
-  var setShowDialog = match[1];
+  var setShowSuccessDialog = match[1];
   var match$1 = React.useState(function () {
-        return "/buyer";
-      });
-  var setRedirect = match$1[1];
-  var match$2 = React.useState(function () {
         return false;
       });
-  var setIsError = match$2[1];
-  var match$3 = React.useState(function () {
+  var setShowErrorDialog = match$1[1];
+  var match$2 = React.useState(function () {
         
       });
-  var setErrMsg = match$3[1];
+  var setErrorMsg = match$2[1];
+  var match$3 = React.useState(function () {
+        return {
+                successUrl: "/buyer",
+                failUrl: "/buyer"
+              };
+      });
+  var redirectUrl = match$3[0];
+  var setRedirectUrl = match$3[1];
   var match$4 = use(undefined);
   var isMutating = match$4[1];
   var mutate = match$4[0];
-  var handleError = function (message, url, param) {
-    setShowDialog(function (param) {
+  var handleError = function (message) {
+    setShowErrorDialog(function (param) {
           return true;
         });
-    setIsError(function (param) {
-          return true;
-        });
-    setErrMsg(function (param) {
+    setErrorMsg(function (param) {
           return message;
         });
-    return Belt_Option.forEach(url, (function (url$p) {
-                  return setRedirect(function (param) {
-                              return url$p;
-                            });
-                }));
   };
   React.useEffect((function () {
           var params = new URLSearchParams(router.query);
           var orderId = params.get("orderId");
           var orderId$1 = (orderId == null) ? undefined : Caml_option.some(orderId);
-          var paymentKey = params.get("paymentKey");
           var amount = Belt_Option.flatMap(Caml_option.nullable_to_opt(params.get("amount")), Belt_Int.fromString);
+          var paymentKey = params.get("paymentKey");
           var paymentId = Belt_Option.flatMap(Caml_option.nullable_to_opt(params.get("payment-id")), Belt_Int.fromString);
           var tempOrderId = Belt_Option.flatMap(Caml_option.nullable_to_opt(params.get("temp-order-id")), Belt_Int.fromString);
-          var productId = params.get("product-id");
-          var productId$1 = (productId == null) ? undefined : Caml_option.some(productId);
-          var productOptionId = params.get("product-option-id");
-          var productOptionId$1 = (productOptionId == null) ? undefined : Caml_option.some(productOptionId);
-          var quantity = params.get("quantity");
-          var quantity$1 = (quantity == null) ? undefined : Caml_option.some(quantity);
           if (!(orderId == null) && !(paymentKey == null) && amount !== undefined && paymentId !== undefined && !isMutating) {
-            var redirectByParams = function (message) {
-              if (!(productId == null) && !(productOptionId == null) && !(quantity == null)) {
-                return handleError(message, "/buyer/web-order/" + productId$1 + "/" + productOptionId$1 + "?quantity=" + quantity$1, undefined);
-              } else {
-                return handleError(message, "/buyer/transactions", undefined);
-              }
-            };
+            if (tempOrderId !== undefined) {
+              setRedirectUrl(function (param) {
+                    return {
+                            successUrl: "/buyer/web-order/complete/" + orderId$1 + "",
+                            failUrl: "/buyer/web-order/" + String(tempOrderId) + ""
+                          };
+                  });
+            } else {
+              setRedirectUrl(function (param) {
+                    return {
+                            successUrl: "/buyer/transactions",
+                            failUrl: "/buyer/transactions"
+                          };
+                  });
+            }
             Curry.app(mutate, [
                   (function (error) {
-                      return redirectByParams(error.message);
+                      handleError(error.message);
                     }),
                   (function (param, _error) {
                       var requestPaymentApprovalTossPayments = param.requestPaymentApprovalTossPayments;
                       if (requestPaymentApprovalTossPayments === undefined) {
-                        return redirectByParams(undefined);
+                        return handleError(undefined);
                       }
                       if (typeof requestPaymentApprovalTossPayments !== "object") {
-                        return redirectByParams(undefined);
+                        return handleError(undefined);
                       }
                       var variant = requestPaymentApprovalTossPayments.NAME;
                       if (variant === "Error") {
-                        return redirectByParams(requestPaymentApprovalTossPayments.VAL.message);
+                        return handleError(requestPaymentApprovalTossPayments.VAL.message);
                       } else if (variant === "RequestPaymentApprovalTossPaymentsResult") {
-                        if (tempOrderId !== undefined) {
-                          setShowDialog(function (param) {
-                                return true;
-                              });
-                          return setRedirect(function (param) {
-                                      return "/buyer/web-order/complete/" + orderId$1;
-                                    });
-                        } else {
-                          setShowDialog(function (param) {
-                                return true;
-                              });
-                          return setRedirect(function (param) {
-                                      return "/buyer/transactions";
-                                    });
-                        }
+                        return setShowSuccessDialog(function (param) {
+                                    return true;
+                                  });
                       } else {
-                        return redirectByParams(undefined);
+                        return handleError(undefined);
                       }
                     }),
                   undefined,
@@ -204,8 +189,8 @@ function TossPaymentsSuccess_Buyer(Props) {
                   undefined,
                   {
                     amount: amount,
-                    paymentId: paymentId,
                     orderId: orderId$1,
+                    paymentId: paymentId,
                     paymentKey: (paymentKey == null) ? undefined : Caml_option.some(paymentKey),
                     tempOrderId: tempOrderId
                   },
@@ -220,15 +205,19 @@ function TossPaymentsSuccess_Buyer(Props) {
             }, React.createElement(TossPaymentsSuccess_Buyer$Dialog, {
                   children: React.createElement("section", {
                         className: "flex flex-col items-center justify-center"
-                      }, match$2[0] ? React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "결제가 실패하여"), React.createElement("span", {
-                                  className: "mb-5"
-                                }, "주문이 정상 처리되지 못했습니다."), React.createElement("span", undefined, "주문/결제하기 페이지에서"), React.createElement("span", {
-                                  className: "mb-5"
-                                }, "결제를 다시 시도해주세요."), React.createElement("span", {
-                                  className: "text-notice"
-                                }, Belt_Option.getWithDefault(match$3[0], ""))) : React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "결제 요청이 성공했습니다."), React.createElement("span", undefined, "결제완료 페이지로 이동합니다."))),
+                      }, React.createElement("span", undefined, "결제가 실패하여"), React.createElement("span", {
+                            className: "mb-5"
+                          }, "주문이 정상 처리되지 못했습니다."), React.createElement("span", undefined, "주문/결제하기 페이지에서"), React.createElement("span", {
+                            className: "mb-5"
+                          }, "결제를 다시 시도해주세요."), React.createElement("span", {
+                            className: "text-notice"
+                          }, Belt_Option.getWithDefault(match$2[0], ""))),
+                  show: match$1[0],
+                  href: redirectUrl.failUrl
+                }), React.createElement(TossPaymentsSuccess_Buyer$Dialog, {
+                  children: React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "결제 요청이 성공했습니다."), React.createElement("span", undefined, "결제완료 페이지로 이동합니다.")),
                   show: match[0],
-                  href: match$1[0]
+                  href: redirectUrl.successUrl
                 }));
 }
 
@@ -238,6 +227,5 @@ export {
   Mutation ,
   Dialog ,
   make ,
-  
 }
 /* react Not a pure module */

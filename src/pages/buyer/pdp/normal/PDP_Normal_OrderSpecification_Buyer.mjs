@@ -2,102 +2,208 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
-import * as Locale from "../../../../utils/Locale.mjs";
-import * as Js_dict from "rescript/lib/es6/js_dict.js";
-import * as Spinbox from "../../../../components/common/Spinbox.mjs";
-import * as IconArrow from "../../../../components/svgs/IconArrow.mjs";
-import Link from "next/link";
+import * as DataGtm from "../../../../utils/DataGtm.mjs";
+import * as IconCheck from "../../../../components/svgs/IconCheck.mjs";
+import * as IconError from "../../../../components/svgs/IconError.mjs";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import * as ReactEvents from "../../../../utils/ReactEvents.mjs";
+import * as Garter_Math from "@greenlabs/garter/src/Garter_Math.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
-import * as PDP_Parser_Buyer from "../../../../utils/PDP_Parser_Buyer.mjs";
-import * as Hooks from "react-relay/hooks";
+import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
+import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
 import * as ReactTabs from "@radix-ui/react-tabs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
-import * as PDPNormalOrderSpecificationBuyerQuery_graphql from "../../../../__generated__/PDPNormalOrderSpecificationBuyerQuery_graphql.mjs";
+import * as ReactToastNotifications from "react-toast-notifications";
+import * as ReactScrollArea from "@radix-ui/react-scroll-area";
+import * as PDP_Normal_TotalPrice_Buyer from "./PDP_Normal_TotalPrice_Buyer.mjs";
+import * as PDP_Normal_SelectedOptionItem_Buyer from "./PDP_Normal_SelectedOptionItem_Buyer.mjs";
+import * as PDPNormalOrderSpecificationBuyerCartQuery_graphql from "../../../../__generated__/PDPNormalOrderSpecificationBuyerCartQuery_graphql.mjs";
+import * as PDPNormalOrderSpecificationBuyer_fragment_graphql from "../../../../__generated__/PDPNormalOrderSpecificationBuyer_fragment_graphql.mjs";
+import * as PDPNormalOrderSpecificationBuyerWosMutation_graphql from "../../../../__generated__/PDPNormalOrderSpecificationBuyerWosMutation_graphql.mjs";
+import * as PDPNormalOrderSpecificationBuyerCartMutation_graphql from "../../../../__generated__/PDPNormalOrderSpecificationBuyerCartMutation_graphql.mjs";
 
-var makeVariables = PDPNormalOrderSpecificationBuyerQuery_graphql.Utils.makeVariables;
-
-function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(PDPNormalOrderSpecificationBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertVariables(variables)), {
-        fetchKey: fetchKey,
-        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
-        networkCacheConfig: networkCacheConfig
-      });
-  return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertResponse, data);
+function use(fRef) {
+  var data = ReactRelay.useFragment(PDPNormalOrderSpecificationBuyer_fragment_graphql.node, fRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalOrderSpecificationBuyer_fragment_graphql.Internal.convertFragment, data);
 }
 
-function useLoader(param) {
-  var match = Hooks.useQueryLoader(PDPNormalOrderSpecificationBuyerQuery_graphql.node);
-  var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
-          return function (param, param$1, param$2, param$3) {
-            return Curry._2(loadQueryFn, PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertVariables(param), {
-                        fetchPolicy: param$1,
-                        networkCacheConfig: param$2
-                      });
-          };
-        }), [loadQueryFn]);
-  return [
-          Caml_option.nullable_to_opt(match[0]),
-          loadQuery,
-          match[2]
-        ];
+function useOpt(opt_fRef) {
+  var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
+  var nullableFragmentData = ReactRelay.useFragment(PDPNormalOrderSpecificationBuyer_fragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
+  return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
+                if (rawFragment !== undefined) {
+                  return PDPNormalOrderSpecificationBuyer_fragment_graphql.Internal.convertFragment(rawFragment);
+                }
+                
+              }), data);
 }
 
-function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, PDPNormalOrderSpecificationBuyerQuery_graphql.node, PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertVariables(variables), {
-          networkCacheConfig: networkCacheConfig,
-          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
-        }).subscribe({
-        next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertResponse(res)
-                      });
-          }),
-        error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
-          })
-      });
+var Fragment = {
+  Types: undefined,
+  Operation: undefined,
+  use: use,
+  useOpt: useOpt
+};
+
+function stringify(v) {
+  if (v) {
+    return "wos";
+  } else {
+    return "excel";
+  }
+}
+
+function variantify(s) {
+  switch (s) {
+    case "excel" :
+        return /* Excel */0;
+    case "wos" :
+        return /* Wos */1;
+    default:
+      return ;
+  }
+}
+
+function toBool(v) {
+  if (v) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+var OrderMethod = {
+  stringify: stringify,
+  variantify: variantify,
+  toBool: toBool
+};
+
+function filterEmptyArr(arr) {
+  if (arr.length !== 0) {
+    return arr;
+  }
   
 }
 
-function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, PDPNormalOrderSpecificationBuyerQuery_graphql.node, PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertVariables(variables), {
-          networkCacheConfig: networkCacheConfig,
-          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
-        }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertResponse(res));
-            });
+function make(product, selectedOptions) {
+  var productOptions = product.productOptions;
+  if (productOptions === undefined) {
+    return [];
+  }
+  var edges = productOptions.edges;
+  var productId = product.productId;
+  var producer = product.producer;
+  var displayName = product.displayName;
+  var fullyQualifiedName = product.category.fullyQualifiedName;
+  var makeItem = function (param) {
+    var quantity = param[1];
+    var nodeId = param[0];
+    return Belt_Option.flatMap(Belt_Array.getBy(edges, (function (param) {
+                      return nodeId === param.node.id;
+                    })), (function (param) {
+                  var match = param.node;
+                  var price = match.price;
+                  if (price !== undefined) {
+                    return {
+                            productId: productId,
+                            displayName: displayName,
+                            optionId: match.productOptionId,
+                            stockSku: match.stockSku,
+                            quantity: quantity,
+                            price: price,
+                            producerCode: Belt_Option.flatMap(producer, (function (producer$p) {
+                                    return producer$p.producerCode;
+                                  })),
+                            categories: Belt_Array.map(fullyQualifiedName, (function (c) {
+                                    return c.name;
+                                  }))
+                          };
+                  }
+                  
+                }));
+  };
+  return Belt_Array.keepMap(Belt_MapString.toArray(selectedOptions), makeItem);
 }
 
-function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(PDPNormalOrderSpecificationBuyerQuery_graphql.node, queryRef);
-  return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertResponse, data);
+function makeOrderBranchGtm(selectedItems, orderType) {
+  var makeItems = function (nonEmptyItems) {
+    return Belt_Array.map(nonEmptyItems, (function (param) {
+                  var categories = param.categories;
+                  return {
+                          currency: "KRW",
+                          item_id: String(param.productId),
+                          item_name: param.displayName,
+                          item_brand: Js_null_undefined.fromOption(param.producerCode),
+                          item_variant: param.stockSku,
+                          price: param.price,
+                          quantity: param.quantity,
+                          item_category: Js_null_undefined.fromOption(Belt_Array.get(categories, 0)),
+                          item_category2: Js_null_undefined.fromOption(Belt_Array.get(categories, 1)),
+                          item_category3: Js_null_undefined.fromOption(Belt_Array.get(categories, 2)),
+                          item_category4: Js_null_undefined.fromOption(Belt_Array.get(categories, 3)),
+                          item_category5: Js_null_undefined.fromOption(Belt_Array.get(categories, 4)),
+                          order_type: orderType ? false : true
+                        };
+                }));
+  };
+  return Belt_Option.map(filterEmptyArr(selectedItems), (function (nonEmptyItems) {
+                return {
+                        event: "click_purchase",
+                        ecommerce: {
+                          items: makeItems(nonEmptyItems)
+                        }
+                      };
+              }));
 }
 
-function retain(environment, variables) {
-  var operationDescriptor = RelayRuntime.createOperationDescriptor(PDPNormalOrderSpecificationBuyerQuery_graphql.node, PDPNormalOrderSpecificationBuyerQuery_graphql.Internal.convertVariables(variables));
-  return environment.retain(operationDescriptor);
+function makeAddToCartGtm(selectedItems) {
+  var makeTotalPrice = function (nonEmptyItems) {
+    return Garter_Math.sum_int(Belt_Array.map(nonEmptyItems, (function (param) {
+                      return Math.imul(param.quantity, param.price);
+                    })));
+  };
+  var makeItems = function (nonEmptyItems) {
+    return Belt_Array.mapWithIndex(nonEmptyItems, (function (index, param) {
+                  var categories = param.categories;
+                  return {
+                          item_id: String(param.productId),
+                          item_name: param.displayName,
+                          price: param.price,
+                          quantity: param.quantity,
+                          item_brand: Js_null_undefined.fromOption(param.producerCode),
+                          item_category: Js_null_undefined.fromOption(Belt_Array.get(categories, 0)),
+                          item_category2: Js_null_undefined.fromOption(Belt_Array.get(categories, 1)),
+                          item_category3: Js_null_undefined.fromOption(Belt_Array.get(categories, 2)),
+                          item_category4: Js_null_undefined.fromOption(Belt_Array.get(categories, 3)),
+                          item_category5: Js_null_undefined.fromOption(Belt_Array.get(categories, 4)),
+                          item_variant: param.stockSku,
+                          index: index
+                        };
+                }));
+  };
+  return Belt_Option.map(filterEmptyArr(selectedItems), (function (nonEmptyItems) {
+                return {
+                        event: "add_to_cart",
+                        currency: "KRW",
+                        value: makeTotalPrice(nonEmptyItems),
+                        ecommerce: {
+                          items: makeItems(nonEmptyItems)
+                        }
+                      };
+              }));
 }
 
-var Query = {
-  makeVariables: makeVariables,
-  Types: undefined,
-  use: use,
-  useLoader: useLoader,
-  $$fetch: $$fetch,
-  fetchPromised: fetchPromised,
-  usePreloaded: usePreloaded,
-  retain: retain
+var SelectedItems = {
+  filterEmptyArr: filterEmptyArr,
+  make: make,
+  makeOrderBranchGtm: makeOrderBranchGtm,
+  makeAddToCartGtm: makeAddToCartGtm
 };
 
 function PDP_Normal_OrderSpecification_Buyer$Placeholder(Props) {
@@ -108,6 +214,23 @@ function PDP_Normal_OrderSpecification_Buyer$Placeholder(Props) {
 
 var Placeholder = {
   make: PDP_Normal_OrderSpecification_Buyer$Placeholder
+};
+
+function PDP_Normal_OrderSpecification_Buyer$Scroll(Props) {
+  var children = Props.children;
+  return React.createElement(ReactScrollArea.Root, {
+              children: null,
+              className: "max-h-[400px] flex flex-col overflow-hidden"
+            }, React.createElement(ReactScrollArea.Viewport, {
+                  children: children,
+                  className: "w-full h-full"
+                }), React.createElement(ReactScrollArea.Scrollbar, {
+                  children: React.createElement(ReactScrollArea.Thumb, {})
+                }));
+}
+
+var Scroll = {
+  make: PDP_Normal_OrderSpecification_Buyer$Scroll
 };
 
 function PDP_Normal_OrderSpecification_Buyer$Tab(Props) {
@@ -126,149 +249,544 @@ var Tab = {
   make: PDP_Normal_OrderSpecification_Buyer$Tab
 };
 
-function PDP_Normal_OrderSpecification_Buyer(Props) {
-  var selectedSkuId = Props.selectedSkuId;
-  var quantity = Props.quantity;
-  var setQuantity = Props.setQuantity;
-  var router = Router.useRouter();
-  var match = use(Curry._1(makeVariables, selectedSkuId), /* StoreOrNetwork */1, undefined, undefined, undefined);
-  var node = match.node;
-  var match$1 = React.useState(function () {
-        return "dropShipping";
+function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
+  return RelayRuntime.commitMutation(environment, {
+              mutation: PDPNormalOrderSpecificationBuyerCartMutation_graphql.node,
+              variables: PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertVariables(variables),
+              onCompleted: (function (res, err) {
+                  if (onCompleted !== undefined) {
+                    return Curry._2(onCompleted, PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertResponse(res), (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              onError: (function (err) {
+                  if (onError !== undefined) {
+                    return Curry._1(onError, (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              optimisticResponse: optimisticResponse !== undefined ? PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
+              optimisticUpdater: optimisticUpdater,
+              updater: updater !== undefined ? (function (store, r) {
+                    Curry._2(updater, store, PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertResponse(r));
+                  }) : undefined,
+              uploadables: uploadables
+            });
+}
+
+function use$1(param) {
+  var match = ReactRelay.useMutation(PDPNormalOrderSpecificationBuyerCartMutation_graphql.node);
+  var mutate = match[0];
+  return [
+          React.useMemo((function () {
+                  return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
+                    return Curry._1(mutate, {
+                                onError: param,
+                                onCompleted: param$1 !== undefined ? (function (r, errors) {
+                                      Curry._2(param$1, PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                    }) : undefined,
+                                onUnsubscribe: param$2,
+                                optimisticResponse: param$3 !== undefined ? PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
+                                optimisticUpdater: param$4,
+                                updater: param$5 !== undefined ? (function (store, r) {
+                                      Curry._2(param$5, store, PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertResponse(r));
+                                    }) : undefined,
+                                variables: PDPNormalOrderSpecificationBuyerCartMutation_graphql.Internal.convertVariables(param$6),
+                                uploadables: param$7
+                              });
+                  };
+                }), [mutate]),
+          match[1]
+        ];
+}
+
+var CartMutation = {
+  Operation: undefined,
+  Types: undefined,
+  commitMutation: commitMutation,
+  use: use$1
+};
+
+function use$2(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
+  var data = ReactRelay.useLazyLoadQuery(PDPNormalOrderSpecificationBuyerCartQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertVariables(variables)), {
+        fetchKey: fetchKey,
+        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
+        networkCacheConfig: networkCacheConfig
       });
-  var setSelectedMethod = match$1[1];
-  var selectedMethod = match$1[0];
-  var tmp;
-  if (node !== undefined) {
-    var match$2 = node.productOptionCost;
-    var isFreeShipping = match$2.isFreeShipping;
-    var deliveryCost = match$2.deliveryCost;
-    var match$3 = node.product;
-    var productNodeId = match$3.id;
-    var productOptionNodeId = node.id;
-    var productNoLabel = String(match$3.productId);
-    var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(node.price, deliveryCost, isFreeShipping);
-    var priceLabel = Belt_Option.mapWithDefault(optionPrice, "", (function (optionPrice$p) {
-            return Locale.Float.show(undefined, Math.imul(optionPrice$p, quantity), 0) + "원";
+  return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertResponse, data);
+}
+
+function useLoader(param) {
+  var match = ReactRelay.useQueryLoader(PDPNormalOrderSpecificationBuyerCartQuery_graphql.node);
+  var loadQueryFn = match[1];
+  var loadQuery = React.useMemo((function () {
+          return function (param, param$1, param$2, param$3) {
+            return Curry._2(loadQueryFn, PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertVariables(param), {
+                        fetchPolicy: param$1,
+                        networkCacheConfig: param$2
+                      });
+          };
+        }), [loadQueryFn]);
+  return [
+          Caml_option.nullable_to_opt(match[0]),
+          loadQuery,
+          match[2]
+        ];
+}
+
+function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
+  ReactRelay.fetchQuery(environment, PDPNormalOrderSpecificationBuyerCartQuery_graphql.node, PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).subscribe({
+        next: (function (res) {
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertResponse(res)
+                });
+          }),
+        error: (function (err) {
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
+          })
+      });
+}
+
+function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
+  var __x = ReactRelay.fetchQuery(environment, PDPNormalOrderSpecificationBuyerCartQuery_graphql.node, PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).toPromise();
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertResponse(res));
+              }), __x);
+}
+
+function usePreloaded(queryRef, param) {
+  var data = ReactRelay.usePreloadedQuery(PDPNormalOrderSpecificationBuyerCartQuery_graphql.node, queryRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertResponse, data);
+}
+
+function retain(environment, variables) {
+  var operationDescriptor = RelayRuntime.createOperationDescriptor(PDPNormalOrderSpecificationBuyerCartQuery_graphql.node, PDPNormalOrderSpecificationBuyerCartQuery_graphql.Internal.convertVariables(variables));
+  return environment.retain(operationDescriptor);
+}
+
+var CartQuery = {
+  Operation: undefined,
+  Types: undefined,
+  use: use$2,
+  useLoader: useLoader,
+  $$fetch: $$fetch,
+  fetchPromised: fetchPromised,
+  usePreloaded: usePreloaded,
+  retain: retain
+};
+
+function makeMutationItem(param) {
+  return {
+          optionId: param.optionId,
+          quantity: param.quantity
+        };
+}
+
+function PDP_Normal_OrderSpecification_Buyer$CartBtn(Props) {
+  var selectedOptions = Props.selectedOptions;
+  var setSelectedOptions = Props.setSelectedOptions;
+  var query = Props.query;
+  var closeFn = Props.closeFn;
+  var match = ReactToastNotifications.useToasts();
+  var addToast = match.addToast;
+  var product = use(query);
+  var selectedItems = make(product, selectedOptions);
+  var match$1 = use$1(undefined);
+  var isAddingCartItems = match$1[1];
+  var addCartItems = match$1[0];
+  var match$2 = useLoader(undefined);
+  var refreshCount = match$2[1];
+  var showToast = function (message, toastType) {
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, toastType ? React.createElement(IconError.make, {
+                    width: "24",
+                    height: "24",
+                    className: "mr-2"
+                  }) : React.createElement(IconCheck.make, {
+                    height: "24",
+                    width: "24",
+                    fill: "#12B564",
+                    className: "mr-2"
+                  }), message), {
+          appearance: "success"
+        });
+  };
+  var onClick = function (param) {
+    Belt_Option.map(makeAddToCartGtm(selectedItems), (function ($$event) {
+            DataGtm.push({
+                  ecommerce: null
+                });
+            DataGtm.push(DataGtm.mergeUserIdUnsafe($$event));
           }));
-    var optionDeliveryCost = PDP_Parser_Buyer.ProductOption.makeOptionDeliveryCost(deliveryCost, isFreeShipping);
-    var totalDeliveryCost = Math.imul(optionDeliveryCost, quantity);
-    var deliveryCostLabel = totalDeliveryCost !== 0 ? Locale.Float.show(undefined, totalDeliveryCost, 0) + "원" : "무료";
-    var quantityLabel = String(quantity);
-    tmp = React.createElement(React.Fragment, undefined, React.createElement("div", {
-              className: "my-4 w-full flex items-center justify-between"
-            }, React.createElement("span", {
-                  className: "w-full text-lg"
-                }, node.optionName), React.createElement(Spinbox.make, {
-                  value: quantity,
-                  setValue: setQuantity
-                })), React.createElement(ReactTabs.Content, {
-              children: null,
-              value: "dropShipping"
-            }, React.createElement("div", {
-                  className: "w-full h-[273px]"
-                }, React.createElement("section", {
-                      className: "w-full bg-gray-50 p-4 text-text-L1 flex flex-col"
-                    }, React.createElement("span", {
-                          className: "font-bold"
-                        }, "상품번호 : " + productNoLabel), React.createElement("span", {
-                          className: "mt-2"
-                        }, "단품번호 : " + node.stockSku), React.createElement("span", {
-                          className: "mt-2"
-                        }, "수량 : " + quantityLabel), React.createElement("span", {
-                          className: "mt-2"
-                        }, "상품가 : " + priceLabel), React.createElement("span", {
-                          className: "mt-2"
-                        }, "배송비 : " + deliveryCostLabel)), React.createElement("section", {
-                      className: "mt-2 flex flex-col"
-                    }, React.createElement("span", {
-                          className: "text-sm text-gray-600"
-                        }, "해당 상품의 가격과 배송비를 확인하시고 주문해주세요."), React.createElement(Link, {
-                          href: "https://drive.google.com/file/d/1hz3Y2U9JlGR4fgiqNdrNFEdKAiL74BOw/view",
-                          children: React.createElement("a", {
-                                className: "flex items-center mt-4",
-                                rel: "noopener noreferer",
-                                target: "_blank"
-                              }, React.createElement("span", {
-                                    className: "text-primary text-[17px] font-bold mr-1"
-                                  }, "위탁 배송 주문 방법 안내"), React.createElement(IconArrow.make, {
-                                    height: "20",
-                                    width: "20",
-                                    stroke: "#12B564"
-                                  }))
-                        }))), React.createElement("section", {
-                  className: "w-full py-5"
-                }, React.createElement("button", {
-                      className: "w-full h-16 bg-primary text-white font-bold flex items-center justify-center rounded-xl",
-                      onClick: (function (param) {
-                          return ReactEvents.interceptingHandler((function (param) {
-                                        router.push("/buyer/upload");
-                                        
-                                      }), param);
-                        })
-                    }, "주문서 업로드하기"))), React.createElement(ReactTabs.Content, {
-              children: null,
-              value: "deliverying"
-            }, React.createElement("div", {
-                  className: "w-full h-[273px]"
-                }, React.createElement("section", {
-                      className: "w-full bg-gray-50 p-4 text-text-L1 flex flex-col"
-                    }, React.createElement("span", undefined, "수량 : " + quantityLabel), React.createElement("span", {
-                          className: "mt-2"
-                        }, "상품가 : " + priceLabel), React.createElement("span", {
-                          className: "mt-2"
-                        }, "배송비 : 배송타입 선택 후 확인 가능"))), React.createElement("section", {
-                  className: "w-full py-5"
-                }, React.createElement("button", {
-                      className: "w-full h-16 bg-primary text-white font-bold flex items-center justify-center rounded-xl",
-                      onClick: (function (param) {
-                          return ReactEvents.interceptingHandler((function (param) {
-                                        var prim1_pathname = "/buyer/web-order/" + productNodeId + "/" + productOptionNodeId;
-                                        var prim1_query = Js_dict.fromArray([[
-                                                "quantity",
-                                                String(quantity)
-                                              ]]);
-                                        var prim1 = {
-                                          pathname: prim1_pathname,
-                                          query: prim1_query
-                                        };
-                                        router.push(prim1);
-                                        
-                                      }), param);
-                        })
-                    }, "바로 구매하기"))));
-  } else {
-    tmp = null;
-  }
+    if (isAddingCartItems) {
+      return ;
+    }
+    if (selectedItems.length === 0) {
+      return ;
+    }
+    var variables = {
+      items: Belt_Array.map(selectedItems, makeMutationItem)
+    };
+    Curry.app(addCartItems, [
+          (function (err) {
+              console.log(err);
+            }),
+          (function (param, param$1) {
+              if (param.addCartItemList.result) {
+                Curry._4(refreshCount, undefined, /* StoreAndNetwork */2, undefined, undefined);
+                Curry._1(closeFn, undefined);
+                setSelectedOptions(function (param) {
+                      return Belt_MapString.fromArray([]);
+                    });
+                return showToast("장바구니에 상품이 담겼습니다.", /* Success */0);
+              } else {
+                return showToast("요청에 실패하였습니다.", /* Failure */1);
+              }
+            }),
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          variables,
+          undefined,
+          undefined
+        ]);
+  };
+  return React.createElement("button", {
+              className: "h-16 rounded-xl bg-white border border-primary text-primary text-base font-bold flex flex-1 items-center justify-center",
+              disabled: isAddingCartItems,
+              onClick: onClick
+            }, "장바구니 담기");
+}
+
+var CartBtn = {
+  CartMutation: CartMutation,
+  CartQuery: CartQuery,
+  makeMutationItem: makeMutationItem,
+  make: PDP_Normal_OrderSpecification_Buyer$CartBtn
+};
+
+function commitMutation$1(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
+  return RelayRuntime.commitMutation(environment, {
+              mutation: PDPNormalOrderSpecificationBuyerWosMutation_graphql.node,
+              variables: PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertVariables(variables),
+              onCompleted: (function (res, err) {
+                  if (onCompleted !== undefined) {
+                    return Curry._2(onCompleted, PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertResponse(res), (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              onError: (function (err) {
+                  if (onError !== undefined) {
+                    return Curry._1(onError, (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              optimisticResponse: optimisticResponse !== undefined ? PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
+              optimisticUpdater: optimisticUpdater,
+              updater: updater !== undefined ? (function (store, r) {
+                    Curry._2(updater, store, PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertResponse(r));
+                  }) : undefined,
+              uploadables: uploadables
+            });
+}
+
+function use$3(param) {
+  var match = ReactRelay.useMutation(PDPNormalOrderSpecificationBuyerWosMutation_graphql.node);
+  var mutate = match[0];
+  return [
+          React.useMemo((function () {
+                  return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
+                    return Curry._1(mutate, {
+                                onError: param,
+                                onCompleted: param$1 !== undefined ? (function (r, errors) {
+                                      Curry._2(param$1, PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                    }) : undefined,
+                                onUnsubscribe: param$2,
+                                optimisticResponse: param$3 !== undefined ? PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
+                                optimisticUpdater: param$4,
+                                updater: param$5 !== undefined ? (function (store, r) {
+                                      Curry._2(param$5, store, PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertResponse(r));
+                                    }) : undefined,
+                                variables: PDPNormalOrderSpecificationBuyerWosMutation_graphql.Internal.convertVariables(param$6),
+                                uploadables: param$7
+                              });
+                  };
+                }), [mutate]),
+          match[1]
+        ];
+}
+
+var WosMutation = {
+  Operation: undefined,
+  Types: undefined,
+  commitMutation: commitMutation$1,
+  use: use$3
+};
+
+function makeMutationItem$1(param) {
+  return {
+          productOptionId: param.optionId,
+          quantity: param.quantity
+        };
+}
+
+function PDP_Normal_OrderSpecification_Buyer$WosBtn(Props) {
+  var selectedOptions = Props.selectedOptions;
+  var query = Props.query;
+  var router = Router.useRouter();
+  var match = ReactToastNotifications.useToasts();
+  var addToast = match.addToast;
+  var product = use(query);
+  var selectedItems = make(product, selectedOptions);
+  var match$1 = use$3(undefined);
+  var isCreatingOrder = match$1[1];
+  var createOrder = match$1[0];
+  var showErrToast = function (message, param) {
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), Belt_Option.getWithDefault(message, "요청에 실패하였습니다.")), {
+          appearance: "success"
+        });
+  };
+  var onClick = function (param) {
+    Belt_Option.map(makeOrderBranchGtm(selectedItems, /* Wos */1), (function ($$event) {
+            DataGtm.push({
+                  ecommerce: null
+                });
+            DataGtm.push(DataGtm.mergeUserIdUnsafe($$event));
+          }));
+    if (isCreatingOrder) {
+      return ;
+    }
+    if (selectedItems.length === 0) {
+      return ;
+    }
+    var variables = {
+      productOptions: Belt_Array.map(selectedItems, makeMutationItem$1)
+    };
+    Curry.app(createOrder, [
+          (function (err) {
+              console.log(err);
+            }),
+          (function (param, param$1) {
+              var createTempWosOrderProductOptions = param.createTempWosOrderProductOptions;
+              if (createTempWosOrderProductOptions === undefined) {
+                return showErrToast(undefined, undefined);
+              }
+              if (typeof createTempWosOrderProductOptions !== "object") {
+                return showErrToast(undefined, undefined);
+              }
+              var variant = createTempWosOrderProductOptions.NAME;
+              if (variant === "Error" || variant === "CartError") {
+                return showErrToast(createTempWosOrderProductOptions.VAL.message, undefined);
+              }
+              if (variant !== "TempWosOrder") {
+                return showErrToast(undefined, undefined);
+              }
+              var prim1 = "/buyer/web-order/" + String(createTempWosOrderProductOptions.VAL.tempOrderId) + "";
+              router.push(prim1);
+            }),
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          variables,
+          undefined,
+          undefined
+        ]);
+  };
+  return React.createElement("button", {
+              className: "h-16 bg-primary text-white font-bold flex flex-1 items-center justify-center rounded-xl",
+              disabled: isCreatingOrder,
+              onClick: onClick
+            }, "바로 구매하기");
+}
+
+var WosBtn = {
+  WosMutation: WosMutation,
+  makeMutationItem: makeMutationItem$1,
+  make: PDP_Normal_OrderSpecification_Buyer$WosBtn
+};
+
+function PDP_Normal_OrderSpecification_Buyer$UploadBtn(Props) {
+  var selectedOptions = Props.selectedOptions;
+  var query = Props.query;
+  var router = Router.useRouter();
+  var product = use(query);
+  var selectedItems = make(product, selectedOptions);
+  return React.createElement("button", {
+              className: "w-full h-16 bg-primary text-white font-bold flex items-center justify-center rounded-xl",
+              onClick: (function (param) {
+                  Belt_Option.map(makeOrderBranchGtm(selectedItems, /* Excel */0), (function ($$event) {
+                          DataGtm.push({
+                                ecommerce: null
+                              });
+                          DataGtm.push(DataGtm.mergeUserIdUnsafe($$event));
+                        }));
+                  router.push("/buyer/upload");
+                })
+            }, "주문서 업로드하기");
+}
+
+var UploadBtn = {
+  make: PDP_Normal_OrderSpecification_Buyer$UploadBtn
+};
+
+function PDP_Normal_OrderSpecification_Buyer(Props) {
+  var query = Props.query;
+  var selectedOptions = Props.selectedOptions;
+  var setSelectedOptions = Props.setSelectedOptions;
+  var closeFn = Props.closeFn;
+  var match = React.useState(function () {
+        return /* Excel */0;
+      });
+  var setSelectedMethod = match[1];
+  var selectedMethod = match[0];
+  var nonEmptyOptions = Belt_MapString.toArray(selectedOptions);
+  var nonEmptyOptions$1 = Belt_MapString.toArray(selectedOptions);
   return React.createElement(ReactTabs.Root, {
               children: null,
-              defaultValue: "dropShipping",
+              defaultValue: "excel",
               onValueChange: (function (selected) {
-                  return setSelectedMethod(function (param) {
-                              return selected;
-                            });
+                  Belt_Option.map(variantify(selected), (function (method) {
+                          setSelectedMethod(function (param) {
+                                return method;
+                              });
+                        }));
                 })
             }, React.createElement(ReactTabs.List, {
                   children: null,
-                  className: "w-full h-12 flex"
+                  className: "w-full h-12 flex px-4"
                 }, React.createElement(PDP_Normal_OrderSpecification_Buyer$Tab, {
                       label: "2개 이상 배송지",
-                      value: "dropShipping",
-                      isSelected: selectedMethod === "dropShipping"
+                      value: "excel",
+                      isSelected: selectedMethod === /* Excel */0
                     }), React.createElement(PDP_Normal_OrderSpecification_Buyer$Tab, {
                       label: "1개 배송지",
-                      value: "deliverying",
-                      isSelected: selectedMethod === "deliverying"
-                    })), tmp);
+                      value: "wos",
+                      isSelected: selectedMethod === /* Wos */1
+                    })), React.createElement(ReactTabs.Content, {
+                  children: null,
+                  value: "excel"
+                }, React.createElement("div", {
+                      className: "divide-y px-4 pt-1"
+                    }, nonEmptyOptions.length !== 0 ? React.createElement(PDP_Normal_OrderSpecification_Buyer$Scroll, {
+                            children: React.createElement("section", {
+                                  className: "pb-6"
+                                }, Belt_Array.map(nonEmptyOptions, (function (param) {
+                                        var id = param[0];
+                                        return React.createElement(React.Suspense, {
+                                                    children: React.createElement(PDP_Normal_SelectedOptionItem_Buyer.MO.make, {
+                                                          id: id,
+                                                          quantity: param[1],
+                                                          onChange: (function (optionId, quantity) {
+                                                              setSelectedOptions(function (prev) {
+                                                                    return Belt_MapString.set(prev, optionId, quantity);
+                                                                  });
+                                                            }),
+                                                          onRemove: (function (optionId) {
+                                                              setSelectedOptions(function (prev) {
+                                                                    return Belt_MapString.remove(prev, optionId);
+                                                                  });
+                                                            }),
+                                                          withCaption: true
+                                                        }),
+                                                    fallback: null,
+                                                    key: id
+                                                  });
+                                      })))
+                          }) : null, React.createElement("section", {
+                          className: "py-3"
+                        }, React.createElement(PDP_Normal_TotalPrice_Buyer.MO.make, {
+                              query: query,
+                              selectedOptions: selectedOptions
+                            }))), React.createElement("div", {
+                      className: "w-full h-[1px] bg-gray-100"
+                    }), React.createElement("section", {
+                      className: "w-full px-4 py-5"
+                    }, React.createElement(PDP_Normal_OrderSpecification_Buyer$UploadBtn, {
+                          selectedOptions: selectedOptions,
+                          query: query
+                        }))), React.createElement(ReactTabs.Content, {
+                  children: null,
+                  value: "wos"
+                }, React.createElement("div", {
+                      className: "divide-y px-4"
+                    }, nonEmptyOptions$1.length !== 0 ? React.createElement(PDP_Normal_OrderSpecification_Buyer$Scroll, {
+                            children: React.createElement("section", {
+                                  className: "pt-1 pb-6"
+                                }, Belt_Array.map(nonEmptyOptions$1, (function (param) {
+                                        var id = param[0];
+                                        return React.createElement(React.Suspense, {
+                                                    children: React.createElement(PDP_Normal_SelectedOptionItem_Buyer.MO.make, {
+                                                          id: id,
+                                                          quantity: param[1],
+                                                          onChange: (function (optionId, quantity) {
+                                                              setSelectedOptions(function (prev) {
+                                                                    return Belt_MapString.set(prev, optionId, quantity);
+                                                                  });
+                                                            }),
+                                                          onRemove: (function (optionId) {
+                                                              setSelectedOptions(function (prev) {
+                                                                    return Belt_MapString.remove(prev, optionId);
+                                                                  });
+                                                            })
+                                                        }),
+                                                    fallback: null,
+                                                    key: id
+                                                  });
+                                      })))
+                          }) : null, React.createElement("section", {
+                          className: "py-3"
+                        }, React.createElement(PDP_Normal_TotalPrice_Buyer.MO.make, {
+                              query: query,
+                              selectedOptions: selectedOptions,
+                              withDeliveryCost: false
+                            }))), React.createElement("div", {
+                      className: "w-full h-[1px] bg-gray-100"
+                    }), React.createElement("section", {
+                      className: "w-full px-4 py-5 flex items-center"
+                    }, React.createElement(PDP_Normal_OrderSpecification_Buyer$CartBtn, {
+                          selectedOptions: selectedOptions,
+                          setSelectedOptions: setSelectedOptions,
+                          query: query,
+                          closeFn: closeFn
+                        }), React.createElement("span", {
+                          className: "w-2"
+                        }), React.createElement(PDP_Normal_OrderSpecification_Buyer$WosBtn, {
+                          selectedOptions: selectedOptions,
+                          query: query
+                        }))));
 }
 
-var make = PDP_Normal_OrderSpecification_Buyer;
+var make$1 = PDP_Normal_OrderSpecification_Buyer;
 
 export {
-  Query ,
+  Fragment ,
+  OrderMethod ,
+  SelectedItems ,
   Placeholder ,
+  Scroll ,
   Tab ,
-  make ,
-  
+  CartBtn ,
+  WosBtn ,
+  UploadBtn ,
+  make$1 as make,
 }
 /* react Not a pure module */

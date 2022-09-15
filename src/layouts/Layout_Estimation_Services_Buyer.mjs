@@ -32,6 +32,9 @@ function Layout_Estimation_Services_Buyer(Props) {
               case "apply" :
                   return children;
               default:
+                if (thirdPathname !== undefined && thirdPathname === "buy" && fourthPathname === "products") {
+                  return children;
+                }
                 
             }
           }
@@ -49,6 +52,5 @@ var make = Layout_Estimation_Services_Buyer;
 
 export {
   make ,
-  
 }
 /* react Not a pure module */

@@ -18,66 +18,71 @@ module Fragment = %relay(`
   `)
 
 module PlaceHoder = {
-  @react.component
-  let make = () => {
-    <section className=%twc("flex flex-col p-7 gap-5 bg-white rounded-sm")>
-      <span className=%twc("flex items-center gap-1 text-lg xl:text-xl text-enabled-L1 font-bold")>
-        {`배송 방식 선택`->React.string}
-        <Tooltip.PC className=%twc("hidden xl:flex")>
-          {`선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.`->React.string}
-        </Tooltip.PC>
-        <Tooltip.Mobile className=%twc("flex xl:hidden")>
-          {`선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.`->React.string}
-        </Tooltip.Mobile>
-      </span>
-      <div className=%twc("flex gap-2")>
-        <RadioButton.PlaceHolder /> <RadioButton.PlaceHolder /> <RadioButton.PlaceHolder />
-      </div>
-    </section>
+  module PC = {
+    @react.component
+    let make = () => {
+      <section className=%twc("flex flex-col p-7 gap-5 bg-white rounded-sm")>
+        <span className=%twc("flex items-center gap-1 text-xl text-enabled-L1 font-bold")>
+          {`배송 방식 선택`->React.string}
+          <Tooltip.PC>
+            {`선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.`->React.string}
+          </Tooltip.PC>
+        </span>
+        <div className=%twc("flex gap-2")>
+          <RadioButton.PlaceHolder.PC /> <RadioButton.PlaceHolder.PC /> <RadioButton.PlaceHolder.PC />
+        </div>
+      </section>
+    }
+  }
+  module MO = {
+    @react.component
+    let make = () => {
+      <section className=%twc("flex flex-col p-7 gap-5 bg-white rounded-sm")>
+        <span className=%twc("flex items-center gap-1 text-lg text-enabled-L1 font-bold")>
+          {`배송 방식 선택`->React.string}
+          <Tooltip.Mobile>
+            {`선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.`->React.string}
+          </Tooltip.Mobile>
+        </span>
+        <div className=%twc("flex gap-2")>
+          <RadioButton.PlaceHolder.MO /> <RadioButton.PlaceHolder.MO /> <RadioButton.PlaceHolder.MO />
+        </div>
+      </section>
+    }
   }
 }
 
 @react.component
-let make = (~query, ~quantity) => {
+let make = (~isSameCourierAvailable, ~isCourierAvailable, ~prefix, ~deviceType) => {
+  let formNames = Form.names(prefix)
   let {register, formState: {errors}} = Hooks.Context.use(.
     ~config=Hooks.Form.config(~mode=#onChange, ()),
     (),
   )
 
-  let {productNode} = Fragment.use(query)
-
   let {ref, name, onChange, onBlur} = register(.
-    Form.names.deliveryType,
+    formNames.deliveryType,
     Some(Hooks.Register.config(~required=true, ())),
   )
 
   let watchValue = Hooks.WatchValues.use(
     Hooks.WatchValues.Text,
-    ~config=Hooks.WatchValues.config(~name=Form.names.deliveryType, ()),
+    ~config=Hooks.WatchValues.config(~name=formNames.deliveryType, ()),
     (),
   )
-
-  <section className=%twc("flex flex-col gap-5 p-7 bg-white rounded-sm")>
-    <span className=%twc("flex items-center gap-1 text-lg xl:text-xl text-enabled-L1 font-bold")>
-      {`배송 방식 선택`->React.string}
-      <Tooltip.PC className=%twc("hidden xl:flex")>
-        {`선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.`->React.string}
-      </Tooltip.PC>
-      <Tooltip.Mobile className=%twc("flex xl:hidden")>
-        {`선택하신 배송 방식에 따라 배송비 부과 정책이 달라집니다.`->React.string}
-      </Tooltip.Mobile>
-    </span>
+  <>
     <div className=%twc("flex gap-2")>
       {{
-        switch productNode {
-        | Some(#NormalProduct({isCourierAvailable})) =>
+        switch isSameCourierAvailable {
+        | Some(true) =>
           switch isCourierAvailable {
-          | true => [
+          | Some(true) => [
               ("parcel", `택배배송`),
               ("freight", `화물배송`),
               ("self", `직접수령`),
             ]
-          | false => [("freight", `화물배송`), ("self", `직접수령`)]
+          | Some(false) => [("freight", `화물배송`), ("self", `직접수령`)]
+          | None => []
           }
         | _ => []
         }
@@ -89,7 +94,7 @@ let make = (~query, ~quantity) => {
             "focus:outline-none focus-within:bg-primary-light focus-within:outline-none focus-within:rounded-xl"
           )>
           <input className=%twc("sr-only") type_="radio" id=name ref name onChange onBlur value />
-          <RadioButton watchValue name=n value />
+          <RadioButton watchValue name=n value deviceType />
         </label>
       )
       ->React.array}
@@ -105,7 +110,5 @@ let make = (~query, ~quantity) => {
           </span>
         </span>}
     />
-    <Web_Order_Delivery_Form watchValue />
-    <Web_Order_Hidden_Input_Buyer query quantity watchValue />
-  </section>
+  </>
 }

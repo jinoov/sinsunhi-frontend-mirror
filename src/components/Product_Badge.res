@@ -25,7 +25,7 @@ module V2 = {
   type status = SALE | SOLDOUT | HIDDEN_SALE | NOSALE | RETIRE
 
   @react.component
-  let make = (~status: status) => {
+  let make = (~className=?, ~status: status) => {
     let displayText = switch status {
     | SALE => `판매중`
     | SOLDOUT => `품절`
@@ -36,13 +36,18 @@ module V2 = {
 
     let displayStyle = switch status {
     | SALE =>
-      %twc("max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap")
+      %twc(
+        "max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap "
+      ) ++
+      className->Option.getWithDefault("")
     | SOLDOUT =>
-      %twc("max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap")
+      %twc("max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap ") ++
+      className->Option.getWithDefault("")
     | HIDDEN_SALE
     | NOSALE
     | RETIRE =>
-      %twc("max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap")
+      %twc("max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap ") ++
+      className->Option.getWithDefault("")
     }
 
     <span className=displayStyle> {displayText->React.string} </span>

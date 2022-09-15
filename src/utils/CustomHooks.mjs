@@ -9,14 +9,16 @@ import * as Global from "../components/Global.mjs";
 import * as Helper from "./Helper.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
+import * as Js_array from "rescript/lib/es6/js_array.js";
 import * as Redirect from "../components/Redirect.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import JwtDecode from "jwt-decode";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as FetchHelper from "./FetchHelper.mjs";
 import * as Router from "next/router";
-import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as DetectBrowser from "detect-browser";
 import * as LocalStorageHooks from "./LocalStorageHooks.mjs";
 
@@ -32,9 +34,9 @@ function useSetPassword(token) {
                 });
           }
           return (function (param) {
-                    return setShowSetPassword(function (param) {
-                                return /* Hide */1;
-                              });
+                    setShowSetPassword(function (param) {
+                          return /* Hide */1;
+                        });
                   });
         }), [token]);
   return [
@@ -51,9 +53,9 @@ function useDebounce(value, delay) {
   var setDebouncedValue = match[1];
   React.useEffect((function () {
           timeoutId.current = setTimeout((function (param) {
-                  return setDebouncedValue(function (param) {
-                              return value;
-                            });
+                  setDebouncedValue(function (param) {
+                        return value;
+                      });
                 }), delay);
           return (function (param) {
                     var id = timeoutId.current;
@@ -107,12 +109,10 @@ function useScrollDirection(param) {
               
             }
             prevScrollTop.current = currentScrollTop;
-            
           };
           window.addEventListener("scroll", handleScrollEvent);
           return (function (param) {
                     window.removeEventListener("scroll", handleScrollEvent);
-                    
                   });
         }), [scrollDirection]);
   return scrollDirection;
@@ -140,22 +140,22 @@ function useScrollObserver(thresholds, sensitive) {
   var setScrollDirection = match$4[1];
   var handleScrollEvent = function (param) {
     var currentScrollTop = window.scrollY;
-    return Belt_Option.forEach(Caml_option.nullable_to_opt(document.querySelector("body")), (function (body) {
-                  var isVisible;
-                  isVisible = thresholds.TAG === /* Pct */0 ? currentScrollTop / body.clientHeight >= thresholds._0 : currentScrollTop >= thresholds._0;
-                  Curry._1(setPrevScrollPos, (function (param) {
-                          return window.scrollY;
-                        }));
-                  if (isVisible) {
-                    return Curry._1(setVisible, (function (param) {
-                                  return /* Visible */0;
-                                }));
-                  } else {
-                    return Curry._1(setVisible, (function (param) {
-                                  return /* Hidden */1;
-                                }));
-                  }
-                }));
+    Belt_Option.forEach(Caml_option.nullable_to_opt(document.querySelector("body")), (function (body) {
+            var isVisible;
+            isVisible = thresholds.TAG === /* Pct */0 ? currentScrollTop / body.clientHeight >= thresholds._0 : currentScrollTop >= thresholds._0;
+            Curry._1(setPrevScrollPos, (function (param) {
+                    return window.scrollY;
+                  }));
+            if (isVisible) {
+              return Curry._1(setVisible, (function (param) {
+                            return /* Visible */0;
+                          }));
+            } else {
+              return Curry._1(setVisible, (function (param) {
+                            return /* Hidden */1;
+                          }));
+            }
+          }));
   };
   React.useLayoutEffect((function () {
           var diff = window.scrollY - debounceValue;
@@ -181,13 +181,11 @@ function useScrollObserver(thresholds, sensitive) {
                     return diff;
                   }));
           }
-          
         }), [prevScrollPos]);
   React.useLayoutEffect((function () {
           window.addEventListener("scroll", handleScrollEvent);
           return (function (param) {
                     window.removeEventListener("scroll", handleScrollEvent);
-                    
                   });
         }), [
         handleScrollEvent,
@@ -209,10 +207,10 @@ var Scroll = {
 function onErrorRetry(error, _key, _config, revalidate, param) {
   var retryCount = param.retryCount;
   if (error.status === 401) {
-    FetchHelper.refreshToken(undefined).catch(function (err) {
-          console.log(err);
-          return Promise.resolve(undefined);
-        });
+    Js_promise.$$catch((function (err) {
+            console.log(err);
+            return Promise.resolve(undefined);
+          }), FetchHelper.refreshToken(undefined));
   }
   if (retryCount > 3) {
     return ;
@@ -222,9 +220,7 @@ function onErrorRetry(error, _key, _config, revalidate, param) {
   };
   setTimeout((function (param) {
           Curry._1(revalidate, revalidateOptions);
-          
         }), 500);
-  
 }
 
 function use(root, target, thresholds, rootMargin, param) {
@@ -257,7 +253,6 @@ function use(root, target, thresholds, rootMargin, param) {
           observer.observe(t);
           return (function (param) {
                     observer.unobserve(t);
-                    
                   });
         }), [
         root,
@@ -271,6 +266,15 @@ function use(root, target, thresholds, rootMargin, param) {
 var $$IntersectionObserver$1 = {
   use: use
 };
+
+function decodeJwt(s) {
+  try {
+    return JwtDecode(s);
+  }
+  catch (exn){
+    return null;
+  }
+}
 
 function encoderRole(v) {
   switch (v) {
@@ -555,6 +559,15 @@ function toOption(u) {
   }
 }
 
+function getUser(param) {
+  var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
+  var user = user_decode(decodeJwt(accessToken));
+  if (user.TAG === /* Ok */0) {
+    return user._0;
+  }
+  
+}
+
 function use$1(param) {
   var match = React.useState(function () {
         return /* Unknown */0;
@@ -567,7 +580,7 @@ function use$1(param) {
                   return /* NotLoggedIn */1;
                 });
           } else {
-            var user = user_decode(JwtDecode(accessToken));
+            var user = user_decode(decodeJwt(accessToken));
             if (user.TAG === /* Ok */0) {
               var user$1 = user._0;
               setToken(function (param) {
@@ -581,23 +594,24 @@ function use$1(param) {
                   });
             }
           }
-          
         }), []);
   return match[0];
 }
 
 function logOut(param) {
   Curry._1(LocalStorageHooks.AccessToken.remove, undefined);
-  return Curry._1(LocalStorageHooks.RefreshToken.remove, undefined);
+  Curry._1(LocalStorageHooks.RefreshToken.remove, undefined);
 }
 
 var Auth = {
+  decodeJwt: decodeJwt,
   encoderRole: encoderRole,
   decoderRole: decoderRole,
   codecRole: codecRole,
   user_encode: user_encode,
   user_decode: user_decode,
   toOption: toOption,
+  getUser: getUser,
   use: use$1,
   logOut: logOut
 };
@@ -612,7 +626,7 @@ function use$2(param) {
   React.useEffect((function () {
           if (typeof user === "number") {
             if (user !== 0) {
-              Redirect.setHref("/seller/signin?redirect=" + router.asPath);
+              Redirect.setHref("/seller/signin?redirect=" + router.asPath + "");
             } else {
               setStatus(function (param) {
                     return user;
@@ -635,7 +649,6 @@ function use$2(param) {
               
             }
           }
-          
         }), [
         user,
         router.asPath
@@ -657,7 +670,7 @@ function use$3(param) {
   React.useEffect((function () {
           if (typeof user === "number") {
             if (user !== 0) {
-              Redirect.setHref("/buyer/signin?redirect=" + router.asPath);
+              Redirect.setHref("/buyer/signin?redirect=" + router.asPath + "");
             } else {
               setStatus(function (param) {
                     return /* Unknown */0;
@@ -680,7 +693,6 @@ function use$3(param) {
               
             }
           }
-          
         }), [
         user,
         router.asPath
@@ -699,7 +711,6 @@ function use2(param) {
           setStatus(function (param) {
                 return user;
               });
-          
         }), [
         user,
         router.query
@@ -722,7 +733,7 @@ function use$4(param) {
   React.useEffect((function () {
           if (typeof user === "number") {
             if (user !== 0) {
-              Redirect.setHref("/admin/signin?redirect=" + router.asPath);
+              Redirect.setHref("/admin/signin?redirect=" + router.asPath + "");
             } else {
               setStatus(function (param) {
                     return user;
@@ -745,7 +756,6 @@ function use$4(param) {
               
             }
           }
-          
         }), [
         user,
         router.asPath
@@ -795,7 +805,6 @@ function use$5(param) {
                     
                   });
         }), [user]);
-  
 }
 
 var CRMUser = {
@@ -1665,7 +1674,7 @@ function use$6(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -2780,7 +2789,7 @@ function use$7(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -3132,7 +3141,7 @@ function use$8(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order/sc?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order/sc?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -3792,7 +3801,7 @@ function use$9(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order/failed?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order/failed?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -4017,7 +4026,7 @@ function use$10(queryParams, param) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order/summary?" + Belt_Option.getWithDefault(queryParams, ""), FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order/summary?" + Belt_Option.getWithDefault(queryParams, "") + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -4210,7 +4219,7 @@ function use$11(param) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order/farmer-delivery-summary", FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order/farmer-delivery-summary", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -4418,7 +4427,7 @@ function use$12(param) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order/admin-dashboard-summary", FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order/admin-dashboard-summary", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -4541,9 +4550,9 @@ function use$13(filename, kind, userId, param) {
     onErrorRetry: onErrorRetry
   };
   var match = Swr(userId !== undefined ? (
-          kind ? Env.restApiUrl + "/order/upload-url?file-name=" + filename + "&user-id=" + userId : Env.restApiUrl + "/order/delivery/upload-url?file-name=" + filename + "&user-id=" + userId
+          kind ? "" + Env.restApiUrl + "/order/upload-url?file-name=" + filename + "&user-id=" + userId + "" : "" + Env.restApiUrl + "/order/delivery/upload-url?file-name=" + filename + "&user-id=" + userId + ""
         ) : (
-          kind ? Env.restApiUrl + "/order/upload-url?file-name=" + filename : Env.restApiUrl + "/order/delivery/upload-url?file-name=" + filename
+          kind ? "" + Env.restApiUrl + "/order/upload-url?file-name=" + filename + "" : "" + Env.restApiUrl + "/order/delivery/upload-url?file-name=" + filename + ""
         ), FetchHelper.fetcher, fetcherOptions);
   var isValidating = match.isValidating;
   var error = match.error;
@@ -4701,7 +4710,7 @@ function use$14(param) {
     revalidateOnReconnect: false,
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order/delivery-company-codes", FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order/delivery-company-codes", FetchHelper.fetcher, fetcherOptions);
   var isValidating = match.isValidating;
   var error = match.error;
   var data = match.data;
@@ -4832,7 +4841,7 @@ function use$15(param) {
     revalidateOnReconnect: false,
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/order/delivery/st-api-key", FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/order/delivery/st-api-key", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -4979,7 +4988,7 @@ function errorCode_decode(v) {
   if (json_arr$1.length === 0) {
     return Spice.error(undefined, "Expected variant, found empty array", v);
   }
-  var tagged = json_arr$1.map(Js_json.classify);
+  var tagged = Js_array.map(Js_json.classify, json_arr$1);
   var match = Belt_Array.getExn(tagged, 0);
   if (typeof match !== "number" && match.TAG === /* JSONString */0) {
     switch (match._0) {
@@ -5413,7 +5422,7 @@ function failCode_decode(v) {
   if (json_arr$1.length === 0) {
     return Spice.error(undefined, "Expected variant, found empty array", v);
   }
-  var tagged = json_arr$1.map(Js_json.classify);
+  var tagged = Js_array.map(Js_json.classify, json_arr$1);
   var match = Belt_Array.getExn(tagged, 0);
   if (typeof match !== "number" && match.TAG === /* JSONString */0) {
     switch (match._0) {
@@ -5580,7 +5589,7 @@ function decoderFailCode(json) {
               TAG: /* Error */1,
               _0: {
                 path: "",
-                message: "\xec\x95\x8c \xec\x88\x98 \xec\x97\x86\xeb\x8a\x94 \xec\x98\xa4\xeb\xa5\x98",
+                message: "알 수 없는 오류",
                 value: json
               }
             };
@@ -5873,16 +5882,16 @@ function use$16(kind, uploadType) {
   var tmp;
   switch (uploadType) {
     case /* Order */0 :
-        tmp = Env.restApiUrl + "/order/recent-uploads?upload-type=order&pay-type=PAID";
+        tmp = "" + Env.restApiUrl + "/order/recent-uploads?upload-type=order&pay-type=PAID";
         break;
     case /* Invoice */1 :
-        tmp = Env.restApiUrl + "/order/recent-uploads?upload-type=invoice";
+        tmp = "" + Env.restApiUrl + "/order/recent-uploads?upload-type=invoice";
         break;
     case /* Offline */2 :
-        tmp = Env.restApiUrl + "/offline-order/recent-uploads?upload-type=offline";
+        tmp = "" + Env.restApiUrl + "/offline-order/recent-uploads?upload-type=offline";
         break;
     case /* OrderAfterPay */3 :
-        tmp = Env.restApiUrl + "/order/recent-uploads?upload-type=order&pay-type=AFTER_PAY";
+        tmp = "" + Env.restApiUrl + "/order/recent-uploads?upload-type=order&pay-type=AFTER_PAY";
         break;
     
   }
@@ -6329,7 +6338,7 @@ function use$17(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/user?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/user?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -6764,7 +6773,7 @@ function use$18(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/user?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/user?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -7649,7 +7658,7 @@ function use$19(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/product?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/product?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -7710,7 +7719,6 @@ function use$20(router) {
           }
           
         }), [router]);
-  
 }
 
 var NoIE = {
@@ -7724,9 +7732,9 @@ function useInvoice(initialInvoice) {
   var setInvoice = match[1];
   var handleOnChangeInvoice = function (e) {
     var cleanedValue = Helper.Invoice.cleanup(e.currentTarget.value);
-    return setInvoice(function (param) {
-                return cleanedValue;
-              });
+    setInvoice(function (param) {
+          return cleanedValue;
+        });
   };
   return [
           match[0],
@@ -7738,7 +7746,7 @@ function contractType_encode(v) {
   if (v) {
     return "online";
   } else {
-    return "bulk-sale";
+    return "bulksale";
   }
 }
 
@@ -7751,7 +7759,7 @@ function contractType_decode(v) {
     return Spice.error(undefined, "Not a JSONString", v);
   }
   var str$1 = str._0;
-  if ("bulk-sale" === str$1) {
+  if ("bulksale" === str$1) {
     return {
             TAG: /* Ok */0,
             _0: /* Bulksale */0
@@ -7794,7 +7802,7 @@ function cost_encode(v) {
               ],
               [
                 "contract-type",
-                v.contractType ? "online" : "bulk-sale"
+                v.contractType ? "online" : "bulksale"
               ],
               [
                 "product-name",
@@ -8118,7 +8126,7 @@ function use$21(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/settlement/cost?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/settlement/cost?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -8454,7 +8462,7 @@ function use$22(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/settlement?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/settlement?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -8576,7 +8584,7 @@ function use$23(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/user/deposit?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/user/deposit?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -8894,7 +8902,7 @@ function use$24(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/transaction?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/transaction?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -9139,7 +9147,7 @@ function use$25(queryParams) {
     revalidateIfStale: true,
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/transaction/summary?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/transaction/summary?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -9464,7 +9472,7 @@ function use$26(queryParams) {
     refreshInterval: 10000,
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/excel-export?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/excel-export?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -9492,1655 +9500,7 @@ var Downloads = {
   use: use$26
 };
 
-function marketType_encode(v) {
-  switch (v) {
-    case /* ONLINE */0 :
-        return "online";
-    case /* WHOLESALE */1 :
-        return "wholesale";
-    case /* OFFLINE */2 :
-        return "offline";
-    
-  }
-}
-
-function marketType_decode(v) {
-  var str = Js_json.classify(v);
-  if (typeof str === "number") {
-    return Spice.error(undefined, "Not a JSONString", v);
-  }
-  if (str.TAG !== /* JSONString */0) {
-    return Spice.error(undefined, "Not a JSONString", v);
-  }
-  var str$1 = str._0;
-  if ("online" === str$1) {
-    return {
-            TAG: /* Ok */0,
-            _0: /* ONLINE */0
-          };
-  } else if ("wholesale" === str$1) {
-    return {
-            TAG: /* Ok */0,
-            _0: /* WHOLESALE */1
-          };
-  } else if ("offline" === str$1) {
-    return {
-            TAG: /* Ok */0,
-            _0: /* OFFLINE */2
-          };
-  } else {
-    return Spice.error(undefined, "Not matched", v);
-  }
-}
-
-function shipment_encode(v) {
-  return Js_dict.fromArray([
-              [
-                "shipment-date",
-                Spice.stringToJson(v.date)
-              ],
-              [
-                "market-type",
-                marketType_encode(v.marketType)
-              ],
-              [
-                "item",
-                Spice.stringToJson(v.crop)
-              ],
-              [
-                "kind",
-                Spice.stringToJson(v.cultivar)
-              ],
-              [
-                "weight",
-                Spice.optionToJson(Spice.floatToJson, v.weight)
-              ],
-              [
-                "weight-unit",
-                Spice.optionToJson(weightUnit_encode, v.weightUnit)
-              ],
-              [
-                "package-type",
-                Spice.optionToJson(Spice.stringToJson, v.packageType)
-              ],
-              [
-                "grade",
-                Spice.optionToJson(Spice.stringToJson, v.grade)
-              ],
-              [
-                "total-quantity",
-                Spice.floatToJson(v.totalQuantity)
-              ],
-              [
-                "total-price",
-                Spice.floatToJson(v.totalPrice)
-              ],
-              [
-                "sku",
-                Spice.stringToJson(v.sku)
-              ]
-            ]);
-}
-
-function shipment_decode(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var date = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "shipment-date"), null));
-  if (date.TAG === /* Ok */0) {
-    var marketType = marketType_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "market-type"), null));
-    if (marketType.TAG === /* Ok */0) {
-      var crop = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "item"), null));
-      if (crop.TAG === /* Ok */0) {
-        var cultivar = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "kind"), null));
-        if (cultivar.TAG === /* Ok */0) {
-          var weight = Spice.optionFromJson(Spice.floatFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "weight"), null));
-          if (weight.TAG === /* Ok */0) {
-            var weightUnit = Spice.optionFromJson(weightUnit_decode, Belt_Option.getWithDefault(Js_dict.get(dict$1, "weight-unit"), null));
-            if (weightUnit.TAG === /* Ok */0) {
-              var packageType = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "package-type"), null));
-              if (packageType.TAG === /* Ok */0) {
-                var grade = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "grade"), null));
-                if (grade.TAG === /* Ok */0) {
-                  var totalQuantity = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "total-quantity"), null));
-                  if (totalQuantity.TAG === /* Ok */0) {
-                    var totalPrice = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "total-price"), null));
-                    if (totalPrice.TAG === /* Ok */0) {
-                      var sku = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "sku"), null));
-                      if (sku.TAG === /* Ok */0) {
-                        return {
-                                TAG: /* Ok */0,
-                                _0: {
-                                  date: date._0,
-                                  marketType: marketType._0,
-                                  crop: crop._0,
-                                  cultivar: cultivar._0,
-                                  weight: weight._0,
-                                  weightUnit: weightUnit._0,
-                                  packageType: packageType._0,
-                                  grade: grade._0,
-                                  totalQuantity: totalQuantity._0,
-                                  totalPrice: totalPrice._0,
-                                  sku: sku._0
-                                }
-                              };
-                      }
-                      var e = sku._0;
-                      return {
-                              TAG: /* Error */1,
-                              _0: {
-                                path: ".sku" + e.path,
-                                message: e.message,
-                                value: e.value
-                              }
-                            };
-                    }
-                    var e$1 = totalPrice._0;
-                    return {
-                            TAG: /* Error */1,
-                            _0: {
-                              path: ".total-price" + e$1.path,
-                              message: e$1.message,
-                              value: e$1.value
-                            }
-                          };
-                  }
-                  var e$2 = totalQuantity._0;
-                  return {
-                          TAG: /* Error */1,
-                          _0: {
-                            path: ".total-quantity" + e$2.path,
-                            message: e$2.message,
-                            value: e$2.value
-                          }
-                        };
-                }
-                var e$3 = grade._0;
-                return {
-                        TAG: /* Error */1,
-                        _0: {
-                          path: ".grade" + e$3.path,
-                          message: e$3.message,
-                          value: e$3.value
-                        }
-                      };
-              }
-              var e$4 = packageType._0;
-              return {
-                      TAG: /* Error */1,
-                      _0: {
-                        path: ".package-type" + e$4.path,
-                        message: e$4.message,
-                        value: e$4.value
-                      }
-                    };
-            }
-            var e$5 = weightUnit._0;
-            return {
-                    TAG: /* Error */1,
-                    _0: {
-                      path: ".weight-unit" + e$5.path,
-                      message: e$5.message,
-                      value: e$5.value
-                    }
-                  };
-          }
-          var e$6 = weight._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: ".weight" + e$6.path,
-                    message: e$6.message,
-                    value: e$6.value
-                  }
-                };
-        }
-        var e$7 = cultivar._0;
-        return {
-                TAG: /* Error */1,
-                _0: {
-                  path: ".kind" + e$7.path,
-                  message: e$7.message,
-                  value: e$7.value
-                }
-              };
-      }
-      var e$8 = crop._0;
-      return {
-              TAG: /* Error */1,
-              _0: {
-                path: ".item" + e$8.path,
-                message: e$8.message,
-                value: e$8.value
-              }
-            };
-    }
-    var e$9 = marketType._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".market-type" + e$9.path,
-              message: e$9.message,
-              value: e$9.value
-            }
-          };
-  }
-  var e$10 = date._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".shipment-date" + e$10.path,
-            message: e$10.message,
-            value: e$10.value
-          }
-        };
-}
-
-function shipments_encode(v) {
-  return Js_dict.fromArray([
-              [
-                "data",
-                Spice.arrayToJson(shipment_encode, v.data)
-              ],
-              [
-                "count",
-                Spice.intToJson(v.count)
-              ],
-              [
-                "offset",
-                Spice.intToJson(v.offset)
-              ],
-              [
-                "limit",
-                Spice.intToJson(v.limit)
-              ]
-            ]);
-}
-
-function shipments_decode(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var data = Spice.arrayFromJson(shipment_decode, Belt_Option.getWithDefault(Js_dict.get(dict$1, "data"), null));
-  if (data.TAG === /* Ok */0) {
-    var count = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "count"), null));
-    if (count.TAG === /* Ok */0) {
-      var offset = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "offset"), null));
-      if (offset.TAG === /* Ok */0) {
-        var limit = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "limit"), null));
-        if (limit.TAG === /* Ok */0) {
-          return {
-                  TAG: /* Ok */0,
-                  _0: {
-                    data: data._0,
-                    count: count._0,
-                    offset: offset._0,
-                    limit: limit._0
-                  }
-                };
-        }
-        var e = limit._0;
-        return {
-                TAG: /* Error */1,
-                _0: {
-                  path: ".limit" + e.path,
-                  message: e.message,
-                  value: e.value
-                }
-              };
-      }
-      var e$1 = offset._0;
-      return {
-              TAG: /* Error */1,
-              _0: {
-                path: ".offset" + e$1.path,
-                message: e$1.message,
-                value: e$1.value
-              }
-            };
-    }
-    var e$2 = count._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".count" + e$2.path,
-              message: e$2.message,
-              value: e$2.value
-            }
-          };
-  }
-  var e$3 = data._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".data" + e$3.path,
-            message: e$3.message,
-            value: e$3.value
-          }
-        };
-}
-
-function use$27(queryParams) {
-  var fetcherOptions = {
-    onErrorRetry: onErrorRetry
-  };
-  var match = Swr(Env.restApiUrl + "/shipment?" + queryParams, FetchHelper.fetcher, fetcherOptions);
-  var error = match.error;
-  var data = match.data;
-  if (error !== undefined) {
-    return {
-            TAG: /* Error */1,
-            _0: error
-          };
-  } else if (data !== undefined) {
-    return {
-            TAG: /* Loaded */0,
-            _0: Caml_option.valFromOption(data)
-          };
-  } else {
-    return /* Loading */0;
-  }
-}
-
-var Shipments = {
-  marketType_encode: marketType_encode,
-  marketType_decode: marketType_decode,
-  shipment_encode: shipment_encode,
-  shipment_decode: shipment_decode,
-  shipments_encode: shipments_encode,
-  shipments_decode: shipments_decode,
-  use: use$27
-};
-
 function response_encode$7(v) {
-  return Js_dict.fromArray([
-              [
-                "data",
-                Spice.floatToJson(v.price)
-              ],
-              [
-                "message",
-                Spice.stringToJson(v.message)
-              ]
-            ]);
-}
-
-function response_decode$7(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var price = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "data"), null));
-  if (price.TAG === /* Ok */0) {
-    var message = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "message"), null));
-    if (message.TAG === /* Ok */0) {
-      return {
-              TAG: /* Ok */0,
-              _0: {
-                price: price._0,
-                message: message._0
-              }
-            };
-    }
-    var e = message._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".message" + e.path,
-              message: e.message,
-              value: e.value
-            }
-          };
-  }
-  var e$1 = price._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".data" + e$1.path,
-            message: e$1.message,
-            value: e$1.value
-          }
-        };
-}
-
-function use$28(queryParam) {
-  var fetcherOptions = {
-    onErrorRetry: onErrorRetry
-  };
-  var match = Swr(Env.restApiUrl + "/shipment/amounts?" + queryParam, FetchHelper.fetcher, fetcherOptions);
-  var error = match.error;
-  var data = match.data;
-  if (error !== undefined) {
-    return {
-            TAG: /* Error */1,
-            _0: error
-          };
-  } else if (data !== undefined) {
-    return {
-            TAG: /* Loaded */0,
-            _0: Caml_option.valFromOption(data)
-          };
-  } else {
-    return /* Loading */0;
-  }
-}
-
-var ShipmentSummary = {
-  response_encode: response_encode$7,
-  response_decode: response_decode$7,
-  use: use$28
-};
-
-function response_encode$8(v) {
-  return Js_dict.fromArray([
-              [
-                "data",
-                Spice.floatToJson(v.price)
-              ],
-              [
-                "message",
-                Spice.stringToJson(v.message)
-              ]
-            ]);
-}
-
-function response_decode$8(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var price = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "data"), null));
-  if (price.TAG === /* Ok */0) {
-    var message = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "message"), null));
-    if (message.TAG === /* Ok */0) {
-      return {
-              TAG: /* Ok */0,
-              _0: {
-                price: price._0,
-                message: message._0
-              }
-            };
-    }
-    var e = message._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".message" + e.path,
-              message: e.message,
-              value: e.value
-            }
-          };
-  }
-  var e$1 = price._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".data" + e$1.path,
-            message: e$1.message,
-            value: e$1.value
-          }
-        };
-}
-
-function use$29(param) {
-  var fetcherOptions = {
-    onErrorRetry: onErrorRetry
-  };
-  var match = Swr(Env.restApiUrl + "/shipment/monthly-amounts?market-type=all", FetchHelper.fetcher, fetcherOptions);
-  var error = match.error;
-  var data = match.data;
-  if (error !== undefined) {
-    return {
-            TAG: /* Error */1,
-            _0: error
-          };
-  } else if (data !== undefined) {
-    return {
-            TAG: /* Loaded */0,
-            _0: Caml_option.valFromOption(data)
-          };
-  } else {
-    return /* Loading */0;
-  }
-}
-
-var ShipmentMontlyAmount = {
-  response_encode: response_encode$8,
-  response_decode: response_decode$8,
-  use: use$29
-};
-
-function offlineOrder_encode(v) {
-  return Js_dict.fromArray([
-              [
-                "id",
-                Spice.intToJson(v.id)
-              ],
-              [
-                "order-product-no",
-                Spice.stringToJson(v.orderProductNo)
-              ],
-              [
-                "sku",
-                Spice.stringToJson(v.sku)
-              ],
-              [
-                "created-at",
-                Spice.stringToJson(v.createdAt)
-              ],
-              [
-                "release-date",
-                Spice.optionToJson(Spice.stringToJson, v.releaseDate)
-              ],
-              [
-                "order-no",
-                Spice.stringToJson(v.orderNo)
-              ],
-              [
-                "order-quantity-complete",
-                Spice.optionToJson(Spice.floatToJson, v.confirmedOrderQuantity)
-              ],
-              [
-                "order-quantity",
-                Spice.floatToJson(v.orderQuantity)
-              ],
-              [
-                "buyer-sell-price",
-                Spice.floatToJson(v.price)
-              ],
-              [
-                "producer-name",
-                Spice.stringToJson(v.producerName)
-              ],
-              [
-                "producer-id",
-                Spice.intToJson(v.producerId)
-              ],
-              [
-                "buyer-name",
-                Spice.stringToJson(v.buyerName)
-              ],
-              [
-                "buyer-id",
-                Spice.intToJson(v.buyerId)
-              ],
-              [
-                "producer-product-cost",
-                Spice.floatToJson(v.cost)
-              ],
-              [
-                "item",
-                Spice.stringToJson(v.crop)
-              ],
-              [
-                "order-product-id",
-                Spice.stringToJson(v.orderProductId)
-              ],
-              [
-                "release-due-date",
-                Spice.stringToJson(v.releaseDueDate)
-              ],
-              [
-                "kind",
-                Spice.stringToJson(v.cultivar)
-              ],
-              [
-                "weight",
-                Spice.optionToJson(Spice.floatToJson, v.weight)
-              ],
-              [
-                "weight-unit",
-                weightUnit_encode(v.weightUnit)
-              ],
-              [
-                "package-type",
-                Spice.optionToJson(Spice.stringToJson, v.packageType)
-              ],
-              [
-                "grade",
-                Spice.optionToJson(Spice.stringToJson, v.grade)
-              ]
-            ]);
-}
-
-function offlineOrder_decode(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var id = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "id"), null));
-  if (id.TAG === /* Ok */0) {
-    var orderProductNo = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "order-product-no"), null));
-    if (orderProductNo.TAG === /* Ok */0) {
-      var sku = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "sku"), null));
-      if (sku.TAG === /* Ok */0) {
-        var createdAt = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "created-at"), null));
-        if (createdAt.TAG === /* Ok */0) {
-          var releaseDate = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "release-date"), null));
-          if (releaseDate.TAG === /* Ok */0) {
-            var orderNo = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "order-no"), null));
-            if (orderNo.TAG === /* Ok */0) {
-              var confirmedOrderQuantity = Spice.optionFromJson(Spice.floatFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "order-quantity-complete"), null));
-              if (confirmedOrderQuantity.TAG === /* Ok */0) {
-                var orderQuantity = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "order-quantity"), null));
-                if (orderQuantity.TAG === /* Ok */0) {
-                  var price = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "buyer-sell-price"), null));
-                  if (price.TAG === /* Ok */0) {
-                    var producerName = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "producer-name"), null));
-                    if (producerName.TAG === /* Ok */0) {
-                      var producerId = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "producer-id"), null));
-                      if (producerId.TAG === /* Ok */0) {
-                        var buyerName = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "buyer-name"), null));
-                        if (buyerName.TAG === /* Ok */0) {
-                          var buyerId = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "buyer-id"), null));
-                          if (buyerId.TAG === /* Ok */0) {
-                            var cost = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "producer-product-cost"), null));
-                            if (cost.TAG === /* Ok */0) {
-                              var crop = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "item"), null));
-                              if (crop.TAG === /* Ok */0) {
-                                var orderProductId = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "order-product-id"), null));
-                                if (orderProductId.TAG === /* Ok */0) {
-                                  var releaseDueDate = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "release-due-date"), null));
-                                  if (releaseDueDate.TAG === /* Ok */0) {
-                                    var cultivar = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "kind"), null));
-                                    if (cultivar.TAG === /* Ok */0) {
-                                      var weight = Spice.optionFromJson(Spice.floatFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "weight"), null));
-                                      if (weight.TAG === /* Ok */0) {
-                                        var weightUnit = weightUnit_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "weight-unit"), null));
-                                        if (weightUnit.TAG === /* Ok */0) {
-                                          var packageType = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "package-type"), null));
-                                          if (packageType.TAG === /* Ok */0) {
-                                            var grade = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "grade"), null));
-                                            if (grade.TAG === /* Ok */0) {
-                                              return {
-                                                      TAG: /* Ok */0,
-                                                      _0: {
-                                                        id: id._0,
-                                                        orderProductNo: orderProductNo._0,
-                                                        sku: sku._0,
-                                                        createdAt: createdAt._0,
-                                                        releaseDate: releaseDate._0,
-                                                        orderNo: orderNo._0,
-                                                        confirmedOrderQuantity: confirmedOrderQuantity._0,
-                                                        orderQuantity: orderQuantity._0,
-                                                        price: price._0,
-                                                        producerName: producerName._0,
-                                                        producerId: producerId._0,
-                                                        buyerName: buyerName._0,
-                                                        buyerId: buyerId._0,
-                                                        cost: cost._0,
-                                                        crop: crop._0,
-                                                        orderProductId: orderProductId._0,
-                                                        releaseDueDate: releaseDueDate._0,
-                                                        cultivar: cultivar._0,
-                                                        weight: weight._0,
-                                                        weightUnit: weightUnit._0,
-                                                        packageType: packageType._0,
-                                                        grade: grade._0
-                                                      }
-                                                    };
-                                            }
-                                            var e = grade._0;
-                                            return {
-                                                    TAG: /* Error */1,
-                                                    _0: {
-                                                      path: ".grade" + e.path,
-                                                      message: e.message,
-                                                      value: e.value
-                                                    }
-                                                  };
-                                          }
-                                          var e$1 = packageType._0;
-                                          return {
-                                                  TAG: /* Error */1,
-                                                  _0: {
-                                                    path: ".package-type" + e$1.path,
-                                                    message: e$1.message,
-                                                    value: e$1.value
-                                                  }
-                                                };
-                                        }
-                                        var e$2 = weightUnit._0;
-                                        return {
-                                                TAG: /* Error */1,
-                                                _0: {
-                                                  path: ".weight-unit" + e$2.path,
-                                                  message: e$2.message,
-                                                  value: e$2.value
-                                                }
-                                              };
-                                      }
-                                      var e$3 = weight._0;
-                                      return {
-                                              TAG: /* Error */1,
-                                              _0: {
-                                                path: ".weight" + e$3.path,
-                                                message: e$3.message,
-                                                value: e$3.value
-                                              }
-                                            };
-                                    }
-                                    var e$4 = cultivar._0;
-                                    return {
-                                            TAG: /* Error */1,
-                                            _0: {
-                                              path: ".kind" + e$4.path,
-                                              message: e$4.message,
-                                              value: e$4.value
-                                            }
-                                          };
-                                  }
-                                  var e$5 = releaseDueDate._0;
-                                  return {
-                                          TAG: /* Error */1,
-                                          _0: {
-                                            path: ".release-due-date" + e$5.path,
-                                            message: e$5.message,
-                                            value: e$5.value
-                                          }
-                                        };
-                                }
-                                var e$6 = orderProductId._0;
-                                return {
-                                        TAG: /* Error */1,
-                                        _0: {
-                                          path: ".order-product-id" + e$6.path,
-                                          message: e$6.message,
-                                          value: e$6.value
-                                        }
-                                      };
-                              }
-                              var e$7 = crop._0;
-                              return {
-                                      TAG: /* Error */1,
-                                      _0: {
-                                        path: ".item" + e$7.path,
-                                        message: e$7.message,
-                                        value: e$7.value
-                                      }
-                                    };
-                            }
-                            var e$8 = cost._0;
-                            return {
-                                    TAG: /* Error */1,
-                                    _0: {
-                                      path: ".producer-product-cost" + e$8.path,
-                                      message: e$8.message,
-                                      value: e$8.value
-                                    }
-                                  };
-                          }
-                          var e$9 = buyerId._0;
-                          return {
-                                  TAG: /* Error */1,
-                                  _0: {
-                                    path: ".buyer-id" + e$9.path,
-                                    message: e$9.message,
-                                    value: e$9.value
-                                  }
-                                };
-                        }
-                        var e$10 = buyerName._0;
-                        return {
-                                TAG: /* Error */1,
-                                _0: {
-                                  path: ".buyer-name" + e$10.path,
-                                  message: e$10.message,
-                                  value: e$10.value
-                                }
-                              };
-                      }
-                      var e$11 = producerId._0;
-                      return {
-                              TAG: /* Error */1,
-                              _0: {
-                                path: ".producer-id" + e$11.path,
-                                message: e$11.message,
-                                value: e$11.value
-                              }
-                            };
-                    }
-                    var e$12 = producerName._0;
-                    return {
-                            TAG: /* Error */1,
-                            _0: {
-                              path: ".producer-name" + e$12.path,
-                              message: e$12.message,
-                              value: e$12.value
-                            }
-                          };
-                  }
-                  var e$13 = price._0;
-                  return {
-                          TAG: /* Error */1,
-                          _0: {
-                            path: ".buyer-sell-price" + e$13.path,
-                            message: e$13.message,
-                            value: e$13.value
-                          }
-                        };
-                }
-                var e$14 = orderQuantity._0;
-                return {
-                        TAG: /* Error */1,
-                        _0: {
-                          path: ".order-quantity" + e$14.path,
-                          message: e$14.message,
-                          value: e$14.value
-                        }
-                      };
-              }
-              var e$15 = confirmedOrderQuantity._0;
-              return {
-                      TAG: /* Error */1,
-                      _0: {
-                        path: ".order-quantity-complete" + e$15.path,
-                        message: e$15.message,
-                        value: e$15.value
-                      }
-                    };
-            }
-            var e$16 = orderNo._0;
-            return {
-                    TAG: /* Error */1,
-                    _0: {
-                      path: ".order-no" + e$16.path,
-                      message: e$16.message,
-                      value: e$16.value
-                    }
-                  };
-          }
-          var e$17 = releaseDate._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: ".release-date" + e$17.path,
-                    message: e$17.message,
-                    value: e$17.value
-                  }
-                };
-        }
-        var e$18 = createdAt._0;
-        return {
-                TAG: /* Error */1,
-                _0: {
-                  path: ".created-at" + e$18.path,
-                  message: e$18.message,
-                  value: e$18.value
-                }
-              };
-      }
-      var e$19 = sku._0;
-      return {
-              TAG: /* Error */1,
-              _0: {
-                path: ".sku" + e$19.path,
-                message: e$19.message,
-                value: e$19.value
-              }
-            };
-    }
-    var e$20 = orderProductNo._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".order-product-no" + e$20.path,
-              message: e$20.message,
-              value: e$20.value
-            }
-          };
-  }
-  var e$21 = id._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".id" + e$21.path,
-            message: e$21.message,
-            value: e$21.value
-          }
-        };
-}
-
-function offlineOrders_encode(v) {
-  return Js_dict.fromArray([
-              [
-                "data",
-                Spice.arrayToJson(offlineOrder_encode, v.data)
-              ],
-              [
-                "count",
-                Spice.intToJson(v.count)
-              ],
-              [
-                "offset",
-                Spice.intToJson(v.offset)
-              ],
-              [
-                "limit",
-                Spice.intToJson(v.limit)
-              ]
-            ]);
-}
-
-function offlineOrders_decode(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var data = Spice.arrayFromJson(offlineOrder_decode, Belt_Option.getWithDefault(Js_dict.get(dict$1, "data"), null));
-  if (data.TAG === /* Ok */0) {
-    var count = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "count"), null));
-    if (count.TAG === /* Ok */0) {
-      var offset = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "offset"), null));
-      if (offset.TAG === /* Ok */0) {
-        var limit = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "limit"), null));
-        if (limit.TAG === /* Ok */0) {
-          return {
-                  TAG: /* Ok */0,
-                  _0: {
-                    data: data._0,
-                    count: count._0,
-                    offset: offset._0,
-                    limit: limit._0
-                  }
-                };
-        }
-        var e = limit._0;
-        return {
-                TAG: /* Error */1,
-                _0: {
-                  path: ".limit" + e.path,
-                  message: e.message,
-                  value: e.value
-                }
-              };
-      }
-      var e$1 = offset._0;
-      return {
-              TAG: /* Error */1,
-              _0: {
-                path: ".offset" + e$1.path,
-                message: e$1.message,
-                value: e$1.value
-              }
-            };
-    }
-    var e$2 = count._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".count" + e$2.path,
-              message: e$2.message,
-              value: e$2.value
-            }
-          };
-  }
-  var e$3 = data._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".data" + e$3.path,
-            message: e$3.message,
-            value: e$3.value
-          }
-        };
-}
-
-function use$30(queryParams) {
-  var fetcherOptions = {
-    onErrorRetry: onErrorRetry
-  };
-  var match = Swr(Env.restApiUrl + "/offline-order?" + queryParams, FetchHelper.fetcher, fetcherOptions);
-  var error = match.error;
-  var data = match.data;
-  if (error !== undefined) {
-    return {
-            TAG: /* Error */1,
-            _0: error
-          };
-  } else if (data !== undefined) {
-    return {
-            TAG: /* Loaded */0,
-            _0: Caml_option.valFromOption(data)
-          };
-  } else {
-    return /* Loading */0;
-  }
-}
-
-var OfflineOrders = {
-  offlineOrder_encode: offlineOrder_encode,
-  offlineOrder_decode: offlineOrder_decode,
-  offlineOrders_encode: offlineOrders_encode,
-  offlineOrders_decode: offlineOrders_decode,
-  use: use$30
-};
-
-function errorCode_encode$1(v) {
-  switch (v.TAG | 0) {
-    case /* Sku */0 :
-        return [
-                "Sku",
-                Spice.stringToJson(v._0)
-              ];
-    case /* EncryptedDocument */1 :
-        return [
-                "EncryptedDocument",
-                Spice.stringToJson(v._0)
-              ];
-    case /* Role */2 :
-        return [
-                "Role",
-                Spice.stringToJson(v._0)
-              ];
-    case /* Columns */3 :
-        return [
-                "Columns",
-                Spice.stringToJson(v._0)
-              ];
-    case /* BuyerId */4 :
-        return [
-                "BuyerId",
-                Spice.stringToJson(v._0)
-              ];
-    case /* ReleaseDueDate */5 :
-        return [
-                "ReleaseDueDate",
-                Spice.stringToJson(v._0)
-              ];
-    case /* ProductDetail */6 :
-        return [
-                "ProductDetail",
-                Spice.stringToJson(v._0)
-              ];
-    case /* Etc */7 :
-        return [
-                "Etc",
-                Spice.stringToJson(v._0)
-              ];
-    
-  }
-}
-
-function errorCode_decode$1(v) {
-  var json_arr = Js_json.classify(v);
-  if (typeof json_arr === "number") {
-    return Spice.error(undefined, "Not a variant", v);
-  }
-  if (json_arr.TAG !== /* JSONArray */3) {
-    return Spice.error(undefined, "Not a variant", v);
-  }
-  var json_arr$1 = json_arr._0;
-  if (json_arr$1.length === 0) {
-    return Spice.error(undefined, "Expected variant, found empty array", v);
-  }
-  var tagged = json_arr$1.map(Js_json.classify);
-  var match = Belt_Array.getExn(tagged, 0);
-  if (typeof match !== "number" && match.TAG === /* JSONString */0) {
-    switch (match._0) {
-      case "BuyerId" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* BuyerId */4,
-                      _0: v0._0
-                    }
-                  };
-          }
-          var e = v0._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e.path,
-                    message: e.message,
-                    value: e.value
-                  }
-                };
-      case "Columns" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0$1 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0$1.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* Columns */3,
-                      _0: v0$1._0
-                    }
-                  };
-          }
-          var e$1 = v0$1._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e$1.path,
-                    message: e$1.message,
-                    value: e$1.value
-                  }
-                };
-      case "EncryptedDocument" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0$2 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0$2.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* EncryptedDocument */1,
-                      _0: v0$2._0
-                    }
-                  };
-          }
-          var e$2 = v0$2._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e$2.path,
-                    message: e$2.message,
-                    value: e$2.value
-                  }
-                };
-      case "Etc" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0$3 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0$3.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* Etc */7,
-                      _0: v0$3._0
-                    }
-                  };
-          }
-          var e$3 = v0$3._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e$3.path,
-                    message: e$3.message,
-                    value: e$3.value
-                  }
-                };
-      case "ProductDetail" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0$4 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0$4.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* ProductDetail */6,
-                      _0: v0$4._0
-                    }
-                  };
-          }
-          var e$4 = v0$4._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e$4.path,
-                    message: e$4.message,
-                    value: e$4.value
-                  }
-                };
-      case "ReleaseDueDate" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0$5 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0$5.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* ReleaseDueDate */5,
-                      _0: v0$5._0
-                    }
-                  };
-          }
-          var e$5 = v0$5._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e$5.path,
-                    message: e$5.message,
-                    value: e$5.value
-                  }
-                };
-      case "Role" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0$6 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0$6.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* Role */2,
-                      _0: v0$6._0
-                    }
-                  };
-          }
-          var e$6 = v0$6._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e$6.path,
-                    message: e$6.message,
-                    value: e$6.value
-                  }
-                };
-      case "Sku" :
-          if (tagged.length !== 2) {
-            return Spice.error(undefined, "Invalid number of arguments to variant constructor", v);
-          }
-          var v0$7 = Spice.stringFromJson(Belt_Array.getExn(json_arr$1, 1));
-          if (v0$7.TAG === /* Ok */0) {
-            return {
-                    TAG: /* Ok */0,
-                    _0: {
-                      TAG: /* Sku */0,
-                      _0: v0$7._0
-                    }
-                  };
-          }
-          var e$7 = v0$7._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: "[0]" + e$7.path,
-                    message: e$7.message,
-                    value: e$7.value
-                  }
-                };
-      default:
-        
-    }
-  }
-  return Spice.error(undefined, "Invalid variant constructor", Belt_Array.getExn(json_arr$1, 0));
-}
-
-function encoderErrorCode$1(v) {
-  return v._0;
-}
-
-function decoderErrorCode$1(json) {
-  var str = Js_json.classify(json);
-  if (typeof str === "number") {
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: "",
-              message: "Expected JSONString",
-              value: json
-            }
-          };
-  }
-  if (str.TAG !== /* JSONString */0) {
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: "",
-              message: "Expected JSONString",
-              value: json
-            }
-          };
-  }
-  switch (str._0) {
-    case "buyer-id" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* BuyerId */4,
-                  _0: "바이어id 유효성검증에 실패하였습니다."
-                }
-              };
-    case "columns" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* Columns */3,
-                  _0: "엑셀데이터 유효성검증에 실패하였습니다."
-                }
-              };
-    case "encrypted-document" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* EncryptedDocument */1,
-                  _0: "엑셀 파일에 암호가 걸려 있습니다."
-                }
-              };
-    case "etc" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* Etc */7,
-                  _0: "알 수 없는 오류가 발생하였습니다."
-                }
-              };
-    case "product-detail" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* ProductDetail */6,
-                  _0: "등록할 상품 상세정보를 기입해주세요."
-                }
-              };
-    case "release-due-date" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* ReleaseDueDate */5,
-                  _0: "출고예정일 유효성검증에 실패하였습니다."
-                }
-              };
-    case "role" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* Role */2,
-                  _0: "유저 role 유효성검증이 실패하였습다.(admin이 아닌 유저)"
-                }
-              };
-    case "sku" :
-        return {
-                TAG: /* Ok */0,
-                _0: {
-                  TAG: /* Sku */0,
-                  _0: "옵션코드(C열)에 문제를 발견하였습니다."
-                }
-              };
-    default:
-      return {
-              TAG: /* Error */1,
-              _0: {
-                path: "",
-                message: "Expected JSONString",
-                value: json
-              }
-            };
-  }
-}
-
-var codecErrorCode$1 = [
-  encoderErrorCode$1,
-  decoderErrorCode$1
-];
-
-function data_encode$4(v) {
-  return Js_dict.fromArray([
-              [
-                "created-at",
-                Spice.stringToJson(v.createdAt)
-              ],
-              [
-                "upload-no",
-                Spice.stringToJson(v.uploadNo)
-              ],
-              [
-                "status",
-                uploadStatus_encode(v.status)
-              ],
-              [
-                "file-name",
-                Spice.stringToJson(v.filename)
-              ],
-              [
-                "error-code",
-                Spice.optionToJson(encoderErrorCode$1, v.errorCode)
-              ],
-              [
-                "error-msg",
-                Spice.optionToJson(Spice.stringToJson, v.errorMsg)
-              ],
-              [
-                "fail-data-json",
-                Spice.optionToJson((function (param) {
-                        return Spice.arrayToJson(Spice.intToJson, param);
-                      }), v.fileDataRows)
-              ]
-            ]);
-}
-
-function data_decode$4(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var createdAt = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "created-at"), null));
-  if (createdAt.TAG === /* Ok */0) {
-    var uploadNo = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "upload-no"), null));
-    if (uploadNo.TAG === /* Ok */0) {
-      var status = uploadStatus_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "status"), null));
-      if (status.TAG === /* Ok */0) {
-        var filename = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "file-name"), null));
-        if (filename.TAG === /* Ok */0) {
-          var errorCode = Spice.optionFromJson(decoderErrorCode$1, Belt_Option.getWithDefault(Js_dict.get(dict$1, "error-code"), null));
-          if (errorCode.TAG === /* Ok */0) {
-            var errorMsg = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "error-msg"), null));
-            if (errorMsg.TAG === /* Ok */0) {
-              var fileDataRows = Spice.optionFromJson((function (param) {
-                      return Spice.arrayFromJson(Spice.intFromJson, param);
-                    }), Belt_Option.getWithDefault(Js_dict.get(dict$1, "fail-data-json"), null));
-              if (fileDataRows.TAG === /* Ok */0) {
-                return {
-                        TAG: /* Ok */0,
-                        _0: {
-                          createdAt: createdAt._0,
-                          uploadNo: uploadNo._0,
-                          status: status._0,
-                          filename: filename._0,
-                          errorCode: errorCode._0,
-                          errorMsg: errorMsg._0,
-                          fileDataRows: fileDataRows._0
-                        }
-                      };
-              }
-              var e = fileDataRows._0;
-              return {
-                      TAG: /* Error */1,
-                      _0: {
-                        path: ".fail-data-json" + e.path,
-                        message: e.message,
-                        value: e.value
-                      }
-                    };
-            }
-            var e$1 = errorMsg._0;
-            return {
-                    TAG: /* Error */1,
-                    _0: {
-                      path: ".error-msg" + e$1.path,
-                      message: e$1.message,
-                      value: e$1.value
-                    }
-                  };
-          }
-          var e$2 = errorCode._0;
-          return {
-                  TAG: /* Error */1,
-                  _0: {
-                    path: ".error-code" + e$2.path,
-                    message: e$2.message,
-                    value: e$2.value
-                  }
-                };
-        }
-        var e$3 = filename._0;
-        return {
-                TAG: /* Error */1,
-                _0: {
-                  path: ".file-name" + e$3.path,
-                  message: e$3.message,
-                  value: e$3.value
-                }
-              };
-      }
-      var e$4 = status._0;
-      return {
-              TAG: /* Error */1,
-              _0: {
-                path: ".status" + e$4.path,
-                message: e$4.message,
-                value: e$4.value
-              }
-            };
-    }
-    var e$5 = uploadNo._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".upload-no" + e$5.path,
-              message: e$5.message,
-              value: e$5.value
-            }
-          };
-  }
-  var e$6 = createdAt._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".created-at" + e$6.path,
-            message: e$6.message,
-            value: e$6.value
-          }
-        };
-}
-
-function response_encode$9(v) {
-  return Js_dict.fromArray([
-              [
-                "message",
-                Spice.stringToJson(v.message)
-              ],
-              [
-                "data",
-                Spice.arrayToJson(data_encode$4, v.data)
-              ]
-            ]);
-}
-
-function response_decode$9(v) {
-  var dict = Js_json.classify(v);
-  if (typeof dict === "number") {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  if (dict.TAG !== /* JSONObject */2) {
-    return Spice.error(undefined, "Not an object", v);
-  }
-  var dict$1 = dict._0;
-  var message = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "message"), null));
-  if (message.TAG === /* Ok */0) {
-    var data = Spice.arrayFromJson(data_decode$4, Belt_Option.getWithDefault(Js_dict.get(dict$1, "data"), null));
-    if (data.TAG === /* Ok */0) {
-      return {
-              TAG: /* Ok */0,
-              _0: {
-                message: message._0,
-                data: data._0
-              }
-            };
-    }
-    var e = data._0;
-    return {
-            TAG: /* Error */1,
-            _0: {
-              path: ".data" + e.path,
-              message: e.message,
-              value: e.value
-            }
-          };
-  }
-  var e$1 = message._0;
-  return {
-          TAG: /* Error */1,
-          _0: {
-            path: ".message" + e$1.path,
-            message: e$1.message,
-            value: e$1.value
-          }
-        };
-}
-
-function use$31(param) {
-  var fetcherOptions = {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshInterval: 3000,
-    onErrorRetry: onErrorRetry
-  };
-  var match = Swr(Env.restApiUrl + "/offline-order/recent-uploads", FetchHelper.fetcher, fetcherOptions);
-  var error = match.error;
-  var data = match.data;
-  if (error !== undefined) {
-    return {
-            TAG: /* Error */1,
-            _0: error
-          };
-  } else if (data !== undefined) {
-    return {
-            TAG: /* Loaded */0,
-            _0: Caml_option.valFromOption(data)
-          };
-  } else {
-    return /* Loading */0;
-  }
-}
-
-var OfflineUploadStatus = {
-  errorCode_encode: errorCode_encode$1,
-  errorCode_decode: errorCode_decode$1,
-  encoderErrorCode: encoderErrorCode$1,
-  decoderErrorCode: decoderErrorCode$1,
-  codecErrorCode: codecErrorCode$1,
-  data_encode: data_encode$4,
-  data_decode: data_decode$4,
-  response_encode: response_encode$9,
-  response_decode: response_decode$9,
-  use: use$31
-};
-
-function response_encode$10(v) {
   return Js_dict.fromArray([
               [
                 "message",
@@ -11153,7 +9513,7 @@ function response_encode$10(v) {
             ]);
 }
 
-function response_decode$10(v) {
+function response_decode$7(v) {
   var dict = Js_json.classify(v);
   if (typeof dict === "number") {
     return Spice.error(undefined, "Not an object", v);
@@ -11196,8 +9556,8 @@ function response_decode$10(v) {
 }
 
 var AdminS3PresignedUrl = {
-  response_encode: response_encode$10,
-  response_decode: response_decode$10
+  response_encode: response_encode$7,
+  response_decode: response_decode$7
 };
 
 function category_encode(v) {
@@ -11289,15 +9649,15 @@ function category_decode(v) {
         };
 }
 
-function data_encode$5(v) {
+function data_encode$4(v) {
   return Spice.arrayToJson(category_encode, v);
 }
 
-function data_decode$5(v) {
+function data_decode$4(v) {
   return Spice.arrayFromJson(category_decode, v);
 }
 
-function response_encode$11(v) {
+function response_encode$8(v) {
   return Js_dict.fromArray([
               [
                 "data",
@@ -11310,7 +9670,7 @@ function response_encode$11(v) {
             ]);
 }
 
-function response_decode$11(v) {
+function response_decode$8(v) {
   var dict = Js_json.classify(v);
   if (typeof dict === "number") {
     return Spice.error(undefined, "Not an object", v);
@@ -11355,10 +9715,10 @@ function response_decode$11(v) {
 var CropCategory = {
   category_encode: category_encode,
   category_decode: category_decode,
-  data_encode: data_encode$5,
-  data_decode: data_decode$5,
-  response_encode: response_encode$11,
-  response_decode: response_decode$11
+  data_encode: data_encode$4,
+  data_decode: data_decode$4,
+  response_encode: response_encode$8,
+  response_decode: response_decode$8
 };
 
 function order_encode$5(v) {
@@ -11815,7 +10175,7 @@ function wholesale_decode(v) {
         };
 }
 
-function response_encode$12(v) {
+function response_encode$9(v) {
   return Js_dict.fromArray([
               [
                 "data",
@@ -11828,7 +10188,7 @@ function response_encode$12(v) {
             ]);
 }
 
-function response_decode$12(v) {
+function response_decode$9(v) {
   var dict = Js_json.classify(v);
   if (typeof dict === "number") {
     return Spice.error(undefined, "Not an object", v);
@@ -11870,11 +10230,11 @@ function response_decode$12(v) {
         };
 }
 
-function use$32(queryParams) {
+function use$27(queryParams) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/wholesale-market-order?" + queryParams, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/wholesale-market-order?" + queryParams + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -11899,12 +10259,12 @@ var WholeSale = {
   bulksale_decode: bulksale_decode,
   wholesale_encode: wholesale_encode,
   wholesale_decode: wholesale_decode,
-  response_encode: response_encode$12,
-  response_decode: response_decode$12,
-  use: use$32
+  response_encode: response_encode$9,
+  response_decode: response_decode$9,
+  use: use$27
 };
 
-function response_encode$13(v) {
+function response_encode$10(v) {
   return Js_dict.fromArray([
               [
                 "url",
@@ -11917,7 +10277,7 @@ function response_encode$13(v) {
             ]);
 }
 
-function response_decode$13(v) {
+function response_decode$10(v) {
   var dict = Js_json.classify(v);
   if (typeof dict === "number") {
     return Spice.error(undefined, "Not an object", v);
@@ -11959,11 +10319,11 @@ function response_decode$13(v) {
         };
 }
 
-function use$33(path) {
+function use$28(path) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
-  var match = Swr(Env.restApiUrl + "/farmmorning-bridge/api/bulk-sale/product-sale-ledger/issue-s3-get-url?path=" + path, FetchHelper.fetcher, fetcherOptions);
+  var match = Swr("" + Env.restApiUrl + "/farmmorning-bridge/api/bulk-sale/product-sale-ledger/issue-s3-get-url?path=" + path + "", FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
   var data = match.data;
   if (error !== undefined) {
@@ -11982,9 +10342,9 @@ function use$33(path) {
 }
 
 var BulkSaleLedger = {
-  response_encode: response_encode$13,
-  response_decode: response_decode$13,
-  use: use$33
+  response_encode: response_encode$10,
+  response_decode: response_decode$10,
+  use: use$28
 };
 
 function buyerType_encode(v) {
@@ -12007,7 +10367,7 @@ function buyerType_decode(v) {
   if (json_arr$1.length === 0) {
     return Spice.error(undefined, "Expected variant, found empty array", v);
   }
-  var tagged = json_arr$1.map(Js_json.classify);
+  var tagged = Js_array.map(Js_json.classify, json_arr$1);
   var match = Belt_Array.getExn(tagged, 0);
   if (typeof match !== "number" && match.TAG === /* JSONString */0) {
     switch (match._0) {
@@ -12036,7 +10396,7 @@ function buyerType_decode(v) {
   return Spice.error(undefined, "Invalid variant constructor", Belt_Array.getExn(json_arr$1, 0));
 }
 
-function response_encode$14(v) {
+function response_encode$11(v) {
   return Js_dict.fromArray([
               [
                 "id",
@@ -12057,7 +10417,7 @@ function response_encode$14(v) {
             ]);
 }
 
-function response_decode$14(v) {
+function response_decode$11(v) {
   var dict = Js_json.classify(v);
   if (typeof dict === "number") {
     return Spice.error(undefined, "Not an object", v);
@@ -12125,13 +10485,13 @@ function response_decode$14(v) {
         };
 }
 
-function use$34(userId) {
+function use$29(userId) {
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
   };
   var match = Swr((function (param) {
           return Belt_Option.map(userId, (function (id) {
-                        return Env.afterPayApiUrl + "/buyers/" + id.toString() + "/";
+                        return "" + Env.afterPayApiUrl + "/buyers/" + id.toString() + "/";
                       }));
         }), FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
@@ -12154,9 +10514,9 @@ function use$34(userId) {
 var AfterPayBuyer = {
   buyerType_encode: buyerType_encode,
   buyerType_decode: buyerType_decode,
-  response_encode: response_encode$14,
-  response_decode: response_decode$14,
-  use: use$34
+  response_encode: response_encode$11,
+  response_decode: response_decode$11,
+  use: use$29
 };
 
 function buyerType_encode$1(v) {
@@ -12297,7 +10657,7 @@ function credit_decode(v) {
         };
 }
 
-function response_encode$15(v) {
+function response_encode$12(v) {
   return Js_dict.fromArray([
               [
                 "id",
@@ -12322,7 +10682,7 @@ function response_encode$15(v) {
             ]);
 }
 
-function response_decode$15(v) {
+function response_decode$12(v) {
   var dict = Js_json.classify(v);
   if (typeof dict === "number") {
     return Spice.error(undefined, "Not an object", v);
@@ -12407,11 +10767,11 @@ function useGetUrl(param) {
   var user = use$3(undefined);
   var userId = typeof user === "number" ? undefined : user._0.id;
   return Belt_Option.map(userId, (function (id) {
-                return Env.afterPayApiUrl + "/buyers/" + id.toString() + "/credit";
+                return "" + Env.afterPayApiUrl + "/buyers/" + id.toString() + "/credit";
               }));
 }
 
-function use$35(param) {
+function use$30(param) {
   var url = useGetUrl(undefined);
   var fetcherOptions = {
     onErrorRetry: onErrorRetry
@@ -12435,7 +10795,7 @@ function use$35(param) {
     return /* Loading */0;
   }
   var data$p = Caml_option.valFromOption(data);
-  var response = response_decode$15(data$p);
+  var response = response_decode$12(data$p);
   if (response.TAG === /* Ok */0) {
     return {
             TAG: /* Loaded */0,
@@ -12448,8 +10808,7 @@ function use$35(param) {
           TAG: /* Error */1,
           _0: {
             status: 500,
-            info: "decode failed",
-            message: undefined
+            info: "decode failed"
           }
         };
 }
@@ -12459,10 +10818,10 @@ var AfterPayCredit = {
   buyerType_decode: buyerType_decode$1,
   credit_encode: credit_encode,
   credit_decode: credit_decode,
-  response_encode: response_encode$15,
-  response_decode: response_decode$15,
+  response_encode: response_encode$12,
+  response_decode: response_decode$12,
   useGetUrl: useGetUrl,
-  use: use$35
+  use: use$30
 };
 
 function buyerType_encode$2(v) {
@@ -12532,7 +10891,7 @@ function agreement_decode(v) {
         };
 }
 
-function response_encode$16(v) {
+function response_encode$13(v) {
   return Js_dict.fromArray([
               [
                 "id",
@@ -12557,7 +10916,7 @@ function response_encode$16(v) {
             ]);
 }
 
-function response_decode$16(v) {
+function response_decode$13(v) {
   var dict = Js_json.classify(v);
   if (typeof dict === "number") {
     return Spice.error(undefined, "Not an object", v);
@@ -12638,7 +10997,7 @@ function response_decode$16(v) {
         };
 }
 
-function use$36(param) {
+function use$31(param) {
   var user = use$3(undefined);
   var userId = typeof user === "number" ? undefined : user._0.id;
   var fetcherOptions = {
@@ -12646,7 +11005,7 @@ function use$36(param) {
   };
   var match = Swr((function (param) {
           return Belt_Option.map(userId, (function (id) {
-                        return Env.afterPayApiUrl + "/buyers/" + id.toString() + "/terms";
+                        return "" + Env.afterPayApiUrl + "/buyers/" + id.toString() + "/terms";
                       }));
         }), FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
@@ -12665,7 +11024,7 @@ function use$36(param) {
     return /* Loading */0;
   }
   var data$p = Caml_option.valFromOption(data);
-  var response = response_decode$16(data$p);
+  var response = response_decode$13(data$p);
   if (response.TAG === /* Ok */0) {
     return {
             TAG: /* Loaded */0,
@@ -12678,8 +11037,7 @@ function use$36(param) {
           TAG: /* Error */1,
           _0: {
             status: 500,
-            info: "decode failed",
-            message: undefined
+            info: "decode failed"
           }
         };
 }
@@ -12689,9 +11047,9 @@ var AfterPayAgreement = {
   buyerType_decode: buyerType_decode$2,
   agreement_encode: agreement_encode,
   agreement_decode: agreement_decode,
-  response_encode: response_encode$16,
-  response_decode: response_decode$16,
-  use: use$36
+  response_encode: response_encode$13,
+  response_decode: response_decode$13,
+  use: use$31
 };
 
 function state_encode(v) {
@@ -13011,7 +11369,7 @@ function list_decode(v) {
         };
 }
 
-function use$37(page) {
+function use$32(page) {
   var user = use$3(undefined);
   var userId = typeof user === "number" ? undefined : user._0.id;
   var fetcherOptions = {
@@ -13019,7 +11377,7 @@ function use$37(page) {
   };
   var match = Swr((function (param) {
           return Belt_Option.map(userId, (function (id) {
-                        return Env.afterPayApiUrl + "/orders?buyer_id=" + String(id) + "&page=" + String(page) + "&size=10";
+                        return "" + Env.afterPayApiUrl + "/orders?buyer_id=" + String(id) + "&page=" + String(page) + "&size=10";
                       }));
         }), FetchHelper.fetcher, fetcherOptions);
   var error = match.error;
@@ -13047,8 +11405,7 @@ function use$37(page) {
           TAG: /* Error */1,
           _0: {
             status: 500,
-            info: "decode failed",
-            message: undefined
+            info: "decode failed"
           }
         };
 }
@@ -13061,7 +11418,7 @@ var AfterPayOrdersList = {
   order_decode: order_decode$6,
   list_encode: list_encode,
   list_decode: list_decode,
-  use: use$37
+  use: use$32
 };
 
 function useSmoothScroll(param) {
@@ -13072,86 +11429,460 @@ function useSmoothScroll(param) {
                     var currentClassName = htmlElement.className;
                     var nextClassName = currentClassName.replace("scroll-smooth", "");
                     htmlElement.className = nextClassName;
-                    
                   });
         }), []);
+}
+
+function TradematchStep(Steps) {
+  var use = function (param) {
+    var router = Router.useRouter();
+    var getStepQueryString = function (step) {
+      router.query["step"] = Curry._1(Steps.toString, step);
+      return new URLSearchParams(router.query).toString();
+    };
+    var match = Belt_Option.map(Js_dict.get(router.query, "step"), Steps.fromString);
+    var currentStep = match !== undefined && match.TAG === /* Ok */0 ? match._0 : Steps.first;
+    var toNext = function (param) {
+      var nextStep = Curry._1(Steps.getNext, currentStep);
+      if (nextStep !== undefined) {
+        var newQueryString = getStepQueryString(Caml_option.valFromOption(nextStep));
+        router.push("" + router.pathname + "?" + newQueryString + "");
+        return ;
+      }
+      var path = router.asPath.replace(/(\d+)\/apply(.*)/, "$1/applied");
+      var newQueries = {};
+      newQueries["type"] = Steps.type_;
+      var newQueryString$1 = new URLSearchParams(newQueries).toString();
+      router.push("" + path + "?" + newQueryString$1 + "");
+    };
+    var toPrev = function (param) {
+      var prevStep = Curry._1(Steps.getPrev, currentStep);
+      if (prevStep !== undefined) {
+        var newQueryString = getStepQueryString(Caml_option.valFromOption(prevStep));
+        router.push("" + router.pathname + "?" + newQueryString + "");
+        return ;
+      }
+      router.back();
+    };
+    var toFirst = function (param) {
+      router.replace("" + router.pathname + "?" + getStepQueryString(Steps.first) + "");
+    };
+    var push = function (step) {
+      router.push("" + router.pathname + "?" + getStepQueryString(step) + "");
+    };
+    var replace = function (step) {
+      router.replace("" + router.pathname + "?" + getStepQueryString(step) + "");
+    };
+    return {
+            first: Steps.first,
+            current: currentStep,
+            currentIndex: Curry._1(Steps.tToJs, currentStep),
+            next: Curry._1(Steps.getNext, currentStep),
+            nextIndex: Curry._1(Steps.tToJs, currentStep) + 1 | 0,
+            length: Steps.length,
+            isFirst: Caml_obj.equal(currentStep, Steps.first),
+            isLast: Caml_obj.equal(currentStep, Steps.last),
+            router: {
+              toNext: toNext,
+              toPrev: toPrev,
+              toFirst: toFirst,
+              push: push,
+              replace: replace
+            }
+          };
+  };
+  return {
+          use: use
+        };
+}
+
+function tToJs(param) {
+  return param + 0 | 0;
+}
+
+function tFromJs(param) {
+  if (param <= 5 && 0 <= param) {
+    return param - 0 | 0;
+  }
   
 }
 
-var stepsOrder = [
-  "grade",
-  "count",
-  "price",
-  "cycle",
-  "requirement",
-  "shipping"
-];
+var type_ = "farm";
 
-function usePageSteps(param) {
-  var router = Router.useRouter();
-  var totalStepLength = stepsOrder.length;
-  var firstStep = Garter_Array.firstExn(stepsOrder);
-  var currentStep = Belt_Option.mapWithDefault(Js_dict.get(router.query, "step"), firstStep, (function (x) {
-          return x;
-        }));
-  var currentStepIndex = Belt_Option.mapWithDefault(Belt_Array.getIndexBy(stepsOrder, (function (x) {
-              return x === currentStep;
-            })), 0, (function (x) {
-          return x;
-        }));
-  var nextStepIndex = currentStepIndex + 1 | 0;
-  var nextStep = Belt_Array.get(stepsOrder, nextStepIndex);
-  var isLast = (stepsOrder.length - 1 | 0) === currentStepIndex;
-  return {
-          totalStepLength: totalStepLength,
-          firstStep: firstStep,
-          currentStep: currentStep,
-          currentStepIndex: currentStepIndex,
-          isLast: isLast,
-          nextStepIndex: nextStepIndex,
-          nextStep: nextStep
-        };
+function getNext(step) {
+  switch (step) {
+    case /* Grade */0 :
+        return /* Count */1;
+    case /* Count */1 :
+        return /* Price */2;
+    case /* Price */2 :
+        return /* Cycle */3;
+    case /* Cycle */3 :
+        return /* Requirement */4;
+    case /* Requirement */4 :
+        return /* Shipping */5;
+    case /* Shipping */5 :
+        return ;
+    
+  }
 }
 
-function useNavigateStep(param) {
+function getPrev(step) {
+  switch (step) {
+    case /* Grade */0 :
+        return ;
+    case /* Count */1 :
+        return /* Grade */0;
+    case /* Price */2 :
+        return /* Count */1;
+    case /* Cycle */3 :
+        return /* Price */2;
+    case /* Requirement */4 :
+        return /* Cycle */3;
+    case /* Shipping */5 :
+        return /* Requirement */4;
+    
+  }
+}
+
+function fromString(str) {
+  switch (str) {
+    case "count" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Count */1
+              };
+    case "cycle" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Cycle */3
+              };
+    case "grade" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Grade */0
+              };
+    case "price" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Price */2
+              };
+    case "requirement" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Requirement */4
+              };
+    case "shipping" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Shipping */5
+              };
+    default:
+      return {
+              TAG: /* Error */1,
+              _0: "parse error"
+            };
+  }
+}
+
+function toString(step) {
+  switch (step) {
+    case /* Grade */0 :
+        return "grade";
+    case /* Count */1 :
+        return "count";
+    case /* Price */2 :
+        return "price";
+    case /* Cycle */3 :
+        return "cycle";
+    case /* Requirement */4 :
+        return "requirement";
+    case /* Shipping */5 :
+        return "shipping";
+    
+  }
+}
+
+var FarmProductSteps = {
+  tToJs: tToJs,
+  tFromJs: tFromJs,
+  first: /* Grade */0,
+  last: /* Shipping */5,
+  length: 6,
+  type_: type_,
+  getNext: getNext,
+  getPrev: getPrev,
+  fromString: fromString,
+  toString: toString
+};
+
+function tToJs$1(param) {
+  return param + 0 | 0;
+}
+
+function tFromJs$1(param) {
+  if (param <= 6 && 0 <= param) {
+    return param - 0 | 0;
+  }
+  
+}
+
+var type_$1 = "aqua";
+
+function getNext$1(step) {
+  switch (step) {
+    case /* Origin */0 :
+        return /* Weight */1;
+    case /* Weight */1 :
+        return /* Price */2;
+    case /* Price */2 :
+        return /* StorageMethod */3;
+    case /* StorageMethod */3 :
+        return /* Cycle */4;
+    case /* Cycle */4 :
+        return /* Requirement */5;
+    case /* Requirement */5 :
+        return /* Shipping */6;
+    case /* Shipping */6 :
+        return ;
+    
+  }
+}
+
+function getPrev$1(step) {
+  switch (step) {
+    case /* Origin */0 :
+        return ;
+    case /* Weight */1 :
+        return /* Origin */0;
+    case /* Price */2 :
+        return /* Weight */1;
+    case /* StorageMethod */3 :
+        return /* Price */2;
+    case /* Cycle */4 :
+        return /* StorageMethod */3;
+    case /* Requirement */5 :
+        return /* Cycle */4;
+    case /* Shipping */6 :
+        return /* Requirement */5;
+    
+  }
+}
+
+function fromString$1(str) {
+  switch (str) {
+    case "cycle" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Cycle */4
+              };
+    case "origin" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Origin */0
+              };
+    case "price" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Price */2
+              };
+    case "requirement" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Requirement */5
+              };
+    case "shipping" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Shipping */6
+              };
+    case "storage-method" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* StorageMethod */3
+              };
+    case "weight" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* Weight */1
+              };
+    default:
+      return {
+              TAG: /* Error */1,
+              _0: "parse error"
+            };
+  }
+}
+
+function toString$1(step) {
+  switch (step) {
+    case /* Origin */0 :
+        return "origin";
+    case /* Weight */1 :
+        return "weight";
+    case /* Price */2 :
+        return "price";
+    case /* StorageMethod */3 :
+        return "storage-method";
+    case /* Cycle */4 :
+        return "cycle";
+    case /* Requirement */5 :
+        return "requirement";
+    case /* Shipping */6 :
+        return "shipping";
+    
+  }
+}
+
+var AquaProductSteps = {
+  tToJs: tToJs$1,
+  tFromJs: tFromJs$1,
+  first: /* Origin */0,
+  last: /* Shipping */6,
+  length: 7,
+  type_: type_$1,
+  getNext: getNext$1,
+  getPrev: getPrev$1,
+  fromString: fromString$1,
+  toString: toString$1
+};
+
+function use$33(param) {
   var router = Router.useRouter();
-  var match = usePageSteps(undefined);
-  var nextStep = match.nextStep;
-  var firstStep = match.firstStep;
-  var navigateToNextStep = function (param) {
+  var getStepQueryString = function (step) {
+    router.query["step"] = toString(step);
+    return new URLSearchParams(router.query).toString();
+  };
+  var match = Belt_Option.map(Js_dict.get(router.query, "step"), fromString);
+  var currentStep = match !== undefined && match.TAG === /* Ok */0 ? match._0 : /* Grade */0;
+  var toNext = function (param) {
+    var nextStep = getNext(currentStep);
     if (nextStep !== undefined) {
-      router.query["step"] = nextStep;
-      var newQueryString = new URLSearchParams(router.query).toString();
-      router.push(router.pathname + "?" + newQueryString);
+      var newQueryString = getStepQueryString(Caml_option.valFromOption(nextStep));
+      router.push("" + router.pathname + "?" + newQueryString + "");
       return ;
     }
-    router.push("/buyer/tradematch/ask-to-buy/applied");
-    
+    var path = router.asPath.replace(/(\d+)\/apply(.*)/, "$1/applied");
+    var newQueries = {};
+    newQueries["type"] = type_;
+    var newQueryString$1 = new URLSearchParams(newQueries).toString();
+    router.push("" + path + "?" + newQueryString$1 + "");
   };
-  var navigateToFirstStep = function (param) {
-    router.query["step"] = firstStep;
-    var newQueryString = new URLSearchParams(router.query).toString();
-    router.replace(router.pathname + "?" + newQueryString);
-    
+  var toPrev = function (param) {
+    var prevStep = getPrev(currentStep);
+    if (prevStep !== undefined) {
+      var newQueryString = getStepQueryString(Caml_option.valFromOption(prevStep));
+      router.push("" + router.pathname + "?" + newQueryString + "");
+      return ;
+    }
+    router.back();
   };
-  var replaceToStep = function (step) {
-    router.query["step"] = step;
-    var newQueryString = new URLSearchParams(router.query).toString();
-    router.replace(router.pathname + "?" + newQueryString);
-    
+  var toFirst = function (param) {
+    router.replace("" + router.pathname + "?" + getStepQueryString(/* Grade */0) + "");
+  };
+  var push = function (step) {
+    router.push("" + router.pathname + "?" + getStepQueryString(step) + "");
+  };
+  var replace = function (step) {
+    router.replace("" + router.pathname + "?" + getStepQueryString(step) + "");
   };
   return {
-          navigateToFirstStep: navigateToFirstStep,
-          navigateToNextStep: navigateToNextStep,
-          replaceToStep: replaceToStep
+          first: /* Grade */0,
+          current: currentStep,
+          currentIndex: currentStep + 0 | 0,
+          next: getNext(currentStep),
+          nextIndex: (currentStep + 0 | 0) + 1 | 0,
+          length: 6,
+          isFirst: Caml_obj.equal(currentStep, /* Grade */0),
+          isLast: Caml_obj.equal(currentStep, /* Shipping */5),
+          router: {
+            toNext: toNext,
+            toPrev: toPrev,
+            toFirst: toFirst,
+            push: push,
+            replace: replace
+          }
         };
 }
 
-var Tradematch = {
-  stepsOrder: stepsOrder,
-  usePageSteps: usePageSteps,
-  useNavigateStep: useNavigateStep
+var FarmTradematchStep = {
+  use: use$33
 };
+
+function use$34(param) {
+  var router = Router.useRouter();
+  var getStepQueryString = function (step) {
+    router.query["step"] = toString$1(step);
+    return new URLSearchParams(router.query).toString();
+  };
+  var match = Belt_Option.map(Js_dict.get(router.query, "step"), fromString$1);
+  var currentStep = match !== undefined && match.TAG === /* Ok */0 ? match._0 : /* Origin */0;
+  var toNext = function (param) {
+    var nextStep = getNext$1(currentStep);
+    if (nextStep !== undefined) {
+      var newQueryString = getStepQueryString(Caml_option.valFromOption(nextStep));
+      router.push("" + router.pathname + "?" + newQueryString + "");
+      return ;
+    }
+    var path = router.asPath.replace(/(\d+)\/apply(.*)/, "$1/applied");
+    var newQueries = {};
+    newQueries["type"] = type_$1;
+    var newQueryString$1 = new URLSearchParams(newQueries).toString();
+    router.push("" + path + "?" + newQueryString$1 + "");
+  };
+  var toPrev = function (param) {
+    var prevStep = getPrev$1(currentStep);
+    if (prevStep !== undefined) {
+      var newQueryString = getStepQueryString(Caml_option.valFromOption(prevStep));
+      router.push("" + router.pathname + "?" + newQueryString + "");
+      return ;
+    }
+    router.back();
+  };
+  var toFirst = function (param) {
+    router.replace("" + router.pathname + "?" + getStepQueryString(/* Origin */0) + "");
+  };
+  var push = function (step) {
+    router.push("" + router.pathname + "?" + getStepQueryString(step) + "");
+  };
+  var replace = function (step) {
+    router.replace("" + router.pathname + "?" + getStepQueryString(step) + "");
+  };
+  return {
+          first: /* Origin */0,
+          current: currentStep,
+          currentIndex: currentStep + 0 | 0,
+          next: getNext$1(currentStep),
+          nextIndex: (currentStep + 0 | 0) + 1 | 0,
+          length: 7,
+          isFirst: Caml_obj.equal(currentStep, /* Origin */0),
+          isLast: Caml_obj.equal(currentStep, /* Shipping */6),
+          router: {
+            toNext: toNext,
+            toPrev: toPrev,
+            toFirst: toFirst,
+            push: push,
+            replace: replace
+          }
+        };
+}
+
+var AquaTradematchStep = {
+  use: use$34
+};
+
+function useCsr(param) {
+  var match = React.useState(function () {
+        return false;
+      });
+  var setCsr = match[1];
+  React.useEffect((function () {
+          setCsr(function (param) {
+                return true;
+              });
+        }), []);
+  return match[0];
+}
 
 export {
   useSetPassword ,
@@ -13183,11 +11914,6 @@ export {
   Transaction ,
   TransactionSummary ,
   Downloads ,
-  Shipments ,
-  ShipmentSummary ,
-  ShipmentMontlyAmount ,
-  OfflineOrders ,
-  OfflineUploadStatus ,
   AdminS3PresignedUrl ,
   CropCategory ,
   WholeSale ,
@@ -13197,7 +11923,11 @@ export {
   AfterPayAgreement ,
   AfterPayOrdersList ,
   useSmoothScroll ,
-  Tradematch ,
-  
+  TradematchStep ,
+  FarmProductSteps ,
+  AquaProductSteps ,
+  FarmTradematchStep ,
+  AquaTradematchStep ,
+  useCsr ,
 }
 /* Env Not a pure module */

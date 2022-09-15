@@ -2,7 +2,7 @@ module Fragment = %relay(`
   fragment ProductAdminFragment on Product {
     id
     displayName
-    productId
+    productId: number
   
     ... on QuotableProduct {
       producer {

@@ -1,7 +1,8 @@
+type placementType
 module Custom: {
   module ToastContainer: {
     @react.component
-    let make: (~children: React.element) => React.element
+    let make: (~children: React.element, ~placement: placementType) => React.element
   }
 
   module Toast: {
@@ -15,7 +16,7 @@ module Custom: {
 }
 
 module ToastProvider: {
-  type componentProps = {
+  type containerProps = {
     // autoDismiss,
     // autoDismissTimeout,
     // isRunning,
@@ -23,14 +24,20 @@ module ToastProvider: {
     // onMouseLeave,
     // appearance,
     // onDismiss,
-    // placement,
+    placement: placementType,
+    transitionDuration: int,
+    transitionState: string,
+    children: React.element,
+  }
+
+  type componentProps = {
     transitionDuration: int,
     transitionState: string,
     children: React.element,
   }
 
   type components = {
-    "ToastContainer": componentProps => React.element,
+    "ToastContainer": containerProps => React.element,
     "Toast": componentProps => React.element,
   }
 
@@ -40,7 +47,7 @@ module ToastProvider: {
       ~autoDismissTimeout: int,
       ~autoDismiss: bool,
       ~components: components,
-      ~placement: string=?,
+      ~placement: placementType,
       ~portalTargetSelector: option<string>,
       ~transitionDuration: option<int>,
       ~children: React.element,
@@ -52,7 +59,7 @@ module ToastProvider: {
     // ~autoDismissTimeout=?,
     // ~autoDismiss=?,
     // ~components=?,
-    ~placement: string=?,
+    ~placement: placementType=?,
     ~portalTargetSelector: string=?,
     ~transitionDuration: int=?,
     ~children: React.element,

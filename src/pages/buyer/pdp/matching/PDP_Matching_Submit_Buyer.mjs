@@ -2,95 +2,131 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as DataGtm from "../../../../utils/DataGtm.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
-import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as ChannelTalk from "../../../../bindings/ChannelTalk.mjs";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
+import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
+import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
+import * as PDP_CTA_Container_Buyer from "../common/PDP_CTA_Container_Buyer.mjs";
+import * as PDPMatchingSubmitBuyer_fragment_graphql from "../../../../__generated__/PDPMatchingSubmitBuyer_fragment_graphql.mjs";
 
-function PDP_Matching_Submit_Buyer$MO$CTAContainer(Props) {
-  var children = Props.children;
-  return React.createElement("div", {
-              className: "fixed w-full bottom-0 left-0"
-            }, React.createElement("div", {
-                  className: "w-full max-w-[768px] p-3 mx-auto border-t border-t-gray-100 bg-white"
-                }, React.createElement("div", {
-                      className: "w-full h-14 flex"
-                    }, React.createElement("button", {
-                          onClick: (function (param) {
-                              return ChannelTalk.showMessenger(undefined);
-                            })
-                        }, React.createElement("img", {
-                              className: "w-14 h-14 mr-2",
-                              alt: "cta-cs-btn-mobile",
-                              src: "/icons/cs-gray-square.png"
-                            })), Belt_Option.getWithDefault(children, null))));
+function use(fRef) {
+  var data = ReactRelay.useFragment(PDPMatchingSubmitBuyer_fragment_graphql.node, fRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(PDPMatchingSubmitBuyer_fragment_graphql.Internal.convertFragment, data);
 }
 
-var CTAContainer = {
-  make: PDP_Matching_Submit_Buyer$MO$CTAContainer
+function useOpt(opt_fRef) {
+  var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
+  var nullableFragmentData = ReactRelay.useFragment(PDPMatchingSubmitBuyer_fragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
+  return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
+                if (rawFragment !== undefined) {
+                  return PDPMatchingSubmitBuyer_fragment_graphql.Internal.convertFragment(rawFragment);
+                }
+                
+              }), data);
+}
+
+var Fragment = {
+  Types: undefined,
+  Operation: undefined,
+  use: use,
+  useOpt: useOpt
+};
+
+function make(displayName, productId, category) {
+  var categoryNames = Belt_Array.map(category.fullyQualifiedName, (function (param) {
+          return param.name;
+        }));
+  return {
+          event: "request_quotation",
+          click_rfq_btn: {
+            item_type: "견적",
+            item_id: String(productId),
+            item_name: displayName,
+            item_category: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 0)),
+            item_category2: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 1)),
+            item_category3: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 2)),
+            item_category4: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 3)),
+            item_category5: Js_null_undefined.fromOption(Belt_Array.get(categoryNames, 4))
+          }
+        };
+}
+
+var RequestQuotationGtm = {
+  make: make
 };
 
 function PDP_Matching_Submit_Buyer$MO(Props) {
   var setShowModal = Props.setShowModal;
   var selectedGroup = Props.selectedGroup;
+  var query = Props.query;
   var buttonText = "최저가 견적받기";
   var router = Router.useRouter();
-  var pid = Js_dict.get(router.query, "pid");
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
+  var match = use(query);
+  var productId = match.productId;
+  var displayName = match.displayName;
+  var category = match.category;
   var btnStyle = "h-14 w-full rounded-xl bg-primary text-white text-lg font-bold";
   var disabledStyle = "h-14 w-full rounded-xl bg-disabled-L2 text-white text-lg font-bold";
-  return React.createElement(PDP_Matching_Submit_Buyer$MO$CTAContainer, {
-              children: typeof user === "number" ? (
-                  user !== 0 ? React.createElement("button", {
-                          className: btnStyle,
-                          onClick: (function (param) {
-                              return setShowModal(function (param) {
-                                          return /* Show */{
-                                                  _0: /* Unauthorized */{
-                                                    _0: "로그인 후에\n견적을 받으실 수 있습니다."
-                                                  }
-                                                };
-                                        });
-                            })
-                        }, buttonText) : React.createElement("button", {
-                          className: disabledStyle,
-                          disabled: true
-                        }, buttonText)
-                ) : (
-                  user._0.role !== 1 ? React.createElement("button", {
-                          className: disabledStyle,
-                          disabled: true
-                        }, buttonText) : React.createElement("button", {
-                          className: btnStyle,
-                          onClick: (function (param) {
-                              Belt_Option.map(pid, (function (pid$p) {
-                                      var prim1_pathname = "/buyer/tradematch/ask-to-buy/apply/" + pid$p;
-                                      var prim1_query = Js_dict.fromArray([[
-                                              "grade",
-                                              selectedGroup
-                                            ]]);
-                                      var prim1 = {
-                                        pathname: prim1_pathname,
-                                        query: prim1_query
-                                      };
-                                      router.push(prim1);
-                                      
-                                    }));
-                              
-                            })
-                        }, buttonText)
-                )
+  var tmp;
+  if (typeof user === "number") {
+    tmp = user !== 0 ? React.createElement("button", {
+            className: btnStyle,
+            onClick: (function (param) {
+                setShowModal(function (param) {
+                      return /* Show */{
+                              _0: /* Unauthorized */{
+                                _0: "로그인 후에\n견적을 받으실 수 있습니다."
+                              }
+                            };
+                    });
+              })
+          }, buttonText) : React.createElement("button", {
+            className: disabledStyle,
+            disabled: true
+          }, buttonText);
+  } else if (user._0.role !== 1) {
+    tmp = React.createElement("button", {
+          className: disabledStyle,
+          disabled: true
+        }, buttonText);
+  } else {
+    var onClick = function (param) {
+      DataGtm.push(DataGtm.mergeUserIdUnsafe(make(displayName, productId, category)));
+      var prim1_pathname = "/buyer/tradematch/buy/products/" + String(productId) + "/apply";
+      var prim1_query = Js_dict.fromArray([[
+              "grade",
+              selectedGroup
+            ]]);
+      var prim1 = {
+        pathname: prim1_pathname,
+        query: prim1_query
+      };
+      router.push(prim1);
+    };
+    tmp = React.createElement("button", {
+          className: btnStyle,
+          onClick: onClick
+        }, buttonText);
+  }
+  return React.createElement(PDP_CTA_Container_Buyer.make, {
+              children: tmp
             });
 }
 
 var MO = {
-  CTAContainer: CTAContainer,
   make: PDP_Matching_Submit_Buyer$MO
 };
 
 export {
+  Fragment ,
+  RequestQuotationGtm ,
   MO ,
-  
 }
 /* react Not a pure module */

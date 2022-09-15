@@ -1,4 +1,36 @@
-type target = Seller | Buyer | Admin
+module StatusPageComponent = {
+  type t =
+    | Seller
+    | Buyer
+    | Admin
+    | Common
+    | Global
+
+  let make = (router: Next.Router.router) => {
+    let routerPathnames = router.pathname->Js.String2.split("/")
+
+    switch (routerPathnames->Array.get(1), routerPathnames->Array.get(2)) {
+    | (Some("seller"), _) => Seller
+    | (Some("admin"), _) => Admin
+    | (Some("buyer"), Some("products"))
+    | (Some("buyer"), None) =>
+      Common
+    | (Some("buyer"), _) => Buyer
+    | (_, _) => Common
+    }
+  }
+
+  let is = (t, target) => {
+    switch (t, target) {
+    | (_, "global") => true
+    | (Seller, "seller") => true
+    | (Admin, "admin") => true
+    | (Buyer, "buyer") => true
+    | (Common, "common") => true
+    | _ => false
+    }
+  }
+}
 module MaintenanceTime = {
   type t = {
     from: Js.Date.t,
@@ -46,8 +78,20 @@ module Match = {
     | Matched(array<matchedInfo>)
     | NotMatched
 
-  let make = (pathname, target, message, from, to_) => {
-    switch (target->Js.Array2.includes(pathname), MaintenanceTime.make(from, to_)) {
+  let make = (currentSubPage, incidentTargets, message, from, to_) => {
+    let pathCheck = (currentSubPage, incidentTargets) => {
+      let matchingIncidentTargets =
+        incidentTargets->Array.getBy(incidentTarget =>
+          currentSubPage->StatusPageComponent.is(incidentTarget)
+        )
+
+      switch matchingIncidentTargets {
+      | None => false
+      | _ => true
+      }
+    }
+
+    switch (pathCheck(currentSubPage, incidentTargets), MaintenanceTime.make(from, to_)) {
     | (true, Some(maintenanceTime)) =>
       Matched([
         {
@@ -176,10 +220,14 @@ module StatusPageCompat = {
     }
   }
 
-  let isMaintenanceTarget = (statusPageIncidents: option<incidents>, pathname) => {
-    statusPageIncidents
-    ->Option.map(statusPageIncidents =>
-      statusPageIncidents->Array.map(statusPageResult => {
+  let isMaintenanceTarget = (
+    statusPageIncidents: option<incidents>,
+    currentSubPage: StatusPageComponent.t,
+  ) => {
+    switch statusPageIncidents {
+    | Some(statusPageIncidents) =>
+      statusPageIncidents
+      ->Array.map(statusPageResult => {
         let message =
           statusPageResult.incidentUpdates
           ->SortArray.stableSortBy((incidentA, incidentB) =>
@@ -191,34 +239,35 @@ module StatusPageCompat = {
           ->Array.get(0)
           ->Option.map(latestIncident => latestIncident.body)
 
+        let incidentTarget =
+          statusPageResult.components
+          ->Array.map(component => component.name)
+          ->Array.map(name => name->Js.String2.toLowerCase)
+
         switch statusPageResult {
         | statusPageResult if statusPageResult.scheduledFor->Option.isSome =>
-          //예정된 시작 시간과 예정된 종료 시간이 제시된 경우
+          // 예정된 시작 시간과 예정된 종료 시간이 제시된 경우
           Match.make(
-            pathname,
-            statusPageResult.components
-            ->Array.map(component => component.name)
-            ->Array.map(name => name->Js.String2.toLowerCase),
+            currentSubPage,
+            incidentTarget,
             message,
             statusPageResult.scheduledFor,
             statusPageResult.scheduledUntil,
           )
         | _ =>
-          //사건 발생 시작 시간만 존재하는 경우
+          // 사건 발생 시작 시간만 존재하는 경우
           Match.make(
-            pathname,
-            statusPageResult.components
-            ->Array.map(component => component.name)
-            ->Array.map(name => name->Js.String2.toLowerCase),
+            currentSubPage,
+            incidentTarget,
             message,
             Some(statusPageResult.createdAt),
             None,
           )
         }
       })
-    )
-    ->Option.map(matches => matches->Array.reduce(Match.NotMatched, Match.join))
-    ->Option.getWithDefault(Match.NotMatched)
+      ->Array.reduce(Match.NotMatched, Match.join)
+    | _ => Match.NotMatched
+    }
   }
 }
 
@@ -226,7 +275,9 @@ module View = {
   @react.component
   let make = (~message, ~maintenanceTime=?) => {
     <section
-      className=%twc("w-screen h-screen flex flex-col items-center justify-start dialog-overlay")>
+      className=%twc(
+        "w-screen h-screen flex flex-col items-center justify-start dialog-overlay bg-white pointer-events-none"
+      )>
       <div className=%twc("flex flex-col h-full items-center justify-center")>
         <img src="/images/maintenance.png" width="140" height="156" />
         <h1 className=%twc("mt-7 text-3xl text-gray-800 whitespace-pre text-center")>
@@ -257,21 +308,17 @@ module Content = {
   @react.component
   let make = () => {
     // 점검 페이지 로직
-    let currentPathName =
-      Next.Router.useRouter().pathname
-      ->Js.String2.split("/")
-      ->Array.get(1)
-      ->Option.getWithDefault("")
+    let currentAffectedTarget = Next.Router.useRouter()->StatusPageComponent.make
 
     let incidentResultFromStatusPage =
       StatusPageCompat.use(StatusPageCompat.Target.Incident)->StatusPageCompat.isMaintenanceTarget(
-        currentPathName,
+        currentAffectedTarget,
       )
 
     let maintenanceResultFromStatusPage =
       StatusPageCompat.use(
         StatusPageCompat.Target.Maintenance,
-      )->StatusPageCompat.isMaintenanceTarget(currentPathName)
+      )->StatusPageCompat.isMaintenanceTarget(currentAffectedTarget)
 
     switch incidentResultFromStatusPage
     ->Match.join(maintenanceResultFromStatusPage)

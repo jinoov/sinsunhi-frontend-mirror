@@ -23,15 +23,19 @@ let use = () => {
     switch Global.Window.ReactNativeWebView.tOpt {
     | Some(_) => ()
     | None =>
-      (Global.import_("@braze/web-sdk")
-      |> Js.Promise.then_((sdk: Js.Nullable.t<braze>) => {
-        setBraze(. _ => sdk->Js.Nullable.toOption)
-        Js.Promise.resolve()
-      })
-      |> Js.Promise.catch(err => {
-        Js.log2("braze init error: ", err)
-        Js.Promise.resolve()
-      }))->ignore
+      try {
+        (Global.import_("@braze/web-sdk")
+        |> Js.Promise.then_((sdk: Js.Nullable.t<braze>) => {
+          setBraze(._ => sdk->Js.Nullable.toOption)
+          Js.Promise.resolve()
+        })
+        |> Js.Promise.catch(err => {
+          Js.log2("braze init error: ", err)
+          Js.Promise.resolve()
+        }))->ignore
+      } catch {
+      | err => Js.log2("fail to initize braze: ", err)
+      }
     }
 
     None
@@ -41,7 +45,7 @@ let use = () => {
     switch Global.Window.ReactNativeWebView.tOpt {
     | Some(_) => ()
     | None =>
-      let _ =
+      let _ = try {
         Global.Window.serviceWorkerRegister("/service-worker.js")
         |> Js.Promise.then_(_ => {
           switch braze {
@@ -55,6 +59,12 @@ let use = () => {
           Js.log2("Failed to register service worker : ", err)
           Js.Promise.resolve()
         })
+      } catch {
+      | err => {
+          Js.log2("fail to initize braze: ", err)
+          Js.Promise.resolve()
+        }
+      }
 
       switch braze {
       | Some(braze') =>
@@ -81,7 +91,10 @@ let changeUser = (user: CustomHooks.Auth.user, braze) => {
   switch user.role {
   | Seller
   | Buyer =>
-    braze.changeUser(. user.id->Int.toString)
+    switch Env.vercelEnv {
+    | "production" => braze.changeUser(. user.id->Int.toString)
+    | _ => braze.changeUser(. `${user.id->Int.toString}-dev`)
+    }
   | Admin => ()
   }
 }

@@ -20,17 +20,15 @@ module Fragment = %relay(`
     noticeStartAt
     noticeEndAt
   
-    # gtm attrs
-    ...PDPQuotedGtmBuyer_fragment
-  
     # Fragments
     ...PDPQuotedDetailsBuyerFragment
+    ...PDPQuotedRfqBtnBuyer_fragment
   }
 `)
 
 module PC = {
   @react.component
-  let make = (~query) => {
+  let make = (~query, ~gnbBanners, ~displayCategories) => {
     let router = Next.Router.useRouter()
     let {
       image,
@@ -48,7 +46,7 @@ module PC = {
 
     <>
       <div className=%twc("w-full min-w-[1280px] min-h-screen")>
-        <Header_Buyer.PC key=router.asPath />
+        <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
         <div className=%twc("w-[1280px] mx-auto min-h-full")>
           <div className=%twc("w-full pt-16 px-5 divide-y")>
             <section className=%twc("w-full flex pb-12 gap-20")>
@@ -69,7 +67,7 @@ module PC = {
                   </div>
                 </section>
                 <section className=%twc("w-full mt-4")>
-                  <PDP_Quoted_Submit_Buyer.PC setShowModal query=fragmentRefs />
+                  <PDP_Quoted_RfqBtn_Buyer.PC setShowModal query=fragmentRefs />
                 </section>
               </div>
             </section>
@@ -113,7 +111,7 @@ module MO = {
       <div className=%twc("w-full min-h-screen")>
         <div className=%twc("w-full bg-white")>
           <div className=%twc("w-full max-w-3xl mx-auto bg-white min-h-screen")>
-            <Header_Buyer.Mobile key=router.asPath />
+            <PDP_Header_Buyer key=router.asPath />
             <section className=%twc("flex flex-col gap-5")>
               <PDP_Image_Buyer.MO src=image.thumb1000x1000 />
             </section>
@@ -127,7 +125,7 @@ module MO = {
                 </section>
                 <section className=%twc("py-8 flex flex-col gap-5")>
                   <PDP_Quoted_RequestGuide_Buyer.MO />
-                  <PDP_Quoted_Submit_Buyer.MO setShowModal query=fragmentRefs />
+                  <PDP_Quoted_RfqBtn_Buyer.MO setShowModal query=fragmentRefs />
                 </section>
               </div>
               {salesDocument->Option.mapWithDefault(React.null, salesDocument' =>
@@ -153,10 +151,10 @@ module MO = {
 }
 
 @react.component
-let make = (~deviceType, ~query) => {
+let make = (~deviceType, ~query, ~gnbBanners, ~displayCategories) => {
   switch deviceType {
   | DeviceDetect.Unknown => React.null
-  | DeviceDetect.PC => <PC query />
+  | DeviceDetect.PC => <PC query gnbBanners displayCategories />
   | DeviceDetect.Mobile => <MO query />
   }
 }

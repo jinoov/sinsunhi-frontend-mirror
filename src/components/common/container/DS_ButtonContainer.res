@@ -1,10 +1,11 @@
 module Floating1 = {
   @react.component
-  let make = (~label, ~disabled=?, ~onClick=?, ~buttonType=?, ~dataGtm=?) => {
+  let make = (~label, ~disabled=?, ~onClick=?, ~buttonType=?, ~dataGtm=?, ~isFixed=true) => {
     <div
-      className=%twc(
-        "absolute w-full max-w-3xl bottom-0 left-1/2 -translate-x-1/2 p-5 gradient-cta-t tab-highlight-color"
-      )>
+      className={cx([
+        "fixed w-full max-w-3xl bottom-0 left-1/2 -translate-x-1/2 p-5 gradient-cta-t tab-highlight-color",
+        isFixed ? "fixed" : "absolute",
+      ])}>
       {dataGtm->Option.mapWithDefault(
         <DS_Button.Normal.Large1 label ?disabled ?onClick ?buttonType />,
         dataGtm' =>

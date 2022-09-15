@@ -2,7 +2,7 @@
 type customError = {
   status: int,
   info: Js.Json.t,
-  message: option<string>,
+  message?: string,
 }
 @spice
 type errJson = {message: string}
@@ -577,6 +577,7 @@ let refreshToken = () => {
         LocalStorageHooks.RefreshToken.set(res.refreshToken)
         Js.Promise.resolve()
       }
+
     | Error(_) => Js.Promise.reject(Js.Exn.raiseError(`토큰 갱신에 실패하였습니다.`))
     }
   })
@@ -606,14 +607,14 @@ let rec retry = (~err=None, ~fn, ~count, ~interval) =>
       if (err->convertFromJsPromiseError).status == 401 {
         refreshToken()
         |> Js.Promise.then_(_ =>
-          wait(interval) |> Js.Promise.then_(_ =>
-            retry(~fn, ~count=count - 1, ~err=None, ~interval)
+          wait(interval) |> Js.Promise.then_(
+            _ => retry(~fn, ~count=count - 1, ~err=None, ~interval),
           )
         )
-        |> Js.Promise.catch(err => {
-          wait(interval) |> Js.Promise.then_(_ =>
-            retry(~fn, ~count=count - 1, ~err=err->convertToExnFromPromiseError->Some, ~interval)
-          )
+        |> Js.Promise.catch(_err => {
+          // Refresh Token 갱신 실패 시, retry를 멈추고 로그인 페이지로 리디렉션한다.
+          Redirect.redirectByRole()
+          Js.Promise.reject(err->convertToExnFromPromiseError)
         })
       } else {
         wait(interval) |> Js.Promise.then_(_ =>
@@ -654,21 +655,24 @@ let checkResponseErrorForSentry = (relayResponse: relayResponse, body: string) =
         resultObj->Option.forEach(obj =>
           switch obj->relayResponseData_decode {
           | Ok(relayResponse) =>
-            relayResponse.__typename->Option.forEach(__typename' => {
-              if (
-                __typename'->Js.Json.decodeString->Option.mapWithDefault(false, s => s == "Error")
-              ) {
-                Sentry.CaptureException.makeWithRelayError(
-                  ~errorType="RelayResponseResultError",
-                  ~errorMessage=relayResponse.message,
-                  ~body,
-                )
-              }
-            })
+            relayResponse.__typename->Option.forEach(
+              __typename' => {
+                if (
+                  __typename'->Js.Json.decodeString->Option.mapWithDefault(false, s => s == "Error")
+                ) {
+                  Sentry.CaptureException.makeWithRelayError(
+                    ~errorType="RelayResponseResultError",
+                    ~errorMessage=relayResponse.message,
+                    ~body,
+                  )
+                }
+              },
+            )
           | Error(_) => ()
           }
         )
       }
+
     | _ => ()
     }
   )

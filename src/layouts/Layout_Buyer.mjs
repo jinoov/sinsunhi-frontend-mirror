@@ -32,20 +32,63 @@ function Layout_Buyer(Props) {
   var router = Router.useRouter();
   var match = Belt_List.fromArray(router.pathname.split("/"));
   var paths = match ? Belt_List.toArray(match.tl) : [];
-  if (paths.length === 3) {
-    var match$1 = paths[0];
-    if (match$1 === "buyer") {
-      var match$2 = paths[1];
-      if (match$2 === "products") {
-        var match$3 = paths[2];
-        if (match$3 === "[pid]") {
-          return children;
-        }
-        
-      }
+  var len = paths.length;
+  if (len < 5) {
+    switch (len) {
+      case 0 :
+      case 1 :
+          break;
+      case 2 :
+          var match$1 = paths[0];
+          if (match$1 === "buyer") {
+            var match$2 = paths[1];
+            switch (match$2) {
+              case "cart" :
+              case "products" :
+                  return children;
+              default:
+                
+            }
+          }
+          break;
+      case 3 :
+          var match$3 = paths[0];
+          if (match$3 === "buyer") {
+            var match$4 = paths[1];
+            switch (match$4) {
+              case "products" :
+                  var match$5 = paths[2];
+                  switch (match$5) {
+                    case "[pid]" :
+                    case "all" :
+                        return children;
+                    default:
+                      
+                  }
+                  break;
+              case "web-order" :
+                  return children;
+              default:
+                
+            }
+          }
+          break;
+      case 4 :
+          var match$6 = paths[0];
+          if (match$6 === "buyer") {
+            var match$7 = paths[1];
+            if (match$7 === "web-order") {
+              var match$8 = paths[2];
+              if (match$8 === "complete") {
+                return children;
+              }
+              
+            }
+            
+          }
+          break;
       
     }
-    
   }
   return React.createElement("div", {
               className: "w-full min-h-screen"
@@ -69,6 +112,5 @@ var make = Layout_Buyer;
 export {
   Responsive ,
   make ,
-  
 }
 /* react Not a pure module */

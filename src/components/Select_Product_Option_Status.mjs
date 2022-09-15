@@ -14,11 +14,9 @@ function encodeStatus(status) {
         return "SALE";
     case /* SOLDOUT */2 :
         return "SOLDOUT";
-    case /* HIDDEN_SALE */3 :
-        return "HIDDEN_SALE";
-    case /* NOSALE */4 :
+    case /* NOSALE */3 :
         return "NOSALE";
-    case /* RETIRE */5 :
+    case /* RETIRE */4 :
         return "RETIRE";
     
   }
@@ -31,12 +29,10 @@ function decodeStatus(status) {
     return /* SALE */1;
   } else if (status === "SOLDOUT") {
     return /* SOLDOUT */2;
-  } else if (status === "HIDDEN_SALE") {
-    return /* HIDDEN_SALE */3;
   } else if (status === "NOSALE") {
-    return /* NOSALE */4;
+    return /* NOSALE */3;
   } else if (status === "RETIRE") {
-    return /* RETIRE */5;
+    return /* RETIRE */4;
   } else {
     return ;
   }
@@ -54,11 +50,9 @@ function formatStatus(status) {
         return "판매중";
     case /* SOLDOUT */2 :
         return "품절";
-    case /* HIDDEN_SALE */3 :
-        return "전시숨김";
-    case /* NOSALE */4 :
+    case /* NOSALE */3 :
         return "숨김";
-    case /* RETIRE */5 :
+    case /* RETIRE */4 :
         return "영구판매중지";
     
   }
@@ -86,9 +80,8 @@ function Select_Product_Option_Status(Props) {
                           /* ALL */0,
                           /* SALE */1,
                           /* SOLDOUT */2,
-                          /* HIDDEN_SALE */3,
-                          /* NOSALE */4,
-                          /* RETIRE */5
+                          /* NOSALE */3,
+                          /* RETIRE */4
                         ], (function (s) {
                             return React.createElement("option", {
                                         key: encodeStatus(s),
@@ -105,6 +98,5 @@ export {
   parseStatus ,
   formatStatus ,
   make ,
-  
 }
 /* react Not a pure module */

@@ -43,7 +43,7 @@ let make = (~onVerified) => {
     let phoneNumber =
       state.values
       ->VerifyPhoneNumberFormFields.get(VerifyPhoneNumberFormFields.PhoneNumber)
-      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\-", ~flags="g"), "")
+      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\\-", ~flags="g"), "")
 
     {
       "recipient-no": phoneNumber,
@@ -80,7 +80,7 @@ let make = (~onVerified) => {
         [
           regExp(
             PhoneNumber,
-            ~matches="^\d{3}-\d{3,4}-\d{4}$",
+            ~matches="^\\d{3}-\\d{3,4}-\\d{4}$",
             ~error=`휴대전화 번호를 다시 확인해주세요.`,
           ),
         ]->Array.concatMany,
@@ -96,7 +96,7 @@ let make = (~onVerified) => {
     let phoneNumber =
       verifyPhoneNumberForm.values
       ->VerifyPhoneNumberFormFields.get(VerifyPhoneNumberFormFields.PhoneNumber)
-      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\-", ~flags="g"), "")
+      ->Garter.String.replaceByRe(Js.Re.fromStringWithFlags("\\-", ~flags="g"), "")
     let code =
       state.values->VerificationCodeFormFields.get(VerificationCodeFormFields.VerificationCode)
 
@@ -108,7 +108,7 @@ let make = (~onVerified) => {
     ->Js.Json.stringifyAny
     ->Option.map(body =>
       FetchHelper.post(
-        ~url=`${Env.restApiUrl}/user/sms/check`,
+        ~url=`${Env.restApiUrl}/user/sms/check-duplicated-member`,
         ~body,
         ~onSuccess={
           _ => {
@@ -248,6 +248,7 @@ let make = (~onVerified) => {
           setSMS(._ => BeforeSendSMS)
           setVerificationCode(._ => BeforeSendVerificationCode)
         }
+
       | _ => ()
       }
     | _ => ()
@@ -261,7 +262,7 @@ let make = (~onVerified) => {
           type_="text"
           name="phone-number"
           size=Input.Large
-          placeholder=`휴대전화번호`
+          placeholder={`휴대전화번호`}
           className=%twc("flex-1")
           value={verifyPhoneNumberForm.values->VerifyPhoneNumberFormFields.get(
             VerifyPhoneNumberFormFields.PhoneNumber,
@@ -297,7 +298,7 @@ let make = (~onVerified) => {
           type_="number"
           name="verify-number"
           size=Input.Large
-          placeholder=`인증번호`
+          placeholder={`인증번호`}
           value={verificationCodeForm.values->VerificationCodeFormFields.get(
             VerificationCodeFormFields.VerificationCode,
           )}
@@ -354,14 +355,14 @@ let make = (~onVerified) => {
     <Dialog
       isShow=isShowDuplicated
       onCancel={_ => setShowDuplicated(._ => Dialog.Hide)}
-      textOnCancel=`아니오`
+      textOnCancel={`아니오`}
       onConfirm={_ =>
         router->Next.Router.push(
           `/buyer/signin/find-id-password?mode=find-id&phone-number=${verifyPhoneNumberForm.values->VerifyPhoneNumberFormFields.get(
               VerifyPhoneNumberFormFields.PhoneNumber,
             )}`,
         )}
-      textOnConfirm=`아이디 찾기`>
+      textOnConfirm={`아이디 찾기`}>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
         {`이미 가입된 회원입니다.\n아이디 찾기를 진행하시겠어요?`->React.string}
       </p>
@@ -369,7 +370,7 @@ let make = (~onVerified) => {
     <Dialog
       isShow=isShowVerifyError
       onConfirm={_ => setShowVerifyError(._ => Dialog.Hide)}
-      textOnConfirm=`확인`>
+      textOnConfirm={`확인`}>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
         {`인증번호가 일치하지 않습니다.`->React.string}
       </p>

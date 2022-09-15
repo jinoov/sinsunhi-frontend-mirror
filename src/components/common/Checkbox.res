@@ -9,9 +9,12 @@ let make = (~id=?, ~name=?, ~checked=?, ~onChange=?, ~disabled=?) => {
   | Some(false)
   | None =>
     switch checked {
-    | Some(true) => %twc("w-5 h-5 bg-green-gl rounded flex justify-center items-center")
+    | Some(true) =>
+      %twc("w-5 h-5 bg-green-gl rounded flex justify-center items-center cursor-pointer")
     | Some(false) =>
-      %twc("w-5 h-5 bg-white border-2 border-gray-300 rounded flex justify-center items-center")
+      %twc(
+        "w-5 h-5 bg-white border-2 border-gray-300 rounded flex justify-center items-center cursor-pointer"
+      )
     | None =>
       %twc("w-5 h-5 border-2 border-gray-200 bg-gray-100 rounded flex justify-center items-center")
     }

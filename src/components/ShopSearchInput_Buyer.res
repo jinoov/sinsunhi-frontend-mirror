@@ -28,18 +28,18 @@ let make = () => {
       ignore()
     } else {
       router->pushObj({
-        pathname: "/buyer/search",
+        pathname: "/search",
         query: Js.Dict.fromArray([("keyword", keyword->Js.Global.encodeURIComponent)]),
       })
     }
   })
 
   React.useEffect1(_ => {
-    if router.pathname == "/buyer/search" {
+    if router.pathname == "/search" {
       router.query
       ->Js.Dict.get("keyword")
       ->Option.map(Js.Global.decodeURIComponent)
-      ->Option.map(keyword' => setKeyword(._ => keyword'))
+      ->Option.map(keyword' => setKeyword(. _ => keyword'))
       ->ignore
     } else {
       setKeyword(._ => "")
@@ -54,7 +54,7 @@ let make = () => {
         className=inputStyle
         type_="text"
         name="shop-search"
-        placeholder=`찾고있는 작물을 검색해보세요`
+        placeholder={`찾고있는 작물을 검색해보세요`}
         value={keyword}
         onChange={onChangeKeyword}
         onFocus={_ => setEditing(._ => true)}
@@ -65,7 +65,7 @@ let make = () => {
         className=%twc(
           "absolute right-0 h-[52px] bg-green-500 rounded-full focus:outline-none flex items-center justify-center px-6"
         )>
-        <IconSearch width="36" height="36" stroke="#fff" />
+        <IconSearch width="24" height="24" fill="#fff" />
         <span className=%twc("text-white font-bold")> {`검색`->React.string} </span>
       </button>
     </div>
@@ -95,18 +95,18 @@ module MO = {
         ignore()
       } else {
         router->pushObj({
-          pathname: "/buyer/search",
+          pathname: "/search",
           query: Js.Dict.fromArray([("keyword", keyword->Js.Global.encodeURIComponent)]),
         })
       }
     })
 
     React.useEffect1(_ => {
-      if router.pathname == "/buyer/search" {
+      if router.pathname == "/search" {
         router.query
         ->Js.Dict.get("keyword")
         ->Option.map(Js.Global.decodeURIComponent)
-        ->Option.map(keyword' => setKeyword(._ => keyword'))
+        ->Option.map(keyword' => setKeyword(. _ => keyword'))
         ->ignore
       } else {
         setKeyword(._ => "")
@@ -121,7 +121,7 @@ module MO = {
           className={inputStyle}
           type_="text"
           name="shop-search"
-          placeholder=`찾고있는 작물을 검색해보세요`
+          placeholder={`찾고있는 작물을 검색해보세요`}
           value={keyword}
           onChange={onChangeKeyword}
           onFocus={_ => setEditing(._ => true)}
@@ -137,7 +137,7 @@ module MO = {
           />
         }}
         <button type_="submit" className=%twc("absolute right-3 top-1/2 translate-y-[-50%]")>
-          <IconSearch width="24" height="24" stroke="#12B564" />
+          <IconSearch width="24" height="24" fill="#12B564" />
         </button>
       </div>
     </form>

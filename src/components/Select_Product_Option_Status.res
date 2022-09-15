@@ -1,11 +1,10 @@
-type status = ALL | SALE | SOLDOUT | HIDDEN_SALE | NOSALE | RETIRE
+type status = ALL | SALE | SOLDOUT | NOSALE | RETIRE
 
 let encodeStatus = status =>
   switch status {
   | ALL => `ALL`
   | SALE => `SALE`
   | SOLDOUT => `SOLDOUT`
-  | HIDDEN_SALE => `HIDDEN_SALE`
   | NOSALE => `NOSALE`
   | RETIRE => `RETIRE`
   }
@@ -16,8 +15,6 @@ let decodeStatus = status =>
     SALE->Some
   } else if status === "SOLDOUT" {
     SOLDOUT->Some
-  } else if status === "HIDDEN_SALE" {
-    HIDDEN_SALE->Some
   } else if status === "NOSALE" {
     NOSALE->Some
   } else if status === "RETIRE" {
@@ -32,7 +29,6 @@ let formatStatus = status =>
   | ALL => `전체`
   | SALE => `판매중`
   | SOLDOUT => `품절`
-  | HIDDEN_SALE => `전시숨김`
   | NOSALE => `숨김`
   | RETIRE => `영구판매중지`
   }
@@ -56,7 +52,7 @@ let make = (~status, ~onChange) => {
         value={status->encodeStatus}
         className=%twc("block w-full h-full absolute top-0 opacity-0")
         onChange>
-        {[ALL, SALE, SOLDOUT, HIDDEN_SALE, NOSALE, RETIRE]
+        {[ALL, SALE, SOLDOUT, NOSALE, RETIRE]
         ->Garter.Array.map(s =>
           <option key={s->encodeStatus} value={s->encodeStatus}>
             {s->formatStatus->React.string}

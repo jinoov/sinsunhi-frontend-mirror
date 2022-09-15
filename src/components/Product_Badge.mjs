@@ -4,8 +4,10 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Js_array from "rescript/lib/es6/js_array.js";
 import * as Converter from "../utils/Converter.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 
 function Product_Badge(Props) {
@@ -46,7 +48,7 @@ function status_decode(v) {
   if (json_arr$1.length === 0) {
     return Spice.error(undefined, "Expected variant, found empty array", v);
   }
-  var tagged = json_arr$1.map(Js_json.classify);
+  var tagged = Js_array.map(Js_json.classify, json_arr$1);
   var match = Belt_Array.getExn(tagged, 0);
   if (typeof match !== "number" && match.TAG === /* JSONString */0) {
     switch (match._0) {
@@ -103,6 +105,7 @@ function status_decode(v) {
 }
 
 function Product_Badge$V2(Props) {
+  var className = Props.className;
   var status = Props.status;
   var displayText;
   switch (status) {
@@ -123,7 +126,9 @@ function Product_Badge$V2(Props) {
         break;
     
   }
-  var displayStyle = status !== 1 && status === 0 ? "max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap" : "max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap";
+  var displayStyle = status !== 1 ? (
+      status !== 0 ? "max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap " + Belt_Option.getWithDefault(className, "") : "max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap " + Belt_Option.getWithDefault(className, "")
+    ) : "max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap " + Belt_Option.getWithDefault(className, "");
   return React.createElement("span", {
               className: displayStyle
             }, displayText);
@@ -140,6 +145,5 @@ var make = Product_Badge;
 export {
   make ,
   V2 ,
-  
 }
 /* react Not a pure module */

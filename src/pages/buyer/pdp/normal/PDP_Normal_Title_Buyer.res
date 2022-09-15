@@ -18,28 +18,28 @@ module PC = {
     }
 
     <section>
-      <h1 className=%twc("text-[32px] text-gray-800")> {displayName->React.string} </h1>
+      <h1 className=%twc("text-[32px] leading-[44px] text-gray-800")>
+        {displayName->React.string}
+      </h1>
       {switch user {
       | Unknown => React.null
 
       | NotLoggedIn =>
-        <h1 className=%twc("mt-5 text-[28px] text-green-500 font-bold")>
+        <h1 className=%twc("mt-4 text-[28px] text-green-500 font-bold")>
           {`공급가 회원공개`->React.string}
         </h1>
 
       | LoggedIn(_) => {
           let textColor = isSoldout ? %twc("text-gray-600") : %twc("text-gray-800")
-          <h1 className={%twc("mt-5 text-[32px] font-bold") ++ textColor}>
+          <h1 className={%twc("mt-4 text-[32px] leading-[38px] font-bold ") ++ textColor}>
             {priceLabel->React.string}
-            <span className=%twc("text-lg")> {`원`->React.string} </span>
+            <span className=%twc("text-[28px]")> {`원`->React.string} </span>
           </h1>
         }
       }}
-      <div className=%twc("w-full h-16 my-4 px-6 flex items-center rounded-xl bg-[#FFF1EE]")>
-        <span className=%twc("text-orange-500")>
-          {`시세에 따라 가격이 변동될 수 있습니다`->React.string}
-        </span>
-      </div>
+      <span className=%twc("mt-4 text-red-500 text-[15px]")>
+        {`시세에 따라 가격이 변동될 수 있습니다`->React.string}
+      </span>
     </section>
   }
 }
@@ -67,12 +67,15 @@ module MO = {
 
       | LoggedIn(_) => {
           let textColor = isSoldout ? %twc("text-gray-600") : %twc("text-gray-800")
-          <h1 className={%twc("text-xl font-bold ") ++ textColor}>
+          <h1 className={%twc("text-[22px] font-bold ") ++ textColor}>
             {priceLabel->React.string}
             <span className=%twc("text-lg")> {`원`->React.string} </span>
           </h1>
         }
       }}
+      <span className=%twc("mt-4 text-red-500 text-[13px]")>
+        {`시세에 따라 가격이 변동될 수 있습니다`->React.string}
+      </span>
     </section>
   }
 }

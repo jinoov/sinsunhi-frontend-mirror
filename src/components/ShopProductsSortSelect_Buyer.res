@@ -17,6 +17,7 @@ let encodeSort = sort => {
   | #UPDATED_DESC => "updated-desc"
   | #PRICE_ASC => "price-asc"
   | #PRICE_DESC => "price-desc"
+  // | #PRICE_ASC_PER_KG => "price-asc-per-kg"
   | _ => ""
   }
 }
@@ -27,6 +28,7 @@ let decodeSort = sortStr => {
   | "updated-desc" => Some(#UPDATED_DESC)
   | "price-asc" => Some(#PRICE_ASC)
   | "price-desc" => Some(#PRICE_DESC)
+  // | "price-asc-per-kg" => Some(#PRICE_ASC_PER_KG)
   | _ => None
   }
 }
@@ -37,6 +39,7 @@ let makeSortLabel = sort => {
   | #UPDATED_DESC => `최신순`
   | #PRICE_ASC => `낮은가격순`
   | #PRICE_DESC => `높은가격순`
+  // | #PRICE_ASC_PER_KG => `낮은가격순(kg당)`
   | _ => ""
   }
 }

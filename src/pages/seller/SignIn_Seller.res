@@ -1,8 +1,15 @@
 module FormFields = SignIn_Seller_Form.FormFields
 module Form = SignIn_Seller_Form.Form
 
-@react.component
-let make = () => {
+@spice
+type info = {
+  message: option<string>,
+  @spice.key("activation-method") activationMethod: option<array<string>>,
+  email: option<string>,
+}
+
+let default = () => {
+  let {addToast} = ReactToastNotifications.useToasts()
   let {useRouter, push} = module(Next.Router)
   let router = useRouter()
 
@@ -10,7 +17,7 @@ let make = () => {
   let (isShowForError, setShowForError) = React.Uncurried.useState(_ => Dialog.Hide)
 
   let onSubmit = ({state}: Form.onSubmitAPI) => {
-    let username = state.values->FormFields.get(FormFields.Phone)
+    let username = state.values->FormFields.get(FormFields.Phone)->Helper.PhoneNumber.removeDash
     let password = state.values->FormFields.get(FormFields.Password)
 
     let {makeWithArray, makeWithDict, toString, get} = module(Webapi.Url.URLSearchParams)
@@ -18,11 +25,7 @@ let make = () => {
     let redirectUrl = router.query->makeWithDict->get("redirect")->Option.getWithDefault("/seller")
 
     let urlSearchParams =
-      [
-        ("grant-type", "password"),
-        ("username", username->Helper.PhoneNumber.removeDash),
-        ("password", password),
-      ]
+      [("grant-type", "password"), ("username", username), ("password", password)]
       ->makeWithArray
       ->toString
 
@@ -40,7 +43,7 @@ let make = () => {
               // 로그인 성공 시, 웹뷰에 Braze 푸시 기기 토큰 등록을 위한 userId를 postMessage 합니다.
               switch res.token->CustomHooks.Auth.decodeJwt->CustomHooks.Auth.user_decode {
               | Ok(user) =>
-                Global.Window.ReactNativeWebView.PostMessage.storeBrazeUserId(user.id->Int.toString)
+                Global.Window.ReactNativeWebView.PostMessage.signIn(user.id->Int.toString)
               | Error(_) => ()
               }
 
@@ -51,7 +54,35 @@ let make = () => {
           }
         }
       },
-      ~onFailure={_ => setShowForError(._ => Dialog.Show)},
+      ~onFailure={
+        err => {
+          let customError = err->FetchHelper.convertFromJsPromiseError
+          if customError.status == 401 {
+            let mode = switch customError.info->info_decode {
+            | Ok(info) =>
+              info.activationMethod->Option.map(method => method->Js.Array2.joinWith(","))
+            | Error(_) => None
+            }->Option.map(methods => "mode=" ++ methods)
+            let activationEmail = switch customError.info->info_decode {
+            | Ok(info) => info.email
+            | Error(_) => None
+            }
+
+            switch (mode, activationEmail) {
+            | (Some(mode), Some(activationEmail)) =>
+              router->Next.Router.push(
+                `/seller/activate-user?${mode}&uid=${username}&email=${activationEmail}&role=farmer`,
+              )
+            | (Some(mode), None) =>
+              router->Next.Router.push(`/seller/activate-user?${mode}&uid=${username}&role=farmer`)
+            | (None, _) =>
+              router->Next.Router.push(`/seller/activate-user?uid=${username}&role=farmer`)
+            }
+          } else {
+            setShowForError(._ => Dialog.Show)
+          }
+        }
+      },
     )->ignore
 
     None
@@ -143,12 +174,55 @@ let make = () => {
     None
   }, [user])
 
+  // 휴면 계정 해제 토큰 처리
+  React.useEffect1(_ => {
+    let activationToken = router.query->Js.Dict.get("dormant_reset_token")
+    let activate = (~token) => {
+      {
+        "dormant-reset-token": token,
+      }
+      ->Js.Json.stringifyAny
+      ->Option.map(body => {
+        FetchHelper.post(
+          ~url=`${Env.restApiUrl}/user/dormant/reset-email`,
+          ~body,
+          ~onSuccess={
+            _ =>
+              addToast(.
+                <div className=%twc("flex items-center")>
+                  <IconCheck height="24" width="24" fill="#12B564" className=%twc("mr-2") />
+                  {`휴면 계정이 해제되었어요!`->React.string}
+                </div>,
+                {appearance: "success"},
+              )
+          },
+          ~onFailure={
+            err => {
+              addToast(.
+                <div className=%twc("flex items-center")>
+                  <IconError height="24" width="24" className=%twc("mr-2") />
+                  {`휴면 계정 해제에 실패했어요`->React.string}
+                </div>,
+                {appearance: "error"},
+              )
+            }
+          },
+        )
+      })
+      ->ignore
+    }
+    switch activationToken {
+    | Some(activationToken) => activate(~token=activationToken)
+    | None => ()
+    }
+
+    None
+  }, [router.query])
+
   ChannelTalkHelper.Hook.use()
 
   <>
-    <Next.Head>
-      <title> {j`생산자 로그인 - 신선하이`->React.string} </title>
-    </Next.Head>
+    <Next.Head> <title> {j`생산자 로그인 - 신선하이`->React.string} </title> </Next.Head>
     <div
       className=%twc(
         "container mx-auto max-w-lg min-h-screen relative flex flex-col justify-center items-center"

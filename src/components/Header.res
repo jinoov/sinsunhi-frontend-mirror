@@ -125,31 +125,15 @@ module Seller = {
               <img
                 src="/assets/sinsunhi-logo.svg"
                 className=%twc("w-[86px] h-[22px] md:w-[100px] md:h-[25px]")
-                alt=`신선하이 로고`
+                alt={`신선하이 로고`}
               />
             </li>
           </Next.Link>
-          <li className=%twc("flex-1 flex justify-end sm:hidden")> <User kind=User.Seller /> </li>
+          <li className=%twc("flex-1 flex justify-end sm:hidden")>
+            <User kind=User.Seller />
+          </li>
         </div>
         <div className=%twc("flex flex-row overflow-x-scroll scrollbar-hide")>
-          <Next.Link
-            href={`/seller/shipments?from=${Js.Date.make()
-              ->DateFns.subDays(7)
-              ->DateFns.format("yyyy-MM-dd")}&to=${Js.Date.make()->DateFns.format("yyyy-MM-dd")}`}
-            passHref=true>
-            <a className=%twc("text-lg font-bold text-green-gl px-2 cursor-pointer min-w-max")>
-              <span
-                id="button"
-                className={switch tab {
-                | #upload => tabInactive
-                | #list => tabInactive
-                | #downloadCenter => tabInactive
-                | #shipments => tabActive
-                }}>
-                {j`출하내역`->React.string}
-              </span>
-            </a>
-          </Next.Link>
           <Next.Link href={`/seller/orders?status=CREATE&sort=created`} passHref=true>
             <a className=%twc("text-lg font-bold text-green-gl px-2 cursor-pointer min-w-max")>
               <span
@@ -193,8 +177,26 @@ module Seller = {
             </a>
           </Next.Link>
         </div>
-        <li className=%twc("hidden sm:flex")> <User kind=User.Seller /> </li>
+        <li className=%twc("hidden sm:flex")>
+          <User kind=User.Seller />
+        </li>
       </ol>
+    </nav>
+  }
+}
+
+module SellerActivateUser = {
+  @module("../../public/assets/arrow-right.svg")
+  external arrowRight: string = "default"
+
+  @react.component
+  let make = () => {
+    let router = Next.Router.useRouter()
+
+    <nav className=%twc("w-full max-w-3xl mx-auto h-14 bg-white pl-4 pr-5 flex items-center")>
+      <button onClick={_ => router->Next.Router.back}>
+        <img src=arrowRight className=%twc("w-6 h-6 rotate-180") />
+      </button>
     </nav>
   }
 }
@@ -211,10 +213,12 @@ module Admin = {
           <img
             src="/assets/sinsunhi-logo.svg"
             className=%twc("w-[86px] h-[22px] md:w-[100px] md:h-[25px]")
-            alt=`신선하이 로고`
+            alt={`신선하이 로고`}
           />
         </li>
-        <li> <User kind=User.Admin /> </li>
+        <li>
+          <User kind=User.Admin />
+        </li>
       </ol>
     </nav>
   }

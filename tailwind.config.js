@@ -224,6 +224,8 @@ module.exports = {
     require("tailwind-scrollbar-hide"),
     function ({ addVariant }) {
       addVariant("children", "& > *");
+      addVariant("state-checked", '&[data-state="checked"]');
+      addVariant("state-open", '&[data-state="open"]');
     },
   ],
 };

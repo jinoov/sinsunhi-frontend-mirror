@@ -161,6 +161,11 @@ let make = () => {
               ~revalidation=None,
             )
             scrollIntoView("upload-status")
+            Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
+              ~kind=#CUSTOM_EVENT,
+              ~payload={"action": "order_uploaded"},
+              (),
+            )
           }}
           onFailure={_ => setShowError(._ => Dialog.Show)}
           startIndex=1
@@ -177,7 +182,13 @@ let make = () => {
               <span
                 className=%twc(
                   "inline-block text-center text-green-gl font-bold py-2 w-28 border border-green-gl rounded-xl focus:outline-none hover:text-green-gl-dark hover:border-green-gl-dark"
-                )>
+                )
+                onClick={_ =>
+                  Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
+                    ~kind=#CUSTOM_EVENT,
+                    ~payload={"action": "order_templete_download"},
+                    (),
+                  )}>
                 {j`양식 다운로드`->React.string}
               </span>
             </a>

@@ -7,14 +7,13 @@
  *
  */
 
-module Fragment = %relay(`
-  fragment ShopMainSpecialShowcaseListBuyerFragment on Query
-  @argumentDefinitions(
-    first: { type: "Int", defaultValue: 8 }
-    after: { type: "ID", defaultValue: null }
-    sort: { type: "DisplayCategoryProductsSort", defaultValue: UPDATED_DESC }
-    onlyDisplayable: { type: "Boolean", defaultValue: true }
-    onlyBuyable: { type: "Boolean", defaultValue: true }
+module Query = %relay(`
+  query ShopMainSpecialShowcaseListBuyerQuery(
+    $after: ID
+    $first: Int!
+    $sort: DisplayCategoryProductsSort!
+    $onlyDisplayable: Boolean!
+    $onlyBuyable: Boolean!
   ) {
     specialDisplayCategories(onlyDisplayable: $onlyDisplayable) {
       id
@@ -70,11 +69,23 @@ module PC = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {useRouter, pushObj} = module(Next.Router)
+  let make = () => {
+    let {useRouter, push} = module(Next.Router)
     let router = useRouter()
 
-    let {specialDisplayCategories} = Fragment.use(query)
+    let variables = Query.makeVariables(
+      ~first=8,
+      ~onlyBuyable=true,
+      ~onlyDisplayable=true,
+      ~sort=#UPDATED_DESC,
+      (),
+    )
+
+    let {specialDisplayCategories} = Query.use(
+      ~variables,
+      ~fetchPolicy=RescriptRelay.StoreAndNetwork,
+      (),
+    )
 
     specialDisplayCategories
     ->Array.mapWithIndex((idx, {id, name, products: {edges, pageInfo}}) => {
@@ -108,10 +119,7 @@ module PC = {
               <div className=%twc("mt-12 flex items-center justify-center")>
                 <button
                   onClick={ReactEvents.interceptingHandler(_ => {
-                    router->pushObj({
-                      pathname: "/buyer/products",
-                      query: [("category-id", id)]->Js.Dict.fromArray,
-                    })
+                    router->push(`/categories/${id}`)
                   })}
                   className=%twc("px-6 py-3 bg-gray-100 rounded-full text-sm flex items-center")>
                   {`전체보기`->React.string}
@@ -157,11 +165,23 @@ module MO = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {useRouter, pushObj} = module(Next.Router)
+  let make = () => {
+    let {useRouter, push} = module(Next.Router)
     let router = useRouter()
 
-    let {specialDisplayCategories} = Fragment.use(query)
+    let variables = Query.makeVariables(
+      ~first=8,
+      ~onlyBuyable=true,
+      ~onlyDisplayable=true,
+      ~sort=#UPDATED_DESC,
+      (),
+    )
+
+    let {specialDisplayCategories} = Query.use(
+      ~variables,
+      ~fetchPolicy=RescriptRelay.StoreAndNetwork,
+      (),
+    )
 
     specialDisplayCategories
     ->Array.map(({id, name, products: {edges, pageInfo}}) => {
@@ -190,10 +210,7 @@ module MO = {
               <div className=%twc("mt-8 flex items-center justify-center")>
                 <button
                   onClick={ReactEvents.interceptingHandler(_ => {
-                    router->pushObj({
-                      pathname: "/buyer/products",
-                      query: [("category-id", id)]->Js.Dict.fromArray,
-                    })
+                    router->push(`/categories/${id}`)
                   })}
                   className=%twc(
                     "px-[18px] py-[10px] bg-gray-100 rounded-full text-sm flex items-center"

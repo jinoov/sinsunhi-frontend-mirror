@@ -163,6 +163,36 @@ var Tabs = {
   Content: Content$6
 };
 
+var Root$10 = {};
+
+var Thumb$1 = {};
+
+var Switch = {
+  Root: Root$10,
+  Thumb: Thumb$1
+};
+
+var Root$11 = {};
+
+var Track = {};
+
+var $$Range = {};
+
+var Thumb$2 = {};
+
+var Slider = {
+  Root: Root$11,
+  Track: Track,
+  $$Range: $$Range,
+  Thumb: Thumb$2
+};
+
+var Root$12 = {};
+
+var Portal$1 = {
+  Root: Root$12
+};
+
 export {
   DropDown ,
   Dialog ,
@@ -174,6 +204,8 @@ export {
   ScrollArea ,
   HoverCard ,
   Tabs ,
-  
+  Switch ,
+  Slider ,
+  Portal$1 as Portal,
 }
 /* No side effect */

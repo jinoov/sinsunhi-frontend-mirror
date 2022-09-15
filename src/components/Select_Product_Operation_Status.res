@@ -2,9 +2,7 @@ module type Status = {
   type status
 
   let options: array<status>
-
   let toDisplay: status => string
-
   let status_encode: status => Js.Json.t
   let status_decode: Js.Json.t => Result.t<status, Spice.decodeError>
 }
@@ -104,7 +102,7 @@ module SearchStatus = {
     | SOLDOUT => `품절`
     | NOSALE => `숨김`
     | RETIRE => `영구판매중지`
-    | HIDDEN_SALE => `전시판매중지`
+    | HIDDEN_SALE => `전시판매숨김`
     }
 
   let options = [ALL, SALE, SOLDOUT, HIDDEN_SALE, NOSALE, RETIRE]

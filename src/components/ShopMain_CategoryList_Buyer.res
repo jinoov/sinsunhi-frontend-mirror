@@ -7,9 +7,8 @@
  *
  */
 
-module Fragment = %relay(`
-  fragment ShopMainCategoryListBuyerQuery on Query
-  @argumentDefinitions(onlyDisplayable: { type: "Boolean", defaultValue: true }) {
+module Query = %relay(`
+  query ShopMainCategoryListBuyerQuery($onlyDisplayable: Boolean!) {
     mainDisplayCategories(onlyDisplayable: $onlyDisplayable) {
       id
       image {
@@ -43,47 +42,31 @@ module PC = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {mainDisplayCategories} = query->Fragment.use
+  let make = (
+    ~categories: array<ShopMainCategoryListBuyerQuery_graphql.Types.response_mainDisplayCategories>,
+  ) => {
+    let mainDisplayCategories = categories
 
     <div className=%twc("w-full")>
       <span className=%twc("text-2xl text-gray-800 font-bold ml-5")>
         {`전체 카테고리`->React.string}
       </span>
       <ol className=%twc("mt-6 w-full flex items-center")>
-        <li className=%twc("mx-6 w-[112px] max-w-[112px]")>
-          <Next.Link href={`/buyer/products`}>
-            <a>
-              <img
-                src="https://public.sinsunhi.com/images/20220512/category_all.png"
-                className=%twc("w-28 h-28")
-                alt=`display-category-all`
-              />
-              <p className=%twc("w-[112px] text-gray-800 font-bold text-center")>
-                {`전체 상품`->React.string}
-              </p>
-            </a>
-          </Next.Link>
-        </li>
         {mainDisplayCategories
         ->Array.map(({id, name, image}) => {
           let key = `display-category-${id}-pc`
           let src =
-            image->Option.mapWithDefault(ImageWithPlaceholder.Placeholder.sm, image' =>
+            image->Option.mapWithDefault(Image.Placeholder.Sm->Image.Placeholder.getSrc, image' =>
               image'.original
             )
-          let queryStr = {
-            [("category-id", id)]
-            ->Webapi.Url.URLSearchParams.makeWithArray
-            ->Webapi.Url.URLSearchParams.toString
-          }
+
           <li key className=%twc("mx-6 w-[112px]")>
-            <Next.Link href={`/buyer/products?${queryStr}`}>
+            <Next.Link href={`/categories/${id}`}>
               <a>
                 <div className=%twc("w-28 aspect-square rounded-lg overflow-hidden")>
-                  <ImageWithPlaceholder
+                  <Image
                     src
-                    placeholder=ImageWithPlaceholder.Placeholder.sm
+                    placeholder=Image.Placeholder.Sm
                     className=%twc("w-full h-full object-cover")
                     alt=key
                   />
@@ -94,6 +77,20 @@ module PC = {
           </li>
         })
         ->React.array}
+        <li className=%twc("mx-6 w-[112px] max-w-[112px]")>
+          <Next.Link href={`/products`}>
+            <a>
+              <img
+                src="https://public.sinsunhi.com/images/20220512/category_all.png"
+                className=%twc("w-28 h-28")
+                alt={`display-category-all`}
+              />
+              <p className=%twc("w-[112px] text-gray-800 font-bold text-center")>
+                {`전체 상품`->React.string}
+              </p>
+            </a>
+          </Next.Link>
+        </li>
       </ol>
     </div>
   }
@@ -124,8 +121,10 @@ module MO = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {mainDisplayCategories} = query->Fragment.use
+  let make = (
+    ~categories: array<ShopMainCategoryListBuyerQuery_graphql.Types.response_mainDisplayCategories>,
+  ) => {
+    let mainDisplayCategories = categories
 
     <div className=%twc("w-full")>
       <span className=%twc("ml-5 text-lg text-gray-800 font-bold")>
@@ -133,13 +132,13 @@ module MO = {
       </span>
       <ol className=%twc("mt-6 w-full grid grid-cols-4 gap-y-3")>
         <li className=%twc("w-full flex items-center justify-center")>
-          <Next.Link href={`/buyer/products`}>
+          <Next.Link href={`/products`}>
             <a>
               <div className=%twc("w-[90px] flex flex-col items-center justify-center")>
                 <img
                   src="https://public.sinsunhi.com/images/20220512/category_all.png"
                   className=%twc("w-14 aspect-square object-cover")
-                  alt=`display-category-all`
+                  alt={`display-category-all`}
                 />
                 <p className=%twc("text-gray-800 text-sm")> {`전체 상품`->React.string} </p>
               </div>
@@ -149,24 +148,15 @@ module MO = {
         {mainDisplayCategories
         ->Array.map(({id, name, image}) => {
           let key = `display-category-${id}-mobile`
-          let src =
-            image->Option.mapWithDefault(ImageWithPlaceholder.Placeholder.sm, image' =>
-              image'.original
-            )
-          let queryStr = {
-            [("category-id", id)]
-            ->Webapi.Url.URLSearchParams.makeWithArray
-            ->Webapi.Url.URLSearchParams.toString
-          }
 
           <li key className=%twc("w-full flex items-center justify-center")>
-            <Next.Link href={`/buyer/products?${queryStr}`}>
+            <Next.Link href={`/categories/${id}`}>
               <a>
                 <div className=%twc("w-[90px] flex flex-col items-center justify-center")>
                   <div className=%twc("w-14 aspect-square rounded-lg overflow-hidden")>
-                    <ImageWithPlaceholder
-                      src
-                      placeholder=ImageWithPlaceholder.Placeholder.sm
+                    <Image
+                      src=?{image->Option.map(({original}) => original)}
+                      placeholder=Image.Placeholder.Sm
                       className=%twc("w-full h-full object-cover")
                       alt=key
                     />

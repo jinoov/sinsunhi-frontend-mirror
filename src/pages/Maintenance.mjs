@@ -9,6 +9,7 @@ import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
@@ -21,6 +22,69 @@ import IsBefore from "date-fns/isBefore";
 import CompareDesc from "date-fns/compareDesc";
 import * as ReactDialog from "@radix-ui/react-dialog";
 
+function make(router) {
+  var routerPathnames = router.pathname.split("/");
+  var match = Belt_Array.get(routerPathnames, 1);
+  var match$1 = Belt_Array.get(routerPathnames, 2);
+  if (match === undefined) {
+    return /* Common */3;
+  }
+  switch (match) {
+    case "admin" :
+        return /* Admin */2;
+    case "buyer" :
+        if (match$1 !== undefined && match$1 !== "products") {
+          return /* Buyer */1;
+        } else {
+          return /* Common */3;
+        }
+    case "seller" :
+        return /* Seller */0;
+    default:
+      return /* Common */3;
+  }
+}
+
+function is(t, target) {
+  if (target === "global") {
+    return true;
+  }
+  switch (t) {
+    case /* Seller */0 :
+        if (target === "seller") {
+          return true;
+        } else {
+          return false;
+        }
+    case /* Buyer */1 :
+        if (target === "buyer") {
+          return true;
+        } else {
+          return false;
+        }
+    case /* Admin */2 :
+        if (target === "admin") {
+          return true;
+        } else {
+          return false;
+        }
+    case /* Common */3 :
+        if (target === "common") {
+          return true;
+        } else {
+          return false;
+        }
+    case /* Global */4 :
+        return false;
+    
+  }
+}
+
+var StatusPageComponent = {
+  make: make,
+  is: is
+};
+
 function afterCheck(from_) {
   return IsAfter(new Date(Date.now()), from_);
 }
@@ -29,7 +93,7 @@ function beforeCheck(to_) {
   return IsBefore(new Date(Date.now()), to_);
 }
 
-function make(from, to_) {
+function make$1(from, to_) {
   return Belt_Option.flatMap(Belt_Option.map(from, (function (prim) {
                     return new Date(prim);
                   })), (function (from) {
@@ -58,21 +122,26 @@ function make(from, to_) {
 
 function format(param) {
   var formatForDisplay = function (date) {
-    return Format(date, "MM") + "월 " + Format(date, "dd") + "일 " + Format(date, "HH") + "시";
+    return "" + Format(date, "MM") + "월 " + Format(date, "dd") + "일 " + Format(date, "HH") + "시";
   };
-  return formatForDisplay(param.from) + " ~ " + Belt_Option.getWithDefault(Belt_Option.map(param.to_, formatForDisplay), "");
+  return "" + formatForDisplay(param.from) + " ~ " + Belt_Option.getWithDefault(Belt_Option.map(param.to_, formatForDisplay), "") + "";
 }
 
 var MaintenanceTime = {
   afterCheck: afterCheck,
   beforeCheck: beforeCheck,
-  make: make,
+  make: make$1,
   format: format
 };
 
-function make$1(pathname, target, message, from, to_) {
-  var match = target.includes(pathname);
-  var match$1 = make(from, to_);
+function make$2(currentSubPage, incidentTargets, message, from, to_) {
+  var pathCheck = function (currentSubPage, incidentTargets) {
+    return Belt_Array.getBy(incidentTargets, (function (incidentTarget) {
+                  return is(currentSubPage, incidentTarget);
+                })) !== undefined;
+  };
+  var match = pathCheck(currentSubPage, incidentTargets);
+  var match$1 = make$1(from, to_);
   if (match && match$1 !== undefined) {
     return /* Matched */{
             _0: [{
@@ -115,7 +184,7 @@ function getIncidentForDisplay(t) {
 }
 
 var Match = {
-  make: make$1,
+  make: make$2,
   join: join,
   getIncidentForDisplay: getIncidentForDisplay
 };
@@ -442,34 +511,34 @@ function incidents_decode(v) {
 
 function use(target) {
   var apiFetcher = function (url) {
-    return fetch(url, Fetch.RequestInit.make(/* Get */0, {
-                            Authorization: "OAuth " + Env.statusPageKey
-                          }, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)(undefined)).then(function (res) {
-                    if (res.ok) {
-                      return res.json();
-                    } else {
-                      return res.json().then(function (errJson) {
-                                    var error = new Error("요청에 실패했습니다.");
-                                    error.status = res.status;
-                                    error.info = errJson;
-                                    var errJson$p = FetchHelper.errJson_decode(errJson);
-                                    if (errJson$p.TAG === /* Ok */0) {
-                                      error.message = errJson$p._0.message;
-                                    }
-                                    return Promise.reject(error);
-                                  }).catch(function (err) {
-                                  return Promise.reject(err);
-                                });
-                    }
-                  }).then(function (data) {
-                  return Promise.resolve(data);
-                }).catch(function (param) {
-                return Promise.resolve(null);
-              });
+    return Js_promise.$$catch((function (param) {
+                  return Promise.resolve(null);
+                }), Js_promise.then_((function (data) {
+                      return Promise.resolve(data);
+                    }), Js_promise.then_((function (res) {
+                          if (res.ok) {
+                            return Fetch.$$Response.json(res);
+                          } else {
+                            return Js_promise.$$catch((function (err) {
+                                          return Promise.reject(err);
+                                        }), Js_promise.then_((function (errJson) {
+                                              var error = new Error("요청에 실패했습니다.");
+                                              error.status = res.status;
+                                              error.info = errJson;
+                                              var errJson$p = FetchHelper.errJson_decode(errJson);
+                                              if (errJson$p.TAG === /* Ok */0) {
+                                                error.message = errJson$p._0.message;
+                                              }
+                                              return Promise.reject(error);
+                                            }), Fetch.$$Response.json(res)));
+                          }
+                        }), fetch(url, Fetch.RequestInit.make(/* Get */0, {
+                                  Authorization: "OAuth " + Env.statusPageKey + ""
+                                }, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)(undefined)))));
   };
   var match = Swr("https://api.statuspage.io/v1/pages/" + Env.statusPagePageId + "/incidents/" + (
         target ? "scheduled" : "unresolved"
-      ), apiFetcher, {
+      ) + "", apiFetcher, {
         revalidateIfStale: false,
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -485,31 +554,28 @@ function use(target) {
   
 }
 
-function isMaintenanceTarget(statusPageIncidents, pathname) {
-  return Belt_Option.getWithDefault(Belt_Option.map(Belt_Option.map(statusPageIncidents, (function (statusPageIncidents) {
-                        return Belt_Array.map(statusPageIncidents, (function (statusPageResult) {
-                                      var message = Belt_Option.map(Belt_Array.get(Belt_SortArray.stableSortBy(statusPageResult.incidentUpdates, (function (incidentA, incidentB) {
-                                                      return CompareDesc(new Date(incidentA.createdAt), new Date(incidentB.createdAt));
-                                                    })), 0), (function (latestIncident) {
-                                              return latestIncident.body;
-                                            }));
-                                      if (Belt_Option.isSome(statusPageResult.scheduledFor)) {
-                                        return make$1(pathname, Belt_Array.map(Belt_Array.map(statusPageResult.components, (function (component) {
-                                                              return component.name;
-                                                            })), (function (name) {
-                                                          return name.toLowerCase();
-                                                        })), message, statusPageResult.scheduledFor, statusPageResult.scheduledUntil);
-                                      } else {
-                                        return make$1(pathname, Belt_Array.map(Belt_Array.map(statusPageResult.components, (function (component) {
-                                                              return component.name;
-                                                            })), (function (name) {
-                                                          return name.toLowerCase();
-                                                        })), message, statusPageResult.createdAt, undefined);
-                                      }
-                                    }));
-                      })), (function (matches) {
-                    return Belt_Array.reduce(matches, /* NotMatched */0, join);
-                  })), /* NotMatched */0);
+function isMaintenanceTarget(statusPageIncidents, currentSubPage) {
+  if (statusPageIncidents !== undefined) {
+    return Belt_Array.reduce(Belt_Array.map(statusPageIncidents, (function (statusPageResult) {
+                      var message = Belt_Option.map(Belt_Array.get(Belt_SortArray.stableSortBy(statusPageResult.incidentUpdates, (function (incidentA, incidentB) {
+                                      return CompareDesc(new Date(incidentA.createdAt), new Date(incidentB.createdAt));
+                                    })), 0), (function (latestIncident) {
+                              return latestIncident.body;
+                            }));
+                      var incidentTarget = Belt_Array.map(Belt_Array.map(statusPageResult.components, (function (component) {
+                                  return component.name;
+                                })), (function (name) {
+                              return name.toLowerCase();
+                            }));
+                      if (Belt_Option.isSome(statusPageResult.scheduledFor)) {
+                        return make$2(currentSubPage, incidentTarget, message, statusPageResult.scheduledFor, statusPageResult.scheduledUntil);
+                      } else {
+                        return make$2(currentSubPage, incidentTarget, message, statusPageResult.createdAt, undefined);
+                      }
+                    })), /* NotMatched */0, join);
+  } else {
+    return /* NotMatched */0;
+  }
 }
 
 var StatusPageCompat = {
@@ -527,7 +593,7 @@ function Maintenance$View(Props) {
   var message = Props.message;
   var maintenanceTime = Props.maintenanceTime;
   return React.createElement("section", {
-              className: "w-screen h-screen flex flex-col items-center justify-start dialog-overlay"
+              className: "w-screen h-screen flex flex-col items-center justify-start dialog-overlay bg-white pointer-events-none"
             }, React.createElement("div", {
                   className: "flex flex-col h-full items-center justify-center"
                 }, React.createElement("img", {
@@ -554,9 +620,9 @@ var View = {
 };
 
 function Maintenance$Content(Props) {
-  var currentPathName = Belt_Option.getWithDefault(Belt_Array.get(Router.useRouter().pathname.split("/"), 1), "");
-  var incidentResultFromStatusPage = isMaintenanceTarget(use(/* Incident */0), currentPathName);
-  var maintenanceResultFromStatusPage = isMaintenanceTarget(use(/* Maintenance */1), currentPathName);
+  var currentAffectedTarget = make(Router.useRouter());
+  var incidentResultFromStatusPage = isMaintenanceTarget(use(/* Incident */0), currentAffectedTarget);
+  var maintenanceResultFromStatusPage = isMaintenanceTarget(use(/* Maintenance */1), currentAffectedTarget);
   var match = getIncidentForDisplay(join(incidentResultFromStatusPage, maintenanceResultFromStatusPage));
   if (match !== undefined) {
     return React.createElement(ReactDialog.Root, {
@@ -593,7 +659,6 @@ function Maintenance(Props) {
           setIsCsr(function (param) {
                 return true;
               });
-          
         }), []);
   if (match[0]) {
     return React.createElement(Maintenance$Content, {});
@@ -602,15 +667,15 @@ function Maintenance(Props) {
   }
 }
 
-var make$2 = Maintenance;
+var make$3 = Maintenance;
 
 export {
+  StatusPageComponent ,
   MaintenanceTime ,
   Match ,
   StatusPageCompat ,
   View ,
   Content ,
-  make$2 as make,
-  
+  make$3 as make,
 }
 /* Env Not a pure module */

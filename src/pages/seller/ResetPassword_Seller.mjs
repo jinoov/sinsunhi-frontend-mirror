@@ -134,20 +134,19 @@ function ResetPassword_Seller(Props) {
     Belt_Option.map(JSON.stringify({
               uid: phoneNumber
             }), (function (body) {
-            return FetchHelper.post(Env.restApiUrl + "/user/password-reset", body, (function (param) {
-                          return setStatusRequestVerificationCode(function (param) {
-                                      return /* SuccessRequestVerificationCode */2;
-                                    });
+            return FetchHelper.post("" + Env.restApiUrl + "/user/password-reset", body, (function (param) {
+                          setStatusRequestVerificationCode(function (param) {
+                                return /* SuccessRequestVerificationCode */2;
+                              });
                         }), (function (param) {
                           setShowSendingVerificationCodeError(function (param) {
                                 return /* Show */0;
                               });
-                          return setStatusRequestVerificationCode(function (param) {
-                                      return /* FailedRequestVerificationCode */3;
-                                    });
+                          setStatusRequestVerificationCode(function (param) {
+                                return /* FailedRequestVerificationCode */3;
+                              });
                         }));
           }));
-    
   };
   var verifyPhoneNumberForm = Curry._7(VerifyPhoneNumberForm.use, initialStateVerifyPhoneNumber, /* Schema */{
         _0: Belt_Array.concatMany([Curry._4(VerifyPhoneNumberForm.ReSchema.Validation.regExp, "전화번호 형식이 맞지 않습니다.", "^\\d{3}-\\d{3,4}-\\d{4}$", undefined, /* PhoneNumber */0)])
@@ -165,23 +164,22 @@ function ResetPassword_Seller(Props) {
               "confirmed-no": code,
               password: password
             }), (function (body) {
-            return FetchHelper.put(Env.restApiUrl + "/user/password/farmer", body, (function (param) {
+            return FetchHelper.put("" + Env.restApiUrl + "/user/password/farmer", body, (function (param) {
                           setStatusRequestReset(function (param) {
                                 return /* SuccessRequestReset */2;
                               });
-                          return setShowResetSuccess(function (param) {
-                                      return /* Show */0;
-                                    });
+                          setShowResetSuccess(function (param) {
+                                return /* Show */0;
+                              });
                         }), (function (param) {
                           setStatusRequestReset(function (param) {
                                 return /* FailedRequestReset */3;
                               });
-                          return setShowResetError(function (param) {
-                                      return /* Show */0;
-                                    });
+                          setShowResetError(function (param) {
+                                return /* Show */0;
+                              });
                         }));
           }));
-    
   };
   var resetPasswordForm = Curry._7(ResetPasswordForm.use, initialStateResetPassword, /* Schema */{
         _0: Belt_Array.concatMany([
@@ -213,11 +211,11 @@ function ResetPassword_Seller(Props) {
   };
   var handleOnChangePhoneNumber = function (e) {
     var newValue = e.currentTarget.value.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
-    return Curry._4(verifyPhoneNumberForm.setFieldValue, /* PhoneNumber */0, newValue, true, undefined);
+    Curry._4(verifyPhoneNumberForm.setFieldValue, /* PhoneNumber */0, newValue, true, undefined);
   };
   var handleOnSubmitResetPassword = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return Curry._1(resetPasswordForm.submit, undefined);
+                  Curry._1(resetPasswordForm.submit, undefined);
                 }), param);
   };
   var isDisabledVerifyPhoneNumberForm = statusRequestVerificationCode === 2 || statusRequestVerificationCode === 1;
@@ -260,16 +258,16 @@ function ResetPassword_Seller(Props) {
   };
   var handleOnClickBackButton = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setShowConfirmGoBack(function (param) {
-                              return /* Show */0;
-                            });
+                  setShowConfirmGoBack(function (param) {
+                        return /* Show */0;
+                      });
                 }), param);
   };
   var handleOnChangePasswordConfirm = function (e) {
     var value = e.target.value;
-    return setPasswordConfirm(function (param) {
-                return value;
-              });
+    setPasswordConfirm(function (param) {
+          return value;
+        });
   };
   var partial_arg = Curry._1(resetPasswordForm.handleChange, /* VerificationCode */0);
   var partial_arg$1 = Curry._1(resetPasswordForm.handleChange, /* Password */1);
@@ -394,13 +392,12 @@ function ResetPassword_Seller(Props) {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "비밀번호 재설정이 진행중 입니다.\n그만 하시겠어요?"),
                   onCancel: (function (param) {
-                      return setShowConfirmGoBack(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowConfirmGoBack(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       router.replace("/seller/signin");
-                      
                     }),
                   textOnConfirm: "그만하기",
                   kindOfConfirm: /* Negative */1
@@ -410,9 +407,9 @@ function ResetPassword_Seller(Props) {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "문자 전송이 실패했습니다.\n다시한번 시도해주세요."),
                   onCancel: (function (param) {
-                      return setShowSendingVerificationCodeError(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowSendingVerificationCodeError(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "확인"
                 }), React.createElement(Dialog.make, {
@@ -422,7 +419,6 @@ function ResetPassword_Seller(Props) {
                       }, "비밀번호 재설정이\n완료되었습니다."),
                   onConfirm: (function (param) {
                       router.replace("/seller/signin");
-                      
                     }),
                   textOnConfirm: "확인"
                 }), React.createElement(Dialog.make, {
@@ -431,9 +427,9 @@ function ResetPassword_Seller(Props) {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "비밀번호 재설정 요청이 실패하였습니다.\n다시 시도해주세요."),
                   onConfirm: (function (param) {
-                      return setShowResetError(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowResetError(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnConfirm: "확인"
                 }));
@@ -454,6 +450,5 @@ export {
   checkDisabledSubmitVerifyPhoneNumberButton ,
   checkPasswordConfirmed ,
   make ,
-  
 }
 /* VerifyPhoneNumberForm Not a pure module */

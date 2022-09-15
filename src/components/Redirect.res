@@ -6,6 +6,19 @@ let setHref = path =>
   })
   ->ignore
 
+let redirectByRole = () => {
+  open Webapi
+  let currentPathname = Dom.location->Dom.Location.pathname
+  let firstPath = currentPathname->Js.String2.split("/")->Array.keep(x => x != "")->Array.get(0)
+  let signInUrl = switch firstPath {
+  | Some("seller") => `/seller/signin?redirect=${currentPathname}`
+  | Some("admin") => `/admin/signin?redirect=${currentPathname}`
+  | Some("buyer") | _ => `/buyer/signin?redirect=${currentPathname}`
+  }
+
+  setHref(signInUrl)
+}
+
 @react.component
 let make = (~path, ~message=?) => {
   React.useEffect0(() => {

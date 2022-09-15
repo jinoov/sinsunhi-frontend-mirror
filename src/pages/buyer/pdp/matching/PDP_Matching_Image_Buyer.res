@@ -10,9 +10,9 @@
 let make = (~src) => {
   <div className=%twc("w-full")>
     <div className=%twc("relative overflow-hidden")>
-      <ImageWithPlaceholder
+      <Image
         src
-        placeholder=ImageWithPlaceholder.Placeholder.lg
+        placeholder=Image.Placeholder.Lg
         className=%twc("w-full max-h-[300px] object-contain")
         alt="product-detail-thumbnail"
       />

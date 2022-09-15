@@ -18,7 +18,7 @@ module Fragments = {
 
   module Normal = %relay(`
     fragment ShopProductListItemBuyerNormalFragment on Product {
-      id
+      productId: number
       image {
         thumb800x800
       }
@@ -35,23 +35,46 @@ module Fragments = {
 
   module Quoted = %relay(`
     fragment ShopProductListItemBuyerQuotedFragment on QuotedProduct {
-      id
+      productId: number
       image {
         thumb800x800
       }
       displayName
+      status
     }
   `)
 
   module Matching = %relay(`
     fragment ShopProductListItemBuyerMatchingFragment on MatchingProduct {
-      id
+      productId: number
       image {
         thumb800x800
       }
       displayName
+      status
+      price
+      pricePerKg
+      representativeWeight
     }
   `)
+}
+
+module StatusLabel = {
+  @react.component
+  let make = (~text) => {
+    let dimmedStyle = %twc("w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl")
+    let labelContainerStyle = %twc(
+      "absolute bottom-0 w-full h-10 bg-gray-600 flex items-center justify-center opacity-90"
+    )
+    let labelTextStyle = %twc("text-white text-xl font-bold")
+
+    <>
+      <div className=dimmedStyle />
+      <div className=labelContainerStyle>
+        <span className=labelTextStyle> {text->React.string} </span>
+      </div>
+    </>
+  }
 }
 
 module Normal = {
@@ -62,8 +85,7 @@ module Normal = {
       let router = useRouter()
       let user = CustomHooks.User.Buyer.use2()
 
-      let {id, displayName, price, image, status} = query->Fragments.Normal.use
-      let isSoldout = status == #SOLDOUT
+      let {productId, displayName, price, image, status} = query->Fragments.Normal.use
 
       let priceLabel = {
         price->Option.mapWithDefault("", price' =>
@@ -71,51 +93,43 @@ module Normal = {
         )
       }
 
-      let onClick = ReactEvents.interceptingHandler(_ => {
-        router->push(`/buyer/products/${id}`)
-      })
-
-      <div className=%twc("w-[280px] h-[376px] cursor-pointer") onClick>
+      <div
+        className=%twc("w-[280px] h-[376px] cursor-pointer")
+        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
         <div className=%twc("w-[280px] aspect-square rounded-xl overflow-hidden relative")>
-          <ImageWithPlaceholder
+          <Image
             src=image.thumb800x800
             className=%twc("w-full h-full object-cover")
-            placeholder=ImageWithPlaceholder.Placeholder.sm
-            alt={`product-${id}`}
+            placeholder=Image.Placeholder.Sm
+            alt={`product-${productId->Int.toString}`}
+            loading=Image.Loading.Lazy
           />
           <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl") />
-          {switch isSoldout {
-          | true => <>
-              <div
-                className=%twc("w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl")
-              />
-              <div
-                className=%twc(
-                  "absolute bottom-0 w-full h-10 bg-gray-600 flex items-center justify-center opacity-90"
-                )>
-                <span className=%twc("text-white text-xl font-bold")>
-                  {`품절`->React.string}
-                </span>
-              </div>
-            </>
-
-          | false => React.null
+          {switch status {
+          | #SOLDOUT => <StatusLabel text={`품절`} />
+          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+          | #NOSALE => <StatusLabel text={`숨김`} />
+          | _ => React.null
           }}
         </div>
         <div className=%twc("flex flex-col mt-4")>
           <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
           {switch user {
-          | LoggedIn(_) =>
-            let textColor = isSoldout ? %twc(" text-gray-400") : %twc(" text-text-L1")
-            <span className={%twc("mt-2 font-bold text-lg") ++ textColor}>
-              {priceLabel->React.string}
-            </span>
+          | Unknown => <Skeleton.Box />
 
           | NotLoggedIn =>
             <span className=%twc("mt-2 font-bold text-lg text-green-500")>
               {`공급가 회원공개`->React.string}
             </span>
-          | Unknown => <Skeleton.Box />
+
+          | LoggedIn(_) =>
+            let textColor = switch status {
+            | #SOLDOUT | #HIDDEN_SALE => %twc(" text-gray-400")
+            | _ => %twc(" text-text-L1")
+            }
+            <span className={%twc("mt-2 font-bold text-lg") ++ textColor}>
+              {priceLabel->React.string}
+            </span>
           }}
         </div>
       </div>
@@ -129,7 +143,7 @@ module Normal = {
       let router = useRouter()
       let user = CustomHooks.User.Buyer.use2()
 
-      let {id, displayName, price, image, status} = query->Fragments.Normal.use
+      let {productId, displayName, price, image, status} = query->Fragments.Normal.use
       let isSoldout = status == #SOLDOUT
 
       let priceLabel = {
@@ -138,33 +152,23 @@ module Normal = {
         )
       }
 
-      let onClick = ReactEvents.interceptingHandler(_ => {
-        router->push(`/buyer/products/${id}`)
-      })
-
-      <div className=%twc("cursor-pointer") onClick>
+      <div
+        className=%twc("cursor-pointer")
+        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
         <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
-          <ImageWithPlaceholder
+          <Image
             src=image.thumb800x800
             className=%twc("w-full h-full object-cover")
-            placeholder=ImageWithPlaceholder.Placeholder.sm
-            alt={`product-${id}`}
+            placeholder=Image.Placeholder.Sm
+            alt={`product-${productId->Int.toString}`}
+            loading=Image.Loading.Lazy
           />
           <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
-          {switch isSoldout {
-          | true => <>
-              <div
-                className=%twc("w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl")
-              />
-              <div
-                className=%twc(
-                  "absolute bottom-0 w-full h-8 bg-gray-600 flex items-center justify-center opacity-90"
-                )>
-                <span className=%twc("text-white font-bold")> {`품절`->React.string} </span>
-              </div>
-            </>
-
-          | false => React.null
+          {switch status {
+          | #SOLDOUT => <StatusLabel text={`품절`} />
+          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+          | #NOSALE => <StatusLabel text={`숨김`} />
+          | _ => React.null
           }}
         </div>
         <div className=%twc("flex flex-col mt-3")>
@@ -196,21 +200,26 @@ module Quoted = {
       let {useRouter, push} = module(Next.Router)
       let router = useRouter()
 
-      let {id, image, displayName} = query->Fragments.Quoted.use
+      let {productId, image, displayName, status} = query->Fragments.Quoted.use
 
-      let onClick = ReactEvents.interceptingHandler(_ => {
-        router->push(`/buyer/products/${id}`)
-      })
-
-      <div className=%twc("w-[280px] h-[376px] cursor-pointer") onClick>
+      <div
+        className=%twc("w-[280px] h-[376px] cursor-pointer")
+        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
         <div className=%twc("w-[280px] aspect-square rounded-xl overflow-hidden relative")>
-          <ImageWithPlaceholder
+          <Image
             src=image.thumb800x800
             className=%twc("w-full h-full object-cover")
-            placeholder=ImageWithPlaceholder.Placeholder.sm
-            alt={`product-${id}`}
+            placeholder=Image.Placeholder.Sm
+            alt={`product-${productId->Int.toString}`}
+            loading=Image.Loading.Lazy
           />
           <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl") />
+          {switch status {
+          | #SOLDOUT => <StatusLabel text={`품절`} />
+          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+          | #NOSALE => <StatusLabel text={`숨김`} />
+          | _ => React.null
+          }}
         </div>
         <div className=%twc("flex flex-col mt-4")>
           <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
@@ -228,24 +237,29 @@ module Quoted = {
       let {useRouter, push} = module(Next.Router)
       let router = useRouter()
 
-      let {id, image, displayName} = query->Fragments.Quoted.use
+      let {productId, image, displayName, status} = query->Fragments.Quoted.use
 
-      let onClick = ReactEvents.interceptingHandler(_ => {
-        router->push(`/buyer/products/${id}`)
-      })
-
-      <div className=%twc("cursor-pointer") onClick>
+      <div
+        className=%twc("cursor-pointer")
+        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
         <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
-          <ImageWithPlaceholder
+          <Image
             src=image.thumb800x800
             className=%twc("w-full h-full object-cover")
-            placeholder=ImageWithPlaceholder.Placeholder.sm
-            alt={`product-${id}`}
+            placeholder=Image.Placeholder.Sm
+            alt={`product-${productId->Int.toString}`}
+            loading=Image.Loading.Lazy
           />
           <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+          {switch status {
+          | #SOLDOUT => <StatusLabel text={`품절`} />
+          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+          | #NOSALE => <StatusLabel text={`숨김`} />
+          | _ => React.null
+          }}
         </div>
         <div className=%twc("flex flex-col mt-3")>
-          <span className=%twc("text-gray-800 line-clamp-2 text-sm")>
+          <span className=%twc("text-text-L1 line-clamp-2 text-sm")>
             {displayName->React.string}
           </span>
           <span className=%twc("mt-1 font-bold text-blue-500")>
@@ -258,33 +272,115 @@ module Quoted = {
 }
 
 module Matching = {
+  module ProductName = {
+    module PC = {
+      @react.component
+      let make = (~productName, ~representativeWeight) => {
+        <span className=%twc("text-gray-800 flex-wrap overflow-hidden gap-1")>
+          <span> {productName->React.string} </span>
+          <span> {`,${representativeWeight->Locale.Float.show(~digits=1)}Kg `->React.string} </span>
+        </span>
+      }
+    }
+
+    module MO = {
+      @react.component
+      let make = (~productName, ~representativeWeight) => {
+        <span className=%twc("text-gray-800 line-clamp-2 text-sm")>
+          <span> {productName->React.string} </span>
+          <span> {`,${representativeWeight->Locale.Float.show(~digits=1)}Kg`->React.string} </span>
+        </span>
+      }
+    }
+  }
+  module PriceText = {
+    module PC = {
+      @react.component
+      let make = (~price, ~pricePerKg, ~isSoldout) => {
+        <div className={%twc("inline-flex flex-col")}>
+          <span
+            className={Cn.make([
+              %twc("mt-1 font-bold text-lg"),
+              isSoldout ? %twc("text-text-L3") : %twc("text-text-L1"),
+            ])}>
+            {`${price->Locale.Float.show(~digits=0)}원`->React.string}
+          </span>
+          <span className=%twc("text-sm text-text-L2")>
+            {`kg당 ${pricePerKg->Locale.Float.show(~digits=0)}원`->React.string}
+          </span>
+        </div>
+      }
+    }
+
+    module MO = {
+      @react.component
+      let make = (~price, ~pricePerKg, ~isSoldout) => {
+        <div className=%twc("inline-flex flex-col")>
+          <span
+            className={Cn.make([
+              %twc("mt-1 font-bold"),
+              isSoldout ? %twc("text-text-L3") : %twc("text-text-L1"),
+            ])}>
+            {`${price->Locale.Float.show(~digits=0)}원`->React.string}
+          </span>
+          <span className=%twc("text-sm text-text-L2")>
+            {`kg당 ${pricePerKg->Locale.Float.show(~digits=0)}원`->React.string}
+          </span>
+        </div>
+      }
+    }
+  }
   module PC = {
     @react.component
     let make = (~query) => {
       let {useRouter, push} = module(Next.Router)
       let router = useRouter()
+      let user = CustomHooks.User.Buyer.use2()
 
-      let {id, image, displayName} = query->Fragments.Matching.use
+      let {productId, image, displayName, status, price, pricePerKg, representativeWeight} =
+        query->Fragments.Matching.use
 
       <div
         className=%twc("w-[280px] h-[376px] cursor-pointer")
-        onClick={_ => {
-          router->push(`/buyer/products/${id}`)
-        }}>
+        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
         <div className=%twc("w-[280px] aspect-square rounded-xl overflow-hidden relative")>
-          <ImageWithPlaceholder
+          <Image
             src=image.thumb800x800
             className=%twc("w-full h-full object-cover")
-            placeholder=ImageWithPlaceholder.Placeholder.sm
-            alt={`product-${id}`}
+            placeholder=Image.Placeholder.Sm
+            alt={`product-${productId->Int.toString}`}
+            loading=Image.Loading.Lazy
           />
           <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl") />
+          {switch status {
+          | #SOLDOUT => <StatusLabel text={`품절`} />
+          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+          | #NOSALE => <StatusLabel text={`숨김`} />
+          | _ => React.null
+          }}
         </div>
         <div className=%twc("flex flex-col mt-4")>
-          <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
-          <span className=%twc("mt-2 font-bold text-lg text-green-500")>
-            {`최저가 견적받기`->React.string}
-          </span>
+          <ProductName.PC productName={displayName} representativeWeight={representativeWeight} />
+          {switch (price, pricePerKg, user) {
+          | (Some(price), Some(pricePerKg), LoggedIn(_)) =>
+            let isSoldout = status == #SOLDOUT
+            <PriceText.PC
+              price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+            />
+
+          | (None, Some(pricePerKg), LoggedIn(_)) =>
+            let isSoldout = status == #SOLDOUT
+            <PriceText.PC
+              price={pricePerKg->Int.toFloat *. representativeWeight}
+              pricePerKg={pricePerKg->Int.toFloat}
+              isSoldout
+            />
+
+          | _ =>
+            <span className=%twc("mt-2 font-bold text-lg text-green-500")>
+              {`예상가 회원공개`->React.string}
+            </span>
+          }}
         </div>
       </div>
     }
@@ -295,30 +391,52 @@ module Matching = {
     let make = (~query) => {
       let {useRouter, push} = module(Next.Router)
       let router = useRouter()
+      let user = CustomHooks.User.Buyer.use2()
 
-      let {id, image, displayName} = query->Fragments.Matching.use
+      let {productId, image, displayName, status, price, pricePerKg, representativeWeight} =
+        query->Fragments.Matching.use
 
       <div
         className=%twc("cursor-pointer")
-        onClick={_ => {
-          router->push(`/buyer/products/${id}`)
-        }}>
+        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
         <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
-          <ImageWithPlaceholder
+          <Image
             src=image.thumb800x800
             className=%twc("w-full h-full object-cover")
-            placeholder=ImageWithPlaceholder.Placeholder.sm
-            alt={`product-${id}`}
+            placeholder=Image.Placeholder.Sm
+            alt={`product-${productId->Int.toString}`}
+            loading=Image.Loading.Lazy
           />
           <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+          {switch status {
+          | #SOLDOUT => <StatusLabel text={`품절`} />
+          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+          | #NOSALE => <StatusLabel text={`숨김`} />
+          | _ => React.null
+          }}
         </div>
         <div className=%twc("flex flex-col mt-3")>
-          <span className=%twc("text-gray-800 line-clamp-2 text-sm")>
-            {displayName->React.string}
-          </span>
-          <span className=%twc("mt-1 font-bold text-green-500")>
-            {`최저가 견적받기`->React.string}
-          </span>
+          <ProductName.MO productName={displayName} representativeWeight={representativeWeight} />
+          {switch (price, pricePerKg, user) {
+          | (Some(price), Some(pricePerKg), LoggedIn(_)) =>
+            let isSoldout = status == #SOLDOUT
+            <PriceText.MO
+              price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+            />
+
+          | (None, Some(pricePerKg), LoggedIn(_)) =>
+            let isSoldout = status == #SOLDOUT
+            <PriceText.MO
+              price={pricePerKg->Int.toFloat *. representativeWeight}
+              pricePerKg={pricePerKg->Int.toFloat}
+              isSoldout
+            />
+
+          | _ =>
+            <span className=%twc("mt-2 font-bold text-lg text-green-500")>
+              {`예상가 회원공개`->React.string}
+            </span>
+          }}
         </div>
       </div>
     }

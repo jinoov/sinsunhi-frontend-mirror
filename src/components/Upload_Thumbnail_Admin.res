@@ -12,6 +12,7 @@ module Mutation = %relay(`
           thumb1920x1920
           thumb400x400
           thumb800x800
+          thumb800xall
         }
       }
     }
@@ -29,6 +30,7 @@ module Form = {
     thumb1920x1920: string,
     thumb400x400: string,
     thumb800x800: string,
+    thumb800xall: string,
   }
 
   let resetImage = {
@@ -38,6 +40,7 @@ module Form = {
     thumb1920x1920: "",
     thumb400x400: "",
     thumb800x800: "",
+    thumb800xall: "",
   }
 }
 
@@ -48,6 +51,7 @@ let mutationImageToFormImage: UploadThumbnailAdminMutation_graphql.Types.respons
   thumb1920x1920: image.thumb1920x1920,
   thumb400x400: image.thumb400x400,
   thumb800x800: image.thumb800x800,
+  thumb800xall: image.thumb800xall->Option.getWithDefault(image.thumb1920x1920),
 }
 
 @react.component
@@ -106,7 +110,7 @@ let make = (~name, ~updateFn: Form.image => unit, ~value: Form.image, ~disabled=
                 UploadFileToS3PresignedUrl.uploadImage(
                   ~file=file',
                   ~original=res'.url,
-                  ~thumb1920=res'.image.thumb1920x1920,
+                  ~resizedImg=res'.image.thumb1920x1920,
                   ~onSuccess={
                     _ => {
                       onSuccessWithUpdate(
@@ -154,7 +158,7 @@ let make = (~name, ~updateFn: Form.image => unit, ~value: Form.image, ~disabled=
           id=name
           type_="file"
           className=%twc("file:hidden sr-only")
-          accept=`.png,.jpg`
+          accept=`.png,.jpg,.webp`
           disabled={disabled->Option.getWithDefault(false) || isThumbnailUploading}
           onChange={handleOnChangeFile}
         />

@@ -9,8 +9,8 @@
 @module("../../public/assets/arrow-white-left.svg")
 external arrowWhiteLeftIcon: string = "default"
 
-module Fragment = %relay(`
-  fragment ShopMainMainBannerBuyerFragment on Query {
+module Query = %relay(`
+  query ShopMainMainBannerBuyerQuery {
     mainBanners {
       id
       imageUrlPc
@@ -19,8 +19,9 @@ module Fragment = %relay(`
       isNewTabMobile
       landingUrl
     }
-  }
+  }  
 `)
+
 module PC = {
   module PrevBtn = {
     @react.component
@@ -84,8 +85,9 @@ module PC = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {mainBanners} = Fragment.use(query)
+  let make = (
+    ~mainBanners: array<ShopMainMainBannerBuyerQuery_graphql.Types.response_mainBanners>,
+  ) => {
     let total = mainBanners->Array.length
 
     let (current, setCurrent) = React.Uncurried.useState(_ => 0)
@@ -105,18 +107,20 @@ module PC = {
         afterChange>
         {switch mainBanners {
         | [] => <Placeholder />
-        | _ =>
-          mainBanners
+        | nonEmptyMainBanners =>
+          nonEmptyMainBanners
           ->Array.map(({id, imageUrlPc, isNewTabPc, landingUrl}) => {
             let key = `main-banner-${id}`
             let target = isNewTabPc ? "_blank" : "_self"
-            <a key href=landingUrl target>
-              <img
-                src=imageUrlPc
-                className=%twc("w-full aspect-[920/396] mb-[-7px] object-cover")
-                alt=key
-              />
-            </a>
+            <Next.Link key href=landingUrl>
+              <a target>
+                <img
+                  src=imageUrlPc
+                  className=%twc("w-full aspect-[920/396] mb-[-7px] object-cover")
+                  alt=key
+                />
+              </a>
+            </Next.Link>
           })
           ->React.array
         }}
@@ -168,8 +172,9 @@ module MO = {
   }
 
   @react.component
-  let make = (~query) => {
-    let {mainBanners} = Fragment.use(query)
+  let make = (
+    ~mainBanners: array<ShopMainMainBannerBuyerQuery_graphql.Types.response_mainBanners>,
+  ) => {
     let total = mainBanners->Array.length
 
     let (current, setCurrent) = React.Uncurried.useState(_ => 0)
@@ -187,18 +192,20 @@ module MO = {
         afterChange>
         {switch mainBanners {
         | [] => <Placeholder />
-        | _ =>
-          mainBanners
+        | nonEmptyMainBanners =>
+          nonEmptyMainBanners
           ->Array.map(({id, imageUrlMobile, isNewTabMobile, landingUrl}) => {
             let key = `main-banner-${id}`
             let target = isNewTabMobile ? "_blank" : "_self"
-            <a key href=landingUrl target>
-              <img
-                src=imageUrlMobile
-                className=%twc("w-full aspect-[320/164] mb-[-7px] object-cover")
-                alt=key
-              />
-            </a>
+            <Next.Link key href=landingUrl>
+              <a target>
+                <img
+                  src=imageUrlMobile
+                  className=%twc("w-full aspect-[320/164] mb-[-7px] object-cover")
+                  alt=key
+                />
+              </a>
+            </Next.Link>
           })
           ->React.array
         }}

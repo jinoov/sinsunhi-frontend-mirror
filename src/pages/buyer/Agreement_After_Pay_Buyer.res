@@ -130,7 +130,7 @@ module Agreement = {
         | _ => ()
         }
       } else {
-        BrowserGuide.jsAlert(`서비스 이용을 위해 약관을 모두 동의해주세요.`)
+        Global.jsAlert(`서비스 이용을 위해 약관을 모두 동의해주세요.`)
       }
     }
 

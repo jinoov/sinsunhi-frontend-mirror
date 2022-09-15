@@ -9,6 +9,10 @@ body {
   @apply font-sans bg-white;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @tailwind utilities;
 
 @layer utilities {
@@ -316,7 +320,7 @@ body {
     font-weight: bold;
   }
 
-  #editor-inline h4 { 
+  #editor-inline h4 {
     display: block;
     font-weight: bold;
   }
@@ -358,7 +362,7 @@ body {
 
   #editor-inline sup {
     vertical-align: super;
-    font-size: smaller; 
+    font-size: smaller;
   }
 
   #editor-inline sub {
@@ -366,31 +370,44 @@ body {
     font-size: smaller;
   }
 
-  #editor-inline table{
-    border-collapse: collapse; 
-
+  #editor-inline table {
+    border-collapse: collapse;
   }
   /* Apply a default padding if legacy cellpadding attribute is missing */
-  #editor-inline table:not([cellpading]) th, #editor-inline table:not([cellpadding]) td {
+  #editor-inline table:not([cellpading]) th,
+  #editor-inline table:not([cellpadding]) td {
     padding: 0.4rem;
   }
 
   /* Set default table styles if a table has a positive border attribute
     and no inline css */
-  #eidtor-inline table[border]:not([border="0"]):not([style*="border-width"]) th, #editor-inline table[border]:not([border="0"]):not([style*="border-width"]) td {
+  #eidtor-inline
+    table[border]:not([border="0"]):not([style*="border-width"])
+    th,
+  #editor-inline
+    table[border]:not([border="0"]):not([style*="border-width"])
+    td {
     border-width: 1px;
   }
 
   /* Set default table styles if a table has a positive border attribute
     and no inline css */
-  #editor-inline table[border]:not([border="0"]):not([style*="border-style"]) th,
-  #editor-inline table[border]:not([border="0"]):not([style*="border-style"]) td {
+  #editor-inline
+    table[border]:not([border="0"]):not([style*="border-style"])
+    th,
+  #editor-inline
+    table[border]:not([border="0"]):not([style*="border-style"])
+    td {
     border-style: solid;
   }
   /* Set default table styles if a table has a positive border attribute
     and no inline css */
-  #eidtor-inline table[border]:not([border="0"]):not([style*="border-color"]) th,
-  #editor-inline table[border]:not([border="0"]):not([style*="border-color"]) td {
+  #eidtor-inline
+    table[border]:not([border="0"]):not([style*="border-color"])
+    th,
+  #editor-inline
+    table[border]:not([border="0"]):not([style*="border-color"])
+    td {
     border-color: #ccc;
   }
   #editor-inline figure {
@@ -414,18 +431,16 @@ body {
     padding: 0.1rem 0.2rem;
     font-family: monospace;
   }
-  #editor-inline .mce-content-body:not([dir=rtl]) blockquote {
+  #editor-inline .mce-content-body:not([dir="rtl"]) blockquote {
     border-left: 2px solid #ccc;
     margin-left: 1.5rem;
     padding-left: 1rem;
   }
-  #editor-inline .mce-content-body[dir=rtl] blockquote {
+  #editor-inline .mce-content-body[dir="rtl"] blockquote {
     border-right: 2px solid #ccc;
     margin-right: 1.5rem;
     padding-right: 1rem;
   }
-
-
 }
 
 /* Normal size */
@@ -463,6 +478,11 @@ body {
 }
 .btn-level6-small-disabled {
   @apply w-full rounded-lg bg-enabled-L5 text-enabled-L4 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-1;
+}
+
+/* Skeleton */
+.skeleton-base {
+  @apply animate-pulse bg-gray-150;
 }
 
 @keyframes slide-down-and-fade {
@@ -574,6 +594,12 @@ body {
   animation: dialog-content-show 150ms cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 20;
 }
+.dialog-content-plain[data-state="open"] {
+  background-color: white;
+  position: fixed;
+  z-index: 20;
+}
+
 .dialog-content-full[data-state="open"] {
   background-color: white;
   position: fixed;
@@ -587,6 +613,10 @@ body {
   animation: dialog-content-show 150ms cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 20;
 }
+.dialog-content-z-15[data-state="open"] {
+  @apply z-[15];
+}
+
 @keyframes accordian-open {
   from {
     height: 0;
@@ -790,4 +820,8 @@ body {
 
 .word-keep-all {
   word-break: keep-all;
+}
+
+#ch-plugin {
+  pointer-events: auto;
 }

@@ -247,6 +247,7 @@ module Hooks = {
       | Checkbox: input<string, bool>
       | Checkboxes: input<array<string>, array<option<bool>>>
       | Object: input<string, Js.Json.t>
+      | NullableObjects: input<string, array<Js.Nullable.t<Js.Json.t>>>
 
     @deriving({abstract: light})
     type config<'a> = {

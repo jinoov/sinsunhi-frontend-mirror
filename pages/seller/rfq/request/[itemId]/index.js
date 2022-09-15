@@ -12,5 +12,10 @@ const RfqItemDetailSeller = dynamic(
 export default function Index(props) {
   const router = useRouter();
   const { itemId = "" } = router.query;
+
+  if (!router.isReady) {
+    return null;
+  }
+
   return <RfqItemDetailSeller {...props} itemId={itemId} />;
 }

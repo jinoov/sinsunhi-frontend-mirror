@@ -2,6 +2,7 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
@@ -189,7 +190,7 @@ function format(kind) {
   }
 }
 
-function make1(fun, $$await) {
+function make1(fun, ms) {
   var timeoutId = {
     contents: undefined
   };
@@ -197,20 +198,17 @@ function make1(fun, $$await) {
     Belt_Option.map(timeoutId.contents, (function (id$p) {
             clearTimeout(id$p);
             timeoutId.contents = undefined;
-            
           }));
     return new Promise((function (resolve, reject) {
                   timeoutId.contents = Caml_option.some(setTimeout((function (param) {
                               var __x = Curry._1(fun, args);
-                              var __x$1 = __x.then(function (res) {
-                                    return Promise.resolve(resolve(res));
-                                  });
-                              __x$1.catch(function (error) {
-                                    return Promise.resolve(reject(new Error(error)));
-                                  });
-                              
-                            }), $$await));
-                  
+                              var __x$1 = Js_promise.then_((function (res) {
+                                      return Promise.resolve(resolve(res));
+                                    }), __x);
+                              Js_promise.$$catch((function (error) {
+                                      return Promise.resolve(reject(new Error(error)));
+                                    }), __x$1);
+                            }), ms));
                 }));
   };
 }
@@ -244,6 +242,5 @@ export {
   Invoice ,
   PhoneNumber ,
   Debounce ,
-  
 }
 /* regexOfMobile Not a pure module */

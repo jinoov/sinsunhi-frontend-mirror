@@ -2,7 +2,9 @@
 
 import * as Env from "../constants/Env.mjs";
 import * as React from "react";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as Caml_js_exceptions from "rescript/lib/es6/caml_js_exceptions.js";
 
 function use(param) {
   var match = React.useState(function () {
@@ -13,34 +15,47 @@ function use(param) {
   React.useEffect((function () {
           var match = window.ReactNativeWebView;
           if (match == null) {
-            import("@braze/web-sdk").then(function (sdk) {
-                    setBraze(function (param) {
-                          if (sdk == null) {
-                            return ;
-                          } else {
-                            return Caml_option.some(sdk);
-                          }
-                        });
-                    return Promise.resolve(undefined);
-                  }).catch(function (err) {
-                  console.log("braze init error: ", err);
-                  return Promise.resolve(undefined);
-                });
+            try {
+              Js_promise.$$catch((function (err) {
+                      console.log("braze init error: ", err);
+                      return Promise.resolve(undefined);
+                    }), Js_promise.then_((function (sdk) {
+                          setBraze(function (param) {
+                                if (sdk == null) {
+                                  return ;
+                                } else {
+                                  return Caml_option.some(sdk);
+                                }
+                              });
+                          return Promise.resolve(undefined);
+                        }), import("@braze/web-sdk")));
+            }
+            catch (raw_err){
+              var err = Caml_js_exceptions.internalToOCamlException(raw_err);
+              console.log("fail to initize braze: ", err);
+            }
           }
           
         }), []);
   React.useEffect((function () {
           var match = window.ReactNativeWebView;
           if (match == null) {
-            window.navigator.serviceWorker.register("/service-worker.js").then(function (param) {
-                    if (braze !== undefined) {
-                      braze.openSession();
-                    }
-                    return Promise.resolve(undefined);
-                  }).catch(function (err) {
-                  console.log("Failed to register service worker : ", err);
-                  return Promise.resolve(undefined);
-                });
+            try {
+              Js_promise.$$catch((function (err) {
+                      console.log("Failed to register service worker : ", err);
+                      return Promise.resolve(undefined);
+                    }), Js_promise.then_((function (param) {
+                          if (braze !== undefined) {
+                            braze.openSession();
+                          }
+                          return Promise.resolve(undefined);
+                        }), window.navigator.serviceWorker.register("/service-worker.js")));
+            }
+            catch (raw_err){
+              var err = Caml_js_exceptions.internalToOCamlException(raw_err);
+              console.log("fail to initize braze: ", err);
+              Promise.resolve(undefined);
+            }
             if (braze !== undefined) {
               braze.initialize(Env.brazeWebApiKey, {
                     baseUrl: "sdk.iad-06.braze.com",
@@ -60,14 +75,15 @@ function changeUser(user, braze) {
   var match = user.role;
   if (match >= 2) {
     return ;
-  } else {
+  } else if (Env.vercelEnv === "production") {
     return braze.changeUser(String(user.id));
+  } else {
+    return braze.changeUser("" + String(user.id) + "-dev");
   }
 }
 
 export {
   use ,
   changeUser ,
-  
 }
 /* Env Not a pure module */

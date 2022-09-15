@@ -19,8 +19,19 @@ let getFirstPath = pathname => {
 module Buyer = {
   @react.component
   let make = () => {
+    let {gnbBanners} = GnbBannerList_Buyer.Query.use(
+      ~variables=(),
+      ~fetchPolicy=RescriptRelay.StoreOrNetwork,
+      (),
+    )
+
+    let {displayCategories} = ShopCategorySelect_Buyer.Query.use(
+      ~variables={parentId: None, types: Some([#NORMAL]), onlyDisplayable: Some(true)},
+      (),
+    )
+
     <div className=%twc("w-screen h-screen flex flex-col items-center justify-start")>
-      <Header_Buyer.PC />
+      <Header_Buyer.PC gnbBanners displayCategories />
       <div className=%twc("flex flex-col h-full items-center justify-center")>
         <IconNotFound width="160" height="160" />
         <h1 className=%twc("mt-7 text-3xl text-gray-800")>

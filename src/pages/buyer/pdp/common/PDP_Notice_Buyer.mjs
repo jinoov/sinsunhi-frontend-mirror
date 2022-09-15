@@ -2,6 +2,7 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as ReactUtil from "../../../../utils/ReactUtil.mjs";
 import * as ChannelTalk from "../../../../bindings/ChannelTalk.mjs";
 import ReactNl2br from "react-nl2br";
 import * as PDP_Parser_Buyer from "../../../../utils/PDP_Parser_Buyer.mjs";
@@ -22,16 +23,21 @@ function PDP_Notice_Buyer$PC(Props) {
                         className: "mt-2 text-gray-800 whitespace-pre-wrap"
                       }, ReactNl2br(notice)), React.createElement("span", {
                         className: "mt-2 text-gray-600"
-                      }, noticeDateLabel)), React.createElement("button", {
-                    className: "w-[314px] h-[204px]",
-                    onClick: (function (param) {
-                        return ChannelTalk.showMessenger(undefined);
-                      })
-                  }, React.createElement("img", {
-                        className: "w-full h-full object-cover",
-                        alt: "detail-qna",
-                        src: "/images/qna-green-square@3x.png"
-                      })));
+                      }, noticeDateLabel)), React.createElement(ReactUtil.SpreadProps.make, {
+                    children: React.createElement("button", {
+                          className: "w-[314px] h-[204px]",
+                          onClick: (function (param) {
+                              ChannelTalk.showMessenger(undefined);
+                            })
+                        }, React.createElement("img", {
+                              className: "w-full h-full object-cover",
+                              alt: "detail-qna",
+                              src: "/images/qna-green-square@3x.png"
+                            })),
+                    props: {
+                      "data-gtm": "click_chatbot"
+                    }
+                  }));
   } else {
     return null;
   }
@@ -68,6 +74,5 @@ var MO = {
 export {
   PC ,
   MO ,
-  
 }
 /* react Not a pure module */

@@ -7,11 +7,27 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 
 function Web_Order_Complete_Orderer_Info_Buyer$Placeholder(Props) {
+  var deviceType = Props.deviceType;
+  var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    
+  }
   return React.createElement("section", {
               className: "flex flex-col gap-5 bg-white rounded-sm"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "주문자 정보"), React.createElement("ul", {
+            }, tmp, React.createElement("ul", {
                   className: "flex flex-col"
                 }, React.createElement("li", {
                       className: "flex gap-5"
@@ -39,19 +55,37 @@ var Placeholder = {
 };
 
 function Web_Order_Complete_Orderer_Info_Buyer(Props) {
+  var deviceType = Props.deviceType;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var toPhoneNumberForm = function (s) {
     return s.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
   };
   if (typeof user === "number") {
-    return React.createElement(Web_Order_Complete_Orderer_Info_Buyer$Placeholder, {});
+    return React.createElement(Web_Order_Complete_Orderer_Info_Buyer$Placeholder, {
+                deviceType: deviceType
+              });
   }
   var user$p = user._0;
+  var tmp;
+  switch (deviceType) {
+    case /* Unknown */0 :
+        tmp = null;
+        break;
+    case /* PC */1 :
+        tmp = React.createElement("span", {
+              className: "text-xl text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    case /* Mobile */2 :
+        tmp = React.createElement("span", {
+              className: "text-lg text-enabled-L1 font-bold"
+            }, "주문자 정보");
+        break;
+    
+  }
   return React.createElement("section", {
               className: "flex flex-col gap-5 bg-white rounded-sm"
-            }, React.createElement("span", {
-                  className: "text-lg xl:text-xl text-enabled-L1 font-bold"
-                }, "주문자 정보"), React.createElement("ul", {
+            }, tmp, React.createElement("ul", {
                   className: "flex flex-col text-sm gap-2"
                 }, React.createElement("li", {
                       className: "flex"
@@ -73,6 +107,5 @@ var make = Web_Order_Complete_Orderer_Info_Buyer;
 export {
   Placeholder ,
   make ,
-  
 }
 /* react Not a pure module */

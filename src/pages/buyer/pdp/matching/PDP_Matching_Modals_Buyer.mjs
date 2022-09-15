@@ -10,8 +10,9 @@ import * as ShopDialog_Buyer from "../../ShopDialog_Buyer.mjs";
 import * as ReactDialog from "@radix-ui/react-dialog";
 import * as ReactScrollArea from "@radix-ui/react-scroll-area";
 import * as PDP_Matching_GradeGuide_Buyer from "./PDP_Matching_GradeGuide_Buyer.mjs";
+import * as PDP_Matching_ServiceGuide_Buyer from "./PDP_Matching_ServiceGuide_Buyer.mjs";
 
-function PDP_Matching_Modals_Buyer$GradeGuide$Scroll(Props) {
+function PDP_Matching_Modals_Buyer$Scroll(Props) {
   var children = Props.children;
   return React.createElement(ReactScrollArea.Root, {
               children: null,
@@ -25,10 +26,11 @@ function PDP_Matching_Modals_Buyer$GradeGuide$Scroll(Props) {
 }
 
 var Scroll = {
-  make: PDP_Matching_Modals_Buyer$GradeGuide$Scroll
+  make: PDP_Matching_Modals_Buyer$Scroll
 };
 
-function PDP_Matching_Modals_Buyer$GradeGuide$GredeGuideHeader(Props) {
+function PDP_Matching_Modals_Buyer$ModalHeader(Props) {
+  var title = Props.title;
   var closeFn = Props.closeFn;
   return React.createElement("section", {
               className: "w-full h-14 flex items-center px-4"
@@ -38,7 +40,7 @@ function PDP_Matching_Modals_Buyer$GradeGuide$GredeGuideHeader(Props) {
                   className: "flex flex-1 items-center justify-center"
                 }, React.createElement("h1", {
                       className: "font-bold text-black"
-                    }, "신선하이 등급")), React.createElement("button", {
+                    }, title)), React.createElement("button", {
                   className: "w-10 h-10 flex items-center justify-center ",
                   onClick: closeFn
                 }, React.createElement(IconClose.make, {
@@ -48,37 +50,70 @@ function PDP_Matching_Modals_Buyer$GradeGuide$GredeGuideHeader(Props) {
                     })));
 }
 
-var GredeGuideHeader = {
-  make: PDP_Matching_Modals_Buyer$GradeGuide$GredeGuideHeader
+var ModalHeader = {
+  make: PDP_Matching_Modals_Buyer$ModalHeader
 };
 
-function PDP_Matching_Modals_Buyer$GradeGuide(Props) {
+function PDP_Matching_Modals_Buyer$ServiceGuide(Props) {
   var show = Props.show;
   var closeFn = Props.closeFn;
-  var query = Props.query;
-  var _open = show && !show._0 ? true : false;
+  var _open;
+  if (show) {
+    var match = show._0;
+    _open = typeof match === "number" ? match !== 0 : false;
+  } else {
+    _open = false;
+  }
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
                     children: null
                   }, React.createElement(ReactDialog.Overlay, {
                         className: "dialog-overlay"
                       }), React.createElement(ReactDialog.Content, {
-                        children: React.createElement(PDP_Matching_Modals_Buyer$GradeGuide$Scroll, {
+                        children: React.createElement(PDP_Matching_Modals_Buyer$Scroll, {
                               children: null
-                            }, React.createElement(PDP_Matching_Modals_Buyer$GradeGuide$GredeGuideHeader, {
+                            }, React.createElement(PDP_Matching_Modals_Buyer$ModalHeader, {
+                                  title: "신선하이 매칭 소개",
+                                  closeFn: closeFn
+                                }), React.createElement(PDP_Matching_ServiceGuide_Buyer.Content.make, {})),
+                        className: "dialog-content-base w-full max-w-[768px] min-h-screen",
+                        onPointerDownOutside: closeFn
+                      })),
+              open: _open
+            });
+}
+
+var ServiceGuide = {
+  make: PDP_Matching_Modals_Buyer$ServiceGuide
+};
+
+function PDP_Matching_Modals_Buyer$GradeGuide(Props) {
+  var show = Props.show;
+  var closeFn = Props.closeFn;
+  var query = Props.query;
+  var _open = show ? show._0 === 0 : false;
+  return React.createElement(ReactDialog.Root, {
+              children: React.createElement(ReactDialog.Portal, {
+                    children: null
+                  }, React.createElement(ReactDialog.Overlay, {
+                        className: "dialog-overlay"
+                      }), React.createElement(ReactDialog.Content, {
+                        children: React.createElement(PDP_Matching_Modals_Buyer$Scroll, {
+                              children: null
+                            }, React.createElement(PDP_Matching_Modals_Buyer$ModalHeader, {
+                                  title: "신선하이 등급",
                                   closeFn: closeFn
                                 }), React.createElement(PDP_Matching_GradeGuide_Buyer.make, {
                                   query: query
                                 })),
-                        className: "dialog-content-base w-full max-w-[768px] min-h-screen"
+                        className: "dialog-content-base w-full max-w-[768px] min-h-screen",
+                        onPointerDownOutside: closeFn
                       })),
               open: _open
             });
 }
 
 var GradeGuide = {
-  Scroll: Scroll,
-  GredeGuideHeader: GredeGuideHeader,
   make: PDP_Matching_Modals_Buyer$GradeGuide
 };
 
@@ -89,12 +124,12 @@ function PDP_Matching_Modals_Buyer$Unauthorized(Props) {
   var match;
   if (show) {
     var message = show._0;
-    match = message ? [
-        /* Show */0,
-        message._0
-      ] : [
+    match = typeof message === "number" ? [
         /* Hide */1,
         ""
+      ] : [
+        /* Show */0,
+        message._0
       ];
   } else {
     match = [
@@ -111,11 +146,10 @@ function PDP_Matching_Modals_Buyer$Unauthorized(Props) {
                                 "redirect",
                                 router.asPath
                               ]])).toString();
-                  router.push("/buyer/signin?" + redirectUrl);
-                  
+                  router.push("/buyer/signin?" + redirectUrl + "");
                 }),
               onCancel: (function (param) {
-                  return Curry._1(closeFn, undefined);
+                  Curry._1(closeFn, undefined);
                 }),
               children: React.createElement("div", {
                     className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
@@ -134,15 +168,18 @@ function PDP_Matching_Modals_Buyer$MO(Props) {
   var setShow = Props.setShow;
   var query = Props.query;
   var closeFn = function (param) {
-    return setShow(function (param) {
-                return /* Hide */0;
-              });
+    setShow(function (param) {
+          return /* Hide */0;
+        });
   };
-  return React.createElement(React.Fragment, undefined, React.createElement(PDP_Matching_Modals_Buyer$GradeGuide, {
+  return React.createElement(React.Fragment, undefined, React.createElement(PDP_Matching_Modals_Buyer$Unauthorized, {
+                  show: show,
+                  closeFn: closeFn
+                }), React.createElement(PDP_Matching_Modals_Buyer$GradeGuide, {
                   show: show,
                   closeFn: closeFn,
                   query: query
-                }), React.createElement(PDP_Matching_Modals_Buyer$Unauthorized, {
+                }), React.createElement(PDP_Matching_Modals_Buyer$ServiceGuide, {
                   show: show,
                   closeFn: closeFn
                 }));
@@ -153,9 +190,11 @@ var MO = {
 };
 
 export {
+  Scroll ,
+  ModalHeader ,
+  ServiceGuide ,
   GradeGuide ,
   Unauthorized ,
   MO ,
-  
 }
 /* react Not a pure module */

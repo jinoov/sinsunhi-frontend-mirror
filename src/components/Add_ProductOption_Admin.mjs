@@ -154,16 +154,16 @@ function submit_encode(v) {
                 Spice.optionToJson(Spice.stringToJson, v.package)
               ],
               [
-                "weight",
-                Spice.floatToJson(v.weight)
+                "amount",
+                Spice.floatToJson(v.amount)
               ],
               [
                 "each",
                 Spice.optionToJson(Product_Option_Each_Admin.Form.each_encode, v.each)
               ],
               [
-                "weight-unit",
-                Select_Product_Option_Unit.Weight.status_encode(v.weightUnit)
+                "amount-unit",
+                Select_Product_Option_Unit.Amount.status_encode(v.amountUnit)
               ],
               [
                 "operation-status",
@@ -188,6 +188,10 @@ function submit_encode(v) {
               [
                 "is-free-shipping",
                 Select_Product_Shipping_Type.status_encode(v.isFreeShipping)
+              ],
+              [
+                "shipping-unit-quantity",
+                Spice.intToJson(v.shippingUnitQuantity)
               ]
             ]);
 }
@@ -207,12 +211,12 @@ function submit_decode(v) {
     if (grade.TAG === /* Ok */0) {
       var $$package = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "package"), null));
       if ($$package.TAG === /* Ok */0) {
-        var weight = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "weight"), null));
-        if (weight.TAG === /* Ok */0) {
+        var amount = Spice.floatFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "amount"), null));
+        if (amount.TAG === /* Ok */0) {
           var each = Spice.optionFromJson(Product_Option_Each_Admin.Form.each_decode, Belt_Option.getWithDefault(Js_dict.get(dict$1, "each"), null));
           if (each.TAG === /* Ok */0) {
-            var weightUnit = Select_Product_Option_Unit.Weight.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "weight-unit"), null));
-            if (weightUnit.TAG === /* Ok */0) {
+            var amountUnit = Select_Product_Option_Unit.Amount.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "amount-unit"), null));
+            if (amountUnit.TAG === /* Ok */0) {
               var operationStatus = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "operation-status"), null));
               if (operationStatus.TAG === /* Ok */0) {
                 var cost = cost_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "cost"), null));
@@ -225,165 +229,179 @@ function submit_decode(v) {
                       if (showEach.TAG === /* Ok */0) {
                         var isFreeShipping = Select_Product_Shipping_Type.status_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "is-free-shipping"), null));
                         if (isFreeShipping.TAG === /* Ok */0) {
+                          var shippingUnitQuantity = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "shipping-unit-quantity"), null));
+                          if (shippingUnitQuantity.TAG === /* Ok */0) {
+                            return {
+                                    TAG: /* Ok */0,
+                                    _0: {
+                                      name: name._0,
+                                      grade: grade._0,
+                                      package: $$package._0,
+                                      amount: amount._0,
+                                      each: each._0,
+                                      amountUnit: amountUnit._0,
+                                      operationStatus: operationStatus._0,
+                                      cost: cost._0,
+                                      cutOffTime: cutOffTime._0,
+                                      memo: memo._0,
+                                      showEach: showEach._0,
+                                      isFreeShipping: isFreeShipping._0,
+                                      shippingUnitQuantity: shippingUnitQuantity._0
+                                    }
+                                  };
+                          }
+                          var e = shippingUnitQuantity._0;
                           return {
-                                  TAG: /* Ok */0,
+                                  TAG: /* Error */1,
                                   _0: {
-                                    name: name._0,
-                                    grade: grade._0,
-                                    package: $$package._0,
-                                    weight: weight._0,
-                                    each: each._0,
-                                    weightUnit: weightUnit._0,
-                                    operationStatus: operationStatus._0,
-                                    cost: cost._0,
-                                    cutOffTime: cutOffTime._0,
-                                    memo: memo._0,
-                                    showEach: showEach._0,
-                                    isFreeShipping: isFreeShipping._0
+                                    path: ".shipping-unit-quantity" + e.path,
+                                    message: e.message,
+                                    value: e.value
                                   }
                                 };
                         }
-                        var e = isFreeShipping._0;
+                        var e$1 = isFreeShipping._0;
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: ".is-free-shipping" + e.path,
-                                  message: e.message,
-                                  value: e.value
+                                  path: ".is-free-shipping" + e$1.path,
+                                  message: e$1.message,
+                                  value: e$1.value
                                 }
                               };
                       }
-                      var e$1 = showEach._0;
+                      var e$2 = showEach._0;
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: ".show-each" + e$1.path,
-                                message: e$1.message,
-                                value: e$1.value
+                                path: ".show-each" + e$2.path,
+                                message: e$2.message,
+                                value: e$2.value
                               }
                             };
                     }
-                    var e$2 = memo._0;
+                    var e$3 = memo._0;
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: ".memo" + e$2.path,
-                              message: e$2.message,
-                              value: e$2.value
+                              path: ".memo" + e$3.path,
+                              message: e$3.message,
+                              value: e$3.value
                             }
                           };
                   }
-                  var e$3 = cutOffTime._0;
+                  var e$4 = cutOffTime._0;
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".cut-off-time" + e$3.path,
-                            message: e$3.message,
-                            value: e$3.value
+                            path: ".cut-off-time" + e$4.path,
+                            message: e$4.message,
+                            value: e$4.value
                           }
                         };
                 }
-                var e$4 = cost._0;
+                var e$5 = cost._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".cost" + e$4.path,
-                          message: e$4.message,
-                          value: e$4.value
+                          path: ".cost" + e$5.path,
+                          message: e$5.message,
+                          value: e$5.value
                         }
                       };
               }
-              var e$5 = operationStatus._0;
+              var e$6 = operationStatus._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".operation-status" + e$5.path,
-                        message: e$5.message,
-                        value: e$5.value
+                        path: ".operation-status" + e$6.path,
+                        message: e$6.message,
+                        value: e$6.value
                       }
                     };
             }
-            var e$6 = weightUnit._0;
+            var e$7 = amountUnit._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".weight-unit" + e$6.path,
-                      message: e$6.message,
-                      value: e$6.value
+                      path: ".amount-unit" + e$7.path,
+                      message: e$7.message,
+                      value: e$7.value
                     }
                   };
           }
-          var e$7 = each._0;
+          var e$8 = each._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".each" + e$7.path,
-                    message: e$7.message,
-                    value: e$7.value
+                    path: ".each" + e$8.path,
+                    message: e$8.message,
+                    value: e$8.value
                   }
                 };
         }
-        var e$8 = weight._0;
+        var e$9 = amount._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".weight" + e$8.path,
-                  message: e$8.message,
-                  value: e$8.value
+                  path: ".amount" + e$9.path,
+                  message: e$9.message,
+                  value: e$9.value
                 }
               };
       }
-      var e$9 = $$package._0;
+      var e$10 = $$package._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".package" + e$9.path,
-                message: e$9.message,
-                value: e$9.value
+                path: ".package" + e$10.path,
+                message: e$10.message,
+                value: e$10.value
               }
             };
     }
-    var e$10 = grade._0;
+    var e$11 = grade._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".grade" + e$10.path,
-              message: e$10.message,
-              value: e$10.value
+              path: ".grade" + e$11.path,
+              message: e$11.message,
+              value: e$11.value
             }
           };
   }
-  var e$11 = name._0;
+  var e$12 = name._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".name" + e$11.path,
-            message: e$11.message,
-            value: e$11.value
+            path: ".name" + e$12.path,
+            message: e$12.message,
+            value: e$12.value
           }
         };
 }
 
 function makeNames(prefix) {
   return {
-          name: prefix + ".name",
-          autoCompleteName: prefix + ".autoCompleteName",
-          grade: prefix + ".grade",
-          package: prefix + ".package",
-          weight: prefix + ".weight",
-          weightUnit: prefix + ".weight-unit",
-          operationStatus: prefix + ".operation-status",
-          isFreeShipping: prefix + ".is-free-shipping",
-          buyerPrice: prefix + ".cost.buyer-price",
-          cost: prefix + ".cost.cost",
-          rawCost: prefix + ".cost.raw-cost",
-          workingCost: prefix + ".cost.working-cost",
-          deliveryCost: prefix + ".cost.delivery-cost",
-          costType: prefix + ".cost.cost-type",
-          cutOffTime: prefix + ".cut-off-time",
-          memo: prefix + ".memo",
-          each: prefix + ".each",
-          showEach: prefix + ".show-each"
+          name: "" + prefix + ".name",
+          autoCompleteName: "" + prefix + ".autoCompleteName",
+          grade: "" + prefix + ".grade",
+          package: "" + prefix + ".package",
+          amount: "" + prefix + ".amount",
+          amountUnit: "" + prefix + ".amount-unit",
+          operationStatus: "" + prefix + ".operation-status",
+          isFreeShipping: "" + prefix + ".is-free-shipping",
+          buyerPrice: "" + prefix + ".cost.buyer-price",
+          cost: "" + prefix + ".cost.cost",
+          rawCost: "" + prefix + ".cost.raw-cost",
+          workingCost: "" + prefix + ".cost.working-cost",
+          deliveryCost: "" + prefix + ".cost.delivery-cost",
+          costType: "" + prefix + ".cost.cost-type",
+          cutOffTime: "" + prefix + ".cut-off-time",
+          memo: "" + prefix + ".memo",
+          each: "" + prefix + ".each",
+          showEach: "" + prefix + ".show-each",
+          shippingUnitQuantity: "" + prefix + ".shipping-unit-quantity"
         };
 }
 
@@ -401,8 +419,8 @@ var defaultValue = Js_dict.fromArray([
         null
       ],
       [
-        "weight-unit",
-        Select_Product_Option_Unit.Weight.status_encode(/* KG */1)
+        "amount-unit",
+        Select_Product_Option_Unit.Amount.status_encode(/* KG */1)
       ],
       [
         "operation-status",
@@ -444,6 +462,10 @@ var defaultValue = Js_dict.fromArray([
       [
         "memo",
         null
+      ],
+      [
+        "shipping-unit-quantity",
+        "1"
       ]
     ]);
 
@@ -452,8 +474,8 @@ var Form_names = {
   autoCompleteName: "autoCompleteName",
   grade: "grade",
   package: "package",
-  weight: "weight",
-  weightUnit: "weight-unit",
+  amount: "amount",
+  amountUnit: "amount-unit",
   operationStatus: "operation-status",
   isFreeShipping: "is-free-shipping",
   buyerPrice: "cost.buyer-price",
@@ -465,7 +487,8 @@ var Form_names = {
   cutOffTime: "cut-off-time",
   memo: "memo",
   each: "each",
-  showEach: "show-each"
+  showEach: "show-each",
+  shippingUnitQuantity: "shipping-unit-quantity"
 };
 
 var Form = {
@@ -478,10 +501,10 @@ var Form = {
   defaultValue: defaultValue
 };
 
-function makeAutoGeneratedName(grade, $$package, weight, weightUnit, numMin, numMax, perWeightUnit, sizeMin, sizeMax, sizeUnit, showEach, param) {
+function makeAutoGeneratedName(grade, $$package, amount, amountUnit, numMin, numMax, perAmountUnit, sizeMin, sizeMax, sizeUnit, showEach, param) {
   var basicNames = [
-    Helper.$$Option.map2(Belt_Option.flatMap(weight, Belt_Float.fromString), weightUnit, (function (w, wu) {
-            return String(w) + wu;
+    Helper.$$Option.map2(Belt_Option.flatMap(amount, Belt_Float.fromString), amountUnit, (function (a, au) {
+            return "" + String(a) + "" + au + "";
           })),
     Belt_Option.flatMap(grade, (function (str) {
             if (str === "") {
@@ -501,17 +524,17 @@ function makeAutoGeneratedName(grade, $$package, weight, weightUnit, numMin, num
   var additiveNames;
   if (showEach) {
     var tmp;
-    if (weight !== undefined && weightUnit !== undefined && numMin !== undefined && numMax !== undefined && perWeightUnit !== undefined) {
-      var match = Belt_Float.fromString(weight);
-      var match$1 = Select_Product_Option_Unit.Weight.status_decode(weightUnit);
+    if (amount !== undefined && amountUnit !== undefined && numMin !== undefined && numMax !== undefined && perAmountUnit !== undefined) {
+      var match = Belt_Float.fromString(amount);
+      var match$1 = Select_Product_Option_Unit.Amount.status_decode(amountUnit);
       var match$2 = Belt_Float.fromString(numMin);
       var match$3 = Belt_Float.fromString(numMax);
-      var match$4 = Select_Product_Option_Unit.Weight.status_decode(perWeightUnit);
+      var match$4 = Select_Product_Option_Unit.Amount.status_decode(perAmountUnit);
       if (match !== undefined && match$1.TAG === /* Ok */0 && match$2 !== undefined && match$3 !== undefined) {
         var weightUnit$p$p = match$1._0;
         if (match$4.TAG === /* Ok */0) {
           var unit$p$p = match$4._0;
-          tmp = Product_Option_Each_Admin.getPerWeight(match, weightUnit$p$p, match$3, unit$p$p) + "~" + (Product_Option_Each_Admin.getPerWeight(match, weightUnit$p$p, match$2, unit$p$p) + perWeightUnit);
+          tmp = "" + Product_Option_Each_Admin.getPerAmount(match, weightUnit$p$p, match$3, unit$p$p) + "~" + ("" + Product_Option_Each_Admin.getPerAmount(match, weightUnit$p$p, match$2, unit$p$p) + "" + perAmountUnit + "");
         } else {
           tmp = undefined;
         }
@@ -523,10 +546,10 @@ function makeAutoGeneratedName(grade, $$package, weight, weightUnit, numMin, num
     }
     additiveNames = [
       Helper.$$Option.map2(numMin, numMax, (function (min, max) {
-              return "상자당 " + min + "~" + max;
+              return "상자당 " + min + "~" + max + "";
             })),
       tmp,
-      sizeMin !== undefined && sizeMax !== undefined && sizeUnit !== undefined ? sizeMin + "~" + sizeMax + sizeUnit : undefined
+      sizeMin !== undefined && sizeMax !== undefined && sizeUnit !== undefined ? "" + sizeMin + "~" + sizeMax + "" + sizeUnit + "" : undefined
     ];
   } else {
     additiveNames = [];
@@ -566,14 +589,14 @@ function Add_ProductOption_Admin$AutoGeneratedName(Props) {
         name: [
           inputNames.grade,
           inputNames.package,
-          inputNames.weight,
-          inputNames.weightUnit,
-          inputNames.each + "." + Product_Option_Each_Admin.Form.names.minNum,
-          inputNames.each + "." + Product_Option_Each_Admin.Form.names.maxNum,
-          inputNames.each + "." + Product_Option_Each_Admin.Form.names.unitWeight,
-          inputNames.each + "." + Product_Option_Each_Admin.Form.names.minSize,
-          inputNames.each + "." + Product_Option_Each_Admin.Form.names.maxSize,
-          inputNames.each + "." + Product_Option_Each_Admin.Form.names.unitSize
+          inputNames.amount,
+          inputNames.amountUnit,
+          "" + inputNames.each + "." + Product_Option_Each_Admin.Form.names.minNum + "",
+          "" + inputNames.each + "." + Product_Option_Each_Admin.Form.names.maxNum + "",
+          "" + inputNames.each + "." + Product_Option_Each_Admin.Form.names.unitAmount + "",
+          "" + inputNames.each + "." + Product_Option_Each_Admin.Form.names.minSize + "",
+          "" + inputNames.each + "." + Product_Option_Each_Admin.Form.names.maxSize + "",
+          "" + inputNames.each + "." + Product_Option_Each_Admin.Form.names.unitSize + ""
         ],
         control: control
       });
@@ -595,15 +618,15 @@ function Add_ProductOption_Admin$AutoGeneratedName(Props) {
     } else {
       var grade = match$1[0];
       var $$package = match$1[1];
-      var weight = match$1[2];
-      var weightUnit = match$1[3];
+      var amount = match$1[2];
+      var amountUnit = match$1[3];
       var numMin = match$1[4];
       var numMax = match$1[5];
-      var perWeightUnit = match$1[6];
+      var perAmountUnit = match$1[6];
       var sizeMin = match$1[7];
       var sizeMax = match$1[8];
       var sizeUnit = match$1[9];
-      generatedName = makeAutoGeneratedName(grade, $$package, weight, weightUnit, numMin, numMax, perWeightUnit, sizeMin, sizeMax, sizeUnit, Belt_Option.getWithDefault(showEach, false), undefined);
+      generatedName = makeAutoGeneratedName(grade, $$package, amount, amountUnit, numMin, numMax, perAmountUnit, sizeMin, sizeMax, sizeUnit, Belt_Option.getWithDefault(showEach, false), undefined);
     }
   } else {
     generatedName = "";
@@ -685,15 +708,15 @@ var PackageInput = {
   make: Add_ProductOption_Admin$PackageInput
 };
 
-function Add_ProductOption_Admin$WeightInput(Props) {
+function Add_ProductOption_Admin$AmountInput(Props) {
   var showEachInputName = Props.showEachInputName;
-  var weightInputName = Props.weightInputName;
+  var amountInputName = Props.amountInputName;
   var unitInputName = Props.unitInputName;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var control = match.control;
-  var match$1 = match.register(weightInputName, {
+  var match$1 = match.register(amountInputName, {
         required: true,
         min: 0,
         valueAsNumber: true
@@ -725,15 +748,15 @@ function Add_ProductOption_Admin$WeightInput(Props) {
                           render: (function (param) {
                               var match = param.field;
                               var onChange = match.onChange;
-                              return React.createElement(Select_Product_Option_Unit.Weight.make, {
-                                          status: Belt_Result.getWithDefault(Select_Product_Option_Unit.Weight.status_decode(match.value), /* KG */1),
+                              return React.createElement(Select_Product_Option_Unit.Amount.make, {
+                                          status: Belt_Result.getWithDefault(Select_Product_Option_Unit.Amount.status_decode(match.value), /* KG */1),
                                           onChange: (function (status) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Weight.status_encode(status)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Amount.status_encode(status)));
                                             }),
                                           forwardRef: match.ref
                                         });
                             }),
-                          defaultValue: Select_Product_Option_Unit.Weight.status_encode(/* KG */1)
+                          defaultValue: Select_Product_Option_Unit.Amount.status_encode(/* KG */1)
                         }), React.createElement("div", {
                           className: "flex gap-2 items-center grow"
                         }, React.createElement(ReactHookForm$1.Controller, {
@@ -747,7 +770,7 @@ function Add_ProductOption_Admin$WeightInput(Props) {
                                                   id: name,
                                                   checked: Belt_Option.getWithDefault(Js_json.decodeBoolean(match.value), false),
                                                   onChange: (function (e) {
-                                                      return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
+                                                      Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
                                                     })
                                                 }), React.createElement("label", {
                                                   htmlFor: name
@@ -770,8 +793,8 @@ function Add_ProductOption_Admin$WeightInput(Props) {
                     })));
 }
 
-var WeightInput = {
-  make: Add_ProductOption_Admin$WeightInput
+var AmountInput = {
+  make: Add_ProductOption_Admin$AmountInput
 };
 
 function Add_ProductOption_Admin$PriceInput(Props) {
@@ -849,7 +872,7 @@ function Add_ProductOption_Admin$OptionStatusSelect(Props) {
                                                   return v;
                                                 })),
                                           onChange: (function (status) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Operation_Status.Base.status_encode(status)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Operation_Status.Base.status_encode(status)));
                                             }),
                                           forwardRef: match.ref
                                         }), React.createElement(ErrorMessage.ErrorMessage, {
@@ -905,7 +928,7 @@ function Add_ProductOption_Admin$IsFreeShipping(Props) {
                           return React.createElement("div", undefined, React.createElement(Select_Product_Shipping_Type.make, {
                                           status: toStatus(match.value),
                                           onChange: (function (selected) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Shipping_Type.status_encode(selected)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Shipping_Type.status_encode(selected)));
                                             }),
                                           forwardRef: match.ref
                                         }), React.createElement(ErrorMessage.ErrorMessage, {
@@ -1169,7 +1192,7 @@ function Add_ProductOption_Admin$CostTypeSelect(Props) {
                                                   return v;
                                                 })),
                                           onChange: (function (status) {
-                                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Producer_Contract_Type.status_encode(status)));
+                                              Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Producer_Contract_Type.status_encode(status)));
                                             }),
                                           forwardRef: match.ref
                                         }), React.createElement(ErrorMessage.ErrorMessage, {
@@ -1193,6 +1216,56 @@ function Add_ProductOption_Admin$CostTypeSelect(Props) {
 
 var CostTypeSelect = {
   make: Add_ProductOption_Admin$CostTypeSelect
+};
+
+function Add_ProductOption_Admin$ShippingUnitQuantityInput(Props) {
+  var inputName = Props.inputName;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var match$1 = match.register(inputName, {
+        required: true,
+        min: 1,
+        valueAsNumber: true
+      });
+  var name = match$1.name;
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "block",
+                  htmlFor: name
+                }, React.createElement("span", {
+                      className: "font-bold"
+                    }, "배송 합포장 단위"), React.createElement("span", {
+                      className: "text-red-500"
+                    }, "*")), React.createElement("input", {
+                  ref: match$1.ref,
+                  defaultValue: "1",
+                  className: "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none",
+                  id: name,
+                  name: name,
+                  placeholder: "배송 합포장 단위 입력",
+                  type: "number",
+                  onBlur: match$1.onBlur,
+                  onChange: match$1.onChange
+                }), React.createElement(ErrorMessage.ErrorMessage, {
+                  name: name,
+                  errors: match.formState.errors,
+                  render: (function (e) {
+                      return React.createElement("span", {
+                                  className: "flex"
+                                }, React.createElement(IconError.make, {
+                                      width: "20",
+                                      height: "20"
+                                    }), React.createElement("span", {
+                                      className: "text-sm text-notice ml-1"
+                                    }, "합포장 단위를 입력해주세요. (1 미만 입력 불가)"));
+                    })
+                }));
+}
+
+var ShippingUnitQuantityInput = {
+  make: Add_ProductOption_Admin$ShippingUnitQuantityInput
 };
 
 function Add_ProductOption_Admin$CutOffTimeInput(Props) {
@@ -1303,9 +1376,9 @@ function Add_ProductOption_Admin(Props) {
   var inputNames = makeNames(prefix);
   var onClickDelete = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setShowRemove(function (param) {
-                              return /* Show */0;
-                            });
+                  setShowRemove(function (param) {
+                        return /* Show */0;
+                      });
                 }), param);
   };
   var onClickCopy = function (param) {
@@ -1319,14 +1392,14 @@ function Add_ProductOption_Admin(Props) {
                   var focusOptions = {
                     shouldFocus: true
                   };
-                  return prepend(Caml_option.valFromOption(values), Caml_option.some(focusOptions), undefined);
+                  prepend(Caml_option.valFromOption(values), Caml_option.some(focusOptions), undefined);
                 }), param);
   };
   var onClickApplyAll = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setApplyAll(function (prev) {
-                              return !prev;
-                            });
+                  setApplyAll(function (prev) {
+                        return !prev;
+                      });
                 }), param);
   };
   var showEach = ReactHookForm$1.useWatch({
@@ -1361,9 +1434,9 @@ function Add_ProductOption_Admin(Props) {
                                       }, React.createElement("span", {
                                             className: "underline"
                                           }, "단품정보 접기"), React.createElement(IconArrow.make, {
-                                            height: "15",
-                                            width: "15",
-                                            stroke: "#000000",
+                                            height: "16",
+                                            width: "16",
+                                            fill: "#000000",
                                             className: "transform -rotate-90"
                                           })),
                                   className: "collabsible-trigger"
@@ -1382,14 +1455,14 @@ function Add_ProductOption_Admin(Props) {
                                     inputName: inputNames.grade
                                   }), React.createElement(Add_ProductOption_Admin$PackageInput, {
                                     inputName: inputNames.package
-                                  })), React.createElement(Add_ProductOption_Admin$WeightInput, {
+                                  })), React.createElement(Add_ProductOption_Admin$AmountInput, {
                                 showEachInputName: inputNames.showEach,
-                                weightInputName: inputNames.weight,
-                                unitInputName: inputNames.weightUnit
+                                amountInputName: inputNames.amount,
+                                unitInputName: inputNames.amountUnit
                               }), showEach !== undefined && showEach ? React.createElement(Product_Option_Each_Admin.make, {
                                   prefix: prefix,
-                                  weightFormName: inputNames.weight,
-                                  wieghtUnitFormName: inputNames.weightUnit
+                                  amountInputName: inputNames.amount,
+                                  amountUnitInputName: inputNames.amountUnit
                                 }) : null, React.createElement("div", {
                                 className: "flex flex-col gap-6 py-6 w-full"
                               }, React.createElement("div", {
@@ -1400,8 +1473,6 @@ function Add_ProductOption_Admin(Props) {
                                         inputNames: inputNames
                                       }), React.createElement(Add_ProductOption_Admin$OptionStatusSelect, {
                                         inputName: inputNames.operationStatus
-                                      }), React.createElement(Add_ProductOption_Admin$IsFreeShipping, {
-                                        inputName: inputNames.isFreeShipping
                                       })), React.createElement("div", {
                                     className: "flex gap-4 items-center justify-start"
                                   }, React.createElement(Add_ProductOption_Admin$RawCostInput, {
@@ -1410,8 +1481,14 @@ function Add_ProductOption_Admin(Props) {
                                         inputName: inputNames.workingCost
                                       }), isCourierAvailable ? React.createElement(Add_ProductOption_Admin$DeliveryCostInput, {
                                           inputName: inputNames.deliveryCost
-                                        }) : React.createElement(Add_ProductOption_Admin$DeliveryCostInput$Disabled, {}), React.createElement(Add_ProductOption_Admin$CostTypeSelect, {
+                                        }) : React.createElement(Add_ProductOption_Admin$DeliveryCostInput$Disabled, {})), React.createElement("div", {
+                                    className: "flex gap-4 items-center justify-start"
+                                  }, React.createElement(Add_ProductOption_Admin$IsFreeShipping, {
+                                        inputName: inputNames.isFreeShipping
+                                      }), React.createElement(Add_ProductOption_Admin$CostTypeSelect, {
                                         inputName: inputNames.costType
+                                      }), React.createElement(Add_ProductOption_Admin$ShippingUnitQuantityInput, {
+                                        inputName: inputNames.shippingUnitQuantity
                                       }))), React.createElement("div", {
                                 className: "flex flex-col gap-6 py-6 w-full"
                               }, React.createElement(Add_ProductOption_Admin$CutOffTimeInput, {
@@ -1432,15 +1509,15 @@ function Add_ProductOption_Admin(Props) {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "등록중인 단품정보를", React.createElement("br", undefined), "삭제하시겠어요?"),
                   onCancel: (function (param) {
-                      return setShowRemove(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowRemove(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       remove(index);
-                      return setShowRemove(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowRemove(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "닫기",
                   textOnConfirm: "삭제",
@@ -1464,7 +1541,7 @@ export {
   OptionCode ,
   GradeInput ,
   PackageInput ,
-  WeightInput ,
+  AmountInput ,
   PriceInput ,
   OptionStatusSelect ,
   IsFreeShipping ,
@@ -1473,9 +1550,9 @@ export {
   DeliveryCostInput ,
   TotalRawCost ,
   CostTypeSelect ,
+  ShippingUnitQuantityInput ,
   CutOffTimeInput ,
   MemoInput ,
   make ,
-  
 }
 /* checkboxCheckedIcon Not a pure module */

@@ -27,6 +27,7 @@ module.exports = {
     Url: "string",
     StaffKey: "string",
     EmailAddress: "string",
-    DecimalNumber: "string"
+    DecimalNumber: "string",
+    BigInt: "float",
   },
 };

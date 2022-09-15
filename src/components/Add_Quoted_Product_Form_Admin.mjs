@@ -14,6 +14,7 @@ import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Float from "rescript/lib/es6/belt_Float.js";
 import * as DatePicker from "./DatePicker.mjs";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
@@ -21,13 +22,13 @@ import * as ProductForm from "../utils/ProductForm.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as ReactSelect from "./common/ReactSelect.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as ReactHookForm$1 from "react-hook-form";
 import EndOfDay from "date-fns/endOfDay";
-import * as Hooks from "react-relay/hooks";
 import Async from "react-select/async";
 import StartOfDay from "date-fns/startOfDay";
 import * as Product_Detail_Editor from "./Product_Detail_Editor.mjs";
@@ -42,10 +43,9 @@ import * as Product_Detail_Basic_Admin from "./Product_Detail_Basic_Admin.mjs";
 import * as Select_Product_Operation_Status from "./Select_Product_Operation_Status.mjs";
 import * as Product_Detail_Description_Admin from "./Product_Detail_Description_Admin.mjs";
 import * as Product_Detail_Display_Categories from "./Product_Detail_Display_Categories.mjs";
+import * as Select_Product_QuotationType_Admin from "./Select_Product_QuotationType_Admin.mjs";
 import * as AddQuotedProductFormAdminMutation_graphql from "../__generated__/AddQuotedProductFormAdminMutation_graphql.mjs";
 import * as AddQuotedProductFormAdminSelectProducerInputQuery_graphql from "../__generated__/AddQuotedProductFormAdminSelectProducerInputQuery_graphql.mjs";
-
-var makeVariables = AddQuotedProductFormAdminMutation_graphql.Utils.makeVariables;
 
 function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
   return RelayRuntime.commitMutation(environment, {
@@ -66,14 +66,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? AddQuotedProductFormAdminMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, AddQuotedProductFormAdminMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, AddQuotedProductFormAdminMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use(param) {
-  var match = Hooks.useMutation(AddQuotedProductFormAdminMutation_graphql.node);
+  var match = ReactRelay.useMutation(AddQuotedProductFormAdminMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -81,13 +81,13 @@ function use(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, AddQuotedProductFormAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, AddQuotedProductFormAdminMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? AddQuotedProductFormAdminMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, AddQuotedProductFormAdminMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, AddQuotedProductFormAdminMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: AddQuotedProductFormAdminMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -102,19 +102,22 @@ var Mutation_errorCode_decode = AddQuotedProductFormAdminMutation_graphql.Utils.
 
 var Mutation_errorCode_fromString = AddQuotedProductFormAdminMutation_graphql.Utils.errorCode_fromString;
 
+var Mutation_productSalesType_decode = AddQuotedProductFormAdminMutation_graphql.Utils.productSalesType_decode;
+
+var Mutation_productSalesType_fromString = AddQuotedProductFormAdminMutation_graphql.Utils.productSalesType_fromString;
+
 var Mutation_productStatus_decode = AddQuotedProductFormAdminMutation_graphql.Utils.productStatus_decode;
 
 var Mutation_productStatus_fromString = AddQuotedProductFormAdminMutation_graphql.Utils.productStatus_fromString;
 
-var Mutation_make_imageInput = AddQuotedProductFormAdminMutation_graphql.Utils.make_imageInput;
-
 var Mutation = {
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
+  productSalesType_decode: Mutation_productSalesType_decode,
+  productSalesType_fromString: Mutation_productSalesType_fromString,
   productStatus_decode: Mutation_productStatus_decode,
   productStatus_fromString: Mutation_productStatus_fromString,
-  make_imageInput: Mutation_make_imageInput,
-  makeVariables: makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use
@@ -177,6 +180,10 @@ function submit_encode(v) {
               [
                 "description-html",
                 Spice.stringToJson(v.editor)
+              ],
+              [
+                "sales-type",
+                Select_Product_QuotationType_Admin.QuotationType.t_encode(v.salesType)
               ]
             ]);
 }
@@ -218,163 +225,176 @@ function submit_decode(v) {
                           if (documentURL.TAG === /* Ok */0) {
                             var editor = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "description-html"), null));
                             if (editor.TAG === /* Ok */0) {
+                              var salesType = Select_Product_QuotationType_Admin.QuotationType.t_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "sales-type"), null));
+                              if (salesType.TAG === /* Ok */0) {
+                                return {
+                                        TAG: /* Ok */0,
+                                        _0: {
+                                          producerName: producerName._0,
+                                          producerProductName: producerProductName._0,
+                                          buyerProductName: buyerProductName._0,
+                                          origin: origin._0,
+                                          productCategory: productCategory._0,
+                                          displayCategories: displayCategories._0,
+                                          operationStatus: operationStatus._0,
+                                          grade: grade._0,
+                                          notice: notice._0,
+                                          noticeStartAt: noticeStartAt._0,
+                                          noticeEndAt: noticeEndAt._0,
+                                          thumbnail: thumbnail._0,
+                                          documentURL: documentURL._0,
+                                          editor: editor._0,
+                                          salesType: salesType._0
+                                        }
+                                      };
+                              }
+                              var e = salesType._0;
                               return {
-                                      TAG: /* Ok */0,
+                                      TAG: /* Error */1,
                                       _0: {
-                                        producerName: producerName._0,
-                                        producerProductName: producerProductName._0,
-                                        buyerProductName: buyerProductName._0,
-                                        origin: origin._0,
-                                        productCategory: productCategory._0,
-                                        displayCategories: displayCategories._0,
-                                        operationStatus: operationStatus._0,
-                                        grade: grade._0,
-                                        notice: notice._0,
-                                        noticeStartAt: noticeStartAt._0,
-                                        noticeEndAt: noticeEndAt._0,
-                                        thumbnail: thumbnail._0,
-                                        documentURL: documentURL._0,
-                                        editor: editor._0
+                                        path: ".sales-type" + e.path,
+                                        message: e.message,
+                                        value: e.value
                                       }
                                     };
                             }
-                            var e = editor._0;
+                            var e$1 = editor._0;
                             return {
                                     TAG: /* Error */1,
                                     _0: {
-                                      path: ".description-html" + e.path,
-                                      message: e.message,
-                                      value: e.value
+                                      path: ".description-html" + e$1.path,
+                                      message: e$1.message,
+                                      value: e$1.value
                                     }
                                   };
                           }
-                          var e$1 = documentURL._0;
+                          var e$2 = documentURL._0;
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: ".document-url" + e$1.path,
-                                    message: e$1.message,
-                                    value: e$1.value
+                                    path: ".document-url" + e$2.path,
+                                    message: e$2.message,
+                                    value: e$2.value
                                   }
                                 };
                         }
-                        var e$2 = thumbnail._0;
+                        var e$3 = thumbnail._0;
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: ".thumbnail" + e$2.path,
-                                  message: e$2.message,
-                                  value: e$2.value
+                                  path: ".thumbnail" + e$3.path,
+                                  message: e$3.message,
+                                  value: e$3.value
                                 }
                               };
                       }
-                      var e$3 = noticeEndAt._0;
+                      var e$4 = noticeEndAt._0;
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: ".notice-date-to" + e$3.path,
-                                message: e$3.message,
-                                value: e$3.value
+                                path: ".notice-date-to" + e$4.path,
+                                message: e$4.message,
+                                value: e$4.value
                               }
                             };
                     }
-                    var e$4 = noticeStartAt._0;
+                    var e$5 = noticeStartAt._0;
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: ".notice-date-from" + e$4.path,
-                              message: e$4.message,
-                              value: e$4.value
+                              path: ".notice-date-from" + e$5.path,
+                              message: e$5.message,
+                              value: e$5.value
                             }
                           };
                   }
-                  var e$5 = notice._0;
+                  var e$6 = notice._0;
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".notice" + e$5.path,
-                            message: e$5.message,
-                            value: e$5.value
+                            path: ".notice" + e$6.path,
+                            message: e$6.message,
+                            value: e$6.value
                           }
                         };
                 }
-                var e$6 = grade._0;
+                var e$7 = grade._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".grade" + e$6.path,
-                          message: e$6.message,
-                          value: e$6.value
+                          path: ".grade" + e$7.path,
+                          message: e$7.message,
+                          value: e$7.value
                         }
                       };
               }
-              var e$7 = operationStatus._0;
+              var e$8 = operationStatus._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".product-operation-status" + e$7.path,
-                        message: e$7.message,
-                        value: e$7.value
+                        path: ".product-operation-status" + e$8.path,
+                        message: e$8.message,
+                        value: e$8.value
                       }
                     };
             }
-            var e$8 = displayCategories._0;
+            var e$9 = displayCategories._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".display-categories" + e$8.path,
-                      message: e$8.message,
-                      value: e$8.value
+                      path: ".display-categories" + e$9.path,
+                      message: e$9.message,
+                      value: e$9.value
                     }
                   };
           }
-          var e$9 = productCategory._0;
+          var e$10 = productCategory._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".product-category" + e$9.path,
-                    message: e$9.message,
-                    value: e$9.value
+                    path: ".product-category" + e$10.path,
+                    message: e$10.message,
+                    value: e$10.value
                   }
                 };
         }
-        var e$10 = origin._0;
+        var e$11 = origin._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".origin" + e$10.path,
-                  message: e$10.message,
-                  value: e$10.value
+                  path: ".origin" + e$11.path,
+                  message: e$11.message,
+                  value: e$11.value
                 }
               };
       }
-      var e$11 = buyerProductName._0;
+      var e$12 = buyerProductName._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".buyer-product-name" + e$11.path,
-                message: e$11.message,
-                value: e$11.value
+                path: ".buyer-product-name" + e$12.path,
+                message: e$12.message,
+                value: e$12.value
               }
             };
     }
-    var e$12 = producerProductName._0;
+    var e$13 = producerProductName._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".producer-product-name" + e$12.path,
-              message: e$12.message,
-              value: e$12.value
+              path: ".producer-product-name" + e$13.path,
+              message: e$13.message,
+              value: e$13.value
             }
           };
   }
-  var e$13 = producerName._0;
+  var e$14 = producerName._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".producer-name" + e$13.path,
-            message: e$13.message,
-            value: e$13.value
+            path: ".producer-name" + e$14.path,
+            message: e$14.message,
+            value: e$14.value
           }
         };
 }
@@ -393,7 +413,8 @@ var Form_formName = {
   noticeDateFrom: "notice-date-from",
   thumbnail: "thumbnail",
   documentURL: "document-url",
-  editor: "description-html"
+  editor: "description-html",
+  salesType: "sales-type"
 };
 
 var Form = {
@@ -415,7 +436,7 @@ function getTextInputStyle(disabled) {
 }
 
 function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
-  var data = Hooks.useLazyLoadQuery(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertVariables(variables)), {
+  var data = ReactRelay.useLazyLoadQuery(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
         networkCacheConfig: networkCacheConfig
@@ -424,7 +445,7 @@ function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 }
 
 function useLoader(param) {
-  var match = Hooks.useQueryLoader(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node);
+  var match = ReactRelay.useQueryLoader(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node);
   var loadQueryFn = match[1];
   var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
@@ -442,38 +463,37 @@ function useLoader(param) {
 }
 
 function $$fetch(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
-  Hooks.fetchQuery(environment, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertVariables(variables), {
+  ReactRelay.fetchQuery(environment, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).subscribe({
         next: (function (res) {
-            return Curry._1(onResult, {
-                        TAG: /* Ok */0,
-                        _0: AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertResponse(res)
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertResponse(res)
+                });
           }),
         error: (function (err) {
-            return Curry._1(onResult, {
-                        TAG: /* Error */1,
-                        _0: err
-                      });
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
           })
       });
-  
 }
 
 function fetchPromised(environment, variables, networkCacheConfig, fetchPolicy, param) {
-  var __x = Hooks.fetchQuery(environment, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertVariables(variables), {
+  var __x = ReactRelay.fetchQuery(environment, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertVariables(variables), {
           networkCacheConfig: networkCacheConfig,
           fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
         }).toPromise();
-  return __x.then(function (res) {
-              return Promise.resolve(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertResponse(res));
-            });
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertResponse(res));
+              }), __x);
 }
 
 function usePreloaded(queryRef, param) {
-  var data = Hooks.usePreloadedQuery(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, queryRef);
+  var data = ReactRelay.usePreloadedQuery(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.node, queryRef);
   return RescriptRelay_Internal.internal_useConvertedValue(AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Internal.convertResponse, data);
 }
 
@@ -486,12 +506,10 @@ var Query_userRole_decode = AddQuotedProductFormAdminSelectProducerInputQuery_gr
 
 var Query_userRole_fromString = AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Utils.userRole_fromString;
 
-var Query_makeVariables = AddQuotedProductFormAdminSelectProducerInputQuery_graphql.Utils.makeVariables;
-
 var Query = {
   userRole_decode: Query_userRole_decode,
   userRole_fromString: Query_userRole_fromString,
-  makeVariables: Query_makeVariables,
+  Operation: undefined,
   Types: undefined,
   use: use$1,
   useLoader: useLoader,
@@ -507,20 +525,20 @@ function Add_Quoted_Product_Form_Admin$SelectProducerInput(Props) {
         mode: "onChange"
       }, undefined);
   var handleLoadOptions = function (inputValue) {
-    return fetchPromised(RelayEnv.envSinsunMarket, {
-                  nameMatch: inputValue,
-                  role: "PRODUCER"
-                }, undefined, undefined, undefined).then(function (result) {
-                var result$p = Belt_Array.map(result.users.edges, (function (edge) {
-                        return /* Selected */{
-                                value: edge.node.id,
-                                label: Belt_Option.mapWithDefault(edge.node.bossName, edge.node.name, (function (boss) {
-                                        return edge.node.name + "(" + boss + ")";
-                                      }))
-                              };
-                      }));
-                return Promise.resolve(result$p);
-              });
+    return Js_promise.then_((function (result) {
+                  var result$p = Belt_Array.map(result.users.edges, (function (edge) {
+                          return /* Selected */{
+                                  value: edge.node.id,
+                                  label: Belt_Option.mapWithDefault(edge.node.bossName, edge.node.name, (function (boss) {
+                                          return "" + edge.node.name + "(" + boss + ")";
+                                        }))
+                                };
+                        }));
+                  return Promise.resolve(result$p);
+                }), fetchPromised(RelayEnv.envSinsunMarket, {
+                    nameMatch: inputValue,
+                    role: "PRODUCER"
+                  }, undefined, undefined, undefined));
   };
   return React.createElement("div", {
               className: "flex flex-col gap-2"
@@ -544,7 +562,7 @@ function Add_Quoted_Product_Form_Admin$SelectProducerInput(Props) {
                                               defaultOptions: false,
                                               loadOptions: Helper.Debounce.make1(handleLoadOptions, 500),
                                               onChange: (function (data) {
-                                                  return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, ReactSelect.encoderRule(data)));
+                                                  Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, ReactSelect.encoderRule(data)));
                                                 }),
                                               placeholder: "생산자명으로 찾기",
                                               noOptionsMessage: (function (param) {
@@ -781,7 +799,7 @@ function Add_Quoted_Product_Form_Admin$DisplayPriceInput(Props) {
                                       var validValue = Belt_Option.getWithDefault(Belt_Option.map(localeStringToFloat(value), (function (prim) {
                                                   return prim;
                                                 })), "");
-                                      return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, validValue));
+                                      Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, validValue));
                                     })
                                 });
                     }),
@@ -863,15 +881,15 @@ function Add_Quoted_Product_Form_Admin$OperationStatusInput(Props) {
                   isShow: match$1[0],
                   children: React.createElement("p", undefined, "영구판매중지 상태를 선택 후 저장하시면", React.createElement("br", undefined), "추후 해당 상품을 수정할 수 없습니다.", React.createElement("br", undefined), React.createElement("br", undefined), "영구판매중지 상태로 변경할까요?"),
                   onCancel: (function (param) {
-                      return setShowProductOperationNoSale(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowProductOperationNoSale(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   onConfirm: (function (param) {
                       setValue(name, Select_Product_Operation_Status.Base.status_encode(/* RETIRE */3));
-                      return setShowProductOperationNoSale(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowProductOperationNoSale(function (param) {
+                            return /* Hide */1;
+                          });
                     }),
                   textOnCancel: "닫기",
                   textOnConfirm: "확인",
@@ -882,6 +900,55 @@ function Add_Quoted_Product_Form_Admin$OperationStatusInput(Props) {
 
 var OperationStatusInput = {
   make: Add_Quoted_Product_Form_Admin$OperationStatusInput
+};
+
+function Add_Quoted_Product_Form_Admin$QuotationTypeInput(Props) {
+  var name = Props.name;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var errors = match.formState.errors;
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 max-w-md w-1/3"
+            }, React.createElement("div", undefined, React.createElement("span", {
+                      className: "font-bold"
+                    }, "견적 유형"), React.createElement("span", {
+                      className: "text-notice"
+                    }, "*")), React.createElement(ReactHookForm$1.Controller, {
+                  name: name,
+                  control: match.control,
+                  render: (function (param) {
+                      var match = param.field;
+                      var onChange = match.onChange;
+                      return React.createElement("div", undefined, React.createElement(Select_Product_QuotationType_Admin.make, {
+                                      status: Belt_Result.mapWithDefault(Select_Product_QuotationType_Admin.QuotationType.t_decode(match.value), undefined, (function (status) {
+                                              return status;
+                                            })),
+                                      onChange: (function (s) {
+                                          Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_QuotationType_Admin.QuotationType.t_encode(s)));
+                                        }),
+                                      forwardRef: match.ref
+                                    }), React.createElement(ErrorMessage.ErrorMessage, {
+                                      name: name,
+                                      errors: errors,
+                                      render: (function (param) {
+                                          return React.createElement("span", {
+                                                      className: "flex"
+                                                    }, React.createElement(IconError.make, {
+                                                          width: "20",
+                                                          height: "20"
+                                                        }), React.createElement("span", {
+                                                          className: "text-sm text-notice ml-1"
+                                                        }, "견적 유형을 선택해주세요."));
+                                        })
+                                    }));
+                    }),
+                  rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                }));
+}
+
+var QuotationTypeInput = {
+  make: Add_Quoted_Product_Form_Admin$QuotationTypeInput
 };
 
 function Add_Quoted_Product_Form_Admin$OriginInput(Props) {
@@ -996,7 +1063,7 @@ function Add_Quoted_Product_Form_Admin$NoticeAndDateInput$DateInput(Props) {
                   var tmp = {
                     id: match.name,
                     onChange: (function (e) {
-                        return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
+                        Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
                       }),
                     firstDayOfWeek: 0
                   };
@@ -1101,7 +1168,7 @@ function Add_Quoted_Product_Form_Admin$ThumbnailUploadInput(Props) {
                           return React.createElement(Upload_Thumbnail_Admin.make, {
                                       name: match.name,
                                       updateFn: (function (imageUrls) {
-                                          return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Upload_Thumbnail_Admin.Form.image_encode(imageUrls)));
+                                          Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Upload_Thumbnail_Admin.Form.image_encode(imageUrls)));
                                         }),
                                       value: Belt_Result.getWithDefault(Upload_Thumbnail_Admin.Form.image_decode(match.value), Upload_Thumbnail_Admin.Form.resetImage)
                                     });
@@ -1205,7 +1272,6 @@ function Add_Quoted_Product_Form_Admin$QuotedSuccessDialog(Props) {
                   }, React.createElement("span", undefined, "견적상품등록이 완료되었습니다.")),
               onCancel: (function (param) {
                   router.push("/admin/products");
-                  
                 }),
               textOnCancel: "확인",
               kindOfConfirm: /* Positive */0,
@@ -1218,9 +1284,10 @@ var QuotedSuccessDialog = {
 };
 
 function makeQuotedProductVariables(form) {
-  var match = form.operationStatus;
+  var match = form.salesType;
+  var match$1 = form.operationStatus;
   var tmp;
-  switch (match) {
+  switch (match$1) {
     case /* SALE */0 :
         tmp = "SALE";
         break;
@@ -1238,38 +1305,52 @@ function makeQuotedProductVariables(form) {
         break;
     
   }
-  return Curry.app(makeVariables, [
-              ProductForm.makeCategoryId(form.productCategory.c5),
-              form.editor,
-              ProductForm.makeDisplayCategoryIds(form.displayCategories),
-              form.buyerProductName,
-              {
-                original: form.thumbnail.original,
-                thumb100x100: form.thumbnail.thumb100x100,
-                thumb400x400: form.thumbnail.thumb400x400,
-                thumb800x800: form.thumbnail.thumb800x800,
-                thumb1000x1000: form.thumbnail.thumb1000x1000,
-                thumb1920x1920: form.thumbnail.thumb1920x1920
-              },
-              form.producerProductName,
-              Belt_Option.keep(form.notice, (function (str) {
-                      return str !== "";
-                    })),
-              ProductForm.makeNoticeDate(form.noticeEndAt, (function (prim) {
-                      return EndOfDay(prim);
-                    })),
-              ProductForm.makeNoticeDate(form.noticeStartAt, (function (prim) {
-                      return StartOfDay(prim);
-                    })),
-              form.origin,
-              form.grade,
-              form.producerName.value,
-              Belt_Option.keep(form.documentURL, (function (str) {
-                      return str !== "";
-                    })),
-              tmp,
-              undefined
-            ]);
+  var tmp$1 = {
+    categoryId: ProductForm.makeCategoryId(form.productCategory.c5),
+    description: form.editor,
+    displayCategoryIds: ProductForm.makeDisplayCategoryIds(form.displayCategories),
+    displayName: form.buyerProductName,
+    grade: form.grade,
+    image: {
+      original: form.thumbnail.original,
+      thumb1000x1000: form.thumbnail.thumb1000x1000,
+      thumb100x100: form.thumbnail.thumb100x100,
+      thumb1920x1920: form.thumbnail.thumb1920x1920,
+      thumb400x400: form.thumbnail.thumb400x400,
+      thumb800x800: form.thumbnail.thumb800x800,
+      thumb800xall: form.thumbnail.thumb800xall
+    },
+    name: form.producerProductName,
+    origin: form.origin,
+    producerId: form.producerName.value,
+    salesType: match ? "RFQ_LIVESTOCK" : "TRADEMATCH_AQUATIC",
+    status: tmp
+  };
+  var tmp$2 = Belt_Option.keep(form.notice, (function (str) {
+          return str !== "";
+        }));
+  if (tmp$2 !== undefined) {
+    tmp$1.notice = tmp$2;
+  }
+  var tmp$3 = ProductForm.makeNoticeDate(form.noticeEndAt, (function (prim) {
+          return EndOfDay(prim);
+        }));
+  if (tmp$3 !== undefined) {
+    tmp$1.noticeEndAt = tmp$3;
+  }
+  var tmp$4 = ProductForm.makeNoticeDate(form.noticeStartAt, (function (prim) {
+          return StartOfDay(prim);
+        }));
+  if (tmp$4 !== undefined) {
+    tmp$1.noticeStartAt = tmp$4;
+  }
+  var tmp$5 = Belt_Option.keep(form.documentURL, (function (str) {
+          return str !== "";
+        }));
+  if (tmp$5 !== undefined) {
+    tmp$1.salesDocument = tmp$5;
+  }
+  return tmp$1;
 }
 
 function Add_Quoted_Product_Form_Admin(Props) {
@@ -1299,52 +1380,76 @@ function Add_Quoted_Product_Form_Admin(Props) {
   var match$3 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowQuotedSucess = match$3[1];
+  var setShowQuotedSuccess = match$3[1];
+  var match$4 = React.useState(function () {
+        return [
+                /* Hide */1,
+                undefined
+              ];
+      });
+  var setErrorStatus = match$4[1];
+  var errorStatus = match$4[0];
   var onSubmit = function (data, param) {
-    console.log(data);
-    var result = Belt_Result.map(submit_decode(data), (function (data$p) {
-            Curry.app(quotedMutate, [
-                  undefined,
-                  (function (param, param$1) {
-                      var createQuotedProduct = param.createQuotedProduct;
-                      if (typeof createQuotedProduct === "object" && createQuotedProduct.NAME === "CreateQuotedProductResult") {
-                        return setShowQuotedSucess(function (param) {
-                                    return /* Show */0;
-                                  });
-                      }
-                      
-                    }),
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  makeQuotedProductVariables(data$p),
-                  undefined,
-                  undefined
-                ]);
-            
-          }));
-    if (result.TAG === /* Ok */0) {
+    var data$1 = submit_decode(data);
+    if (data$1.TAG === /* Ok */0) {
+      Curry.app(quotedMutate, [
+            undefined,
+            (function (param, param$1) {
+                var createQuotedProduct = param.createQuotedProduct;
+                if (typeof createQuotedProduct === "object") {
+                  var variant = createQuotedProduct.NAME;
+                  if (variant === "CreateQuotedProductResult") {
+                    return setShowQuotedSuccess(function (param) {
+                                return /* Show */0;
+                              });
+                  }
+                  if (variant === "Error") {
+                    var message = createQuotedProduct.VAL.message;
+                    return setErrorStatus(function (param) {
+                                return [
+                                        /* Show */0,
+                                        message
+                                      ];
+                              });
+                  }
+                  
+                }
+                setErrorStatus(function (param) {
+                      return [
+                              /* Show */0,
+                              undefined
+                            ];
+                    });
+              }),
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            makeQuotedProductVariables(data$1._0),
+            undefined,
+            undefined
+          ]);
       return ;
     }
-    console.log(result._0);
-    return addToast(React.createElement("div", {
-                    className: "flex items-center"
-                  }, React.createElement(IconError.make, {
-                        width: "24",
-                        height: "24",
-                        className: "mr-2"
-                      }), "오류가 발생하였습니다. 등록내용을 확인하세요."), {
-                appearance: "error"
-              });
+    console.log(data$1._0);
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), "오류가 발생하였습니다. 등록내용을 확인하세요."), {
+          appearance: "error"
+        });
   };
   var handleReset = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
-                  return setShowReset(function (param) {
-                              return /* Show */0;
-                            });
+                  setShowReset(function (param) {
+                        return /* Show */0;
+                      });
                 }), param);
   };
+  var errorMessage = errorStatus[1];
   return React.createElement(ReactHookForm.Provider.make, {
               children: React.createElement("form", {
                     onSubmit: methods.handleSubmit(onSubmit)
@@ -1373,11 +1478,13 @@ function Add_Quoted_Product_Form_Admin(Props) {
                                     className: "flex gap-2"
                                   }, React.createElement(Add_Quoted_Product_Form_Admin$OperationStatusInput, {
                                         name: "product-operation-status"
-                                      }), React.createElement(Add_Quoted_Product_Form_Admin$OriginInput, {
-                                        name: "origin"
+                                      }), React.createElement(Add_Quoted_Product_Form_Admin$QuotationTypeInput, {
+                                        name: "sales-type"
                                       })), React.createElement("div", {
                                     className: "flex gap-2"
-                                  }, React.createElement(Add_Quoted_Product_Form_Admin$GradeInput, {
+                                  }, React.createElement(Add_Quoted_Product_Form_Admin$OriginInput, {
+                                        name: "origin"
+                                      }), React.createElement(Add_Quoted_Product_Form_Admin$GradeInput, {
                                         name: "grade"
                                       }))))), React.createElement("section", {
                         className: "p-7 mt-4 mx-4 mb-7 bg-white rounded shadow-gl"
@@ -1410,15 +1517,15 @@ function Add_Quoted_Product_Form_Admin(Props) {
                         isShow: match$2[0],
                         children: React.createElement("p", undefined, "모든 내용을 초기화 하시겠어요?"),
                         onCancel: (function (param) {
-                            return setShowReset(function (param) {
-                                        return /* Hide */1;
-                                      });
+                            setShowReset(function (param) {
+                                  return /* Hide */1;
+                                });
                           }),
                         onConfirm: (function (param) {
                             reset(undefined);
-                            return setShowReset(function (param) {
-                                        return /* Hide */1;
-                                      });
+                            setShowReset(function (param) {
+                                  return /* Hide */1;
+                                });
                           }),
                         textOnCancel: "닫기",
                         textOnConfirm: "초기화",
@@ -1426,6 +1533,21 @@ function Add_Quoted_Product_Form_Admin(Props) {
                         boxStyle: "text-center rounded-2xl"
                       }), React.createElement(Add_Quoted_Product_Form_Admin$QuotedSuccessDialog, {
                         isShow: match$3[0]
+                      }), React.createElement(Dialog.make, {
+                        isShow: errorStatus[0],
+                        children: React.createElement("div", {
+                              className: "text-gray-500 text-center whitespace-pre-wrap"
+                            }, "상품정보 등록에 실패하였습니다.", errorMessage !== undefined ? React.createElement("p", undefined, errorMessage) : null),
+                        onCancel: (function (param) {
+                            setErrorStatus(function (param) {
+                                  return [
+                                          /* Hide */1,
+                                          undefined
+                                        ];
+                                });
+                          }),
+                        textOnCancel: "확인",
+                        boxStyle: "text-center rounded-2xl"
                       })),
               methods: methods
             });
@@ -1444,6 +1566,7 @@ export {
   ReadOnlyProductId ,
   DisplayPriceInput ,
   OperationStatusInput ,
+  QuotationTypeInput ,
   OriginInput ,
   GradeInput ,
   NoticeAndDateInput ,
@@ -1453,6 +1576,5 @@ export {
   QuotedSuccessDialog ,
   makeQuotedProductVariables ,
   make ,
-  
 }
 /* react Not a pure module */

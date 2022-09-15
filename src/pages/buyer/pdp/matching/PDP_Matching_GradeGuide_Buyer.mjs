@@ -2,24 +2,25 @@
 
 import * as React from "react";
 import * as Divider from "../../../../components/common/Divider.mjs";
+import * as IconArrow from "../../../../components/svgs/IconArrow.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import ReactNl2br from "react-nl2br";
+import * as ReactRelay from "react-relay";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as ReactTabs from "@radix-ui/react-tabs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactSeparator from "@radix-ui/react-separator";
 import * as PDPMatchingGradeGuideBuyer_fragment_graphql from "../../../../__generated__/PDPMatchingGradeGuideBuyer_fragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(PDPMatchingGradeGuideBuyer_fragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPMatchingGradeGuideBuyer_fragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPMatchingGradeGuideBuyer_fragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPMatchingGradeGuideBuyer_fragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPMatchingGradeGuideBuyer_fragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -31,6 +32,7 @@ function useOpt(opt_fRef) {
 
 var Fragment = {
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
@@ -184,6 +186,38 @@ var Content = {
   make: PDP_Matching_GradeGuide_Buyer$Content
 };
 
+function PDP_Matching_GradeGuide_Buyer$Trigger(Props) {
+  var onClick = Props.onClick;
+  var className = Props.className;
+  return React.createElement("div", {
+              className: "w-full bg-green-50 rounded-xl p-6 " + Belt_Option.getWithDefault(className, "")
+            }, React.createElement("div", {
+                  className: "flex items-center"
+                }, React.createElement("img", {
+                      className: "w-6 h-6 object-contain mr-2",
+                      src: "/icons/grade-green-circle@3x.png"
+                    }), React.createElement("h1", {
+                      className: "text-black font-bold text-base"
+                    }, "신선하이 등급으로 필요한 시세를 한눈에")), React.createElement("div", {
+                  className: "mt-2 flex flex-col "
+                }, React.createElement("span", {
+                      className: "text-sm text-gray-600"
+                    }, ReactNl2br("고객의 구매 목적을 고려한 신선하이 등급을 통해\n상품의 품질별 시세의 흐름을 한눈에 파악할 수 있습니다."))), React.createElement("button", {
+                  className: "mt-4 flex items-center",
+                  onClick: onClick
+                }, React.createElement("span", {
+                      className: "text-sm text-primary font-bold"
+                    }, "신선하이 등급보러가기"), React.createElement(IconArrow.make, {
+                      height: "16",
+                      width: "16",
+                      fill: "#12b564"
+                    })));
+}
+
+var Trigger = {
+  make: PDP_Matching_GradeGuide_Buyer$Trigger
+};
+
 function PDP_Matching_GradeGuide_Buyer$Divider(Props) {
   var className = Props.className;
   var tmp = {};
@@ -201,8 +235,8 @@ function PDP_Matching_GradeGuide_Buyer(Props) {
   var query = Props.query;
   var match = use(query);
   var match$1 = match.qualityStandard;
-  var low = match$1.low;
   var medium = match$1.medium;
+  var low = match$1.low;
   var high = match$1.high;
   var match$2 = React.useState(function () {
         return "high";
@@ -213,9 +247,9 @@ function PDP_Matching_GradeGuide_Buyer(Props) {
                   children: null,
                   defaultValue: "high",
                   onValueChange: (function (selected) {
-                      return setSelectedTab(function (param) {
-                                  return selected;
-                                });
+                      setSelectedTab(function (param) {
+                            return selected;
+                          });
                     })
                 }, React.createElement(ReactTabs.List, {
                       children: null,
@@ -283,8 +317,8 @@ export {
   Banner ,
   Tab ,
   Content ,
+  Trigger ,
   Divider$1 as Divider,
   make ,
-  
 }
 /* react Not a pure module */

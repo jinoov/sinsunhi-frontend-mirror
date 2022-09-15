@@ -22,8 +22,8 @@ module Fragment = %relay(`
       productOptions(after: $after, first: $first) {
         edges {
           node {
-            weight
-            weightUnit
+            amount
+            amountUnit
             grade
           }
         }
@@ -34,8 +34,8 @@ module Fragment = %relay(`
       productOptions(after: $after, first: $first) {
         edges {
           node {
-            weight
-            weightUnit
+            amount
+            amountUnit
             grade
           }
         }
@@ -65,11 +65,11 @@ module PC = {
       PDP_Parser_Buyer.Product.Normal.makeCategoryLabel(category.item, category.kind)
     }
 
-    let weightLabel = switch productOptions {
+    let amountLabel = switch productOptions {
     | Some(productOptions') =>
       productOptions'.edges
-      ->Array.map(({node: {weight, weightUnit}}) => (weight, weightUnit))
-      ->PDP_Parser_Buyer.Product.Normal.makeWeightLabel
+      ->Array.map(({node: {amount, amountUnit}}) => (amount, amountUnit))
+      ->PDP_Parser_Buyer.Product.Normal.makeAmountLabel
     | None => "-"
     }
 
@@ -82,7 +82,7 @@ module PC = {
     <div className=%twc("pb-5")>
       <h2 className=%twc("font-bold text-lg text-gray-800")> {`상품 정보`->React.string} </h2>
       <Column className=%twc("mt-5") label=`작물/품종` value=categoryLabel />
-      <Column className=%twc("mt-2") label=`중량단위` value=weightLabel />
+      <Column className=%twc("mt-2") label=`중량단위` value=amountLabel />
       {gradeLabel->Option.mapWithDefault(React.null, gradeLabel' => {
         <Column className=%twc("mt-5") label=`등급/용도명` value=gradeLabel' />
       })}
@@ -117,8 +117,8 @@ module MO = {
     let weightLabel = switch productOptions {
     | Some(productOptions') =>
       productOptions'.edges
-      ->Array.map(({node: {weight, weightUnit}}) => (weight, weightUnit))
-      ->PDP_Parser_Buyer.Product.Normal.makeWeightLabel
+      ->Array.map(({node: {amount, amountUnit}}) => (amount, amountUnit))
+      ->PDP_Parser_Buyer.Product.Normal.makeAmountLabel
     | None => "-"
     }
 

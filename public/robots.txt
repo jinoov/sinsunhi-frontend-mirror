@@ -1,4 +1,28 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sinsunhi.com/sitemap.xml
+Disallow: /admin/
+Disallow: /seller/
+Disallow: /404/
+Disallow: /out-of-service/
+Disallow: /browser-guide/
+
+Disallow: /buyer/orders
+Disallow: /buyer/upload
+Disallow: /buyer/transactions
+Disallow: /buyer/download-center
+Disallow: /buyer/cart
+Disallow: /buyer/me
+Disallow: /buyer/after-pay
+Disallow: /buyer/toss-payments
+Disallow: /buyer/web-order
+
+Disallow: /orders
+Disallow: /upload
+Disallow: /transactions
+Disallow: /download-center
+Disallow: /cart
+Disallow: /me
+Disallow: /after-pay
+Disallow: /toss-payments
+Disallow: /web-order

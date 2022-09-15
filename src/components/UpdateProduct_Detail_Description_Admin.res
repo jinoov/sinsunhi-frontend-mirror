@@ -10,6 +10,7 @@ module Fragment = %relay(`
       thumb1920x1920
       thumb400x400
       thumb800x800
+      thumb800xall
     }
     salesDocument
     noticeStartAt
@@ -24,6 +25,7 @@ let queryImageToFormImage: UpdateProductDetailDescriptionAdmin_graphql.Types.fra
   thumb1920x1920: image.thumb1920x1920,
   thumb400x400: image.thumb400x400,
   thumb800x800: image.thumb800x800,
+  thumb800xall: image.thumb800xall->Option.getWithDefault(image.thumb1920x1920),
 }
 
 @react.component

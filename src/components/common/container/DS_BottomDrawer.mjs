@@ -3,8 +3,9 @@
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
-import * as DS_Icon from "../../svgs/DS_Icon.mjs";
+import * as IconClose from "../../svgs/IconClose.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as ReactPortal from "@radix-ui/react-portal";
 
 function toStyle(isShow, show, hide, style) {
   return Cx.cx([
@@ -21,7 +22,6 @@ function useLockBodyScroll(isLock) {
               bodyElement.className = "overflow-hidden";
               return (function (param) {
                         bodyElement.className = "";
-                        
                       });
             } else {
               return ;
@@ -33,7 +33,6 @@ function useLockBodyScroll(isLock) {
             return ;
           }
         }), [isLock]);
-  
 }
 
 var context = React.createContext(function (param) {
@@ -70,7 +69,7 @@ function DS_BottomDrawer$Overlay(Props) {
   return React.createElement("div", {
               className: overlayStyle("fixed top-0 left-0 w-full h-full bg-dim transition-opacity z-[12]"),
               onClick: (function (param) {
-                  return Curry._1(handleClose, undefined);
+                  Curry._1(handleClose, undefined);
                 })
             });
 }
@@ -89,9 +88,9 @@ function DS_BottomDrawer$Header(Props) {
                 }, Belt_Option.getWithDefault(children, null)), React.createElement("span", {
                   className: "cursor-pointer p-4",
                   onClick: (function (param) {
-                      return Curry._1(handleClose, undefined);
+                      Curry._1(handleClose, undefined);
                     })
-                }, React.createElement(DS_Icon.Common.CloseLarge2.make, {
+                }, React.createElement(IconClose.make, {
                       height: "24",
                       width: "24"
                     })));
@@ -117,23 +116,32 @@ function DS_BottomDrawer$Root(Props) {
   var onClose = Props.onClose;
   var children = Props.children;
   var fullOpt = Props.full;
+  var dimLocationOpt = Props.dimLocation;
   var full = fullOpt !== undefined ? fullOpt : false;
+  var dimLocation = dimLocationOpt !== undefined ? dimLocationOpt : /* Declared */1;
   useLockBodyScroll(isShow);
   var showStyle = function (param) {
     return toStyle(isShow, "bottom-0", "-bottom-full", param);
   };
-  return React.createElement(DS_BottomDrawer$BottomDrawerContext$Provider, {
-              value: onClose,
-              children: null
-            }, React.createElement(DS_BottomDrawer$Overlay, {
-                  isShow: isShow
-                }), React.createElement("div", {
-                  "aria-hidden": !isShow,
-                  className: showStyle(Cx.cx([
-                            full ? "h-full" : "max-h-[85vh]",
-                            "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
-                          ]))
-                }, children));
+  var content = React.createElement(DS_BottomDrawer$BottomDrawerContext$Provider, {
+        value: onClose,
+        children: null
+      }, React.createElement(DS_BottomDrawer$Overlay, {
+            isShow: isShow
+          }), React.createElement("div", {
+            "aria-hidden": !isShow,
+            className: showStyle(Cx.cx([
+                      full ? "h-full" : "max-h-[85vh]",
+                      "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
+                    ]))
+          }, children));
+  if (dimLocation) {
+    return content;
+  } else {
+    return React.createElement(ReactPortal.Root, {
+                children: content
+              });
+  }
 }
 
 var Root = {
@@ -148,6 +156,5 @@ export {
   Header ,
   Body ,
   Root ,
-  
 }
 /* context Not a pure module */

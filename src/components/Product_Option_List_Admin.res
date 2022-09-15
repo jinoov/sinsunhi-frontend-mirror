@@ -9,6 +9,8 @@ module Fragment = %relay(`
     status: { type: "ProductOptionStatus" }
     productName: { type: "String" }
     categoryId: { type: "Int" }
+    productIds: { type: "[Int!]" }
+    skuNos: { type: "[String!]" }
   ) {
     productOptions(
       sort: $sort
@@ -18,6 +20,8 @@ module Fragment = %relay(`
       productOptionStatus: $status
       productName: $productName
       categoryId: $categoryId
+      productIds: $productIds
+      skuNos: $skuNos
     ) {
       edges {
         node {
@@ -69,7 +73,7 @@ let make = (~query) => {
       <div className=%twc("min-w-max text-sm divide-y divide-gray-100")>
         <div className=%twc("grid grid-cols-15-admin-product bg-gray-100 text-gray-500 h-12")>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`판매상태`->React.string}
+            {j`상품상태·단품상태`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
             {j`생산자명`->React.string}

@@ -7,6 +7,8 @@ import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Skeleton from "./Skeleton.mjs";
 import * as IconCheck from "./svgs/IconCheck.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as ReactHookForm from "react-hook-form";
 import * as ReactTooltip from "@radix-ui/react-tooltip";
 
 function Web_Order_Util_Component$Tooltip$PC(Props) {
@@ -26,7 +28,6 @@ function Web_Order_Util_Component$Tooltip$PC(Props) {
                         src: "/icons/icon_common_tooltip_q_line_20.png",
                         onClick: (function (e) {
                             e.preventDefault();
-                            
                           })
                       })
                 }), React.createElement(ReactTooltip.Content, {
@@ -59,9 +60,9 @@ function Web_Order_Util_Component$Tooltip$Mobile(Props) {
   React.useEffect((function () {
           if (touch) {
             setTimeout((function (param) {
-                    return Curry._1(setTouch, (function (param) {
-                                  return false;
-                                }));
+                    Curry._1(setTouch, (function (param) {
+                            return false;
+                          }));
                   }), 2000);
           }
           
@@ -80,9 +81,9 @@ function Web_Order_Util_Component$Tooltip$Mobile(Props) {
                         src: "/icons/icon_common_tooltip_q_line_20.png",
                         onClick: (function (e) {
                             e.preventDefault();
-                            return Curry._1(setTouch, (function (param) {
-                                          return !touch;
-                                        }));
+                            Curry._1(setTouch, (function (param) {
+                                    return !touch;
+                                  }));
                           })
                       })
                 }), React.createElement(ReactTooltip.Content, {
@@ -108,25 +109,36 @@ var Tooltip = {
   Mobile: Mobile
 };
 
-function Web_Order_Util_Component$RadioButton$PlaceHolder(Props) {
+function Web_Order_Util_Component$RadioButton$PlaceHolder$PC(Props) {
   return React.createElement(Skeleton.Box.make, {
-              className: "w-24 xl:w-32 min-h-[2.75rem] rounded-xl"
+              className: "w-32 min-h-[2.75rem] rounded-xl"
             });
 }
 
-var PlaceHolder = {
-  make: Web_Order_Util_Component$RadioButton$PlaceHolder
+var PC$1 = {
+  make: Web_Order_Util_Component$RadioButton$PlaceHolder$PC
 };
 
-function Web_Order_Util_Component$RadioButton(Props) {
-  var watchValue = Props.watchValue;
+function Web_Order_Util_Component$RadioButton$PlaceHolder$MO(Props) {
+  return React.createElement(Skeleton.Box.make, {
+              className: "w-24 min-h-[2.75rem] rounded-xl"
+            });
+}
+
+var MO = {
+  make: Web_Order_Util_Component$RadioButton$PlaceHolder$MO
+};
+
+var PlaceHolder = {
+  PC: PC$1,
+  MO: MO
+};
+
+function Web_Order_Util_Component$RadioButton$PC(Props) {
+  var checked = Props.checked;
   var name = Props.name;
-  var value = Props.value;
-  var checked = Belt_Option.mapWithDefault(watchValue, false, (function (watch) {
-          return Caml_obj.caml_equal(watch, value);
-        }));
   return React.createElement("span", {
-              className: checked ? "w-24 xl:w-32 h-11 pl-1 flex justify-center items-center text-sm xl:text-base text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer" : "w-24 xl:w-32 h-11 flex justify-center items-center text-sm xl:text-base text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
+              className: checked ? "w-32 h-11 pl-1 flex justify-center items-center text-base text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer" : "w-32 h-11 flex justify-center items-center text-base text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
             }, name, checked ? React.createElement(IconCheck.make, {
                     height: "20",
                     width: "30",
@@ -135,14 +147,90 @@ function Web_Order_Util_Component$RadioButton(Props) {
                   }) : null);
 }
 
+var PC$2 = {
+  make: Web_Order_Util_Component$RadioButton$PC
+};
+
+function Web_Order_Util_Component$RadioButton$MO(Props) {
+  var checked = Props.checked;
+  var name = Props.name;
+  return React.createElement("span", {
+              className: checked ? "w-24 h-11 pl-1 flex justify-center items-center text-sm text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer" : "w-24 h-11 flex justify-center items-center text-sm text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
+            }, name, checked ? React.createElement(IconCheck.make, {
+                    height: "20",
+                    width: "30",
+                    fill: "#12b564",
+                    className: "mb-1"
+                  }) : null);
+}
+
+var MO$1 = {
+  make: Web_Order_Util_Component$RadioButton$MO
+};
+
+function Web_Order_Util_Component$RadioButton(Props) {
+  var watchValue = Props.watchValue;
+  var name = Props.name;
+  var value = Props.value;
+  var deviceType = Props.deviceType;
+  var checked = Belt_Option.mapWithDefault(watchValue, false, (function (watch) {
+          return Caml_obj.equal(watch, value);
+        }));
+  switch (deviceType) {
+    case /* Unknown */0 :
+        return null;
+    case /* PC */1 :
+        return React.createElement(Web_Order_Util_Component$RadioButton$PC, {
+                    checked: checked,
+                    name: name
+                  });
+    case /* Mobile */2 :
+        return React.createElement(Web_Order_Util_Component$RadioButton$MO, {
+                    checked: checked,
+                    name: name
+                  });
+    
+  }
+}
+
 var RadioButton = {
   PlaceHolder: PlaceHolder,
+  PC: PC$2,
+  MO: MO$1,
   make: Web_Order_Util_Component$RadioButton
+};
+
+function Web_Order_Util_Component$Hidden(Props) {
+  var value = Props.value;
+  var inputName = Props.inputName;
+  var isNumberOpt = Props.isNumber;
+  var isNumber = isNumberOpt !== undefined ? isNumberOpt : false;
+  var match = ReactHookForm.useFormContext({
+        mode: "all"
+      }, undefined);
+  var match$1 = match.register(inputName, isNumber ? ({
+            valueAsNumber: true
+          }) : undefined);
+  var name = match$1.name;
+  var tmp = {
+    ref: match$1.ref,
+    id: name,
+    name: name,
+    type: "hidden"
+  };
+  if (value !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(value);
+  }
+  return React.createElement("input", tmp);
+}
+
+var Hidden = {
+  make: Web_Order_Util_Component$Hidden
 };
 
 export {
   Tooltip ,
   RadioButton ,
-  
+  Hidden ,
 }
 /* react Not a pure module */

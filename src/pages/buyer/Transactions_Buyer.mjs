@@ -18,11 +18,11 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as EmptyOrders from "../../components/common/EmptyOrders.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as Authorization from "../../utils/Authorization.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as Transaction_Buyer from "../../components/Transaction_Buyer.mjs";
-import * as Hooks from "react-relay/hooks";
 import * as Select_CountPerPage from "../../components/Select_CountPerPage.mjs";
 import * as Cash_Charge_Button_Buyer from "../../components/Cash_Charge_Button_Buyer.mjs";
 import * as Select_Transaction_Status from "../../components/Select_Transaction_Status.mjs";
@@ -53,14 +53,14 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
               optimisticResponse: optimisticResponse !== undefined ? TransactionsBuyerMutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
               optimisticUpdater: optimisticUpdater,
               updater: updater !== undefined ? (function (store, r) {
-                    return Curry._2(updater, store, TransactionsBuyerMutation_graphql.Internal.convertResponse(r));
+                    Curry._2(updater, store, TransactionsBuyerMutation_graphql.Internal.convertResponse(r));
                   }) : undefined,
               uploadables: uploadables
             });
 }
 
 function use(param) {
-  var match = Hooks.useMutation(TransactionsBuyerMutation_graphql.node);
+  var match = ReactRelay.useMutation(TransactionsBuyerMutation_graphql.node);
   var mutate = match[0];
   return [
           React.useMemo((function () {
@@ -68,13 +68,13 @@ function use(param) {
                     return Curry._1(mutate, {
                                 onError: param,
                                 onCompleted: param$1 !== undefined ? (function (r, errors) {
-                                      return Curry._2(param$1, TransactionsBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                      Curry._2(param$1, TransactionsBuyerMutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
                                     }) : undefined,
                                 onUnsubscribe: param$2,
                                 optimisticResponse: param$3 !== undefined ? TransactionsBuyerMutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
                                 optimisticUpdater: param$4,
                                 updater: param$5 !== undefined ? (function (store, r) {
-                                      return Curry._2(param$5, store, TransactionsBuyerMutation_graphql.Internal.convertResponse(r));
+                                      Curry._2(param$5, store, TransactionsBuyerMutation_graphql.Internal.convertResponse(r));
                                     }) : undefined,
                                 variables: TransactionsBuyerMutation_graphql.Internal.convertVariables(param$6),
                                 uploadables: param$7
@@ -89,12 +89,10 @@ var Mutation_errorCode_decode = TransactionsBuyerMutation_graphql.Utils.errorCod
 
 var Mutation_errorCode_fromString = TransactionsBuyerMutation_graphql.Utils.errorCode_fromString;
 
-var Mutation_makeVariables = TransactionsBuyerMutation_graphql.Utils.makeVariables;
-
 var Mutation = {
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
-  makeVariables: Mutation_makeVariables,
+  Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
   use: use
@@ -208,9 +206,9 @@ function Transactions_Buyer$Transactions(Props) {
       });
   var setShowErrorForDownload = match$2[1];
   var count;
-  if (typeof status === "number") {
+  if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     count = "-";
-  } else if (status.TAG === /* Loaded */0) {
+  } else {
     var transactions$p = CustomHooks.Transaction.response_decode(status._0);
     if (transactions$p.TAG === /* Ok */0) {
       count = String(transactions$p._0.count);
@@ -218,8 +216,6 @@ function Transactions_Buyer$Transactions(Props) {
       console.log(transactions$p._0);
       count = "-";
     }
-  } else {
-    count = "-";
   }
   var type_ = Belt_Option.getWithDefault(Js_dict.get(router.query, "type"), "");
   var bodyOption = Js_dict.fromArray([[
@@ -227,15 +223,15 @@ function Transactions_Buyer$Transactions(Props) {
           type_
         ]]);
   var handleError = function (message, param) {
-    return addToast(React.createElement("div", {
-                    className: "flex items-center"
-                  }, React.createElement(IconError.make, {
-                        width: "24",
-                        height: "24",
-                        className: "mr-2"
-                      }), "결제가 실패하였습니다. " + Belt_Option.getWithDefault(message, "")), {
-                appearance: "error"
-              });
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), "결제가 실패하였습니다. " + Belt_Option.getWithDefault(message, "") + ""), {
+          appearance: "error"
+        });
   };
   var notices = [
     "1. 주문(발주)를 등록하기 위해서는 먼저 주문가능잔액(신선캐시) 충전이 필요합니다.",
@@ -258,85 +254,61 @@ function Transactions_Buyer$Transactions(Props) {
                 var siteCd = getHtmlInputElementValue("site_cd");
                 var siteKey = getHtmlInputElementValue("site_key");
                 var tranCd = getHtmlInputElementValue("tran_cd");
-                if (encData !== undefined) {
-                  if (encInfo !== undefined) {
-                    if (paymentId !== undefined) {
-                      if (ordrMony !== undefined) {
-                        if (siteCd !== undefined) {
-                          if (siteKey !== undefined) {
-                            if (tranCd !== undefined) {
-                              Curry.app(mutate, [
-                                    (function (error) {
-                                        window.closeEventKCP();
-                                        return handleError(error.message, undefined);
-                                      }),
-                                    (function (param, _error) {
-                                        var requestPaymentApprovalKCP = param.requestPaymentApprovalKCP;
-                                        if (requestPaymentApprovalKCP === undefined) {
-                                          return ;
-                                        }
-                                        if (typeof requestPaymentApprovalKCP === "object") {
-                                          var variant = requestPaymentApprovalKCP.NAME;
-                                          if (variant === "RequestPaymentApprovalKCPResult") {
-                                            window.closeEventKCP();
-                                            addToast(React.createElement("div", {
-                                                      className: "flex items-center"
-                                                    }, React.createElement(IconCheck.make, {
-                                                          height: "24",
-                                                          width: "24",
-                                                          fill: "#12B564",
-                                                          className: "mr-2"
-                                                        }), "결제가 완료되었습니다."), {
-                                                  appearance: "success"
-                                                });
-                                            swr.mutate(Env.restApiUrl + "/transaction/summary?" + new URLSearchParams(router.query).toString(), undefined, true);
-                                            return swr.mutate(Env.restApiUrl + "/transaction?" + new URLSearchParams(router.query).toString(), undefined, true);
-                                          } else if (variant === "Error") {
-                                            window.closeEventKCP();
-                                            return handleError(Belt_Option.getWithDefault(requestPaymentApprovalKCP.VAL.message, ""), undefined);
-                                          } else {
-                                            window.closeEventKCP();
-                                            return handleError("", undefined);
-                                          }
-                                        }
-                                        window.closeEventKCP();
-                                        return handleError("", undefined);
-                                      }),
-                                    undefined,
-                                    undefined,
-                                    undefined,
-                                    undefined,
-                                    {
-                                      encData: encData,
-                                      encInfo: encInfo,
-                                      paymentId: paymentId,
-                                      ordrMony: ordrMony,
-                                      siteCd: siteCd,
-                                      siteKey: siteKey,
-                                      tranCd: tranCd
-                                    },
-                                    undefined,
-                                    undefined
-                                  ]);
+                if (encData !== undefined && encInfo !== undefined && paymentId !== undefined && ordrMony !== undefined && siteCd !== undefined && siteKey !== undefined && tranCd !== undefined) {
+                  Curry.app(mutate, [
+                        (function (error) {
+                            window.closeEventKCP();
+                            handleError(error.message, undefined);
+                          }),
+                        (function (param, _error) {
+                            var requestPaymentApprovalKCP = param.requestPaymentApprovalKCP;
+                            if (requestPaymentApprovalKCP === undefined) {
                               return ;
-                            } else {
-                              return handleError("결제 인증에 실패하였습니다.", undefined);
                             }
-                          } else {
-                            return handleError("결제 인증에 실패하였습니다.", undefined);
-                          }
-                        } else {
-                          return handleError("결제 인증에 실패하였습니다.", undefined);
-                        }
-                      } else {
-                        return handleError("결제 인증에 실패하였습니다.", undefined);
-                      }
-                    } else {
-                      return handleError("결제 인증에 실패하였습니다.", undefined);
-                    }
-                  } else {
-                    return handleError("결제 인증에 실패하였습니다.", undefined);
-                  }
+                            if (typeof requestPaymentApprovalKCP === "object") {
+                              var variant = requestPaymentApprovalKCP.NAME;
+                              if (variant === "RequestPaymentApprovalKCPResult") {
+                                window.closeEventKCP();
+                                addToast(React.createElement("div", {
+                                          className: "flex items-center"
+                                        }, React.createElement(IconCheck.make, {
+                                              height: "24",
+                                              width: "24",
+                                              fill: "#12B564",
+                                              className: "mr-2"
+                                            }), "결제가 완료되었습니다."), {
+                                      appearance: "success"
+                                    });
+                                swr.mutate("" + Env.restApiUrl + "/transaction/summary?" + new URLSearchParams(router.query).toString() + "", undefined, true);
+                                return swr.mutate("" + Env.restApiUrl + "/transaction?" + new URLSearchParams(router.query).toString() + "", undefined, true);
+                              } else if (variant === "Error") {
+                                window.closeEventKCP();
+                                return handleError(Belt_Option.getWithDefault(requestPaymentApprovalKCP.VAL.message, ""), undefined);
+                              } else {
+                                window.closeEventKCP();
+                                return handleError("", undefined);
+                              }
+                            }
+                            window.closeEventKCP();
+                            handleError("", undefined);
+                          }),
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                        {
+                          encData: encData,
+                          encInfo: encInfo,
+                          ordrMony: ordrMony,
+                          paymentId: paymentId,
+                          siteCd: siteCd,
+                          siteKey: siteKey,
+                          tranCd: tranCd
+                        },
+                        undefined,
+                        undefined
+                      ]);
+                  return ;
                 } else {
                   return handleError("결제 인증에 실패하였습니다.", undefined);
                 }
@@ -366,7 +338,7 @@ function Transactions_Buyer$Transactions(Props) {
                                   className: "font-bold"
                                 }, "결제내역", React.createElement("span", {
                                       className: "ml-1 text-green-gl font-normal"
-                                    }, count + "건")), React.createElement("div", {
+                                    }, "" + count + "건")), React.createElement("div", {
                                   className: "flex flex-col lg:flex-row mt-4 lg:mt-0"
                                 }, React.createElement("div", {
                                       className: "flex items-center"
@@ -382,117 +354,15 @@ function Transactions_Buyer$Transactions(Props) {
                                           bodyOption: bodyOption
                                         }))))), React.createElement(Transactions_Buyer$List, {
                           status: status
-                        }))), React.createElement("form", {
-                  id: "order_info",
-                  action: "",
-                  method: "post",
-                  name: "order_info"
-                }, React.createElement("input", {
-                      id: "ordr_idxx",
-                      maxLength: 40,
-                      name: "ordr_idxx",
-                      type: "hidden",
-                      value: "TEST12345"
-                    }), React.createElement("input", {
-                      id: "good_name",
-                      name: "good_name",
-                      type: "hidden",
-                      value: "신선하이"
-                    }), React.createElement("input", {
-                      id: "good_mny",
-                      maxLength: 12,
-                      name: "good_mny",
-                      type: "hidden",
-                      value: "0"
-                    }), React.createElement("input", {
-                      id: "currency",
-                      maxLength: 9,
-                      name: "currency",
-                      type: "hidden",
-                      value: "0"
-                    }), React.createElement("input", {
-                      id: "shop_user_id",
-                      name: "shop_user_id",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "buyr_name",
-                      name: "buyr_name",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      name: "quotaopt",
-                      type: "hidden",
-                      value: "0"
-                    }), React.createElement("input", {
-                      id: "pay_method",
-                      name: "pay_method",
-                      type: "hidden",
-                      value: "101000000000"
-                    }), React.createElement("input", {
-                      id: "site_cd",
-                      name: "site_cd",
-                      type: "hidden",
-                      value: "T0000"
-                    }), React.createElement("input", {
-                      id: "site_name",
-                      name: "site_name",
-                      type: "hidden",
-                      value: "Sinsun Market"
-                    }), React.createElement("input", {
-                      id: "site_key",
-                      name: "site_key",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "site_logo",
-                      name: "site_logo",
-                      type: "hidden",
-                      value: Env.logo150x50
-                    }), React.createElement("input", {
-                      id: "res_cd",
-                      name: "res_cd",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "res_msg",
-                      name: "res_msg",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "enc_info",
-                      name: "enc_info",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "enc_data",
-                      name: "enc_data",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "ret_pay_method",
-                      name: "ret_pay_method",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "tran_cd",
-                      name: "tran_cd",
-                      type: "hidden",
-                      value: ""
-                    }), React.createElement("input", {
-                      id: "use_pay_method",
-                      name: "use_pay_method",
-                      type: "hidden",
-                      value: ""
-                    })), React.createElement(Dialog.make, {
+                        }))), React.createElement(Dialog.make, {
                   isShow: match$2[0],
                   children: React.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "다운로드에 실패하였습니다.\n다시 시도하시기 바랍니다."),
                   onConfirm: (function (param) {
-                      return setShowErrorForDownload(function (param) {
-                                  return /* Hide */1;
-                                });
+                      setShowErrorForDownload(function (param) {
+                            return /* Hide */1;
+                          });
                     })
                 }));
 }
@@ -525,6 +395,5 @@ export {
   getHtmlInputElementValue ,
   Transactions ,
   make ,
-  
 }
 /* Env Not a pure module */

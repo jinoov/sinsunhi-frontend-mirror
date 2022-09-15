@@ -12,7 +12,7 @@ function toString(t) {
 
 function toContractTypeDisplay(str) {
   switch (str) {
-    case "bulk-sale" :
+    case "bulksale" :
         return "전량구매";
     case "online" :
         return "온라인";
@@ -50,6 +50,5 @@ export {
   toString ,
   toContractTypeDisplay ,
   make ,
-  
 }
 /* react Not a pure module */

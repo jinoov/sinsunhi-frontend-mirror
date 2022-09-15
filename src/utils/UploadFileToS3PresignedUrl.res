@@ -94,7 +94,7 @@ let uploadBulkSale = (~file, ~farmmorningUserId, ~onSuccess, ~onFailure, ()) => 
   })
 }
 
-let uploadImage = (~file, ~original, ~thumb1920, ~onSuccess, ~onFailure, ()) => {
+let uploadImage = (~file, ~original, ~resizedImg, ~onSuccess, ~onFailure, ()) => {
   open FetchHelper
 
   // PUT file to the presigned-url
@@ -102,7 +102,7 @@ let uploadImage = (~file, ~original, ~thumb1920, ~onSuccess, ~onFailure, ()) => 
   |> Js.Promise.then_(_res =>
     fetchWithIntervalRetry(
       ~fetcher=getProcessedImage,
-      ~url=thumb1920,
+      ~url=resizedImg,
       ~body="",
       ~count=10,
       ~interval=3000,

@@ -5,29 +5,30 @@ import * as Editor from "../../../../components/Editor.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Footer_Buyer from "../../../../components/Footer_Buyer.mjs";
 import * as Header_Buyer from "../../../../components/Header_Buyer.mjs";
 import * as PDP_Image_Buyer from "../common/PDP_Image_Buyer.mjs";
+import * as PDP_Header_Buyer from "../PDP_Header_Buyer.mjs";
 import * as PDP_Notice_Buyer from "../common/PDP_Notice_Buyer.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as Hooks from "react-relay/hooks";
 import * as PDP_Quoted_Title_Buyer from "./PDP_Quoted_Title_Buyer.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PDP_Quoted_Modals_Buyer from "./PDP_Quoted_Modals_Buyer.mjs";
-import * as PDP_Quoted_Submit_Buyer from "./PDP_Quoted_Submit_Buyer.mjs";
+import * as PDP_Quoted_RfqBtn_Buyer from "./PDP_Quoted_RfqBtn_Buyer.mjs";
 import * as PDP_SalesDocument_Buyer from "../common/PDP_SalesDocument_Buyer.mjs";
 import * as PDP_Quoted_Details_Buyer from "./PDP_Quoted_Details_Buyer.mjs";
 import * as PDP_Quoted_RequestGuide_Buyer from "./PDP_Quoted_RequestGuide_Buyer.mjs";
 import * as PDPQuotedBuyerFragment_graphql from "../../../../__generated__/PDPQuotedBuyerFragment_graphql.mjs";
 
 function use(fRef) {
-  var data = Hooks.useFragment(PDPQuotedBuyerFragment_graphql.node, fRef);
+  var data = ReactRelay.useFragment(PDPQuotedBuyerFragment_graphql.node, fRef);
   return RescriptRelay_Internal.internal_useConvertedValue(PDPQuotedBuyerFragment_graphql.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(PDPQuotedBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = ReactRelay.useFragment(PDPQuotedBuyerFragment_graphql.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
@@ -39,12 +40,15 @@ function useOpt(opt_fRef) {
 
 var Fragment = {
   Types: undefined,
+  Operation: undefined,
   use: use,
   useOpt: useOpt
 };
 
 function PDP_Quoted_Buyer$PC(Props) {
   var query = Props.query;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   var match = use(query);
   var fragmentRefs = match.fragmentRefs;
@@ -55,6 +59,8 @@ function PDP_Quoted_Buyer$PC(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full min-w-[1280px] min-h-screen"
                 }, React.createElement(Header_Buyer.PC.make, {
+                      gnbBanners: gnbBanners,
+                      displayCategories: displayCategories,
                       key: router.asPath
                     }), React.createElement("div", {
                       className: "w-[1280px] mx-auto min-h-full"
@@ -82,7 +88,7 @@ function PDP_Quoted_Buyer$PC(Props) {
                                               className: "flex flex-col gap-6 pt-6"
                                             }, React.createElement(PDP_Quoted_RequestGuide_Buyer.PC.make, {})))), React.createElement("section", {
                                       className: "w-full mt-4"
-                                    }, React.createElement(PDP_Quoted_Submit_Buyer.PC.make, {
+                                    }, React.createElement(PDP_Quoted_RfqBtn_Buyer.PC.make, {
                                           setShowModal: setShowModal,
                                           query: fragmentRefs
                                         })))), React.createElement("section", {
@@ -122,7 +128,7 @@ function PDP_Quoted_Buyer$MO(Props) {
                       className: "w-full bg-white"
                     }, React.createElement("div", {
                           className: "w-full max-w-3xl mx-auto bg-white min-h-screen"
-                        }, React.createElement(Header_Buyer.Mobile.make, {
+                        }, React.createElement(PDP_Header_Buyer.make, {
                               key: router.asPath
                             }), React.createElement("section", {
                               className: "flex flex-col gap-5"
@@ -142,7 +148,7 @@ function PDP_Quoted_Buyer$MO(Props) {
                                           query: fragmentRefs
                                         })), React.createElement("section", {
                                       className: "py-8 flex flex-col gap-5"
-                                    }, React.createElement(PDP_Quoted_RequestGuide_Buyer.MO.make, {}), React.createElement(PDP_Quoted_Submit_Buyer.MO.make, {
+                                    }, React.createElement(PDP_Quoted_RequestGuide_Buyer.MO.make, {}), React.createElement(PDP_Quoted_RfqBtn_Buyer.MO.make, {
                                           setShowModal: setShowModal,
                                           query: fragmentRefs
                                         }))), Belt_Option.mapWithDefault(match.salesDocument, null, (function (salesDocument$p) {
@@ -174,12 +180,16 @@ var MO = {
 function PDP_Quoted_Buyer(Props) {
   var deviceType = Props.deviceType;
   var query = Props.query;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
         return React.createElement(PDP_Quoted_Buyer$PC, {
-                    query: query
+                    query: query,
+                    gnbBanners: gnbBanners,
+                    displayCategories: displayCategories
                   });
     case /* Mobile */2 :
         return React.createElement(PDP_Quoted_Buyer$MO, {
@@ -196,6 +206,5 @@ export {
   PC ,
   MO ,
   make ,
-  
 }
 /* react Not a pure module */

@@ -37,7 +37,7 @@ function Guide_Upload_After_Pay(Props) {
                                     className: "flex mt-5"
                                   }, React.createElement("a", {
                                         className: "flex-1",
-                                        href: "/buyer/products/advanced-search",
+                                        href: "/products/advanced-search",
                                         target: "_blank"
                                       }, React.createElement("span", {
                                             className: "block text-center p-3 rounded-xl border border-green-gl text-base font-bold text-green-gl mr-2 bg-white"
@@ -114,6 +114,5 @@ var make = Guide_Upload_After_Pay;
 
 export {
   make ,
-  
 }
 /* Env Not a pure module */

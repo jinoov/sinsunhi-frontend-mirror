@@ -9,6 +9,8 @@
 
 module Fragment = %relay(`
   fragment PDPMatchingSelectGradeBuyer_fragment on MatchingProduct {
+    matchingProductId: number
+  
     representativeWeight
   
     qualityStandard {
@@ -36,6 +38,16 @@ module Fragment = %relay(`
     }
   }
 `)
+
+module ClickPriceGroupFilterGtm = {
+  // 가격그룹 셀렉터 클릭 시
+  let make = matchingProductId => {
+    {
+      "event": "click_price_group_filter",
+      "item_id": matchingProductId->Int.toString,
+    }
+  }
+}
 
 module Item = {
   @react.component
@@ -78,7 +90,7 @@ module RadioSelector = {
         <Item
           itemId="price-group-high"
           value="high"
-          label=`가격 상위 그룹`
+          label={`가격 상위 그룹`}
           description=qualityStandard.high.description
           price=recentMarketPrice'.high.mean
           representativeWeight
@@ -87,7 +99,7 @@ module RadioSelector = {
         <Item
           itemId="price-group-medium"
           value="medium"
-          label=`가격 중위 그룹`
+          label={`가격 중위 그룹`}
           description=qualityStandard.medium.description
           price=recentMarketPrice'.medium.mean
           representativeWeight
@@ -96,7 +108,7 @@ module RadioSelector = {
         <Item
           itemId="price-group-low"
           value="low"
-          label=`가격 하위 그룹`
+          label={`가격 하위 그룹`}
           description=qualityStandard.low.description
           price=recentMarketPrice'.low.mean
           representativeWeight
@@ -146,6 +158,7 @@ let make = (~setShowModal, ~query, ~selectedGroup, ~setSelectedGroup) => {
   let user = CustomHooks.User.Buyer.use2()
 
   let (showBottmSheet, setShowBottomSheet) = React.Uncurried.useState(_ => false)
+  let {matchingProductId} = query->Fragment.use
 
   <>
     {switch user {
@@ -182,11 +195,18 @@ let make = (~setShowModal, ~query, ~selectedGroup, ~setSelectedGroup) => {
 
       <>
         <button
-          onClick={_ => setShowBottomSheet(._ => true)}
+          onClick={_ => {
+            matchingProductId
+            ->ClickPriceGroupFilterGtm.make
+            ->DataGtm.mergeUserIdUnsafe
+            ->DataGtm.push
+            setShowBottomSheet(._ => true)
+          }}
           className=%twc(
             "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black"
           )>
-          {label->React.string} <IconArrowSelect width="24" height="24" fill="#262626" />
+          {label->React.string}
+          <IconArrowSelect width="24" height="24" fill="#262626" />
         </button>
         <BottomSheet
           show=showBottmSheet

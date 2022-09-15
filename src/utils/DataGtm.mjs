@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import * as ReactUtil from "./ReactUtil.mjs";
+import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as CustomHooks from "./CustomHooks.mjs";
 
 function push(data) {
   var layer = window.dataLayer;
@@ -10,7 +12,6 @@ function push(data) {
   } else {
     layer.push(data);
   }
-  
 }
 
 function DataGtm(Props) {
@@ -24,11 +25,20 @@ function DataGtm(Props) {
             });
 }
 
+function mergeUserIdUnsafe(data) {
+  var userIdOrNull = Belt_Option.mapWithDefault(CustomHooks.Auth.getUser(undefined), null, (function (user) {
+          return user.id;
+        }));
+  return Object.assign(data, {
+              user_id: userIdOrNull
+            });
+}
+
 var make = DataGtm;
 
 export {
   push ,
   make ,
-  
+  mergeUserIdUnsafe ,
 }
 /* react Not a pure module */

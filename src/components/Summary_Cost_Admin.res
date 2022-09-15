@@ -67,7 +67,7 @@ let make = () => {
         [
           regExp(
             ProductIdsOrSkus,
-            ~matches="^([0-9]+([,\n\s]+)?)*$",
+            ~matches="^([0-9]+([,\n\\s]+)?)*$",
             ~error=`숫자(Enter 또는 ","로 구분 가능)만 입력해주세요`,
           ),
         ]->Array.concatMany,
@@ -92,10 +92,10 @@ let make = () => {
       } else if k === "product-name" {
         FormFields.ProductName->form.setFieldValue(v, ~shouldValidate=true, ())
       } else if k === "product-ids" {
-        setProductIdentifier(._ => ProductIds)
+        setProductIdentifier(. _ => ProductIds)
         FormFields.ProductIdsOrSkus->form.setFieldValue(v, ~shouldValidate=true, ())
       } else if k === "skus" {
-        setProductIdentifier(._ => ProductSkus)
+        setProductIdentifier(. _ => ProductSkus)
         FormFields.ProductIdsOrSkus->form.setFieldValue(v, ~shouldValidate=true, ())
       }
     })
@@ -141,7 +141,7 @@ let make = () => {
                   type_="text"
                   name="seller-name"
                   className=%twc("flex-1")
-                  placeholder=`생산자명`
+                  placeholder={`생산자명`}
                   value={form.values->FormFields.get(FormFields.ProducerName)}
                   onChange={FormFields.ProducerName->form.handleChange->ReForm.Helpers.handleChange}
                   error=None
@@ -155,7 +155,7 @@ let make = () => {
                 <Input
                   type_="text"
                   name="product-name"
-                  placeholder=`상품명`
+                  placeholder={`상품명`}
                   value={form.values->FormFields.get(FormFields.ProductName)}
                   onChange={FormFields.ProductName->form.handleChange->ReForm.Helpers.handleChange}
                   error=None
@@ -183,8 +183,8 @@ let make = () => {
                     value={stringifyProductIdentifier(productIdentifier)}
                     className=%twc("block w-full h-full absolute top-0 opacity-0")
                     onChange={handleOnSelect(setProductIdentifier)}>
-                    <option value=`상품번호`> {j`상품번호`->React.string} </option>
-                    <option value=`단품번호`> {j`단품번호`->React.string} </option>
+                    <option value={`상품번호`}> {j`상품번호`->React.string} </option>
+                    <option value={`단품번호`}> {j`단품번호`->React.string} </option>
                   </select>
                 </div>
               </div>
@@ -193,7 +193,7 @@ let make = () => {
                   type_="text"
                   name="product-identifiers"
                   className=%twc("flex-1")
-                  placeholder=`상품번호 입력(Enter 또는 “,”로 구분 가능, 최대 100개 입력 가능)`
+                  placeholder={`상품번호 입력(Enter 또는 “,”로 구분 가능, 최대 100개 입력 가능)`}
                   value={form.values->FormFields.get(FormFields.ProductIdsOrSkus)}
                   onChange={FormFields.ProductIdsOrSkus
                   ->form.handleChange
@@ -213,13 +213,13 @@ let make = () => {
           <input
             type_="button"
             className=%twc("btn-level6")
-            value=`초기화`
+            value={`초기화`}
             onClick={handleOnReset}
             tabIndex=7
           />
         </span>
         <span className=%twc("w-20 h-11 flex")>
-          <input type_="submit" className=%twc("btn-level1") value=`검색` tabIndex=6 />
+          <input type_="submit" className=%twc("btn-level1") value={`검색`} tabIndex=6 />
         </span>
       </div>
     </form>

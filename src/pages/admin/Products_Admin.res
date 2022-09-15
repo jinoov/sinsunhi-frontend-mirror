@@ -115,12 +115,12 @@ module List = {
       producerCodes: query
       ->Js.Dict.get("producer-codes")
       ->Option.keep(a => a !== "")
-      ->Option.map(str => str->Js.String2.splitByRe(Js.Re.fromString("\s*[,\n\s]\s*")))
+      ->Option.map(str => str->Js.String2.splitByRe(Js.Re.fromString("\\s*[,\n\\s]\\s*")))
       ->Option.map(a => a->Array.keepMap(Garter.Fn.identity)->Array.keep(str => str !== "")),
       productNos: query
       ->Js.Dict.get("product-nos")
       ->Option.keep(a => a !== "")
-      ->Option.map(str => str->Js.String2.splitByRe(Js.Re.fromString("\s*[,\n\s]\s*")))
+      ->Option.map(str => str->Js.String2.splitByRe(Js.Re.fromString("\\s*[,\n\\s]\s*")))
       ->Option.map(a => a->Array.keepMap(Garter.Fn.identity)->Array.keepMap(Int.fromString)),
       statuses: switch query
       ->Js.Dict.get("status")
@@ -189,9 +189,13 @@ module Products = {
       <header className=%twc("flex items-baseline p-7 pb-0")>
         <h1 className=%twc("text-text-L1 text-xl font-bold")> {j`상품 조회`->React.string} </h1>
       </header>
-      <React.Suspense fallback={<div />}> <Search /> </React.Suspense>
+      <React.Suspense fallback={<div />}>
+        <Search />
+      </React.Suspense>
       <div className=%twc("p-7 m-4 overflow-auto overflow-x-scroll bg-white rounded shadow-gl")>
-        <React.Suspense fallback={<Products_List_Admin.Skeleton />}> <List /> </React.Suspense>
+        <React.Suspense fallback={<Products_List_Admin.Skeleton />}>
+          <List />
+        </React.Suspense>
       </div>
     </div>
   }
@@ -199,9 +203,11 @@ module Products = {
 
 @react.component
 let make = () => {
-  <Authorization.Admin title=j`관리자 상품 조회`>
+  <Authorization.Admin title={j`관리자 상품 조회`}>
     <RescriptReactErrorBoundary fallback={_ => <div> {`에러 발생`->React.string} </div>}>
-      <React.Suspense fallback={<Skeleton />}> <Products /> </React.Suspense>
+      <React.Suspense fallback={<Skeleton />}>
+        <Products />
+      </React.Suspense>
     </RescriptReactErrorBoundary>
   </Authorization.Admin>
 }

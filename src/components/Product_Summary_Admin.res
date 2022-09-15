@@ -8,7 +8,7 @@
 
 module Fragment = %relay(`
   fragment ProductSummaryAdminFragment on Product {
-    productId
+    productId: number
     displayName
     name
   
