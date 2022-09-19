@@ -156,6 +156,7 @@ module List = {
 
   @react.component
   let make = () => {
+    let user = CustomHooks.Auth.use()
     let searchInput = useSearchInput()
 
     let queryData = Query.use(~variables=searchInput, ~fetchPolicy=RescriptRelay.NetworkOnly, ())
@@ -170,7 +171,15 @@ module List = {
           </h3>
           <div className=%twc("flex")>
             <Select_CountPerPage className=%twc("mr-2") />
-            <Excel_Download_Request_Button userType=Admin requestUrl="/product/request-excel" />
+            {switch user {
+            | LoggedIn({role}) =>
+              switch role {
+              | Admin =>
+                <Excel_Download_Request_Button userType=Admin requestUrl="/product/request-excel" />
+              | _ => React.null
+              }
+            | _ => React.null
+            }}
           </div>
         </div>
       </div>

@@ -14,7 +14,8 @@ function SearchAddressEmbed(Props) {
               var option = {
                 oncomplete: onComplete,
                 width: w,
-                height: h
+                height: h,
+                submitMode: false
               };
               var daumPostCode = new (daum.Postcode)(option);
               var openOption = {

@@ -9,18 +9,8 @@ function MyInfo_Layout_Buyer(Props) {
   var query = Props.query;
   var children = Props.children;
   var router = Router.useRouter();
-  var match = router.asPath;
-  var tmp = match === "/buyer/me/profile" ? React.createElement(React.Fragment, undefined, React.createElement("span", {
-              className: "font-bold"
-            }, "프로필 정보"), React.createElement("div", {
-              className: "border-b-2 border-[#1F2024]"
-            })) : React.createElement("span", undefined, "프로필정보");
-  var match$1 = router.asPath;
-  var tmp$1 = match$1 === "/buyer/me/account" ? React.createElement(React.Fragment, undefined, React.createElement("span", {
-              className: "font-bold"
-            }, "계정정보"), React.createElement("div", {
-              className: "border-b-2 border-[#1F2024]"
-            })) : React.createElement("span", undefined, "계정정보");
+  var str = router.asPath;
+  var str$1 = router.asPath;
   return React.createElement("section", {
               className: "flex-col bg-surface"
             }, React.createElement("div", {
@@ -48,14 +38,22 @@ function MyInfo_Layout_Buyer(Props) {
                                         className: "py-[18px] text-left px-7"
                                       }, React.createElement("div", {
                                             className: "w-fit"
-                                          }, tmp))
+                                          }, str.includes("/buyer/me/profile") ? React.createElement(React.Fragment, undefined, React.createElement("span", {
+                                                      className: "font-bold"
+                                                    }, "프로필 정보"), React.createElement("div", {
+                                                      className: "border-b-2 border-[#1F2024]"
+                                                    })) : React.createElement("span", undefined, "프로필정보")))
                                 }), React.createElement(Link, {
                                   href: "/buyer/me/account",
                                   children: React.createElement("a", {
                                         className: "py-[18px] text-left px-7"
                                       }, React.createElement("div", {
                                             className: "w-fit"
-                                          }, tmp$1))
+                                          }, str$1.includes("/buyer/me/account") ? React.createElement(React.Fragment, undefined, React.createElement("span", {
+                                                      className: "font-bold"
+                                                    }, "계정정보"), React.createElement("div", {
+                                                      className: "border-b-2 border-[#1F2024]"
+                                                    })) : React.createElement("span", undefined, "계정정보")))
                                 }), React.createElement(Link, {
                                   href: "/buyer/upload",
                                   children: React.createElement("a", {

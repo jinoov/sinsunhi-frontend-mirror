@@ -26,6 +26,10 @@ let make = (~isOpen, ~onClose, ~defaultValue="") => {
   let (mutate, mutating) = Mutation.use()
   let {addToast} = ReactToastNotifications.useToasts()
 
+  let reset = () => {
+    setCompany(defaultValue, ())
+  }
+
   let handleOnChange = e => {
     let value = (e->ReactEvent.Synthetic.target)["value"]
 
@@ -87,6 +91,14 @@ let make = (~isOpen, ~onClose, ~defaultValue="") => {
       )->ignore
     }
   )->ReactEvents.interceptingHandler
+
+  // mobile 에서 뒤로가기로 닫혔을 때, 상태초기화
+  React.useEffect1(_ => {
+    if !isOpen {
+      reset()
+    }
+    None
+  }, [isOpen])
 
   <Dialog.Root _open={isOpen}>
     <Dialog.Overlay className=%twc("dialog-overlay") />

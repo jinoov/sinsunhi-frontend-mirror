@@ -171,7 +171,8 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
         <h3 className=%twc("mt-10 font-bold")> {j`배송정보`->React.string} </h3>
         <section className=%twc("divide-y text-sm text-text-L2 mt-2 border-t border-b")>
           {switch order.deliveryType {
-          | Some(FREIGHT) => <>
+          | Some(FREIGHT) =>
+            <>
               <div className=%twc("grid grid-cols-2-detail")>
                 <div className=%twc("p-3 bg-div-shape-L2")>
                   {j`배송 희망일`->React.string}
@@ -219,7 +220,8 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
                 </div>
               </div>
             </>
-          | Some(SELF) => <>
+          | Some(SELF) =>
+            <>
               <div className=%twc("grid grid-cols-2-detail")>
                 <div className=%twc("p-3 bg-div-shape-L2")>
                   {j`수령 희망일`->React.string}
@@ -246,7 +248,8 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
                 </div>
               </div>
             </>
-          | _ => <>
+          | _ =>
+            <>
               <div className=%twc("grid grid-cols-4-detail")>
                 <div className=%twc("p-3 bg-div-shape-L2")> {j`택배사`->React.string} </div>
                 <div className=%twc("p-3")>
@@ -287,6 +290,9 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
             </>
           }}
         </section>
+        <React.Suspense fallback={React.null}>
+          <Order_Cancel_Admin orderNo=order.orderNo orderProductNo=Some(order.orderProductNo) />
+        </React.Suspense>
         <h3 className=%twc("mt-10 font-bold")> {j`담당MD 메모`->React.string} </h3>
         <textarea
           value=adminMemo
@@ -298,13 +304,13 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
             "px-3 py-2 mt-2 border border-border-default-L1 rounded-lg w-full h-24 focus:outline-none"
           )
           maxLength=1000
-          placeholder=`공지사항 또는 메모 입력(최대 1000자)`
+          placeholder={`공지사항 또는 메모 입력(최대 1000자)`}
         />
         <span className=%twc("w-1/2")>
           <Dialog.ButtonBox
-            textOnCancel=`닫기`
+            textOnCancel={`닫기`}
             onCancel={_ => close()}
-            textOnConfirm=`저장`
+            textOnConfirm={`저장`}
             onConfirm={handleOnConfirm}
           />
         </span>

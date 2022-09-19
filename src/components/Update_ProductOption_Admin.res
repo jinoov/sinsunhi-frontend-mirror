@@ -32,9 +32,7 @@ module Fragment = %relay(`
     cutOffTime
     memo
     stockSku
-    productOptionCost {
-      isFreeShipping
-    }
+    isFreeShipping
     shippingUnitQuantity
     ...UpdateProductOptionAdminAutoGenNameFragment
   }
@@ -673,7 +671,7 @@ module EditShippingUnitQuantity = {
         className=%twc(
           "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none"
         )
-        placeholder=`배송 합포장 단위 입력`
+        placeholder={`배송 합포장 단위 입력`}
         defaultValue={defaultValue->Int.toString}
       />
       <ErrorMessage
@@ -943,7 +941,7 @@ let make = (
                 inputName={inputNames.isFreeShipping}
                 defaultValue={
                   open Select_Product_Shipping_Type
-                  switch productOption.productOptionCost.isFreeShipping {
+                  switch productOption.isFreeShipping {
                   | true => FREE
                   | false => NOTFREE
                   }

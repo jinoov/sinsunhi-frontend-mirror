@@ -356,6 +356,10 @@ body {
     display: unset;
   }
 
+  #editor-inline iframe {
+    display: unset;
+  }
+
   #editor-inline p {
     display: block;
   }
@@ -777,6 +781,14 @@ body {
 
 .gradient-cta-t {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+}
+
+.gradient-tab-r {
+  background: linear-gradient(270deg, #ffffff 40%, rgba(255, 255, 255, 0) 100%);
+}
+
+.gradient-tab-l {
+  background: linear-gradient(90deg, #ffffff 40%, rgba(255, 255, 255, 0) 100%);
 }
 
 .rfq-radio-item {

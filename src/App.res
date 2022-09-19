@@ -82,7 +82,11 @@ let default = (props: props): React.element => {
         | (Some("seller"), Some("signup"))
         | (Some("seller"), Some("reset-password"))
         | (Some("seller"), Some("rfq")) => content
-        | (Some("seller"), Some("activate-user")) => <> <Header.SellerActivateUser /> content </>
+        | (Some("seller"), Some("activate-user")) =>
+          <>
+            <Header.SellerActivateUser />
+            content
+          </>
         | (Some("seller"), _) => <Layout_Seller> content </Layout_Seller>
         | (Some("buyer"), Some("rfq"))
         | (Some("buyer"), Some("tradematch")) =>
@@ -90,7 +94,11 @@ let default = (props: props): React.element => {
         | (Some("buyer"), None)
         | (Some("buyer"), Some("search")) => content
         | (Some("buyer"), Some("me")) => content
-        | (Some("buyer"), _) => <Layout_Buyer> content </Layout_Buyer>
+        | (Some("buyer"), _)
+        | (Some("products"), _)
+        | (Some("matching"), _)
+        | (Some("delivery"), _) =>
+          <Layout_Buyer> content </Layout_Buyer>
         | (Some("admin"), Some("signin")) => content
         | (Some("admin"), _) => <Layout_Admin> content </Layout_Admin>
         | _ => content

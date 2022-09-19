@@ -1,91 +1,101 @@
-module Query = %relay(`
-  query RfqItemDetailSeller_RfqRequestItemMeatNode_Query($itemId: ID!) {
-    node(id: $itemId) {
-      ... on RfqRequestItemMeat {
-        id
-        species {
+module Query = {
+  module RfqRequestItemMeat = %relay(`
+    query RfqItemDetailSeller_RfqRequestItemMeatNode_Query($itemId: ID!) {
+      node(id: $itemId) {
+        ... on RfqRequestItemMeat {
           id
-          code
-          name
-          shortName
-          meatGrades(first: 9999, orderBy: RANKING) {
-            edges {
-              node {
-                id
-                grade
-                isDomestic
-                madeIn
-                meatSpecies {
-                  code
+          species {
+            id
+            code
+            name
+            shortName
+            meatGrades(first: 9999, orderBy: RANKING) {
+              edges {
+                node {
+                  id
+                  grade
+                  isDomestic
+                  madeIn
+                  meatSpecies {
+                    code
+                  }
                 }
               }
             }
           }
-        }
-        part {
-          name
-          isDomestic
-        }
-        grade {
-          id
-          grade
-          madeIn
-        }
-        weightKg
-        usages {
-          edges {
-            node {
-              id
-              name
-            }
+          part {
+            name
+            isDomestic
           }
-        }
-        storageMethod
-        packageMethod
-        preferredBrand
-        otherRequirements
-        createdAt
-        updatedAt
-        requestItemStatus: status
-        request {
-          id
-          requestStatus: status
-          desiredDeliveryDate
-          deliveryMethod
-          deliveryAddress
-          remainSecondsUntilQuotationExpired
-          closedAt
-        }
-        quotations {
-          edges {
-            node {
-              id
-              quotationStatus: status
-              createdAt
-              price
-              pricePerKg
-              grade {
-                grade
+          grade {
+            id
+            grade
+            madeIn
+          }
+          weightKg
+          usages {
+            edges {
+              node {
                 id
+                name
               }
             }
           }
-        }
-        brands {
-          edges {
-            node {
-              id
-              name
+          storageMethod
+          packageMethod
+          preferredBrand
+          otherRequirements
+          createdAt
+          updatedAt
+          requestItemStatus: status
+          request {
+            id
+            requestStatus: status
+            desiredDeliveryDate
+            deliveryMethod
+            deliveryAddress
+            remainSecondsUntilQuotationExpired
+            closedAt
+          }
+          quotations {
+            edges {
+              node {
+                id
+                quotationStatus: status
+                createdAt
+                price
+                pricePerKg
+                grade {
+                  grade
+                  id
+                }
+              }
+            }
+          }
+          brands {
+            edges {
+              node {
+                id
+                name
+              }
             }
           }
         }
       }
     }
-    rfqRecommendedPriceForMeat(rfqRequestItemId: $itemId) {
-      pricePerKg
-    }
-  }
 `)
+
+  module QuotationPrice = %relay(`
+    query RfqItemDetailSeller_QuotationPrice_Query($itemId: ID!) {
+      rfqRecommendedPriceForMeat(rfqRequestItemId: $itemId) {
+        recommendedPricePerKg: pricePerKg
+      }
+      rfqMinQuotedPriceForMeat(rfqRequestItemId: $itemId) {
+        minQuotedPricePerKg: pricePerKg
+      }
+    }
+  `)
+}
 
 module Mutation = {
   module CreateRfqQuotationMeat = %relay(`
@@ -219,7 +229,7 @@ type time = Day(int) | Hour(int) | Minute(int) | Second(int)
 module TimerTitle = {
   @react.component
   let make = (~remainSecondsUntilQuotationExpired: int) => {
-    let (time, setTime) = React.Uncurried.useState(_ => remainSecondsUntilQuotationExpired - 3600)
+    let (time, setTime) = React.Uncurried.useState(_ => remainSecondsUntilQuotationExpired - 7200)
 
     React.useEffect0(_ => {
       let id = Js.Global.setInterval(_ => {
@@ -615,7 +625,6 @@ module Detail = {
               label={`다음`}
               onClick={_ => navigatePriceFormPage()}
             />
-            <div />
           </DS_BottomDrawer.Body>
         </DS_BottomDrawer.Root>
       </>
@@ -648,10 +657,67 @@ module Detail = {
 
 type mutationType = Create | Update
 module Apply = {
+  module PriceTextsSkeleton = {
+    @react.component
+    let make = () => {
+      <div>
+        <div className=%twc("animate-pulse rounded-lg bg-gray-100 h-5 w-[280px]") />
+        <div className=%twc("h-2") />
+        <div className=%twc("animate-pulse rounded-lg bg-gray-100 h-5 w-[300px]") />
+      </div>
+    }
+  }
+
+  module PriceTexts = {
+    @react.component
+    let make = (~itemId, ~minimumPriceUnit) => {
+      let {rfqRecommendedPriceForMeat, rfqMinQuotedPriceForMeat} = Query.QuotationPrice.use(
+        ~variables={itemId: itemId},
+        // 짧은 시간 내에 다른 셀러들이 견적서를 제출할 수 있으므로, 최신화된 가격정보를 가져와야함.
+        ~fetchPolicy=RescriptRelay.NetworkOnly,
+        (),
+      )
+
+      let displayPricePerKg =
+        rfqRecommendedPriceForMeat.recommendedPricePerKg
+        ->Int.fromString
+        ->Option.map(x => x - mod(x, minimumPriceUnit))
+        ->Option.map(x => x->Int.toString)
+        ->Option.map(x => x->stringToNumber)
+
+      let minQuotedPrice =
+        rfqMinQuotedPriceForMeat.minQuotedPricePerKg->Option.mapWithDefault(
+          displayPricePerKg,
+          x => Some(x->stringToNumber),
+        )
+
+      <div className=%twc("text-text-L3 text-base")>
+        {switch displayPricePerKg {
+        | Some(pricePerKg) =>
+          <>
+            <span> {`구매자의 기존 단가는 `->React.string} </span>
+            <span className=%twc("text-primary")> {`${pricePerKg}원`->React.string} </span>
+            <span> {`입니다.`->React.string} </span>
+            <br />
+          </>
+        | None => React.null
+        }}
+        {switch minQuotedPrice {
+        | Some(minQuotedPrice') =>
+          <>
+            <span> {`현재까지 최저 입찰 단가는 `->React.string} </span>
+            <span className=%twc("text-primary")> {`${minQuotedPrice'}원`->React.string} </span> // Todo
+            <span> {`입니다.`->React.string} </span>
+          </>
+        | None => React.null
+        }}
+      </div>
+    }
+  }
+
   @react.component
   let make = (
     ~itemMeat: MeatItemTypes.response_node,
-    ~rfqRecommendedPriceForMeat: MeatItemTypes.response_rfqRecommendedPriceForMeat,
     ~sellerSelectedGradeNode: MeatItemTypes.response_node_species_meatGrades_edges_node,
   ) => {
     let router = Next.Router.useRouter()
@@ -789,6 +855,29 @@ module Apply = {
       }
     }
 
+    let speciesName = itemMeat.species->Option.map(x => x.name)
+    let speciesCode = itemMeat.species->Option.map(x => x.code)
+
+    let minimumPriceUnit = switch speciesCode {
+    | Some("BEEF") => 100
+    | Some("PORK") => 50
+    | Some("CHICKEN") => 10
+    | _ => 0
+    }
+
+    let errorMessage = switch speciesName {
+    | Some(name) =>
+      Some(
+        `${name}의 경우 견적가는 ${minimumPriceUnit->Int.toString}원 단위로 입력해주셔야 해요.`,
+      )
+    | _ => None
+    }
+
+    let isValidPrice = switch price->Option.flatMap(Int.fromString) {
+    | Some(price') => mod(price', minimumPriceUnit) === 0 ? true : false
+    | None => false
+    }
+
     <>
       <section
         className=%twc("relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl pt-14")>
@@ -810,9 +899,13 @@ module Apply = {
                 x.isDomestic ? `국산` : `수입`
               )}의`}
             title2={`제공 가능한 단가를 알려주세요`}
-            subTitle={`최대 단가 : ${rfqRecommendedPriceForMeat.pricePerKg->stringToNumber}원/kg`}
           />
         </DS_Title.Normal1.Root>
+        <div className=%twc("px-5 mt-3")>
+          <React.Suspense fallback={<PriceTextsSkeleton />}>
+            <PriceTexts itemId={itemMeat.id} minimumPriceUnit />
+          </React.Suspense>
+        </div>
         <DS_InputField.Line1.Root className=%twc("mt-10")>
           <DS_InputField.Line1.Input
             type_="text"
@@ -820,6 +913,7 @@ module Apply = {
             placeholder={`단가`}
             unit={`원/kg`}
             autoFocus=true
+            errorMessage={isValidPrice ? None : errorMessage}
             value={price->Option.getWithDefault(``)->numberToComma}
             onChange={handleChangeInput}
             isClear=true
@@ -832,7 +926,7 @@ module Apply = {
       <DS_Dialog.Popup.Root>
         <DS_Dialog.Popup.Trigger asChild=false>
           <div onClick={_ => trackDataWhenNextButton()}>
-            <DS_ButtonContainer.Full1 disabled={price->Option.isNone} label={`다음`} />
+            <DS_ButtonContainer.Full1 disabled={!isValidPrice} label={`다음`} />
           </div>
         </DS_Dialog.Popup.Trigger>
         <DS_Dialog.Popup.Portal>
@@ -875,7 +969,7 @@ module Apply = {
 module DetailPageRouter = {
   @react.component
   let make = (~itemId) => {
-    let {node, rfqRecommendedPriceForMeat} = Query.use(~variables={itemId: itemId}, ())
+    let {node} = Query.RfqRequestItemMeat.use(~variables={itemId: itemId}, ())
     let router = Next.Router.useRouter()
     let selectedGradeId = router.query->Js.Dict.get("selected_grade_id")
 
@@ -895,12 +989,7 @@ module DetailPageRouter = {
 
             switch (sellerSelectedGradeNode, itemStatus) {
             | (Some(sellerSelectedGradeNode'), #WAITING_FOR_QUOTATION) =>
-              <Apply
-                itemMeat={itemMeat}
-                rfqRecommendedPriceForMeat={rfqRecommendedPriceForMeat}
-                sellerSelectedGradeNode={sellerSelectedGradeNode'.node}
-              />
-
+              <Apply itemMeat={itemMeat} sellerSelectedGradeNode={sellerSelectedGradeNode'.node} />
             | _ => <DS_None.Default message={`잘못된 접근입니다.`} />
             }
           }

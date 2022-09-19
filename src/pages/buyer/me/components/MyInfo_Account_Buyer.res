@@ -30,7 +30,9 @@ module LogoutDialog = {
         switch role {
         | Some(Seller) => router->Next.Router.push("/seller/signin")
         | Some(Buyer) => router->Next.Router.push("/buyer/signin")
-        | Some(Admin) => router->Next.Router.push("/admin/signin")
+        | Some(Admin)
+        | Some(ExternalStaff) =>
+          router->Next.Router.push("/admin/signin")
         | None => ()
         }
       }
@@ -40,8 +42,8 @@ module LogoutDialog = {
       isShow={isOpen}
       onCancel={onCancel}
       onConfirm={logOut}
-      textOnCancel=`닫기`
-      textOnConfirm=`로그아웃`
+      textOnCancel={`닫기`}
+      textOnConfirm={`로그아웃`}
       kindOfConfirm=Dialog.Negative
       boxStyle=%twc("rounded-xl")>
       <div className=%twc("text-center")> {`로그아웃 하시겠어요?`->React.string} </div>
@@ -53,9 +55,13 @@ module PC = {
   @module("../../../../../public/assets/write.svg")
   external writeIcon: string = "default"
 
+  type modal = Password | Company | Manager | Phone | BizNumber | Location | Logout
+
   @react.component
   let make = (~query) => {
     let router = Next.Router.useRouter()
+    let (openModal, setOpenModal) = React.Uncurried.useState(_ => None)
+
     let {
       name: company,
       manager,
@@ -77,14 +83,6 @@ module PC = {
         "$1-$2-$3",
       )
 
-    let (isUpdatePasswordOpen, setUpdatePasswordOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateCompanyOpen, setUpdateCompanyOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateManagerOpen, setUpdateManagerOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdatePhoneNumberOpen, setUpdatePhoneNumberOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateBizNumberOpen, setUpdateBizNumberOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateAddressOpen, setUpdateAddressOpen) = React.Uncurried.useState(_ => false)
-    let (showLogout, setShowLogout) = React.Uncurried.useState(_ => Dialog.Hide)
-
     <>
       <MyInfo_Layout_Buyer query>
         <div className=%twc("p-7 bg-white ml-4 w-full")>
@@ -103,7 +101,7 @@ module PC = {
                 </div>
                 <button
                   className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
-                  onClick={_ => setUpdatePasswordOpen(._ => true)}>
+                  onClick={_ => setOpenModal(._ => Some(Password))}>
                   {`비밀번호 재설정`->React.string}
                 </button>
               </div>
@@ -115,7 +113,7 @@ module PC = {
                 </div>
                 <div className=%twc("flex items-center")>
                   {company->React.string}
-                  <button onClick={_ => setUpdateCompanyOpen(._ => true)}>
+                  <button onClick={_ => setOpenModal(._ => Some(Company))}>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -128,7 +126,7 @@ module PC = {
                 </div>
                 <div className=%twc("flex items-center")>
                   {manager->Option.getWithDefault("")->React.string}
-                  <button onClick={_ => setUpdateManagerOpen(._ => true)}>
+                  <button onClick={_ => setOpenModal(._ => Some(Manager))}>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -141,7 +139,7 @@ module PC = {
                 </div>
                 <div className=%twc("flex items-center")>
                   {displayPhone->React.string}
-                  <button onClick={_ => setUpdatePhoneNumberOpen(._ => true)}>
+                  <button onClick={_ => setOpenModal(._ => Some(Phone))}>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -163,7 +161,7 @@ module PC = {
                 </div>
                 <div className=%twc("flex items-center")>
                   {displayBizNumber->React.string}
-                  <button onClick={_ => setUpdateBizNumberOpen(._ => true)}>
+                  <button onClick={_ => setOpenModal(._ => Some(BizNumber))}>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -190,7 +188,7 @@ module PC = {
                     className=%twc("text-left")>
                     {address->Option.getWithDefault("")->React.string}
                   </p>
-                  <button onClick={_ => setUpdateAddressOpen(._ => true)}>
+                  <button onClick={_ => setOpenModal(._ => Some(Location))}>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -255,7 +253,7 @@ module PC = {
                 </div>
                 <button
                   className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
-                  onClick={_ => setShowLogout(._ => Dialog.Show)}>
+                  onClick={_ => setOpenModal(._ => Some(Logout))}>
                   {`로그아웃`->React.string}
                 </button>
               </div>
@@ -276,40 +274,62 @@ module PC = {
         </div>
       </MyInfo_Layout_Buyer>
       <Update_Password_Buyer
-        isOpen={isUpdatePasswordOpen} onClose={_ => setUpdatePasswordOpen(._ => false)} email
+        isOpen={openModal == Some(Password)} onClose={_ => setOpenModal(._ => None)} email
       />
       <Update_CompanyName_Buyer
-        isOpen={isUpdateCompanyOpen}
-        onClose={_ => setUpdateCompanyOpen(._ => false)}
+        isOpen={openModal == Some(Company)}
+        onClose={_ => setOpenModal(._ => None)}
         key=company
         defaultValue=company
       />
       <Update_Manager_Buyer
-        isOpen={isUpdateManagerOpen}
-        onClose={_ => setUpdateManagerOpen(._ => false)}
+        isOpen={openModal == Some(Manager)}
+        onClose={_ => setOpenModal(._ => None)}
         key=?manager
         defaultValue=?manager
       />
       <Update_PhoneNumber_Buyer
-        isOpen={isUpdatePhoneNumberOpen} onClose={_ => setUpdatePhoneNumberOpen(._ => false)}
+        isOpen={openModal == Some(Phone)} onClose={_ => setOpenModal(._ => None)}
       />
       <Update_BusinessNumber_Buyer
-        isOpen={isUpdateBizNumberOpen}
-        onClose={_ => setUpdateBizNumberOpen(._ => false)}
+        isOpen={openModal == Some(BizNumber)}
+        onClose={_ => setOpenModal(._ => None)}
         key=displayBizNumber
         defaultValue=displayBizNumber
       />
       <Update_Address_Buyer
-        isOpen={isUpdateAddressOpen} onClose={_ => setUpdateAddressOpen(._ => false)} window=true
+        isOpen={openModal == Some(Location)} onClose={_ => setOpenModal(._ => None)} popup=true
       />
-      <LogoutDialog isOpen={showLogout} onCancel={_ => setShowLogout(._ => Dialog.Hide)} />
+      <LogoutDialog
+        isOpen={openModal == Some(Logout) ? Dialog.Show : Dialog.Hide}
+        onCancel={_ => setOpenModal(._ => None)}
+      />
     </>
   }
 }
 
 module Mobile = {
+  type modal =
+    Password | Company | Manager | Phone | BizNumber | Location | Terms | Logout | Signout
+
+  let toFragment = modal =>
+    switch modal {
+    | Password => "#password"
+    | Company => "#company"
+    | Manager => "#manager"
+    | Phone => "#phone"
+    | BizNumber => "#biz-number"
+    | Location => "#location"
+    | Terms => "#terms"
+    | Logout => "#logout"
+    | Signout => "#signout"
+    }
+
   @react.component
   let make = (~query) => {
+    let router = Next.Router.useRouter()
+    let (openModal, setOpenModal) = React.Uncurried.useState(_ => None)
+
     let {
       name: company,
       manager,
@@ -331,15 +351,25 @@ module Mobile = {
         "$1-$2-$3",
       )
 
-    let (isUpdatePasswordOpen, setUpdatePasswordOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateCompanyOpen, setUpdateComponentOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateManagerOpen, setUpdateManagerOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdatePhoneNumberOpen, setUpdatePhoneNumberOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateBizNumberOpen, setUpdateBizNumberOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateAddressOpen, setUpdateAddressOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateTermOpen, setUpdateTermOpen) = React.Uncurried.useState(_ => false)
-    let (showLogout, setShowLogout) = React.Uncurried.useState(_ => Dialog.Hide)
-    let (isSignoutOpen, setSignoutOpen) = React.Uncurried.useState(_ => false)
+    // only for mobile
+    // related PR: #860 모달, 드로워에 대한 뒤로가기 처리 방법을 찾는 시도.
+    // 모달이 열릴 때, fragment 를 추가하고 뒤로가기 하여 모달이 닫히게 한다.
+    let open_ = (~modal: modal) => {
+      if !(router.asPath->Js.String2.includes(toFragment(modal))) {
+        router->Next.Router.push(`${router.asPath}${toFragment(modal)}`)
+      }
+      setOpenModal(._ => Some(modal))
+    }
+
+    // url에 fragment가 없으면 모달창 닫는다.
+    // 모달 닫는 것을 직접 하지 않고 url이 변화할 때마다 side effect로 처리한다.
+    React.useEffect1(() => {
+      if !(router.asPath->Js.String2.includes("#")) && openModal->Option.isSome {
+        setOpenModal(._ => None)
+      }
+
+      None
+    }, [router.asPath])
 
     <div className=%twc("block w-full bg-white absolute top-0 pt-14 min-h-screen")>
       <div className=%twc("w-full max-w-3xl mx-auto bg-white h-full")>
@@ -353,7 +383,7 @@ module Mobile = {
                 <div> {email->React.string} </div>
               </div>
             </li>
-            <button className=%twc("w-full flex") onClick={_ => setUpdatePasswordOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Password)}>
               <li
                 className=%twc(
                   "py-5 flex items-center w-full border-t border-gray-100 justify-between"
@@ -361,13 +391,15 @@ module Mobile = {
                 <div className=%twc("min-w-[105px] mr-2 text-left")>
                   <span className=%twc("font-bold")> {`비밀번호`->React.string} </span>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
           </ol>
           <div className=%twc("h-3 bg-gray-100") />
           <ol className=%twc("bg-white")>
-            <button className=%twc("w-full flex") onClick={_ => setUpdateComponentOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Company)}>
               <li className=%twc("py-5 px-4 flex items-center w-full justify-between")>
                 <div className=%twc("flex")>
                   <div className=%twc("min-w-[105px] mr-2 text-left")>
@@ -375,10 +407,12 @@ module Mobile = {
                   </div>
                   {company->React.string}
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
-            <button className=%twc("w-full flex") onClick={_ => setUpdateManagerOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Manager)}>
               <li
                 className=%twc(
                   "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -389,11 +423,12 @@ module Mobile = {
                   </div>
                   <div> {manager->Option.getWithDefault("")->React.string} </div>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
-            <button
-              className=%twc("w-full flex") onClick={_ => setUpdatePhoneNumberOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Phone)}>
               <li
                 className=%twc(
                   "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -417,10 +452,12 @@ module Mobile = {
                     }}
                   </div>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
-            <button className=%twc("w-full flex") onClick={_ => setUpdateBizNumberOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=BizNumber)}>
               <li
                 className=%twc(
                   "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -445,10 +482,12 @@ module Mobile = {
                     }}
                   </div>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
-            <button className=%twc("w-full flex") onClick={_ => setUpdateAddressOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Location)}>
               <li
                 className=%twc(
                   "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -469,23 +508,27 @@ module Mobile = {
                     }}
                   </p>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
           </ol>
           <div className=%twc("h-3 bg-gray-100") />
           <ol className=%twc("bg-white px-4 mb-6")>
-            <button className=%twc("w-full flex") onClick={_ => setUpdateTermOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Terms)}>
               <li className=%twc("py-5 flex items-center w-full justify-between")>
                 <div className=%twc("min-w-[105px] mr-2 text-left")>
                   <span className=%twc("font-bold")>
                     {`서비스 이용동의`->React.string}
                   </span>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
-            <button className=%twc("w-full flex") onClick={_ => setShowLogout(._ => Dialog.Show)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Logout)}>
               <li
                 className=%twc(
                   "py-5 flex items-center w-full justify-between border-t border-gray-100"
@@ -493,10 +536,12 @@ module Mobile = {
                 <div className=%twc("min-w-[105px] mr-2 text-left")>
                   <span className=%twc("font-bold")> {`로그아웃`->React.string} </span>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
-            <button className=%twc("w-full flex") onClick={_ => setSignoutOpen(._ => true)}>
+            <button className=%twc("w-full flex") onClick={_ => open_(~modal=Signout)}>
               <li
                 className=%twc(
                   "py-5 flex items-center w-full justify-between border-t border-gray-100"
@@ -504,46 +549,53 @@ module Mobile = {
                 <div className=%twc("min-w-[105px] mr-2 text-left")>
                   <span className=%twc("font-bold")> {`회원탈퇴`->React.string} </span>
                 </div>
-                <div className=%twc("")> <IconArrow height="16" width="16" fill="#B2B2B2" /> </div>
+                <div className=%twc("")>
+                  <IconArrow height="16" width="16" fill="#B2B2B2" />
+                </div>
               </li>
             </button>
           </ol>
         </section>
         <Update_Password_Buyer
-          isOpen={isUpdatePasswordOpen} onClose={_ => setUpdatePasswordOpen(._ => false)} email
+          isOpen={openModal == Some(Password)} onClose={_ => router->Next.Router.back} email
         />
         <Update_CompanyName_Buyer
-          isOpen={isUpdateCompanyOpen}
-          onClose={_ => setUpdateComponentOpen(._ => false)}
+          isOpen={openModal == Some(Company)}
+          onClose={_ => router->Next.Router.back}
           key={company}
           defaultValue={company}
         />
         <Update_Manager_Buyer
-          isOpen={isUpdateManagerOpen}
-          onClose={_ => setUpdateManagerOpen(._ => false)}
+          isOpen={openModal == Some(Manager)}
+          onClose={_ => router->Next.Router.back}
           key=?{manager}
           defaultValue=?{manager}
         />
         <Update_PhoneNumber_Buyer
-          isOpen={isUpdatePhoneNumberOpen} onClose={_ => setUpdatePhoneNumberOpen(._ => false)}
+          isOpen={openModal == Some(Phone)} onClose={_ => router->Next.Router.back}
         />
         <Update_BusinessNumber_Buyer
-          isOpen={isUpdateBizNumberOpen}
-          onClose={_ => setUpdateBizNumberOpen(._ => false)}
+          isOpen={openModal == Some(BizNumber)}
+          onClose={_ => router->Next.Router.back}
           key=displayBizNumber
           defaultValue=displayBizNumber
         />
         <Update_Address_Buyer
-          isOpen={isUpdateAddressOpen} onClose={_ => setUpdateAddressOpen(._ => false)}
+          isOpen={openModal == Some(Location)} onClose={_ => router->Next.Router.back}
         />
         <Update_MarketingTerm_Buyer
-          isOpen={isUpdateTermOpen}
-          onClose={_ => setUpdateTermOpen(._ => false)}
+          isOpen={openModal == Some(Terms)}
+          onClose={_ => router->Next.Router.back}
           query={fragmentRefs}
         />
-        <LogoutDialog isOpen={showLogout} onCancel={_ => setShowLogout(._ => Dialog.Hide)} />
+        <LogoutDialog
+          isOpen={openModal == Some(Logout) ? Dialog.Show : Dialog.Hide}
+          onCancel={_ => router->Next.Router.back}
+        />
         <Account_Signout_Buyer_Mobile
-          isOpen={isSignoutOpen} onClose={_ => setSignoutOpen(._ => false)} query={fragmentRefs}
+          isOpen={openModal == Some(Signout)}
+          onClose={_ => router->Next.Router.back}
+          query={fragmentRefs}
         />
       </div>
     </div>

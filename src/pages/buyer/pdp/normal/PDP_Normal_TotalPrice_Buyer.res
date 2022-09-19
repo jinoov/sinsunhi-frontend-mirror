@@ -21,9 +21,9 @@ module Fragment = %relay(`
             id
             stockSku
             price
+            isFreeShipping
             productOptionCost {
               deliveryCost
-              isFreeShipping
             }
           }
         }
@@ -37,9 +37,9 @@ module Fragment = %relay(`
             id
             stockSku
             price
+            isFreeShipping
             productOptionCost {
               deliveryCost
-              isFreeShipping
             }
           }
         }
@@ -109,16 +109,18 @@ module PC = {
         productOptions->Option.flatMap(({edges}) => {
           edges
           ->Array.getBy(({node}) => node.id == optionId)
-          ->Option.flatMap(({node: {price, productOptionCost: {deliveryCost, isFreeShipping}}}) => {
+          ->Option.flatMap(({node: {price, isFreeShipping, productOptionCost: {deliveryCost}}}) => {
             // 단품의 가격은 필수정보이지만, 미인증 상태일 경우 가격을 가리기 위해 nullable하게 만들어졌다.
             // 단품을 고르고 가격을 계산하는 과정은, 인증 이후에 진행되는 과정이므로
             // 가격이 null인 케이스를 사전에 제거하여 이후 계산에 용이하도록 한다.
-            price->Option.map(price' => {
-              price: price',
-              deliveryCost: deliveryCost,
-              isFreeShipping: isFreeShipping,
-              quantity: quantity,
-            })
+            price->Option.map(
+              price' => {
+                price: price',
+                deliveryCost,
+                isFreeShipping,
+                quantity,
+              },
+            )
           })
         })
       }
@@ -209,16 +211,18 @@ module MO = {
         productOptions->Option.flatMap(({edges}) => {
           edges
           ->Array.getBy(({node}) => node.id == optionId)
-          ->Option.flatMap(({node: {price, productOptionCost: {deliveryCost, isFreeShipping}}}) => {
+          ->Option.flatMap(({node: {price, isFreeShipping, productOptionCost: {deliveryCost}}}) => {
             // 단품의 가격은 필수정보이지만, 미인증 상태일 경우 가격을 가리기 위해 nullable하게 만들어졌다.
             // 단품을 고르고 가격을 계산하는 과정은, 인증 이후에 진행되는 과정이므로
             // 가격이 null인 케이스를 사전에 제거하여 이후 계산에 용이하도록 한다.
-            price->Option.map(price' => {
-              price: price',
-              deliveryCost: deliveryCost,
-              isFreeShipping: isFreeShipping,
-              quantity: quantity,
-            })
+            price->Option.map(
+              price' => {
+                price: price',
+                deliveryCost,
+                isFreeShipping,
+                quantity,
+              },
+            )
           })
         })
       }

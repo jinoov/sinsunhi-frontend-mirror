@@ -195,7 +195,15 @@ let make = (~isOpen, ~onClose) => {
     ->ignore
   }
 
-  <Dialog.Root _open={isOpen} onOpenChange={_ => reset()}>
+  // mobile 에서 뒤로가기로 닫혔을 때, 상태초기화
+  React.useEffect1(_ => {
+    if !isOpen {
+      reset()
+    }
+    None
+  }, [isOpen])
+
+  <Dialog.Root _open={isOpen}>
     <Dialog.Overlay className=%twc("dialog-overlay") />
     <Dialog.Content
       className=%twc(

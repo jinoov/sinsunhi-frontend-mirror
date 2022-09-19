@@ -3,24 +3,38 @@
 import * as ReForm from "@rescriptbr/reform/src/ReForm.mjs";
 
 function get(values, field) {
-  if (field) {
-    return values.email;
-  } else {
-    return values.name;
+  switch (field) {
+    case /* Name */0 :
+        return values.name;
+    case /* Email */1 :
+        return values.email;
+    case /* Phone */2 :
+        return values.phone;
+    
   }
 }
 
 function set(values, field, value) {
-  if (field) {
-    return {
-            name: values.name,
-            email: value
-          };
-  } else {
-    return {
-            name: value,
-            email: values.email
-          };
+  switch (field) {
+    case /* Name */0 :
+        return {
+                name: value,
+                email: values.email,
+                phone: values.phone
+              };
+    case /* Email */1 :
+        return {
+                name: values.name,
+                email: value,
+                phone: values.phone
+              };
+    case /* Phone */2 :
+        return {
+                name: values.name,
+                email: values.email,
+                phone: value
+              };
+    
   }
 }
 
@@ -36,7 +50,8 @@ var Form = ReForm.Make({
 
 var initialState = {
   name: "",
-  email: ""
+  email: "",
+  phone: ""
 };
 
 export {

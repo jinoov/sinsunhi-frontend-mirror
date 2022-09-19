@@ -106,9 +106,8 @@ function PDP_Normal_SelectedOptionItem_Buyer$PC(Props) {
     return null;
   }
   var stockSku = node.stockSku;
-  var productOptionCost = node.productOptionCost;
   var productId = node.product.productId;
-  var totalOptionPrice = Belt_Option.map(PDP_Parser_Buyer.ProductOption.makeOptionPrice(node.price, productOptionCost.deliveryCost, productOptionCost.isFreeShipping), (function (optionPrice$p) {
+  var totalOptionPrice = Belt_Option.map(PDP_Parser_Buyer.ProductOption.makeOptionPrice(node.price, node.productOptionCost.deliveryCost, node.isFreeShipping), (function (optionPrice$p) {
           return Math.imul(optionPrice$p, quantity);
         }));
   return React.createElement("div", {
@@ -163,9 +162,8 @@ function PDP_Normal_SelectedOptionItem_Buyer$MO(Props) {
     return null;
   }
   var stockSku = node.stockSku;
-  var productOptionCost = node.productOptionCost;
   var productId = node.product.productId;
-  var totalOptionPrice = Belt_Option.map(PDP_Parser_Buyer.ProductOption.makeOptionPrice(node.price, productOptionCost.deliveryCost, productOptionCost.isFreeShipping), (function (optionPrice$p) {
+  var totalOptionPrice = Belt_Option.map(PDP_Parser_Buyer.ProductOption.makeOptionPrice(node.price, node.productOptionCost.deliveryCost, node.isFreeShipping), (function (optionPrice$p) {
           return Math.imul(optionPrice$p, quantity);
         }));
   return React.createElement("section", {

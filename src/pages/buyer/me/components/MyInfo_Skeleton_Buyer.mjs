@@ -4,18 +4,8 @@ import * as React from "react";
 import * as Skeleton from "../../../../components/Skeleton.mjs";
 import * as IconArrow from "../../../../components/svgs/IconArrow.mjs";
 import Link from "next/link";
-import * as Router from "next/router";
 
 function MyInfo_Skeleton_Buyer$PC(Props) {
-  var router = Router.useRouter();
-  var match = router.asPath;
-  var tmp = match === "/buyer/me/profile" ? React.createElement("div", {
-          className: "border border-[#1F2024]"
-        }) : null;
-  var match$1 = router.asPath;
-  var tmp$1 = match$1 === "/buyer/me/account" ? React.createElement("div", {
-          className: "border border-[#1F2024]"
-        }) : null;
   return React.createElement("section", {
               className: "flex-col bg-surface"
             }, React.createElement("div", {
@@ -51,14 +41,14 @@ function MyInfo_Skeleton_Buyer$PC(Props) {
                                         className: "py-[18px] text-left px-7"
                                       }, React.createElement("div", {
                                             className: "w-fit"
-                                          }, "프로필정보", tmp))
+                                          }, "프로필정보"))
                                 }), React.createElement(Link, {
                                   href: "/buyer/me/account",
                                   children: React.createElement("a", {
                                         className: "py-[18px] text-left px-7"
                                       }, React.createElement("div", {
                                             className: "w-fit"
-                                          }, "계정정보", tmp$1))
+                                          }, "계정정보"))
                                 }), React.createElement(Link, {
                                   href: "/buyer/upload",
                                   children: React.createElement("a", {

@@ -56,6 +56,7 @@ let mutationImageToFormImage: UploadThumbnailAdminMutation_graphql.Types.respons
 
 @react.component
 let make = (~name, ~updateFn: Form.image => unit, ~value: Form.image, ~disabled=?) => {
+  let {addToast} = ReactToastNotifications.useToasts()
   let (mutate, _) = Mutation.use()
   let (thumbnailURL, setThumbnailURL) = React.Uncurried.useState(_ => Init)
   let isThumbnailUploading = thumbnailURL == Loading
@@ -128,9 +129,17 @@ let make = (~name, ~updateFn: Form.image => unit, ~value: Form.image, ~disabled=
             }
           },
           ~onError={
-            err => {
-              Js.log(err)
-              onFailureWithReset(resetFile, updateFn, err)
+            error => {
+              onFailureWithReset(resetFile, updateFn, error)
+              addToast(.
+                <div className=%twc("flex items-center")>
+                  <span className=%twc("w-6 h-6 mr-2")>
+                    <IconError height="24" width="24" />
+                  </span>
+                  <div className=%twc("w-full truncate")> {`${error.message}`->React.string} </div>
+                </div>,
+                {appearance: "error"},
+              )
             }
           },
           (),
@@ -158,7 +167,7 @@ let make = (~name, ~updateFn: Form.image => unit, ~value: Form.image, ~disabled=
           id=name
           type_="file"
           className=%twc("file:hidden sr-only")
-          accept=`.png,.jpg,.webp`
+          accept={`.png,.jpg,.webp`}
           disabled={disabled->Option.getWithDefault(false) || isThumbnailUploading}
           onChange={handleOnChangeFile}
         />

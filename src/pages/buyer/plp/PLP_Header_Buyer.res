@@ -60,10 +60,12 @@ let make = () => {
     // position fixed
     <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
       <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
-        <div className=%twc("px-5 py-4 flex justify-between")>
-          <button onClick={_ => router->Next.Router.back}>
-            <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
-          </button>
+        <div className=%twc("px-5 py-4 flex w-full items-center")>
+          <div className=%twc("w-1/3 flex justify-start")>
+            <button onClick={_ => router->Next.Router.back}>
+              <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+            </button>
+          </div>
           {switch isCsr {
           | false => <span />
           | true =>
@@ -71,16 +73,26 @@ let make = () => {
             // 전체 상품 리스트
             | None =>
               <>
-                <span className=%twc("font-bold text-xl")> {`전체 상품`->React.string} </span>
-                <CartLinkIcon />
+                <div className=%twc("w-1/3 flex justify-center")>
+                  <span className=%twc("font-bold text-xl")> {`전체 상품`->React.string} </span>
+                </div>
+                <div className=%twc("w-1/3 flex justify-end gap-2")>
+                  <CartLinkIcon />
+                  <HomeLinkIcon />
+                </div>
               </>
             // 특정 전시카테고리 내 상품 리스트
             | Some(displayCategoryId') =>
               <RescriptReactErrorBoundary fallback={_ => <span />}>
-                <React.Suspense fallback={<span />}>
-                  <DisplayCategoryName displayCategoryId=displayCategoryId' />
-                </React.Suspense>
-                <CartLinkIcon />
+                <div className=%twc("w-1/3 flex justify-center")>
+                  <React.Suspense fallback={<span />}>
+                    <DisplayCategoryName displayCategoryId=displayCategoryId' />
+                  </React.Suspense>
+                </div>
+                <div className=%twc("w-1/3 flex justify-end gap-2")>
+                  <CartLinkIcon />
+                  <HomeLinkIcon />
+                </div>
               </RescriptReactErrorBoundary>
             }
           }}

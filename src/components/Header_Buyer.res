@@ -6,8 +6,6 @@
  *    바이어 페이지의 공통 헤더로써 네비게이션을 제공합니다
  *
  */
-@module("../../public/assets/home.svg")
-external homeIcon: string = "default"
 module Mobile = {
   module LoggedInUserMenu = {
     @react.component
@@ -42,12 +40,7 @@ module Mobile = {
               <div>
                 <span className=%twc("font-bold text-xl")> {title->React.string} </span>
               </div>
-              <button
-                type_="button"
-                className=%twc("w-6 h-[30px]")
-                onClick={_ => router->Next.Router.push("/buyer")}>
-                <img src=homeIcon />
-              </button>
+              <HomeLinkIcon />
             </div>
           </header>
         </div>
@@ -65,14 +58,19 @@ module Mobile = {
         // position fixed
         <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
           <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
-            <div className=%twc("px-5 py-4 flex justify-between")>
-              <button type_="button" onClick={_ => router->Next.Router.back}>
-                <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
-              </button>
-              <div>
+            <div className=%twc("px-5 py-4 flex items-center")>
+              <div className=%twc("w-1/3 flex justify-start")>
+                <button type_="button" onClick={_ => router->Next.Router.back}>
+                  <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+                </button>
+              </div>
+              <div className=%twc("w-1/3 flex justify-center")>
                 <span className=%twc("font-bold text-xl")> {title->React.string} </span>
               </div>
-              <CartLinkIcon />
+              <div className=%twc("w-1/3 flex gap-2 justify-end")>
+                <CartLinkIcon />
+                <HomeLinkIcon />
+              </div>
             </div>
           </header>
         </div>
@@ -85,27 +83,22 @@ module Mobile = {
   // 뒤로가기 버튼이 없는 해더
   module NoBack = {
     @react.component
-    let make = (~title) => {
-      let router = Next.Router.useRouter()
-      <>
-        // position fixed
-        <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
-          <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
-            <div className=%twc("px-5 py-4 flex justify-between")>
-              <div className=%twc("w-[24px]") />
-              <div>
-                <span className=%twc("font-bold text-xl")> {title->React.string} </span>
-              </div>
-              <button type_="button" onClick={_ => router->Next.Router.push("/buyer")}>
-                <img src=homeIcon />
-              </button>
+    let make = (~title) => <>
+      // position fixed
+      <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
+        <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
+          <div className=%twc("px-5 py-4 flex justify-between")>
+            <div className=%twc("w-[24px]") />
+            <div>
+              <span className=%twc("font-bold text-xl")> {title->React.string} </span>
             </div>
-          </header>
-        </div>
-        // placeholder
-        <div className=%twc("w-full h-14") />
-      </>
-    }
+            <HomeLinkIcon />
+          </div>
+        </header>
+      </div>
+      // placeholder
+      <div className=%twc("w-full h-14") />
+    </>
   }
 
   module NoHome = {
@@ -240,39 +233,36 @@ module Mobile = {
   @react.component
   let make = () => {
     let router = Next.Router.useRouter()
-
-    let secondPathname =
-      router.pathname->Js.String2.split("/")->Array.keep(x => x !== "")->Garter.Array.get(1)
-
-    let thirdPathname =
-      router.pathname->Js.String2.split("/")->Array.keep(x => x !== "")->Garter.Array.get(2)
+    let pathnames = router.pathname->Js.String2.split("/")->Array.keep(x => x !== "")
+    let first = pathnames->Array.get(0)
+    let second = pathnames->Array.get(1)
+    let third = pathnames->Array.get(2)
 
     <>
       <AppLink_Header />
-      {switch (secondPathname, thirdPathname) {
-      | (Some("signin"), Some("find-id-password")) => <Normal title={``} />
-      | (Some("signin"), _) => <Normal title={`로그인`} />
-      | (Some("signup"), _) => <Normal title={`회원가입`} />
-      | (Some("upload"), _) => <Normal title={`주문서 업로드`} />
-      | (Some("orders"), _) => <Normal title={`주문 내역`} />
-      | (Some("me"), Some("account")) => <NoHome title={`계정정보`} />
-      | (Some("me"), Some("profile")) => <NoHome title={`프로필정보`} />
-      | (Some("me"), _) => <NoHome title={`마이페이지`} />
-      | (Some("download-center"), _) => <Normal title={`다운로드 센터`} />
-      | (Some("transactions"), _) => <Normal title={`결제 내역`} />
-      | (Some("products"), None) => <PLP_Header_Buyer />
-      | (Some("products"), Some("all")) => <Normal title={`전체 상품`} /> // will be removed(2022.08.01)
-      | (Some("products"), Some("advanced-search")) => <Normal title={`상품 검색`} />
-      | (Some("products"), Some(_)) => <PDP_Header_Buyer />
-      | (Some("search"), _) => <Search />
-      | (Some("web-order"), Some("complete")) => <NoBack title={`주문 완료`} />
-      | (Some("web-order"), _) => <Normal title={`주문·결제`} />
-      | (Some("delivery"), None) => <BackAndCart title={`신선배송`} />
-      | (Some("matching"), None) => <NoHome title={`신선매칭`} />
-      | (Some("delivery"), Some(_)) => <BackAndCart title={`신선배송`} />
-      | (Some("matching"), Some(_)) => <Normal title={`신선매칭`} />
-      | (Some("cart"), _) => <Normal title={`장바구니`} />
-      | (None, _) => <GnbHome />
+      {switch (first, second, third) {
+      | (Some("buyer"), Some("signin"), Some("find-id-password")) => <Normal title={``} />
+      | (Some("buyer"), Some("signin"), _) => <Normal title={`로그인`} />
+      | (Some("buyer"), Some("signup"), _) => <Normal title={`회원가입`} />
+      | (Some("buyer"), Some("upload"), _) => <Normal title={`주문서 업로드`} />
+      | (Some("buyer"), Some("orders"), _) => <Normal title={`주문 내역`} />
+      | (Some("buyer"), Some("me"), Some("account")) => <NoHome title={`계정정보`} />
+      | (Some("buyer"), Some("me"), Some("profile")) => <NoHome title={`프로필정보`} />
+      | (Some("buyer"), Some("me"), _) => <NoHome title={`마이페이지`} />
+      | (Some("buyer"), Some("download-center"), _) => <Normal title={`다운로드 센터`} />
+      | (Some("buyer"), Some("transactions"), _) => <Normal title={`결제 내역`} />
+      | (Some("buyer"), Some("products"), Some("advanced-search")) =>
+        <Normal title={`상품 검색`} />
+      | (Some("products"), Some("advanced-search"), None) => <Normal title={`상품 검색`} />
+      | (Some("search"), _, _) => <Search />
+      | (Some("buyer"), Some("web-order"), Some("complete")) => <NoBack title={`주문 완료`} />
+      | (Some("buyer"), Some("web-order"), _) => <Normal title={`주문·결제`} />
+      | (Some("delivery"), None, _) => <BackAndCart title={`신선배송`} />
+      | (Some("delivery"), Some(_), _) => <BackAndCart title={`신선배송`} />
+      | (Some("matching"), None, _) => <NoHome title={`신선매칭`} />
+      | (Some("matching"), Some(_), _) => <Normal title={`신선매칭`} />
+      | (Some("buyer"), Some("cart"), _) => <Normal title={`장바구니`} />
+      | (Some("buyer"), None, _) => <GnbHome />
       | _ => <Normal title={``} />
       }}
     </>
@@ -284,14 +274,69 @@ module PC_Old = {
   module LoggedInUserMenu = {
     @react.component
     let make = (~user: CustomHooks.Auth.user) => {
+      let logOut = ReactEvents.interceptingHandler(_ => {
+        CustomHooks.Auth.logOut()
+        ChannelTalkHelper.logout()
+        Redirect.setHref("/")
+      })
+
+      let itemStyle = %twc(
+        "cursor-pointer w-full h-full py-3 px-8 whitespace-nowrap flex items-center justify-center"
+      )
+
+      open RadixUI.DropDown
       <div id="gnb-user" className=%twc("relative flex items-center h-16")>
-        <Next.Link href="/buyer/me">
-          <a>
-            <span className=%twc("text-base text-gray-800")>
-              {user.email->Option.getWithDefault("")->React.string}
-            </span>
-          </a>
-        </Next.Link>
+        <Root>
+          <Trigger className=%twc("focus:outline-none")>
+            <div className=%twc("flex items-center")>
+              <span className=%twc("text-base text-gray-800")>
+                {user.email->Option.getWithDefault("")->React.string}
+              </span>
+              <span className=%twc("relative ml-1")>
+                <IconArrowSelect height="22" width="22" fill="#262626" />
+              </span>
+            </div>
+          </Trigger>
+          <Content
+            align=#end
+            className=%twc(
+              "dropdown-content p-1 w-[140px] bg-white rounded-lg shadow-md divide-y text-gray-800"
+            )>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/buyer/me">
+                <a className=itemStyle>
+                  <span> {`마이페이지`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/buyer/orders">
+                <a className=itemStyle>
+                  <span> {`주문내역`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/buyer/transactions">
+                <a className=itemStyle>
+                  <span> {`결제내역`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/products/advanced-search">
+                <a className=itemStyle>
+                  <span> {`단품확인`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <button type_="button" onClick={logOut} className=itemStyle>
+                <span> {`로그아웃`->React.string} </span>
+              </button>
+            </Item>
+          </Content>
+        </Root>
       </div>
     }
   }
@@ -452,14 +497,69 @@ module PC = {
   module LoggedInUserMenu = {
     @react.component
     let make = (~user: CustomHooks.Auth.user) => {
+      let logOut = ReactEvents.interceptingHandler(_ => {
+        CustomHooks.Auth.logOut()
+        ChannelTalkHelper.logout()
+        Redirect.setHref("/")
+      })
+
+      let itemStyle = %twc(
+        "cursor-pointer w-full h-full py-3 px-8 whitespace-nowrap flex items-center justify-center"
+      )
+
+      open RadixUI.DropDown
       <div id="gnb-user" className=%twc("relative flex items-center h-16")>
-        <Next.Link href="/buyer/me">
-          <a>
-            <span className=%twc("text-base text-gray-800")>
-              {user.email->Option.getWithDefault("")->React.string}
-            </span>
-          </a>
-        </Next.Link>
+        <Root>
+          <Trigger className=%twc("focus:outline-none")>
+            <div className=%twc("flex items-center")>
+              <span className=%twc("text-base text-gray-800")>
+                {user.email->Option.getWithDefault("")->React.string}
+              </span>
+              <span className=%twc("relative ml-1")>
+                <IconArrowSelect height="22" width="22" fill="#262626" />
+              </span>
+            </div>
+          </Trigger>
+          <Content
+            align=#end
+            className=%twc(
+              "dropdown-content p-1 w-[140px] bg-white rounded-lg shadow-md divide-y text-gray-800"
+            )>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/buyer/me">
+                <a className=itemStyle>
+                  <span> {`마이페이지`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/buyer/orders">
+                <a className=itemStyle>
+                  <span> {`주문내역`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/buyer/transactions">
+                <a className=itemStyle>
+                  <span> {`결제내역`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <Next.Link href="/products/advanced-search">
+                <a className=itemStyle>
+                  <span> {`단품확인`->React.string} </span>
+                </a>
+              </Next.Link>
+            </Item>
+            <Item className=%twc("focus:outline-none")>
+              <button type_="button" onClick={logOut} className=itemStyle>
+                <span> {`로그아웃`->React.string} </span>
+              </button>
+            </Item>
+          </Content>
+        </Root>
       </div>
     }
   }

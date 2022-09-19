@@ -1,8 +1,6 @@
 module PC = {
   @react.component
   let make = () => {
-    let router = Next.Router.useRouter()
-
     <section className=%twc("flex-col bg-surface")>
       <div className=%twc("mx-auto py-20 max-w-7xl w-3/4")>
         <h2 className=%twc("font-bold ml-5 text-[32px]")>
@@ -32,24 +30,12 @@ module PC = {
             <div className=%twc("flex flex-col")>
               <Next.Link href="/buyer/me/profile">
                 <a className=%twc("py-[18px] text-left px-7")>
-                  <div className=%twc("w-fit")>
-                    {`프로필정보`->React.string}
-                    {switch router.asPath {
-                    | "/buyer/me/profile" => <div className=%twc("border border-[#1F2024]") />
-                    | _ => React.null
-                    }}
-                  </div>
+                  <div className=%twc("w-fit")> {`프로필정보`->React.string} </div>
                 </a>
               </Next.Link>
               <Next.Link href="/buyer/me/account">
                 <a className=%twc("py-[18px] text-left px-7")>
-                  <div className=%twc("w-fit")>
-                    {`계정정보`->React.string}
-                    {switch router.asPath {
-                    | "/buyer/me/account" => <div className=%twc("border border-[#1F2024]") />
-                    | _ => React.null
-                    }}
-                  </div>
+                  <div className=%twc("w-fit")> {`계정정보`->React.string} </div>
                 </a>
               </Next.Link>
               <Next.Link href="/buyer/upload">

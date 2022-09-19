@@ -47,6 +47,7 @@ let basicPlugins: array<Plugin.t> = [
   #paste,
   #emoticons,
   #table,
+  #media,
 ]
 
 @react.component

@@ -79,6 +79,7 @@ let make = (~control, ~name, ~defaultValue=?, ~disabled=?) => {
             [#numlist, #bullist],
             [#image, #charmap, #emoticons],
             [#preview, #fullscreen],
+            [#media],
           ],
           ~images_upload_handler={handleImageUpload},
           (),

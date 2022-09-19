@@ -18,9 +18,9 @@ module Query = %relay(`
         }
         stockSku
         price
+        isFreeShipping
         productOptionCost {
           deliveryCost
-          isFreeShipping
         }
       }
     }
@@ -35,12 +35,19 @@ module PC = {
     switch node {
     | None => React.null
 
-    | Some({product: {productId}, stockSku, optionName, price, productOptionCost}) =>
+    | Some({
+        product: {productId},
+        stockSku,
+        optionName,
+        price,
+        isFreeShipping,
+        productOptionCost,
+      }) =>
       let totalOptionPrice = {
         PDP_Parser_Buyer.ProductOption.makeOptionPrice(
           ~price,
           ~deliveryCost=productOptionCost.deliveryCost,
-          ~isFreeShipping=productOptionCost.isFreeShipping,
+          ~isFreeShipping,
         )->Option.map(optionPrice' => optionPrice' * quantity)
       }
 
@@ -85,12 +92,19 @@ module MO = {
     switch node {
     | None => React.null
 
-    | Some({product: {productId}, stockSku, optionName, price, productOptionCost}) =>
+    | Some({
+        product: {productId},
+        stockSku,
+        optionName,
+        price,
+        isFreeShipping,
+        productOptionCost,
+      }) =>
       let totalOptionPrice = {
         PDP_Parser_Buyer.ProductOption.makeOptionPrice(
           ~price,
           ~deliveryCost=productOptionCost.deliveryCost,
-          ~isFreeShipping=productOptionCost.isFreeShipping,
+          ~isFreeShipping,
         )->Option.map(optionPrice' => optionPrice' * quantity)
       }
 

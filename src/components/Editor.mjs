@@ -30,7 +30,8 @@ var basicPlugins = [
   "wordcount",
   "paste",
   "emoticons",
-  "table"
+  "table",
+  "media"
 ];
 
 function Editor(Props) {

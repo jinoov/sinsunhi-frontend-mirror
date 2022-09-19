@@ -36,23 +36,23 @@ function Excel_Download_Request_Button(Props) {
         return /* Hide */1;
       });
   var setShowDownloadError = match$4[1];
-  var downloadCenterPath;
-  switch (userType) {
-    case /* Seller */0 :
-        downloadCenterPath = "/seller/download-center";
-        break;
-    case /* Buyer */1 :
-        downloadCenterPath = "/buyer/download-center";
-        break;
-    case /* Admin */2 :
-        downloadCenterPath = "/admin/download-center";
-        break;
-    
-  }
+  var downloadCenterPath = userType !== 1 ? (
+      userType !== 0 ? "/admin/download-center" : "/seller/download-center"
+    ) : "/buyer/download-center";
   var menuLocation = userType >= 2 ? "좌측" : "우측 상단";
   var download = function (param) {
     Belt_Option.map(JSON.stringify(Belt_Option.getWithDefault(bodyOption, router.query)), (function (body) {
             return FetchHelper.requestWithRetry(FetchHelper.postWithTokenForExcel, "" + Env.restApiUrl + "" + requestUrl + "", body, 3, (function (param) {
+                          addToast(React.createElement("div", {
+                                    className: "flex items-center"
+                                  }, React.createElement(IconCheck.make, {
+                                        height: "24",
+                                        width: "24",
+                                        fill: "#12B564",
+                                        className: "mr-2"
+                                      }), "다운로드 파일 생성을 요청합니다."), {
+                                appearance: "success"
+                              });
                           setIsShowMoveToDownloadCenter(function (param) {
                                 return /* Show */0;
                               });
@@ -90,16 +90,6 @@ function Excel_Download_Request_Button(Props) {
                       download(undefined);
                       setIsShowRequest(function (param) {
                             return /* Hide */1;
-                          });
-                      addToast(React.createElement("div", {
-                                className: "flex items-center"
-                              }, React.createElement(IconCheck.make, {
-                                    height: "24",
-                                    width: "24",
-                                    fill: "#12B564",
-                                    className: "mr-2"
-                                  }), "다운로드 파일 생성을 요청합니다."), {
-                            appearance: "success"
                           });
                     }),
                   textOnCancel: "닫기"

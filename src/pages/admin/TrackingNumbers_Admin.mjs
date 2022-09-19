@@ -133,6 +133,7 @@ function response_decode(v) {
 
 function TrackingNumbers_Admin$Orders(Props) {
   var router = Router.useRouter();
+  var user = CustomHooks.Auth.use(undefined);
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
   var status = CustomHooks.OrdersAdmin.use(new URLSearchParams(router.query).toString());
@@ -290,10 +291,10 @@ function TrackingNumbers_Admin$Orders(Props) {
                                                         });
                                             }
                                           })
-                                      }, "상품준비중으로 변경") : null, React.createElement(Excel_Download_Request_Button.make, {
-                                      userType: /* Admin */2,
-                                      requestUrl: "/order/request-excel/farmer"
-                                    })))), React.createElement(Order_List_Admin_Seller.make, {
+                                      }, "상품준비중으로 변경") : null, typeof user === "number" || user._0.role !== 2 ? null : React.createElement(Excel_Download_Request_Button.make, {
+                                        userType: /* Admin */2,
+                                        requestUrl: "/order/request-excel/farmer"
+                                      })))), React.createElement(Order_List_Admin_Seller.make, {
                           status: status,
                           check: check,
                           onCheckOrder: handleOnCheckOrder,

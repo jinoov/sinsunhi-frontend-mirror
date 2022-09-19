@@ -107,10 +107,9 @@ function PDP_Normal_SelectOption_Buyer$PC$Item(Props) {
   var query = Props.query;
   var setSelectedOptions = Props.setSelectedOptions;
   var match = use$1(query);
-  var match$1 = match.productOptionCost;
   var optionName = match.optionName;
   var id = match.id;
-  var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match$1.deliveryCost, match$1.isFreeShipping);
+  var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match.productOptionCost.deliveryCost, match.isFreeShipping);
   var optionPriceLabel = Belt_Option.mapWithDefault(optionPrice, "", (function (optionPrice$p) {
           return "" + Locale.Float.show(undefined, optionPrice$p, 0) + "원";
         }));
@@ -259,10 +258,9 @@ function PDP_Normal_SelectOption_Buyer$MO$Item(Props) {
   var checked = Props.checked;
   var onChange = Props.onChange;
   var match = use$1(query);
-  var match$1 = match.productOptionCost;
   var optionName = match.optionName;
   var id = match.id;
-  var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match$1.deliveryCost, match$1.isFreeShipping);
+  var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match.productOptionCost.deliveryCost, match.isFreeShipping);
   var optionPriceLabel = Belt_Option.mapWithDefault(optionPrice, "", (function (optionPrice$p) {
           return "" + Locale.Float.show(undefined, optionPrice$p, 0) + "원";
         }));

@@ -216,13 +216,14 @@ module Auth = {
     | _ => Js.Json.null
     }
 
-  type role = Seller | Buyer | Admin
+  type role = Seller | Buyer | Admin | ExternalStaff
 
   let encoderRole = v =>
     switch v {
     | Seller => "farmer"
     | Buyer => "buyer"
     | Admin => "admin"
+    | ExternalStaff => "external-staff"
     }->Js.Json.string
 
   let decoderRole = json => {
@@ -232,6 +233,7 @@ module Auth = {
       | "farmer" => Seller->Ok
       | "buyer" => Buyer->Ok
       | "admin" => Admin->Ok
+      | "external-staff" => ExternalStaff->Ok
       | _ => Error({Spice.path: "", message: "Expected JSONString", value: json})
       }
     | _ => Error({Spice.path: "", message: "Expected JSONString", value: json})
@@ -315,6 +317,7 @@ module User = {
           switch user'.role {
           | Buyer => Redirect.setHref(`/buyer`)
           | Admin => Redirect.setHref(`/admin`)
+          | ExternalStaff => Redirect.setHref(`/admin`)
           | Seller => setStatus(._ => user)
           }
         | NotLoggedIn => Redirect.setHref(`/seller/signin?redirect=${router.asPath}`)
@@ -340,6 +343,7 @@ module User = {
           switch user'.role {
           | Seller => Redirect.setHref(`/seller`)
           | Admin => Redirect.setHref(`/admin/`)
+          | ExternalStaff => Redirect.setHref(`/admin`)
           | Buyer => setStatus(._ => user)
           }
         | NotLoggedIn => Redirect.setHref(`/buyer/signin?redirect=${router.asPath}`)
@@ -387,6 +391,7 @@ module User = {
           | Seller => Redirect.setHref(`/seller/`)
           | Buyer => Redirect.setHref(`/buyer`)
           | Admin => setStatus(._ => user)
+          | ExternalStaff => setStatus(._ => user)
           }
         | NotLoggedIn => Redirect.setHref(`/admin/signin?redirect=${router.asPath}`)
         | Unknown => setStatus(._ => user)
@@ -415,6 +420,7 @@ module CRMUser = {
     | Auth.Seller => "seller"
     | Auth.Buyer => "buyer"
     | Auth.Admin => "admin"
+    | Auth.ExternalStaff => "external-staff"
     }
 
   let use = () => {

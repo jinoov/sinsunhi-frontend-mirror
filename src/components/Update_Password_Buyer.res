@@ -148,6 +148,8 @@ module UpdateView = {
 
     let (mutate, mutating) = Mutation.use()
 
+    let submitDisabled = mutating || state.error->Option.isSome || password == ""
+
     let handlePasswordChange = e => {
       let newPassword = (e->ReactEvent.Synthetic.target)["value"]
 
@@ -263,8 +265,11 @@ module UpdateView = {
         </div>
         <button
           type_="submit"
-          className=%twc("bg-green-500 rounded-xl w-full py-4")
-          disabled={mutating || state.error->Option.isSome}>
+          className={cx([
+            %twc("rounded-xl w-full py-4"),
+            submitDisabled ? %twc("bg-disabled-L2") : %twc("bg-green-500"),
+          ])}
+          disabled={submitDisabled}>
           <span className=%twc("text-white")> {`재설정`->React.string} </span>
         </button>
       </section>
@@ -282,6 +287,17 @@ let make = (~isOpen, ~onClose, ~email) => {
   let handleCloseButton = _ => {
     setShowNotice(._ => DialogCmp.Show)
   }
+
+  // mobile 에서 뒤로가기로 닫혔을 때, 상태초기화, 하위 다이얼로그도 닫음.
+  React.useEffect3(() => {
+    if !isOpen {
+      setStep(._ => Confirm)
+      if isShowNotice == DialogCmp.Show {
+        setShowNotice(._ => DialogCmp.Hide)
+      }
+    }
+    None
+  }, (isOpen, isShowNotice, setShowNotice))
 
   <>
     <Dialog.Root _open={isOpen}>

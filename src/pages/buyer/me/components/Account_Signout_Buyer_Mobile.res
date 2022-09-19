@@ -181,6 +181,15 @@ let make = (~query, ~isOpen, ~onClose) => {
     ->ignore
   }
 
+  // mobile 에서 뒤로가기로 닫혔을 때, 상태 초기화.
+  React.useEffect1(_ => {
+    if !isOpen {
+      reset()
+    }
+
+    None
+  }, [isOpen])
+
   <Dialog.Root _open={isOpen} onOpenChange={reset}>
     <Dialog.Overlay className=%twc("dialog-overlay") />
     <Dialog.Content

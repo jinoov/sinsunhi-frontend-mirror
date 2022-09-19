@@ -16,9 +16,10 @@ let rec render = (
   pathname: string,
   openedAdminMenu,
   setOpenedAdminMenu,
+  userRole,
 ) => {
   switch t {
-  | Root({title, icon, children, anchor: {url, target}}) => {
+  | Root({title, icon, children, anchor: {url, target}, role}) => {
       let headComponent = <Head title icon selected={t->Layout_Admin_Data.Item.hasUrl(pathname)} />
 
       let head = switch children {
@@ -29,22 +30,38 @@ let rec render = (
       | _ => headComponent
       }
 
-      <Layout_Admin_Root key={url} accordianItemValue={url} head openedAdminMenu setOpenedAdminMenu>
-        {children
-        ->Array.map(d => d->render(pathname, openedAdminMenu, setOpenedAdminMenu))
-        ->React.array}
-      </Layout_Admin_Root>
+      switch role->Garter.Array.some(roleOfItem => userRole == Some(roleOfItem)) {
+      | true =>
+        <Layout_Admin_Root
+          key={url} accordianItemValue={url} head openedAdminMenu setOpenedAdminMenu>
+          {children
+          ->Array.map(d => d->render(pathname, openedAdminMenu, setOpenedAdminMenu, userRole))
+          ->React.array}
+        </Layout_Admin_Root>
+      | false => React.null
+      }
     }
-  | Sub({anchor: {url, target}, title}) =>
-    <Layout_Admin_Sub
-      key={url} title href={url} selected={t->Layout_Admin_Data.Item.hasUrl(pathname)} target
-    />
+
+  | Sub({anchor: {url, target}, title, role}) => switch role->Garter.Array.some(roleOfItem =>
+      userRole == Some(roleOfItem)
+    ) {
+    | true =>
+      <Layout_Admin_Sub
+        key={url} title href={url} selected={t->Layout_Admin_Data.Item.hasUrl(pathname)} target
+      />
+    | false => React.null
+    }
   }
 }
 
 @react.component
 let make = (~children) => {
   let router = Next.Router.useRouter()
+  let user = CustomHooks.Auth.use()
+  let role = switch user {
+  | LoggedIn(user) => Some(user.role)
+  | _ => None
+  }
   let (openedAdminMenu, setOpenedAdminMenu) = LocalStorageHooks.AdminMenu.useLocalStorage()
 
   <>
@@ -53,7 +70,12 @@ let make = (~children) => {
       <aside className=%twc("mt-px min-h-screen bg-white")>
         {Layout_Admin_Data.Item.items
         ->Array.map(t =>
-          t->render(router.pathname, openedAdminMenu->Option.getWithDefault([]), setOpenedAdminMenu)
+          t->render(
+            router.pathname,
+            openedAdminMenu->Option.getWithDefault([]),
+            setOpenedAdminMenu,
+            role,
+          )
         )
         ->React.array}
       </aside>

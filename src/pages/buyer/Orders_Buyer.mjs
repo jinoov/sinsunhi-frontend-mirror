@@ -2,6 +2,7 @@
 
 import * as Env from "../../constants/Env.mjs";
 import * as Swr from "swr";
+import * as Curry from "rescript/lib/es6/curry.js";
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
@@ -10,21 +11,85 @@ import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Checkbox from "../../components/common/Checkbox.mjs";
 import * as Constants from "../../constants/Constants.mjs";
+import * as IconCheck from "../../components/svgs/IconCheck.mjs";
+import * as IconError from "../../components/svgs/IconError.mjs";
 import * as ErrorPanel from "../../components/common/ErrorPanel.mjs";
 import * as Pagination from "../../components/common/Pagination.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as EmptyOrders from "../../components/common/EmptyOrders.mjs";
-import * as FetchHelper from "../../utils/FetchHelper.mjs";
 import * as Order_Buyer from "../../components/Order_Buyer.mjs";
 import * as Router from "next/router";
+import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as Authorization from "../../utils/Authorization.mjs";
 import * as Select_Sorted from "../../components/Select_Sorted.mjs";
+import * as RelayRuntime from "relay-runtime";
 import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
 import * as Select_CountPerPage from "../../components/Select_CountPerPage.mjs";
 import * as Summary_Order_Buyer from "../../components/Summary_Order_Buyer.mjs";
+import * as ReactToastNotifications from "react-toast-notifications";
+import * as OrdersBuyer_Mutation_graphql from "../../__generated__/OrdersBuyer_Mutation_graphql.mjs";
 import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
+
+function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
+  return RelayRuntime.commitMutation(environment, {
+              mutation: OrdersBuyer_Mutation_graphql.node,
+              variables: OrdersBuyer_Mutation_graphql.Internal.convertVariables(variables),
+              onCompleted: (function (res, err) {
+                  if (onCompleted !== undefined) {
+                    return Curry._2(onCompleted, OrdersBuyer_Mutation_graphql.Internal.convertResponse(res), (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              onError: (function (err) {
+                  if (onError !== undefined) {
+                    return Curry._1(onError, (err == null) ? undefined : Caml_option.some(err));
+                  }
+                  
+                }),
+              optimisticResponse: optimisticResponse !== undefined ? OrdersBuyer_Mutation_graphql.Internal.convertWrapRawResponse(optimisticResponse) : undefined,
+              optimisticUpdater: optimisticUpdater,
+              updater: updater !== undefined ? (function (store, r) {
+                    Curry._2(updater, store, OrdersBuyer_Mutation_graphql.Internal.convertResponse(r));
+                  }) : undefined,
+              uploadables: uploadables
+            });
+}
+
+function use(param) {
+  var match = ReactRelay.useMutation(OrdersBuyer_Mutation_graphql.node);
+  var mutate = match[0];
+  return [
+          React.useMemo((function () {
+                  return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
+                    return Curry._1(mutate, {
+                                onError: param,
+                                onCompleted: param$1 !== undefined ? (function (r, errors) {
+                                      Curry._2(param$1, OrdersBuyer_Mutation_graphql.Internal.convertResponse(r), (errors == null) ? undefined : Caml_option.some(errors));
+                                    }) : undefined,
+                                onUnsubscribe: param$2,
+                                optimisticResponse: param$3 !== undefined ? OrdersBuyer_Mutation_graphql.Internal.convertWrapRawResponse(param$3) : undefined,
+                                optimisticUpdater: param$4,
+                                updater: param$5 !== undefined ? (function (store, r) {
+                                      Curry._2(param$5, store, OrdersBuyer_Mutation_graphql.Internal.convertResponse(r));
+                                    }) : undefined,
+                                variables: OrdersBuyer_Mutation_graphql.Internal.convertVariables(param$6),
+                                uploadables: param$7
+                              });
+                  };
+                }), [mutate]),
+          match[1]
+        ];
+}
+
+var Mutation = {
+  Operation: undefined,
+  Types: undefined,
+  commitMutation: commitMutation,
+  use: use
+};
 
 function Orders_Buyer$List(Props) {
   var status = Props.status;
@@ -243,28 +308,24 @@ function Orders_Buyer$Orders(Props) {
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
+  var match$1 = ReactToastNotifications.useToasts();
+  var addToast = match$1.addToast;
+  var match$2 = use(undefined);
+  var cancelMutate = match$2[0];
   var status = CustomHooks.Orders.use(new URLSearchParams(router.query).toString());
-  var match$1 = React.useState(function () {
-        
-      });
-  var setOrdersToCancel = match$1[1];
-  var ordersToCancel = match$1[0];
-  var match$2 = React.useState(function () {
-        return /* Hide */1;
-      });
-  var setShowCancelConfirm = match$2[1];
   var match$3 = React.useState(function () {
-        return /* Hide */1;
-      });
-  var setShowNothingToCancel = match$3[1];
-  var match$4 = React.useState(function () {
         
       });
-  var setSuccessResultCancel = match$4[1];
+  var setOrdersToCancel = match$3[1];
+  var ordersToCancel = match$3[0];
+  var match$4 = React.useState(function () {
+        return /* Hide */1;
+      });
+  var setShowCancelConfirm = match$4[1];
   var match$5 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowCancelSuccess = match$5[1];
+  var setShowNothingToCancel = match$5[1];
   var match$6 = React.useState(function () {
         return /* Hide */1;
       });
@@ -322,42 +383,66 @@ function Orders_Buyer$Orders(Props) {
         });
   };
   var countOfChecked = Belt_SetString.size(ordersToCancel);
-  var cancelOrder = function (orders) {
-    setShowCancelConfirm(function (param) {
-          return /* Hide */1;
+  var handleError = function (message) {
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconError.make, {
+                  width: "24",
+                  height: "24",
+                  className: "mr-2"
+                }), message), {
+          appearance: "error"
         });
-    Belt_Option.map(JSON.stringify({
-              "order-product-numbers": orders
-            }), (function (body) {
-            return FetchHelper.requestWithRetry(FetchHelper.postWithToken, "" + Env.restApiUrl + "/order/cancel", body, 3, (function (res) {
-                          var res$p = response_decode(res);
-                          var result;
-                          if (res$p.TAG === /* Ok */0) {
-                            var res$p$1 = res$p._0;
-                            result = [
-                              res$p$1.data.totalCount,
-                              res$p$1.data.updateCount
-                            ];
-                          } else {
-                            result = undefined;
-                          }
-                          setSuccessResultCancel(function (param) {
-                                return result;
-                              });
-                          setShowCancelSuccess(function (param) {
-                                return /* Show */0;
-                              });
-                          setOrdersToCancel(function (param) {
-                                
-                              });
-                          mutate("" + Env.restApiUrl + "/order?" + new URLSearchParams(router.query).toString() + "", undefined, undefined);
-                          mutate("" + Env.restApiUrl + "/order/summary?" + Period.currentPeriod(router) + "", undefined, undefined);
-                        }), (function (param) {
-                          setShowCancelError(function (param) {
-                                return /* Show */0;
-                              });
-                        }));
-          }));
+  };
+  var cancelOrder = function (orders) {
+    Curry.app(cancelMutate, [
+          (function (err) {
+              handleError(err.message);
+            }),
+          (function (param, param$1) {
+              var cancelWosOrderProductOption = param.cancelWosOrderProductOption;
+              if (cancelWosOrderProductOption === undefined) {
+                return handleError("주문 취소에 실패하였습니다.");
+              }
+              if (typeof cancelWosOrderProductOption !== "object") {
+                return handleError("주문 취소에 실패하였습니다.");
+              }
+              var variant = cancelWosOrderProductOption.NAME;
+              if (variant === "CancelWosOrderProductOptionResult") {
+                setShowCancelConfirm(function (param) {
+                      return /* Hide */1;
+                    });
+                setOrdersToCancel(function (param) {
+                      
+                    });
+                mutate("" + Env.restApiUrl + "/order?" + new URLSearchParams(router.query).toString() + "", undefined, undefined);
+                mutate("" + Env.restApiUrl + "/order/summary?" + Period.currentPeriod(router) + "", undefined, undefined);
+                return addToast(React.createElement("div", {
+                                className: "flex items-center"
+                              }, React.createElement(IconCheck.make, {
+                                    height: "24",
+                                    width: "24",
+                                    fill: "#12B564",
+                                    className: "mr-2"
+                                  }), "주문이 취소되었습니다."), {
+                            appearance: "success"
+                          });
+              } else if (variant === "Error") {
+                return handleError(Belt_Option.getWithDefault(cancelWosOrderProductOption.VAL.message, "주문 취소에 실패하였습니다."));
+              } else {
+                return handleError("주문 취소에 실패하였습니다.");
+              }
+            }),
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          {
+            input: orders
+          },
+          undefined,
+          undefined
+        ]);
   };
   var isTotalSelected = Belt_Option.isNone(Js_dict.get(router.query, "status"));
   var isCreateSelected = Belt_Option.isSome(Belt_Option.keep(Js_dict.get(router.query, "status"), (function (status) {
@@ -409,7 +494,7 @@ function Orders_Buyer$Orders(Props) {
                           countOfChecked: countOfChecked,
                           onClickCancel: cancelOrder
                         }))), React.createElement(Dialog.make, {
-                  isShow: match$2[0],
+                  isShow: match$4[0],
                   children: null,
                   onCancel: (function (param) {
                       setShowCancelConfirm(function (param) {
@@ -431,7 +516,7 @@ function Orders_Buyer$Orders(Props) {
                     }, React.createElement("span", {
                           className: "font-bold"
                         }, "선택한 " + String(countOfChecked) + "개"), "의 주문을 취소하시겠습니까?")), React.createElement(Dialog.make, {
-                  isShow: match$3[0],
+                  isShow: match$5[0],
                   children: null,
                   onCancel: (function (param) {
                       setShowNothingToCancel(function (param) {
@@ -447,26 +532,6 @@ function Orders_Buyer$Orders(Props) {
                     }), React.createElement("p", {
                       className: "text-black-gl text-center whitespace-pre-wrap"
                     }, "취소할 주문을 선택해주세요.")), React.createElement(Dialog.make, {
-                  isShow: match$5[0],
-                  children: React.createElement("p", {
-                        className: "text-gray-500 text-center whitespace-pre-wrap"
-                      }, Belt_Option.mapWithDefault(match$4[0], "주문 취소에 성공하였습니다.", (function (param) {
-                              var updateCount = param[1];
-                              var totalCount = param[0];
-                              if ((totalCount - updateCount | 0) > 0) {
-                                return React.createElement(React.Fragment, undefined, React.createElement("span", {
-                                                className: "font-bold"
-                                              }, "" + String(totalCount) + "개 중 " + String(updateCount) + "개가 정상적으로 주문취소 처리되었습니다."), "\n\n" + String(totalCount - updateCount | 0) + "개의 주문은 상품준비중 등의 이유로 주문취소 처리되지 못했습니다");
-                              } else {
-                                return "" + String(totalCount) + "개의 주문이 정상적으로 주문취소 처리되었습니다.";
-                              }
-                            }))),
-                  onConfirm: (function (param) {
-                      setShowCancelSuccess(function (param) {
-                            return /* Hide */1;
-                          });
-                    })
-                }), React.createElement(Dialog.make, {
                   isShow: match$6[0],
                   children: React.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
@@ -493,6 +558,7 @@ function Orders_Buyer(Props) {
 var make = Orders_Buyer;
 
 export {
+  Mutation ,
   List ,
   data_encode ,
   data_decode ,

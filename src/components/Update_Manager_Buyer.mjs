@@ -155,6 +155,12 @@ function Update_Manager_Buyer(Props) {
                       ]);
                 }), param);
   };
+  React.useEffect((function () {
+          if (!isOpen) {
+            Curry._3(setManager, defaultValue, undefined, undefined);
+          }
+          
+        }), [isOpen]);
   return React.createElement(ReactDialog.Root, {
               children: null,
               open: isOpen

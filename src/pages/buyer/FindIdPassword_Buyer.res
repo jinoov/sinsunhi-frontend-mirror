@@ -18,6 +18,7 @@ module FindId = {
           setMode(._ => Found)
           setUid(._ => uids)
         }
+
       | Some(NotExisted) => setMode(._ => NotFound)
       | None => setMode(._ => VerifyPhoneNumber)
       }
@@ -32,7 +33,8 @@ module FindId = {
 
     <>
       {switch mode {
-      | VerifyPhoneNumber => <>
+      | VerifyPhoneNumber =>
+        <>
           <h2 className=%twc("text-2xl font-bold relative xs:whitespace-pre-line")>
             {`가입시 등록하신 휴대전화번호로\n아이디를 찾을 수 있습니다.`->React.string}
           </h2>
@@ -42,7 +44,8 @@ module FindId = {
             />
           </div>
         </>
-      | Found => <>
+      | Found =>
+        <>
           <h2 className=%twc("text-2xl font-bold relative xs:whitespace-pre-line")>
             {`회원님의 휴대전화번호로 가입된\n아이디가 있습니다.`->React.string}
           </h2>
@@ -65,7 +68,8 @@ module FindId = {
             </button>
           </span>
         </>
-      | NotFound => <>
+      | NotFound =>
+        <>
           <h2 className="text-2xl font-bold relative xs:whitespace-pre-line">
             {`회원님의 휴대전화번호로 가입된\n아이디가 없습니다.`->React.string}
           </h2>
@@ -180,7 +184,7 @@ module ResetPassword = {
             type_="email"
             name="email"
             size=Input.Large
-            placeholder=`신선하이 계정 (이메일) 입력`
+            placeholder={`신선하이 계정 (이메일) 입력`}
             value={form.values->FormFields.get(FormFields.Email)}
             onChange={FormFields.Email->form.handleChange->ReForm.Helpers.handleChange}
             error={FormFields.Email->Form.ReSchema.Field->form.getFieldError}
@@ -197,7 +201,7 @@ module ResetPassword = {
           </button>
         </div>
       </div>
-      <Dialog isShow=isShowResetSuccess onConfirm={_ => goToSignIn()} textOnConfirm=`확인`>
+      <Dialog isShow=isShowResetSuccess onConfirm={_ => goToSignIn()} textOnConfirm={`확인`}>
         <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
           <span className=%twc("font-bold")>
             {form.values->FormFields.get(FormFields.Email)->React.string}
@@ -213,7 +217,7 @@ module ResetPassword = {
       <Dialog
         isShow=isShowResetError
         onConfirm={_ => setShowResetError(._ => Dialog.Hide)}
-        textOnConfirm=`확인`>
+        textOnConfirm={`확인`}>
         <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
           {`비밀번호 재설정 요청을 실패하였습니다.\n다시 시도해주세요.`->React.string}
         </p>
@@ -292,6 +296,7 @@ let default = (~props: props) => {
       | Buyer => router->push("/")
       | Seller => router->push("/seller")
       | Admin => router->push("/admin")
+      | ExternalStaff => router->push("/admin")
       }
     | NotLoggedIn | Unknown => ()
     }

@@ -1846,10 +1846,10 @@
   resolved "https://registry.yarnpkg.com/@greenlabs/re-korean-numeral/-/re-korean-numeral-0.1.2.tgz#223fc0501d07bc7c242644fc398ec460d138804c"
   integrity sha512-5PTpfai5PUMV9GTd/Uf5YfOYi8SK1vs/fH4AMpt464aIFYV1/E2+iwFKkmfiPcmoy78Unkd9Zn82XstddaDkIA==
 
-"@greenlabs/res-daum-postcode@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@greenlabs/res-daum-postcode/-/res-daum-postcode-0.1.0.tgz#8b492f726f34d159f0056a57dfbfb215ce45aa21"
-  integrity sha512-2C9rEA5V/Mkvp5cA3t+t/G/1Y3YfV/Gxsul/UtcIm9f0SP20wHEMRmK7+BSWp1UUSK284M/grei2UmrzhdWc3A==
+"@greenlabs/res-daum-postcode@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@greenlabs/res-daum-postcode/-/res-daum-postcode-0.1.1.tgz#e1abecca25485d72dd3be1b6cf2d9e3345238d84"
+  integrity sha512-VHhhMPpEEdpv2k+DG/6QC8rtO4A0Buk1Afz3nvlmR/R+hckcdJG9w3PZw8ytyNkN129hAUldOIKS1jpyAnG+yQ==
 
 "@greenlabs/res-tailwindcss@^0.1.8":
   version "0.1.8"

@@ -57,20 +57,19 @@ let useCards = (
 }
 
 module PC = {
+  type modal = SectorAndSale | Categories | BizNumber | Manager
+
   @react.component
   let make = (~query) => {
-    let (isSalesAndSectorOpen, setSalesAndSectorOpen) = React.Uncurried.useState(_ => false)
-    let (isCategoriesOpen, setCategoriesOpen) = React.Uncurried.useState(_ => false)
-    let (isBizOpen, setBizOpen) = React.Uncurried.useState(_ => false)
-    let (isManagerOpen, setManagerOpen) = React.Uncurried.useState(_ => false)
+    let (openModal, setOpenModal) = React.Uncurried.useState(_ => None)
 
     let items = useCards(
       query,
-      ~sectorsOnclick={_ => setSalesAndSectorOpen(._ => true)},
-      ~salesOnClick={_ => setSalesAndSectorOpen(._ => true)},
-      ~categoriesOnClick={_ => setCategoriesOpen(._ => true)},
-      ~bizOnClick={_ => setBizOpen(._ => true)},
-      ~managerOnClick={_ => setManagerOpen(._ => true)},
+      ~sectorsOnclick={_ => setOpenModal(._ => Some(SectorAndSale))},
+      ~salesOnClick={_ => setOpenModal(._ => Some(SectorAndSale))},
+      ~categoriesOnClick={_ => setOpenModal(._ => Some(Categories))},
+      ~bizOnClick={_ => setOpenModal(._ => Some(BizNumber))},
+      ~managerOnClick={_ => setOpenModal(._ => Some(Manager))},
     )
 
     let cmpNum = 5 - items->Array.length
@@ -97,36 +96,68 @@ module PC = {
           </div>
         </div>
         <Update_SectorAndSale_Buyer
-          isOpen={isSalesAndSectorOpen} onClose={_ => setSalesAndSectorOpen(._ => false)}
+          isOpen={openModal == Some(SectorAndSale)} onClose={_ => setOpenModal(._ => None)}
         />
         <Update_InterestedCategories_Buyer
-          isOpen={isCategoriesOpen} onClose={_ => setCategoriesOpen(._ => false)}
+          isOpen={openModal == Some(Categories)} onClose={_ => setOpenModal(._ => None)}
         />
-        <Update_BusinessNumber_Buyer isOpen={isBizOpen} onClose={_ => setBizOpen(._ => false)} />
-        <Update_Manager_Buyer isOpen={isManagerOpen} onClose={_ => setManagerOpen(._ => false)} />
+        <Update_BusinessNumber_Buyer
+          isOpen={openModal == Some(BizNumber)} onClose={_ => setOpenModal(._ => None)}
+        />
+        <Update_Manager_Buyer
+          isOpen={openModal == Some(Manager)} onClose={_ => setOpenModal(._ => None)}
+        />
       </div>
     }
   }
 }
 
 module Mobile = {
+  type modal = SectorAndSale | Categories | BizNumber | Manager
+
+  let toFragment = modal =>
+    switch modal {
+    | Manager => "#manager"
+    | BizNumber => "#biz-number"
+    | SectorAndSale => "#sector"
+    | Categories => "#categories"
+    }
+
   @react.component
   let make = (~query) => {
-    let (isSalesAndSectorOpen, setSalesAndSectorOpen) = React.Uncurried.useState(_ => false)
-    let (isCategoriesOpen, setCategoriesOpen) = React.Uncurried.useState(_ => false)
-    let (isBizOpen, setBizOpen) = React.Uncurried.useState(_ => false)
-    let (isManagerOpen, setManagerOpen) = React.Uncurried.useState(_ => false)
+    let router = Next.Router.useRouter()
+    let (openModal, setOpenModal) = React.Uncurried.useState(_ => None)
+
+    // only for mobile
+    // related PR: #860 모달, 드로워에 대한 뒤로가기 처리 방법을 찾는 시도.
+    // 모달이 열릴 때, fragment 를 추가하고 뒤로가기 하여 모달이 닫히게 한다.
+    let open_ = (~modal: modal) => {
+      if !(router.asPath->Js.String2.includes(toFragment(modal))) {
+        router->Next.Router.push(`${router.asPath}${toFragment(modal)}`)
+      }
+      setOpenModal(._ => Some(modal))
+    }
 
     let items = useCards(
       query,
-      ~sectorsOnclick={_ => setSalesAndSectorOpen(._ => true)},
-      ~salesOnClick={_ => setSalesAndSectorOpen(._ => true)},
-      ~categoriesOnClick={_ => setCategoriesOpen(._ => true)},
-      ~bizOnClick={_ => setBizOpen(._ => true)},
-      ~managerOnClick={_ => setManagerOpen(._ => true)},
+      ~sectorsOnclick={_ => open_(~modal=SectorAndSale)},
+      ~salesOnClick={_ => open_(~modal=SectorAndSale)},
+      ~categoriesOnClick={_ => open_(~modal=Categories)},
+      ~bizOnClick={_ => open_(~modal=BizNumber)},
+      ~managerOnClick={_ => open_(~modal=Manager)},
     )
 
     let cmpNum = 5 - items->Array.length
+
+    // url에 fragment가 없으면 모달창 닫는다.
+    // 모달 닫는 것을 직접 하지 않고 url이 변화할 때마다 side effect로 처리한다.
+    React.useEffect1(() => {
+      if !(router.asPath->Js.String2.includes("#")) && openModal->Option.isSome {
+        setOpenModal(._ => None)
+      }
+
+      None
+    }, [router.asPath])
 
     switch items->Garter.Array.isEmpty {
     | true => React.null
@@ -163,13 +194,17 @@ module Mobile = {
           </div>
         </div>
         <Update_SectorAndSale_Buyer
-          isOpen={isSalesAndSectorOpen} onClose={_ => setSalesAndSectorOpen(._ => false)}
+          isOpen={openModal == Some(SectorAndSale)} onClose={_ => router->Next.Router.back}
         />
         <Update_InterestedCategories_Buyer
-          isOpen={isCategoriesOpen} onClose={_ => setCategoriesOpen(._ => false)}
+          isOpen={openModal == Some(Categories)} onClose={_ => router->Next.Router.back}
         />
-        <Update_BusinessNumber_Buyer isOpen={isBizOpen} onClose={_ => setBizOpen(._ => false)} />
-        <Update_Manager_Buyer isOpen={isManagerOpen} onClose={_ => setManagerOpen(._ => false)} />
+        <Update_BusinessNumber_Buyer
+          isOpen={openModal == Some(BizNumber)} onClose={_ => router->Next.Router.back}
+        />
+        <Update_Manager_Buyer
+          isOpen={openModal == Some(Manager)} onClose={_ => router->Next.Router.back}
+        />
       </>
     }
   }

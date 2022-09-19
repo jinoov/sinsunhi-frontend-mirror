@@ -38,20 +38,31 @@ let make = (~children) => {
   | ["buyer", "products"]
   | ["buyer", "cart"]
   | ["buyer", "web-order", _]
-  | ["buyer", "web-order", "complete", _] => children
+  | ["buyer", "web-order", "complete", _]
+  | ["products", "[pid]"]
+  | ["products", "all"]
+  | ["products"] => children
   | _ =>
     <div className=%twc("w-full min-h-screen")>
       // PC Header
-      <div className=%twc("hidden xl:flex")> <Header_Buyer.PC_Old key=router.asPath /> </div>
+      <div className=%twc("hidden xl:flex")>
+        <Header_Buyer.PC_Old key=router.asPath />
+      </div>
       // Mobile Header
-      <div className=%twc("block xl:hidden")> <Header_Buyer.Mobile key=router.asPath /> </div>
+      <div className=%twc("block xl:hidden")>
+        <Header_Buyer.Mobile key=router.asPath />
+      </div>
       //------Content------
       children
       //-------------------
       // PC Footer
-      <div className=%twc("hidden xl:flex")> <Footer_Buyer.PC /> </div>
+      <div className=%twc("hidden xl:flex")>
+        <Footer_Buyer.PC />
+      </div>
       // Mobile Footer
-      <div className=%twc("block xl:hidden")> <Footer_Buyer.MO /> </div>
+      <div className=%twc("block xl:hidden")>
+        <Footer_Buyer.MO />
+      </div>
     </div>
   }
 }

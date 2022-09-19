@@ -26,7 +26,7 @@ let use = () => {
       try {
         (Global.import_("@braze/web-sdk")
         |> Js.Promise.then_((sdk: Js.Nullable.t<braze>) => {
-          setBraze(._ => sdk->Js.Nullable.toOption)
+          setBraze(. _ => sdk->Js.Nullable.toOption)
           Js.Promise.resolve()
         })
         |> Js.Promise.catch(err => {
@@ -95,6 +95,6 @@ let changeUser = (user: CustomHooks.Auth.user, braze) => {
     | "production" => braze.changeUser(. user.id->Int.toString)
     | _ => braze.changeUser(. `${user.id->Int.toString}-dev`)
     }
-  | Admin => ()
+  | Admin | ExternalStaff => ()
   }
 }

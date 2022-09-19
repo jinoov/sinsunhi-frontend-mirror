@@ -88,6 +88,7 @@ module Tool = {
     | #anchor
     | #ltr
     | #rtl
+    | #media
   ]
   let toString = (x: t) => (x :> string)
 }
@@ -117,6 +118,7 @@ module Plugin = {
     | #wordcount
     | #paste
     | #emoticons
+    | #media
   ]
 
   let toString = (x: t) => (x :> string)

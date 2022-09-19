@@ -84,7 +84,7 @@ module PC = {
       | NotLoggedIn => Unauthorized
       | LoggedIn({role}) =>
         switch role {
-        | Admin | Seller => NoPermission
+        | Admin | ExternalStaff | Seller => NoPermission
         | Buyer => Available(salesType->QuotationType.decode->Option.getWithDefault(RFQ_LIVESTOCK))
         }
       }
@@ -159,7 +159,7 @@ module MO = {
       | NotLoggedIn => Unauthorized
       | LoggedIn({role}) =>
         switch role {
-        | Admin | Seller => NoPermission
+        | Admin | ExternalStaff | Seller => NoPermission
         | Buyer => Available(salesType->QuotationType.decode->Option.getWithDefault(RFQ_LIVESTOCK))
         }
       }

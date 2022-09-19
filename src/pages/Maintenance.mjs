@@ -7,6 +7,8 @@ import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
+import * as Js_array from "rescript/lib/es6/js_array.js";
 import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
@@ -22,171 +24,49 @@ import IsBefore from "date-fns/isBefore";
 import CompareDesc from "date-fns/compareDesc";
 import * as ReactDialog from "@radix-ui/react-dialog";
 
-function make(router) {
-  var routerPathnames = router.pathname.split("/");
-  var match = Belt_Array.get(routerPathnames, 1);
-  var match$1 = Belt_Array.get(routerPathnames, 2);
-  if (match === undefined) {
-    return /* Common */3;
-  }
-  switch (match) {
-    case "admin" :
-        return /* Admin */2;
-    case "buyer" :
-        if (match$1 !== undefined && match$1 !== "products") {
-          return /* Buyer */1;
-        } else {
-          return /* Common */3;
-        }
-    case "seller" :
-        return /* Seller */0;
-    default:
-      return /* Common */3;
-  }
-}
-
-function is(t, target) {
-  if (target === "global") {
-    return true;
-  }
-  switch (t) {
-    case /* Seller */0 :
-        if (target === "seller") {
-          return true;
-        } else {
-          return false;
-        }
-    case /* Buyer */1 :
-        if (target === "buyer") {
-          return true;
-        } else {
-          return false;
-        }
-    case /* Admin */2 :
-        if (target === "admin") {
-          return true;
-        } else {
-          return false;
-        }
-    case /* Common */3 :
-        if (target === "common") {
-          return true;
-        } else {
-          return false;
-        }
-    case /* Global */4 :
-        return false;
-    
-  }
-}
-
-var StatusPageComponent = {
-  make: make,
-  is: is
-};
-
-function afterCheck(from_) {
-  return IsAfter(new Date(Date.now()), from_);
-}
-
-function beforeCheck(to_) {
-  return IsBefore(new Date(Date.now()), to_);
-}
-
-function make$1(from, to_) {
-  return Belt_Option.flatMap(Belt_Option.map(from, (function (prim) {
-                    return new Date(prim);
-                  })), (function (from) {
-                if (!afterCheck(from)) {
-                  return ;
-                }
-                var to_$1 = Belt_Option.map(to_, (function (prim) {
-                        return new Date(prim);
-                      }));
-                if (to_$1 === undefined) {
-                  return {
-                          from: from,
-                          to_: undefined
-                        };
-                }
-                var to_$2 = Caml_option.valFromOption(to_$1);
-                if (beforeCheck(to_$2)) {
-                  return {
-                          from: from,
-                          to_: Caml_option.some(to_$2)
-                        };
-                }
-                
-              }));
-}
-
-function format(param) {
-  var formatForDisplay = function (date) {
-    return "" + Format(date, "MM") + "월 " + Format(date, "dd") + "일 " + Format(date, "HH") + "시";
+function make(from, to_) {
+  var now = new Date(Date.now());
+  var isBetween = function (from, now, to$p) {
+    if (IsAfter(now, from)) {
+      return IsBefore(now, to$p);
+    } else {
+      return false;
+    }
   };
-  return "" + formatForDisplay(param.from) + " ~ " + Belt_Option.getWithDefault(Belt_Option.map(param.to_, formatForDisplay), "") + "";
-}
-
-var MaintenanceTime = {
-  afterCheck: afterCheck,
-  beforeCheck: beforeCheck,
-  make: make$1,
-  format: format
-};
-
-function make$2(currentSubPage, incidentTargets, message, from, to_) {
-  var pathCheck = function (currentSubPage, incidentTargets) {
-    return Belt_Array.getBy(incidentTargets, (function (incidentTarget) {
-                  return is(currentSubPage, incidentTarget);
-                })) !== undefined;
-  };
-  var match = pathCheck(currentSubPage, incidentTargets);
-  var match$1 = make$1(from, to_);
-  if (match && match$1 !== undefined) {
-    return /* Matched */{
-            _0: [{
-                message: message,
-                maintenanceTime: match$1
-              }]
-          };
-  } else {
-    return /* NotMatched */0;
-  }
-}
-
-function join(a, b) {
-  if (!a) {
-    if (b) {
-      return /* Matched */{
-              _0: b._0
+  var match = new Date(from);
+  var match$1 = Belt_Option.map(to_, (function (prim) {
+          return new Date(prim);
+        }));
+  if (match$1 === undefined) {
+    if (IsAfter(now, match)) {
+      return {
+              from: match,
+              to_: undefined
             };
     } else {
-      return /* NotMatched */0;
+      return ;
     }
   }
-  var a$1 = a._0;
-  if (b) {
-    return /* Matched */{
-            _0: Belt_Array.concat(a$1, b._0)
+  var to_$p = Caml_option.valFromOption(match$1);
+  if (isBetween(match, now, to_$p)) {
+    return {
+            from: match,
+            to_: Caml_option.some(to_$p)
           };
-  } else {
-    return /* Matched */{
-            _0: a$1
-          };
-  }
-}
-
-function getIncidentForDisplay(t) {
-  if (t) {
-    return Belt_Array.get(t._0, 0);
   }
   
 }
 
-var Match = {
-  make: make$2,
-  join: join,
-  getIncidentForDisplay: getIncidentForDisplay
+function format(param) {
+  var formatForDisplay = function (date) {
+    return Format(date, "MM월 dd일 HH시");
+  };
+  return "" + Format(param.from, "MM월 dd일 HH시") + " ~ " + Belt_Option.mapWithDefault(param.to_, "", formatForDisplay) + "";
+}
+
+var MaintenanceTime = {
+  make: make,
+  format: format
 };
 
 function t_encode(v) {
@@ -489,18 +369,6 @@ var Incident = {
   incident_decode: incident_decode
 };
 
-function apiEndPoint(t) {
-  if (t) {
-    return "scheduled";
-  } else {
-    return "unresolved";
-  }
-}
-
-var Target = {
-  apiEndPoint: apiEndPoint
-};
-
 function incidents_encode(v) {
   return Spice.arrayToJson(incident_encode, v);
 }
@@ -509,8 +377,8 @@ function incidents_decode(v) {
   return Spice.arrayFromJson(incident_decode, v);
 }
 
-function use(target) {
-  var apiFetcher = function (url) {
+function useStatusPage(apiEndpoint) {
+  var fetcher = function (url) {
     return Js_promise.$$catch((function (param) {
                   return Promise.resolve(null);
                 }), Js_promise.then_((function (data) {
@@ -536,9 +404,7 @@ function use(target) {
                                   Authorization: "OAuth " + Env.statusPageKey + ""
                                 }, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)(undefined)))));
   };
-  var match = Swr("https://api.statuspage.io/v1/pages/" + Env.statusPagePageId + "/incidents/" + (
-        target ? "scheduled" : "unresolved"
-      ) + "", apiFetcher, {
+  var match = Swr("https://api.statuspage.io/v1/pages/" + Env.statusPagePageId + "/incidents/" + apiEndpoint + "", fetcher, {
         revalidateIfStale: false,
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -554,39 +420,52 @@ function use(target) {
   
 }
 
-function isMaintenanceTarget(statusPageIncidents, currentSubPage) {
-  if (statusPageIncidents !== undefined) {
-    return Belt_Array.reduce(Belt_Array.map(statusPageIncidents, (function (statusPageResult) {
-                      var message = Belt_Option.map(Belt_Array.get(Belt_SortArray.stableSortBy(statusPageResult.incidentUpdates, (function (incidentA, incidentB) {
-                                      return CompareDesc(new Date(incidentA.createdAt), new Date(incidentB.createdAt));
-                                    })), 0), (function (latestIncident) {
-                              return latestIncident.body;
-                            }));
-                      var incidentTarget = Belt_Array.map(Belt_Array.map(statusPageResult.components, (function (component) {
-                                  return component.name;
-                                })), (function (name) {
-                              return name.toLowerCase();
-                            }));
-                      if (Belt_Option.isSome(statusPageResult.scheduledFor)) {
-                        return make$2(currentSubPage, incidentTarget, message, statusPageResult.scheduledFor, statusPageResult.scheduledUntil);
-                      } else {
-                        return make$2(currentSubPage, incidentTarget, message, statusPageResult.createdAt, undefined);
-                      }
-                    })), /* NotMatched */0, join);
-  } else {
-    return /* NotMatched */0;
-  }
-}
-
-var StatusPageCompat = {
+var StatusPageAPI = {
   Component: Component,
   IncidentUpdate: IncidentUpdate,
   Incident: Incident,
-  Target: Target,
   incidents_encode: incidents_encode,
   incidents_decode: incidents_decode,
-  use: use,
-  isMaintenanceTarget: isMaintenanceTarget
+  useStatusPage: useStatusPage
+};
+
+function make$1(currentSubPage, incidentTargets, message, from, to_) {
+  var pathCheck = function (currentSubPage, incidentTargets) {
+    return Belt_Option.isSome(Belt_Array.getBy(incidentTargets, (function (incidentTarget) {
+                      return Caml_obj.equal(currentSubPage, incidentTarget);
+                    })));
+  };
+  var match = pathCheck(currentSubPage, incidentTargets);
+  var match$1 = make(from, to_);
+  if (match && match$1 !== undefined) {
+    return [{
+              message: message,
+              maintenanceTime: match$1
+            }];
+  }
+  
+}
+
+function fromIncident(incident, currentSubPage) {
+  var message = Belt_Option.map(Belt_Array.get(Belt_SortArray.stableSortBy(incident.incidentUpdates, (function (incidentA, incidentB) {
+                  return CompareDesc(new Date(incidentA.createdAt), new Date(incidentB.createdAt));
+                })), 0), (function (latestIncident) {
+          return latestIncident.body;
+        }));
+  var incidentTarget = Belt_Array.map(incident.components, (function (component) {
+          return component.name;
+        }));
+  var match = incident.scheduledFor;
+  var match$1 = incident.scheduledUntil;
+  if (match !== undefined && match$1 !== undefined) {
+    return make$1(currentSubPage, incidentTarget, message, match, incident.scheduledUntil);
+  }
+  return make$1(currentSubPage, incidentTarget, message, incident.createdAt, undefined);
+}
+
+var Match = {
+  make: make$1,
+  fromIncident: fromIncident
 };
 
 function Maintenance$View(Props) {
@@ -619,35 +498,82 @@ var View = {
   make: Maintenance$View
 };
 
-function Maintenance$Content(Props) {
-  var currentAffectedTarget = make(Router.useRouter());
-  var incidentResultFromStatusPage = isMaintenanceTarget(use(/* Incident */0), currentAffectedTarget);
-  var maintenanceResultFromStatusPage = isMaintenanceTarget(use(/* Maintenance */1), currentAffectedTarget);
-  var match = getIncidentForDisplay(join(incidentResultFromStatusPage, maintenanceResultFromStatusPage));
+function Maintenance$Container(Props) {
+  var router = Router.useRouter();
+  var routerPathNames = router.pathname.split("/");
+  var match = Belt_Array.get(routerPathNames, 1);
+  var match$1 = Belt_Array.get(routerPathNames, 2);
+  var currentSubPage;
   if (match !== undefined) {
-    return React.createElement(ReactDialog.Root, {
-                children: React.createElement(ReactDialog.Portal, {
-                      children: null
-                    }, React.createElement(ReactDialog.Overlay, {
-                          className: "dialog-overlay"
-                        }), React.createElement(ReactDialog.Content, {
-                          children: null,
-                          className: "top-0 bg-white fixed z-20"
-                        }, React.createElement(Head, {
-                              children: React.createElement("title", undefined, "🚧 신선하이 점검중입니다 🚧")
-                            }), React.createElement(Maintenance$View, {
-                              message: match.message,
-                              maintenanceTime: match.maintenanceTime
-                            }))),
-                open: true
-              });
+    switch (match) {
+      case "admin" :
+          currentSubPage = "ADMIN";
+          break;
+      case "buyer" :
+          currentSubPage = match$1 !== undefined ? "BUYER" : "COMMON";
+          break;
+      case "seller" :
+          currentSubPage = "SELLER";
+          break;
+      default:
+        currentSubPage = "COMMON";
+    }
   } else {
+    currentSubPage = "COMMON";
+  }
+  var incidents = useStatusPage("unresolved");
+  var maintenance = useStatusPage("scheduled");
+  var currentIncident = Belt_Array.get(Belt_Array.keepMap(incidents !== undefined ? (
+              maintenance !== undefined ? Js_array.concat(incidents, maintenance) : incidents
+            ) : (
+              maintenance !== undefined ? maintenance : []
+            ), (function (incidentList) {
+              return fromIncident(incidentList, currentSubPage);
+            })), 0);
+  var message;
+  var maintenanceTime;
+  if (currentIncident === undefined) {
     return null;
   }
+  var len = currentIncident.length;
+  if (len >= 3) {
+    return null;
+  }
+  switch (len) {
+    case 0 :
+        return null;
+    case 1 :
+        var match$2 = currentIncident[0];
+        message = match$2.message;
+        maintenanceTime = match$2.maintenanceTime;
+        break;
+    case 2 :
+        var match$3 = currentIncident[0];
+        message = match$3.message;
+        maintenanceTime = match$3.maintenanceTime;
+        break;
+    
+  }
+  return React.createElement(ReactDialog.Root, {
+              children: React.createElement(ReactDialog.Portal, {
+                    children: null
+                  }, React.createElement(ReactDialog.Overlay, {
+                        className: "dialog-overlay"
+                      }), React.createElement(ReactDialog.Content, {
+                        children: null,
+                        className: "top-0 bg-white fixed z-20"
+                      }, React.createElement(Head, {
+                            children: React.createElement("title", undefined, "🚧 신선하이 점검중입니다 🚧")
+                          }), React.createElement(Maintenance$View, {
+                            message: message,
+                            maintenanceTime: maintenanceTime
+                          }))),
+              open: true
+            });
 }
 
-var Content = {
-  make: Maintenance$Content
+var Container = {
+  make: Maintenance$Container
 };
 
 function Maintenance(Props) {
@@ -661,21 +587,20 @@ function Maintenance(Props) {
               });
         }), []);
   if (match[0]) {
-    return React.createElement(Maintenance$Content, {});
+    return React.createElement(Maintenance$Container, {});
   } else {
     return null;
   }
 }
 
-var make$3 = Maintenance;
+var make$2 = Maintenance;
 
 export {
-  StatusPageComponent ,
   MaintenanceTime ,
+  StatusPageAPI ,
   Match ,
-  StatusPageCompat ,
   View ,
-  Content ,
-  make$3 as make,
+  Container ,
+  make$2 as make,
 }
 /* Env Not a pure module */

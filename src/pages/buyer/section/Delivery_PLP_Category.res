@@ -24,8 +24,8 @@ module ListItem = {
     kind: kind,
   }
   let make = (id, name) => {
-    id: id,
-    name: name,
+    id,
+    name,
     kind: All,
   }
   let fromQuery = (
@@ -82,6 +82,7 @@ module PC = {
             })
             ->ignore
           }
+
         | _ => ()
         }
         None
@@ -110,10 +111,9 @@ module PC = {
               }
 
               let query = switch item.kind {
-              | All =>
-                `/buyer/delivery/products?category-id=${categoryId->Option.getWithDefault("")}`
+              | All => `/delivery/products?category-id=${categoryId->Option.getWithDefault("")}`
               | Specific =>
-                `/buyer/delivery/products?category-id=${categoryId->Option.getWithDefault(
+                `/delivery/products?category-id=${categoryId->Option.getWithDefault(
                     "",
                   )}&sub-category-id=${item.id}`
               }
@@ -162,7 +162,9 @@ module PC = {
       )
       ->Option.getWithDefault([])
 
-    <React.Suspense fallback={<Skeleton />}> <View items /> </React.Suspense>
+    <React.Suspense fallback={<Skeleton />}>
+      <View items />
+    </React.Suspense>
   }
 }
 
@@ -233,10 +235,9 @@ module MO = {
               | (Specific, None) => %twc("border-transparent text-gray-400")
               }
               let query = switch item.kind {
-              | All =>
-                `/buyer/delivery/products?category-id=${categoryId->Option.getWithDefault("")}`
+              | All => `/delivery/products?category-id=${categoryId->Option.getWithDefault("")}`
               | Specific =>
-                `/buyer/delivery/products?category-id=${categoryId->Option.getWithDefault(
+                `/delivery/products?category-id=${categoryId->Option.getWithDefault(
                     "",
                   )}&sub-category-id=${item.id}`
               }
@@ -287,6 +288,8 @@ module MO = {
       )
       ->Option.getWithDefault([])
 
-    <React.Suspense fallback={<Skeleton />}> <View items /> </React.Suspense>
+    <React.Suspense fallback={<Skeleton />}>
+      <View items />
+    </React.Suspense>
   }
 }

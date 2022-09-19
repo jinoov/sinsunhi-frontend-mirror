@@ -18,7 +18,7 @@ module Mutation = %relay(`
 `)
 
 @react.component
-let make = (~isOpen, ~onClose, ~window=false) => {
+let make = (~isOpen, ~onClose, ~popup=false) => {
   let (showSearch, setShowSearch) = React.Uncurried.useState(_ => false)
   let (address, setAddress) = React.Uncurried.useState(_ => "")
   let (zipCode, setZipCode) = React.Uncurried.useState(_ => "")
@@ -46,7 +46,7 @@ let make = (~isOpen, ~onClose, ~window=false) => {
   }
 
   let handleOnclickSearchAddress = _ => {
-    switch window {
+    switch popup {
     | true => {
         open DaumPostCode
         let option = makeOption(~oncomplete=handleAddressOnComplete, ())
@@ -135,7 +135,15 @@ let make = (~isOpen, ~onClose, ~window=false) => {
     }
   )->ReactEvents.interceptingHandler
 
-  <Dialog.Root _open={isOpen} onOpenChange={reset}>
+  // mobile 에서 뒤로가기로 닫혔을 때, 상태초기화
+  React.useEffect1(_ => {
+    if !isOpen {
+      reset()
+    }
+    None
+  }, [isOpen])
+
+  <Dialog.Root _open={isOpen}>
     <Dialog.Overlay className=%twc("dialog-overlay") />
     <Dialog.Content
       className=%twc(

@@ -1,5 +1,18 @@
 external unsafeAsFile: Webapi.Blob.t => Webapi.File.t = "%identity"
 
+module Mutation = %relay(`
+  mutation OrdersBuyer_Mutation($input: [String!]!) {
+    cancelWosOrderProductOption(input: { idsToCancel: $input }) {
+      ... on CancelWosOrderProductOptionResult {
+        successProductOptionCount
+      }
+      ... on Error {
+        message
+      }
+    }
+  }
+`)
+
 module List = {
   @react.component
   let make = (
@@ -134,6 +147,9 @@ module Orders = {
   let make = () => {
     let router = Next.Router.useRouter()
     let {mutate} = Swr.useSwrConfig()
+    let {addToast} = ReactToastNotifications.useToasts()
+
+    let (cancelMutate, _) = Mutation.use()
 
     let status = CustomHooks.Orders.use(
       router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
@@ -143,8 +159,6 @@ module Orders = {
 
     let (isShowCancelConfirm, setShowCancelConfirm) = React.Uncurried.useState(_ => Dialog.Hide)
     let (isShowNothingToCancel, setShowNothingToCancel) = React.Uncurried.useState(_ => Dialog.Hide)
-    let (successResultCancel, setSuccessResultCancel) = React.Uncurried.useState(_ => None)
-    let (isShowCancelSuccess, setShowCancelSuccess) = React.Uncurried.useState(_ => Dialog.Hide)
     let (isShowCancelError, setShowCancelError) = React.Uncurried.useState(_ => Dialog.Hide)
 
     // 검색 조건이 바뀌면(예를 들어 페이지 변경 등) 선택했던 취소할 주문을 초기화 한다.
@@ -198,50 +212,56 @@ module Orders = {
     }
     let countOfChecked = ordersToCancel->Set.String.size
 
-    let cancelOrder = orders => {
+    let handleError = message =>
+      addToast(.
+        <div className=%twc("flex items-center")>
+          <IconError height="24" width="24" className=%twc("mr-2") />
+          {message->React.string}
+        </div>,
+        {appearance: "error"},
+      )
+
+    let onSuccess = () => {
       setShowCancelConfirm(._ => Dialog.Hide)
-      {
-        "order-product-numbers": orders,
-      }
-      ->Js.Json.stringifyAny
-      ->Option.map(body => {
-        FetchHelper.requestWithRetry(
-          ~fetcher=FetchHelper.postWithToken,
-          ~url=`${Env.restApiUrl}/order/cancel`,
-          ~body,
-          ~count=3,
-          ~onSuccess={
-            res => {
-              let result = switch res->response_decode {
-              | Ok(res') => Some(res'.data.totalCount, res'.data.updateCount)
-              | Error(_) => None
-              }
-
-              setSuccessResultCancel(._ => result)
-
-              setShowCancelSuccess(._ => Dialog.Show)
-
-              setOrdersToCancel(._ => Set.String.empty)
-              // 주문 취소 후 revalidate
-              mutate(.
-                ~url=`${Env.restApiUrl}/order?${router.query
-                  ->Webapi.Url.URLSearchParams.makeWithDict
-                  ->Webapi.Url.URLSearchParams.toString}`,
-                ~data=None,
-                ~revalidation=None,
-              )
-              mutate(.
-                ~url=`${Env.restApiUrl}/order/summary?${Period.currentPeriod(router)}`,
-                ~data=None,
-                ~revalidation=None,
-              )
-            }
-          },
-          ~onFailure={_ => setShowCancelError(._ => Dialog.Show)},
-        )
-      })
-      ->ignore
+      setOrdersToCancel(._ => Set.String.empty)
+      // 주문 취소 후 revalidate
+      mutate(.
+        ~url=`${Env.restApiUrl}/order?${router.query
+          ->Webapi.Url.URLSearchParams.makeWithDict
+          ->Webapi.Url.URLSearchParams.toString}`,
+        ~data=None,
+        ~revalidation=None,
+      )
+      mutate(.
+        ~url=`${Env.restApiUrl}/order/summary?${Period.currentPeriod(router)}`,
+        ~data=None,
+        ~revalidation=None,
+      )
+      addToast(.
+        <div className=%twc("flex items-center")>
+          <IconCheck height="24" width="24" fill="#12B564" className=%twc("mr-2") />
+          {j`주문이 취소되었습니다.`->React.string}
+        </div>,
+        {appearance: "success"},
+      )
     }
+
+    let cancelOrder = orders =>
+      cancelMutate(
+        ~variables={
+          input: orders,
+        },
+        ~onCompleted=({cancelWosOrderProductOption}, _) => {
+          switch cancelWosOrderProductOption {
+          | Some(#CancelWosOrderProductOptionResult(_)) => onSuccess()
+          | Some(#Error({message})) =>
+            handleError(message->Option.getWithDefault(`주문 취소에 실패하였습니다.`))
+          | _ => handleError(`주문 취소에 실패하였습니다.`)
+          }
+        },
+        ~onError={err => handleError(err.message)},
+        (),
+      )->ignore
 
     let isTotalSelected = router.query->Js.Dict.get("status")->Option.isNone
 
@@ -300,9 +320,9 @@ module Orders = {
       </div>
       <Dialog
         isShow=isShowCancelConfirm
-        textOnCancel=`취소`
+        textOnCancel={`취소`}
         onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-        textOnConfirm=`확인`
+        textOnConfirm={`확인`}
         onConfirm={_ => cancelOrder(ordersToCancel->Set.String.toArray)}>
         <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
@@ -314,30 +334,11 @@ module Orders = {
       </Dialog>
       <Dialog
         isShow=isShowNothingToCancel
-        textOnCancel=`확인`
+        textOnCancel={`확인`}
         onCancel={_ => setShowNothingToCancel(._ => Dialog.Hide)}>
         <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           {j`취소할 주문을 선택해주세요.`->React.string}
-        </p>
-      </Dialog>
-      <Dialog isShow=isShowCancelSuccess onConfirm={_ => setShowCancelSuccess(._ => Dialog.Hide)}>
-        <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
-          {successResultCancel->Option.mapWithDefault(
-            `주문 취소에 성공하였습니다.`->React.string,
-            ((totalCount, updateCount)) =>
-              if totalCount - updateCount > 0 {
-                <>
-                  <span className=%twc("font-bold")>
-                    {`${totalCount->Int.toString}개 중 ${updateCount->Int.toString}개가 정상적으로 주문취소 처리되었습니다.`->React.string}
-                  </span>
-                  {`\n\n${(totalCount - updateCount)
-                      ->Int.toString}개의 주문은 상품준비중 등의 이유로 주문취소 처리되지 못했습니다`->React.string}
-                </>
-              } else {
-                `${totalCount->Int.toString}개의 주문이 정상적으로 주문취소 처리되었습니다.`->React.string
-              },
-          )}
         </p>
       </Dialog>
       <Dialog isShow=isShowCancelError onConfirm={_ => setShowCancelError(._ => Dialog.Hide)}>
@@ -351,4 +352,6 @@ module Orders = {
 
 @react.component
 let make = () =>
-  <Authorization.Buyer title=j`주문내역 조회`> <Orders /> </Authorization.Buyer>
+  <Authorization.Buyer title={j`주문내역 조회`}>
+    <Orders />
+  </Authorization.Buyer>

@@ -284,6 +284,8 @@ function encoderRole(v) {
         return "buyer";
     case /* Admin */2 :
         return "admin";
+    case /* ExternalStaff */3 :
+        return "external-staff";
     
   }
 }
@@ -320,6 +322,11 @@ function decoderRole(json) {
         return {
                 TAG: /* Ok */0,
                 _0: /* Buyer */1
+              };
+    case "external-staff" :
+        return {
+                TAG: /* Ok */0,
+                _0: /* ExternalStaff */3
               };
     case "farmer" :
         return {
@@ -644,6 +651,7 @@ function use$2(param) {
                   Redirect.setHref("/buyer");
                   break;
               case /* Admin */2 :
+              case /* ExternalStaff */3 :
                   Redirect.setHref("/admin");
                   break;
               
@@ -689,6 +697,9 @@ function use$3(param) {
                   break;
               case /* Admin */2 :
                   Redirect.setHref("/admin/");
+                  break;
+              case /* ExternalStaff */3 :
+                  Redirect.setHref("/admin");
                   break;
               
             }
@@ -753,6 +764,11 @@ function use$4(param) {
                         return user;
                       });
                   break;
+              case /* ExternalStaff */3 :
+                  setStatus(function (param) {
+                        return user;
+                      });
+                  break;
               
             }
           }
@@ -781,6 +797,8 @@ function roleToString(r) {
         return "buyer";
     case /* Admin */2 :
         return "admin";
+    case /* ExternalStaff */3 :
+        return "external-staff";
     
   }
 }

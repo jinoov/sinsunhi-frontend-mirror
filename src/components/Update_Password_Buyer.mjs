@@ -235,6 +235,7 @@ function Update_Password_Buyer$UpdateView(Props) {
   var match$3 = use(undefined);
   var mutating = match$3[1];
   var mutate = match$3[0];
+  var submitDisabled = mutating || Belt_Option.isSome(state.error) || password === "";
   var handlePasswordChange = function (e) {
     var newPassword = e.target.value;
     Curry._3(setPassword, newPassword, true, undefined);
@@ -359,8 +360,11 @@ function Update_Password_Buyer$UpdateView(Props) {
                               className: "ml-2 text-text-L1",
                               htmlFor: "password-reveal"
                             }, "비밀번호 표시"))), React.createElement("button", {
-                      className: "bg-green-500 rounded-xl w-full py-4",
-                      disabled: mutating || Belt_Option.isSome(state.error),
+                      className: Cx.cx([
+                            "rounded-xl w-full py-4",
+                            submitDisabled ? "bg-disabled-L2" : "bg-green-500"
+                          ]),
+                      disabled: submitDisabled,
                       type: "submit"
                     }, React.createElement("span", {
                           className: "text-white"
@@ -384,11 +388,30 @@ function Update_Password_Buyer(Props) {
         return /* Hide */1;
       });
   var setShowNotice = match$1[1];
+  var isShowNotice = match$1[0];
   var handleCloseButton = function (param) {
     setShowNotice(function (param) {
           return /* Show */0;
         });
   };
+  React.useEffect((function () {
+          if (!isOpen) {
+            setStep(function (param) {
+                  return /* Confirm */0;
+                });
+            if (isShowNotice === /* Show */0) {
+              setShowNotice(function (param) {
+                    return /* Hide */1;
+                  });
+            }
+            
+          }
+          
+        }), [
+        isOpen,
+        isShowNotice,
+        setShowNotice
+      ]);
   return React.createElement(React.Fragment, undefined, React.createElement(ReactDialog.Root, {
                   children: null,
                   open: isOpen
@@ -416,7 +439,7 @@ function Update_Password_Buyer(Props) {
                                 })),
                       className: "dialog-content-plain bottom-0 left-0 xl:bottom-auto xl:left-auto xl:rounded-2xl xl:state-open:top-1/2 xl:state-open:left-1/2 xl:state-open:-translate-x-1/2 xl:state-open:-translate-y-1/2 dialog-content-z-15"
                     })), React.createElement(Dialog.make, {
-                  isShow: match$1[0],
+                  isShow: isShowNotice,
                   children: React.createElement("div", {
                         className: "text-center"
                       }, "비밀번호 재설정이 진행중입니다.", React.createElement("br", undefined), "진행을 취소하시겠어요?"),

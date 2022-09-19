@@ -24,9 +24,9 @@ module ListItem = {
     name: string,
   }
   let fromQueryData = (id, src, name) => {
-    id: id,
-    src: src,
-    name: name,
+    id,
+    src,
+    name,
   }
   module PC = {
     module Skeleton = {
@@ -57,7 +57,7 @@ module ListItem = {
       }
 
       <li className=%twc("cursor-pointer")>
-        <Next.Link href={`/buyer/matching/products?${queryStr}`}>
+        <Next.Link href={`/matching/products?${queryStr}`}>
           <a className=%twc("w-28 flex flex-col items-center gap-[18px]")>
             <div className=%twc("w-28 aspect-square rounded-lg overflow-hidden")>
               <Image
@@ -111,7 +111,7 @@ module ListItem = {
         ->Webapi.Url.URLSearchParams.toString
       }
       <li>
-        <Next.Link href={`/buyer/matching/products?${queryStr}`}>
+        <Next.Link href={`/matching/products?${queryStr}`}>
           <a className=%twc("w-[75px] flex flex-col items-center gap-[9px]")>
             <div className=%twc("w-14 aspect-square rounded-lg overflow-hidden")>
               <Image

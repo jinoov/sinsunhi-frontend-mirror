@@ -184,7 +184,7 @@ let default = (~props) => {
       switch user'.role {
       | Buyer => router->push("/")
       | Seller => router->push("/seller")
-      | Admin => router->push("/admin")
+      | Admin | ExternalStaff => router->push("/admin")
       }
     | NotLoggedIn | Unknown => ()
     }
@@ -241,7 +241,9 @@ let default = (~props) => {
   ChannelTalkHelper.Hook.use()
 
   <>
-    <Next.Head> <title> {j`바이어 로그인 - 신선하이`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {j`바이어 로그인 - 신선하이`->React.string} </title>
+    </Next.Head>
     <div
       className=%twc(
         "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"

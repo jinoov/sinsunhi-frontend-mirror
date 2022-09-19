@@ -3,9 +3,11 @@
 import * as React from "react";
 import * as Helper from "../../../../utils/Helper.mjs";
 import Uniqid from "uniqid";
+import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import ReactSlick from "react-slick";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
@@ -79,40 +81,29 @@ function useCards(query, sectorsOnclick, salesOnClick, categoriesOnClick, bizOnC
 function MyInfo_Profile_Complete_Buyer$PC(Props) {
   var query = Props.query;
   var match = React.useState(function () {
-        return false;
+        
       });
-  var setSalesAndSectorOpen = match[1];
-  var match$1 = React.useState(function () {
-        return false;
-      });
-  var setCategoriesOpen = match$1[1];
-  var match$2 = React.useState(function () {
-        return false;
-      });
-  var setBizOpen = match$2[1];
-  var match$3 = React.useState(function () {
-        return false;
-      });
-  var setManagerOpen = match$3[1];
+  var setOpenModal = match[1];
+  var openModal = match[0];
   var items = useCards(query, (function (param) {
-          setSalesAndSectorOpen(function (param) {
-                return true;
+          setOpenModal(function (param) {
+                return /* SectorAndSale */0;
               });
         }), (function (param) {
-          setSalesAndSectorOpen(function (param) {
-                return true;
+          setOpenModal(function (param) {
+                return /* SectorAndSale */0;
               });
         }), (function (param) {
-          setCategoriesOpen(function (param) {
-                return true;
+          setOpenModal(function (param) {
+                return /* Categories */1;
               });
         }), (function (param) {
-          setBizOpen(function (param) {
-                return true;
+          setOpenModal(function (param) {
+                return /* BizNumber */2;
               });
         }), (function (param) {
-          setManagerOpen(function (param) {
-                return true;
+          setOpenModal(function (param) {
+                return /* Manager */3;
               });
         }));
   var cmpNum = 5 - items.length | 0;
@@ -136,31 +127,31 @@ function MyInfo_Profile_Complete_Buyer$PC(Props) {
                                           key: Uniqid("profile")
                                         }, i);
                             })))), React.createElement(Update_SectorAndSale_Buyer.make, {
-                    isOpen: match[0],
+                    isOpen: Caml_obj.equal(openModal, /* SectorAndSale */0),
                     onClose: (function (param) {
-                        setSalesAndSectorOpen(function (param) {
-                              return false;
+                        setOpenModal(function (param) {
+                              
                             });
                       })
                   }), React.createElement(Update_InterestedCategories_Buyer.make, {
-                    isOpen: match$1[0],
+                    isOpen: Caml_obj.equal(openModal, /* Categories */1),
                     onClose: (function (param) {
-                        setCategoriesOpen(function (param) {
-                              return false;
+                        setOpenModal(function (param) {
+                              
                             });
                       })
                   }), React.createElement(Update_BusinessNumber_Buyer.make, {
-                    isOpen: match$2[0],
+                    isOpen: Caml_obj.equal(openModal, /* BizNumber */2),
                     onClose: (function (param) {
-                        setBizOpen(function (param) {
-                              return false;
+                        setOpenModal(function (param) {
+                              
                             });
                       })
                   }), React.createElement(Update_Manager_Buyer.make, {
-                    isOpen: match$3[0],
+                    isOpen: Caml_obj.equal(openModal, /* Manager */3),
                     onClose: (function (param) {
-                        setManagerOpen(function (param) {
-                              return false;
+                        setOpenModal(function (param) {
+                              
                             });
                       })
                   }));
@@ -171,57 +162,67 @@ var PC = {
   make: MyInfo_Profile_Complete_Buyer$PC
 };
 
+function toFragment(modal) {
+  switch (modal) {
+    case /* SectorAndSale */0 :
+        return "#sector";
+    case /* Categories */1 :
+        return "#categories";
+    case /* BizNumber */2 :
+        return "#biz-number";
+    case /* Manager */3 :
+        return "#manager";
+    
+  }
+}
+
 function MyInfo_Profile_Complete_Buyer$Mobile(Props) {
   var query = Props.query;
+  var router = Router.useRouter();
   var match = React.useState(function () {
-        return false;
+        
       });
-  var setSalesAndSectorOpen = match[1];
-  var match$1 = React.useState(function () {
-        return false;
-      });
-  var setCategoriesOpen = match$1[1];
-  var match$2 = React.useState(function () {
-        return false;
-      });
-  var setBizOpen = match$2[1];
-  var match$3 = React.useState(function () {
-        return false;
-      });
-  var setManagerOpen = match$3[1];
+  var setOpenModal = match[1];
+  var openModal = match[0];
+  var open_ = function (modal) {
+    if (!router.asPath.includes(toFragment(modal))) {
+      router.push("" + router.asPath + "" + toFragment(modal) + "");
+    }
+    setOpenModal(function (param) {
+          return modal;
+        });
+  };
   var items = useCards(query, (function (param) {
-          setSalesAndSectorOpen(function (param) {
-                return true;
-              });
+          open_(/* SectorAndSale */0);
         }), (function (param) {
-          setSalesAndSectorOpen(function (param) {
-                return true;
-              });
+          open_(/* SectorAndSale */0);
         }), (function (param) {
-          setCategoriesOpen(function (param) {
-                return true;
-              });
+          open_(/* Categories */1);
         }), (function (param) {
-          setBizOpen(function (param) {
-                return true;
-              });
+          open_(/* BizNumber */2);
         }), (function (param) {
-          setManagerOpen(function (param) {
-                return true;
-              });
+          open_(/* Manager */3);
         }));
   var cmpNum = 5 - items.length | 0;
+  React.useEffect((function () {
+          if (!router.asPath.includes("#") && Belt_Option.isSome(openModal)) {
+            setOpenModal(function (param) {
+                  
+                });
+          }
+          
+        }), [router.asPath]);
   if (Garter_Array.isEmpty(items)) {
     return null;
   }
-  var match$4 = items.length;
+  var match$1 = items.length;
   return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, React.createElement("div", {
                       className: "mb-4"
                     }, React.createElement("span", {
                           className: "font-bold text-lg"
                         }, "프로필 완성하기"), React.createElement("span", {
                           className: "ml-1 text-sm text-primary"
-                        }, "" + String(cmpNum) + "/5")), React.createElement("div", undefined, match$4 === 0 || match$4 === 1 ? Belt_Array.map(items, (function (i) {
+                        }, "" + String(cmpNum) + "/5")), React.createElement("div", undefined, match$1 === 0 || match$1 === 1 ? Belt_Array.map(items, (function (i) {
                               return React.createElement("div", {
                                           key: Uniqid("profile"),
                                           className: "w-full"
@@ -237,37 +238,30 @@ function MyInfo_Profile_Complete_Buyer$Mobile(Props) {
                                               }, i);
                                   }))
                           }))), React.createElement(Update_SectorAndSale_Buyer.make, {
-                  isOpen: match[0],
+                  isOpen: Caml_obj.equal(openModal, /* SectorAndSale */0),
                   onClose: (function (param) {
-                      setSalesAndSectorOpen(function (param) {
-                            return false;
-                          });
+                      router.back();
                     })
                 }), React.createElement(Update_InterestedCategories_Buyer.make, {
-                  isOpen: match$1[0],
+                  isOpen: Caml_obj.equal(openModal, /* Categories */1),
                   onClose: (function (param) {
-                      setCategoriesOpen(function (param) {
-                            return false;
-                          });
+                      router.back();
                     })
                 }), React.createElement(Update_BusinessNumber_Buyer.make, {
-                  isOpen: match$2[0],
+                  isOpen: Caml_obj.equal(openModal, /* BizNumber */2),
                   onClose: (function (param) {
-                      setBizOpen(function (param) {
-                            return false;
-                          });
+                      router.back();
                     })
                 }), React.createElement(Update_Manager_Buyer.make, {
-                  isOpen: match$3[0],
+                  isOpen: Caml_obj.equal(openModal, /* Manager */3),
                   onClose: (function (param) {
-                      setManagerOpen(function (param) {
-                            return false;
-                          });
+                      router.back();
                     })
                 }));
 }
 
 var Mobile = {
+  toFragment: toFragment,
   make: MyInfo_Profile_Complete_Buyer$Mobile
 };
 

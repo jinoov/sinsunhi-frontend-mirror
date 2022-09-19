@@ -1170,7 +1170,7 @@ function Update_ProductOption_Admin(Props) {
                                           key: stringifyStatus(productOption.status)
                                         }), React.createElement(Update_ProductOption_Admin$EditIsFreeShipping, {
                                           inputName: inputNames.isFreeShipping,
-                                          defaultValue: productOption.productOptionCost.isFreeShipping ? /* FREE */1 : /* NOTFREE */0,
+                                          defaultValue: productOption.isFreeShipping ? /* FREE */1 : /* NOTFREE */0,
                                           disabled: disabled
                                         }), React.createElement(Update_ProductOption_Admin$EditShippingUnitQuantity, {
                                           inputName: inputNames.shippingUnitQuantity,

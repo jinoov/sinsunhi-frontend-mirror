@@ -173,7 +173,7 @@ function Update_BusinessNumber_Buyer(Props) {
     Curry._3(setBusinessNumber, newValue, true, undefined);
   };
   var reset = function (param) {
-    Curry._3(setBusinessNumber, "", undefined, undefined);
+    Curry._3(setBusinessNumber, defaultValue, true, undefined);
     setIsVerifying(function (param) {
           return false;
         });
@@ -286,10 +286,15 @@ function Update_BusinessNumber_Buyer(Props) {
                         }));
                 }), param);
   };
+  React.useEffect((function () {
+          if (!isOpen) {
+            reset(undefined);
+          }
+          
+        }), [isOpen]);
   return React.createElement(ReactDialog.Root, {
               children: null,
-              open: isOpen,
-              onOpenChange: reset
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {

@@ -26,6 +26,7 @@ module Orders = {
   @react.component
   let make = () => {
     let router = Next.Router.useRouter()
+    let user = CustomHooks.Auth.use()
     let {mutate} = Swr.useSwrConfig()
 
     let status = CustomHooks.OrdersAdmin.use(
@@ -36,9 +37,6 @@ module Orders = {
     // 취소 관련
     let (isShowCancelConfirm, setShowCancelConfirm) = React.Uncurried.useState(_ => Dialog.Hide)
     let (isShowNothingToCancel, setShowNothingToCancel) = React.Uncurried.useState(_ => Dialog.Hide)
-    let (isShowCancelSuccess, setShowCancelSuccess) = React.Uncurried.useState(_ => Dialog.Hide)
-    let (isShowCancelError, setShowCancelError) = React.Uncurried.useState(_ => Dialog.Hide)
-    let (successResultCancel, setSuccessResultCancel) = React.Uncurried.useState(_ => None)
     // 환불 관련
     let (refundReason, setRefundReason) = React.Uncurried.useState(_ => DeliveryDelayed)
     let (isShowNothingToRefund, setShowNothingToRefund) = React.Uncurried.useState(_ => Dialog.Hide)
@@ -106,51 +104,6 @@ module Orders = {
     }
     let countOfChecked = selectedOrders->Set.String.size
 
-    let cancelOrder = orders => {
-      setShowCancelConfirm(._ => Dialog.Hide)
-      {
-        "order-product-numbers": orders,
-      }
-      ->Js.Json.stringifyAny
-      ->Option.map(body => {
-        FetchHelper.requestWithRetry(
-          ~fetcher=FetchHelper.postWithToken,
-          ~url=`${Env.restApiUrl}/order/cancel`,
-          ~body,
-          ~count=3,
-          ~onSuccess={
-            res => {
-              let result = switch res->response_decode {
-              | Ok(res') => Some(res'.data.totalCount, res'.data.updateCount)
-              | Error(_) => None
-              }
-
-              setSuccessResultCancel(._ => result)
-
-              setShowCancelSuccess(._ => Dialog.Show)
-
-              setSelectedOrders(._ => Set.String.empty)
-              // 주문 취소 후 revalidate
-              mutate(.
-                ~url=`${Env.restApiUrl}/order?${router.query
-                  ->Webapi.Url.URLSearchParams.makeWithDict
-                  ->Webapi.Url.URLSearchParams.toString}`,
-                ~data=None,
-                ~revalidation=None,
-              )
-              mutate(.
-                ~url=`${Env.restApiUrl}/order/summary?${Period.currentPeriod(router)}`,
-                ~data=None,
-                ~revalidation=None,
-              )
-            }
-          },
-          ~onFailure={_ => setShowCancelError(._ => Dialog.Show)},
-        )
-      })
-      ->ignore
-    }
-
     let handleOnChangeRefundReason = e => {
       let value = (e->ReactEvent.Synthetic.target)["value"]
       switch value->refundReason_decode {
@@ -199,7 +152,7 @@ module Orders = {
               )
             }
           },
-          ~onFailure={_ => setShowCancelError(._ => Dialog.Show)},
+          ~onFailure={_ => setShowRefundError(._ => Dialog.Show)},
         )
       })
       ->ignore
@@ -248,6 +201,23 @@ module Orders = {
         )
       })
       ->ignore
+    }
+
+    let handleConfirmCancel = () => {
+      setSelectedOrders(._ => Set.String.empty)
+      // 주문 취소 후 revalidate
+      mutate(.
+        ~url=`${Env.restApiUrl}/order?${router.query
+          ->Webapi.Url.URLSearchParams.makeWithDict
+          ->Webapi.Url.URLSearchParams.toString}`,
+        ~data=None,
+        ~revalidation=None,
+      )
+      mutate(.
+        ~url=`${Env.restApiUrl}/order/summary?${Period.currentPeriod(router)}`,
+        ~data=None,
+        ~revalidation=None,
+      )
     }
 
     <>
@@ -308,9 +278,10 @@ module Orders = {
                           ? setShowCancelConfirm(._ => Dialog.Show)
                           : setShowNothingToCancel(._ => Dialog.Show)
                       }}>
-                      {j`주문 취소`->React.string}
+                      {j`선택 항목 주문 취소`->React.string}
                     </button>
-                  | Some(NEGOTIATING) => <>
+                  | Some(NEGOTIATING) =>
+                    <>
                       <button
                         className=%twc(
                           "h-9 px-3 text-primary bg-primary-light rounded-lg flex items-center mr-2 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-light focus:ring-opacity-100"
@@ -331,7 +302,7 @@ module Orders = {
                             ? setShowCancelConfirm(._ => Dialog.Show)
                             : setShowNothingToCancel(._ => Dialog.Show)
                         }}>
-                        {j`주문 취소`->React.string}
+                        {j`선택 항목 주문 취소`->React.string}
                       </button>
                     </>
                   | Some(DELIVERING)
@@ -340,9 +311,17 @@ module Orders = {
                   | None => React.null
                   }
                 }
-                <Excel_Download_Request_Button
-                  userType=Admin requestUrl="/order/request-excel/buyer"
-                />
+                {switch user {
+                | LoggedIn({role}) =>
+                  switch role {
+                  | Admin =>
+                    <Excel_Download_Request_Button
+                      userType=Admin requestUrl="/order/request-excel/buyer"
+                    />
+                  | _ => React.null
+                  }
+                | _ => React.null
+                }}
               </div>
             </div>
           </div>
@@ -352,28 +331,21 @@ module Orders = {
             onCheckOrder=handleOnCheckOrder
             onCheckAll=handleCheckAll
             countOfChecked
-            onClickCancel=cancelOrder
+            onClickCancel={handleConfirmCancel}
           />
         </div>
       </div>
-      <Dialog
-        isShow=isShowCancelConfirm
-        textOnCancel=`닫기`
-        onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-        textOnConfirm=`취소 완료하기`
-        onConfirm={_ => cancelOrder(selectedOrders->Set.String.toArray)}>
-        <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
-          <span className=%twc("font-bold")>
-            {j`선택한 ${countOfChecked->Int.toString}개`->React.string}
-          </span>
-          {j`의 주문을 취소하시겠습니까?`->React.string}
-        </p>
-      </Dialog>
+      <Orders_Cancel_Dialog_Admin
+        isShowCancelConfirm
+        setShowCancelConfirm
+        selectedOrders={selectedOrders->Set.String.toArray}
+        confirmFn={handleConfirmCancel}
+      />
       <Dialog
         isShow=isShowRefundConfirm
-        textOnCancel=`취소`
+        textOnCancel={`취소`}
         onCancel={_ => setShowRefundConfirm(._ => Dialog.Hide)}
-        textOnConfirm=`확인`
+        textOnConfirm={`확인`}
         onConfirm={_ => refundOrder(selectedOrders->Set.String.toArray)}>
         <div className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           <h3>
@@ -424,9 +396,9 @@ module Orders = {
       </Dialog>
       <Dialog
         isShow=isShowCompleteConfirm
-        textOnCancel=`취소`
+        textOnCancel={`취소`}
         onCancel={_ => setShowCompleteConfirm(._ => Dialog.Hide)}
-        textOnConfirm=`확인`
+        textOnConfirm={`확인`}
         onConfirm={_ => completeOrder(selectedOrders->Set.String.toArray)}>
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           <span className=%twc("font-bold")>
@@ -437,7 +409,7 @@ module Orders = {
       </Dialog>
       <Dialog
         isShow=isShowNothingToCancel
-        textOnCancel=`확인`
+        textOnCancel={`확인`}
         onCancel={_ => setShowNothingToCancel(._ => Dialog.Hide)}>
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           {j`취소할 주문을 선택해주세요.`->React.string}
@@ -445,7 +417,7 @@ module Orders = {
       </Dialog>
       <Dialog
         isShow=isShowNothingToRefund
-        textOnCancel=`확인`
+        textOnCancel={`확인`}
         onCancel={_ => setShowNothingToRefund(._ => Dialog.Hide)}>
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           {j`환불 처리할 주문을 선택해주세요.`->React.string}
@@ -453,34 +425,10 @@ module Orders = {
       </Dialog>
       <Dialog
         isShow=isShowNothingToComplete
-        textOnCancel=`확인`
+        textOnCancel={`확인`}
         onCancel={_ => setShowNothingToComplete(._ => Dialog.Hide)}>
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           {j`배송완료할 주문을 선택해주세요.`->React.string}
-        </p>
-      </Dialog>
-      <Dialog isShow=isShowCancelSuccess onConfirm={_ => setShowCancelSuccess(._ => Dialog.Hide)}>
-        <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
-          {successResultCancel->Option.mapWithDefault(
-            `주문 취소에 성공하였습니다.`->React.string,
-            ((totalCount, updateCount)) =>
-              if totalCount - updateCount > 0 {
-                <>
-                  <span className=%twc("font-bold")>
-                    {`${totalCount->Int.toString}개 중 ${updateCount->Int.toString}개가 정상적으로 주문취소 처리되었습니다.`->React.string}
-                  </span>
-                  {`\n\n${(totalCount - updateCount)
-                      ->Int.toString}개의 주문은 상품준비중 등의 이유로 주문취소 처리되지 못했습니다`->React.string}
-                </>
-              } else {
-                `${totalCount->Int.toString}개의 주문이 정상적으로 주문취소 처리되었습니다.`->React.string
-              },
-          )}
-        </p>
-      </Dialog>
-      <Dialog isShow=isShowCancelError onConfirm={_ => setShowCancelError(._ => Dialog.Hide)}>
-        <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
-          {`주문 취소에 실패하였습니다.\n다시 시도하시기 바랍니다.`->React.string}
         </p>
       </Dialog>
       <Dialog isShow=isShowRefundSuccess onConfirm={_ => setShowRefundSuccess(._ => Dialog.Hide)}>
@@ -538,4 +486,6 @@ module Orders = {
 
 @react.component
 let make = () =>
-  <Authorization.Admin title=j`관리자 주문서 조회`> <Orders /> </Authorization.Admin>
+  <Authorization.Admin title={j`관리자 주문서 조회`}>
+    <Orders />
+  </Authorization.Admin>

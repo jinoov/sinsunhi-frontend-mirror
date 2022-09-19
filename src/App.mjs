@@ -61,6 +61,7 @@ function $$default(props) {
           
         }), [router$1]);
   var tmp;
+  var exit = 0;
   if (firstPathname !== undefined) {
     switch (firstPathname) {
       case "admin" :
@@ -86,13 +87,16 @@ function $$default(props) {
                       });
                   break;
               default:
-                tmp = React.createElement(Layout_Buyer.make, {
-                      children: content
-                    });
+                exit = 1;
             }
           } else {
             tmp = content;
           }
+          break;
+      case "delivery" :
+      case "matching" :
+      case "products" :
+          exit = 1;
           break;
       case "seller" :
           if (secondPathname !== undefined) {
@@ -127,6 +131,11 @@ function $$default(props) {
     }
   } else {
     tmp = content;
+  }
+  if (exit === 1) {
+    tmp = React.createElement(Layout_Buyer.make, {
+          children: content
+        });
   }
   return React.createElement(Nextjs.ErrorBoundary, {
               fallback: React.createElement(ErrorPage.make, {}),

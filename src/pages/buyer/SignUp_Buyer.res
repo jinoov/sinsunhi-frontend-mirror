@@ -273,6 +273,7 @@ let make = () => {
       | Buyer => router->push("/")
       | Seller => router->push("/seller")
       | Admin => router->push("/admin")
+      | ExternalStaff => router->push("/admin")
       }
     | NotLoggedIn | Unknown => ()
     }

@@ -127,7 +127,7 @@ function Matching_Main_Category$ListItem$PC(Props) {
   return React.createElement("li", {
               className: "cursor-pointer"
             }, React.createElement(Link, {
-                  href: "/buyer/matching/products?" + queryStr + "",
+                  href: "/matching/products?" + queryStr + "",
                   children: React.createElement("a", {
                         className: "w-28 flex flex-col items-center gap-[18px]"
                       }, React.createElement("div", {
@@ -175,7 +175,7 @@ function Matching_Main_Category$ListItem$MO(Props) {
             id
           ]]).toString();
   return React.createElement("li", undefined, React.createElement(Link, {
-                  href: "/buyer/matching/products?" + queryStr + "",
+                  href: "/matching/products?" + queryStr + "",
                   children: React.createElement("a", {
                         className: "w-[75px] flex flex-col items-center gap-[9px]"
                       }, React.createElement("div", {

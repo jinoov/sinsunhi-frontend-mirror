@@ -211,11 +211,9 @@ let makeUpdateOption: Update_ProductOption_Admin.Form.submit => UpdateProductOpt
   | SOLDOUT => #SOLDOUT
   | RETIRE => #RETIRE
   },
-  productOptionCost: {
-    isFreeShipping: switch option.isFreeShipping {
-    | FREE => true
-    | NOTFREE => false
-    },
+  isFreeShipping: switch option.isFreeShipping {
+  | FREE => true
+  | NOTFREE => false
   },
   shippingUnitQuantity: option.shippingUnitQuantity,
 }
@@ -232,10 +230,10 @@ let makeCreateOption: (
     deliveryCost: option.cost.deliveryCost->Option.getWithDefault(0),
     rawCost: option.cost.rawCost,
     workingCost: option.cost.workingCost,
-    isFreeShipping: switch option.isFreeShipping {
-    | FREE => true
-    | NOTFREE => false
-    },
+  },
+  isFreeShipping: switch option.isFreeShipping {
+  | FREE => true
+  | NOTFREE => false
   },
   grade: option.grade->Option.keep(nonEmptyString),
   //--- 입수정보
@@ -399,8 +397,8 @@ module Presenter = {
             ~variables={
               connections: [connectionId->RescriptRelay.makeDataId],
               input: {
-                createProductOptions: createProductOptions,
-                updateProductOptions: updateProductOptions,
+                createProductOptions,
+                updateProductOptions,
               },
             },
             ~onCompleted=(_, _) => {

@@ -281,6 +281,7 @@ function SignUp_Buyer(Props) {
                   router.push("/");
                   break;
               case /* Admin */2 :
+              case /* ExternalStaff */3 :
                   router.push("/admin");
                   break;
               

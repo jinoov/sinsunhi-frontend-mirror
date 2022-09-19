@@ -93,9 +93,8 @@ function PDP_Normal_TotalPrice_Buyer$PC(Props) {
                                       return param.node.id === optionId;
                                     })), (function (param) {
                                   var match = param.node;
-                                  var match$1 = match.productOptionCost;
-                                  var isFreeShipping = match$1.isFreeShipping;
-                                  var deliveryCost = match$1.deliveryCost;
+                                  var deliveryCost = match.productOptionCost.deliveryCost;
+                                  var isFreeShipping = match.isFreeShipping;
                                   return Belt_Option.map(match.price, (function (price$p) {
                                                 return {
                                                         price: price$p,
@@ -194,9 +193,8 @@ function PDP_Normal_TotalPrice_Buyer$MO(Props) {
                                       return param.node.id === optionId;
                                     })), (function (param) {
                                   var match = param.node;
-                                  var match$1 = match.productOptionCost;
-                                  var isFreeShipping = match$1.isFreeShipping;
-                                  var deliveryCost = match$1.deliveryCost;
+                                  var deliveryCost = match.productOptionCost.deliveryCost;
+                                  var isFreeShipping = match.isFreeShipping;
                                   return Belt_Option.map(match.price, (function (price$p) {
                                                 return {
                                                         price: price$p,

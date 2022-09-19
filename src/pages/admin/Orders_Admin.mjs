@@ -22,6 +22,7 @@ import * as IconArrowSelect from "../../components/svgs/IconArrowSelect.mjs";
 import * as Select_CountPerPage from "../../components/Select_CountPerPage.mjs";
 import * as Summary_Order_Admin from "../../components/Summary_Order_Admin.mjs";
 import * as Order_List_Admin_Buyer from "../../components/Order_List_Admin_Buyer.mjs";
+import * as Orders_Cancel_Dialog_Admin from "../../components/Orders_Cancel_Dialog_Admin.mjs";
 import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
 
 function data_encode(v) {
@@ -176,6 +177,7 @@ function displayRefundReason(rr) {
 
 function Orders_Admin$Orders(Props) {
   var router = Router.useRouter();
+  var user = CustomHooks.Auth.use(undefined);
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
   var status = CustomHooks.OrdersAdmin.use(new URLSearchParams(router.query).toString());
@@ -193,62 +195,50 @@ function Orders_Admin$Orders(Props) {
       });
   var setShowNothingToCancel = match$3[1];
   var match$4 = React.useState(function () {
-        return /* Hide */1;
+        return /* DeliveryDelayed */0;
       });
-  var setShowCancelSuccess = match$4[1];
+  var setRefundReason = match$4[1];
+  var refundReason = match$4[0];
   var match$5 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowCancelError = match$5[1];
+  var setShowNothingToRefund = match$5[1];
   var match$6 = React.useState(function () {
-        
+        return /* Hide */1;
       });
-  var setSuccessResultCancel = match$6[1];
+  var setShowRefundConfirm = match$6[1];
   var match$7 = React.useState(function () {
-        return /* DeliveryDelayed */0;
+        return /* Hide */1;
       });
-  var setRefundReason = match$7[1];
-  var refundReason = match$7[0];
+  var setShowRefundSuccess = match$7[1];
   var match$8 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowNothingToRefund = match$8[1];
+  var setShowRefundError = match$8[1];
   var match$9 = React.useState(function () {
-        return /* Hide */1;
+        
       });
-  var setShowRefundConfirm = match$9[1];
+  var setSuccessResultRefund = match$9[1];
   var match$10 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowRefundSuccess = match$10[1];
+  var setShowCompleteConfirm = match$10[1];
   var match$11 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowRefundError = match$11[1];
+  var setShowNothingToComplete = match$11[1];
   var match$12 = React.useState(function () {
-        
+        return /* Hide */1;
       });
-  var setSuccessResultRefund = match$12[1];
+  var setShowCompleteSuccess = match$12[1];
   var match$13 = React.useState(function () {
         return /* Hide */1;
       });
-  var setShowCompleteConfirm = match$13[1];
+  var setShowCompleteError = match$13[1];
   var match$14 = React.useState(function () {
-        return /* Hide */1;
-      });
-  var setShowNothingToComplete = match$14[1];
-  var match$15 = React.useState(function () {
-        return /* Hide */1;
-      });
-  var setShowCompleteSuccess = match$15[1];
-  var match$16 = React.useState(function () {
-        return /* Hide */1;
-      });
-  var setShowCompleteError = match$16[1];
-  var match$17 = React.useState(function () {
         
       });
-  var setSuccessResultComplete = match$17[1];
+  var setSuccessResultComplete = match$14[1];
   React.useEffect((function () {
           setSelectedOrders(function (param) {
                 
@@ -300,43 +290,6 @@ function Orders_Admin$Orders(Props) {
         });
   };
   var countOfChecked = Belt_SetString.size(selectedOrders);
-  var cancelOrder = function (orders) {
-    setShowCancelConfirm(function (param) {
-          return /* Hide */1;
-        });
-    Belt_Option.map(JSON.stringify({
-              "order-product-numbers": orders
-            }), (function (body) {
-            return FetchHelper.requestWithRetry(FetchHelper.postWithToken, "" + Env.restApiUrl + "/order/cancel", body, 3, (function (res) {
-                          var res$p = response_decode(res);
-                          var result;
-                          if (res$p.TAG === /* Ok */0) {
-                            var res$p$1 = res$p._0;
-                            result = [
-                              res$p$1.data.totalCount,
-                              res$p$1.data.updateCount
-                            ];
-                          } else {
-                            result = undefined;
-                          }
-                          setSuccessResultCancel(function (param) {
-                                return result;
-                              });
-                          setShowCancelSuccess(function (param) {
-                                return /* Show */0;
-                              });
-                          setSelectedOrders(function (param) {
-                                
-                              });
-                          mutate("" + Env.restApiUrl + "/order?" + new URLSearchParams(router.query).toString() + "", undefined, undefined);
-                          mutate("" + Env.restApiUrl + "/order/summary?" + Period.currentPeriod(router) + "", undefined, undefined);
-                        }), (function (param) {
-                          setShowCancelError(function (param) {
-                                return /* Show */0;
-                              });
-                        }));
-          }));
-  };
   var handleOnChangeRefundReason = function (e) {
     var value = e.target.value;
     var refundReason = refundReason_decode(value);
@@ -350,7 +303,14 @@ function Orders_Admin$Orders(Props) {
           return refundReason$1;
         });
   };
-  var match$18 = Belt_Option.flatMap(Js_dict.get(router.query, "status"), (function (status$p) {
+  var handleConfirmCancel = function (param) {
+    setSelectedOrders(function (param) {
+          
+        });
+    mutate("" + Env.restApiUrl + "/order?" + new URLSearchParams(router.query).toString() + "", undefined, undefined);
+    mutate("" + Env.restApiUrl + "/order/summary?" + Period.currentPeriod(router) + "", undefined, undefined);
+  };
+  var match$15 = Belt_Option.flatMap(Js_dict.get(router.query, "status"), (function (status$p) {
           var status$p$p = CustomHooks.OrdersAdmin.status_decode(status$p);
           if (status$p$p.TAG === /* Ok */0) {
             return status$p$p._0;
@@ -359,8 +319,8 @@ function Orders_Admin$Orders(Props) {
         }));
   var tmp;
   var exit = 0;
-  if (match$18 !== undefined) {
-    switch (match$18) {
+  if (match$15 !== undefined) {
+    switch (match$15) {
       case /* COMPLETE */4 :
           tmp = React.createElement("button", {
                 className: "h-9 px-3 text-black-gl bg-gray-button-gl rounded-lg flex items-center mr-2",
@@ -415,7 +375,7 @@ function Orders_Admin$Orders(Props) {
                                     });
                         }
                       })
-                  }, "주문 취소"));
+                  }, "선택 항목 주문 취소"));
           break;
       
     }
@@ -436,7 +396,7 @@ function Orders_Admin$Orders(Props) {
                           });
               }
             })
-        }, "주문 취소");
+        }, "선택 항목 주문 취소");
   }
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "max-w-gnb-panel overflow-auto overflow-x-scroll bg-div-shape-L1 min-h-screen"
@@ -460,35 +420,23 @@ function Orders_Admin$Orders(Props) {
                                       className: "mr-2"
                                     }), React.createElement(Select_Sorted.make, {
                                       className: "mr-2"
-                                    }), tmp, React.createElement(Excel_Download_Request_Button.make, {
-                                      userType: /* Admin */2,
-                                      requestUrl: "/order/request-excel/buyer"
-                                    })))), React.createElement(Order_List_Admin_Buyer.make, {
+                                    }), tmp, typeof user === "number" || user._0.role !== 2 ? null : React.createElement(Excel_Download_Request_Button.make, {
+                                        userType: /* Admin */2,
+                                        requestUrl: "/order/request-excel/buyer"
+                                      })))), React.createElement(Order_List_Admin_Buyer.make, {
                           status: status,
                           check: check,
                           onCheckOrder: handleOnCheckOrder,
                           onCheckAll: handleCheckAll,
                           countOfChecked: countOfChecked,
-                          onClickCancel: cancelOrder
-                        }))), React.createElement(Dialog.make, {
-                  isShow: match$2[0],
-                  children: React.createElement("p", {
-                        className: "text-black-gl text-center whitespace-pre-wrap"
-                      }, React.createElement("span", {
-                            className: "font-bold"
-                          }, "선택한 " + String(countOfChecked) + "개"), "의 주문을 취소하시겠습니까?"),
-                  onCancel: (function (param) {
-                      setShowCancelConfirm(function (param) {
-                            return /* Hide */1;
-                          });
-                    }),
-                  onConfirm: (function (param) {
-                      cancelOrder(Belt_SetString.toArray(selectedOrders));
-                    }),
-                  textOnCancel: "닫기",
-                  textOnConfirm: "취소 완료하기"
+                          onClickCancel: handleConfirmCancel
+                        }))), React.createElement(Orders_Cancel_Dialog_Admin.make, {
+                  isShowCancelConfirm: match$2[0],
+                  setShowCancelConfirm: setShowCancelConfirm,
+                  selectedOrders: Belt_SetString.toArray(selectedOrders),
+                  confirmFn: handleConfirmCancel
                 }), React.createElement(Dialog.make, {
-                  isShow: match$9[0],
+                  isShow: match$6[0],
                   children: React.createElement("div", {
                         className: "text-black-gl text-center whitespace-pre-wrap"
                       }, React.createElement("h3", undefined, React.createElement("span", {
@@ -564,7 +512,7 @@ function Orders_Admin$Orders(Props) {
                                             mutate("" + Env.restApiUrl + "/order?" + new URLSearchParams(router.query).toString() + "", undefined, undefined);
                                             mutate("" + Env.restApiUrl + "/order/summary?" + Period.currentPeriod(router) + "", undefined, undefined);
                                           }), (function (param) {
-                                            setShowCancelError(function (param) {
+                                            setShowRefundError(function (param) {
                                                   return /* Show */0;
                                                 });
                                           }));
@@ -573,7 +521,7 @@ function Orders_Admin$Orders(Props) {
                   textOnCancel: "취소",
                   textOnConfirm: "확인"
                 }), React.createElement(Dialog.make, {
-                  isShow: match$13[0],
+                  isShow: match$10[0],
                   children: React.createElement("p", {
                         className: "text-black-gl text-center whitespace-pre-wrap"
                       }, React.createElement("span", {
@@ -636,7 +584,7 @@ function Orders_Admin$Orders(Props) {
                     }),
                   textOnCancel: "확인"
                 }), React.createElement(Dialog.make, {
-                  isShow: match$8[0],
+                  isShow: match$5[0],
                   children: React.createElement("p", {
                         className: "text-black-gl text-center whitespace-pre-wrap"
                       }, "환불 처리할 주문을 선택해주세요."),
@@ -647,7 +595,7 @@ function Orders_Admin$Orders(Props) {
                     }),
                   textOnCancel: "확인"
                 }), React.createElement(Dialog.make, {
-                  isShow: match$14[0],
+                  isShow: match$11[0],
                   children: React.createElement("p", {
                         className: "text-black-gl text-center whitespace-pre-wrap"
                       }, "배송완료할 주문을 선택해주세요."),
@@ -658,40 +606,10 @@ function Orders_Admin$Orders(Props) {
                     }),
                   textOnCancel: "확인"
                 }), React.createElement(Dialog.make, {
-                  isShow: match$4[0],
+                  isShow: match$7[0],
                   children: React.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
-                      }, Belt_Option.mapWithDefault(match$6[0], "주문 취소에 성공하였습니다.", (function (param) {
-                              var updateCount = param[1];
-                              var totalCount = param[0];
-                              if ((totalCount - updateCount | 0) > 0) {
-                                return React.createElement(React.Fragment, undefined, React.createElement("span", {
-                                                className: "font-bold"
-                                              }, "" + String(totalCount) + "개 중 " + String(updateCount) + "개가 정상적으로 주문취소 처리되었습니다."), "\n\n" + String(totalCount - updateCount | 0) + "개의 주문은 상품준비중 등의 이유로 주문취소 처리되지 못했습니다");
-                              } else {
-                                return "" + String(totalCount) + "개의 주문이 정상적으로 주문취소 처리되었습니다.";
-                              }
-                            }))),
-                  onConfirm: (function (param) {
-                      setShowCancelSuccess(function (param) {
-                            return /* Hide */1;
-                          });
-                    })
-                }), React.createElement(Dialog.make, {
-                  isShow: match$5[0],
-                  children: React.createElement("p", {
-                        className: "text-gray-500 text-center whitespace-pre-wrap"
-                      }, "주문 취소에 실패하였습니다.\n다시 시도하시기 바랍니다."),
-                  onConfirm: (function (param) {
-                      setShowCancelError(function (param) {
-                            return /* Hide */1;
-                          });
-                    })
-                }), React.createElement(Dialog.make, {
-                  isShow: match$10[0],
-                  children: React.createElement("p", {
-                        className: "text-gray-500 text-center whitespace-pre-wrap"
-                      }, Belt_Option.mapWithDefault(match$12[0], "주문 환불 처리에 성공하였습니다.", (function (param) {
+                      }, Belt_Option.mapWithDefault(match$9[0], "주문 환불 처리에 성공하였습니다.", (function (param) {
                               var updateCount = param[1];
                               var totalCount = param[0];
                               if ((totalCount - updateCount | 0) > 0) {
@@ -708,7 +626,7 @@ function Orders_Admin$Orders(Props) {
                           });
                     })
                 }), React.createElement(Dialog.make, {
-                  isShow: match$11[0],
+                  isShow: match$8[0],
                   children: React.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "환불 처리에 실패하였습니다.\n다시 시도하시기 바랍니다."),
@@ -718,10 +636,10 @@ function Orders_Admin$Orders(Props) {
                           });
                     })
                 }), React.createElement(Dialog.make, {
-                  isShow: match$15[0],
+                  isShow: match$12[0],
                   children: React.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
-                      }, Belt_Option.mapWithDefault(match$17[0], "배송완료 처리에 성공하였습니다.", (function (param) {
+                      }, Belt_Option.mapWithDefault(match$14[0], "배송완료 처리에 성공하였습니다.", (function (param) {
                               var updateCount = param[1];
                               var totalCount = param[0];
                               if ((totalCount - updateCount | 0) > 0) {
@@ -738,7 +656,7 @@ function Orders_Admin$Orders(Props) {
                           });
                     })
                 }), React.createElement(Dialog.make, {
-                  isShow: match$16[0],
+                  isShow: match$13[0],
                   children: React.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "배송완료 처리에 실패하였습니다.\n다시 시도하시기 바랍니다."),

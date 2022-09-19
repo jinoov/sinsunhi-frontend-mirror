@@ -19,8 +19,12 @@ module Fragment = %relay(`
 @module("../../../../../public/assets/write.svg")
 external writeIcon: string = "default"
 module PC = {
+  type modal = SectorAndSale | Categories
+
   @react.component
   let make = (~query) => {
+    let (openModal, setOpenModal) = React.Uncurried.useState(_ => None)
+
     let {
       interestedItemCategories: categories,
       selfReportedBusinessSectors: sectors,
@@ -32,12 +36,6 @@ module PC = {
 
     let displaySectors =
       sectors->Option.getWithDefault([])->Array.map(({label}) => label)->Js.Array2.joinWith(",")
-
-    let (isUpdateSectorAndSale, setUpdateSectorAndSale) = React.Uncurried.useState(_ => false)
-    let (
-      isUpdateInterestedCategories,
-      setUpdateInterestedCategories,
-    ) = React.Uncurried.useState(_ => false)
 
     <>
       <MyInfo_Layout_Buyer query>
@@ -52,8 +50,7 @@ module PC = {
                 <div className=%twc("flex items-center")>
                   {displayCategories->React.string}
                   <button
-                    onClick={_ => setUpdateInterestedCategories(._ => true)}
-                    className=%twc("shrink-0")>
+                    onClick={_ => setOpenModal(._ => Some(Categories))} className=%twc("shrink-0")>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -67,7 +64,8 @@ module PC = {
                 <div className=%twc("flex items-center")>
                   {displaySectors->React.string}
                   <button
-                    onClick={_ => setUpdateSectorAndSale(._ => true)} className=%twc("shrink-0")>
+                    onClick={_ => setOpenModal(._ => Some(SectorAndSale))}
+                    className=%twc("shrink-0")>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -81,7 +79,8 @@ module PC = {
                 <div className=%twc("flex items-center")>
                   {saleBin->Option.mapWithDefault("", ({label}) => label)->React.string}
                   <button
-                    onClick={_ => setUpdateSectorAndSale(._ => true)} className=%twc("shrink-0")>
+                    onClick={_ => setOpenModal(._ => Some(SectorAndSale))}
+                    className=%twc("shrink-0")>
                     <img
                       src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
                     />
@@ -93,19 +92,31 @@ module PC = {
         </div>
       </MyInfo_Layout_Buyer>
       <Update_SectorAndSale_Buyer
-        isOpen=isUpdateSectorAndSale onClose={_ => setUpdateSectorAndSale(._ => false)}
+        isOpen={openModal == Some(SectorAndSale)} onClose={_ => setOpenModal(._ => None)}
       />
       <Update_InterestedCategories_Buyer
-        isOpen=isUpdateInterestedCategories
-        onClose={_ => setUpdateInterestedCategories(._ => false)}
+        isOpen={openModal == Some(Categories)} onClose={_ => setOpenModal(._ => None)}
       />
     </>
   }
 }
 
 module Mobile = {
+  type modal = SectorAndSale | Categories | Company | Manager
+
+  let toFragment = modal =>
+    switch modal {
+    | Company => "#company"
+    | Manager => "#manager"
+    | SectorAndSale => "#sector"
+    | Categories => "#categories"
+    }
+
   @react.component
   let make = (~query) => {
+    let router = Next.Router.useRouter()
+    let (openModal, setOpenModal) = React.Uncurried.useState(_ => None)
+
     let {
       interestedItemCategories: categories,
       selfReportedBusinessSectors: sectors,
@@ -114,8 +125,6 @@ module Mobile = {
       name: company,
       uid: email,
     } = Fragment.use(query)
-    let (isUpdateCompanyOpen, setUpdateComponentOpen) = React.Uncurried.useState(_ => false)
-    let (isUpdateManagerOpen, setUpdateManagerOpen) = React.Uncurried.useState(_ => false)
 
     let displayCategories =
       categories->Option.getWithDefault([])->Array.map(({name}) => name)->Js.Array2.joinWith(", ")
@@ -123,11 +132,25 @@ module Mobile = {
     let displaySectors =
       sectors->Option.getWithDefault([])->Array.map(({label}) => label)->Js.Array2.joinWith(", ")
 
-    let (isUpdateSectorAndSale, setUpdateSectorAndSale) = React.Uncurried.useState(_ => false)
-    let (
-      isUpdateInterestedCategories,
-      setUpdateInterestedCategories,
-    ) = React.Uncurried.useState(_ => false)
+    // only for mobile
+    // related PR: #860 모달, 드로워에 대한 뒤로가기 처리 방법을 찾는 시도.
+    // 모달이 열릴 때, fragment 를 추가하고 뒤로가기 하여 모달이 닫히게 한다.
+    let open_ = (~modal: modal) => {
+      if !(router.asPath->Js.String2.includes(toFragment(modal))) {
+        router->Next.Router.push(`${router.asPath}${toFragment(modal)}`)
+      }
+      setOpenModal(._ => Some(modal))
+    }
+
+    // url에 fragment가 없으면 모달창 닫는다.
+    // 모달 닫는 것을 직접 하지 않고 url이 변화할 때마다 side effect로 처리한다.
+    React.useEffect1(() => {
+      if !(router.asPath->Js.String2.includes("#")) && openModal->Option.isSome {
+        setOpenModal(._ => None)
+      }
+
+      None
+    }, [router.asPath])
 
     <>
       <div className=%twc("block w-full bg-white absolute top-0 pt-14 min-h-screen")>
@@ -137,17 +160,13 @@ module Mobile = {
               <MyInfo_ProfilePicture_Buyer
                 size={MyInfo_ProfilePicture_Buyer.XLarge} content=company
               />
-              <button
-                className=%twc("mt-3 flex items-center")
-                onClick={_ => setUpdateManagerOpen(._ => true)}>
+              <button className=%twc("mt-3 flex items-center") onClick={_ => open_(~modal=Manager)}>
                 <span className=%twc("font-bold text-gray-800 text-lg")>
                   {manager->Option.getWithDefault("")->React.string}
                 </span>
                 <img src="/assets/write.svg" className=%twc("ml-1") width="16px" height="16px" />
               </button>
-              <button
-                className=%twc("mt-1 flex items-center")
-                onClick={_ => setUpdateComponentOpen(._ => true)}>
+              <button className=%twc("mt-1 flex items-center") onClick={_ => open_(~modal=Company)}>
                 <span className=%twc("text-gray-800")> {company->React.string} </span>
                 <img src="/assets/write.svg" className=%twc("ml-1") width="16px" height="16px" />
               </button>
@@ -160,7 +179,7 @@ module Mobile = {
               <li>
                 <button
                   className=%twc("w-full py-[18px] px-4 flex items-center justify-between")
-                  onClick={_ => setUpdateInterestedCategories(._ => true)}>
+                  onClick={_ => open_(~modal=Categories)}>
                   <div className=%twc("flex items-center w-[calc(100%-16px)]")>
                     <div className=%twc("shrink-0")>
                       <span className=%twc("font-bold")> {`관심품목`->React.string} </span>
@@ -175,7 +194,7 @@ module Mobile = {
               <li>
                 <button
                   className=%twc("w-full py-[18px] px-4 flex items-center justify-between")
-                  onClick={_ => setUpdateSectorAndSale(._ => true)}>
+                  onClick={_ => open_(~modal=SectorAndSale)}>
                   <div className=%twc("flex items-center w-[calc(100%-16px)]")>
                     <div className=%twc("shrink-0")>
                       <span className=%twc("font-bold")> {`업종 정보`->React.string} </span>
@@ -190,7 +209,7 @@ module Mobile = {
               <li>
                 <button
                   className=%twc("w-full py-[18px] px-4 flex items-center justify-between")
-                  onClick={_ => setUpdateSectorAndSale(._ => true)}>
+                  onClick={_ => open_(~modal=SectorAndSale)}>
                   <div className=%twc("flex items-center")>
                     <div className=%twc("shrink-0")>
                       <span className=%twc("font-bold")> {`연매출 정보`->React.string} </span>
@@ -207,21 +226,20 @@ module Mobile = {
         </div>
       </div>
       <Update_SectorAndSale_Buyer
-        isOpen=isUpdateSectorAndSale onClose={_ => setUpdateSectorAndSale(._ => false)}
+        isOpen={openModal == Some(SectorAndSale)} onClose={_ => router->Next.Router.back}
       />
       <Update_InterestedCategories_Buyer
-        isOpen=isUpdateInterestedCategories
-        onClose={_ => setUpdateInterestedCategories(._ => false)}
+        isOpen={openModal == Some(Categories)} onClose={_ => router->Next.Router.back}
       />
       <Update_CompanyName_Buyer
-        isOpen={isUpdateCompanyOpen}
-        onClose={_ => setUpdateComponentOpen(._ => false)}
+        isOpen={openModal == Some(Company)}
+        onClose={_ => router->Next.Router.back}
         key={company}
         defaultValue={company}
       />
       <Update_Manager_Buyer
-        isOpen={isUpdateManagerOpen}
-        onClose={_ => setUpdateManagerOpen(._ => false)}
+        isOpen={openModal == Some(Manager)}
+        onClose={_ => router->Next.Router.back}
         key=?{manager}
         defaultValue=?{manager}
       />

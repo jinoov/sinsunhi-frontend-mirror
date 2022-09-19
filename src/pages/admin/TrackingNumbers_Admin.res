@@ -17,6 +17,7 @@ module Orders = {
   @react.component
   let make = () => {
     let router = Next.Router.useRouter()
+    let user = CustomHooks.Auth.use()
     let {mutate} = Swr.useSwrConfig()
 
     let status = CustomHooks.OrdersAdmin.use(
@@ -144,7 +145,9 @@ module Orders = {
         </header>
         <Summary_Delivery_Admin />
         <div
-          className=%twc("p-7 mt-4 mx-4 shadow-gl overflow-auto overflow-x-scroll bg-white rounded")>
+          className=%twc(
+            "p-7 mt-4 mx-4 shadow-gl overflow-auto overflow-x-scroll bg-white rounded"
+          )>
           <div className=%twc("flex justify-between pb-4")>
             <div className=%twc("flex flex-auto justify-between")>
               <h3 className=%twc("font-bold")>
@@ -168,9 +171,17 @@ module Orders = {
                       {j`상품준비중으로 변경`->React.string}
                     </button>
                   : React.null}
-                <Excel_Download_Request_Button
-                  userType=Admin requestUrl="/order/request-excel/farmer"
-                />
+                {switch user {
+                | LoggedIn({role}) =>
+                  switch role {
+                  | Admin =>
+                    <Excel_Download_Request_Button
+                      userType=Admin requestUrl="/order/request-excel/farmer"
+                    />
+                  | _ => React.null
+                  }
+                | _ => React.null
+                }}
               </div>
             </div>
           </div>
@@ -187,9 +198,9 @@ module Orders = {
       // 다이얼로그
       <Dialog
         isShow=isShowPackingConfirm
-        textOnCancel=`취소`
+        textOnCancel={`취소`}
         onCancel={_ => setShowPackingConfirm(._ => Dialog.Hide)}
-        textOnConfirm=`확인`
+        textOnConfirm={`확인`}
         onConfirm={_ => changeOrdersToPacking(ordersToPacking->Set.String.toArray)}>
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
           <span className=%twc("font-bold")>
@@ -200,7 +211,7 @@ module Orders = {
       </Dialog>
       <Dialog
         isShow=isShowNothingToPacking
-        textOnCancel=`확인`
+        textOnCancel={`확인`}
         onCancel={_ => setShowNothingToPacking(._ => Dialog.Hide)}>
         <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
         <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
@@ -237,4 +248,6 @@ module Orders = {
 
 @react.component
 let make = () =>
-  <Authorization.Admin title=j`관리자 송장번호 조회`> <Orders /> </Authorization.Admin>
+  <Authorization.Admin title={j`관리자 송장번호 조회`}>
+    <Orders />
+  </Authorization.Admin>

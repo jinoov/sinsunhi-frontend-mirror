@@ -103,6 +103,26 @@ const config = {
         destination: "/products/:id",
         permanent: true,
       },
+      {
+        source: "/buyer/matching",
+        destination: "/matching",
+        permanent: true,
+      },
+      {
+        source: "/buyer/matching/products",
+        destination: "/matching/products",
+        permanent: true,
+      },
+      {
+        source: "/buyer/delivery",
+        destination: "/delivery",
+        permanent: true,
+      },
+      {
+        source: "/buyer/delivery/products",
+        destination: "/delivery/products",
+        permanent: true,
+      },
     ];
   },
 };

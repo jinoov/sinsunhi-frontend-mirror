@@ -225,6 +225,12 @@ function Account_Signout_Buyer_Mobile(Props) {
                         }));
           }));
   };
+  React.useEffect((function () {
+          if (!isOpen) {
+            reset(undefined);
+          }
+          
+        }), [isOpen]);
   var tmp;
   switch (match$2[0]) {
     case /* Confirm */0 :

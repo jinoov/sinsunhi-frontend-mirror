@@ -9,6 +9,7 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import * as CartLinkIcon from "../../../components/common/CartLinkIcon.mjs";
+import * as HomeLinkIcon from "../../../components/HomeLinkIcon.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
@@ -136,28 +137,38 @@ function PLP_Header_Buyer(Props) {
                 }, React.createElement("header", {
                       className: "w-full max-w-3xl mx-auto h-14 bg-white"
                     }, React.createElement("div", {
-                          className: "px-5 py-4 flex justify-between"
-                        }, React.createElement("button", {
-                              onClick: (function (param) {
-                                  router.back();
-                                })
-                            }, React.createElement("img", {
-                                  className: "w-6 h-6 rotate-180",
-                                  src: "/assets/arrow-right.svg"
-                                })), match[0] ? (
+                          className: "px-5 py-4 flex w-full items-center"
+                        }, React.createElement("div", {
+                              className: "w-1/3 flex justify-start"
+                            }, React.createElement("button", {
+                                  onClick: (function (param) {
+                                      router.back();
+                                    })
+                                }, React.createElement("img", {
+                                      className: "w-6 h-6 rotate-180",
+                                      src: "/assets/arrow-right.svg"
+                                    }))), match[0] ? (
                             displayCategoryId !== undefined ? React.createElement(RescriptReactErrorBoundary.make, {
                                     children: null,
                                     fallback: (function (param) {
                                         return React.createElement("span", undefined);
                                       })
-                                  }, React.createElement(React.Suspense, {
-                                        children: React.createElement(PLP_Header_Buyer$DisplayCategoryName, {
-                                              displayCategoryId: displayCategoryId
-                                            }),
-                                        fallback: React.createElement("span", undefined)
-                                      }), React.createElement(CartLinkIcon.make, {})) : React.createElement(React.Fragment, undefined, React.createElement("span", {
-                                        className: "font-bold text-xl"
-                                      }, "전체 상품"), React.createElement(CartLinkIcon.make, {}))
+                                  }, React.createElement("div", {
+                                        className: "w-1/3 flex justify-center"
+                                      }, React.createElement(React.Suspense, {
+                                            children: React.createElement(PLP_Header_Buyer$DisplayCategoryName, {
+                                                  displayCategoryId: displayCategoryId
+                                                }),
+                                            fallback: React.createElement("span", undefined)
+                                          })), React.createElement("div", {
+                                        className: "w-1/3 flex justify-end gap-2"
+                                      }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {}))) : React.createElement(React.Fragment, undefined, React.createElement("div", {
+                                        className: "w-1/3 flex justify-center"
+                                      }, React.createElement("span", {
+                                            className: "font-bold text-xl"
+                                          }, "전체 상품")), React.createElement("div", {
+                                        className: "w-1/3 flex justify-end gap-2"
+                                      }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {})))
                           ) : React.createElement("span", undefined)))), React.createElement("div", {
                   className: "w-full h-14"
                 }));

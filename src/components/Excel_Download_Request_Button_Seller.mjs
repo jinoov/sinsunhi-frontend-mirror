@@ -33,19 +33,9 @@ function Excel_Download_Request_Button_Seller(Props) {
         return /* Hide */1;
       });
   var setShowDownloadError = match$4[1];
-  var downloadCenterPath;
-  switch (userType) {
-    case /* Seller */0 :
-        downloadCenterPath = "/seller/download-center";
-        break;
-    case /* Buyer */1 :
-        downloadCenterPath = "/buyer/download-center";
-        break;
-    case /* Admin */2 :
-        downloadCenterPath = "/admin/download-center";
-        break;
-    
-  }
+  var downloadCenterPath = userType !== 1 ? (
+      userType !== 0 ? "/admin/download-center" : "/seller/download-center"
+    ) : "/buyer/download-center";
   var menuLocation = userType >= 2 ? "좌측" : "우측 상단";
   var download = function (param) {
     Belt_Option.map(Belt_Option.flatMap(bodyOption, (function (prim) {

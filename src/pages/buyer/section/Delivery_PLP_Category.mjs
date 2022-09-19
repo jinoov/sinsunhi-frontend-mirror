@@ -183,7 +183,7 @@ function Delivery_PLP_Category$PC$View(Props) {
                                 subCategoryId !== undefined || item.id !== Belt_Option.getWithDefault(categoryId, "") ? "border-transparent text-gray-400" : "border-gray-800 text-gray-800 font-bold"
                               );
                             var match$1 = item.kind;
-                            var query = match$1 ? "/buyer/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "&sub-category-id=" + item.id + "" : "/buyer/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "";
+                            var query = match$1 ? "/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "&sub-category-id=" + item.id + "" : "/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "";
                             return React.createElement("li", {
                                         key: item.id,
                                         id: "category-" + item.id + "",
@@ -300,7 +300,7 @@ function Delivery_PLP_Category$MO$View(Props) {
                                 subCategoryId !== undefined || item.id !== Belt_Option.getWithDefault(categoryId, "") ? "border-transparent text-gray-400" : "border-gray-800 text-gray-800 font-bold"
                               );
                             var match$1 = item.kind;
-                            var query = match$1 ? "/buyer/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "&sub-category-id=" + item.id + "" : "/buyer/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "";
+                            var query = match$1 ? "/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "&sub-category-id=" + item.id + "" : "/delivery/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "";
                             return React.createElement("li", {
                                         key: item.id,
                                         id: "category-" + item.id + "",

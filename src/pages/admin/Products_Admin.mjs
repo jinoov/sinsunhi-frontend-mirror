@@ -9,6 +9,7 @@ import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import * as Authorization from "../../utils/Authorization.mjs";
@@ -362,6 +363,7 @@ function useSearchInput(param) {
 }
 
 function Products_Admin$List(Props) {
+  var user = CustomHooks.Auth.use(undefined);
   var searchInput = useSearchInput(undefined);
   var queryData = use(searchInput, /* NetworkOnly */3, undefined, undefined, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
@@ -376,10 +378,10 @@ function Products_Admin$List(Props) {
                           className: "flex"
                         }, React.createElement(Select_CountPerPage.make, {
                               className: "mr-2"
-                            }), React.createElement(Excel_Download_Request_Button.make, {
-                              userType: /* Admin */2,
-                              requestUrl: "/product/request-excel"
-                            })))), React.createElement(Products_List_Admin.make, {
+                            }), typeof user === "number" || user._0.role !== 2 ? null : React.createElement(Excel_Download_Request_Button.make, {
+                                userType: /* Admin */2,
+                                requestUrl: "/product/request-excel"
+                              })))), React.createElement(Products_List_Admin.make, {
                   query: queryData.fragmentRefs
                 }));
 }

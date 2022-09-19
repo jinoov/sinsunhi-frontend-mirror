@@ -3,10 +3,13 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Header from "../components/Header.mjs";
+import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as Router from "next/router";
+import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as Layout_Admin_Sub from "../components/Layout_Admin_Sub.mjs";
 import * as Layout_Admin_Data from "../data/Layout_Admin_Data.mjs";
 import * as Layout_Admin_Root from "../components/Layout_Admin_Root.mjs";
@@ -27,7 +30,7 @@ var Head = {
   make: Layout_Admin$Head
 };
 
-function render(t, pathname, openedAdminMenu, setOpenedAdminMenu) {
+function render(t, pathname, openedAdminMenu, setOpenedAdminMenu, userRole) {
   if (t.TAG === /* Root */0) {
     var children = t.children;
     var match = t.anchor;
@@ -44,31 +47,45 @@ function render(t, pathname, openedAdminMenu, setOpenedAdminMenu) {
                   target: match.target
                 }, headComponent)
           });
-    return React.createElement(Layout_Admin_Root.make, {
-                accordianItemValue: url,
-                head: head,
-                children: Belt_Array.map(children, (function (d) {
-                        return render(d, pathname, openedAdminMenu, setOpenedAdminMenu);
-                      })),
-                openedAdminMenu: openedAdminMenu,
-                setOpenedAdminMenu: setOpenedAdminMenu,
-                key: url
-              });
+    if (Garter_Array.some(t.role, (function (roleOfItem) {
+              return Caml_obj.equal(userRole, roleOfItem);
+            }))) {
+      return React.createElement(Layout_Admin_Root.make, {
+                  accordianItemValue: url,
+                  head: head,
+                  children: Belt_Array.map(children, (function (d) {
+                          return render(d, pathname, openedAdminMenu, setOpenedAdminMenu, userRole);
+                        })),
+                  openedAdminMenu: openedAdminMenu,
+                  setOpenedAdminMenu: setOpenedAdminMenu,
+                  key: url
+                });
+    } else {
+      return null;
+    }
   }
   var match$1 = t.anchor;
   var url$1 = match$1.url;
-  return React.createElement(Layout_Admin_Sub.make, {
-              title: t.title,
-              href: url$1,
-              selected: Layout_Admin_Data.Item.hasUrl(t, pathname),
-              target: match$1.target,
-              key: url$1
-            });
+  if (Garter_Array.some(t.role, (function (roleOfItem) {
+            return Caml_obj.equal(userRole, roleOfItem);
+          }))) {
+    return React.createElement(Layout_Admin_Sub.make, {
+                title: t.title,
+                href: url$1,
+                selected: Layout_Admin_Data.Item.hasUrl(t, pathname),
+                target: match$1.target,
+                key: url$1
+              });
+  } else {
+    return null;
+  }
 }
 
 function Layout_Admin(Props) {
   var children = Props.children;
   var router = Router.useRouter();
+  var user = CustomHooks.Auth.use(undefined);
+  var role = typeof user === "number" ? undefined : user._0.role;
   var match = Curry._1(LocalStorageHooks.AdminMenu.useLocalStorage, undefined);
   var setOpenedAdminMenu = match[1];
   var openedAdminMenu = match[0];
@@ -77,7 +94,7 @@ function Layout_Admin(Props) {
                 }, React.createElement("aside", {
                       className: "mt-px min-h-screen bg-white"
                     }, Belt_Array.map(Layout_Admin_Data.Item.items, (function (t) {
-                            return render(t, router.pathname, Belt_Option.getWithDefault(openedAdminMenu, []), setOpenedAdminMenu);
+                            return render(t, router.pathname, Belt_Option.getWithDefault(openedAdminMenu, []), setOpenedAdminMenu, role);
                           }))), React.createElement("article", {
                       className: "w-full max-w-gnb-panel"
                     }, children)));

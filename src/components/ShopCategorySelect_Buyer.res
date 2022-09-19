@@ -240,7 +240,7 @@ module PC = {
     let (isHovered, setIsHovered) = React.Uncurried.useState(_ => false)
     let (hoveredId, setHoveredId) = React.Uncurried.useState((_): option<string> => None)
 
-    let triggerStyle = %twc("flex items-center w-56 h-[54px] px-7 ")
+    let triggerStyle = %twc("flex items-center w-56 h-[54px] px-7 whitespace-nowrap ")
     let textStyle = %twc("mx-2 text-lg font-bold ")
 
     let makeHoverChange = (~id, ~children, _) => {
@@ -261,6 +261,7 @@ module PC = {
             </span>
             <IconArrow className=%twc("rotate-90") fill="#B2B2B2" width="20" height="20" />
           </div>
+
         | true =>
           <>
             <div className={triggerStyle ++ %twc("border-t border-x border-primary")}>

@@ -3,25 +3,25 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import * as Redirect from "./Redirect.mjs";
 import * as IconArrow from "./svgs/IconArrow.mjs";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
+import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as CartLinkIcon from "./common/CartLinkIcon.mjs";
-import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
+import * as HomeLinkIcon from "./HomeLinkIcon.mjs";
 import * as IconHamburger from "./svgs/IconHamburger.mjs";
 import * as AppLink_Header from "./AppLink_Header.mjs";
-import * as PDP_Header_Buyer from "../pages/buyer/pdp/PDP_Header_Buyer.mjs";
-import * as PLP_Header_Buyer from "../pages/buyer/plp/PLP_Header_Buyer.mjs";
+import * as IconArrowSelect from "./svgs/IconArrowSelect.mjs";
+import * as ChannelTalkHelper from "../utils/ChannelTalkHelper.mjs";
 import * as GnbBannerList_Buyer from "./GnbBannerList_Buyer.mjs";
 import * as ShopSearchInput_Buyer from "./ShopSearchInput_Buyer.mjs";
 import * as ShopCategorySelect_Buyer from "./ShopCategorySelect_Buyer.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
-import HomeSvg from "../../public/assets/home.svg";
-
-var homeIcon = HomeSvg;
+import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
 
 function Header_Buyer$Mobile$LoggedInUserMenu(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement(CartLinkIcon.make, {}), React.createElement(Link, {
@@ -57,15 +57,7 @@ function Header_Buyer$Mobile$Normal(Props) {
                                   src: "/assets/arrow-right.svg"
                                 })), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, title)), React.createElement("button", {
-                              className: "w-6 h-[30px]",
-                              type: "button",
-                              onClick: (function (param) {
-                                  router.push("/buyer");
-                                })
-                            }, React.createElement("img", {
-                                  src: homeIcon
-                                }))))), React.createElement("div", {
+                                }, title)), React.createElement(HomeLinkIcon.make, {})))), React.createElement("div", {
                   className: "w-full h-14"
                 }));
 }
@@ -82,18 +74,24 @@ function Header_Buyer$Mobile$BackAndCart(Props) {
                 }, React.createElement("header", {
                       className: "w-full max-w-3xl mx-auto h-14 bg-white"
                     }, React.createElement("div", {
-                          className: "px-5 py-4 flex justify-between"
-                        }, React.createElement("button", {
-                              type: "button",
-                              onClick: (function (param) {
-                                  router.back();
-                                })
-                            }, React.createElement("img", {
-                                  className: "w-6 h-6 rotate-180",
-                                  src: "/assets/arrow-right.svg"
-                                })), React.createElement("div", undefined, React.createElement("span", {
+                          className: "px-5 py-4 flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-1/3 flex justify-start"
+                            }, React.createElement("button", {
+                                  type: "button",
+                                  onClick: (function (param) {
+                                      router.back();
+                                    })
+                                }, React.createElement("img", {
+                                      className: "w-6 h-6 rotate-180",
+                                      src: "/assets/arrow-right.svg"
+                                    }))), React.createElement("div", {
+                              className: "w-1/3 flex justify-center"
+                            }, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, title)), React.createElement(CartLinkIcon.make, {})))), React.createElement("div", {
+                                }, title)), React.createElement("div", {
+                              className: "w-1/3 flex gap-2 justify-end"
+                            }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {}))))), React.createElement("div", {
                   className: "w-full h-14"
                 }));
 }
@@ -104,7 +102,6 @@ var BackAndCart = {
 
 function Header_Buyer$Mobile$NoBack(Props) {
   var title = Props.title;
-  var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
                 }, React.createElement("header", {
@@ -115,14 +112,7 @@ function Header_Buyer$Mobile$NoBack(Props) {
                               className: "w-[24px]"
                             }), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, title)), React.createElement("button", {
-                              type: "button",
-                              onClick: (function (param) {
-                                  router.push("/buyer");
-                                })
-                            }, React.createElement("img", {
-                                  src: homeIcon
-                                }))))), React.createElement("div", {
+                                }, title)), React.createElement(HomeLinkIcon.make, {})))), React.createElement("div", {
                   className: "w-full h-14"
                 }));
 }
@@ -261,135 +251,147 @@ var Search = {
 
 function Header_Buyer$Mobile(Props) {
   var router = Router.useRouter();
-  var secondPathname = Garter_Array.get(Belt_Array.keep(router.pathname.split("/"), (function (x) {
-              return x !== "";
-            })), 1);
-  var thirdPathname = Garter_Array.get(Belt_Array.keep(router.pathname.split("/"), (function (x) {
-              return x !== "";
-            })), 2);
+  var pathnames = Belt_Array.keep(router.pathname.split("/"), (function (x) {
+          return x !== "";
+        }));
+  var first = Belt_Array.get(pathnames, 0);
+  var second = Belt_Array.get(pathnames, 1);
+  var third = Belt_Array.get(pathnames, 2);
   var tmp;
-  if (secondPathname !== undefined) {
-    switch (secondPathname) {
-      case "cart" :
-          tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                title: "장바구니"
-              });
+  var exit = 0;
+  if (first !== undefined) {
+    switch (first) {
+      case "buyer" :
+          if (second !== undefined) {
+            switch (second) {
+              case "cart" :
+                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                        title: "장바구니"
+                      });
+                  break;
+              case "download-center" :
+                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                        title: "다운로드 센터"
+                      });
+                  break;
+              case "me" :
+                  if (third !== undefined) {
+                    switch (third) {
+                      case "account" :
+                          tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
+                                title: "계정정보"
+                              });
+                          break;
+                      case "profile" :
+                          tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
+                                title: "프로필정보"
+                              });
+                          break;
+                      default:
+                        tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
+                              title: "마이페이지"
+                            });
+                    }
+                  } else {
+                    tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
+                          title: "마이페이지"
+                        });
+                  }
+                  break;
+              case "orders" :
+                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                        title: "주문 내역"
+                      });
+                  break;
+              case "products" :
+                  if (third === "advanced-search") {
+                    tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                          title: "상품 검색"
+                        });
+                  } else {
+                    exit = 1;
+                  }
+                  break;
+              case "signin" :
+                  tmp = third !== undefined ? (
+                      third === "find-id-password" ? React.createElement(Header_Buyer$Mobile$Normal, {
+                              title: ""
+                            }) : React.createElement(Header_Buyer$Mobile$Normal, {
+                              title: "로그인"
+                            })
+                    ) : React.createElement(Header_Buyer$Mobile$Normal, {
+                          title: "로그인"
+                        });
+                  break;
+              case "signup" :
+                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                        title: "회원가입"
+                      });
+                  break;
+              case "transactions" :
+                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                        title: "결제 내역"
+                      });
+                  break;
+              case "upload" :
+                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                        title: "주문서 업로드"
+                      });
+                  break;
+              case "web-order" :
+                  tmp = third !== undefined ? (
+                      third === "complete" ? React.createElement(Header_Buyer$Mobile$NoBack, {
+                              title: "주문 완료"
+                            }) : React.createElement(Header_Buyer$Mobile$Normal, {
+                              title: "주문·결제"
+                            })
+                    ) : React.createElement(Header_Buyer$Mobile$Normal, {
+                          title: "주문·결제"
+                        });
+                  break;
+              default:
+                exit = 1;
+            }
+          } else {
+            tmp = React.createElement(Header_Buyer$Mobile$GnbHome, {});
+          }
           break;
       case "delivery" :
-          tmp = thirdPathname !== undefined ? React.createElement(Header_Buyer$Mobile$BackAndCart, {
+          tmp = second !== undefined ? React.createElement(Header_Buyer$Mobile$BackAndCart, {
                   title: "신선배송"
                 }) : React.createElement(Header_Buyer$Mobile$BackAndCart, {
                   title: "신선배송"
                 });
           break;
-      case "download-center" :
-          tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                title: "다운로드 센터"
-              });
-          break;
       case "matching" :
-          tmp = thirdPathname !== undefined ? React.createElement(Header_Buyer$Mobile$Normal, {
+          tmp = second !== undefined ? React.createElement(Header_Buyer$Mobile$Normal, {
                   title: "신선매칭"
                 }) : React.createElement(Header_Buyer$Mobile$NoHome, {
                   title: "신선매칭"
                 });
           break;
-      case "me" :
-          if (thirdPathname !== undefined) {
-            switch (thirdPathname) {
-              case "account" :
-                  tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
-                        title: "계정정보"
-                      });
-                  break;
-              case "profile" :
-                  tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
-                        title: "프로필정보"
-                      });
-                  break;
-              default:
-                tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
-                      title: "마이페이지"
-                    });
-            }
-          } else {
-            tmp = React.createElement(Header_Buyer$Mobile$NoHome, {
-                  title: "마이페이지"
-                });
-          }
-          break;
-      case "orders" :
-          tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                title: "주문 내역"
-              });
-          break;
       case "products" :
-          if (thirdPathname !== undefined) {
-            switch (thirdPathname) {
-              case "advanced-search" :
-                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                        title: "상품 검색"
-                      });
-                  break;
-              case "all" :
-                  tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                        title: "전체 상품"
-                      });
-                  break;
-              default:
-                tmp = React.createElement(PDP_Header_Buyer.make, {});
-            }
+          if (second !== undefined && second === "advanced-search" && third === undefined) {
+            tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                  title: "상품 검색"
+                });
           } else {
-            tmp = React.createElement(PLP_Header_Buyer.make, {});
+            exit = 1;
           }
           break;
       case "search" :
           tmp = React.createElement(Header_Buyer$Mobile$Search, {});
           break;
-      case "signin" :
-          tmp = thirdPathname !== undefined ? (
-              thirdPathname === "find-id-password" ? React.createElement(Header_Buyer$Mobile$Normal, {
-                      title: ""
-                    }) : React.createElement(Header_Buyer$Mobile$Normal, {
-                      title: "로그인"
-                    })
-            ) : React.createElement(Header_Buyer$Mobile$Normal, {
-                  title: "로그인"
-                });
-          break;
-      case "signup" :
-          tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                title: "회원가입"
-              });
-          break;
-      case "transactions" :
-          tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                title: "결제 내역"
-              });
-          break;
-      case "upload" :
-          tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-                title: "주문서 업로드"
-              });
-          break;
-      case "web-order" :
-          tmp = thirdPathname !== undefined ? (
-              thirdPathname === "complete" ? React.createElement(Header_Buyer$Mobile$NoBack, {
-                      title: "주문 완료"
-                    }) : React.createElement(Header_Buyer$Mobile$Normal, {
-                      title: "주문·결제"
-                    })
-            ) : React.createElement(Header_Buyer$Mobile$Normal, {
-                  title: "주문·결제"
-                });
-          break;
       default:
-        tmp = React.createElement(Header_Buyer$Mobile$Normal, {
-              title: ""
-            });
+        exit = 1;
     }
   } else {
-    tmp = React.createElement(Header_Buyer$Mobile$GnbHome, {});
+    exit = 1;
+  }
+  if (exit === 1) {
+    tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+          title: ""
+        });
   }
   return React.createElement(React.Fragment, undefined, React.createElement(AppLink_Header.make, {}), tmp);
 }
@@ -407,15 +409,76 @@ var Mobile = {
 
 function Header_Buyer$PC_Old$LoggedInUserMenu(Props) {
   var user = Props.user;
+  var logOut = function (param) {
+    return ReactEvents.interceptingHandler((function (param) {
+                  CustomHooks.Auth.logOut(undefined);
+                  ChannelTalkHelper.logout(undefined);
+                  Redirect.setHref("/");
+                }), param);
+  };
+  var itemStyle = "cursor-pointer w-full h-full py-3 px-8 whitespace-nowrap flex items-center justify-center";
   return React.createElement("div", {
               className: "relative flex items-center h-16",
               id: "gnb-user"
-            }, React.createElement(Link, {
-                  href: "/buyer/me",
-                  children: React.createElement("a", undefined, React.createElement("span", {
-                            className: "text-base text-gray-800"
-                          }, Belt_Option.getWithDefault(user.email, "")))
-                }));
+            }, React.createElement(ReactDropdownMenu.Root, {
+                  children: null
+                }, React.createElement(ReactDropdownMenu.Trigger, {
+                      children: React.createElement("div", {
+                            className: "flex items-center"
+                          }, React.createElement("span", {
+                                className: "text-base text-gray-800"
+                              }, Belt_Option.getWithDefault(user.email, "")), React.createElement("span", {
+                                className: "relative ml-1"
+                              }, React.createElement(IconArrowSelect.make, {
+                                    height: "22",
+                                    width: "22",
+                                    fill: "#262626"
+                                  }))),
+                      className: "focus:outline-none"
+                    }), React.createElement(ReactDropdownMenu.Content, {
+                      children: null,
+                      align: "end",
+                      className: "dropdown-content p-1 w-[140px] bg-white rounded-lg shadow-md divide-y text-gray-800"
+                    }, React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/buyer/me",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "마이페이지"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/buyer/orders",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "주문내역"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/buyer/transactions",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "결제내역"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/products/advanced-search",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "단품확인"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement("button", {
+                                className: itemStyle,
+                                type: "button",
+                                onClick: logOut
+                              }, React.createElement("span", undefined, "로그아웃")),
+                          className: "focus:outline-none"
+                        }))));
 }
 
 var LoggedInUserMenu$1 = {
@@ -577,15 +640,76 @@ var PC_Old = {
 
 function Header_Buyer$PC$LoggedInUserMenu(Props) {
   var user = Props.user;
+  var logOut = function (param) {
+    return ReactEvents.interceptingHandler((function (param) {
+                  CustomHooks.Auth.logOut(undefined);
+                  ChannelTalkHelper.logout(undefined);
+                  Redirect.setHref("/");
+                }), param);
+  };
+  var itemStyle = "cursor-pointer w-full h-full py-3 px-8 whitespace-nowrap flex items-center justify-center";
   return React.createElement("div", {
               className: "relative flex items-center h-16",
               id: "gnb-user"
-            }, React.createElement(Link, {
-                  href: "/buyer/me",
-                  children: React.createElement("a", undefined, React.createElement("span", {
-                            className: "text-base text-gray-800"
-                          }, Belt_Option.getWithDefault(user.email, "")))
-                }));
+            }, React.createElement(ReactDropdownMenu.Root, {
+                  children: null
+                }, React.createElement(ReactDropdownMenu.Trigger, {
+                      children: React.createElement("div", {
+                            className: "flex items-center"
+                          }, React.createElement("span", {
+                                className: "text-base text-gray-800"
+                              }, Belt_Option.getWithDefault(user.email, "")), React.createElement("span", {
+                                className: "relative ml-1"
+                              }, React.createElement(IconArrowSelect.make, {
+                                    height: "22",
+                                    width: "22",
+                                    fill: "#262626"
+                                  }))),
+                      className: "focus:outline-none"
+                    }), React.createElement(ReactDropdownMenu.Content, {
+                      children: null,
+                      align: "end",
+                      className: "dropdown-content p-1 w-[140px] bg-white rounded-lg shadow-md divide-y text-gray-800"
+                    }, React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/buyer/me",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "마이페이지"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/buyer/orders",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "주문내역"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/buyer/transactions",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "결제내역"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement(Link, {
+                                href: "/products/advanced-search",
+                                children: React.createElement("a", {
+                                      className: itemStyle
+                                    }, React.createElement("span", undefined, "단품확인"))
+                              }),
+                          className: "focus:outline-none"
+                        }), React.createElement(ReactDropdownMenu.Item, {
+                          children: React.createElement("button", {
+                                className: itemStyle,
+                                type: "button",
+                                onClick: logOut
+                              }, React.createElement("span", undefined, "로그아웃")),
+                          className: "focus:outline-none"
+                        }))));
 }
 
 var LoggedInUserMenu$2 = {
@@ -713,9 +837,8 @@ var PC = {
 };
 
 export {
-  homeIcon ,
   Mobile ,
   PC_Old ,
   PC ,
 }
-/* homeIcon Not a pure module */
+/* react Not a pure module */

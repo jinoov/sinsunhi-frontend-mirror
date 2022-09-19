@@ -32,7 +32,7 @@ class MyDocument extends Document {
           />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-          <link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" as="style" onLoad="this.onload=null;this.rel='stylesheet';this.type='text/css'" />
+          <link rel="stylesheet preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" as="style" onLoad="this.onload=null;this.rel='stylesheet';this.type='text/css'" />
           <noscript><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" /></noscript>
           <link rel="manifest" href="/manifest.json"/>
           <link rel="apple-touch-icon" href="icon-512x512.png"/>

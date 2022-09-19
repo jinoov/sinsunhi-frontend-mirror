@@ -78,8 +78,8 @@ var Mutation = {
 function Update_Address_Buyer(Props) {
   var isOpen = Props.isOpen;
   var onClose = Props.onClose;
-  var windowOpt = Props.window;
-  var $$window = windowOpt !== undefined ? windowOpt : false;
+  var popupOpt = Props.popup;
+  var popup = popupOpt !== undefined ? popupOpt : false;
   var match = React.useState(function () {
         return false;
       });
@@ -117,7 +117,7 @@ function Update_Address_Buyer(Props) {
         });
   };
   var handleOnclickSearchAddress = function (param) {
-    if (!$$window) {
+    if (!popup) {
       return setShowSearch(function (param) {
                   return true;
                 });
@@ -219,10 +219,15 @@ function Update_Address_Buyer(Props) {
                       ]);
                 }), param);
   };
+  React.useEffect((function () {
+          if (!isOpen) {
+            reset(undefined);
+          }
+          
+        }), [isOpen]);
   return React.createElement(ReactDialog.Root, {
               children: null,
-              open: isOpen,
-              onOpenChange: reset
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {

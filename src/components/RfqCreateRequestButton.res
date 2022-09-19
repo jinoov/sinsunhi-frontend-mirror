@@ -211,7 +211,7 @@ let make = (~className, ~buttonText=`최저가 견적받기`, ~position=?) => {
   | LoggedIn(user') =>
     switch user'.role {
     | Buyer => <Button.Buyer className buttonText ?position />
-    | Seller | Admin => <Button.UnauthorizedUser className buttonText />
+    | Seller | Admin | ExternalStaff => <Button.UnauthorizedUser className buttonText />
     }
   | NotLoggedIn
   | Unknown =>

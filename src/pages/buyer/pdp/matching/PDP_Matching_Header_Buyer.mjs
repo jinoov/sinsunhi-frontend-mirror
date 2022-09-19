@@ -9,6 +9,7 @@ import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import * as CartLinkIcon from "../../../../components/common/CartLinkIcon.mjs";
+import * as HomeLinkIcon from "../../../../components/HomeLinkIcon.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
 import * as Webapi__Dom__Element from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__Element.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
@@ -194,17 +195,23 @@ function PDP_Matching_Header_Buyer(Props) {
                 }, React.createElement("header", {
                       className: "w-full max-w-3xl mx-auto h-14 bg-white"
                     }, React.createElement("div", {
-                          className: "px-5 py-4 flex justify-between items-center"
-                        }, React.createElement("button", {
-                              onClick: (function (param) {
-                                  router.back();
-                                })
-                            }, React.createElement("img", {
-                                  className: "w-6 h-6 rotate-180",
-                                  src: "/assets/arrow-right.svg"
-                                })), React.createElement("div", undefined, React.createElement("span", {
+                          className: "px-5 py-4 flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-1/3 flex justify-start"
+                            }, React.createElement("button", {
+                                  onClick: (function (param) {
+                                      router.back();
+                                    })
+                                }, React.createElement("img", {
+                                      className: "w-6 h-6 rotate-180",
+                                      src: "/assets/arrow-right.svg"
+                                    }))), React.createElement("div", {
+                              className: "w-1/3 flex justify-center"
+                            }, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, match$2[0])), React.createElement(CartLinkIcon.make, {})))), React.createElement("div", {
+                                }, match$2[0])), React.createElement("div", {
+                              className: "w-1/3 flex justify-end gap-2"
+                            }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {}))))), React.createElement("div", {
                   className: "w-full fixed z-[5] bg-white left-0 " + foldableStyle
                 }, React.createElement("section", {
                       className: "w-full max-w-3xl mx-auto bg-white border-b border-gray-50"

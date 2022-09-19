@@ -117,10 +117,10 @@ let makeCreateOption: (
     deliveryCost: option.cost.deliveryCost->Option.getWithDefault(0),
     rawCost: option.cost.rawCost,
     workingCost: option.cost.workingCost,
-    isFreeShipping: switch option.isFreeShipping {
-    | FREE => true
-    | NOTFREE => false
-    },
+  },
+  isFreeShipping: switch option.isFreeShipping {
+  | FREE => true
+  | NOTFREE => false
   },
   grade: option.grade->Option.keep(nonEmptyString),
   cutOffTime: option.cutOffTime->Option.keep(nonEmptyString)->noneToDefaultCutOffTime,

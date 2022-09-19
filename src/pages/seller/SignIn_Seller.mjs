@@ -238,16 +238,14 @@ function $$default(param) {
   React.useEffect((function () {
           if (typeof user !== "number") {
             var match = user._0.role;
-            switch (match) {
-              case /* Seller */0 :
-                  router.push("/seller");
-                  break;
-              case /* Buyer */1 :
-                  router.push("/buyer");
-                  break;
-              case /* Admin */2 :
-                  break;
-              
+            if (match !== 1) {
+              if (match !== 0) {
+                
+              } else {
+                router.push("/seller");
+              }
+            } else {
+              router.push("/buyer");
             }
           }
           

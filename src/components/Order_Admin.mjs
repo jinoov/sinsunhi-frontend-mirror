@@ -2,7 +2,6 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
-import * as Dialog from "./common/Dialog.mjs";
 import * as Locale from "../utils/Locale.mjs";
 import * as Checkbox from "./common/Checkbox.mjs";
 import * as Skeleton from "./Skeleton.mjs";
@@ -14,6 +13,7 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as Tracking_Admin from "./Tracking_Admin.mjs";
 import * as Order_Detail_Button_Admin from "./Order_Detail_Button_Admin.mjs";
+import * as Orders_Cancel_Dialog_Admin from "./Orders_Cancel_Dialog_Admin.mjs";
 
 function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
@@ -173,24 +173,11 @@ function Order_Admin$Item$Table(Props) {
                       className: "h-full flex flex-col px-4 py-2 whitespace-nowrap"
                     }, React.createElement("span", {
                           className: "block"
-                        }, Belt_Option.getWithDefault(Belt_Option.map(order.deliveryDate, formatDate), "-")))), React.createElement(Dialog.make, {
-                  isShow: match[0],
-                  children: React.createElement("p", {
-                        className: "text-black-gl text-center whitespace-pre-wrap"
-                      }, "선택한 주문을 취소하시겠습니까?"),
-                  onCancel: (function (param) {
-                      setShowCancelConfirm(function (param) {
-                            return /* Hide */1;
-                          });
-                    }),
-                  onConfirm: (function (param) {
-                      setShowCancelConfirm(function (param) {
-                            return /* Hide */1;
-                          });
-                      Curry._1(onClickCancel, [order.orderProductNo]);
-                    }),
-                  textOnCancel: "닫기",
-                  textOnConfirm: "취소 완료하기"
+                        }, Belt_Option.getWithDefault(Belt_Option.map(order.deliveryDate, formatDate), "-")))), React.createElement(Orders_Cancel_Dialog_Admin.make, {
+                  isShowCancelConfirm: match[0],
+                  setShowCancelConfirm: setShowCancelConfirm,
+                  selectedOrders: [order.orderProductNo],
+                  confirmFn: onClickCancel
                 }));
 }
 

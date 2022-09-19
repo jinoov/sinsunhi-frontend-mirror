@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import * as Dialog from "../../../../components/common/Dialog.mjs";
+import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as IconArrow from "../../../../components/svgs/IconArrow.mjs";
 import Link from "next/link";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
@@ -68,21 +69,19 @@ function MyInfo_Account_Buyer$LogoutDialog(Props) {
                   var role = Belt_Option.map(CustomHooks.Auth.toOption(user), (function (user$p) {
                           return user$p.role;
                         }));
-                  if (role === undefined) {
+                  if (role !== undefined) {
+                    if (role !== 1) {
+                      if (role !== 0) {
+                        router.push("/admin/signin");
+                      } else {
+                        router.push("/seller/signin");
+                      }
+                    } else {
+                      router.push("/buyer/signin");
+                    }
                     return ;
                   }
-                  switch (role) {
-                    case /* Seller */0 :
-                        router.push("/seller/signin");
-                        return ;
-                    case /* Buyer */1 :
-                        router.push("/buyer/signin");
-                        return ;
-                    case /* Admin */2 :
-                        router.push("/admin/signin");
-                        return ;
-                    
-                  }
+                  
                 }), param);
   };
   return React.createElement(Dialog.make, {
@@ -108,50 +107,27 @@ var writeIcon = WriteSvg;
 function MyInfo_Account_Buyer$PC(Props) {
   var query = Props.query;
   var router = Router.useRouter();
-  var match = use(query);
-  var verifications = match.verifications;
-  var email = match.uid;
-  var company = match.name;
-  var manager = match.manager;
-  var address = match.address;
-  var displayBizNumber = Belt_Option.mapWithDefault(match.businessRegistrationNumber, "", (function (str) {
+  var match = React.useState(function () {
+        
+      });
+  var setOpenModal = match[1];
+  var openModal = match[0];
+  var match$1 = use(query);
+  var verifications = match$1.verifications;
+  var email = match$1.uid;
+  var company = match$1.name;
+  var manager = match$1.manager;
+  var address = match$1.address;
+  var displayBizNumber = Belt_Option.mapWithDefault(match$1.businessRegistrationNumber, "", (function (str) {
           return str.replace(/(^\d{3})(\d+)?(\d{5})$/, "$1-$2-$3");
         }));
-  var displayPhone = match.phone.replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3");
-  var match$1 = React.useState(function () {
-        return false;
-      });
-  var setUpdatePasswordOpen = match$1[1];
-  var match$2 = React.useState(function () {
-        return false;
-      });
-  var setUpdateCompanyOpen = match$2[1];
-  var match$3 = React.useState(function () {
-        return false;
-      });
-  var setUpdateManagerOpen = match$3[1];
-  var match$4 = React.useState(function () {
-        return false;
-      });
-  var setUpdatePhoneNumberOpen = match$4[1];
-  var match$5 = React.useState(function () {
-        return false;
-      });
-  var setUpdateBizNumberOpen = match$5[1];
-  var match$6 = React.useState(function () {
-        return false;
-      });
-  var setUpdateAddressOpen = match$6[1];
-  var match$7 = React.useState(function () {
-        return /* Hide */1;
-      });
-  var setShowLogout = match$7[1];
-  var match$8 = Belt_Option.map(verifications, (function (param) {
+  var displayPhone = match$1.phone.replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3");
+  var match$2 = Belt_Option.map(verifications, (function (param) {
           return param.phoneVerificationStatus;
         }));
   var tmp;
   var exit = 0;
-  if (match$8 === "VERIFIED") {
+  if (match$2 === "VERIFIED") {
     tmp = null;
   } else {
     exit = 1;
@@ -161,12 +137,12 @@ function MyInfo_Account_Buyer$PC(Props) {
           className: "text-notice ml-2"
         }, "인증 필요");
   }
-  var match$9 = Belt_Option.map(verifications, (function (param) {
+  var match$3 = Belt_Option.map(verifications, (function (param) {
           return param.isValidBusinessRegistrationNumberByViewer;
         }));
   var tmp$1;
   var exit$1 = 0;
-  if (match$9 !== undefined && match$9) {
+  if (match$3 !== undefined && match$3) {
     tmp$1 = null;
   } else {
     exit$1 = 1;
@@ -178,10 +154,10 @@ function MyInfo_Account_Buyer$PC(Props) {
   }
   var str = Belt_Option.getWithDefault(address, "");
   var tmp$2 = {
-    isOpen: match$3[0],
+    isOpen: Caml_obj.equal(openModal, /* Manager */2),
     onClose: (function (param) {
-        setUpdateManagerOpen(function (param) {
-              return false;
+        setOpenModal(function (param) {
+              
             });
       })
   };
@@ -212,8 +188,8 @@ function MyInfo_Account_Buyer$PC(Props) {
                                       }, "비밀번호"), React.createElement("button", {
                                         className: "py-2 px-3 bg-gray-150 rounded-lg",
                                         onClick: (function (param) {
-                                            setUpdatePasswordOpen(function (param) {
-                                                  return true;
+                                            setOpenModal(function (param) {
+                                                  return /* Password */0;
                                                 });
                                           })
                                       }, "비밀번호 재설정"))), React.createElement("div", {
@@ -226,8 +202,8 @@ function MyInfo_Account_Buyer$PC(Props) {
                                         className: "flex items-center"
                                       }, company, React.createElement("button", {
                                             onClick: (function (param) {
-                                                setUpdateCompanyOpen(function (param) {
-                                                      return true;
+                                                setOpenModal(function (param) {
+                                                      return /* Company */1;
                                                     });
                                               })
                                           }, React.createElement("img", {
@@ -243,8 +219,8 @@ function MyInfo_Account_Buyer$PC(Props) {
                                         className: "flex items-center"
                                       }, Belt_Option.getWithDefault(manager, ""), React.createElement("button", {
                                             onClick: (function (param) {
-                                                setUpdateManagerOpen(function (param) {
-                                                      return true;
+                                                setOpenModal(function (param) {
+                                                      return /* Manager */2;
                                                     });
                                               })
                                           }, React.createElement("img", {
@@ -260,8 +236,8 @@ function MyInfo_Account_Buyer$PC(Props) {
                                         className: "flex items-center"
                                       }, displayPhone, React.createElement("button", {
                                             onClick: (function (param) {
-                                                setUpdatePhoneNumberOpen(function (param) {
-                                                      return true;
+                                                setOpenModal(function (param) {
+                                                      return /* Phone */3;
                                                     });
                                               })
                                           }, React.createElement("img", {
@@ -277,8 +253,8 @@ function MyInfo_Account_Buyer$PC(Props) {
                                         className: "flex items-center"
                                       }, displayBizNumber, React.createElement("button", {
                                             onClick: (function (param) {
-                                                setUpdateBizNumberOpen(function (param) {
-                                                      return true;
+                                                setOpenModal(function (param) {
+                                                      return /* BizNumber */4;
                                                     });
                                               })
                                           }, React.createElement("img", {
@@ -299,8 +275,8 @@ function MyInfo_Account_Buyer$PC(Props) {
                                             }
                                           }, Belt_Option.getWithDefault(address, "")), React.createElement("button", {
                                             onClick: (function (param) {
-                                                setUpdateAddressOpen(function (param) {
-                                                      return true;
+                                                setOpenModal(function (param) {
+                                                      return /* Location */5;
                                                     });
                                               })
                                           }, React.createElement("img", {
@@ -358,7 +334,7 @@ function MyInfo_Account_Buyer$PC(Props) {
                                                           className: "ml-2 text-sm text-text-L3 "
                                                         }, "자세히 보기"))
                                               }), React.createElement(MyInfo_MarketingTerm_Switcher_Buyer.make, {
-                                                query: match.fragmentRefs
+                                                query: match$1.fragmentRefs
                                               })))), React.createElement("div", {
                                     className: "flex py-5 items-center"
                                   }, React.createElement("div", {
@@ -366,8 +342,8 @@ function MyInfo_Account_Buyer$PC(Props) {
                                       }, "로그아웃"), React.createElement("button", {
                                         className: "py-2 px-3 bg-gray-150 rounded-lg",
                                         onClick: (function (param) {
-                                            setShowLogout(function (param) {
-                                                  return /* Show */0;
+                                            setOpenModal(function (param) {
+                                                  return /* Logout */6;
                                                 });
                                           })
                                       }, "로그아웃")), React.createElement("div", {
@@ -381,51 +357,51 @@ function MyInfo_Account_Buyer$PC(Props) {
                                           })
                                       }, "회원탈퇴"))), React.createElement("div", undefined), React.createElement("div", undefined)))
                 }), React.createElement(Update_Password_Buyer.make, {
-                  isOpen: match$1[0],
+                  isOpen: Caml_obj.equal(openModal, /* Password */0),
                   onClose: (function (param) {
-                      setUpdatePasswordOpen(function (param) {
-                            return false;
+                      setOpenModal(function (param) {
+                            
                           });
                     }),
                   email: email
                 }), React.createElement(Update_CompanyName_Buyer.make, {
-                  isOpen: match$2[0],
+                  isOpen: Caml_obj.equal(openModal, /* Company */1),
                   onClose: (function (param) {
-                      setUpdateCompanyOpen(function (param) {
-                            return false;
+                      setOpenModal(function (param) {
+                            
                           });
                     }),
                   defaultValue: company,
                   key: company
                 }), React.createElement(Update_Manager_Buyer.make, tmp$2), React.createElement(Update_PhoneNumber_Buyer.make, {
-                  isOpen: match$4[0],
+                  isOpen: Caml_obj.equal(openModal, /* Phone */3),
                   onClose: (function (param) {
-                      setUpdatePhoneNumberOpen(function (param) {
-                            return false;
+                      setOpenModal(function (param) {
+                            
                           });
                     })
                 }), React.createElement(Update_BusinessNumber_Buyer.make, {
-                  isOpen: match$5[0],
+                  isOpen: Caml_obj.equal(openModal, /* BizNumber */4),
                   onClose: (function (param) {
-                      setUpdateBizNumberOpen(function (param) {
-                            return false;
+                      setOpenModal(function (param) {
+                            
                           });
                     }),
                   defaultValue: displayBizNumber,
                   key: displayBizNumber
                 }), React.createElement(Update_Address_Buyer.make, {
-                  isOpen: match$6[0],
+                  isOpen: Caml_obj.equal(openModal, /* Location */5),
                   onClose: (function (param) {
-                      setUpdateAddressOpen(function (param) {
-                            return false;
+                      setOpenModal(function (param) {
+                            
                           });
                     }),
-                  window: true
+                  popup: true
                 }), React.createElement(MyInfo_Account_Buyer$LogoutDialog, {
-                  isOpen: match$7[0],
+                  isOpen: Caml_obj.equal(openModal, /* Logout */6) ? /* Show */0 : /* Hide */1,
                   onCancel: (function (param) {
-                      setShowLogout(function (param) {
-                            return /* Hide */1;
+                      setOpenModal(function (param) {
+                            
                           });
                     })
                 }));
@@ -436,60 +412,70 @@ var PC = {
   make: MyInfo_Account_Buyer$PC
 };
 
+function toFragment(modal) {
+  switch (modal) {
+    case /* Password */0 :
+        return "#password";
+    case /* Company */1 :
+        return "#company";
+    case /* Manager */2 :
+        return "#manager";
+    case /* Phone */3 :
+        return "#phone";
+    case /* BizNumber */4 :
+        return "#biz-number";
+    case /* Location */5 :
+        return "#location";
+    case /* Terms */6 :
+        return "#terms";
+    case /* Logout */7 :
+        return "#logout";
+    case /* Signout */8 :
+        return "#signout";
+    
+  }
+}
+
 function MyInfo_Account_Buyer$Mobile(Props) {
   var query = Props.query;
-  var match = use(query);
-  var fragmentRefs = match.fragmentRefs;
-  var verifications = match.verifications;
-  var email = match.uid;
-  var company = match.name;
-  var manager = match.manager;
-  var displayBizNumber = Belt_Option.mapWithDefault(match.businessRegistrationNumber, "", (function (str) {
+  var router = Router.useRouter();
+  var match = React.useState(function () {
+        
+      });
+  var setOpenModal = match[1];
+  var openModal = match[0];
+  var match$1 = use(query);
+  var fragmentRefs = match$1.fragmentRefs;
+  var verifications = match$1.verifications;
+  var email = match$1.uid;
+  var company = match$1.name;
+  var manager = match$1.manager;
+  var displayBizNumber = Belt_Option.mapWithDefault(match$1.businessRegistrationNumber, "", (function (str) {
           return str.replace(/(^\d{3})(\d+)?(\d{5})$/, "$1-$2-$3");
         }));
-  var displayPhone = match.phone.replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3");
-  var match$1 = React.useState(function () {
-        return false;
-      });
-  var setUpdatePasswordOpen = match$1[1];
-  var match$2 = React.useState(function () {
-        return false;
-      });
-  var setUpdateComponentOpen = match$2[1];
-  var match$3 = React.useState(function () {
-        return false;
-      });
-  var setUpdateManagerOpen = match$3[1];
-  var match$4 = React.useState(function () {
-        return false;
-      });
-  var setUpdatePhoneNumberOpen = match$4[1];
-  var match$5 = React.useState(function () {
-        return false;
-      });
-  var setUpdateBizNumberOpen = match$5[1];
-  var match$6 = React.useState(function () {
-        return false;
-      });
-  var setUpdateAddressOpen = match$6[1];
-  var match$7 = React.useState(function () {
-        return false;
-      });
-  var setUpdateTermOpen = match$7[1];
-  var match$8 = React.useState(function () {
-        return /* Hide */1;
-      });
-  var setShowLogout = match$8[1];
-  var match$9 = React.useState(function () {
-        return false;
-      });
-  var setSignoutOpen = match$9[1];
-  var match$10 = Belt_Option.map(verifications, (function (param) {
+  var displayPhone = match$1.phone.replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3");
+  var open_ = function (modal) {
+    if (!router.asPath.includes(toFragment(modal))) {
+      router.push("" + router.asPath + "" + toFragment(modal) + "");
+    }
+    setOpenModal(function (param) {
+          return modal;
+        });
+  };
+  React.useEffect((function () {
+          if (!router.asPath.includes("#") && Belt_Option.isSome(openModal)) {
+            setOpenModal(function (param) {
+                  
+                });
+          }
+          
+        }), [router.asPath]);
+  var match$2 = Belt_Option.map(verifications, (function (param) {
           return param.phoneVerificationStatus;
         }));
   var tmp;
   var exit = 0;
-  if (match$10 === "VERIFIED") {
+  if (match$2 === "VERIFIED") {
     tmp = null;
   } else {
     exit = 1;
@@ -499,12 +485,12 @@ function MyInfo_Account_Buyer$Mobile(Props) {
           className: "text-notice ml-2"
         }, "인증 필요");
   }
-  var match$11 = Belt_Option.map(verifications, (function (param) {
+  var match$3 = Belt_Option.map(verifications, (function (param) {
           return param.isValidBusinessRegistrationNumberByViewer;
         }));
   var tmp$1;
   var exit$1 = 0;
-  if (match$11 !== undefined && match$11) {
+  if (match$3 !== undefined && match$3) {
     tmp$1 = null;
   } else {
     exit$1 = 1;
@@ -514,13 +500,11 @@ function MyInfo_Account_Buyer$Mobile(Props) {
           className: "text-notice ml-2"
         }, "유효하지 않음");
   }
-  var str = Belt_Option.getWithDefault(match.address, "");
+  var str = Belt_Option.getWithDefault(match$1.address, "");
   var tmp$2 = {
-    isOpen: match$3[0],
+    isOpen: Caml_obj.equal(openModal, /* Manager */2),
     onClose: (function (param) {
-        setUpdateManagerOpen(function (param) {
-              return false;
-            });
+        router.back();
       })
   };
   if (manager !== undefined) {
@@ -546,9 +530,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                         }, "이메일")), React.createElement("div", undefined, email))), React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setUpdatePasswordOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* Password */0);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 flex items-center w-full border-t border-gray-100 justify-between"
@@ -569,9 +551,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                         }, React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setUpdateComponentOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* Company */1);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 px-4 flex items-center w-full justify-between"
@@ -590,9 +570,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                         })))), React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setUpdateManagerOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* Manager */2);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -611,9 +589,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                         })))), React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setUpdatePhoneNumberOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* Phone */3);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -634,9 +610,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                         })))), React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setUpdateBizNumberOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* BizNumber */4);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -657,9 +631,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                         })))), React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setUpdateAddressOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* Location */5);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 px-4 flex items-center w-full border-t border-gray-100 justify-between"
@@ -689,9 +661,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                         }, React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setUpdateTermOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* Terms */6);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 flex items-center w-full justify-between"
@@ -708,9 +678,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                         })))), React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setShowLogout(function (param) {
-                                        return /* Show */0;
-                                      });
+                                  open_(/* Logout */7);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 flex items-center w-full justify-between border-t border-gray-100"
@@ -727,9 +695,7 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                         })))), React.createElement("button", {
                               className: "w-full flex",
                               onClick: (function (param) {
-                                  setSignoutOpen(function (param) {
-                                        return true;
-                                      });
+                                  open_(/* Signout */8);
                                 })
                             }, React.createElement("li", {
                                   className: "py-5 flex items-center w-full justify-between border-t border-gray-100"
@@ -744,72 +710,57 @@ function MyInfo_Account_Buyer$Mobile(Props) {
                                           width: "16",
                                           fill: "#B2B2B2"
                                         })))))), React.createElement(Update_Password_Buyer.make, {
-                      isOpen: match$1[0],
+                      isOpen: Caml_obj.equal(openModal, /* Password */0),
                       onClose: (function (param) {
-                          setUpdatePasswordOpen(function (param) {
-                                return false;
-                              });
+                          router.back();
                         }),
                       email: email
                     }), React.createElement(Update_CompanyName_Buyer.make, {
-                      isOpen: match$2[0],
+                      isOpen: Caml_obj.equal(openModal, /* Company */1),
                       onClose: (function (param) {
-                          setUpdateComponentOpen(function (param) {
-                                return false;
-                              });
+                          router.back();
                         }),
                       defaultValue: company,
                       key: company
                     }), React.createElement(Update_Manager_Buyer.make, tmp$2), React.createElement(Update_PhoneNumber_Buyer.make, {
-                      isOpen: match$4[0],
+                      isOpen: Caml_obj.equal(openModal, /* Phone */3),
                       onClose: (function (param) {
-                          setUpdatePhoneNumberOpen(function (param) {
-                                return false;
-                              });
+                          router.back();
                         })
                     }), React.createElement(Update_BusinessNumber_Buyer.make, {
-                      isOpen: match$5[0],
+                      isOpen: Caml_obj.equal(openModal, /* BizNumber */4),
                       onClose: (function (param) {
-                          setUpdateBizNumberOpen(function (param) {
-                                return false;
-                              });
+                          router.back();
                         }),
                       defaultValue: displayBizNumber,
                       key: displayBizNumber
                     }), React.createElement(Update_Address_Buyer.make, {
-                      isOpen: match$6[0],
+                      isOpen: Caml_obj.equal(openModal, /* Location */5),
                       onClose: (function (param) {
-                          setUpdateAddressOpen(function (param) {
-                                return false;
-                              });
+                          router.back();
                         })
                     }), React.createElement(Update_MarketingTerm_Buyer.make, {
-                      isOpen: match$7[0],
+                      isOpen: Caml_obj.equal(openModal, /* Terms */6),
                       onClose: (function (param) {
-                          setUpdateTermOpen(function (param) {
-                                return false;
-                              });
+                          router.back();
                         }),
                       query: fragmentRefs
                     }), React.createElement(MyInfo_Account_Buyer$LogoutDialog, {
-                      isOpen: match$8[0],
+                      isOpen: Caml_obj.equal(openModal, /* Logout */7) ? /* Show */0 : /* Hide */1,
                       onCancel: (function (param) {
-                          setShowLogout(function (param) {
-                                return /* Hide */1;
-                              });
+                          router.back();
                         })
                     }), React.createElement(Account_Signout_Buyer_Mobile.make, {
                       query: fragmentRefs,
-                      isOpen: match$9[0],
+                      isOpen: Caml_obj.equal(openModal, /* Signout */8),
                       onClose: (function (param) {
-                          setSignoutOpen(function (param) {
-                                return false;
-                              });
+                          router.back();
                         })
                     })));
 }
 
 var Mobile = {
+  toFragment: toFragment,
   make: MyInfo_Account_Buyer$Mobile
 };
 

@@ -8,7 +8,7 @@
     "@duetds/date-picker": "^1.4.0",
     "@greenlabs/garter": "^0.11.0",
     "@greenlabs/re-korean-numeral": "^0.1.2",
-    "@greenlabs/res-daum-postcode": "^0.1.0",
+    "@greenlabs/res-daum-postcode": "^0.1.1",
     "@hookform/error-message": "^2.0.0",
     "@radix-ui/react-accordion": "^0.1.6",
     "@radix-ui/react-collapsible": "^0.1.5",

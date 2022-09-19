@@ -19,11 +19,6 @@ import { ErrorBoundary } from "@sentry/react";
 // If you don't do this, your Fast-Refresh will
 // not work!
 export default function App(props) {
-  let gtmAppId = null;
-  if (process && process.env && process.env.NEXT_PUBLIC_GTM_APP_ID) {
-    gtmAppId = process.env.NEXT_PUBLIC_GTM_APP_ID;
-  }
-
   return (
     <>
       <Head>
@@ -43,7 +38,7 @@ export default function App(props) {
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','${gtmAppId}');
+          })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_APP_ID}');
           `,
         }}
       />

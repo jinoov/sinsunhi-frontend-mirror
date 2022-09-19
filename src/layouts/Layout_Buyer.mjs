@@ -36,29 +36,48 @@ function Layout_Buyer(Props) {
   if (len < 5) {
     switch (len) {
       case 0 :
+          break;
       case 1 :
+          var match$1 = paths[0];
+          if (match$1 === "products") {
+            return children;
+          }
           break;
       case 2 :
-          var match$1 = paths[0];
-          if (match$1 === "buyer") {
-            var match$2 = paths[1];
-            switch (match$2) {
-              case "cart" :
-              case "products" :
-                  return children;
-              default:
-                
-            }
+          var match$2 = paths[0];
+          switch (match$2) {
+            case "buyer" :
+                var match$3 = paths[1];
+                switch (match$3) {
+                  case "cart" :
+                  case "products" :
+                      return children;
+                  default:
+                    
+                }
+                break;
+            case "products" :
+                var match$4 = paths[1];
+                switch (match$4) {
+                  case "[pid]" :
+                  case "all" :
+                      return children;
+                  default:
+                    
+                }
+                break;
+            default:
+              
           }
           break;
       case 3 :
-          var match$3 = paths[0];
-          if (match$3 === "buyer") {
-            var match$4 = paths[1];
-            switch (match$4) {
+          var match$5 = paths[0];
+          if (match$5 === "buyer") {
+            var match$6 = paths[1];
+            switch (match$6) {
               case "products" :
-                  var match$5 = paths[2];
-                  switch (match$5) {
+                  var match$7 = paths[2];
+                  switch (match$7) {
                     case "[pid]" :
                     case "all" :
                         return children;
@@ -74,12 +93,12 @@ function Layout_Buyer(Props) {
           }
           break;
       case 4 :
-          var match$6 = paths[0];
-          if (match$6 === "buyer") {
-            var match$7 = paths[1];
-            if (match$7 === "web-order") {
-              var match$8 = paths[2];
-              if (match$8 === "complete") {
+          var match$8 = paths[0];
+          if (match$8 === "buyer") {
+            var match$9 = paths[1];
+            if (match$9 === "web-order") {
+              var match$10 = paths[2];
+              if (match$10 === "complete") {
                 return children;
               }
               

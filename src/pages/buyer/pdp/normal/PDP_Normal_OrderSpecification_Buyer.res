@@ -26,10 +26,6 @@ module Fragment = %relay(`
             productOptionId: number
             stockSku
             price
-            productOptionCost {
-              deliveryCost
-              isFreeShipping
-            }
           }
         }
       }
@@ -46,10 +42,6 @@ module Fragment = %relay(`
             productOptionId: number
             stockSku
             price
-            productOptionCost {
-              deliveryCost
-              isFreeShipping
-            }
           }
         }
       }

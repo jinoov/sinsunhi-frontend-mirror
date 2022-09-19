@@ -167,7 +167,8 @@ function Product_Detail_Editor(Props) {
                         [
                           "preview",
                           "fullscreen"
-                        ]
+                        ],
+                        ["media"]
                       ],
                       quickbars_insert_toolbar: false,
                       paste_data_images: true,

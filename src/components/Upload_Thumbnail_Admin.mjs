@@ -13,6 +13,7 @@ import * as ReactRelay from "react-relay";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as IconCloseInput from "./svgs/IconCloseInput.mjs";
+import * as ReactToastNotifications from "react-toast-notifications";
 import * as UploadFileToS3PresignedUrl from "../utils/UploadFileToS3PresignedUrl.mjs";
 import * as UploadThumbnailAdminMutation_graphql from "../__generated__/UploadThumbnailAdminMutation_graphql.mjs";
 
@@ -247,13 +248,15 @@ function Upload_Thumbnail_Admin(Props) {
   var updateFn = Props.updateFn;
   var value = Props.value;
   var disabled = Props.disabled;
-  var match = use(undefined);
-  var mutate = match[0];
-  var match$1 = React.useState(function () {
+  var match = ReactToastNotifications.useToasts();
+  var addToast = match.addToast;
+  var match$1 = use(undefined);
+  var mutate = match$1[0];
+  var match$2 = React.useState(function () {
         return /* Init */0;
       });
-  var setThumbnailURL = match$1[1];
-  var thumbnailURL = match$1[0];
+  var setThumbnailURL = match$2[1];
+  var thumbnailURL = match$2[0];
   var isThumbnailUploading = thumbnailURL === /* Loading */1;
   var resetFile = function (param) {
     var inputFile = document.getElementById("thumbnail");
@@ -284,9 +287,20 @@ function Upload_Thumbnail_Admin(Props) {
     imageUrlStateReset(undefined);
     var filename = file$p.name;
     Curry.app(mutate, [
-          (function (err) {
-              console.log(err);
-              onFailureWithReset(resetFile, updateFn, err);
+          (function (error) {
+              onFailureWithReset(resetFile, updateFn, error);
+              addToast(React.createElement("div", {
+                        className: "flex items-center"
+                      }, React.createElement("span", {
+                            className: "w-6 h-6 mr-2"
+                          }, React.createElement(IconError.make, {
+                                width: "24",
+                                height: "24"
+                              })), React.createElement("div", {
+                            className: "w-full truncate"
+                          }, "" + error.message + "")), {
+                    appearance: "error"
+                  });
             }),
           (function (param, param$1) {
               var res = param.createPresignedUrlForImage;

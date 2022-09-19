@@ -15,7 +15,6 @@ import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
 import ArrowRightSvg from "../../public/assets/arrow-right.svg";
 
 function Header$User(Props) {
-  var kind = Props.kind;
   var router = Router.useRouter();
   var user = CustomHooks.Auth.use(undefined);
   var logOut = function (param) {
@@ -25,23 +24,27 @@ function Header$User(Props) {
                   var role = Belt_Option.map(CustomHooks.Auth.toOption(user), (function (user$p) {
                           return user$p.role;
                         }));
-                  if (role === undefined) {
+                  if (role !== undefined) {
+                    if (role !== 1) {
+                      if (role !== 0) {
+                        router.push("/admin/signin");
+                      } else {
+                        router.push("/seller/signin");
+                      }
+                    } else {
+                      router.push("/buyer/signin");
+                    }
                     return ;
                   }
-                  switch (role) {
-                    case /* Seller */0 :
-                        router.push("/seller/signin");
-                        return ;
-                    case /* Buyer */1 :
-                        router.push("/buyer/signin");
-                        return ;
-                    case /* Admin */2 :
-                        router.push("/admin/signin");
-                        return ;
-                    
-                  }
+                  
                 }), param);
   };
+  var match = Belt_Option.map(CustomHooks.Auth.toOption(user), (function (u) {
+          return u.role;
+        }));
+  var match$1 = Belt_Option.map(CustomHooks.Auth.toOption(user), (function (u) {
+          return u.role;
+        }));
   return React.createElement("div", {
               className: "relative flex items-center sm:h-16",
               id: "gnb-user"
@@ -51,9 +54,14 @@ function Header$User(Props) {
                       children: null,
                       className: "focus:outline-none"
                     }, React.createElement("div", {
-                          className: "hidden sm:flex sm:h-16 sm:items-center underline"
-                        }, React.createElement("span", undefined, Belt_Option.getWithDefault(Belt_Option.flatMap(CustomHooks.Auth.toOption(user), (function (user$p) {
-                                        if (kind !== 0) {
+                          className: "hidden sm:flex sm:h-16 sm:items-center"
+                        }, match !== undefined && match >= 3 ? React.createElement("span", {
+                                className: "mr-2 rounded-lg bg-primary text-white text-sm px-1 py-0.5"
+                              }, "외부") : null, React.createElement("span", {
+                              className: "underline"
+                            }, Belt_Option.getWithDefault(Belt_Option.flatMap(CustomHooks.Auth.toOption(user), (function (user$p) {
+                                        var match = user$p.role;
+                                        if (match !== 0) {
                                           return user$p.email;
                                         } else {
                                           return user$p.name;
@@ -66,10 +74,13 @@ function Header$User(Props) {
                                   fill: "#121212"
                                 }))), React.createElement("div", {
                           className: "flex items-center h-16 sm:hidden"
-                        }, React.createElement("span", {
+                        }, match$1 !== undefined && match$1 >= 3 ? React.createElement("span", {
+                                className: "mr-2 rounded-lg bg-primary text-white text-sm px-1 py-0.5"
+                              }, "외부") : null, React.createElement("span", {
                               className: "flex w-8 h-8 rounded-full bg-gray-100 justify-center items-center"
                             }, Belt_Option.getWithDefault(Belt_Option.map(Belt_Option.map(Belt_Option.flatMap(CustomHooks.Auth.toOption(user), (function (user$p) {
-                                                if (kind !== 0) {
+                                                var match = user$p.role;
+                                                if (match !== 0) {
                                                   return user$p.email;
                                                 } else {
                                                   return user$p.name;
@@ -140,9 +151,7 @@ function Header$Seller(Props) {
                                   }))
                         }), React.createElement("li", {
                           className: "flex-1 flex justify-end sm:hidden"
-                        }, React.createElement(Header$User, {
-                              kind: /* Seller */0
-                            }))), React.createElement("div", {
+                        }, React.createElement(Header$User, {}))), React.createElement("div", {
                       className: "flex flex-row overflow-x-scroll scrollbar-hide"
                     }, React.createElement(Link, {
                           href: "/seller/orders?status=CREATE&sort=created",
@@ -173,9 +182,7 @@ function Header$Seller(Props) {
                                   }, "다운로드 센터"))
                         })), React.createElement("li", {
                       className: "hidden sm:flex"
-                    }, React.createElement(Header$User, {
-                          kind: /* Seller */0
-                        }))));
+                    }, React.createElement(Header$User, {}))));
 }
 
 var Seller = {
@@ -210,9 +217,7 @@ function Header$Admin(Props) {
                           className: "w-[86px] h-[22px] md:w-[100px] md:h-[25px]",
                           alt: "신선하이 로고",
                           src: "/assets/sinsunhi-logo.svg"
-                        })), React.createElement("li", undefined, React.createElement(Header$User, {
-                          kind: /* Admin */2
-                        }))));
+                        })), React.createElement("li", undefined, React.createElement(Header$User, {}))));
 }
 
 var Admin = {

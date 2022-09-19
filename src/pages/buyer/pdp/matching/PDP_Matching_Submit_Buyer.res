@@ -75,7 +75,7 @@ module MO = {
       | LoggedIn({role}) =>
         switch role {
         // 어드민 | 셀러
-        | Admin | Seller =>
+        | Admin | ExternalStaff | Seller =>
           <button disabled=true className=disabledStyle> {buttonText->React.string} </button>
 
         // 바이어

@@ -7,6 +7,7 @@ import * as DS_Icon from "../../../components/svgs/DS_Icon.mjs";
 import * as DS_None from "../../../components/common/container/DS_None.mjs";
 import * as DataGtm from "../../../utils/DataGtm.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as DS_Title from "../../../components/common/container/DS_Title.mjs";
 import * as DS_Toast from "../../../components/common/container/DS_Toast.mjs";
 import * as Js_array from "rescript/lib/es6/js_array.js";
@@ -33,6 +34,7 @@ import * as DS_TopNavigation from "../../../components/common/container/DS_TopNa
 import * as DS_ButtonContainer from "../../../components/common/container/DS_ButtonContainer.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactToastNotifications from "react-toast-notifications";
+import * as RfqItemDetailSeller_QuotationPrice_Query_graphql from "../../../__generated__/RfqItemDetailSeller_QuotationPrice_Query_graphql.mjs";
 import * as RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql from "../../../__generated__/RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.mjs";
 import * as RfqItemDetailSeller_CreateRfqQuotationMeat_Mutation_graphql from "../../../__generated__/RfqItemDetailSeller_CreateRfqQuotationMeat_Mutation_graphql.mjs";
 import * as RfqItemDetailSeller_UpdateRfqQuotationMeat_Mutation_graphql from "../../../__generated__/RfqItemDetailSeller_UpdateRfqQuotationMeat_Mutation_graphql.mjs";
@@ -104,49 +106,49 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
-var Query_countryCode_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.countryCode_decode;
+var RfqRequestItemMeat_countryCode_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.countryCode_decode;
 
-var Query_countryCode_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.countryCode_fromString;
+var RfqRequestItemMeat_countryCode_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.countryCode_fromString;
 
-var Query_rfqDeliveryMethod_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqDeliveryMethod_decode;
+var RfqRequestItemMeat_rfqDeliveryMethod_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqDeliveryMethod_decode;
 
-var Query_rfqDeliveryMethod_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqDeliveryMethod_fromString;
+var RfqRequestItemMeat_rfqDeliveryMethod_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqDeliveryMethod_fromString;
 
-var Query_rfqMeatPackageMethod_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatPackageMethod_decode;
+var RfqRequestItemMeat_rfqMeatPackageMethod_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatPackageMethod_decode;
 
-var Query_rfqMeatPackageMethod_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatPackageMethod_fromString;
+var RfqRequestItemMeat_rfqMeatPackageMethod_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatPackageMethod_fromString;
 
-var Query_rfqMeatStorageMethod_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatStorageMethod_decode;
+var RfqRequestItemMeat_rfqMeatStorageMethod_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatStorageMethod_decode;
 
-var Query_rfqMeatStorageMethod_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatStorageMethod_fromString;
+var RfqRequestItemMeat_rfqMeatStorageMethod_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqMeatStorageMethod_fromString;
 
-var Query_rfqQuotationStatus_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqQuotationStatus_decode;
+var RfqRequestItemMeat_rfqQuotationStatus_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqQuotationStatus_decode;
 
-var Query_rfqQuotationStatus_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqQuotationStatus_fromString;
+var RfqRequestItemMeat_rfqQuotationStatus_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqQuotationStatus_fromString;
 
-var Query_rfqRequestItemStatus_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestItemStatus_decode;
+var RfqRequestItemMeat_rfqRequestItemStatus_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestItemStatus_decode;
 
-var Query_rfqRequestItemStatus_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestItemStatus_fromString;
+var RfqRequestItemMeat_rfqRequestItemStatus_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestItemStatus_fromString;
 
-var Query_rfqRequestStatus_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestStatus_decode;
+var RfqRequestItemMeat_rfqRequestStatus_decode = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestStatus_decode;
 
-var Query_rfqRequestStatus_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestStatus_fromString;
+var RfqRequestItemMeat_rfqRequestStatus_fromString = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Utils.rfqRequestStatus_fromString;
 
-var Query = {
-  countryCode_decode: Query_countryCode_decode,
-  countryCode_fromString: Query_countryCode_fromString,
-  rfqDeliveryMethod_decode: Query_rfqDeliveryMethod_decode,
-  rfqDeliveryMethod_fromString: Query_rfqDeliveryMethod_fromString,
-  rfqMeatPackageMethod_decode: Query_rfqMeatPackageMethod_decode,
-  rfqMeatPackageMethod_fromString: Query_rfqMeatPackageMethod_fromString,
-  rfqMeatStorageMethod_decode: Query_rfqMeatStorageMethod_decode,
-  rfqMeatStorageMethod_fromString: Query_rfqMeatStorageMethod_fromString,
-  rfqQuotationStatus_decode: Query_rfqQuotationStatus_decode,
-  rfqQuotationStatus_fromString: Query_rfqQuotationStatus_fromString,
-  rfqRequestItemStatus_decode: Query_rfqRequestItemStatus_decode,
-  rfqRequestItemStatus_fromString: Query_rfqRequestItemStatus_fromString,
-  rfqRequestStatus_decode: Query_rfqRequestStatus_decode,
-  rfqRequestStatus_fromString: Query_rfqRequestStatus_fromString,
+var RfqRequestItemMeat = {
+  countryCode_decode: RfqRequestItemMeat_countryCode_decode,
+  countryCode_fromString: RfqRequestItemMeat_countryCode_fromString,
+  rfqDeliveryMethod_decode: RfqRequestItemMeat_rfqDeliveryMethod_decode,
+  rfqDeliveryMethod_fromString: RfqRequestItemMeat_rfqDeliveryMethod_fromString,
+  rfqMeatPackageMethod_decode: RfqRequestItemMeat_rfqMeatPackageMethod_decode,
+  rfqMeatPackageMethod_fromString: RfqRequestItemMeat_rfqMeatPackageMethod_fromString,
+  rfqMeatStorageMethod_decode: RfqRequestItemMeat_rfqMeatStorageMethod_decode,
+  rfqMeatStorageMethod_fromString: RfqRequestItemMeat_rfqMeatStorageMethod_fromString,
+  rfqQuotationStatus_decode: RfqRequestItemMeat_rfqQuotationStatus_decode,
+  rfqQuotationStatus_fromString: RfqRequestItemMeat_rfqQuotationStatus_fromString,
+  rfqRequestItemStatus_decode: RfqRequestItemMeat_rfqRequestItemStatus_decode,
+  rfqRequestItemStatus_fromString: RfqRequestItemMeat_rfqRequestItemStatus_fromString,
+  rfqRequestStatus_decode: RfqRequestItemMeat_rfqRequestStatus_decode,
+  rfqRequestStatus_fromString: RfqRequestItemMeat_rfqRequestStatus_fromString,
   Operation: undefined,
   Types: undefined,
   use: use,
@@ -155,6 +157,89 @@ var Query = {
   fetchPromised: fetchPromised,
   usePreloaded: usePreloaded,
   retain: retain
+};
+
+function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
+  var data = ReactRelay.useLazyLoadQuery(RfqItemDetailSeller_QuotationPrice_Query_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertVariables(variables)), {
+        fetchKey: fetchKey,
+        fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
+        networkCacheConfig: networkCacheConfig
+      });
+  return RescriptRelay_Internal.internal_useConvertedValue(RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertResponse, data);
+}
+
+function useLoader$1(param) {
+  var match = ReactRelay.useQueryLoader(RfqItemDetailSeller_QuotationPrice_Query_graphql.node);
+  var loadQueryFn = match[1];
+  var loadQuery = React.useMemo((function () {
+          return function (param, param$1, param$2, param$3) {
+            return Curry._2(loadQueryFn, RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertVariables(param), {
+                        fetchPolicy: param$1,
+                        networkCacheConfig: param$2
+                      });
+          };
+        }), [loadQueryFn]);
+  return [
+          Caml_option.nullable_to_opt(match[0]),
+          loadQuery,
+          match[2]
+        ];
+}
+
+function $$fetch$1(environment, variables, onResult, networkCacheConfig, fetchPolicy, param) {
+  ReactRelay.fetchQuery(environment, RfqItemDetailSeller_QuotationPrice_Query_graphql.node, RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).subscribe({
+        next: (function (res) {
+            Curry._1(onResult, {
+                  TAG: /* Ok */0,
+                  _0: RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertResponse(res)
+                });
+          }),
+        error: (function (err) {
+            Curry._1(onResult, {
+                  TAG: /* Error */1,
+                  _0: err
+                });
+          })
+      });
+}
+
+function fetchPromised$1(environment, variables, networkCacheConfig, fetchPolicy, param) {
+  var __x = ReactRelay.fetchQuery(environment, RfqItemDetailSeller_QuotationPrice_Query_graphql.node, RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertVariables(variables), {
+          networkCacheConfig: networkCacheConfig,
+          fetchPolicy: RescriptRelay.mapFetchQueryFetchPolicy(fetchPolicy)
+        }).toPromise();
+  return Js_promise.then_((function (res) {
+                return Promise.resolve(RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertResponse(res));
+              }), __x);
+}
+
+function usePreloaded$1(queryRef, param) {
+  var data = ReactRelay.usePreloadedQuery(RfqItemDetailSeller_QuotationPrice_Query_graphql.node, queryRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertResponse, data);
+}
+
+function retain$1(environment, variables) {
+  var operationDescriptor = RelayRuntime.createOperationDescriptor(RfqItemDetailSeller_QuotationPrice_Query_graphql.node, RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertVariables(variables));
+  return environment.retain(operationDescriptor);
+}
+
+var QuotationPrice = {
+  Operation: undefined,
+  Types: undefined,
+  use: use$1,
+  useLoader: useLoader$1,
+  $$fetch: $$fetch$1,
+  fetchPromised: fetchPromised$1,
+  usePreloaded: usePreloaded$1,
+  retain: retain$1
+};
+
+var Query = {
+  RfqRequestItemMeat: RfqRequestItemMeat,
+  QuotationPrice: QuotationPrice
 };
 
 function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
@@ -182,7 +267,7 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
             });
 }
 
-function use$1(param) {
+function use$2(param) {
   var match = ReactRelay.useMutation(RfqItemDetailSeller_CreateRfqQuotationMeat_Mutation_graphql.node);
   var mutate = match[0];
   return [
@@ -224,7 +309,7 @@ var CreateRfqQuotationMeat = {
   Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation,
-  use: use$1
+  use: use$2
 };
 
 function commitMutation$1(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
@@ -252,7 +337,7 @@ function commitMutation$1(environment, variables, optimisticUpdater, optimisticR
             });
 }
 
-function use$2(param) {
+function use$3(param) {
   var match = ReactRelay.useMutation(RfqItemDetailSeller_UpdateRfqQuotationMeat_Mutation_graphql.node);
   var mutate = match[0];
   return [
@@ -294,7 +379,7 @@ var UpdateRfqQuotationMeat = {
   Operation: undefined,
   Types: undefined,
   commitMutation: commitMutation$1,
-  use: use$2
+  use: use$3
 };
 
 var Mutation = {
@@ -383,7 +468,7 @@ function stringToNumber(s) {
 function RfqItemDetail_Seller$TimerTitle(Props) {
   var remainSecondsUntilQuotationExpired = Props.remainSecondsUntilQuotationExpired;
   var match = React.useState(function () {
-        return remainSecondsUntilQuotationExpired - 3600 | 0;
+        return remainSecondsUntilQuotationExpired - 7200 | 0;
       });
   var setTime = match[1];
   var time = match[0];
@@ -824,7 +909,7 @@ function RfqItemDetail_Seller$Detail$Button(Props) {
                           onClick: (function (param) {
                               navigatePriceFormPage(undefined);
                             })
-                        }), React.createElement("div", undefined))));
+                        }))));
 }
 
 var Button = {
@@ -862,16 +947,56 @@ var Detail = {
   make: RfqItemDetail_Seller$Detail
 };
 
+function RfqItemDetail_Seller$Apply$PriceTextsSkeleton(Props) {
+  return React.createElement("div", undefined, React.createElement("div", {
+                  className: "animate-pulse rounded-lg bg-gray-100 h-5 w-[280px]"
+                }), React.createElement("div", {
+                  className: "h-2"
+                }), React.createElement("div", {
+                  className: "animate-pulse rounded-lg bg-gray-100 h-5 w-[300px]"
+                }));
+}
+
+var PriceTextsSkeleton = {
+  make: RfqItemDetail_Seller$Apply$PriceTextsSkeleton
+};
+
+function RfqItemDetail_Seller$Apply$PriceTexts(Props) {
+  var itemId = Props.itemId;
+  var minimumPriceUnit = Props.minimumPriceUnit;
+  var match = use$1({
+        itemId: itemId
+      }, /* NetworkOnly */3, undefined, undefined, undefined);
+  var displayPricePerKg = Belt_Option.map(Belt_Option.map(Belt_Option.map(Belt_Int.fromString(match.rfqRecommendedPriceForMeat.recommendedPricePerKg), (function (x) {
+                  return x - Caml_int32.mod_(x, minimumPriceUnit) | 0;
+                })), (function (x) {
+              return String(x);
+            })), stringToNumber);
+  var minQuotedPrice = Belt_Option.mapWithDefault(match.rfqMinQuotedPriceForMeat.minQuotedPricePerKg, displayPricePerKg, (function (x) {
+          return stringToNumber(x);
+        }));
+  return React.createElement("div", {
+              className: "text-text-L3 text-base"
+            }, displayPricePerKg !== undefined ? React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "구매자의 기존 단가는 "), React.createElement("span", {
+                        className: "text-primary"
+                      }, "" + displayPricePerKg + "원"), React.createElement("span", undefined, "입니다."), React.createElement("br", undefined)) : null, minQuotedPrice !== undefined ? React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "현재까지 최저 입찰 단가는 "), React.createElement("span", {
+                        className: "text-primary"
+                      }, "" + minQuotedPrice + "원"), React.createElement("span", undefined, "입니다.")) : null);
+}
+
+var PriceTexts = {
+  make: RfqItemDetail_Seller$Apply$PriceTexts
+};
+
 function RfqItemDetail_Seller$Apply(Props) {
   var itemMeat = Props.itemMeat;
-  var rfqRecommendedPriceForMeat = Props.rfqRecommendedPriceForMeat;
   var sellerSelectedGradeNode = Props.sellerSelectedGradeNode;
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
-  var match$1 = use$1(undefined);
+  var match$1 = use$2(undefined);
   var mutateCreate = match$1[0];
-  var match$2 = use$2(undefined);
+  var match$2 = use$3(undefined);
   var mutateUpdate = match$2[0];
   var match$3 = React.useState(function () {
         
@@ -1002,12 +1127,39 @@ function RfqItemDetail_Seller$Apply(Props) {
           undefined
         ]);
   };
+  var speciesName = Belt_Option.map(itemMeat.species, (function (x) {
+          return x.name;
+        }));
+  var speciesCode = Belt_Option.map(itemMeat.species, (function (x) {
+          return x.code;
+        }));
+  var minimumPriceUnit;
+  if (speciesCode !== undefined) {
+    switch (speciesCode) {
+      case "BEEF" :
+          minimumPriceUnit = 100;
+          break;
+      case "CHICKEN" :
+          minimumPriceUnit = 10;
+          break;
+      case "PORK" :
+          minimumPriceUnit = 50;
+          break;
+      default:
+        minimumPriceUnit = 0;
+    }
+  } else {
+    minimumPriceUnit = 0;
+  }
+  var errorMessage = speciesName !== undefined ? "" + speciesName + "의 경우 견적가는 " + String(minimumPriceUnit) + "원 단위로 입력해주셔야 해요." : undefined;
+  var price$p = Belt_Option.flatMap(price, Belt_Int.fromString);
+  var isValidPrice = price$p !== undefined ? Caml_int32.mod_(price$p, minimumPriceUnit) === 0 : false;
   var part = Belt_Option.mapWithDefault(itemMeat.part, "", (function (x) {
           return "" + x.name + "/" + (
                   x.isDomestic ? "국산" : "수입"
                 ) + "";
         }));
-  var price$p = Belt_Option.getWithDefault(price, "");
+  var price$p$1 = Belt_Option.getWithDefault(price, "");
   return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl pt-14"
                 }, React.createElement(DS_TopNavigation.Detail.Root.make, {
@@ -1038,11 +1190,18 @@ function RfqItemDetail_Seller$Apply(Props) {
                                       return "수입";
                                     }
                                   })) + "의",
-                            title2: "제공 가능한 단가를 알려주세요",
-                            subTitle: "최대 단가 : " + stringToNumber(rfqRecommendedPriceForMeat.pricePerKg) + "원/kg"
+                            title2: "제공 가능한 단가를 알려주세요"
                           }),
                       className: "mt-10"
-                    }), React.createElement(DS_InputField.Line1.Root.make, {
+                    }), React.createElement("div", {
+                      className: "px-5 mt-3"
+                    }, React.createElement(React.Suspense, {
+                          children: React.createElement(RfqItemDetail_Seller$Apply$PriceTexts, {
+                                itemId: itemMeat.id,
+                                minimumPriceUnit: minimumPriceUnit
+                              }),
+                          fallback: React.createElement(RfqItemDetail_Seller$Apply$PriceTextsSkeleton, {})
+                        })), React.createElement(DS_InputField.Line1.Root.make, {
                       children: React.createElement(DS_InputField.Line1.Input.make, {
                             type_: "text",
                             placeholder: "단가",
@@ -1057,6 +1216,7 @@ function RfqItemDetail_Seller$Apply(Props) {
                                     });
                               }),
                             unit: "원/kg",
+                            errorMessage: isValidPrice ? undefined : errorMessage,
                             underLabelType: "won",
                             maxLength: 10
                           }),
@@ -1079,7 +1239,7 @@ function RfqItemDetail_Seller$Apply(Props) {
                               })
                           }, React.createElement(DS_ButtonContainer.Full1.make, {
                                 label: "다음",
-                                disabled: Belt_Option.isNone(price)
+                                disabled: !isValidPrice
                               })),
                       asChild: false
                     }), React.createElement(DS_Dialog.Popup.Portal.make, {
@@ -1093,7 +1253,7 @@ function RfqItemDetail_Seller$Apply(Props) {
                             }), React.createElement(DS_Dialog.Popup.Description.make, {
                               children: React.createElement("div", {
                                     className: "text-base leading-6 tracking-tight text-enabled-L2"
-                                  }, React.createElement("div", undefined, "" + part + " - " + numberToComma(price$p) + " 원/kg"), React.createElement("div", undefined, "등급 - " + sellerSelectedGradeNode.grade + ""))
+                                  }, React.createElement("div", undefined, "" + part + " - " + numberToComma(price$p$1) + " 원/kg"), React.createElement("div", undefined, "등급 - " + sellerSelectedGradeNode.grade + ""))
                             }), React.createElement(DS_Dialog.Popup.Buttons.make, {
                               children: null
                             }, React.createElement(DS_Dialog.Popup.Close.make, {
@@ -1112,6 +1272,8 @@ function RfqItemDetail_Seller$Apply(Props) {
 }
 
 var Apply = {
+  PriceTextsSkeleton: PriceTextsSkeleton,
+  PriceTexts: PriceTexts,
   make: RfqItemDetail_Seller$Apply
 };
 
@@ -1149,7 +1311,6 @@ function RfqItemDetail_Seller$DetailPageRouter(Props) {
   if (sellerSelectedGradeNode !== undefined && itemStatus === "WAITING_FOR_QUOTATION") {
     return React.createElement(RfqItemDetail_Seller$Apply, {
                 itemMeat: node,
-                rfqRecommendedPriceForMeat: match.rfqRecommendedPriceForMeat,
                 sellerSelectedGradeNode: sellerSelectedGradeNode.node
               });
   }

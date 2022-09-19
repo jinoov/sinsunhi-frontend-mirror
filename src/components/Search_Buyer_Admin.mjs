@@ -11,14 +11,20 @@ import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import * as Query_Buyer_Form_Admin from "./Query_Buyer_Form_Admin.mjs";
 
+function stringToPhoneFormat(str) {
+  return str.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
+}
+
 function Search_Buyer_Admin(Props) {
   var router = Router.useRouter();
   var onSubmit = function (param) {
     var state = param.state;
     var name = Query_Buyer_Form_Admin.FormFields.get(state.values, /* Name */0);
     var email = Query_Buyer_Form_Admin.FormFields.get(state.values, /* Email */1);
+    var phone = Query_Buyer_Form_Admin.FormFields.get(state.values, /* Phone */2).replace(new RegExp("\\-", "g"), "");
     router.query["name"] = name;
     router.query["email"] = email;
+    router.query["phone"] = phone;
     router.query["offset"] = "0";
     router.push("" + router.pathname + "?" + new URLSearchParams(router.query).toString() + "");
   };
@@ -39,6 +45,8 @@ function Search_Buyer_Admin(Props) {
                     return Curry._4(form.setFieldValue, /* Name */0, v, false, undefined);
                   } else if (k === "email") {
                     return Curry._4(form.setFieldValue, /* Email */1, v, false, undefined);
+                  } else if (k === "phone") {
+                    return Curry._4(form.setFieldValue, /* Phone */2, stringToPhoneFormat(v), false, undefined);
                   } else {
                     return ;
                   }
@@ -48,7 +56,12 @@ function Search_Buyer_Admin(Props) {
     return ReactEvents.interceptingHandler((function (param) {
                   Curry._4(form.setFieldValue, /* Name */0, "", false, undefined);
                   Curry._4(form.setFieldValue, /* Email */1, "", false, undefined);
+                  Curry._4(form.setFieldValue, /* Phone */2, "", false, undefined);
                 }), param);
+  };
+  var handleOnChangePhone = function (e) {
+    var newValue = stringToPhoneFormat(e.currentTarget.value);
+    Curry._4(form.setFieldValue, /* Phone */2, newValue, true, undefined);
   };
   var partial_arg = Curry._1(form.handleChange, /* Name */0);
   var partial_arg$1 = Curry._1(form.handleChange, /* Email */1);
@@ -65,13 +78,14 @@ function Search_Buyer_Admin(Props) {
                             }, "검색"), React.createElement("div", {
                               className: "flex-1"
                             }, React.createElement("div", {
-                                  className: "flex"
+                                  className: "flex gap-10"
                                 }, React.createElement("div", {
-                                      className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center mr-16"
+                                      className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
                                     }, React.createElement("label", {
-                                          className: "whitespace-nowrap mr-2",
-                                          htmlFor: "producer-name"
+                                          className: "whitespace-nowrap mr-2 w-18",
+                                          htmlFor: "name"
                                         }, "바이어명"), React.createElement(Input.make, {
+                                          id: "name",
                                           type_: "text",
                                           name: "name",
                                           placeholder: "바이어명 입력",
@@ -87,10 +101,11 @@ function Search_Buyer_Admin(Props) {
                                       className: "min-w-1/2 flex items-center"
                                     }, React.createElement("label", {
                                           className: "whitespace-nowrap mr-2",
-                                          htmlFor: "producer-code"
+                                          htmlFor: "email"
                                         }, "이메일"), React.createElement("span", {
                                           className: "flex-1"
                                         }, React.createElement(Input.make, {
+                                              id: "email",
                                               type_: "text",
                                               name: "email",
                                               placeholder: "이메일 입력",
@@ -102,7 +117,25 @@ function Search_Buyer_Admin(Props) {
                                                     _0: /* Email */1
                                                   }),
                                               tabIndex: 2
-                                            }))))))), React.createElement("div", {
+                                            })))), React.createElement("div", {
+                                  className: "flex mt-4"
+                                }, React.createElement("div", {
+                                      className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
+                                    }, React.createElement("label", {
+                                          className: "whitespace-nowrap mr-2 w-18",
+                                          htmlFor: "phone"
+                                        }, "휴대전화번호"), React.createElement(Input.make, {
+                                          id: "phone",
+                                          type_: "text",
+                                          name: "phone",
+                                          placeholder: "휴대전화번호 입력",
+                                          value: Query_Buyer_Form_Admin.FormFields.get(form.values, /* Phone */2),
+                                          onChange: handleOnChangePhone,
+                                          error: Curry._1(form.getFieldError, /* Field */{
+                                                _0: /* Phone */2
+                                              }),
+                                          tabIndex: 3
+                                        })))))), React.createElement("div", {
                       className: "flex justify-center mt-5"
                     }, React.createElement("input", {
                           className: "w-20 py-2 bg-gray-button-gl text-black-gl rounded-xl ml-2 hover:bg-gray-button-gl focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-gl focus:ring-opacity-100",
@@ -127,6 +160,7 @@ var make = Search_Buyer_Admin;
 export {
   FormFields ,
   Form ,
+  stringToPhoneFormat ,
   make ,
 }
 /* Input Not a pure module */

@@ -13,6 +13,8 @@ module Query = %relay(`
   }
 `)
 
+// 사용하지 않는 페이지
+// RfqItemDetail_Seller 파일인 `/seller/rfq/request/${itemMeat.requestItem.id}` 페이지로 Replace합니다.
 module ConfirmPageRouter = {
   @react.component
   let make = (~quotationId) => {
@@ -24,6 +26,7 @@ module ConfirmPageRouter = {
         router->Next.Router.replace(`/seller/rfq/request/${itemMeat.requestItem.id}`)
         React.null
       }
+
     | None => <DS_None.Default message={`견적서 정보가 없습니다.`} />
     }
   }
@@ -31,7 +34,7 @@ module ConfirmPageRouter = {
 
 @react.component
 let make = (~quotationId: option<string>) => {
-  <Authorization.Seller fallback={React.null} title=`견적 확인`>
+  <Authorization.Seller fallback={React.null} title={`견적 확인`}>
     <React.Suspense>
       {switch quotationId {
       | Some(quotationId') => <ConfirmPageRouter quotationId={quotationId'} />

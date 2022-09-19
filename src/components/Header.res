@@ -1,9 +1,8 @@
 type sellerTab = [#upload | #list | #downloadCenter | #shipments]
 
 module User = {
-  type kind = Seller | Buyer | Admin
   @react.component
-  let make = (~kind) => {
+  let make = () => {
     let router = Next.Router.useRouter()
     let user = CustomHooks.Auth.use()
 
@@ -15,7 +14,7 @@ module User = {
         switch role {
         | Some(Seller) => router->Next.Router.push("/seller/signin")
         | Some(Buyer) => router->Next.Router.push("/buyer/signin")
-        | Some(Admin) => router->Next.Router.push("/admin/signin")
+        | Some(Admin) | Some(ExternalStaff) => router->Next.Router.push("/admin/signin")
         | None => ()
         }
       }
@@ -25,15 +24,23 @@ module User = {
       <RadixUI.DropDown.Root>
         // PC 뷰
         <RadixUI.DropDown.Trigger className=%twc("focus:outline-none")>
-          <div className=%twc("hidden sm:flex sm:h-16 sm:items-center underline")>
-            <span>
+          <div className=%twc("hidden sm:flex sm:h-16 sm:items-center")>
+            {switch user->CustomHooks.Auth.toOption->Option.map(u => u.role) {
+            | Some(ExternalStaff) =>
+              <span className=%twc("mr-2 rounded-lg bg-primary text-white text-sm px-1 py-0.5")>
+                {"외부"->React.string}
+              </span>
+            | _ => React.null
+            }}
+            <span className=%twc("underline")>
               {user
               ->CustomHooks.Auth.toOption
               ->Option.flatMap(user' =>
-                switch kind {
+                switch user'.role {
                 | Seller => Some(user'.name)
                 | Buyer
-                | Admin =>
+                | Admin
+                | ExternalStaff =>
                   user'.email
                 }
               )
@@ -45,15 +52,23 @@ module User = {
             </span>
           </div>
           <div className=%twc("flex items-center h-16 sm:hidden")>
+            {switch user->CustomHooks.Auth.toOption->Option.map(u => u.role) {
+            | Some(ExternalStaff) =>
+              <span className=%twc("mr-2 rounded-lg bg-primary text-white text-sm px-1 py-0.5")>
+                {"외부"->React.string}
+              </span>
+            | _ => React.null
+            }}
             <span
               className=%twc("flex w-8 h-8 rounded-full bg-gray-100 justify-center items-center")>
               {user
               ->CustomHooks.Auth.toOption
               ->Option.flatMap(user' =>
-                switch kind {
+                switch user'.role {
                 | Seller => Some(user'.name)
                 | Buyer
-                | Admin =>
+                | Admin
+                | ExternalStaff =>
                   user'.email
                 }
               )
@@ -130,7 +145,7 @@ module Seller = {
             </li>
           </Next.Link>
           <li className=%twc("flex-1 flex justify-end sm:hidden")>
-            <User kind=User.Seller />
+            <User />
           </li>
         </div>
         <div className=%twc("flex flex-row overflow-x-scroll scrollbar-hide")>
@@ -178,7 +193,7 @@ module Seller = {
           </Next.Link>
         </div>
         <li className=%twc("hidden sm:flex")>
-          <User kind=User.Seller />
+          <User />
         </li>
       </ol>
     </nav>
@@ -217,7 +232,7 @@ module Admin = {
           />
         </li>
         <li>
-          <User kind=User.Admin />
+          <User />
         </li>
       </ol>
     </nav>

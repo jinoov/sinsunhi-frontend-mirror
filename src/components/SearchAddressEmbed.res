@@ -17,6 +17,7 @@ let make = (~onComplete, ~isShow) => {
             ~oncomplete=onComplete,
             ~width=w->Float.fromInt,
             ~height=h->Float.fromInt,
+            ~submitMode=false,
             (),
           )
           let daumPostCode = option->make

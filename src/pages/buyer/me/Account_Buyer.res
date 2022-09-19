@@ -49,11 +49,12 @@ let default = ({deviceType, gnbBanners, displayCategories}) => {
     <Next.Script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
     <div className=%twc("w-full min-h-screen")>
       {switch deviceType {
-      | DeviceDetect.PC => <>
+      | DeviceDetect.PC =>
+        <>
           <div className=%twc("flex")>
             <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
           </div>
-          <Authorization.Buyer title=`신선하이` ssrFallback={<MyInfo_Skeleton_Buyer.PC />}>
+          <Authorization.Buyer title={`신선하이`} ssrFallback={<MyInfo_Skeleton_Buyer.PC />}>
             <RescriptReactErrorBoundary
               fallback={_ =>
                 <div> {`계정정보를 가져오는데 실패했습니다`->React.string} </div>}>
@@ -65,10 +66,11 @@ let default = ({deviceType, gnbBanners, displayCategories}) => {
           <Footer_Buyer.PC />
         </>
       | DeviceDetect.Unknown
-      | DeviceDetect.Mobile => <>
+      | DeviceDetect.Mobile =>
+        <>
           <Header_Buyer.Mobile key=router.asPath />
           <Authorization.Buyer
-            title=`신선하이` ssrFallback={<MyInfo_Skeleton_Buyer.Mobile.Account />}>
+            title={`신선하이`} ssrFallback={<MyInfo_Skeleton_Buyer.Mobile.Account />}>
             <RescriptReactErrorBoundary
               fallback={_ =>
                 <div> {`계정정보를 가져오는데 실패했습니다`->React.string} </div>}>

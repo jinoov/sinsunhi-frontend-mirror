@@ -20,7 +20,7 @@ let make = (~query, ~children) => {
               <a className=%twc("py-[18px] text-left px-7")>
                 <div className=%twc("w-fit")>
                   {switch router.asPath {
-                  | "/buyer/me/profile" =>
+                  | str if str->Js.String2.includes("/buyer/me/profile") =>
                     <>
                       <span className=%twc("font-bold")> {`프로필 정보`->React.string} </span>
                       <div className=%twc("border-b-2 border-[#1F2024]") />
@@ -34,7 +34,7 @@ let make = (~query, ~children) => {
               <a className=%twc("py-[18px] text-left px-7")>
                 <div className=%twc("w-fit")>
                   {switch router.asPath {
-                  | "/buyer/me/account" =>
+                  | str if str->Js.String2.includes("/buyer/me/account") =>
                     <>
                       <span className=%twc("font-bold")> {`계정정보`->React.string} </span>
                       <div className=%twc("border-b-2 border-[#1F2024]") />

@@ -5,6 +5,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Divider from "../../../components/common/Divider.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import * as IconArrow from "../../../components/svgs/IconArrow.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
@@ -13,6 +14,7 @@ import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
+import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
 import * as Webapi__Dom__Element from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__Element.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PLP_Scrollable_Tab_Item from "./PLP_Scrollable_Tab_Item.mjs";
@@ -107,32 +109,110 @@ function PLP_Scrollable_Header$PC$ScrollTab(Props) {
   var router = Router.useRouter();
   var cid = Js_dict.get(router.query, "cid");
   var categoryId = cid !== undefined ? cid : Js_dict.get(router.query, "category-id");
+  var container = React.useRef(null);
+  var target = React.useRef(null);
+  var match = React.useState(function () {
+        return false;
+      });
+  var setShowLeftArrow = match[1];
+  var match$1 = React.useState(function () {
+        return false;
+      });
+  var setShowRightArrow = match$1[1];
+  var modifyArrowVisibility = function (param) {
+    var container$p = container.current;
+    if (container$p == null) {
+      return ;
+    }
+    var currentScrollLeft = container$p.scrollLeft;
+    setShowLeftArrow(function (param) {
+          return currentScrollLeft > 0.0;
+        });
+    setShowRightArrow(function (param) {
+          return ((Math.ceil(currentScrollLeft) | 0) + container$p.clientWidth | 0) < container$p.scrollWidth;
+        });
+  };
+  var scrollToSelectedItem = function (param) {
+    target.current = Js_null_undefined.fromOption(Caml_option.nullable_to_opt(document.getElementById("category-" + Belt_Option.getWithDefault(categoryId, "") + "")));
+    var match = container.current;
+    var match$1 = target.current;
+    if (match == null) {
+      return ;
+    }
+    if (match$1 == null) {
+      return ;
+    }
+    var targetWidth = match$1.clientWidth;
+    var match$2 = Webapi__Dom__Element.asHtmlElement(match$1);
+    var match$3 = Webapi__Dom__Element.asHtmlElement(match);
+    var targetLeft = match$2 !== undefined && match$3 !== undefined ? Caml_option.valFromOption(match$2).offsetLeft - Caml_option.valFromOption(match$3).offsetLeft | 0 : undefined;
+    var containerClientWidth = match.clientWidth;
+    Belt_Option.map(targetLeft, (function (targetLeft$p) {
+            match.scrollLeft = (targetLeft$p - (containerClientWidth / 2 | 0) | 0) + (targetWidth / 2 | 0) | 0;
+          }));
+  };
   React.useEffect((function () {
-          var windowWidth = window.innerWidth;
-          var container = document.getElementById("horizontal-scroll-container");
-          var target = document.getElementById("category-" + Belt_Option.getWithDefault(categoryId, "") + "");
-          if (!(container == null) && !(target == null)) {
-            var targetWidth = target.clientWidth;
-            var target$p$p = Webapi__Dom__Element.asHtmlElement(target);
-            var targetLeft = target$p$p !== undefined ? Caml_option.valFromOption(target$p$p).offsetLeft : undefined;
-            Belt_Option.map(targetLeft, (function (targetLeft$p) {
-                    container.scrollLeft = (targetLeft$p - (windowWidth / 2 | 0) | 0) + (targetWidth / 2 | 0) | 0;
-                  }));
-          }
-          
+          scrollToSelectedItem(undefined);
+          modifyArrowVisibility(undefined);
         }), [categoryId]);
-  return React.createElement("section", {
-              className: "w-full mx-auto bg-white border-b border-gray-50 "
-            }, React.createElement("ol", {
-                  className: "overflow-x-scroll scrollbar-hide flex items-center px-2 gap-4",
-                  id: "horizontal-scroll-container"
-                }, Belt_Array.map(items, (function (item) {
-                        return React.createElement(PLP_Scrollable_Tab_Item.PC.make, {
-                                    selected: item.id === Belt_Option.getWithDefault(categoryId, ""),
-                                    item: item,
-                                    key: item.id
-                                  });
-                      }))));
+  var handleClickLeftArrow = function (param) {
+    var container$p = container.current;
+    if (!(container$p == null)) {
+      container$p.scrollBy({
+            behavior: "smooth",
+            left: -120.0,
+            top: 0.0
+          });
+      return ;
+    }
+    
+  };
+  var handleClickRightArrow = function (param) {
+    var container$p = container.current;
+    if (!(container$p == null)) {
+      container$p.scrollBy({
+            behavior: "smooth",
+            left: 120.0,
+            top: 0.0
+          });
+      return ;
+    }
+    
+  };
+  return React.createElement("div", {
+              className: "inline-flex flex-col w-full"
+            }, React.createElement("section", {
+                  className: "w-full mx-auto bg-white border-b border-gray-50 scroll-smooth"
+                }, React.createElement("ol", {
+                      ref: container,
+                      className: "overflow-x-scroll scrollbar-hide flex items-center px-2 gap-4",
+                      id: "horizontal-scroll-container",
+                      onScroll: modifyArrowVisibility
+                    }, Belt_Array.map(items, (function (item) {
+                            return React.createElement(PLP_Scrollable_Tab_Item.PC.make, {
+                                        selected: item.id === Belt_Option.getWithDefault(categoryId, ""),
+                                        item: item,
+                                        key: item.id
+                                      });
+                          })))), React.createElement("div", {
+                  className: "-mt-11 flex pointer-events-none"
+                }, match[0] ? React.createElement("div", {
+                        className: "w-[88px] h-11 inline-flex gradient-tab-l mr-auto"
+                      }, React.createElement("button", {
+                            className: "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto rotate-180",
+                            onClick: handleClickLeftArrow
+                          }, React.createElement(IconArrow.make, {
+                                height: "16px",
+                                width: "16px"
+                              }))) : null, match$1[0] ? React.createElement("div", {
+                        className: "w-[88px] h-11 float-left inline-flex gradient-tab-r justify-end self-end ml-auto"
+                      }, React.createElement("button", {
+                            className: "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto",
+                            onClick: handleClickRightArrow
+                          }, React.createElement(IconArrow.make, {
+                                height: "16px",
+                                width: "16px"
+                              }))) : null));
 }
 
 var ScrollTab = {
@@ -256,16 +336,17 @@ function PLP_Scrollable_Header$MO$View(Props) {
   var router = Router.useRouter();
   var cid = Js_dict.get(router.query, "cid");
   var categoryId = cid !== undefined ? cid : Js_dict.get(router.query, "category-id");
+  var container = React.useRef(null);
   React.useEffect((function () {
           var windowWidth = window.innerWidth;
-          var container = document.getElementById("horizontal-scroll-container");
           var target = document.getElementById("category-" + Belt_Option.getWithDefault(categoryId, "") + "");
-          if (!(container == null) && !(target == null)) {
+          var match = container.current;
+          if (!(match == null) && !(target == null)) {
             var targetWidth = target.clientWidth;
             var target$p$p = Webapi__Dom__Element.asHtmlElement(target);
             var targetLeft = target$p$p !== undefined ? Caml_option.valFromOption(target$p$p).offsetLeft : undefined;
             Belt_Option.map(targetLeft, (function (targetLeft$p) {
-                    container.scrollLeft = (targetLeft$p - (windowWidth / 2 | 0) | 0) + (targetWidth / 2 | 0) | 0;
+                    match.scrollLeft = (targetLeft$p - (windowWidth / 2 | 0) | 0) + (targetWidth / 2 | 0) | 0;
                   }));
           }
           
@@ -275,6 +356,7 @@ function PLP_Scrollable_Header$MO$View(Props) {
             }, React.createElement("section", {
                   className: "w-full max-w-3xl mx-auto bg-white border-b border-gray-50"
                 }, React.createElement("ol", {
+                      ref: container,
                       className: "overflow-x-scroll scrollbar-hide flex items-center px-4 gap-4",
                       id: "horizontal-scroll-container"
                     }, Belt_Array.map(items, (function (item) {

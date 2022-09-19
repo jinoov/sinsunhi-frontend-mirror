@@ -166,7 +166,7 @@ let default = () => {
       | Buyer => router->Next.Router.push("/buyer")
       | Seller => router->Next.Router.push("/seller")
       // 어드민의 경우, 되돌리지 않고 접근하게 한다.
-      | Admin => ()
+      | Admin | ExternalStaff => ()
       }
     | NotLoggedIn | Unknown => ()
     }
@@ -222,7 +222,9 @@ let default = () => {
   ChannelTalkHelper.Hook.use()
 
   <>
-    <Next.Head> <title> {j`생산자 로그인 - 신선하이`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {j`생산자 로그인 - 신선하이`->React.string} </title>
+    </Next.Head>
     <div
       className=%twc(
         "container mx-auto max-w-lg min-h-screen relative flex flex-col justify-center items-center"

@@ -6,7 +6,6 @@
  *    매칭 상품의 모바일 뷰 헤더를 표현합니다.
  *
  */
-
 module Fragment = %relay(`
   fragment PDPMatchingHeaderBuyer_fragment on MatchingProduct {
     category {
@@ -169,14 +168,19 @@ let make = (~query) => {
   <>
     <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
       <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
-        <div className=%twc("px-5 py-4 flex justify-between items-center")>
-          <button onClick={_ => router->back}>
-            <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
-          </button>
-          <div>
+        <div className=%twc("px-5 py-4 flex items-center")>
+          <div className=%twc("w-1/3 flex justify-start")>
+            <button onClick={_ => router->back}>
+              <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+            </button>
+          </div>
+          <div className=%twc("w-1/3 flex justify-center")>
             <span className=%twc("font-bold text-xl")> {parentName->React.string} </span>
           </div>
-          <CartLinkIcon />
+          <div className=%twc("w-1/3 flex justify-end gap-2")>
+            <CartLinkIcon />
+            <HomeLinkIcon />
+          </div>
         </div>
       </header>
     </div>

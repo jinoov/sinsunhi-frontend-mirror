@@ -6,7 +6,6 @@
  *    쿼리 파라메터로 전달된 pid(product node id)를 활용하여, 상품 타입에 맞는 헤더를 표현합니다
  *
  */
-
 module Query = %relay(`
   query PDPHeaderBuyerQuery($productId: Int!) {
     product(number: $productId) {
@@ -32,14 +31,19 @@ module Default = {
       // position fixed
       <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
         <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
-          <div className=%twc("px-5 py-4 flex justify-between")>
-            <button onClick={_ => router->Next.Router.back}>
-              <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
-            </button>
-            <div>
+          <div className=%twc("px-5 py-4 flex items-center")>
+            <div className=%twc("w-1/3 flex justify-start")>
+              <button onClick={_ => router->Next.Router.back}>
+                <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+              </button>
+            </div>
+            <div className=%twc("w-1/3 flex justify-center")>
               <span className=%twc("font-bold text-xl")> {`상품 상세`->React.string} </span>
             </div>
-            <CartLinkIcon />
+            <div className=%twc("w-1/3 flex justify-end gap-2")>
+              <CartLinkIcon />
+              <HomeLinkIcon />
+            </div>
           </div>
         </header>
       </div>
@@ -58,11 +62,14 @@ module Placeholder = {
       // position fixed
       <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
         <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
-          <div className=%twc("px-5 py-4 flex justify-between")>
+          <div className=%twc("px-5 py-4 flex justify-between items-center")>
             <button onClick={_ => router->Next.Router.back}>
               <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
             </button>
-            <CartLinkIcon />
+            <div className=%twc("flex gap-2")>
+              <CartLinkIcon />
+              <HomeLinkIcon />
+            </div>
           </div>
         </header>
       </div>

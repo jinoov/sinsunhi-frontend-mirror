@@ -326,7 +326,7 @@ function ShopCategorySelect_Buyer$PC(Props) {
   if (match[0]) {
     var partial_arg = [];
     tmp = React.createElement(React.Fragment, undefined, React.createElement("div", {
-              className: "flex items-center w-56 h-[54px] px-7 border-t border-x border-primary"
+              className: "flex items-center w-56 h-[54px] px-7 whitespace-nowrap border-t border-x border-primary"
             }, React.createElement(IconHamburger.make, {
                   width: "24",
                   height: "24",
@@ -405,7 +405,7 @@ function ShopCategorySelect_Buyer$PC(Props) {
                 })));
   } else {
     tmp = React.createElement("div", {
-          className: "flex items-center w-56 h-[54px] px-7 border-t border-x border-transparent"
+          className: "flex items-center w-56 h-[54px] px-7 whitespace-nowrap border-t border-x border-transparent"
         }, React.createElement(IconHamburger.make, {
               width: "24",
               height: "24",

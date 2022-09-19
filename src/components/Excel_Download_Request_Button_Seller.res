@@ -10,14 +10,14 @@ let make = (~userType: CustomHooks.Auth.role, ~requestUrl, ~buttonText=?, ~bodyO
   let (isShowDownloadError, setShowDownloadError) = React.Uncurried.useState(_ => Dialog.Hide)
 
   let downloadCenterPath = switch userType {
-  | Admin => "/admin/download-center"
+  | Admin | ExternalStaff => "/admin/download-center"
   | Buyer => "/buyer/download-center"
   | Seller => "/seller/download-center"
   }
 
   let menuLocation = switch userType {
   | Buyer | Seller => j`우측 상단`
-  | Admin => j`좌측`
+  | Admin | ExternalStaff => j`좌측`
   }
 
   let download = () => {
@@ -66,7 +66,7 @@ let make = (~userType: CustomHooks.Auth.role, ~requestUrl, ~buttonText=?, ~bodyO
           {appearance: "success"},
         )
       }}
-      textOnCancel=j`닫기`
+      textOnCancel={j`닫기`}
       onCancel={_ => setIsShowRequest(._ => Dialog.Hide)}>
       <span className=%twc("flex items-center justify-center w-full py-10")>
         <strong> {j`엑셀 다운로드`->React.string} </strong>
@@ -76,7 +76,7 @@ let make = (~userType: CustomHooks.Auth.role, ~requestUrl, ~buttonText=?, ~bodyO
     <Dialog
       isShow=isShowMoveToDownloadCenter
       onConfirm={_ => Next.Router.push(router, downloadCenterPath)}
-      textOnCancel=j`닫기`
+      textOnCancel={j`닫기`}
       onCancel={_ => setIsShowMoveToDownloadCenter(._ => Dialog.Hide)}>
       <span className=%twc("flex flex-col items-center justify-center w-full py-5")>
         <span className=%twc("flex")>

@@ -33,6 +33,10 @@ var items = [
           className: "w-5 h-5",
           src: naviDashboardIcon
         }),
+    role: [
+      /* Admin */2,
+      /* ExternalStaff */3
+    ],
     children: []
   },
   {
@@ -46,6 +50,10 @@ var items = [
           className: "w-5 h-5",
           src: naviProductIcon
         }),
+    role: [
+      /* Admin */2,
+      /* ExternalStaff */3
+    ],
     children: [
       {
         TAG: /* Sub */1,
@@ -54,7 +62,8 @@ var items = [
           url: "/admin/add-product",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       },
       {
         TAG: /* Sub */1,
@@ -63,7 +72,11 @@ var items = [
           url: "/admin/products",
           target: "_self"
         },
-        slug: Caml_option.some(/\/admin\/products\/\[pid\]/g)
+        slug: Caml_option.some(/\/admin\/products\/\[pid\]/g),
+        role: [
+          /* Admin */2,
+          /* ExternalStaff */3
+        ]
       },
       {
         TAG: /* Sub */1,
@@ -72,7 +85,11 @@ var items = [
           url: "/admin/product-options",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [
+          /* Admin */2,
+          /* ExternalStaff */3
+        ]
       }
     ]
   },
@@ -87,6 +104,10 @@ var items = [
           className: "w-5 h-5",
           src: naviOrderIcon
         }),
+    role: [
+      /* Admin */2,
+      /* ExternalStaff */3
+    ],
     children: [
       {
         TAG: /* Sub */1,
@@ -95,7 +116,11 @@ var items = [
           url: "/admin/orders",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [
+          /* Admin */2,
+          /* ExternalStaff */3
+        ]
       },
       {
         TAG: /* Sub */1,
@@ -104,7 +129,8 @@ var items = [
           url: "/admin/add-orders",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       },
       {
         TAG: /* Sub */1,
@@ -113,7 +139,11 @@ var items = [
           url: "/admin/tracking-numbers",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [
+          /* Admin */2,
+          /* ExternalStaff */3
+        ]
       },
       {
         TAG: /* Sub */1,
@@ -122,7 +152,8 @@ var items = [
           url: "/admin/add-tracking-numbers",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       }
     ]
   },
@@ -138,6 +169,7 @@ var items = [
           width: "1.25rem",
           fill: "#262626"
         }),
+    role: [/* Admin */2],
     children: [
       {
         TAG: /* Sub */1,
@@ -146,7 +178,8 @@ var items = [
           url: "/admin/cost-management",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       },
       {
         TAG: /* Sub */1,
@@ -155,7 +188,8 @@ var items = [
           url: "/admin/settlements",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       }
     ]
   },
@@ -171,6 +205,7 @@ var items = [
           width: "1.25rem",
           fill: "#262626"
         }),
+    role: [/* Admin */2],
     children: [
       {
         TAG: /* Sub */1,
@@ -179,7 +214,8 @@ var items = [
           url: "/admin/bulk-sale/products",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       },
       {
         TAG: /* Sub */1,
@@ -188,7 +224,8 @@ var items = [
           url: "/admin/bulk-sale/producers",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       }
     ]
   },
@@ -203,6 +240,7 @@ var items = [
           className: "w-5 h-5",
           src: naviUserIcon
         }),
+    role: [/* Admin */2],
     children: [
       {
         TAG: /* Sub */1,
@@ -211,7 +249,8 @@ var items = [
           url: "/admin/farmer-users",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       },
       {
         TAG: /* Sub */1,
@@ -220,7 +259,8 @@ var items = [
           url: "/admin/buyer-users",
           target: "_self"
         },
-        slug: undefined
+        slug: undefined,
+        role: [/* Admin */2]
       }
     ]
   },
@@ -236,6 +276,7 @@ var items = [
           height: "1.25rem",
           fill: "#262626"
         }),
+    role: [/* Admin */2],
     children: []
   },
   {
@@ -250,6 +291,7 @@ var items = [
           height: "1.25rem",
           fill: "#262626"
         }),
+    role: [/* Admin */2],
     children: []
   }
 ];

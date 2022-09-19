@@ -265,6 +265,12 @@ function Update_PhoneNumber_Buyer(Props) {
                         }));
           }));
   };
+  React.useEffect((function () {
+          if (!isOpen) {
+            reset(undefined);
+          }
+          
+        }), [isOpen]);
   var tmp;
   var exit = 0;
   if (smsStatus !== undefined) {
@@ -354,10 +360,7 @@ function Update_PhoneNumber_Buyer(Props) {
   }
   return React.createElement(ReactDialog.Root, {
               children: null,
-              open: isOpen,
-              onOpenChange: (function (param) {
-                  reset(undefined);
-                })
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {

@@ -1715,7 +1715,20 @@ function Update_Normal_Product_Form_Admin(Props) {
     var data$1 = submit_decode(data);
     if (data$1.TAG === /* Ok */0) {
       Curry.app(normalMutate, [
-            undefined,
+            (function (error) {
+                addToast(React.createElement("div", {
+                          className: "flex items-center"
+                        }, React.createElement("span", {
+                              className: "w-6 h-6 mr-2"
+                            }, React.createElement(IconError.make, {
+                                  width: "24",
+                                  height: "24"
+                                })), React.createElement("div", {
+                              className: "w-full truncate"
+                            }, "" + error.message + "")), {
+                      appearance: "error"
+                    });
+              }),
             (function (param, param$1) {
                 var updateProduct = param.updateProduct;
                 if (typeof updateProduct === "object") {

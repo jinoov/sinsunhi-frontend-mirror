@@ -113,7 +113,8 @@ module Item = {
             | CANCEL
             | ERROR
             | REFUND
-            | NEGOTIATING => <>
+            | NEGOTIATING =>
+              <>
                 <span className=%twc("block")> {courierName->React.string} </span>
                 <span className=%twc("block text-gray-500")>
                   {order.invoice->Option.getWithDefault(`-`)->React.string}
@@ -129,7 +130,9 @@ module Item = {
             </div>
           | _ =>
             <div className=%twc("h-full flex flex-col px-4 py-2")>
-              <span className=%twc("block")> {order.receiverName->Option.getWithDefault(`-`)->React.string} </span>
+              <span className=%twc("block")>
+                {order.receiverName->Option.getWithDefault(`-`)->React.string}
+              </span>
               <span className=%twc("block")>
                 {order.receiverPhone->Option.getWithDefault(`-`)->React.string}
               </span>
@@ -156,19 +159,12 @@ module Item = {
           </div>
         </li>
         // 다이얼로그
-        <Dialog
-          isShow=isShowCancelConfirm
-          textOnCancel=`닫기`
-          onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-          textOnConfirm=`취소 완료하기`
-          onConfirm={_ => {
-            setShowCancelConfirm(._ => Dialog.Hide)
-            onClickCancel([order.orderProductNo])
-          }}>
-          <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
-            {j`선택한 주문을 취소하시겠습니까?`->React.string}
-          </p>
-        </Dialog>
+        <Orders_Cancel_Dialog_Admin
+          isShowCancelConfirm
+          setShowCancelConfirm
+          selectedOrders={[order.orderProductNo]}
+          confirmFn=onClickCancel
+        />
       </>
     }
 
@@ -179,8 +175,8 @@ module Item = {
       let make = () => {
         <li className=%twc("grid grid-cols-10-gl-admin")>
           <div className=%twc("h-full flex flex-col px-4 py-2")> <Checkbox /> </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")>
-            <Box className=%twc("w-20") /> <Box /> <Box className=%twc("w-12") />
+          <div className=%twc("h-full flex flex-col px-4 py-2")> 
+            <Box className=%twc("w-20") /> <Box /> <Box className=%twc("w-12") /> 
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> <Box /> </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>

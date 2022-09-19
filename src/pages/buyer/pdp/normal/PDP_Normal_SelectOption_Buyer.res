@@ -27,9 +27,9 @@ module Fragments = {
                productId: number
              }
              price
+             isFreeShipping
              productOptionCost {
                deliveryCost
-               isFreeShipping
              }
              ...PDPNormalSelectOptionBuyerItemFragment
            }
@@ -49,9 +49,9 @@ module Fragments = {
                productId: number
              }
              price
+             isFreeShipping
              productOptionCost {
                deliveryCost
-               isFreeShipping
              }
              ...PDPNormalSelectOptionBuyerItemFragment
            }
@@ -68,9 +68,9 @@ module Fragments = {
     stockSku
     price
     status
+    isFreeShipping
     productOptionCost {
       deliveryCost
-      isFreeShipping
     }
   }  
   `)
@@ -82,7 +82,9 @@ module Scroll = {
     open RadixUI.ScrollArea
     <Root className=%twc("max-h-[400px] flex flex-col overflow-hidden")>
       <Viewport className=%twc("w-full h-full")> {children} </Viewport>
-      <Scrollbar> <Thumb /> </Scrollbar>
+      <Scrollbar>
+        <Thumb />
+      </Scrollbar>
     </Root>
   }
 }
@@ -97,7 +99,7 @@ module PC = {
   module Item = {
     @react.component
     let make = (~query, ~setSelectedOptions) => {
-      let {id, optionName, price, status, productOptionCost: {deliveryCost, isFreeShipping}} =
+      let {id, optionName, price, status, isFreeShipping, productOptionCost: {deliveryCost}} =
         query->Fragments.Item.use
 
       let optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(
@@ -117,7 +119,10 @@ module PC = {
       | #SOLDOUT =>
         // 품절
         <div className=%twc("w-full rounded-lg py-3 px-2 text-gray-400")>
-          <span> {optionName->React.string} {`/`->React.string} </span>
+          <span>
+            {optionName->React.string}
+            {`/`->React.string}
+          </span>
           <span>
             <span className=%twc("ml-1 font-bold")> {optionPriceLabel->React.string} </span>
             <span className=%twc("font-bold")> {` - 품절`->React.string} </span>
@@ -137,7 +142,10 @@ module PC = {
               })}
             className=%twc("rounded-lg py-3 px-2 hover:bg-gray-100")>
             <span className=%twc("text-gray-800")>
-              <span> {optionName->React.string} {`/`->React.string} </span>
+              <span>
+                {optionName->React.string}
+                {`/`->React.string}
+              </span>
               <span className=%twc("ml-1 font-bold")> {optionPriceLabel->React.string} </span>
             </span>
           </div>
@@ -238,7 +246,7 @@ module MO = {
   module Item = {
     @react.component
     let make = (~query, ~checked, ~onChange) => {
-      let {id, optionName, price, status, productOptionCost: {deliveryCost, isFreeShipping}} =
+      let {id, optionName, price, status, isFreeShipping, productOptionCost: {deliveryCost}} =
         query->Fragments.Item.use
 
       let optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(
@@ -407,7 +415,8 @@ module MO = {
       </div>
 
     // 단품 선택 가능
-    | Available => <>
+    | Available =>
+      <>
         <div
           onClick={_ => setShowBottomSheet(._ => true)}
           className=%twc("w-full h-13 p-3 flex items-center justify-between border rounded-xl")>

@@ -19,6 +19,7 @@ import * as FetchHelper from "../utils/FetchHelper.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import Format from "date-fns/format";
+import * as Order_Cancel_Admin from "./Order_Cancel_Admin.mjs";
 import SubMinutes from "date-fns/subMinutes";
 import * as Webapi__Dom__Element from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__Element.mjs";
 import * as ReactDialog from "@radix-ui/react-dialog";
@@ -298,7 +299,13 @@ function Order_Detail_Button_Admin(Props) {
                             className: "mt-10 font-bold"
                           }, "배송정보"), React.createElement("section", {
                             className: "divide-y text-sm text-text-L2 mt-2 border-t border-b"
-                          }, tmp), React.createElement("h3", {
+                          }, tmp), React.createElement(React.Suspense, {
+                            children: React.createElement(Order_Cancel_Admin.make, {
+                                  orderNo: order.orderNo,
+                                  orderProductNo: order.orderProductNo
+                                }),
+                            fallback: null
+                          }), React.createElement("h3", {
                             className: "mt-10 font-bold"
                           }, "담당MD 메모"), React.createElement("textarea", {
                             className: "px-3 py-2 mt-2 border border-border-default-L1 rounded-lg w-full h-24 focus:outline-none",

@@ -1,124 +1,35 @@
-module StatusPageComponent = {
-  type t =
-    | Seller
-    | Buyer
-    | Admin
-    | Common
-    | Global
-
-  let make = (router: Next.Router.router) => {
-    let routerPathnames = router.pathname->Js.String2.split("/")
-
-    switch (routerPathnames->Array.get(1), routerPathnames->Array.get(2)) {
-    | (Some("seller"), _) => Seller
-    | (Some("admin"), _) => Admin
-    | (Some("buyer"), Some("products"))
-    | (Some("buyer"), None) =>
-      Common
-    | (Some("buyer"), _) => Buyer
-    | (_, _) => Common
-    }
-  }
-
-  let is = (t, target) => {
-    switch (t, target) {
-    | (_, "global") => true
-    | (Seller, "seller") => true
-    | (Admin, "admin") => true
-    | (Buyer, "buyer") => true
-    | (Common, "common") => true
-    | _ => false
-    }
-  }
-}
 module MaintenanceTime = {
   type t = {
     from: Js.Date.t,
     to_: option<Js.Date.t>,
   }
 
-  // now is after startDate
-  let afterCheck = from_ => DateFns.isAfter(Js.Date.now()->Js.Date.fromFloat, from_)
-
-  //and now is before endDate
-  let beforeCheck = to_ => DateFns.isBefore(Js.Date.now()->Js.Date.fromFloat, to_)
-
   let make = (from, to_) => {
-    from
-    ->Option.map(Js.Date.fromString)
-    ->Option.flatMap(from => {
-      switch afterCheck(from) {
-      | true =>
-        switch to_->Option.map(Js.Date.fromString) {
-        | Some(to_) if beforeCheck(to_) => Some({from: from, to_: Some(to_)})
-        | Some(_) => None
-        | None => Some({from: from, to_: None})
-        }
-      | false => None
-      }
-    })
+    let now = Js.Date.now()->Js.Date.fromFloat
+    let isBetween = (from, now, to') => {
+      DateFns.isAfter(now, from) && DateFns.isBefore(now, to')
+    }
+    switch (from->Js.Date.fromString, to_->Option.map(Js.Date.fromString)) {
+    | (from', Some(to_')) if isBetween(from', now, to_') =>
+      Some({
+        from: from',
+        to_: Some(to_'),
+      })
+
+    | (from', None) if DateFns.isAfter(now, from') => Some({from: from', to_: None})
+    | _ => None
+    }
   }
 
   let format = ({from, to_}) => {
-    let formatForDisplay = date =>
-      `${date->DateFns.format("MM")}월 ${date->DateFns.format("dd")}일 ${date->DateFns.format(
-          "HH",
-        )}시`
+    let formatForDisplay = date => date->DateFns.format(`MM월 dd일 HH시`)
 
-    `${from->formatForDisplay} ~ ${to_->Option.map(formatForDisplay)->Option.getWithDefault("")}`
+    `${from->formatForDisplay} ~ ${to_->Option.mapWithDefault("", formatForDisplay)}`
   }
 }
-module Match = {
-  type matchedInfo = {
-    message: option<string>,
-    maintenanceTime: MaintenanceTime.t,
-  }
 
-  type t =
-    | Matched(array<matchedInfo>)
-    | NotMatched
-
-  let make = (currentSubPage, incidentTargets, message, from, to_) => {
-    let pathCheck = (currentSubPage, incidentTargets) => {
-      let matchingIncidentTargets =
-        incidentTargets->Array.getBy(incidentTarget =>
-          currentSubPage->StatusPageComponent.is(incidentTarget)
-        )
-
-      switch matchingIncidentTargets {
-      | None => false
-      | _ => true
-      }
-    }
-
-    switch (pathCheck(currentSubPage, incidentTargets), MaintenanceTime.make(from, to_)) {
-    | (true, Some(maintenanceTime)) =>
-      Matched([
-        {
-          message: message,
-          maintenanceTime: maintenanceTime,
-        },
-      ])
-    | _ => NotMatched
-    }
-  }
-
-  let join = (a, b) =>
-    switch (a, b) {
-    | (NotMatched, NotMatched) => NotMatched
-    | (Matched(a), NotMatched) => Matched(a)
-    | (NotMatched, Matched(b)) => Matched(b)
-    | (Matched(a), Matched(b)) => Matched(a->Array.concat(b))
-    }
-
-  let getIncidentForDisplay = t =>
-    switch t {
-    | Matched(incidents) => incidents->Array.get(0)
-    | NotMatched => None
-    }
-}
-
-module StatusPageCompat = {
+module StatusPageAPI = {
+  // statuspage의 api에 대한 모델링입니다.
   module Component = {
     @spice
     type t = {name: string}
@@ -147,25 +58,13 @@ module StatusPageCompat = {
     }
   }
 
-  module Target = {
-    type t =
-      | Incident
-      | Maintenance
-
-    let apiEndPoint = t => {
-      switch t {
-      | Incident => "unresolved"
-      | Maintenance => "scheduled"
-      }
-    }
-  }
-
   @spice
   type incidents = array<Incident.incident>
 
-  let use = target => {
-    let apiFetcher = url => {
+  let useStatusPage = apiEndpoint => {
+    let fetcher = url => {
       open FetchHelper
+
       url->Fetch.fetchWithInit(
         Fetch.RequestInit.make(
           ~method_=Get,
@@ -202,8 +101,8 @@ module StatusPageCompat = {
     }
 
     let {data, error} = Swr.useSwr(
-      `https://api.statuspage.io/v1/pages/${Env.statusPagePageId}/incidents/${target->Target.apiEndPoint}`,
-      apiFetcher,
+      `https://api.statuspage.io/v1/pages/${Env.statusPagePageId}/incidents/${apiEndpoint}`,
+      fetcher,
       Swr.fetcherOptions(
         ~revalidateIfStale=false,
         ~revalidateOnFocus=false,
@@ -213,60 +112,62 @@ module StatusPageCompat = {
         (),
       ),
     )
+
     switch (data, error) {
     | (Some(data), None) =>
       data->incidents_decode->Result.mapWithDefault(None, incident => incident->Some)
-    | (_, _) => None
+    | _ => None
+    }
+  }
+}
+
+module Match = {
+  type t = {
+    message: option<string>,
+    maintenanceTime: MaintenanceTime.t,
+  }
+
+  let make = (currentSubPage, incidentTargets, message, from, to_) => {
+    let pathCheck = (currentSubPage, incidentTargets) => {
+      incidentTargets
+      ->Array.getBy(incidentTarget => currentSubPage == incidentTarget)
+      ->Option.isSome
+    }
+
+    switch (pathCheck(currentSubPage, incidentTargets), MaintenanceTime.make(from, to_)) {
+    | (true, Some(maintenanceTime)) =>
+      Some([
+        {
+          message,
+          maintenanceTime,
+        },
+      ])
+    | _ => None
     }
   }
 
-  let isMaintenanceTarget = (
-    statusPageIncidents: option<incidents>,
-    currentSubPage: StatusPageComponent.t,
-  ) => {
-    switch statusPageIncidents {
-    | Some(statusPageIncidents) =>
-      statusPageIncidents
-      ->Array.map(statusPageResult => {
-        let message =
-          statusPageResult.incidentUpdates
-          ->SortArray.stableSortBy((incidentA, incidentB) =>
-            DateFns.compareDesc(
-              incidentA.createdAt->Js.Date.fromString,
-              incidentB.createdAt->Js.Date.fromString,
-            )
-          )
-          ->Array.get(0)
-          ->Option.map(latestIncident => latestIncident.body)
+  let fromIncident = (incident: StatusPageAPI.Incident.incident, currentSubPage) => {
+    // 이 incident의 가장 마지막 업데이트의 메시지를 가져옵니다.
+    let message =
+      incident.incidentUpdates
+      ->SortArray.stableSortBy((incidentA, incidentB) =>
+        DateFns.compareDesc(
+          incidentA.createdAt->Js.Date.fromString,
+          incidentB.createdAt->Js.Date.fromString,
+        )
+      )
+      ->Array.get(0)
+      ->Option.map(latestIncident => latestIncident.body)
 
-        let incidentTarget =
-          statusPageResult.components
-          ->Array.map(component => component.name)
-          ->Array.map(name => name->Js.String2.toLowerCase)
+    let incidentTarget = incident.components->Array.map(component => component.name)
 
-        switch statusPageResult {
-        | statusPageResult if statusPageResult.scheduledFor->Option.isSome =>
-          // 예정된 시작 시간과 예정된 종료 시간이 제시된 경우
-          Match.make(
-            currentSubPage,
-            incidentTarget,
-            message,
-            statusPageResult.scheduledFor,
-            statusPageResult.scheduledUntil,
-          )
-        | _ =>
-          // 사건 발생 시작 시간만 존재하는 경우
-          Match.make(
-            currentSubPage,
-            incidentTarget,
-            message,
-            Some(statusPageResult.createdAt),
-            None,
-          )
-        }
-      })
-      ->Array.reduce(Match.NotMatched, Match.join)
-    | _ => Match.NotMatched
+    switch (incident.scheduledFor, incident.scheduledUntil) {
+    | (Some(scheduledFor), Some(_)) =>
+      // 예정된 시작 시간과 예정된 종료 시간이 제시된 경우 -> Maintenance
+      make(currentSubPage, incidentTarget, message, scheduledFor, incident.scheduledUntil)
+    | _ =>
+      // 사건 발생 시작 시간만 존재하는 경우 -> Incident
+      make(currentSubPage, incidentTarget, message, incident.createdAt, None)
     }
   }
 }
@@ -304,26 +205,37 @@ module View = {
   }
 }
 
-module Content = {
+module Container = {
   @react.component
   let make = () => {
     // 점검 페이지 로직
-    let currentAffectedTarget = Next.Router.useRouter()->StatusPageComponent.make
+    let router = Next.Router.useRouter()
+    let routerPathNames = router.pathname->Js.String2.split("/")
+    let currentSubPage = switch (routerPathNames->Array.get(1), routerPathNames->Array.get(2)) {
+    | (Some("seller"), _) => "SELLER"
+    | (Some("admin"), _) => "ADMIN"
+    | (Some("buyer"), Some("products"))
+    | (Some("buyer"), Some(_)) => "BUYER"
+    | (Some("buyer"), None)
+    | (_, _) => "COMMON"
+    }
 
-    let incidentResultFromStatusPage =
-      StatusPageCompat.use(StatusPageCompat.Target.Incident)->StatusPageCompat.isMaintenanceTarget(
-        currentAffectedTarget,
-      )
+    let incidents = StatusPageAPI.useStatusPage("unresolved")
+    let maintenance = StatusPageAPI.useStatusPage("scheduled")
 
-    let maintenanceResultFromStatusPage =
-      StatusPageCompat.use(
-        StatusPageCompat.Target.Maintenance,
-      )->StatusPageCompat.isMaintenanceTarget(currentAffectedTarget)
+    let currentIncident =
+      switch (incidents, maintenance) {
+      | (Some(incidents'), Some(maintenance')) => incidents'->Js.Array.concat(maintenance')
+      | (Some(incidents'), None) => incidents'
+      | (None, Some(maintenance')) => maintenance'
+      | (None, None) => []
+      }
+      ->Array.keepMap(incidentList => Match.fromIncident(incidentList, currentSubPage))
+      ->Array.get(0)
 
-    switch incidentResultFromStatusPage
-    ->Match.join(maintenanceResultFromStatusPage)
-    ->Match.getIncidentForDisplay {
-    | Some({message, maintenanceTime}) =>
+    switch currentIncident {
+    | Some([{message, maintenanceTime}, _])
+    | Some([{message, maintenanceTime}]) =>
       <RadixUI.Dialog.Root _open=true>
         <RadixUI.Dialog.Portal>
           <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
@@ -335,8 +247,7 @@ module Content = {
           </RadixUI.Dialog.Content>
         </RadixUI.Dialog.Portal>
       </RadixUI.Dialog.Root>
-
-    | None => React.null
+    | _ => React.null
     }
   }
 }
@@ -349,7 +260,7 @@ let make = () => {
     None
   })
   switch isCsr {
-  | true => <Content />
+  | true => <Container />
   | false => React.null
   }
 }
