@@ -43,7 +43,6 @@ external make: (
   ~tinymceScriptSrc: string=?,
   ~disabled: bool=?,
   ~inline: bool=?,
-  ~disabled: bool=?,
 ) => React.element = "Editor"
 
 module Menu = {
