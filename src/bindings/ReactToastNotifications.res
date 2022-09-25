@@ -133,7 +133,7 @@ module ToastProvider = {
       autoDismissTimeout=2000
       autoDismiss=true
       components={{
-        "ToastContainer": ({children, placement}) =>
+        "ToastContainer": ({children, placement}: containerProps) =>
           <Custom.ToastContainer placement> {children} </Custom.ToastContainer>,
         "Toast": ({children, transitionDuration, transitionState}) =>
           <Custom.Toast transitionDuration transitionState> {children} </Custom.Toast>,
