@@ -92,12 +92,11 @@ var Query = {
   retain: retain
 };
 
-function PDP_Normal_SelectedOptionItem_Buyer$PC(Props) {
-  var id = Props.id;
-  var quantity = Props.quantity;
-  var onChange = Props.onChange;
-  var onRemove = Props.onRemove;
-  var withCaption = Props.withCaption;
+function PDP_Normal_SelectedOptionItem_Buyer$PC(props) {
+  var onRemove = props.onRemove;
+  var onChange = props.onChange;
+  var quantity = props.quantity;
+  var id = props.id;
   var match = use({
         id: id
       }, undefined, undefined, undefined, undefined);
@@ -121,7 +120,7 @@ function PDP_Normal_SelectedOptionItem_Buyer$PC(Props) {
                   className: "flex flex-col items-end"
                 }, React.createElement("span", {
                       className: "mt-1 text-gray-800 text-right text-[15px]"
-                    }, React.createElement("span", undefined, node.optionName)), Belt_Option.mapWithDefault(Belt_Option.keep(withCaption, (function (bool$p) {
+                    }, React.createElement("span", undefined, node.optionName)), Belt_Option.mapWithDefault(Belt_Option.keep(props.withCaption, (function (bool$p) {
                             return bool$p === true;
                           })), null, (function (param) {
                         return React.createElement("span", {
@@ -148,12 +147,11 @@ var PC = {
   make: PDP_Normal_SelectedOptionItem_Buyer$PC
 };
 
-function PDP_Normal_SelectedOptionItem_Buyer$MO(Props) {
-  var id = Props.id;
-  var quantity = Props.quantity;
-  var onChange = Props.onChange;
-  var onRemove = Props.onRemove;
-  var withCaption = Props.withCaption;
+function PDP_Normal_SelectedOptionItem_Buyer$MO(props) {
+  var onRemove = props.onRemove;
+  var onChange = props.onChange;
+  var quantity = props.quantity;
+  var id = props.id;
   var match = use({
         id: id
       }, undefined, undefined, undefined, undefined);
@@ -177,7 +175,7 @@ function PDP_Normal_SelectedOptionItem_Buyer$MO(Props) {
                   className: "flex flex-col items-end"
                 }, React.createElement("span", {
                       className: "mt-1 text-gray-800 text-right text-[15px]"
-                    }, React.createElement("span", undefined, node.optionName)), Belt_Option.mapWithDefault(Belt_Option.keep(withCaption, (function (bool$p) {
+                    }, React.createElement("span", undefined, node.optionName)), Belt_Option.mapWithDefault(Belt_Option.keep(props.withCaption, (function (bool$p) {
                             return bool$p === true;
                           })), null, (function (param) {
                         return React.createElement("span", {

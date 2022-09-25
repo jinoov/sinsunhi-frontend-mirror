@@ -22,7 +22,7 @@ function set(old, k, v) {
   return old;
 }
 
-function Search_Product_Option_Admin(Props) {
+function Search_Product_Option_Admin(props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return Select_Product_Option_Status.parseStatus(router.query);

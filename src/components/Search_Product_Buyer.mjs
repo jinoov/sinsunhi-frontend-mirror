@@ -13,7 +13,7 @@ import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import * as Select_Product_Status from "./Select_Product_Status.mjs";
 import * as Query_Product_Form_Buyer from "./Query_Product_Form_Buyer.mjs";
 
-function Search_Product_Buyer(Props) {
+function Search_Product_Buyer(props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return Select_Product_Status.parseStatus(router.query);

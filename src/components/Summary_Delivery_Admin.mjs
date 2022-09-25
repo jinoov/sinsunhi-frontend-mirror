@@ -18,7 +18,7 @@ import Format from "date-fns/format";
 import SubDays from "date-fns/subDays";
 import * as Query_Delivery_Form_Admin from "./Query_Delivery_Form_Admin.mjs";
 
-function Summary_Delivery_Admin$StatusFilter(Props) {
+function Summary_Delivery_Admin$StatusFilter(props) {
   return React.createElement("ol", {
               className: "grid grid-cols-2 pt-3 sm:grid-cols-4 lg:grid-cols-6 lg:justify-between lg:w-full lg:py-4"
             }, React.createElement(Status.Total.make, {}), React.createElement(Status.Item.make, {
@@ -50,7 +50,7 @@ var StatusFilter = {
   make: Summary_Delivery_Admin$StatusFilter
 };
 
-function Summary_Delivery_Admin(Props) {
+function Summary_Delivery_Admin(props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return {
@@ -315,7 +315,7 @@ function Summary_Delivery_Admin(Props) {
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* From */0, param);
                                     }),
-                                  date: query.from,
+                                  date: Caml_option.some(query.from),
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   firstDayOfWeek: 0
                                 }), React.createElement("span", {
@@ -325,7 +325,7 @@ function Summary_Delivery_Admin(Props) {
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* To */1, param);
                                     }),
-                                  date: query.to_,
+                                  date: Caml_option.some(query.to_),
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   minDate: Format(query.from, "yyyy-MM-dd"),
                                   firstDayOfWeek: 0

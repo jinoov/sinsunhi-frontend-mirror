@@ -3,11 +3,9 @@
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as React from "react";
 
-function MyInfo_ProfilePicture_Buyer(Props) {
-  var content = Props.content;
-  var size = Props.size;
+function MyInfo_ProfilePicture_Buyer(props) {
   var match;
-  switch (size) {
+  switch (props.size) {
     case /* Small */0 :
         match = [
           "min-w-[54px] h-[54px]",
@@ -38,7 +36,7 @@ function MyInfo_ProfilePicture_Buyer(Props) {
                         "text-2xl text-enabled-L4 block",
                         match[1]
                       ])
-                }, content.charAt(0)));
+                }, props.content.charAt(0)));
 }
 
 var make = MyInfo_ProfilePicture_Buyer;

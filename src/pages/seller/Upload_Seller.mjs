@@ -5,6 +5,7 @@ import * as Swr from "swr";
 import * as React from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as Authorization from "../../utils/Authorization.mjs";
 import Format from "date-fns/format";
@@ -14,7 +15,7 @@ import * as Guide_Upload_Seller from "../../components/Guide_Upload_Seller.mjs";
 import * as UploadStatus_Seller from "../../components/UploadStatus_Seller.mjs";
 import * as Excel_Download_Request_Button_Seller from "../../components/Excel_Download_Request_Button_Seller.mjs";
 
-function Upload_Seller$Upload(Props) {
+function Upload_Seller$Upload(props) {
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
   var match$1 = React.useState(function () {
@@ -57,7 +58,7 @@ function Upload_Seller$Upload(Props) {
                                 }, "1. 상품준비중인 주문 다운로드"), React.createElement(Excel_Download_Request_Button_Seller.make, {
                                   userType: /* Seller */0,
                                   requestUrl: "/order/request-excel/farmer",
-                                  bodyOption: payload
+                                  bodyOption: Caml_option.some(payload)
                                 })), React.createElement(Upload_Deliveries.make, {
                               onSuccess: (function (param) {
                                   setShowSuccess(function (param) {
@@ -124,7 +125,7 @@ var Upload = {
   make: Upload_Seller$Upload
 };
 
-function Upload_Seller(Props) {
+function Upload_Seller(props) {
   return React.createElement(Authorization.Seller.make, {
               children: React.createElement(Upload_Seller$Upload, {}),
               title: "송장번호 대량 등록"

@@ -44,10 +44,9 @@ function toString(status) {
   return Js_json.decodeString(status ? "전량판매" : "온라인택배");
 }
 
-function Select_Producer_Contract_Type(Props) {
-  var status = Props.status;
-  var onChange = Props.onChange;
-  var forwardRef = Props.forwardRef;
+function Select_Producer_Contract_Type(props) {
+  var onChange = props.onChange;
+  var status = props.status;
   var displayStatus = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "공급가 타입 선택");
   var value = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "");
   var handleOnChange = function (e) {
@@ -69,7 +68,7 @@ function Select_Producer_Contract_Type(Props) {
                           width: "24",
                           fill: "#121212"
                         })), React.createElement("select", {
-                      ref: forwardRef,
+                      ref: props.forwardRef,
                       className: "block w-full h-full absolute top-0 opacity-0",
                       value: value,
                       onChange: handleOnChange

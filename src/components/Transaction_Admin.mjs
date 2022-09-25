@@ -18,8 +18,8 @@ function formatTime(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "HH:mm");
 }
 
-function Transaction_Admin$Item$Table(Props) {
-  var transaction = Props.transaction;
+function Transaction_Admin$Item$Table(props) {
+  var transaction = props.transaction;
   return React.createElement("li", {
               className: "flex justify-between text-gray-700 p-5"
             }, React.createElement("div", {
@@ -37,7 +37,7 @@ function Transaction_Admin$Item$Table(Props) {
                     }, Locale.Float.show(undefined, transaction.deposit, 0))));
 }
 
-function Transaction_Admin$Item$Table$Loading(Props) {
+function Transaction_Admin$Item$Table$Loading(props) {
   return Garter_Array.map(Garter_Array.make(7, 0), (function (k) {
                 return React.createElement("li", {
                             key: String(k),
@@ -79,10 +79,9 @@ var Item = {
   Table: Table
 };
 
-function Transaction_Admin(Props) {
-  var transaction = Props.transaction;
+function Transaction_Admin(props) {
   return React.createElement(Transaction_Admin$Item$Table, {
-              transaction: transaction
+              transaction: props.transaction
             });
 }
 

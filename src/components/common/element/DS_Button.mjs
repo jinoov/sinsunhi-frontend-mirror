@@ -18,67 +18,62 @@ function buttonStyle(disabled, buttonType) {
   }
 }
 
-var make = React.forwardRef(function (Props, ref_) {
-      var className = Props.className;
-      var label = Props.label;
-      var disabledOpt = Props.disabled;
-      var onClick = Props.onClick;
-      var buttonTypeOpt = Props.buttonType;
-      var disabled = disabledOpt !== undefined ? disabledOpt : false;
-      var buttonType = buttonTypeOpt !== undefined ? buttonTypeOpt : "primary";
+var make = React.forwardRef(function (props, ref) {
+      var buttonType = props.buttonType;
+      var disabled = props.disabled;
+      var buttonType$1 = buttonType !== undefined ? buttonType : "primary";
+      var disabled$1 = disabled !== undefined ? disabled : false;
       var defaultStyle = Cx.cx([
-            buttonStyle(disabled, buttonType),
+            buttonStyle(disabled$1, buttonType$1),
             "px-5 py-4 w-full rounded-xl font-bold"
           ]);
       var tmp = {
-        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+        className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
                 return Cx.cx([
                             defaultStyle,
                             className$p
                           ]);
               })),
-        disabled: disabled
+        disabled: disabled$1
       };
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+      var tmp$1 = Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
               return prim;
             }));
       if (tmp$1 !== undefined) {
         tmp.ref = Caml_option.valFromOption(tmp$1);
       }
-      if (onClick !== undefined) {
-        tmp.onClick = Caml_option.valFromOption(onClick);
+      if (props.onClick !== undefined) {
+        tmp.onClick = Caml_option.valFromOption(props.onClick);
       }
-      return React.createElement("button", tmp, label);
+      return React.createElement("button", tmp, props.label);
     });
 
 var Large1 = {
   make: make
 };
 
-var make$1 = React.forwardRef(function (Props, ref_) {
-      var label = Props.label;
-      var disabledOpt = Props.disabled;
-      var onClick = Props.onClick;
-      var buttonTypeOpt = Props.buttonType;
-      var disabled = disabledOpt !== undefined ? disabledOpt : false;
-      var buttonType = buttonTypeOpt !== undefined ? buttonTypeOpt : "primary";
+var make$1 = React.forwardRef(function (props, ref) {
+      var buttonType = props.buttonType;
+      var disabled = props.disabled;
+      var buttonType$1 = buttonType !== undefined ? buttonType : "primary";
+      var disabled$1 = disabled !== undefined ? disabled : false;
       var tmp = {
         className: Cn.make([
-              buttonStyle(disabled, buttonType),
+              buttonStyle(disabled$1, buttonType$1),
               "w-full py-4"
             ]),
-        disabled: disabled
+        disabled: disabled$1
       };
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+      var tmp$1 = Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
               return prim;
             }));
       if (tmp$1 !== undefined) {
         tmp.ref = Caml_option.valFromOption(tmp$1);
       }
-      if (onClick !== undefined) {
-        tmp.onClick = Caml_option.valFromOption(onClick);
+      if (props.onClick !== undefined) {
+        tmp.onClick = Caml_option.valFromOption(props.onClick);
       }
-      return React.createElement("button", tmp, label);
+      return React.createElement("button", tmp, props.label);
     });
 
 var Full1 = {
@@ -91,28 +86,25 @@ var Normal = {
   Full1: Full1
 };
 
-function DS_Button$Chip$TextSmall1(Props) {
-  var label = Props.label;
-  var selectedOpt = Props.selected;
-  var className = Props.className;
-  var onClick = Props.onClick;
-  var selected = selectedOpt !== undefined ? selectedOpt : false;
+function DS_Button$Chip$TextSmall1(props) {
+  var selected = props.selected;
+  var selected$1 = selected !== undefined ? selected : false;
   var defaultStyle = Cx.cx([
-        selected ? "bg-gray-800 text-white" : "bg-white text-gray-500",
+        selected$1 ? "bg-gray-800 text-white" : "bg-white text-gray-500",
         "px-3 py-1.5 rounded-full"
       ]);
   var tmp = {
-    className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+    className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
             return Cx.cx([
                         defaultStyle,
                         className$p
                       ]);
           }))
   };
-  if (onClick !== undefined) {
-    tmp.onClick = Caml_option.valFromOption(onClick);
+  if (props.onClick !== undefined) {
+    tmp.onClick = Caml_option.valFromOption(props.onClick);
   }
-  return React.createElement("button", tmp, label);
+  return React.createElement("button", tmp, props.label);
 }
 
 var TextSmall1 = {
@@ -123,30 +115,27 @@ var Chip = {
   TextSmall1: TextSmall1
 };
 
-var make$2 = React.forwardRef(function (Props, ref_) {
-      var text = Props.text;
-      var selectedOpt = Props.selected;
-      var labelNumber = Props.labelNumber;
-      var onClick = Props.onClick;
-      var selected = selectedOpt !== undefined ? selectedOpt : false;
+var make$2 = React.forwardRef(function (props, ref) {
+      var selected = props.selected;
+      var selected$1 = selected !== undefined ? selected : false;
       var tmp = {
         className: Cn.make([
-              selected ? "border-b-[3px] border-default text-default" : "text-enabled-L4",
+              selected$1 ? "border-b-[3px] border-default text-default" : "text-enabled-L4",
               "h-11 inline-flex flex-row items-center text-lg"
             ])
       };
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+      var tmp$1 = Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
               return prim;
             }));
       if (tmp$1 !== undefined) {
         tmp.ref = Caml_option.valFromOption(tmp$1);
       }
-      if (onClick !== undefined) {
-        tmp.onClick = Caml_option.valFromOption(onClick);
+      if (props.onClick !== undefined) {
+        tmp.onClick = Caml_option.valFromOption(props.onClick);
       }
       return React.createElement("button", tmp, React.createElement("span", {
                       className: "leading-7 font-bold"
-                    }, text), Belt_Option.mapWithDefault(labelNumber, null, (function (number) {
+                    }, props.text), Belt_Option.mapWithDefault(props.labelNumber, null, (function (number) {
                         return Belt_Option.mapWithDefault(number, null, (function (number$p) {
                                       return React.createElement("div", {
                                                   className: "flex items-center"

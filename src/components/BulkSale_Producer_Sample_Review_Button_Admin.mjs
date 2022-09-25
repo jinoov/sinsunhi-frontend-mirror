@@ -83,12 +83,10 @@ var Fragment = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-function BulkSale_Producer_Sample_Review_Button_Admin(Props) {
-  var applicationId = Props.applicationId;
-  var sampleReview = Props.sampleReview;
-  var match = useRefetchable(sampleReview);
+function BulkSale_Producer_Sample_Review_Button_Admin(props) {
+  var match = useRefetchable(props.sampleReview);
   var refetch = match[1];
-  var sampleReview$1 = Belt_Option.map(Belt_Array.get(match[0].bulkSaleSampleReviews.edges, 0), (function (edge) {
+  var sampleReview = Belt_Option.map(Belt_Array.get(match[0].bulkSaleSampleReviews.edges, 0), (function (edge) {
           return edge.node;
         }));
   var refetchSampleReviews = function (param) {
@@ -101,12 +99,12 @@ function BulkSale_Producer_Sample_Review_Button_Admin(Props) {
                 }), React.createElement(ReactDialog.Trigger, {
                   children: React.createElement("span", {
                         className: "h-8 px-5 py-1 text-primary bg-primary-light rounded-lg focus:outline-none cursor-pointer"
-                      }, sampleReview$1 !== undefined ? "평가수정" : "평가입력"),
+                      }, sampleReview !== undefined ? "평가수정" : "평가입력"),
                   className: "text-left"
-                }), sampleReview$1 !== undefined ? React.createElement(BulkSale_Producer_Sample_Review_Button_Update_Admin.make, {
-                    sampleReview: sampleReview$1
+                }), sampleReview !== undefined ? React.createElement(BulkSale_Producer_Sample_Review_Button_Update_Admin.make, {
+                    sampleReview: sampleReview
                   }) : React.createElement(BulkSale_Producer_Sample_Review_Button_Create_Admin.make, {
-                    applicationId: applicationId,
+                    applicationId: props.applicationId,
                     refetchSampleReviews: refetchSampleReviews
                   }));
 }

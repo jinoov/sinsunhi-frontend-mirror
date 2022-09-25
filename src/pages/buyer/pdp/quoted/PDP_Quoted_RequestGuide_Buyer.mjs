@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function PDP_Quoted_RequestGuide_Buyer$PC(Props) {
+function PDP_Quoted_RequestGuide_Buyer$PC(props) {
   return React.createElement("div", {
               className: "w-full flex flex-col gap-4"
             }, React.createElement("h1", {
@@ -18,7 +18,7 @@ var PC = {
   make: PDP_Quoted_RequestGuide_Buyer$PC
 };
 
-function PDP_Quoted_RequestGuide_Buyer$MO(Props) {
+function PDP_Quoted_RequestGuide_Buyer$MO(props) {
   return React.createElement("div", {
               className: "w-full flex flex-col gap-4"
             }, React.createElement("h1", {

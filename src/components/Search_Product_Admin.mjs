@@ -262,11 +262,10 @@ function getDefault(dict) {
         };
 }
 
-function Search_Product_Admin(Props) {
-  var defaultValue = Props.defaultValue;
-  var defaultCategoryQuery = Props.defaultCategoryQuery;
+function Search_Product_Admin(props) {
+  var defaultValue = props.defaultValue;
   var router = Router.useRouter();
-  var categoriesQueryData = use(defaultCategoryQuery);
+  var categoriesQueryData = use(props.defaultCategoryQuery);
   var methods = ReactHookForm$1.useForm({
         mode: "all",
         defaultValues: Js_dict.fromArray([
@@ -478,7 +477,7 @@ function Search_Product_Admin(Props) {
                                                     className: "bg-white w-44"
                                                   }, React.createElement(ReactHookForm$1.Controller, {
                                                         name: "status",
-                                                        control: control,
+                                                        control: Caml_option.some(control),
                                                         render: (function (param) {
                                                             var match = param.field;
                                                             var onChange = match.onChange;
@@ -493,7 +492,7 @@ function Search_Product_Admin(Props) {
                                                                         forwardRef: match.ref
                                                                       });
                                                           }),
-                                                        defaultValue: Select_Product_Operation_Status.Search.status_encode(/* ALL */0)
+                                                        defaultValue: Caml_option.some(Select_Product_Operation_Status.Search.status_encode(/* ALL */0))
                                                       }))), React.createElement("div", {
                                                 className: "flex items-center"
                                               }, React.createElement("label", {
@@ -504,7 +503,7 @@ function Search_Product_Admin(Props) {
                                                     className: "bg-white w-44"
                                                   }, React.createElement(ReactHookForm$1.Controller, {
                                                         name: "product-type",
-                                                        control: control,
+                                                        control: Caml_option.some(control),
                                                         render: (function (param) {
                                                             var match = param.field;
                                                             var onChange = match.onChange;
@@ -518,12 +517,12 @@ function Search_Product_Admin(Props) {
                                                                           })
                                                                       });
                                                           }),
-                                                        defaultValue: Select_Product_Type.Search.status_encode(/* ALL */0)
+                                                        defaultValue: Caml_option.some(Select_Product_Type.Search.status_encode(/* ALL */0))
                                                       }))), React.createElement("div", {
                                                 className: "flex items-center gap-6"
                                               }, React.createElement("div", undefined, "택배가능여부"), React.createElement(ReactHookForm$1.Controller, {
                                                     name: "delivery",
-                                                    control: control,
+                                                    control: Caml_option.some(control),
                                                     render: (function (param) {
                                                         var match = param.field;
                                                         var onChange = match.onChange;
@@ -538,7 +537,7 @@ function Search_Product_Admin(Props) {
                                                                     name: match.name
                                                                   });
                                                       }),
-                                                    defaultValue: Select_Delivery_Available.status_encode(/* ALL */0)
+                                                    defaultValue: Caml_option.some(Select_Delivery_Available.status_encode(/* ALL */0))
                                                   }))))), React.createElement("div", {
                                     className: "flex-1"
                                   }))), React.createElement("div", {

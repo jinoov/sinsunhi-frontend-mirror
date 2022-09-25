@@ -2,20 +2,20 @@
 
 import * as React from "react";
 
-function IconNotFound(Props) {
-  var widthOpt = Props.width;
-  var heightOpt = Props.height;
-  var width = widthOpt !== undefined ? widthOpt : "160";
-  var height = heightOpt !== undefined ? heightOpt : "160";
+function IconNotFound(props) {
+  var height = props.height;
+  var width = props.width;
+  var height$1 = height !== undefined ? height : "160";
+  var width$1 = width !== undefined ? width : "160";
   return React.createElement("svg", {
-              height: height,
-              width: width,
+              height: height$1,
+              width: width$1,
               fill: "none",
               viewBox: "0 0 160 160",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("rect", {
-                  height: height,
-                  width: width,
+                  height: height$1,
+                  width: width$1,
                   fill: "white"
                 }), React.createElement("g", {
                   filter: "url(#filter0_i_2702_20597)"

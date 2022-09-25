@@ -6,214 +6,136 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactAccordion from "@radix-ui/react-accordion";
 
-var make = React.forwardRef(function (Props, ref_) {
-      var children = Props.children;
-      var _type = Props.type;
-      var asChild = Props.asChild;
-      var className = Props.className;
-      var value = Props.value;
-      var onValueChange = Props.onValueChange;
+var make = React.forwardRef(function (props, ref) {
       var defaultStyle = "";
-      var tmp = {
-        children: children,
-        type: _type,
-        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
-                return Cx.cx([
-                            defaultStyle,
-                            className$p
-                          ]);
-              }))
-      };
-      if (asChild !== undefined) {
-        tmp.asChild = asChild;
-      }
-      if (value !== undefined) {
-        tmp.value = Caml_option.valFromOption(value);
-      }
-      if (onValueChange !== undefined) {
-        tmp.onValueChange = Caml_option.valFromOption(onValueChange);
-      }
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
-              return prim;
-            }));
-      if (tmp$1 !== undefined) {
-        tmp.ref = Caml_option.valFromOption(tmp$1);
-      }
-      return React.createElement(ReactAccordion.Root, tmp);
+      return React.createElement(ReactAccordion.Root, {
+                  asChild: props.asChild,
+                  children: props.children,
+                  _type: props._type,
+                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+                          return Cx.cx([
+                                      defaultStyle,
+                                      className$p
+                                    ]);
+                        })),
+                  value: props.value,
+                  onValueChange: props.onValueChange,
+                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
+                          return prim;
+                        }))
+                });
     });
 
 var RootMultiple = {
   make: make
 };
 
-var make$1 = React.forwardRef(function (Props, ref_) {
-      var children = Props.children;
-      var _type = Props.type;
-      var asChild = Props.asChild;
-      var collapsible = Props.collapsible;
-      var className = Props.className;
-      var value = Props.value;
-      var onValueChange = Props.onValueChange;
+var make$1 = React.forwardRef(function (props, ref) {
       var defaultStyle = "";
-      var tmp = {
-        children: children,
-        type: _type,
-        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
-                return Cx.cx([
-                            defaultStyle,
-                            className$p
-                          ]);
-              }))
-      };
-      if (asChild !== undefined) {
-        tmp.asChild = asChild;
-      }
-      if (collapsible !== undefined) {
-        tmp.collapsible = collapsible;
-      }
-      if (value !== undefined) {
-        tmp.value = value;
-      }
-      if (onValueChange !== undefined) {
-        tmp.onValueChange = Caml_option.valFromOption(onValueChange);
-      }
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
-              return prim;
-            }));
-      if (tmp$1 !== undefined) {
-        tmp.ref = Caml_option.valFromOption(tmp$1);
-      }
-      return React.createElement(ReactAccordion.Root, tmp);
+      return React.createElement(ReactAccordion.Root, {
+                  asChild: props.asChild,
+                  children: props.children,
+                  _type: props._type,
+                  collapsible: props.collapsible,
+                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+                          return Cx.cx([
+                                      defaultStyle,
+                                      className$p
+                                    ]);
+                        })),
+                  value: props.value,
+                  onValueChange: props.onValueChange,
+                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
+                          return prim;
+                        }))
+                });
     });
 
 var RootSingle = {
   make: make$1
 };
 
-var make$2 = React.forwardRef(function (Props, ref_) {
-      var children = Props.children;
-      var className = Props.className;
-      var asChild = Props.asChild;
+var make$2 = React.forwardRef(function (props, ref) {
       var defaultStyle = "focus:outline-none accordian-trigger";
-      var tmp = {
-        children: children,
-        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
-                return Cx.cx([
-                            defaultStyle,
-                            className$p
-                          ]);
-              }))
-      };
-      if (asChild !== undefined) {
-        tmp.asChild = asChild;
-      }
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
-              return prim;
-            }));
-      if (tmp$1 !== undefined) {
-        tmp.ref = Caml_option.valFromOption(tmp$1);
-      }
-      return React.createElement(ReactAccordion.Trigger, tmp);
+      return React.createElement(ReactAccordion.Trigger, {
+                  children: props.children,
+                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+                          return Cx.cx([
+                                      defaultStyle,
+                                      className$p
+                                    ]);
+                        })),
+                  asChild: props.asChild,
+                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
+                          return prim;
+                        }))
+                });
     });
 
 var Trigger = {
   make: make$2
 };
 
-var make$3 = React.forwardRef(function (Props, ref_) {
-      var children = Props.children;
-      var value = Props.value;
-      var className = Props.className;
-      var disabled = Props.disabled;
-      var asChild = Props.asChild;
+var make$3 = React.forwardRef(function (props, ref) {
       var defaultStyle = "";
-      var tmp = {
-        children: children,
-        value: value,
-        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
-                return Cx.cx([
-                            defaultStyle,
-                            className$p
-                          ]);
-              }))
-      };
-      if (asChild !== undefined) {
-        tmp.asChild = asChild;
-      }
-      if (disabled !== undefined) {
-        tmp.disabled = disabled;
-      }
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
-              return prim;
-            }));
-      if (tmp$1 !== undefined) {
-        tmp.ref = Caml_option.valFromOption(tmp$1);
-      }
-      return React.createElement(ReactAccordion.Item, tmp);
+      return React.createElement(ReactAccordion.Item, {
+                  children: props.children,
+                  value: props.value,
+                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+                          return Cx.cx([
+                                      defaultStyle,
+                                      className$p
+                                    ]);
+                        })),
+                  asChild: props.asChild,
+                  disabled: props.disabled,
+                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
+                          return prim;
+                        }))
+                });
     });
 
 var Item = {
   make: make$3
 };
 
-var make$4 = React.forwardRef(function (Props, ref_) {
-      var children = Props.children;
-      var className = Props.className;
-      var asChild = Props.asChild;
+var make$4 = React.forwardRef(function (props, ref) {
       var defaultStyle = "";
-      var tmp = {
-        children: children,
-        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
-                return Cx.cx([
-                            defaultStyle,
-                            className$p
-                          ]);
-              }))
-      };
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
-              return prim;
-            }));
-      if (tmp$1 !== undefined) {
-        tmp.ref = Caml_option.valFromOption(tmp$1);
-      }
-      if (asChild !== undefined) {
-        tmp.asChild = asChild;
-      }
-      return React.createElement(ReactAccordion.Header, tmp);
+      return React.createElement(ReactAccordion.Header, {
+                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
+                          return prim;
+                        })),
+                  children: props.children,
+                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+                          return Cx.cx([
+                                      defaultStyle,
+                                      className$p
+                                    ]);
+                        })),
+                  asChild: props.asChild
+                });
     });
 
 var Header = {
   make: make$4
 };
 
-var make$5 = React.forwardRef(function (Props, ref_) {
-      var children = Props.children;
-      var className = Props.className;
-      var asChild = Props.asChild;
-      var forceMount = Props.forceMount;
+var make$5 = React.forwardRef(function (props, ref) {
       var defaultStyle = "accordian-content";
-      var tmp = {
-        children: children,
-        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
-                return Cx.cx([
-                            defaultStyle,
-                            className$p
-                          ]);
-              }))
-      };
-      if (asChild !== undefined) {
-        tmp.asChild = asChild;
-      }
-      if (forceMount !== undefined) {
-        tmp.forceMount = forceMount;
-      }
-      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
-              return prim;
-            }));
-      if (tmp$1 !== undefined) {
-        tmp.ref = Caml_option.valFromOption(tmp$1);
-      }
-      return React.createElement(ReactAccordion.Content, tmp);
+      return React.createElement(ReactAccordion.Content, {
+                  children: props.children,
+                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+                          return Cx.cx([
+                                      defaultStyle,
+                                      className$p
+                                    ]);
+                        })),
+                  asChild: props.asChild,
+                  forceMount: props.forceMount,
+                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
+                          return prim;
+                        }))
+                });
     });
 
 var Content = {

@@ -5,6 +5,7 @@ import * as React from "react";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
@@ -14,7 +15,7 @@ import * as ChannelTalkHelper from "../utils/ChannelTalkHelper.mjs";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
 import ArrowRightSvg from "../../public/assets/arrow-right.svg";
 
-function Header$User(Props) {
+function Header$User(props) {
   var router = Router.useRouter();
   var user = CustomHooks.Auth.use(undefined);
   var logOut = function (param) {
@@ -94,19 +95,19 @@ function Header$User(Props) {
                       align: "end",
                       className: "dropdown-content bg-white shadow-gl p-2"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement("span", {
-                                className: "block py-3 px-8 whitespace-nowrap cursor-default",
-                                onClick: logOut
-                              }, "로그아웃"),
+                          children: Caml_option.some(React.createElement("span", {
+                                    className: "block py-3 px-8 whitespace-nowrap cursor-default",
+                                    onClick: logOut
+                                  }, "로그아웃")),
                           className: "focus:outline-none hover:bg-div-shape-L1 rounded-lg"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement("a", {
-                                className: "cursor-default",
-                                href: Env.kakaotalkChannel,
-                                target: "_blank"
-                              }, React.createElement("span", {
-                                    className: "block py-3 px-8 whitespace-nowrap hover:bg-div-shape-L1 rounded-lg"
-                                  }, "고객센터")),
+                          children: Caml_option.some(React.createElement("a", {
+                                    className: "cursor-default",
+                                    href: Env.kakaotalkChannel,
+                                    target: "_blank"
+                                  }, React.createElement("span", {
+                                        className: "block py-3 px-8 whitespace-nowrap hover:bg-div-shape-L1 rounded-lg"
+                                      }, "고객센터"))),
                           className: "focus:outline-none"
                         }))));
 }
@@ -115,7 +116,7 @@ var User = {
   make: Header$User
 };
 
-function Header$Seller(Props) {
+function Header$Seller(props) {
   var router = Router.useRouter();
   var tabActive = "block py-2 shadow-inner-b-4 shadow-green sm:h-16 sm:flex sm:items-center whitespace-nowrap";
   var tabInactive = "block py-2 shadow-green sm:h-16 sm:flex sm:items-center text-gray-400 whitespace-nowrap";
@@ -191,7 +192,7 @@ var Seller = {
 
 var arrowRight = ArrowRightSvg;
 
-function Header$SellerActivateUser(Props) {
+function Header$SellerActivateUser(props) {
   var router = Router.useRouter();
   return React.createElement("nav", {
               className: "w-full max-w-3xl mx-auto h-14 bg-white pl-4 pr-5 flex items-center"
@@ -210,7 +211,7 @@ var SellerActivateUser = {
   make: Header$SellerActivateUser
 };
 
-function Header$Admin(Props) {
+function Header$Admin(props) {
   return React.createElement("nav", undefined, React.createElement("ol", {
                   className: "px-4 shadow-inner-b-1 shadow-gray flex justify-between items-center h-16 sm:px-10 md:px-20"
                 }, React.createElement("li", undefined, React.createElement("img", {

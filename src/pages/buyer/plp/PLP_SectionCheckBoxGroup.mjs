@@ -8,7 +8,7 @@ import * as ReactEvents from "../../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as PLP_FilterOption from "./PLP_FilterOption.mjs";
 
-function PLP_SectionCheckBoxGroup$PC(Props) {
+function PLP_SectionCheckBoxGroup$PC(props) {
   var router = Router.useRouter();
   var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type"));
   var match = PLP_FilterOption.Section.toCheckBoxSelection(sectionType);
@@ -53,7 +53,7 @@ var PC = {
   make: PLP_SectionCheckBoxGroup$PC
 };
 
-function PLP_SectionCheckBoxGroup$MO(Props) {
+function PLP_SectionCheckBoxGroup$MO(props) {
   var router = Router.useRouter();
   var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type"));
   var match = PLP_FilterOption.Section.toCheckBoxSelection(sectionType);

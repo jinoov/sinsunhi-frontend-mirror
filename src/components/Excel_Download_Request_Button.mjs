@@ -12,11 +12,10 @@ import DownloadSvg from "../../public/assets/download.svg";
 
 var downloadIcon = DownloadSvg;
 
-function Excel_Download_Request_Button(Props) {
-  var userType = Props.userType;
-  var requestUrl = Props.requestUrl;
-  var buttonText = Props.buttonText;
-  var bodyOption = Props.bodyOption;
+function Excel_Download_Request_Button(props) {
+  var bodyOption = props.bodyOption;
+  var requestUrl = props.requestUrl;
+  var userType = props.userType;
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
@@ -76,7 +75,7 @@ function Excel_Download_Request_Button(Props) {
                 }, React.createElement("img", {
                       className: "relative mr-1",
                       src: downloadIcon
-                    }), Belt_Option.getWithDefault(buttonText, "엑셀 다운로드 요청")), React.createElement(Dialog.make, {
+                    }), Belt_Option.getWithDefault(props.buttonText, "엑셀 다운로드 요청")), React.createElement(Dialog.make, {
                   isShow: match$1[0],
                   children: React.createElement("span", {
                         className: "flex items-center justify-center w-full py-10"

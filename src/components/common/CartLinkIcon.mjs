@@ -101,7 +101,7 @@ var Query = {
 
 var cartIcon = Icon_cartSvg;
 
-function CartLinkIcon$PlaceHolder(Props) {
+function CartLinkIcon$PlaceHolder(props) {
   return React.createElement(Link, {
               href: "/buyer/cart",
               children: React.createElement("a", undefined, React.createElement("img", {
@@ -116,7 +116,7 @@ var PlaceHolder = {
   make: CartLinkIcon$PlaceHolder
 };
 
-function CartLinkIcon$NotLoggedIn(Props) {
+function CartLinkIcon$NotLoggedIn(props) {
   var match = React.useState(function () {
         return false;
       });
@@ -164,7 +164,7 @@ function CartLinkIcon$NotLoggedIn(Props) {
                                                     }), param);
                                       })
                                   }, "로그인")))),
-                  open: match[0]
+                  _open: match[0]
                 }), React.createElement("button", {
                   type: "button",
                   onClick: (function (param) {
@@ -183,31 +183,31 @@ var NotLoggedIn = {
   make: CartLinkIcon$NotLoggedIn
 };
 
-function CartLinkIcon$Container(Props) {
+function CartLinkIcon$Container(props) {
   var queryData = use(undefined, /* StoreAndNetwork */2, undefined, undefined, undefined);
   var router = Router.useRouter();
   var count = queryData.cartItemCount;
   return React.createElement(React.Suspense, {
-              children: React.createElement(DataGtm.make, {
-                    children: React.createElement("button", {
-                          className: "relative w-6 h-6 min-w-[24px] min-h-[24px] place-self-center",
-                          type: "button",
-                          onClick: (function (param) {
-                              router.push("/buyer/cart");
-                            })
-                        }, count !== 0 ? React.createElement("div", {
-                                className: Cx.cx([
-                                      "flex justify-center items-center rounded-[10px] bg-emphasis h-4 text-white text-xs absolute font-bold -top-1 leading-[14.4px]",
-                                      count >= 10 ? "-right-2 w-[23px]" : "-right-1 w-4"
-                                    ])
-                              }, String(count)) : null, React.createElement("img", {
-                              className: "w-6 h-6 min-w-[24px] min-h-[24px] place-self-center",
-                              alt: "cart-icon",
-                              src: cartIcon
-                            })),
-                    dataGtm: "click_cart"
-                  }),
-              fallback: React.createElement(CartLinkIcon$PlaceHolder, {})
+              children: Caml_option.some(React.createElement(DataGtm.make, {
+                        children: React.createElement("button", {
+                              className: "relative w-6 h-6 min-w-[24px] min-h-[24px] place-self-center",
+                              type: "button",
+                              onClick: (function (param) {
+                                  router.push("/buyer/cart");
+                                })
+                            }, count !== 0 ? React.createElement("div", {
+                                    className: Cx.cx([
+                                          "flex justify-center items-center rounded-[10px] bg-emphasis h-4 text-white text-xs absolute font-bold -top-1 leading-[14.4px]",
+                                          count >= 10 ? "-right-2 w-[23px]" : "-right-1 w-4"
+                                        ])
+                                  }, String(count)) : null, React.createElement("img", {
+                                  className: "w-6 h-6 min-w-[24px] min-h-[24px] place-self-center",
+                                  alt: "cart-icon",
+                                  src: cartIcon
+                                })),
+                        dataGtm: "click_cart"
+                      })),
+              fallback: Caml_option.some(React.createElement(CartLinkIcon$PlaceHolder, {}))
             });
 }
 
@@ -215,7 +215,7 @@ var Container = {
   make: CartLinkIcon$Container
 };
 
-function CartLinkIcon(Props) {
+function CartLinkIcon(props) {
   var user = CustomHooks.Auth.use(undefined);
   var isLoggedIn;
   if (typeof user === "number") {

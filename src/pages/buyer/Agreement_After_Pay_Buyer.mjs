@@ -10,6 +10,7 @@ import * as IconArrow from "../../components/svgs/IconArrow.mjs";
 import * as IconCheck from "../../components/svgs/IconCheck.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as FetchHelper from "../../utils/FetchHelper.mjs";
 import * as Router from "next/router";
@@ -20,7 +21,7 @@ import * as ReactHookForm from "react-hook-form";
 import * as Guide_Upload_Buyer from "../../components/Guide_Upload_Buyer.mjs";
 import * as Upload_After_Pay_Form from "./Upload_After_Pay_Form.mjs";
 
-function Agreement_After_Pay_Buyer$Info(Props) {
+function Agreement_After_Pay_Buyer$Info(props) {
   return React.createElement("div", {
               className: "px-3 pt-16 pb-5"
             }, React.createElement("div", {
@@ -64,13 +65,10 @@ var Info = {
   make: Agreement_After_Pay_Buyer$Info
 };
 
-function Agreement_After_Pay_Buyer$AgreementItem(Props) {
-  var children = Props.children;
-  var id = Props.id;
-  var register = Props.register;
-  var onChange = Props.onChange;
-  var href = Props.href;
-  var r = register(id, undefined);
+function Agreement_After_Pay_Buyer$AgreementItem(props) {
+  var onChange = props.onChange;
+  var id = props.id;
+  var r = props.register(id, undefined);
   return React.createElement("div", {
               className: "flex items-center gap-2"
             }, React.createElement("div", undefined, React.createElement(Checkbox.Uncontrolled.make, {
@@ -85,10 +83,10 @@ function Agreement_After_Pay_Buyer$AgreementItem(Props) {
                                 }));
                         }),
                       disabled: false,
-                      inputRef: r.ref
+                      inputRef: Caml_option.some(r.ref)
                     })), React.createElement("div", undefined, React.createElement("label", {
                       htmlFor: id
-                    }, children)), Belt_Option.mapWithDefault(href, null, (function (href) {
+                    }, props.children)), Belt_Option.mapWithDefault(props.href, null, (function (href) {
                     return React.createElement("div", {
                                 className: "ml-auto"
                               }, React.createElement("a", {
@@ -113,7 +111,7 @@ var agree3 = "AFTER_PAY_COMPANY_CREDIT_INFO_INQUIRY";
 
 var agree4 = "AFTER_PAY_COMPANY_CREDIT_INFO_OFFER";
 
-function Agreement_After_Pay_Buyer$Agreement(Props) {
+function Agreement_After_Pay_Buyer$Agreement(props) {
   var user = Curry._1(CustomHooks.User.Buyer.use, undefined);
   var userId = typeof user === "number" ? undefined : user._0.id;
   var router = Router.useRouter();
@@ -241,7 +239,7 @@ var Agreement = {
   make: Agreement_After_Pay_Buyer$Agreement
 };
 
-function Agreement_After_Pay_Buyer(Props) {
+function Agreement_After_Pay_Buyer(props) {
   var agreements = CustomHooks.AfterPayAgreement.use(undefined);
   var router = Router.useRouter();
   React.useEffect((function () {

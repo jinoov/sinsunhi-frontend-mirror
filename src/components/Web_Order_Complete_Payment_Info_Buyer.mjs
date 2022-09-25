@@ -82,10 +82,9 @@ function makePrice(o, d, m) {
   }
 }
 
-function Web_Order_Complete_Payment_Info_Buyer$Placeholder(Props) {
-  var deviceType = Props.deviceType;
+function Web_Order_Complete_Payment_Info_Buyer$Placeholder(props) {
   var tmp;
-  switch (deviceType) {
+  switch (props.deviceType) {
     case /* Unknown */0 :
         tmp = null;
         break;
@@ -126,10 +125,9 @@ var Placeholder = {
   make: Web_Order_Complete_Payment_Info_Buyer$Placeholder
 };
 
-function Web_Order_Complete_Payment_Info_Buyer(Props) {
-  var query = Props.query;
-  var deviceType = Props.deviceType;
-  var match = use(query);
+function Web_Order_Complete_Payment_Info_Buyer(props) {
+  var deviceType = props.deviceType;
+  var match = use(props.query);
   var wosOrder = match.wosOrder;
   if (wosOrder === undefined) {
     return React.createElement(Web_Order_Complete_Payment_Info_Buyer$Placeholder, {

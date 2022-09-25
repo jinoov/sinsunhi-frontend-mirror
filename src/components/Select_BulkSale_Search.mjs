@@ -20,11 +20,9 @@ import * as Select_BulkSale_ProductCategory from "./Select_BulkSale_ProductCateg
 import * as SelectBulkSaleSearchStaffQuery_graphql from "../__generated__/SelectBulkSaleSearchStaffQuery_graphql.mjs";
 import * as SelectBulkSaleSearchStaffMutation_graphql from "../__generated__/SelectBulkSaleSearchStaffMutation_graphql.mjs";
 
-function Select_BulkSale_Search$Crop(Props) {
-  var cropId = Props.cropId;
-  var onChange = Props.onChange;
-  var disabledOpt = Props.disabled;
-  var disabled = disabledOpt !== undefined ? disabledOpt : false;
+function Select_BulkSale_Search$Crop(props) {
+  var disabled = props.disabled;
+  var disabled$1 = disabled !== undefined ? disabled : false;
   var handleLoadOptions = function (inputValue) {
     return Js_promise.then_((function (result) {
                   var result$p = Garter_Array.map(result.crops.edges, (function (edge) {
@@ -45,17 +43,17 @@ function Select_BulkSale_Search$Crop(Props) {
   return React.createElement("article", {
               className: "w-full"
             }, React.createElement(Async, {
-                  value: cropId,
+                  value: props.cropId,
                   cacheOptions: false,
                   defaultOptions: true,
                   loadOptions: Helper.Debounce.make1(handleLoadOptions, 500),
-                  onChange: onChange,
+                  onChange: props.onChange,
                   placeholder: "품목 검색",
                   noOptionsMessage: (function (param) {
                       return "검색 결과가 없습니다.";
                     }),
                   isClearable: true,
-                  isDisabled: disabled,
+                  isDisabled: disabled$1,
                   styles: {
                     menu: (function (provide, param) {
                         return Object.assign(provide, {
@@ -79,12 +77,10 @@ var Crop = {
   make: Select_BulkSale_Search$Crop
 };
 
-function Select_BulkSale_Search$ProductCategory(Props) {
-  var cropId = Props.cropId;
-  var productCategoryId = Props.productCategoryId;
-  var onChange = Props.onChange;
-  var disabledOpt = Props.disabled;
-  var disabled = disabledOpt !== undefined ? disabledOpt : false;
+function Select_BulkSale_Search$ProductCategory(props) {
+  var disabled = props.disabled;
+  var cropId = props.cropId;
+  var disabled$1 = disabled !== undefined ? disabled : false;
   var handleLoadOptions = function (inputValue) {
     if (cropId) {
       return Js_promise.then_((function (result) {
@@ -110,11 +106,11 @@ function Select_BulkSale_Search$ProductCategory(Props) {
   return React.createElement("article", {
               className: "w-full"
             }, React.createElement(Async, {
-                  value: productCategoryId,
+                  value: props.productCategoryId,
                   cacheOptions: false,
                   defaultOptions: true,
                   loadOptions: Helper.Debounce.make1(handleLoadOptions, 500),
-                  onChange: onChange,
+                  onChange: props.onChange,
                   placeholder: "품종 검색",
                   noOptionsMessage: (function (param) {
                       if (cropId) {
@@ -124,7 +120,7 @@ function Select_BulkSale_Search$ProductCategory(Props) {
                       }
                     }),
                   isClearable: true,
-                  isDisabled: disabled,
+                  isDisabled: disabled$1,
                   styles: {
                     menu: (function (provide, param) {
                         return Object.assign(provide, {
@@ -288,10 +284,10 @@ function getEmailId(x) {
   return Garter_Array.firstExn(x.split("@"));
 }
 
-function Select_BulkSale_Search$Staff(Props) {
-  var applicationId = Props.applicationId;
-  var staffInfo = Props.staffInfo;
-  var onChange = Props.onChange;
+function Select_BulkSale_Search$Staff(props) {
+  var onChange = props.onChange;
+  var staffInfo = props.staffInfo;
+  var applicationId = props.applicationId;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = React.useState(function () {

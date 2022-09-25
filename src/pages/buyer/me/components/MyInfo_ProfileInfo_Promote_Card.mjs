@@ -3,30 +3,27 @@
 import * as React from "react";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 
-function MyInfo_ProfileInfo_Promote_Card$Card(Props) {
-  var content = Props.content;
-  var onClick = Props.onClick;
-  var childrenOpt = Props.children;
-  var children = childrenOpt !== undefined ? Caml_option.valFromOption(childrenOpt) : null;
+function MyInfo_ProfileInfo_Promote_Card$Card(props) {
+  var children = props.children;
+  var children$1 = children !== undefined ? Caml_option.valFromOption(children) : null;
   return React.createElement("div", {
               className: "px-4 py-3 flex items-center justify-between border border-gray-200 rounded-[4px] h-full"
             }, React.createElement("div", {
                   className: "text-sm mr-2"
-                }, content), React.createElement("button", {
+                }, props.content), React.createElement("button", {
                   className: "px-3 py-2 text-sm bg-gray-50 rounded-lg text-gray-800",
-                  onClick: onClick
-                }, "입력하기"), children);
+                  onClick: props.onClick
+                }, "입력하기"), children$1);
 }
 
 var Card = {
   make: MyInfo_ProfileInfo_Promote_Card$Card
 };
 
-function MyInfo_ProfileInfo_Promote_Card$SalesBin(Props) {
-  var onClick = Props.onClick;
+function MyInfo_ProfileInfo_Promote_Card$SalesBin(props) {
   return React.createElement(MyInfo_ProfileInfo_Promote_Card$Card, {
               content: "💰 연간 거래 규모는 어느정도 되시나요?",
-              onClick: onClick
+              onClick: props.onClick
             });
 }
 
@@ -34,11 +31,10 @@ var SalesBin = {
   make: MyInfo_ProfileInfo_Promote_Card$SalesBin
 };
 
-function MyInfo_ProfileInfo_Promote_Card$Sectors(Props) {
-  var onClick = Props.onClick;
+function MyInfo_ProfileInfo_Promote_Card$Sectors(props) {
   return React.createElement(MyInfo_ProfileInfo_Promote_Card$Card, {
               content: "🚛 주 납품 유형은 무엇인가요?",
-              onClick: onClick
+              onClick: props.onClick
             });
 }
 
@@ -46,11 +42,10 @@ var Sectors = {
   make: MyInfo_ProfileInfo_Promote_Card$Sectors
 };
 
-function MyInfo_ProfileInfo_Promote_Card$InterestCategories(Props) {
-  var onClick = Props.onClick;
+function MyInfo_ProfileInfo_Promote_Card$InterestCategories(props) {
   return React.createElement(MyInfo_ProfileInfo_Promote_Card$Card, {
               content: "🍅 관심 상품을 알려주세요.",
-              onClick: onClick
+              onClick: props.onClick
             });
 }
 
@@ -58,11 +53,10 @@ var InterestCategories = {
   make: MyInfo_ProfileInfo_Promote_Card$InterestCategories
 };
 
-function MyInfo_ProfileInfo_Promote_Card$BusinessNumber(Props) {
-  var onClick = Props.onClick;
+function MyInfo_ProfileInfo_Promote_Card$BusinessNumber(props) {
   return React.createElement(MyInfo_ProfileInfo_Promote_Card$Card, {
               content: "📄 사업자 등록번호를 확인해주세요.",
-              onClick: onClick
+              onClick: props.onClick
             });
 }
 
@@ -70,11 +64,10 @@ var BusinessNumber = {
   make: MyInfo_ProfileInfo_Promote_Card$BusinessNumber
 };
 
-function MyInfo_ProfileInfo_Promote_Card$Manager(Props) {
-  var onClick = Props.onClick;
+function MyInfo_ProfileInfo_Promote_Card$Manager(props) {
   return React.createElement(MyInfo_ProfileInfo_Promote_Card$Card, {
               content: "💻 담당자명을 알려주세요.",
-              onClick: onClick
+              onClick: props.onClick
             });
 }
 

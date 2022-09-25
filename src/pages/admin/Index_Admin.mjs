@@ -4,7 +4,7 @@ import * as React from "react";
 import * as Router from "next/router";
 import * as Authorization from "../../utils/Authorization.mjs";
 
-function Index_Admin(Props) {
+function Index_Admin(props) {
   var router = Router.useRouter();
   React.useEffect((function () {
           router.replace("/admin/dashboard");

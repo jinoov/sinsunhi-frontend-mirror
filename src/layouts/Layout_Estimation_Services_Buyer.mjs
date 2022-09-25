@@ -6,8 +6,8 @@ import * as Router from "next/router";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as Layout_Buyer from "./Layout_Buyer.mjs";
 
-function Layout_Estimation_Services_Buyer(Props) {
-  var children = Props.children;
+function Layout_Estimation_Services_Buyer(props) {
+  var children = props.children;
   var router = Router.useRouter();
   var paths = Belt_Array.keep(router.pathname.split("/"), (function (x) {
           return x !== "";
@@ -15,37 +15,44 @@ function Layout_Estimation_Services_Buyer(Props) {
   var secondPathname = Garter_Array.get(paths, 1);
   var thirdPathname = Garter_Array.get(paths, 2);
   var fourthPathname = Garter_Array.get(paths, 3);
-  if (secondPathname !== undefined) {
-    switch (secondPathname) {
-      case "rfq" :
-          if (thirdPathname !== undefined) {
-            return children;
-          } else {
-            return React.createElement(Layout_Buyer.make, {
-                        children: children
-                      });
-          }
-      case "tradematch" :
-          if (fourthPathname !== undefined) {
-            switch (fourthPathname) {
-              case "applied" :
-              case "apply" :
-                  return children;
-              default:
-                if (thirdPathname !== undefined && thirdPathname === "buy" && fourthPathname === "products") {
-                  return children;
-                }
-                
-            }
-          }
-          break;
-      default:
-        
-    }
+  if (secondPathname === undefined) {
+    return React.createElement(Layout_Buyer.make, {
+                children: children
+              });
   }
-  return React.createElement(Layout_Buyer.make, {
-              children: children
-            });
+  switch (secondPathname) {
+    case "rfq" :
+        if (thirdPathname !== undefined) {
+          return children;
+        } else {
+          return React.createElement(Layout_Buyer.make, {
+                      children: children
+                    });
+        }
+    case "tradematch" :
+        if (fourthPathname === undefined) {
+          return React.createElement(Layout_Buyer.make, {
+                      children: children
+                    });
+        }
+        switch (fourthPathname) {
+          case "applied" :
+          case "apply" :
+              return children;
+          default:
+            if (thirdPathname !== undefined && thirdPathname === "buy" && fourthPathname === "products") {
+              return children;
+            } else {
+              return React.createElement(Layout_Buyer.make, {
+                          children: children
+                        });
+            }
+        }
+    default:
+      return React.createElement(Layout_Buyer.make, {
+                  children: children
+                });
+  }
 }
 
 var make = Layout_Estimation_Services_Buyer;

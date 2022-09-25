@@ -54,10 +54,9 @@ function deliveryTypetoString(d) {
   }
 }
 
-function Web_Order_Complete_Delivery_Info_Buyer$Placeholder(Props) {
-  var deviceType = Props.deviceType;
+function Web_Order_Complete_Delivery_Info_Buyer$Placeholder(props) {
   var tmp;
-  switch (deviceType) {
+  switch (props.deviceType) {
     case /* Unknown */0 :
         tmp = null;
         break;
@@ -120,10 +119,9 @@ var Placeholder = {
   make: Web_Order_Complete_Delivery_Info_Buyer$Placeholder
 };
 
-function Web_Order_Complete_Delivery_Info_Buyer(Props) {
-  var query = Props.query;
-  var deviceType = Props.deviceType;
-  var match = use(query);
+function Web_Order_Complete_Delivery_Info_Buyer(props) {
+  var deviceType = props.deviceType;
+  var match = use(props.query);
   var toPhoneNumberForm = function (s) {
     return s.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
   };

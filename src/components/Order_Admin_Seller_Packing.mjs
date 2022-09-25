@@ -24,13 +24,11 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
 }
 
-function Order_Admin_Seller_Packing$Item$Table(Props) {
-  var order = Props.order;
-  var courierCode = Props.courierCode;
-  var setCourier = Props.setCourier;
-  var invoice = Props.invoice;
-  var onChangeInvoice = Props.onChangeInvoice;
-  var onSubmitInvoice = Props.onSubmitInvoice;
+function Order_Admin_Seller_Packing$Item$Table(props) {
+  var onSubmitInvoice = props.onSubmitInvoice;
+  var invoice = props.invoice;
+  var courierCode = props.courierCode;
+  var order = props.order;
   var isDisabledSubmitButton = courierCode !== undefined && invoice !== undefined ? invoice === "" : true;
   var match = order.status;
   var tmp;
@@ -40,7 +38,7 @@ function Order_Admin_Seller_Packing$Item$Table(Props) {
     var match$1 = order.invoice;
     tmp = React.createElement(React.Fragment, undefined, React.createElement(Select_Courier.make, {
               courierCode: courierCode,
-              setCourier: setCourier
+              setCourier: props.setCourier
             }), React.createElement("div", {
               className: "flex mt-1"
             }, React.createElement("label", {
@@ -50,9 +48,8 @@ function Order_Admin_Seller_Packing$Item$Table(Props) {
                       name: "invoice-number",
                       placeholder: "송장번호입력",
                       value: Belt_Option.getWithDefault(invoice, ""),
-                      onChange: onChangeInvoice,
-                      size: /* Small */2,
-                      error: undefined
+                      onChange: props.onChangeInvoice,
+                      size: /* Small */2
                     })), React.createElement("label", undefined, match$1 !== undefined ? React.createElement("button", {
                         className: "py-1 px-2 rounded-md bg-gray-300 text-white ml-1 whitespace-nowrap",
                         type: "button",
@@ -131,7 +128,7 @@ var Table = {
   make: Order_Admin_Seller_Packing$Item$Table
 };
 
-function Order_Admin_Seller_Packing$Item$Loading(Props) {
+function Order_Admin_Seller_Packing$Item$Loading(props) {
   return React.createElement("li", {
               className: "grid grid-cols-11-gl-admin"
             }, React.createElement("div", {
@@ -180,8 +177,8 @@ var Item = {
   Loading: Loading
 };
 
-function Order_Admin_Seller_Packing(Props) {
-  var order = Props.order;
+function Order_Admin_Seller_Packing(props) {
+  var order = props.order;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;

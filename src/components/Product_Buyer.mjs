@@ -10,8 +10,8 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
 }
 
-function Product_Buyer$Item$Table(Props) {
-  var product = Props.product;
+function Product_Buyer$Item$Table(props) {
+  var product = props.product;
   return React.createElement(React.Fragment, undefined, React.createElement("li", {
                   className: "hidden lg:grid lg:grid-cols-7-buyer-product text-gray-700"
                 }, React.createElement("div", {
@@ -49,8 +49,8 @@ var Table = {
   make: Product_Buyer$Item$Table
 };
 
-function Product_Buyer$Item$Card(Props) {
-  var product = Props.product;
+function Product_Buyer$Item$Card(props) {
+  var product = props.product;
   return React.createElement(React.Fragment, undefined, React.createElement("li", {
                   className: "py-7 px-5 lg:mb-4 lg:hidden text-black-gl"
                 }, React.createElement("section", {
@@ -111,8 +111,8 @@ var Item = {
   Card: Card
 };
 
-function Product_Buyer(Props) {
-  var product = Props.product;
+function Product_Buyer(props) {
+  var product = props.product;
   return React.createElement(React.Fragment, undefined, React.createElement(Product_Buyer$Item$Table, {
                   product: product
                 }), React.createElement(Product_Buyer$Item$Card, {

@@ -5,53 +5,42 @@ import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 
-function DS_Input$InputText1(Props) {
-  var type_ = Props.type_;
-  var className = Props.className;
-  var placeholder = Props.placeholder;
-  var value = Props.value;
-  var onChange = Props.onChange;
-  var disabled = Props.disabled;
-  var autoFocus = Props.autoFocus;
-  var inputMode = Props.inputMode;
-  var maxLength = Props.maxLength;
-  var onFocus = Props.onFocus;
-  var onBlur = Props.onBlur;
+function DS_Input$InputText1(props) {
   var tmp = {
-    className: Belt_Option.mapWithDefault(className, "w-full outline-none text-xl placeholder:text-gray-400 disabled:bg-white leading-8", (function (className$p) {
+    className: Belt_Option.mapWithDefault(props.className, "w-full outline-none text-xl placeholder:text-gray-400 disabled:bg-white leading-8", (function (className$p) {
             return Cx.cx([
                         "w-full outline-none text-xl placeholder:text-gray-400 disabled:bg-white leading-8",
                         className$p
                       ]);
           })),
-    type: type_
+    type: props.type_
   };
-  if (autoFocus !== undefined) {
-    tmp.autoFocus = Caml_option.valFromOption(autoFocus);
+  if (props.autoFocus !== undefined) {
+    tmp.autoFocus = Caml_option.valFromOption(props.autoFocus);
   }
-  if (disabled !== undefined) {
-    tmp.disabled = Caml_option.valFromOption(disabled);
+  if (props.disabled !== undefined) {
+    tmp.disabled = Caml_option.valFromOption(props.disabled);
   }
-  if (inputMode !== undefined) {
-    tmp.inputMode = Caml_option.valFromOption(inputMode);
+  if (props.inputMode !== undefined) {
+    tmp.inputMode = Caml_option.valFromOption(props.inputMode);
   }
-  if (maxLength !== undefined) {
-    tmp.maxLength = Caml_option.valFromOption(maxLength);
+  if (props.maxLength !== undefined) {
+    tmp.maxLength = Caml_option.valFromOption(props.maxLength);
   }
-  if (placeholder !== undefined) {
-    tmp.placeholder = Caml_option.valFromOption(placeholder);
+  if (props.placeholder !== undefined) {
+    tmp.placeholder = Caml_option.valFromOption(props.placeholder);
   }
-  if (value !== undefined) {
-    tmp.value = Caml_option.valFromOption(value);
+  if (props.value !== undefined) {
+    tmp.value = Caml_option.valFromOption(props.value);
   }
-  if (onFocus !== undefined) {
-    tmp.onFocus = Caml_option.valFromOption(onFocus);
+  if (props.onFocus !== undefined) {
+    tmp.onFocus = Caml_option.valFromOption(props.onFocus);
   }
-  if (onBlur !== undefined) {
-    tmp.onBlur = Caml_option.valFromOption(onBlur);
+  if (props.onBlur !== undefined) {
+    tmp.onBlur = Caml_option.valFromOption(props.onBlur);
   }
-  if (onChange !== undefined) {
-    tmp.onChange = Caml_option.valFromOption(onChange);
+  if (props.onChange !== undefined) {
+    tmp.onChange = Caml_option.valFromOption(props.onChange);
   }
   return React.createElement("input", tmp);
 }

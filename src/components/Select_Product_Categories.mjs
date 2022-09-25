@@ -6,10 +6,9 @@ import * as ReactHookForm from "react-hook-form";
 import * as ErrorMessage from "@hookform/error-message";
 import * as Select_Product_Category from "./Select_Product_Category.mjs";
 
-function Select_Product_Categories(Props) {
-  var control = Props.control;
-  var name = Props.name;
-  var disabled = Props.disabled;
+function Select_Product_Categories(props) {
+  var name = props.name;
+  var control = props.control;
   var match = ReactHookForm.useFormState({
         control: control
       });
@@ -18,7 +17,7 @@ function Select_Product_Categories(Props) {
                 }, React.createElement(Select_Product_Category.make, {
                       control: control,
                       name: name,
-                      disabled: disabled
+                      disabled: props.disabled
                     })), React.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
                   errors: match.errors,

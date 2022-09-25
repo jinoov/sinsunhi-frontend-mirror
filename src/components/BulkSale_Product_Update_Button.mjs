@@ -3,7 +3,8 @@
 import * as V from "../utils/V.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Input from "./common/Input.mjs";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import * as IconCheck from "./svgs/IconCheck.mjs";
 import * as IconClose from "./svgs/IconClose.mjs";
 import * as IconError from "./svgs/IconError.mjs";
@@ -51,7 +52,7 @@ function use(param) {
   var match = ReactRelay.useMutation(BulkSaleProductUpdateButtonMutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -147,14 +148,14 @@ function makeInput(preferredGrade, preferredQuantityAmount, preferredQuantityUni
         };
 }
 
-function BulkSale_Product_Update_Button(Props) {
-  var product = Props.product;
+function BulkSale_Product_Update_Button(props) {
+  var product = props.product;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
   var isMutating = match$1[1];
   var mutate = match$1[0];
-  var match$2 = React.useState(function () {
+  var match$2 = React$1.useState(function () {
         return /* Selected */{
                 value: product.productCategory.crop.id,
                 label: product.productCategory.crop.name
@@ -162,7 +163,7 @@ function BulkSale_Product_Update_Button(Props) {
       });
   var setCropId = match$2[1];
   var cropId = match$2[0];
-  var match$3 = React.useState(function () {
+  var match$3 = React$1.useState(function () {
         return /* Selected */{
                 value: product.productCategory.id,
                 label: product.productCategory.name
@@ -175,37 +176,37 @@ function BulkSale_Product_Update_Button(Props) {
         productCategoryId,
         product.productCategory.name
       ]);
-  var match$4 = React.useState(function () {
+  var match$4 = React$1.useState(function () {
         return product.preferredGrade;
       });
   var setPreferredGrade = match$4[1];
   var preferredGrade = match$4[0];
-  var match$5 = React.useState(function () {
+  var match$5 = React$1.useState(function () {
         return String(product.preferredQuantity.amount);
       });
   var setPreferredQuantityAmount = match$5[1];
   var preferredQuantityAmount = match$5[0];
-  var match$6 = React.useState(function () {
+  var match$6 = React$1.useState(function () {
         return convertPackageUnit(product.preferredQuantity.unit);
       });
   var setPreferredQuantityUnit = match$6[1];
   var preferredQuantityUnit = match$6[0];
-  var match$7 = React.useState(function () {
+  var match$7 = React$1.useState(function () {
         return String(product.estimatedSellerEarningRate);
       });
   var setEstimatedSellerEarningRate = match$7[1];
   var estimatedSellerEarningRate = match$7[0];
-  var match$8 = React.useState(function () {
+  var match$8 = React$1.useState(function () {
         return String(product.estimatedPurchasePriceMin);
       });
   var setEstimatedPurchasePriceMin = match$8[1];
   var estimatedPurchasePriceMin = match$8[0];
-  var match$9 = React.useState(function () {
+  var match$9 = React$1.useState(function () {
         return String(product.estimatedPurchasePriceMax);
       });
   var setEstimatedPurchasePriceMax = match$9[1];
   var estimatedPurchasePriceMax = match$9[0];
-  var match$10 = React.useState(function () {
+  var match$10 = React$1.useState(function () {
         return [];
       });
   var setFormErrors = match$10[1];
@@ -271,93 +272,92 @@ function BulkSale_Product_Update_Button(Props) {
             return "KG";
           });
     });
-  return React.createElement(ReactDialog.Root, {
+  return React$1.createElement(ReactDialog.Root, {
               children: null
-            }, React.createElement(ReactDialog.Overlay, {
+            }, React$1.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
-                }), React.createElement(ReactDialog.Trigger, {
+                }), React$1.createElement(ReactDialog.Trigger, {
                   children: "수정하기",
                   className: "h-8 px-5 py-1 text-primary bg-primary-light rounded-lg focus:outline-none"
-                }), React.createElement(ReactDialog.Content, {
-                  children: React.createElement("section", {
+                }), React$1.createElement(ReactDialog.Content, {
+                  children: React$1.createElement("section", {
                         className: "p-5"
-                      }, React.createElement("article", {
+                      }, React$1.createElement("article", {
                             className: "flex"
-                          }, React.createElement("h2", {
+                          }, React$1.createElement("h2", {
                                 className: "text-xl font-bold"
-                              }, "상품 수정"), React.createElement(ReactDialog.Close, {
-                                children: React.createElement(IconClose.make, {
+                              }, "상품 수정"), React$1.createElement(ReactDialog.Close, {
+                                children: React$1.createElement(IconClose.make, {
                                       height: "24",
                                       width: "24",
                                       fill: "#262626"
                                     }),
                                 className: "inline-block p-1 focus:outline-none ml-auto"
-                              })), React.createElement(React.Suspense, {
-                            children: React.createElement(Select_BulkSale_Crop.make, {
-                                  cropId: cropId,
-                                  onChange: (function (param) {
-                                      return handleOnSelect(partial_arg, setCropId, param);
-                                    }),
-                                  error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
-                                              if (typeof error === "object" && error.NAME === "ErrorProductCategoryId") {
-                                                return error.VAL;
-                                              }
-                                              
-                                            })))
-                                }),
-                            fallback: React.createElement("div", undefined, "로딩 중..")
-                          }), React.createElement(React.Suspense, {
-                            children: React.createElement(Select_BulkSale_ProductCategory.make, {
-                                  cropId: cropId,
-                                  productCategoryId: productCategoryId,
-                                  onChange: (function (param) {
-                                      return handleOnSelect(partial_arg$1, setProductCategoryId, param);
-                                    }),
-                                  error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
-                                              if (typeof error === "object" && error.NAME === "ErrorProductCategoryId") {
-                                                return error.VAL;
-                                              }
-                                              
-                                            }))),
-                                  key: cropId ? cropId.value : ""
-                                }),
-                            fallback: React.createElement("div", undefined, "로딩 중..")
-                          }), React.createElement(React.Suspense, {
-                            children: React.createElement(Select_BulkSale_ProductGrade.make, {
-                                  productCategoryId: productCategoryId,
-                                  preferredGrade: preferredGrade,
-                                  onChange: (function (param) {
-                                      return handleOnChange(undefined, setPreferredGrade, param);
-                                    }),
-                                  error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
-                                              if (typeof error === "object" && error.NAME === "ErrorGrade") {
-                                                return error.VAL;
-                                              }
-                                              
-                                            })))
-                                }),
-                            fallback: React.createElement("div", undefined, "로딩 중..")
-                          }), React.createElement(React.Suspense, {
-                            children: React.createElement(Input_Select_BulkSale_ProductQuantity.make, {
-                                  quantityAmount: preferredQuantityAmount,
-                                  quantityUnit: preferredQuantityUnit,
-                                  onChangeAmount: (function (param) {
-                                      return handleOnChange(undefined, setPreferredQuantityAmount, param);
-                                    }),
-                                  onChangeUnit: handleOnSelectPackageUnit,
-                                  error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
-                                              if (typeof error === "object" && error.NAME === "ErrorAmount") {
-                                                return error.VAL;
-                                              }
-                                              
-                                            })))
-                                }),
-                            fallback: React.createElement("div", undefined, "로딩 중..")
-                          }), React.createElement("article", {
+                              })), React$1.createElement(React$1.Suspense, {
+                            children: Caml_option.some(React$1.createElement(Select_BulkSale_Crop.make, {
+                                      cropId: cropId,
+                                      onChange: (function (param) {
+                                          return handleOnSelect(partial_arg, setCropId, param);
+                                        }),
+                                      error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
+                                                  if (typeof error === "object" && error.NAME === "ErrorProductCategoryId") {
+                                                    return error.VAL;
+                                                  }
+                                                  
+                                                })))
+                                    })),
+                            fallback: Caml_option.some(React$1.createElement("div", undefined, "로딩 중.."))
+                          }), React$1.createElement(React$1.Suspense, {
+                            children: Caml_option.some(React.createElementWithKey(Select_BulkSale_ProductCategory.make, {
+                                      cropId: cropId,
+                                      productCategoryId: productCategoryId,
+                                      onChange: (function (param) {
+                                          return handleOnSelect(partial_arg$1, setProductCategoryId, param);
+                                        }),
+                                      error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
+                                                  if (typeof error === "object" && error.NAME === "ErrorProductCategoryId") {
+                                                    return error.VAL;
+                                                  }
+                                                  
+                                                })))
+                                    }, cropId ? cropId.value : "")),
+                            fallback: Caml_option.some(React$1.createElement("div", undefined, "로딩 중.."))
+                          }), React$1.createElement(React$1.Suspense, {
+                            children: Caml_option.some(React$1.createElement(Select_BulkSale_ProductGrade.make, {
+                                      productCategoryId: productCategoryId,
+                                      preferredGrade: preferredGrade,
+                                      onChange: (function (param) {
+                                          return handleOnChange(undefined, setPreferredGrade, param);
+                                        }),
+                                      error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
+                                                  if (typeof error === "object" && error.NAME === "ErrorGrade") {
+                                                    return error.VAL;
+                                                  }
+                                                  
+                                                })))
+                                    })),
+                            fallback: Caml_option.some(React$1.createElement("div", undefined, "로딩 중.."))
+                          }), React$1.createElement(React$1.Suspense, {
+                            children: Caml_option.some(React$1.createElement(Input_Select_BulkSale_ProductQuantity.make, {
+                                      quantityAmount: preferredQuantityAmount,
+                                      quantityUnit: preferredQuantityUnit,
+                                      onChangeAmount: (function (param) {
+                                          return handleOnChange(undefined, setPreferredQuantityAmount, param);
+                                        }),
+                                      onChangeUnit: handleOnSelectPackageUnit,
+                                      error: Garter_Array.first(Belt_Array.keepMap(formErrors, (function (error) {
+                                                  if (typeof error === "object" && error.NAME === "ErrorAmount") {
+                                                    return error.VAL;
+                                                  }
+                                                  
+                                                })))
+                                    })),
+                            fallback: Caml_option.some(React$1.createElement("div", undefined, "로딩 중.."))
+                          }), React$1.createElement("article", {
                             className: "mt-5"
-                          }, React.createElement("h3", undefined, "예상 추가 수익 비율"), React.createElement("div", {
+                          }, React$1.createElement("h3", undefined, "예상 추가 수익 비율"), React$1.createElement("div", {
                                 className: "flex mt-2"
-                              }, React.createElement(Input.make, {
+                              }, React$1.createElement(Input.make, {
                                     type_: "profit-ratio",
                                     name: "profit-ratio",
                                     placeholder: "0",
@@ -374,11 +374,11 @@ function BulkSale_Product_Update_Button(Props) {
                                                 
                                               }))),
                                     textAlign: /* Right */2
-                                  }))), React.createElement("article", {
+                                  }))), React$1.createElement("article", {
                             className: "mt-5"
-                          }, React.createElement("h3", undefined, "적정 구매 가격"), React.createElement("div", {
+                          }, React$1.createElement("h3", undefined, "적정 구매 가격"), React$1.createElement("div", {
                                 className: "flex mt-2"
-                              }, React.createElement(Input.make, {
+                              }, React$1.createElement(Input.make, {
                                     type_: "profit-ratio",
                                     name: "profit-ratio",
                                     placeholder: "0",
@@ -395,7 +395,7 @@ function BulkSale_Product_Update_Button(Props) {
                                                 
                                               }))),
                                     textAlign: /* Right */2
-                                  }), React.createElement(Input.make, {
+                                  }), React$1.createElement(Input.make, {
                                     type_: "profit-ratio",
                                     name: "profit-ratio",
                                     placeholder: "0",
@@ -412,17 +412,17 @@ function BulkSale_Product_Update_Button(Props) {
                                                 
                                               }))),
                                     textAlign: /* Right */2
-                                  }))), React.createElement("article", {
+                                  }))), React$1.createElement("article", {
                             className: "flex justify-center items-center mt-5"
-                          }, React.createElement(ReactDialog.Close, {
-                                children: React.createElement("span", {
+                          }, React$1.createElement(ReactDialog.Close, {
+                                children: React$1.createElement("span", {
                                       className: "btn-level6 py-3 px-5",
                                       id: "btn-close"
                                     }, "닫기"),
                                 className: "flex mr-2"
-                              }), React.createElement("span", {
+                              }), React$1.createElement("span", {
                                 className: "flex mr-2"
-                              }, React.createElement("button", {
+                              }, React$1.createElement("button", {
                                     className: isMutating ? "btn-level1-disabled py-3 px-5" : "btn-level1 py-3 px-5",
                                     disabled: isMutating,
                                     onClick: (function (param) {
@@ -450,9 +450,9 @@ function BulkSale_Product_Update_Button(Props) {
                                             Curry.app(mutate, [
                                                   (function (err) {
                                                       console.log(err);
-                                                      addToast(React.createElement("div", {
+                                                      addToast(React$1.createElement("div", {
                                                                 className: "flex items-center"
-                                                              }, React.createElement(IconError.make, {
+                                                              }, React$1.createElement(IconError.make, {
                                                                     width: "24",
                                                                     height: "24",
                                                                     className: "mr-2"
@@ -468,9 +468,9 @@ function BulkSale_Product_Update_Button(Props) {
                                                         console.log(mutationError);
                                                         var error = Belt_Array.get(mutationError, 0);
                                                         if (error !== undefined) {
-                                                          addToast(React.createElement("div", {
+                                                          addToast(React$1.createElement("div", {
                                                                     className: "flex items-center"
-                                                                  }, React.createElement(IconError.make, {
+                                                                  }, React$1.createElement(IconError.make, {
                                                                         width: "24",
                                                                         height: "24",
                                                                         className: "mr-2"
@@ -484,9 +484,9 @@ function BulkSale_Product_Update_Button(Props) {
                                                           return ;
                                                         }
                                                       }
-                                                      addToast(React.createElement("div", {
+                                                      addToast(React$1.createElement("div", {
                                                                 className: "flex items-center"
-                                                              }, React.createElement(IconCheck.make, {
+                                                              }, React$1.createElement(IconCheck.make, {
                                                                     height: "24",
                                                                     width: "24",
                                                                     fill: "#12B564",

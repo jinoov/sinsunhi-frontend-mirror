@@ -9,6 +9,7 @@ import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactSelect from "./common/ReactSelect.mjs";
 import ReactSelect$1 from "react-select";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
@@ -205,18 +206,18 @@ var categoryTypeOptions = [
   }
 ];
 
-function Select_Display_Categories$Select_CategoryType(Props) {
-  var control = Props.control;
-  var name = Props.name;
-  var disabled = Props.disabled;
-  var required = Props.required;
+function Select_Display_Categories$Select_CategoryType(props) {
+  var required = props.required;
+  var disabled = props.disabled;
+  var name = props.name;
+  var control = props.control;
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "relative w-48"
                 }, React.createElement("div", {
                       className: "absolute w-full"
                     }, React.createElement(ReactHookForm$1.Controller, {
                           name: "" + name + ".categoryType",
-                          control: control,
+                          control: Caml_option.some(control),
                           render: (function (param) {
                               var match = param.field;
                               var onChange = match.onChange;
@@ -239,10 +240,10 @@ function Select_Display_Categories$Select_CategoryType(Props) {
                                                           });
                                               })
                                           },
-                                          ref: match.ref
+                                          ref: Caml_option.some(match.ref)
                                         });
                             }),
-                          rules: ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined),
+                          rules: Caml_option.some(ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)),
                           shouldUnregister: true
                         }))), React.createElement(Select_Display_Category.make, {
                   control: control,
@@ -256,26 +257,26 @@ var Select_CategoryType = {
   make: Select_Display_Categories$Select_CategoryType
 };
 
-function Select_Display_Categories(Props) {
-  var control = Props.control;
-  var name = Props.name;
-  var disabledOpt = Props.disabled;
-  var requiredOpt = Props.required;
-  var disabled = disabledOpt !== undefined ? disabledOpt : false;
-  var required = requiredOpt !== undefined ? requiredOpt : true;
+function Select_Display_Categories(props) {
+  var required = props.required;
+  var disabled = props.disabled;
+  var name = props.name;
+  var control = props.control;
+  var required$1 = required !== undefined ? required : true;
+  var disabled$1 = disabled !== undefined ? disabled : false;
   var match = ReactHookForm$1.useFormState({
         control: control
       });
   return React.createElement(React.Suspense, {
-              children: null,
-              fallback: React.createElement("div", undefined)
+              children: Caml_option.some(null),
+              fallback: Caml_option.some(React.createElement("div", undefined))
             }, React.createElement("div", {
                   className: "flex gap-2 h-9"
                 }, React.createElement(Select_Display_Categories$Select_CategoryType, {
                       control: control,
                       name: name,
-                      disabled: disabled,
-                      required: required
+                      disabled: disabled$1,
+                      required: required$1
                     })), React.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
                   errors: match.errors,

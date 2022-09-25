@@ -3,14 +3,13 @@
 import * as $$Image from "../../../../components/common/Image.mjs";
 import * as React from "react";
 
-function PDP_Matching_Image_Buyer(Props) {
-  var src = Props.src;
+function PDP_Matching_Image_Buyer(props) {
   return React.createElement("div", {
               className: "w-full"
             }, React.createElement("div", {
                   className: "relative overflow-hidden"
                 }, React.createElement($$Image.make, {
-                      src: src,
+                      src: props.src,
                       placeholder: /* Lg */1,
                       alt: "product-detail-thumbnail",
                       className: "w-full max-h-[300px] object-contain"

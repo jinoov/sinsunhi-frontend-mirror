@@ -76,13 +76,11 @@ function sumPriceObjs(priceObjs) {
               }));
 }
 
-function PDP_Normal_TotalPrice_Buyer$PC(Props) {
-  var query = Props.query;
-  var selectedOptions = Props.selectedOptions;
-  var withDeliveryCostOpt = Props.withDeliveryCost;
-  var withDeliveryCost = withDeliveryCostOpt !== undefined ? withDeliveryCostOpt : true;
+function PDP_Normal_TotalPrice_Buyer$PC(props) {
+  var withDeliveryCost = props.withDeliveryCost;
+  var withDeliveryCost$1 = withDeliveryCost !== undefined ? withDeliveryCost : true;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use(query);
+  var match = use(props.query);
   var productOptions = match.productOptions;
   var makePriceObjs = function (options) {
     var makePriceObj = function (param) {
@@ -108,7 +106,7 @@ function PDP_Normal_TotalPrice_Buyer$PC(Props) {
     };
     return Belt_Array.keepMap(Belt_MapString.toArray(options), makePriceObj);
   };
-  var match$1 = makePriceObjs(selectedOptions);
+  var match$1 = makePriceObjs(props.selectedOptions);
   var priceLabelStatus = user === 0 ? /* Loading */0 : (
       match.status === "SOLDOUT" ? /* Soldout */2 : (
           typeof user === "number" ? /* Unauthorized */1 : (
@@ -156,7 +154,7 @@ function PDP_Normal_TotalPrice_Buyer$PC(Props) {
   } else {
     var match$3 = sumPriceObjs(priceLabelStatus._0);
     var totalDeliveryCost = match$3[1];
-    var deliveryCostLabel = withDeliveryCost ? (
+    var deliveryCostLabel = withDeliveryCost$1 ? (
         totalDeliveryCost !== 0 ? "배송비 " + Locale.Float.show(undefined, totalDeliveryCost, 0) + "원 포함" : "배송비 무료"
       ) : "택배 배송비 포함 금액(배송방식에 따라 변동됨)";
     tmp$1 = React.createElement("span", {
@@ -176,13 +174,11 @@ var PC = {
   make: PDP_Normal_TotalPrice_Buyer$PC
 };
 
-function PDP_Normal_TotalPrice_Buyer$MO(Props) {
-  var query = Props.query;
-  var selectedOptions = Props.selectedOptions;
-  var withDeliveryCostOpt = Props.withDeliveryCost;
-  var withDeliveryCost = withDeliveryCostOpt !== undefined ? withDeliveryCostOpt : true;
+function PDP_Normal_TotalPrice_Buyer$MO(props) {
+  var withDeliveryCost = props.withDeliveryCost;
+  var withDeliveryCost$1 = withDeliveryCost !== undefined ? withDeliveryCost : true;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use(query);
+  var match = use(props.query);
   var productOptions = match.productOptions;
   var makePriceObjs = function (options) {
     var makePriceObj = function (param) {
@@ -208,7 +204,7 @@ function PDP_Normal_TotalPrice_Buyer$MO(Props) {
     };
     return Belt_Array.keepMap(Belt_MapString.toArray(options), makePriceObj);
   };
-  var match$1 = makePriceObjs(selectedOptions);
+  var match$1 = makePriceObjs(props.selectedOptions);
   var priceLabelStatus = user === 0 ? /* Loading */0 : (
       match.status === "SOLDOUT" ? /* Soldout */2 : (
           typeof user === "number" ? /* Unauthorized */1 : (
@@ -260,7 +256,7 @@ function PDP_Normal_TotalPrice_Buyer$MO(Props) {
   } else {
     var match$3 = sumPriceObjs(priceLabelStatus._0);
     var totalDeliveryCost = match$3[1];
-    var deliveryCostLabel = withDeliveryCost ? (
+    var deliveryCostLabel = withDeliveryCost$1 ? (
         totalDeliveryCost !== 0 ? "배송비 " + Locale.Float.show(undefined, totalDeliveryCost, 0) + "원 포함" : "배송비 무료"
       ) : "택배 배송비 포함 금액(배송방식에 따라 변동됨)";
     var captionStyle$4 = "text-[13px] text-gray-600";

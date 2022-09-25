@@ -357,10 +357,9 @@ var Mutation = {
   Delete: Delete
 };
 
-function RfqCreateRequestButton$Button$Buyer(Props) {
-  var className = Props.className;
-  var buttonText = Props.buttonText;
-  var position = Props.position;
+function RfqCreateRequestButton$Button$Buyer(props) {
+  var buttonText = props.buttonText;
+  var className = props.className;
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
@@ -414,7 +413,7 @@ function RfqCreateRequestButton$Button$Buyer(Props) {
             createNewRequest(undefined);
           })
       }, buttonText);
-  var dataGtm = Belt_Option.mapWithDefault(position, "", (function (p) {
+  var dataGtm = Belt_Option.mapWithDefault(props.position, "", (function (p) {
           if (p === "top") {
             return "Click_Button1_RFQ_Livestock_Landing";
           } else {
@@ -503,15 +502,13 @@ var Buyer = {
   make: RfqCreateRequestButton$Button$Buyer
 };
 
-function RfqCreateRequestButton$Button$UnauthorizedUser(Props) {
-  var className = Props.className;
-  var buttonText = Props.buttonText;
+function RfqCreateRequestButton$Button$UnauthorizedUser(props) {
   return React.createElement(DS_Dialog.Popup.Root.make, {
               children: null
             }, React.createElement(DS_Dialog.Popup.Trigger.make, {
                   children: React.createElement("button", {
-                        className: className
-                      }, buttonText),
+                        className: props.className
+                      }, props.buttonText),
                   asChild: true
                 }), React.createElement(DS_Dialog.Popup.Portal.make, {
                   children: null
@@ -540,11 +537,10 @@ var Button = {
   UnauthorizedUser: UnauthorizedUser
 };
 
-function RfqCreateRequestButton(Props) {
-  var className = Props.className;
-  var buttonTextOpt = Props.buttonText;
-  var position = Props.position;
-  var buttonText = buttonTextOpt !== undefined ? buttonTextOpt : "최저가 견적받기";
+function RfqCreateRequestButton(props) {
+  var buttonText = props.buttonText;
+  var className = props.className;
+  var buttonText$1 = buttonText !== undefined ? buttonText : "최저가 견적받기";
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   if (typeof user === "number") {
@@ -561,23 +557,21 @@ function RfqCreateRequestButton(Props) {
                                   ]])).toString();
                     router.push("/buyer/signin?" + redirectUrl + "");
                   })
-              }, buttonText);
+              }, buttonText$1);
   }
   var match = user._0.role;
   if (match !== 1) {
     return React.createElement(RfqCreateRequestButton$Button$UnauthorizedUser, {
                 className: className,
-                buttonText: buttonText
+                buttonText: buttonText$1
+              });
+  } else {
+    return React.createElement(RfqCreateRequestButton$Button$Buyer, {
+                className: className,
+                buttonText: buttonText$1,
+                position: props.position
               });
   }
-  var tmp = {
-    className: className,
-    buttonText: buttonText
-  };
-  if (position !== undefined) {
-    tmp.position = Caml_option.valFromOption(position);
-  }
-  return React.createElement(RfqCreateRequestButton$Button$Buyer, tmp);
 }
 
 var make = RfqCreateRequestButton;

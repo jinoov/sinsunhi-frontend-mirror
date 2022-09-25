@@ -7,7 +7,7 @@ import * as Add_Normal_Product_Form_Admin from "../../components/Add_Normal_Prod
 import * as Add_Quoted_Product_Form_Admin from "../../components/Add_Quoted_Product_Form_Admin.mjs";
 import * as Add_Matching_Product_Form_Admin from "../../components/Add_Matching_Product_Form_Admin.mjs";
 
-function AddProduct_Admin$Product(Props) {
+function AddProduct_Admin$Product(props) {
   var match = React.useState(function () {
         return /* NORMAL */0;
       });
@@ -52,7 +52,7 @@ var Product = {
   make: AddProduct_Admin$Product
 };
 
-function AddProduct_Admin(Props) {
+function AddProduct_Admin(props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(AddProduct_Admin$Product, {}),
               title: "관리자 상품 조회"

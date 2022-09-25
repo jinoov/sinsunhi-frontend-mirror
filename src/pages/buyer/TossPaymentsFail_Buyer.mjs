@@ -62,10 +62,8 @@ function codeToString(code) {
   }
 }
 
-function TossPaymentsFail_Buyer$ErrorDialog(Props) {
-  var children = Props.children;
-  var show = Props.show;
-  var href = Props.href;
+function TossPaymentsFail_Buyer$ErrorDialog(props) {
+  var href = props.href;
   var router = Router.useRouter();
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
@@ -75,14 +73,14 @@ function TossPaymentsFail_Buyer$ErrorDialog(Props) {
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
                         className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
-                      }, children, React.createElement("button", {
+                      }, props.children, React.createElement("button", {
                             className: "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1",
                             type: "button",
                             onClick: (function (param) {
                                 router.replace(href);
                               })
                           }, "닫기"))),
-              open: show
+              _open: props.show
             });
 }
 
@@ -90,7 +88,7 @@ var ErrorDialog = {
   make: TossPaymentsFail_Buyer$ErrorDialog
 };
 
-function TossPaymentsFail_Buyer(Props) {
+function TossPaymentsFail_Buyer(props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return "잘못된 접근";

@@ -23,11 +23,10 @@ function format(second) {
   }
 }
 
-function Timer(Props) {
-  var status = Props.status;
-  var onChangeStatus = Props.onChangeStatus;
-  var startTimeInSec = Props.startTimeInSec;
-  var className = Props.className;
+function Timer(props) {
+  var startTimeInSec = props.startTimeInSec;
+  var onChangeStatus = props.onChangeStatus;
+  var status = props.status;
   var match = React.useState(function () {
         return status;
       });
@@ -82,7 +81,7 @@ function Timer(Props) {
           
         }), [time]);
   return React.createElement("div", {
-              className: className
+              className: props.className
             }, format(time));
 }
 

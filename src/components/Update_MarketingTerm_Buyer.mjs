@@ -99,11 +99,9 @@ var Mutation = {
   use: use$1
 };
 
-function Update_MarketingTerm_Buyer(Props) {
-  var isOpen = Props.isOpen;
-  var onClose = Props.onClose;
-  var query = Props.query;
-  var match = use(query);
+function Update_MarketingTerm_Buyer(props) {
+  var onClose = props.onClose;
+  var match = use(props.query);
   var match$1 = use$1(undefined);
   var mutate = match$1[0];
   var status = Belt_Option.isSome(Belt_List.getAssoc(Belt_List.fromArray(Belt_Array.map(match.terms.edges, (function (param) {
@@ -136,7 +134,7 @@ function Update_MarketingTerm_Buyer(Props) {
   };
   return React.createElement(ReactDialog.Root, {
               children: null,
-              open: isOpen
+              _open: props.isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {

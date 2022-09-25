@@ -51,20 +51,18 @@ function toBool(status) {
 
 var defaultStyle = "flex px-3 py-2 border items-center border-border-default-L1 rounded-lg h-9 text-enabled-L1 focus:outline";
 
-function Select_Tax_Status(Props) {
-  var status = Props.status;
-  var onChange = Props.onChange;
-  var forwardRef = Props.forwardRef;
-  var disabled = Props.disabled;
+function Select_Tax_Status(props) {
+  var disabled = props.disabled;
+  var status = props.status;
   var displayStatus = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "과면세여부 선택");
   var value = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "");
   var tmp = {
     className: "block w-full h-full absolute top-0 opacity-0",
     value: value,
-    onChange: onChange
+    onChange: props.onChange
   };
-  if (forwardRef !== undefined) {
-    tmp.ref = Caml_option.valFromOption(forwardRef);
+  if (props.forwardRef !== undefined) {
+    tmp.ref = Caml_option.valFromOption(props.forwardRef);
   }
   if (disabled !== undefined) {
     tmp.disabled = Caml_option.valFromOption(disabled);

@@ -11,12 +11,11 @@ import * as Tradematch_Skeleton_Buyer from "./Tradematch_Skeleton_Buyer.mjs";
 import * as Tradematch_Buy_Aqua_Product_Applied_Buyer from "./Tradematch_Buy_Aqua_Product_Applied_Buyer.mjs";
 import * as Tradematch_Buy_Farm_Product_Applied_Buyer from "./Tradematch_Buy_Farm_Product_Applied_Buyer.mjs";
 
-function Tradematch_Buy_Product_Applied_Buyer(Props) {
-  var pid = Props.pid;
+function Tradematch_Buy_Product_Applied_Buyer(props) {
   var router = Router.useRouter();
   var productType = Js_dict.get(router.query, "type");
   console.log(router);
-  var match = Belt_Int.fromString(pid);
+  var match = Belt_Int.fromString(props.pid);
   var tmp;
   var exit = 0;
   if (match !== undefined && productType !== undefined) {

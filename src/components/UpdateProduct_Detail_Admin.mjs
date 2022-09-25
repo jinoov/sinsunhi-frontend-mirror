@@ -36,10 +36,9 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function UpdateProduct_Detail_Admin(Props) {
-  var query = Props.query;
-  var productType = Props.productType;
-  var product = use(query);
+function UpdateProduct_Detail_Admin(props) {
+  var productType = props.productType;
+  var product = use(props.query);
   var productSelectType = productType !== 2 ? (
       productType >= 3 ? /* MATCHING */2 : /* NORMAL */0
     ) : /* QUOTED */1;

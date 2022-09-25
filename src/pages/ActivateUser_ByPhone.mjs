@@ -45,9 +45,9 @@ var sendBtnStyle = "w-full bg-primary rounded-xl text-white font-bold whitespace
 
 var resendBtnStyle = "w-full bg-gray-50 rounded-xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 h-14";
 
-function ActivateUser_ByPhone$SendPhoneNumber(Props) {
-  var uid = Props.uid;
-  var role = Props.role;
+function ActivateUser_ByPhone$SendPhoneNumber(props) {
+  var role = props.role;
+  var uid = props.uid;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var router = Router.useRouter();
@@ -161,8 +161,8 @@ var SendPhoneNumber = {
   make: ActivateUser_ByPhone$SendPhoneNumber
 };
 
-function ActivateUser_ByPhone$Error(Props) {
-  var message = Props.message;
+function ActivateUser_ByPhone$Error(props) {
+  var message = props.message;
   React.useEffect((function () {
           window.alert(message);
         }), []);
@@ -177,30 +177,33 @@ var $$Error = {
   make: ActivateUser_ByPhone$Error
 };
 
-function ActivateUser_ByPhone(Props) {
-  var skipEmail = Props.skipEmail;
-  var phone = Props.phone;
-  var uid = Props.uid;
-  var role = Props.role;
+function ActivateUser_ByPhone(props) {
+  var role = props.role;
+  var uid = props.uid;
+  var phone = props.phone;
   if (phone !== undefined) {
     if (role !== undefined && uid !== undefined) {
       return React.createElement(ActivateUser_ByPhone_VerificationCode.make, {
                   phone: Caml_option.valFromOption(phone),
-                  skipEmail: skipEmail,
+                  skipEmail: props.skipEmail,
                   uid: Caml_option.valFromOption(uid),
                   role: role
                 });
+    } else {
+      return React.createElement(ActivateUser_ByPhone$Error, {
+                  message: "잘못된 접근 입니다."
+                });
     }
-    
   } else if (role !== undefined && uid !== undefined) {
     return React.createElement(ActivateUser_ByPhone$SendPhoneNumber, {
                 uid: Caml_option.valFromOption(uid),
                 role: role
               });
+  } else {
+    return React.createElement(ActivateUser_ByPhone$Error, {
+                message: "잘못된 접근 입니다."
+              });
   }
-  return React.createElement(ActivateUser_ByPhone$Error, {
-              message: "잘못된 접근 입니다."
-            });
 }
 
 var make = ActivateUser_ByPhone;

@@ -92,7 +92,7 @@ var Query = {
   retain: retain
 };
 
-function Select_Wholesaler$Loading(Props) {
+function Select_Wholesaler$Loading(props) {
   return React.createElement("article", {
               className: "flex-1"
             }, React.createElement("h3", {
@@ -114,14 +114,11 @@ var Loading = {
   make: Select_Wholesaler$Loading
 };
 
-function Select_Wholesaler(Props) {
-  var label = Props.label;
-  var wholesalerMarketId = Props.wholesalerMarketId;
-  var wholesalerId = Props.wholesalerId;
-  var onChange = Props.onChange;
+function Select_Wholesaler(props) {
+  var wholesalerId = props.wholesalerId;
   var queryData = use({
         first: 100,
-        marketIds: Belt_Option.map(wholesalerMarketId, (function (id) {
+        marketIds: Belt_Option.map(props.wholesalerMarketId, (function (id) {
                 return [id];
               }))
       }, undefined, undefined, undefined, undefined);
@@ -129,7 +126,7 @@ function Select_Wholesaler(Props) {
               className: "flex-1"
             }, React.createElement("h3", {
                   className: "text-sm"
-                }, label), React.createElement("label", {
+                }, props.label), React.createElement("label", {
                   className: "block relative mt-2"
                 }, React.createElement("span", {
                       className: "flex items-center border border-border-default-L1 rounded-md h-9 px-3 text-enabled-L1"
@@ -148,7 +145,7 @@ function Select_Wholesaler(Props) {
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
                       value: Belt_Option.getWithDefault(wholesalerId, ""),
-                      onChange: onChange
+                      onChange: props.onChange
                     }, React.createElement("option", {
                           value: ""
                         }, "법인선택"), Belt_Array.map(queryData.wholesalers.edges, (function (edge) {

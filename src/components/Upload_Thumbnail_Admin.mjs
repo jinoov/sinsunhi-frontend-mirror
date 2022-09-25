@@ -243,11 +243,9 @@ function mutationImageToFormImage(image) {
         };
 }
 
-function Upload_Thumbnail_Admin(Props) {
-  var name = Props.name;
-  var updateFn = Props.updateFn;
-  var value = Props.value;
-  var disabled = Props.disabled;
+function Upload_Thumbnail_Admin(props) {
+  var updateFn = props.updateFn;
+  var name = props.name;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
@@ -334,7 +332,7 @@ function Upload_Thumbnail_Admin(Props) {
           undefined
         ]);
   };
-  var displayName = Belt_Option.flatMap(Belt_Option.flatMap(Belt_Option.map(Caml_option.null_to_opt(/[^/]+$/.exec(value.original)), (function (prim) {
+  var displayName = Belt_Option.flatMap(Belt_Option.flatMap(Belt_Option.map(Caml_option.null_to_opt(/[^/]+$/.exec(props.value.original)), (function (prim) {
                   return prim;
                 })), Garter_Array.first), (function (prim) {
           if (prim == null) {
@@ -355,7 +353,7 @@ function Upload_Thumbnail_Admin(Props) {
                           className: "file:hidden sr-only",
                           id: name,
                           accept: ".png,.jpg,.webp",
-                          disabled: Belt_Option.getWithDefault(disabled, false) || isThumbnailUploading,
+                          disabled: Belt_Option.getWithDefault(props.disabled, false) || isThumbnailUploading,
                           name: name,
                           type: "file",
                           onChange: handleOnChangeFile

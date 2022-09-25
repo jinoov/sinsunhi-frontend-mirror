@@ -11,7 +11,7 @@ import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import * as Query_Farmer_Form_Admin from "./Query_Farmer_Form_Admin.mjs";
 
-function Search_Farmer_Admin(Props) {
+function Search_Farmer_Admin(props) {
   var router = Router.useRouter();
   var onSubmit = function (param) {
     var state = param.state;

@@ -4,7 +4,7 @@ import * as React from "react";
 import * as IconClose from "../components/svgs/IconClose.mjs";
 import Head from "next/head";
 
-function Terms(Props) {
+function Terms(props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "서비스 이용약관 - 신선하이")
                 }), React.createElement("div", {

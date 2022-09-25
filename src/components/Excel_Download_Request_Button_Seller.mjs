@@ -9,11 +9,10 @@ import * as FetchHelper from "../utils/FetchHelper.mjs";
 import * as Router from "next/router";
 import * as ReactToastNotifications from "react-toast-notifications";
 
-function Excel_Download_Request_Button_Seller(Props) {
-  var userType = Props.userType;
-  var requestUrl = Props.requestUrl;
-  var buttonText = Props.buttonText;
-  var bodyOption = Props.bodyOption;
+function Excel_Download_Request_Button_Seller(props) {
+  var bodyOption = props.bodyOption;
+  var requestUrl = props.requestUrl;
+  var userType = props.userType;
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
@@ -62,7 +61,7 @@ function Excel_Download_Request_Button_Seller(Props) {
                             return /* Show */0;
                           });
                     })
-                }, Belt_Option.getWithDefault(buttonText, "다운로드")), React.createElement(Dialog.make, {
+                }, Belt_Option.getWithDefault(props.buttonText, "다운로드")), React.createElement(Dialog.make, {
                   isShow: match$1[0],
                   children: React.createElement("span", {
                         className: "flex items-center justify-center w-full py-10"

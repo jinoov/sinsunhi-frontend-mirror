@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as Divider from "../../../components/common/Divider.mjs";
 import Head from "next/head";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ChannelTalkHelper from "../../../utils/ChannelTalkHelper.mjs";
 import * as SectionMain_PC_Title from "./SectionMain_PC_Title.mjs";
 import * as Delivery_Main_Category from "./Delivery_Main_Category.mjs";
@@ -10,7 +11,7 @@ import * as Delivery_Main_InfoBanner from "./Delivery_Main_InfoBanner.mjs";
 import * as Delivery_Main_AllProducts from "./Delivery_Main_AllProducts.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
 
-function SectionMain_Delivery$PC$View(Props) {
+function SectionMain_Delivery$PC$View(props) {
   return React.createElement(React.Fragment, undefined, React.createElement(SectionMain_PC_Title.make, {
                   title: "신선배송"
                 }), React.createElement(Delivery_Main_InfoBanner.PC.make, {}), React.createElement(Delivery_Main_Category.PC.make, {}), React.createElement(Delivery_Main_AllProducts.PC.make, {}));
@@ -20,7 +21,7 @@ var View = {
   make: SectionMain_Delivery$PC$View
 };
 
-function SectionMain_Delivery$PC$Skeleton(Props) {
+function SectionMain_Delivery$PC$Skeleton(props) {
   return React.createElement(React.Fragment, undefined, React.createElement(SectionMain_PC_Title.Skeleton.make, {}), React.createElement(Delivery_Main_InfoBanner.PC.Skeleton.make, {}), React.createElement(Delivery_Main_Category.PC.Skeleton.make, {}), React.createElement(Delivery_Main_AllProducts.PC.Skeleton.make, {}));
 }
 
@@ -28,7 +29,7 @@ var Skeleton = {
   make: SectionMain_Delivery$PC$Skeleton
 };
 
-function SectionMain_Delivery$PC(Props) {
+function SectionMain_Delivery$PC(props) {
   return React.createElement(SectionMain_Delivery$PC$View, {});
 }
 
@@ -38,7 +39,7 @@ var PC = {
   make: SectionMain_Delivery$PC
 };
 
-function SectionMain_Delivery$MO$View(Props) {
+function SectionMain_Delivery$MO$View(props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Delivery_Main_InfoBanner.MO.make, {}), React.createElement(Delivery_Main_Category.MO.make, {}), React.createElement(Divider.make, {}), React.createElement(Delivery_Main_AllProducts.MO.make, {}));
 }
 
@@ -46,7 +47,7 @@ var View$1 = {
   make: SectionMain_Delivery$MO$View
 };
 
-function SectionMain_Delivery$MO$Skeleton(Props) {
+function SectionMain_Delivery$MO$Skeleton(props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Delivery_Main_InfoBanner.MO.Skeleton.make, {}), React.createElement(Delivery_Main_Category.MO.Skeleton.make, {}), React.createElement(Divider.make, {}), React.createElement(Delivery_Main_Category.MO.Skeleton.make, {}), React.createElement(Delivery_Main_AllProducts.MO.Skeleton.make, {}));
 }
 
@@ -54,7 +55,7 @@ var Skeleton$1 = {
   make: SectionMain_Delivery$MO$Skeleton
 };
 
-function SectionMain_Delivery$MO(Props) {
+function SectionMain_Delivery$MO(props) {
   return React.createElement(SectionMain_Delivery$MO$View, {});
 }
 
@@ -64,9 +65,8 @@ var MO = {
   make: SectionMain_Delivery$MO
 };
 
-function SectionMain_Delivery$Skeleton(Props) {
-  var deviceType = Props.deviceType;
-  switch (deviceType) {
+function SectionMain_Delivery$Skeleton(props) {
+  switch (props.deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
@@ -81,10 +81,9 @@ var Skeleton$2 = {
   make: SectionMain_Delivery$Skeleton
 };
 
-function SectionMain_Delivery$Container(Props) {
-  var deviceType = Props.deviceType;
+function SectionMain_Delivery$Container(props) {
   ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
-  switch (deviceType) {
+  switch (props.deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
@@ -99,8 +98,8 @@ var Container = {
   make: SectionMain_Delivery$Container
 };
 
-function SectionMain_Delivery(Props) {
-  var deviceType = Props.deviceType;
+function SectionMain_Delivery(props) {
+  var deviceType = props.deviceType;
   var match = React.useState(function () {
         return false;
       });
@@ -114,14 +113,14 @@ function SectionMain_Delivery(Props) {
                   children: React.createElement("title", undefined, "신선하이 신선배송")
                 }), React.createElement(RescriptReactErrorBoundary.make, {
                   children: React.createElement(React.Suspense, {
-                        children: match[0] ? React.createElement(SectionMain_Delivery$Container, {
-                                deviceType: deviceType
-                              }) : React.createElement(SectionMain_Delivery$Skeleton, {
-                                deviceType: deviceType
-                              }),
-                        fallback: React.createElement(SectionMain_Delivery$Skeleton, {
-                              deviceType: deviceType
-                            })
+                        children: Caml_option.some(match[0] ? React.createElement(SectionMain_Delivery$Container, {
+                                    deviceType: deviceType
+                                  }) : React.createElement(SectionMain_Delivery$Skeleton, {
+                                    deviceType: deviceType
+                                  })),
+                        fallback: Caml_option.some(React.createElement(SectionMain_Delivery$Skeleton, {
+                                  deviceType: deviceType
+                                }))
                       }),
                   fallback: (function (param) {
                       return React.createElement(SectionMain_Delivery$Skeleton, {

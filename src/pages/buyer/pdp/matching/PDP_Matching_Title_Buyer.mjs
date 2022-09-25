@@ -35,10 +35,9 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Matching_Title_Buyer$MO(Props) {
-  var query = Props.query;
-  var selectedGroup = Props.selectedGroup;
-  var match = use(query);
+function PDP_Matching_Title_Buyer$MO(props) {
+  var selectedGroup = props.selectedGroup;
+  var match = use(props.query);
   var representativeWeight = match.representativeWeight;
   var priceLabel = Belt_Option.mapWithDefault(match.recentMarketPrice, "", (function (param) {
           var price;

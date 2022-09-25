@@ -16,7 +16,7 @@ function dropByK(dict, k) {
                   })));
 }
 
-function SignUp_Buyer_Survey(Props) {
+function SignUp_Buyer_Survey(props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = React.useState(function () {

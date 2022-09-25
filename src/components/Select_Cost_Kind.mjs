@@ -55,8 +55,7 @@ function displayKind(k) {
   }
 }
 
-function Select_Cost_Kind(Props) {
-  var className = Props.className;
+function Select_Cost_Kind(props) {
   var router = Router.useRouter();
   var onChange = function (e) {
     var isOnlyNull = e.target.value;
@@ -64,8 +63,8 @@ function Select_Cost_Kind(Props) {
     router.push("" + router.pathname + "?" + new URLSearchParams(router.query).toString() + "");
   };
   var tmp = {};
-  if (className !== undefined) {
-    tmp.className = Caml_option.valFromOption(className);
+  if (props.className !== undefined) {
+    tmp.className = Caml_option.valFromOption(props.className);
   }
   return React.createElement("span", tmp, React.createElement("label", {
                   className: "block relative"

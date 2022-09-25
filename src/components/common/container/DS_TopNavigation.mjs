@@ -4,78 +4,70 @@ import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 
-function DS_TopNavigation$Detail$Root(Props) {
-  var children = Props.children;
-  var className = Props.className;
-  var bgClassNameOpt = Props.bgClassName;
-  var bgClassName = bgClassNameOpt !== undefined ? bgClassNameOpt : "bg-white";
+function DS_TopNavigation$Detail$Root(props) {
+  var bgClassName = props.bgClassName;
+  var bgClassName$1 = bgClassName !== undefined ? bgClassName : "bg-white";
   var defaultStyle = Cx.cx([
         "fixed top-0 left-1/2 w-full flex justify-between items-center max-w-3xl -translate-x-1/2 p-3",
-        bgClassName
+        bgClassName$1
       ]);
   return React.createElement("div", {
-              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
-                                  bgClassName,
+                                  bgClassName$1,
                                   className$p
                                 ]);
                     }))
-            }, children);
+            }, props.children);
 }
 
 var Root = {
   make: DS_TopNavigation$Detail$Root
 };
 
-function DS_TopNavigation$Detail$Left(Props) {
-  var children = Props.children;
-  var className = Props.className;
+function DS_TopNavigation$Detail$Left(props) {
   var defaultStyle = "mr-2";
   return React.createElement("div", {
-              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, children);
+            }, props.children);
 }
 
 var Left = {
   make: DS_TopNavigation$Detail$Left
 };
 
-function DS_TopNavigation$Detail$Center(Props) {
-  var children = Props.children;
-  var className = Props.className;
+function DS_TopNavigation$Detail$Center(props) {
   var defaultStyle = "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 tracking-tight font-bold truncate";
   return React.createElement("div", {
-              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, children);
+            }, props.children);
 }
 
 var Center = {
   make: DS_TopNavigation$Detail$Center
 };
 
-function DS_TopNavigation$Detail$Right(Props) {
-  var children = Props.children;
-  var className = Props.className;
+function DS_TopNavigation$Detail$Right(props) {
   var defaultStyle = "ml-2";
   return React.createElement("div", {
-              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, children);
+            }, props.children);
 }
 
 var Right = {

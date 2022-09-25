@@ -9,7 +9,7 @@ import * as Search_Farmer_Admin from "../../components/Search_Farmer_Admin.mjs";
 import * as User_List_Admin_Farmer from "../../components/User_List_Admin_Farmer.mjs";
 import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
 
-function FarmerUsers_Admin$Users(Props) {
+function FarmerUsers_Admin$Users(props) {
   var router = Router.useRouter();
   var rq = router.query;
   var status = Curry._1(CustomHooks.QueryUser.Farmer.use, (rq["role"] = "farmer", new URLSearchParams(rq).toString()));
@@ -41,7 +41,7 @@ var Users = {
   make: FarmerUsers_Admin$Users
 };
 
-function FarmerUsers_Admin(Props) {
+function FarmerUsers_Admin(props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(FarmerUsers_Admin$Users, {}),
               title: "관리자 농민 사용자 조회"

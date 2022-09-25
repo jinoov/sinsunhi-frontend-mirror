@@ -7,7 +7,6 @@ import * as DS_Input from "../element/DS_Input.mjs";
 import * as Garter_Fn from "@greenlabs/garter/src/Garter_Fn.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_format from "rescript/lib/es6/caml_format.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as KoreanNumeral from "@greenlabs/re-korean-numeral/src/KoreanNumeral.mjs";
 import SearchbarClearSvg from "../../../../public/assets/searchbar-clear.svg";
 
@@ -58,110 +57,83 @@ function lineStyle(errorMessage, disabled, focused) {
   }
 }
 
-function DS_InputField$Line1$Root(Props) {
-  var children = Props.children;
-  var className = Props.className;
+function DS_InputField$Line1$Root(props) {
   var defaultStyle = "relative flex flex-col min-w-0 mx-5";
   return React.createElement("label", {
-              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, children);
+            }, props.children);
 }
 
 var Root = {
   make: DS_InputField$Line1$Root
 };
 
-function DS_InputField$Line1$Input(Props) {
-  var type_ = Props.type_;
-  var className = Props.className;
-  var placeholder = Props.placeholder;
-  var value = Props.value;
-  var onChange = Props.onChange;
-  var disabled = Props.disabled;
-  var autoFocus = Props.autoFocus;
-  var inputMode = Props.inputMode;
-  var isClearOpt = Props.isClear;
-  var fnClear = Props.fnClear;
-  var unit = Props.unit;
-  var errorMessage = Props.errorMessage;
-  var underLabel = Props.underLabel;
-  var underLabelType = Props.underLabelType;
-  var maxLength = Props.maxLength;
-  var isClear = isClearOpt !== undefined ? isClearOpt : false;
+function DS_InputField$Line1$Input(props) {
+  var underLabelType = props.underLabelType;
+  var underLabel = props.underLabel;
+  var errorMessage = props.errorMessage;
+  var fnClear = props.fnClear;
+  var isClear = props.isClear;
+  var disabled = props.disabled;
+  var value = props.value;
+  var isClear$1 = isClear !== undefined ? isClear : false;
   var match = React.useState(function () {
         return false;
       });
   var setFocused = match[1];
-  var tmp = {
-    type_: type_,
-    onFocus: (function (param) {
-        setFocused(function (param) {
-              return true;
-            });
-      }),
-    onBlur: (function (param) {
-        setFocused(function (param) {
-              return false;
-            });
-      })
-  };
-  if (className !== undefined) {
-    tmp.className = Caml_option.valFromOption(className);
-  }
-  if (placeholder !== undefined) {
-    tmp.placeholder = Caml_option.valFromOption(placeholder);
-  }
-  if (value !== undefined) {
-    tmp.value = Caml_option.valFromOption(value);
-  }
-  if (onChange !== undefined) {
-    tmp.onChange = Caml_option.valFromOption(onChange);
-  }
-  if (disabled !== undefined) {
-    tmp.disabled = Caml_option.valFromOption(disabled);
-  }
-  if (autoFocus !== undefined) {
-    tmp.autoFocus = Caml_option.valFromOption(autoFocus);
-  }
-  if (inputMode !== undefined) {
-    tmp.inputMode = Caml_option.valFromOption(inputMode);
-  }
-  if (maxLength !== undefined) {
-    tmp.maxLength = Caml_option.valFromOption(maxLength);
-  }
   var match$1 = Belt_Option.mapWithDefault(value, false, (function (x) {
           return x.trim() !== "";
         }));
   var getUnderLabel = React.createElement("span", {
         className: "text-gray-400 text-sm leading-5 mt-3"
       }, value !== undefined && match$1 && underLabelType !== undefined ? convertNumber(underLabelType, toOnlyNumber(value)) : Belt_Option.getWithDefault(underLabel, ""));
-  var tmp$1;
+  var tmp;
   var exit = 0;
   if (disabled !== undefined && disabled) {
-    tmp$1 = getUnderLabel;
+    tmp = getUnderLabel;
   } else {
     exit = 1;
   }
   if (exit === 1) {
     var errorMessage$p = Belt_Option.flatMap(errorMessage, Garter_Fn.identity);
-    tmp$1 = errorMessage$p !== undefined ? React.createElement("span", {
+    tmp = errorMessage$p !== undefined ? React.createElement("span", {
             className: "text-emphasis text-sm leading-5 mt-3"
           }, errorMessage$p) : getUnderLabel;
   }
-  return React.createElement(React.Fragment, undefined, React.createElement(DS_Input.InputText1.make, tmp), React.createElement("div", {
+  return React.createElement(React.Fragment, undefined, React.createElement(DS_Input.InputText1.make, {
+                  type_: props.type_,
+                  className: props.className,
+                  placeholder: props.placeholder,
+                  value: value,
+                  onChange: props.onChange,
+                  disabled: disabled,
+                  autoFocus: props.autoFocus,
+                  inputMode: props.inputMode,
+                  maxLength: props.maxLength,
+                  onFocus: (function (param) {
+                      setFocused(function (param) {
+                            return true;
+                          });
+                    }),
+                  onBlur: (function (param) {
+                      setFocused(function (param) {
+                            return false;
+                          });
+                    })
+                }), React.createElement("div", {
                   className: "absolute top-0 right-0 flex justify-end items-center"
                 }, React.createElement("div", {
                       className: "absolute top-0 right-0 flex justify-end items-center"
-                    }, Belt_Option.mapWithDefault(unit, null, (function (x) {
+                    }, Belt_Option.mapWithDefault(props.unit, null, (function (x) {
                             return React.createElement("span", {
                                         className: "mr-2.5 text-xl w-20 text-right"
                                       }, x);
-                          })), isClear && Belt_Option.isSome(value) && Belt_Option.mapWithDefault(value, false, (function (x) {
+                          })), isClear$1 && Belt_Option.isSome(value) && Belt_Option.mapWithDefault(value, false, (function (x) {
                             return x.trim() !== "";
                           })) ? React.createElement("button", {
                             className: "h-[30px]",
@@ -174,7 +146,7 @@ function DS_InputField$Line1$Input(Props) {
                                 src: searchBarClear
                               })) : null)), React.createElement("div", {
                   className: lineStyle(errorMessage, disabled, match[0])
-                }), tmp$1);
+                }), tmp);
 }
 
 var Input = {

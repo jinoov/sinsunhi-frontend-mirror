@@ -15,7 +15,7 @@ import Format from "date-fns/format";
 import SubDays from "date-fns/subDays";
 import * as Order_List_Admin_Uncompleted from "../../components/Order_List_Admin_Uncompleted.mjs";
 
-function UncompletedOrders_Admin(Props) {
+function UncompletedOrders_Admin(props) {
   var router = Router.useRouter();
   var status = CustomHooks.OrdersAdminUncompleted.use(new URLSearchParams(router.query).toString());
   var match = React.useState(function () {
@@ -120,7 +120,7 @@ function UncompletedOrders_Admin(Props) {
                                       onChange: (function (param) {
                                           return handleOnChangeDate(/* From */0, param);
                                         }),
-                                      date: query.from,
+                                      date: Caml_option.some(query.from),
                                       maxDate: Format(new Date(), "yyyy-MM-dd"),
                                       firstDayOfWeek: 0
                                     }), React.createElement(DatePicker.make, {
@@ -128,7 +128,7 @@ function UncompletedOrders_Admin(Props) {
                                       onChange: (function (param) {
                                           return handleOnChangeDate(/* To */1, param);
                                         }),
-                                      date: query.to_,
+                                      date: Caml_option.some(query.to_),
                                       maxDate: Format(new Date(), "yyyy-MM-dd"),
                                       minDate: Format(query.from, "yyyy-MM-dd"),
                                       firstDayOfWeek: 0

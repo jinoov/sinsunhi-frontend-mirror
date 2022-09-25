@@ -25,8 +25,8 @@ import EditSvg from "../../public/assets/edit.svg";
 
 var editIcon = EditSvg;
 
-function User_MD_Update_Button_Admin_Farmer(Props) {
-  var user = Props.user;
+function User_MD_Update_Button_Admin_Farmer(props) {
+  var user = props.user;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;

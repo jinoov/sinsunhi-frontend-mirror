@@ -2,7 +2,8 @@
 
 import * as $$Intl from "../../../bindings/intl.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import * as DS_Icon from "../../../components/svgs/DS_Icon.mjs";
 import * as DS_None from "../../../components/common/container/DS_None.mjs";
 import * as DataGtm from "../../../utils/DataGtm.mjs";
@@ -51,7 +52,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -171,7 +172,7 @@ function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$1(param) {
   var match = ReactRelay.useQueryLoader(RfqItemDetailSeller_QuotationPrice_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqItemDetailSeller_QuotationPrice_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -271,7 +272,7 @@ function use$2(param) {
   var match = ReactRelay.useMutation(RfqItemDetailSeller_CreateRfqQuotationMeat_Mutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -341,7 +342,7 @@ function use$3(param) {
   var match = ReactRelay.useMutation(RfqItemDetailSeller_UpdateRfqQuotationMeat_Mutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -465,14 +466,14 @@ function stringToNumber(s) {
   return numberToComma(Garter_Array.firstExn(s.split(".")));
 }
 
-function RfqItemDetail_Seller$TimerTitle(Props) {
-  var remainSecondsUntilQuotationExpired = Props.remainSecondsUntilQuotationExpired;
-  var match = React.useState(function () {
+function RfqItemDetail_Seller$TimerTitle(props) {
+  var remainSecondsUntilQuotationExpired = props.remainSecondsUntilQuotationExpired;
+  var match = React$1.useState(function () {
         return remainSecondsUntilQuotationExpired - 7200 | 0;
       });
   var setTime = match[1];
   var time = match[0];
-  React.useEffect((function () {
+  React$1.useEffect((function () {
           var id = setInterval((function (param) {
                   setTime(function (time) {
                         return Math.max(0, time - 1 | 0);
@@ -546,18 +547,16 @@ var TimerTitle = {
   make: RfqItemDetail_Seller$TimerTitle
 };
 
-function RfqItemDetail_Seller$Detail$Item(Props) {
-  var title = Props.title;
-  var value = Props.value;
-  return React.createElement(DS_ListItem.Normal1.Item.make, {
+function RfqItemDetail_Seller$Detail$Item(props) {
+  return React$1.createElement(DS_ListItem.Normal1.Item.make, {
               children: null
-            }, React.createElement(DS_TitleList.Left.TitleSubtitle1.make, {
-                  title1: title,
+            }, React$1.createElement(DS_TitleList.Left.TitleSubtitle1.make, {
+                  title1: props.title,
                   titleStyle: "font-normal text-text-L2"
-                }), React.createElement(DS_ListItem.Normal1.RightGroup.make, {
-                  children: React.createElement(DS_TitleList.Common.TextIcon1.Root.make, {
-                        children: React.createElement(DS_TitleList.Common.TextIcon1.$$Text.make, {
-                              children: value,
+                }), React$1.createElement(DS_ListItem.Normal1.RightGroup.make, {
+                  children: React$1.createElement(DS_TitleList.Common.TextIcon1.Root.make, {
+                        children: React$1.createElement(DS_TitleList.Common.TextIcon1.$$Text.make, {
+                              children: props.value,
                               className: "text-right word-keep-all"
                             })
                       })
@@ -568,8 +567,8 @@ var Item = {
   make: RfqItemDetail_Seller$Detail$Item
 };
 
-function RfqItemDetail_Seller$Detail$Title(Props) {
-  var itemMeat = Props.itemMeat;
+function RfqItemDetail_Seller$Detail$Title(props) {
+  var itemMeat = props.itemMeat;
   var submittedQuotation = Garter_Array.first(Belt_Array.map(itemMeat.quotations.edges, (function (x) {
               return x.node;
             })));
@@ -577,7 +576,7 @@ function RfqItemDetail_Seller$Detail$Title(Props) {
   var pageTitle;
   if (hasSubmittedQuotation) {
     var match = itemMeat.requestItemStatus;
-    pageTitle = React.createElement(DS_TitleList.Left.Title3Subtitle1.make, {
+    pageTitle = React$1.createElement(DS_TitleList.Left.Title3Subtitle1.make, {
           title1: Belt_Option.mapWithDefault(itemMeat.species, "", (function (x) {
                   return x.shortName;
                 })),
@@ -595,23 +594,23 @@ function RfqItemDetail_Seller$Detail$Title(Props) {
           subTitle: match === "WAITING_FOR_QUOTATION" ? "아직 견적서를 수정할 수 있어요" : ""
         });
   } else {
-    pageTitle = React.createElement(React.Fragment, undefined, React.createElement(DS_TitleList.Left.TitleSubtitle1.make, {
+    pageTitle = React$1.createElement(React$1.Fragment, undefined, React$1.createElement(DS_TitleList.Left.TitleSubtitle1.make, {
               title1: "견적요청서가 도착했어요"
             }), null);
   }
   var match$1 = itemMeat.requestItemStatus;
-  var pageSubTitle = match$1 === "WAITING_FOR_QUOTATION" ? React.createElement("div", {
+  var pageSubTitle = match$1 === "WAITING_FOR_QUOTATION" ? React$1.createElement("div", {
           className: "my-3 inline-flex items-center text-sm font-bold leading-5 tracking-tight px-2 py-1.5 rounded text-emphasis bg-emphasis bg-opacity-10"
-        }, React.createElement(DS_Icon.Common.PeriodSmall1.make, {
+        }, React$1.createElement(DS_Icon.Common.PeriodSmall1.make, {
               height: "14",
               width: "14",
               className: "mr-1"
-            }), React.createElement(RfqItemDetail_Seller$TimerTitle, {
+            }), React$1.createElement(RfqItemDetail_Seller$TimerTitle, {
               remainSecondsUntilQuotationExpired: itemMeat.request.remainSecondsUntilQuotationExpired
             })) : null;
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "px-5 pt-8"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "mt-3"
                 }, pageTitle, pageSubTitle));
 }
@@ -620,8 +619,8 @@ var Title = {
   make: RfqItemDetail_Seller$Detail$Title
 };
 
-function RfqItemDetail_Seller$Detail$MyQuotation(Props) {
-  var itemMeat = Props.itemMeat;
+function RfqItemDetail_Seller$Detail$MyQuotation(props) {
+  var itemMeat = props.itemMeat;
   var hasSubmittedQuotation = Belt_Option.isSome(Garter_Array.first(Belt_Array.map(itemMeat.quotations.edges, (function (x) {
                   return x.node;
                 }))));
@@ -637,25 +636,25 @@ function RfqItemDetail_Seller$Detail$MyQuotation(Props) {
   var quotationPrice = Belt_Option.flatMap(Garter_Array.first(itemMeat.quotations.edges), (function (x) {
           return Garter_Array.firstExn(x.node.pricePerKg.split("."));
         }));
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
                   className: "px-5 mt-10"
-                }, React.createElement("h3", {
+                }, React$1.createElement("h3", {
                       className: "font-bold leading-6 tracking-tight"
-                    }, "제안하신 내용")), React.createElement("div", {
+                    }, "제안하신 내용")), React$1.createElement("div", {
                   className: "flex flex-col items-center space-y-3 mx-5 mt-5"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "w-full bg-white rounded-lg py-5"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "flex flex-col px-5 gap-3.5"
-                        }, React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                        }, React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                               title: "단가",
                               value: "" + numberToComma(Belt_Option.getWithDefault(quotationPrice, "")) + "원/kg"
-                            }), isGradeIgnore ? React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                            }), isGradeIgnore ? React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                 title: "등급",
                                 value: Belt_Option.mapWithDefault(gradeText, "", (function (x) {
                                         return x;
                                       }))
-                              }) : null))), React.createElement("div", {
+                              }) : null))), React$1.createElement("div", {
                   className: "h-3 bg-border-default-L2 mt-6"
                 }));
 }
@@ -664,8 +663,8 @@ var MyQuotation = {
   make: RfqItemDetail_Seller$Detail$MyQuotation
 };
 
-function RfqItemDetail_Seller$Detail$Request(Props) {
-  var itemMeat = Props.itemMeat;
+function RfqItemDetail_Seller$Detail$Request(props) {
+  var itemMeat = props.itemMeat;
   var match = Belt_Option.map(itemMeat.species, (function (x) {
           return x.code;
         }));
@@ -687,13 +686,13 @@ function RfqItemDetail_Seller$Detail$Request(Props) {
   } else {
     isSkipGrade = false;
   }
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "flex flex-col items-center space-y-3 mx-5 mt-5 pb-28"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "w-full bg-white rounded-lg py-5 mx-6"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "px-5 mb-6"
-                    }, React.createElement(DS_TitleList.Left.Title3Subtitle1.make, {
+                    }, React$1.createElement(DS_TitleList.Left.Title3Subtitle1.make, {
                           title1: Belt_Option.mapWithDefault(itemMeat.species, "", (function (x) {
                                   return x.shortName;
                                 })),
@@ -707,65 +706,65 @@ function RfqItemDetail_Seller$Detail$Request(Props) {
                                     return "수입";
                                   }
                                 }))
-                        })), React.createElement("div", {
+                        })), React$1.createElement("div", {
                       className: "flex flex-col"
-                    }, React.createElement(DS_ListItem.Normal1.Root.make, {
+                    }, React$1.createElement(DS_ListItem.Normal1.Root.make, {
                           children: null,
                           className: "space-y-3.5"
                         }, Belt_Option.mapWithDefault(itemMeat.packageMethod, null, (function (x) {
-                                return React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                                return React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                             title: "포장상태",
                                             value: displayPackageMethod(x)
                                           });
                               })), isSkipGrade ? null : Belt_Option.mapWithDefault(itemMeat.grade, null, (function (x) {
-                                  return React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                                  return React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                               title: "등급",
                                               value: x.grade
                                             });
                                 })), Belt_Option.mapWithDefault(itemMeat.weightKg, null, (function (x) {
-                                return React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                                return React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                             title: "주문량",
                                             value: "" + numberToComma(Garter_Array.firstExn(x.split("."))) + " kg"
                                           });
-                              })), Garter_Array.isEmpty(itemMeat.usages.edges) ? null : React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                              })), Garter_Array.isEmpty(itemMeat.usages.edges) ? null : React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                 title: "사용용도",
                                 value: Js_array.joinWith(", ", Belt_Array.map(itemMeat.usages.edges, (function (edge) {
                                             return edge.node.name;
                                           })))
                               }), Belt_Option.mapWithDefault(itemMeat.storageMethod, null, (function (x) {
-                                return React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                                return React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                             title: "보관상태",
                                             value: displayStorageMethod(x)
                                           });
-                              })), itemMeat.preferredBrand === "" ? null : React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                              })), itemMeat.preferredBrand === "" ? null : React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                 title: "선호브랜드",
                                 value: itemMeat.preferredBrand
-                              }), Garter_Array.isEmpty(itemMeat.brands.edges) ? React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                              }), Garter_Array.isEmpty(itemMeat.brands.edges) ? React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                 title: "브랜드",
                                 value: "브랜드 무관"
-                              }) : React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                              }) : React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                                 title: "브랜드",
                                 value: Js_array.joinWith(", ", Belt_Array.map(itemMeat.brands.edges, (function (edge) {
                                             return edge.node.name;
                                           })))
-                              }), React.createElement("li", {
+                              }), React$1.createElement("li", {
                               className: "h-0.5 bg-border-disabled"
-                            }), React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                            }), React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                               title: "납품 희망일자",
                               value: Format(new Date(itemMeat.request.desiredDeliveryDate), "yy.MM.dd")
-                            }), React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                            }), React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                               title: "수령방식",
                               value: displayDeleveryMethod(itemMeat.request.deliveryMethod)
-                            }), React.createElement(RfqItemDetail_Seller$Detail$Item, {
+                            }), React$1.createElement(RfqItemDetail_Seller$Detail$Item, {
                               title: "배송지역",
                               value: itemMeat.request.deliveryAddress
-                            }), itemMeat.otherRequirements.trim() === "" ? null : React.createElement(React.Fragment, undefined, React.createElement("li", {
+                            }), itemMeat.otherRequirements.trim() === "" ? null : React$1.createElement(React$1.Fragment, undefined, React$1.createElement("li", {
                                     className: "h-0.5 bg-border-disabled"
-                                  }), React.createElement("li", {
+                                  }), React$1.createElement("li", {
                                     className: "flex flex-col justify-start items-start space-y-2"
-                                  }, React.createElement("span", {
+                                  }, React$1.createElement("span", {
                                         className: "text-text-L2"
-                                      }, "요청사항"), React.createElement("div", {
+                                      }, "요청사항"), React$1.createElement("div", {
                                         className: "w-full"
                                       }, itemMeat.otherRequirements)))))));
 }
@@ -774,8 +773,8 @@ var $$Request = {
   make: RfqItemDetail_Seller$Detail$Request
 };
 
-function RfqItemDetail_Seller$Detail$Button(Props) {
-  var itemMeat = Props.itemMeat;
+function RfqItemDetail_Seller$Detail$Button(props) {
+  var itemMeat = props.itemMeat;
   var router = Router.useRouter();
   var submittedQuotation = Garter_Array.first(Belt_Array.map(itemMeat.quotations.edges, (function (x) {
               return x.node;
@@ -800,12 +799,12 @@ function RfqItemDetail_Seller$Detail$Button(Props) {
             })), (function (x) {
           return x.node;
         }));
-  var match = React.useState(function () {
+  var match = React$1.useState(function () {
         return false;
       });
   var setDrawerShow = match[1];
   var isDrawerShow = match[0];
-  var match$1 = React.useState(function () {
+  var match$1 = React$1.useState(function () {
         if (isGradeIgnore) {
           return ;
         } else {
@@ -828,7 +827,7 @@ function RfqItemDetail_Seller$Detail$Button(Props) {
     
   };
   var match$2 = itemMeat.requestItemStatus;
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
                   onClick: (function (param) {
                       if (hasSubmittedQuotation) {
                         return ;
@@ -840,7 +839,7 @@ function RfqItemDetail_Seller$Detail$Button(Props) {
                                       }));
                       }
                     })
-                }, React.createElement(DS_ButtonContainer.Floating1.make, {
+                }, React$1.createElement(DS_ButtonContainer.Floating1.make, {
                       label: "견적서 " + (
                         hasSubmittedQuotation ? "수정" : "작성"
                       ) + "하기",
@@ -854,7 +853,7 @@ function RfqItemDetail_Seller$Detail$Button(Props) {
                             return navigatePriceFormPage(undefined);
                           }
                         })
-                    })), React.createElement(DS_BottomDrawer.Root.make, {
+                    })), React$1.createElement(DS_BottomDrawer.Root.make, {
                   isShow: isDrawerShow,
                   onClose: (function (param) {
                       setDrawerShow(function (param) {
@@ -862,12 +861,12 @@ function RfqItemDetail_Seller$Detail$Button(Props) {
                           });
                     }),
                   children: null
-                }, React.createElement(DS_BottomDrawer.Header.make, {}), React.createElement(DS_BottomDrawer.Body.make, {
+                }, React$1.createElement(DS_BottomDrawer.Header.make, {}), React$1.createElement(DS_BottomDrawer.Body.make, {
                       children: null
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "text-text-L3 leading-6 tracking-tight px-5 mb-3"
-                        }, "구매자가 " + madeInText + "/등급무관을 선택했어요"), React.createElement(DS_Title.Normal1.Root.make, {
-                          children: React.createElement(DS_Title.Normal1.TextGroup.make, {
+                        }, "구매자가 " + madeInText + "/등급무관을 선택했어요"), React$1.createElement(DS_Title.Normal1.Root.make, {
+                          children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
                                 title1: "" + Belt_Option.mapWithDefault(itemMeat.part, "", (function (x) {
                                         return x.name;
                                       })) + "/" + (
@@ -875,35 +874,37 @@ function RfqItemDetail_Seller$Detail$Button(Props) {
                                 ) + "의",
                                 title2: "판매하시는 등급을 선택해주세요"
                               })
-                        }), React.createElement(DS_ListItem.Normal1.Root.make, {
+                        }), React$1.createElement(DS_ListItem.Normal1.Root.make, {
                           children: Belt_Array.map(grades, (function (x) {
                                   var isSelected = Belt_Option.mapWithDefault(selectedGrade, false, (function (grade$p) {
                                           return grade$p === x.id;
                                         }));
-                                  return React.createElement(DS_ListItem.Normal1.Item.make, {
+                                  return React.createElementVariadicWithKey(DS_ListItem.Normal1.Item.make, {
                                               children: null,
                                               onClick: (function (param) {
                                                   setSelectedGrade(function (param) {
                                                         return x.id;
                                                       });
-                                                }),
-                                              key: x.id
-                                            }, React.createElement(DS_ListItem.Normal1.TextGroup.make, {
-                                                  title1: x.grade
-                                                }), React.createElement(DS_ListItem.Normal1.RightGroup.make, {
-                                                  children: isSelected ? React.createElement(DS_Icon.Common.RadioOnLarge1.make, {
-                                                          height: "24",
-                                                          width: "24",
-                                                          fill: "#12B564"
-                                                        }) : React.createElement(DS_Icon.Common.RadioOffLarge1.make, {
-                                                          height: "24",
-                                                          width: "24",
-                                                          fill: "#B2B2B2"
-                                                        })
-                                                }));
+                                                })
+                                            }, [
+                                              React$1.createElement(DS_ListItem.Normal1.TextGroup.make, {
+                                                    title1: x.grade
+                                                  }),
+                                              React$1.createElement(DS_ListItem.Normal1.RightGroup.make, {
+                                                    children: isSelected ? React$1.createElement(DS_Icon.Common.RadioOnLarge1.make, {
+                                                            height: "24",
+                                                            width: "24",
+                                                            fill: "#12B564"
+                                                          }) : React$1.createElement(DS_Icon.Common.RadioOffLarge1.make, {
+                                                            height: "24",
+                                                            width: "24",
+                                                            fill: "#B2B2B2"
+                                                          })
+                                                  })
+                                            ], x.id);
                                 })),
                           className: "space-y-8 mt-10 tab-highlight-color pb-[96px] overflow-y-auto"
-                        }), React.createElement(DS_ButtonContainer.Floating1.make, {
+                        }), React$1.createElement(DS_ButtonContainer.Floating1.make, {
                           label: "다음",
                           disabled: Belt_Option.isNone(selectedGrade),
                           onClick: (function (param) {
@@ -916,24 +917,24 @@ var Button = {
   make: RfqItemDetail_Seller$Detail$Button
 };
 
-function RfqItemDetail_Seller$Detail(Props) {
-  var itemMeat = Props.itemMeat;
-  React.useEffect((function () {
+function RfqItemDetail_Seller$Detail(props) {
+  var itemMeat = props.itemMeat;
+  React$1.useEffect((function () {
           DataGtm.push(DataGtm.mergeUserIdUnsafe({
                     event: "view_rfq_livestock_quotation_detail",
                     request_id: itemMeat.request.id,
                     quotation_id: itemMeat.id
                   }));
         }), []);
-  return React.createElement("section", {
+  return React$1.createElement("section", {
               className: "relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl bg-gray-50"
-            }, React.createElement(RfqItemDetail_Seller$Detail$Title, {
+            }, React$1.createElement(RfqItemDetail_Seller$Detail$Title, {
                   itemMeat: itemMeat
-                }), React.createElement(RfqItemDetail_Seller$Detail$MyQuotation, {
+                }), React$1.createElement(RfqItemDetail_Seller$Detail$MyQuotation, {
                   itemMeat: itemMeat
-                }), React.createElement(RfqItemDetail_Seller$Detail$Request, {
+                }), React$1.createElement(RfqItemDetail_Seller$Detail$Request, {
                   itemMeat: itemMeat
-                }), React.createElement(RfqItemDetail_Seller$Detail$Button, {
+                }), React$1.createElement(RfqItemDetail_Seller$Detail$Button, {
                   itemMeat: itemMeat
                 }));
 }
@@ -947,12 +948,12 @@ var Detail = {
   make: RfqItemDetail_Seller$Detail
 };
 
-function RfqItemDetail_Seller$Apply$PriceTextsSkeleton(Props) {
-  return React.createElement("div", undefined, React.createElement("div", {
+function RfqItemDetail_Seller$Apply$PriceTextsSkeleton(props) {
+  return React$1.createElement("div", undefined, React$1.createElement("div", {
                   className: "animate-pulse rounded-lg bg-gray-100 h-5 w-[280px]"
-                }), React.createElement("div", {
+                }), React$1.createElement("div", {
                   className: "h-2"
-                }), React.createElement("div", {
+                }), React$1.createElement("div", {
                   className: "animate-pulse rounded-lg bg-gray-100 h-5 w-[300px]"
                 }));
 }
@@ -961,11 +962,10 @@ var PriceTextsSkeleton = {
   make: RfqItemDetail_Seller$Apply$PriceTextsSkeleton
 };
 
-function RfqItemDetail_Seller$Apply$PriceTexts(Props) {
-  var itemId = Props.itemId;
-  var minimumPriceUnit = Props.minimumPriceUnit;
+function RfqItemDetail_Seller$Apply$PriceTexts(props) {
+  var minimumPriceUnit = props.minimumPriceUnit;
   var match = use$1({
-        itemId: itemId
+        itemId: props.itemId
       }, /* NetworkOnly */3, undefined, undefined, undefined);
   var displayPricePerKg = Belt_Option.map(Belt_Option.map(Belt_Option.map(Belt_Int.fromString(match.rfqRecommendedPriceForMeat.recommendedPricePerKg), (function (x) {
                   return x - Caml_int32.mod_(x, minimumPriceUnit) | 0;
@@ -975,22 +975,22 @@ function RfqItemDetail_Seller$Apply$PriceTexts(Props) {
   var minQuotedPrice = Belt_Option.mapWithDefault(match.rfqMinQuotedPriceForMeat.minQuotedPricePerKg, displayPricePerKg, (function (x) {
           return stringToNumber(x);
         }));
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "text-text-L3 text-base"
-            }, displayPricePerKg !== undefined ? React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "구매자의 기존 단가는 "), React.createElement("span", {
+            }, displayPricePerKg !== undefined ? React$1.createElement(React$1.Fragment, undefined, React$1.createElement("span", undefined, "구매자의 기존 단가는 "), React$1.createElement("span", {
                         className: "text-primary"
-                      }, "" + displayPricePerKg + "원"), React.createElement("span", undefined, "입니다."), React.createElement("br", undefined)) : null, minQuotedPrice !== undefined ? React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "현재까지 최저 입찰 단가는 "), React.createElement("span", {
+                      }, "" + displayPricePerKg + "원"), React$1.createElement("span", undefined, "입니다."), React$1.createElement("br", undefined)) : null, minQuotedPrice !== undefined ? React$1.createElement(React$1.Fragment, undefined, React$1.createElement("span", undefined, "현재까지 최저 입찰 단가는 "), React$1.createElement("span", {
                         className: "text-primary"
-                      }, "" + minQuotedPrice + "원"), React.createElement("span", undefined, "입니다.")) : null);
+                      }, "" + minQuotedPrice + "원"), React$1.createElement("span", undefined, "입니다.")) : null);
 }
 
 var PriceTexts = {
   make: RfqItemDetail_Seller$Apply$PriceTexts
 };
 
-function RfqItemDetail_Seller$Apply(Props) {
-  var itemMeat = Props.itemMeat;
-  var sellerSelectedGradeNode = Props.sellerSelectedGradeNode;
+function RfqItemDetail_Seller$Apply(props) {
+  var sellerSelectedGradeNode = props.sellerSelectedGradeNode;
+  var itemMeat = props.itemMeat;
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
@@ -998,7 +998,7 @@ function RfqItemDetail_Seller$Apply(Props) {
   var mutateCreate = match$1[0];
   var match$2 = use$3(undefined);
   var mutateUpdate = match$2[0];
-  var match$3 = React.useState(function () {
+  var match$3 = React$1.useState(function () {
         
       });
   var setPrice = match$3[1];
@@ -1160,27 +1160,27 @@ function RfqItemDetail_Seller$Apply(Props) {
                 ) + "";
         }));
   var price$p$1 = Belt_Option.getWithDefault(price, "");
-  return React.createElement(React.Fragment, undefined, React.createElement("section", {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
                   className: "relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl pt-14"
-                }, React.createElement(DS_TopNavigation.Detail.Root.make, {
+                }, React$1.createElement(DS_TopNavigation.Detail.Root.make, {
                       children: null
-                    }, React.createElement(DS_TopNavigation.Detail.Left.make, {
-                          children: React.createElement("a", {
+                    }, React$1.createElement(DS_TopNavigation.Detail.Left.make, {
+                          children: React$1.createElement("a", {
                                 className: "cursor-pointer",
                                 onClick: (function (param) {
                                     window.history.back();
                                   })
-                              }, React.createElement(DS_Icon.Common.ArrowLeftXLarge1.make, {
+                              }, React$1.createElement(DS_Icon.Common.ArrowLeftXLarge1.make, {
                                     height: "32",
                                     width: "32",
                                     className: "relative"
                                   }))
-                        }), React.createElement(DS_TopNavigation.Detail.Center.make, {
+                        }), React$1.createElement(DS_TopNavigation.Detail.Center.make, {
                           children: "견적서 " + (
                             hasSubmittedQuotation ? "수정" : "작성"
                           ) + ""
-                        })), React.createElement(DS_Title.Normal1.Root.make, {
-                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
+                        })), React$1.createElement(DS_Title.Normal1.Root.make, {
+                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "" + Belt_Option.mapWithDefault(itemMeat.part, "", (function (x) {
                                     return x.name;
                                   })) + "/" + Belt_Option.mapWithDefault(itemMeat.part, "", (function (x) {
@@ -1193,16 +1193,16 @@ function RfqItemDetail_Seller$Apply(Props) {
                             title2: "제공 가능한 단가를 알려주세요"
                           }),
                       className: "mt-10"
-                    }), React.createElement("div", {
+                    }), React$1.createElement("div", {
                       className: "px-5 mt-3"
-                    }, React.createElement(React.Suspense, {
-                          children: React.createElement(RfqItemDetail_Seller$Apply$PriceTexts, {
-                                itemId: itemMeat.id,
-                                minimumPriceUnit: minimumPriceUnit
-                              }),
-                          fallback: React.createElement(RfqItemDetail_Seller$Apply$PriceTextsSkeleton, {})
-                        })), React.createElement(DS_InputField.Line1.Root.make, {
-                      children: React.createElement(DS_InputField.Line1.Input.make, {
+                    }, React$1.createElement(React$1.Suspense, {
+                          children: Caml_option.some(React$1.createElement(RfqItemDetail_Seller$Apply$PriceTexts, {
+                                    itemId: itemMeat.id,
+                                    minimumPriceUnit: minimumPriceUnit
+                                  })),
+                          fallback: Caml_option.some(React$1.createElement(RfqItemDetail_Seller$Apply$PriceTextsSkeleton, {}))
+                        })), React$1.createElement(DS_InputField.Line1.Root.make, {
+                      children: React$1.createElement(DS_InputField.Line1.Input.make, {
                             type_: "text",
                             placeholder: "단가",
                             value: numberToComma(Belt_Option.getWithDefault(price, "")),
@@ -1216,15 +1216,15 @@ function RfqItemDetail_Seller$Apply(Props) {
                                     });
                               }),
                             unit: "원/kg",
-                            errorMessage: isValidPrice ? undefined : errorMessage,
+                            errorMessage: Caml_option.some(isValidPrice ? undefined : errorMessage),
                             underLabelType: "won",
                             maxLength: 10
                           }),
                       className: "mt-10"
-                    })), React.createElement(DS_Dialog.Popup.Root.make, {
+                    })), React$1.createElement(DS_Dialog.Popup.Root.make, {
                   children: null
-                }, React.createElement(DS_Dialog.Popup.Trigger.make, {
-                      children: React.createElement("div", {
+                }, React$1.createElement(DS_Dialog.Popup.Trigger.make, {
+                      children: React$1.createElement("div", {
                             onClick: (function (param) {
                                 if (hasSubmittedQuotation) {
                                   return ;
@@ -1237,33 +1237,33 @@ function RfqItemDetail_Seller$Apply(Props) {
                                                 }));
                                 }
                               })
-                          }, React.createElement(DS_ButtonContainer.Full1.make, {
+                          }, React$1.createElement(DS_ButtonContainer.Full1.make, {
                                 label: "다음",
                                 disabled: !isValidPrice
                               })),
                       asChild: false
-                    }), React.createElement(DS_Dialog.Popup.Portal.make, {
+                    }), React$1.createElement(DS_Dialog.Popup.Portal.make, {
                       children: null
-                    }, React.createElement(DS_Dialog.Popup.Overlay.make, {}), React.createElement(DS_Dialog.Popup.Content.make, {
+                    }, React$1.createElement(DS_Dialog.Popup.Overlay.make, {}), React$1.createElement(DS_Dialog.Popup.Content.make, {
                           children: null
-                        }, React.createElement(DS_Dialog.Popup.Title.make, {
+                        }, React$1.createElement(DS_Dialog.Popup.Title.make, {
                               children: "아래 내용으로 견적서를 " + (
                                 hasSubmittedQuotation ? "수정합니다." : "보냅니다."
                               ) + ""
-                            }), React.createElement(DS_Dialog.Popup.Description.make, {
-                              children: React.createElement("div", {
+                            }), React$1.createElement(DS_Dialog.Popup.Description.make, {
+                              children: React$1.createElement("div", {
                                     className: "text-base leading-6 tracking-tight text-enabled-L2"
-                                  }, React.createElement("div", undefined, "" + part + " - " + numberToComma(price$p$1) + " 원/kg"), React.createElement("div", undefined, "등급 - " + sellerSelectedGradeNode.grade + ""))
-                            }), React.createElement(DS_Dialog.Popup.Buttons.make, {
+                                  }, React$1.createElement("div", undefined, "" + part + " - " + numberToComma(price$p$1) + " 원/kg"), React$1.createElement("div", undefined, "등급 - " + sellerSelectedGradeNode.grade + ""))
+                            }), React$1.createElement(DS_Dialog.Popup.Buttons.make, {
                               children: null
-                            }, React.createElement(DS_Dialog.Popup.Close.make, {
-                                  children: React.createElement(DS_Button.Normal.Large1.make, {
+                            }, React$1.createElement(DS_Dialog.Popup.Close.make, {
+                                  children: React$1.createElement(DS_Button.Normal.Large1.make, {
                                         label: "아니오",
                                         buttonType: "white"
                                       }),
                                   asChild: true
-                                }), React.createElement(DS_Dialog.Popup.Close.make, {
-                                  children: React.createElement(DS_Button.Normal.Large1.make, {
+                                }), React$1.createElement(DS_Dialog.Popup.Close.make, {
+                                  children: React$1.createElement(DS_Button.Normal.Large1.make, {
                                         label: "네",
                                         onClick: handleSubmit
                                       }),
@@ -1277,21 +1277,20 @@ var Apply = {
   make: RfqItemDetail_Seller$Apply
 };
 
-function RfqItemDetail_Seller$DetailPageRouter(Props) {
-  var itemId = Props.itemId;
+function RfqItemDetail_Seller$DetailPageRouter(props) {
   var match = use({
-        itemId: itemId
+        itemId: props.itemId
       }, undefined, undefined, undefined, undefined);
   var node = match.node;
   var router = Router.useRouter();
   var selectedGradeId = Js_dict.get(router.query, "selected_grade_id");
   if (node === undefined) {
-    return React.createElement(DS_None.Default.make, {
+    return React$1.createElement(DS_None.Default.make, {
                 message: "견적서 정보가 없습니다."
               });
   }
   if (selectedGradeId === undefined) {
-    return React.createElement(RfqItemDetail_Seller$Detail, {
+    return React$1.createElement(RfqItemDetail_Seller$Detail, {
                 itemMeat: node
               });
   }
@@ -1309,32 +1308,33 @@ function RfqItemDetail_Seller$DetailPageRouter(Props) {
           return x.node.id === selectedGradeId;
         }));
   if (sellerSelectedGradeNode !== undefined && itemStatus === "WAITING_FOR_QUOTATION") {
-    return React.createElement(RfqItemDetail_Seller$Apply, {
+    return React$1.createElement(RfqItemDetail_Seller$Apply, {
                 itemMeat: node,
                 sellerSelectedGradeNode: sellerSelectedGradeNode.node
               });
+  } else {
+    return React$1.createElement(DS_None.Default.make, {
+                message: "잘못된 접근입니다."
+              });
   }
-  return React.createElement(DS_None.Default.make, {
-              message: "잘못된 접근입니다."
-            });
 }
 
 var DetailPageRouter = {
   make: RfqItemDetail_Seller$DetailPageRouter
 };
 
-function RfqItemDetail_Seller(Props) {
-  var itemId = Props.itemId;
-  return React.createElement(Authorization.Seller.make, {
-              children: React.createElement(React.Suspense, {
-                    children: itemId !== undefined ? React.createElement(RfqItemDetail_Seller$DetailPageRouter, {
-                            itemId: itemId
-                          }) : React.createElement(DS_None.Default.make, {
-                            message: "견적서 정보를 불러올 수 없습니다. 관리자에게 문의해주세요."
-                          })
+function RfqItemDetail_Seller(props) {
+  var itemId = props.itemId;
+  return React$1.createElement(Authorization.Seller.make, {
+              children: React$1.createElement(React$1.Suspense, {
+                    children: Caml_option.some(itemId !== undefined ? React$1.createElement(RfqItemDetail_Seller$DetailPageRouter, {
+                                itemId: itemId
+                              }) : React$1.createElement(DS_None.Default.make, {
+                                message: "견적서 정보를 불러올 수 없습니다. 관리자에게 문의해주세요."
+                              }))
                   }),
               title: "견적 확인",
-              fallback: null
+              fallback: Caml_option.some(null)
             });
 }
 
@@ -1359,4 +1359,4 @@ export {
   DetailPageRouter ,
   make ,
 }
-/* react Not a pure module */
+/* React Not a pure module */

@@ -129,23 +129,20 @@ function getLastAvailablePriceRange(weeklyMarketPrices, selectedGroup, represent
   }
 }
 
-function PDP_Matching_Estimator_Buyer$PriceSlider(Props) {
-  var weightLabel = Props.weightLabel;
-  var priceLabel = Props.priceLabel;
-  var value = Props.value;
-  var setValue = Props.setValue;
-  var color = Props.color;
+function PDP_Matching_Estimator_Buyer$PriceSlider(props) {
+  var color = props.color;
+  var setValue = props.setValue;
   return React.createElement("div", {
               className: "flex flex-1 flex-col"
             }, React.createElement("span", {
                   className: "text-sm text-gray-600"
-                }, weightLabel), React.createElement("span", {
+                }, props.weightLabel), React.createElement("span", {
                   className: "mt-1 text-2xl font-bold"
-                }, priceLabel), React.createElement("div", {
+                }, props.priceLabel), React.createElement("div", {
                   className: "mt-3"
                 }, React.createElement(ReactSlider.Root, {
                       children: null,
-                      value: [value],
+                      value: [props.value],
                       onValueChange: (function (arr) {
                           if (arr.length !== 1) {
                             return ;
@@ -161,17 +158,17 @@ function PDP_Matching_Estimator_Buyer$PriceSlider(Props) {
                       orientation: "horizontal"
                     }, React.createElement(ReactSlider.Track, {
                           className: "relative flex-grow rounded-full h-1 bg-[#F0F2F5]",
-                          children: React.createElement(ReactSlider.Range, {
-                                className: "absolute rounded-full h-full " + color
-                              })
+                          children: Caml_option.some(React.createElement(ReactSlider.Range, {
+                                    className: "absolute rounded-full h-full " + color
+                                  }))
                         }), React.createElement(ReactSlider.Thumb, {
                           asChild: true,
                           className: "focus:outline-none",
-                          children: React.createElement("div", {
-                                className: "w-4 h-8 flex items-center justify-center select-none touch-none "
-                              }, React.createElement("div", {
-                                    className: "w-4 h-4 rounded-full bg-primary " + color
-                                  }))
+                          children: Caml_option.some(React.createElement("div", {
+                                    className: "w-4 h-8 flex items-center justify-center select-none touch-none "
+                                  }, React.createElement("div", {
+                                        className: "w-4 h-4 rounded-full bg-primary " + color
+                                      })))
                         }))));
 }
 
@@ -179,10 +176,10 @@ var PriceSlider = {
   make: PDP_Matching_Estimator_Buyer$PriceSlider
 };
 
-function PDP_Matching_Estimator_Buyer$WeightSlider(Props) {
-  var value = Props.value;
-  var setValue = Props.setValue;
-  var color = Props.color;
+function PDP_Matching_Estimator_Buyer$WeightSlider(props) {
+  var color = props.color;
+  var setValue = props.setValue;
+  var value = props.value;
   var displayWeight = value === 1000 ? "1T" : (
       value >= 100 && value < 200 ? "100Kg" : (
           value === 0 ? "10Kg" : "" + String(value) + "Kg"
@@ -226,17 +223,17 @@ function PDP_Matching_Estimator_Buyer$WeightSlider(Props) {
                       orientation: "horizontal"
                     }, React.createElement(ReactSlider.Track, {
                           className: "relative flex-grow rounded-full h-1 bg-[#F0F2F5]",
-                          children: React.createElement(ReactSlider.Range, {
-                                className: "absolute rounded-full h-full " + color
-                              })
+                          children: Caml_option.some(React.createElement(ReactSlider.Range, {
+                                    className: "absolute rounded-full h-full " + color
+                                  }))
                         }), React.createElement(ReactSlider.Thumb, {
                           asChild: true,
                           className: "focus:outline-none",
-                          children: React.createElement("div", {
-                                className: "w-4 h-8 flex items-center justify-center select-none touch-none "
-                              }, React.createElement("div", {
-                                    className: "w-4 h-4 rounded-full bg-primary " + color
-                                  }))
+                          children: Caml_option.some(React.createElement("div", {
+                                    className: "w-4 h-8 flex items-center justify-center select-none touch-none "
+                                  }, React.createElement("div", {
+                                        className: "w-4 h-4 rounded-full bg-primary " + color
+                                      })))
                         }))));
 }
 
@@ -244,9 +241,8 @@ var WeightSlider = {
   make: PDP_Matching_Estimator_Buyer$WeightSlider
 };
 
-function PDP_Matching_Estimator_Buyer$Estimator(Props) {
-  var representativeWeight = Props.representativeWeight;
-  var priceRange = Props.priceRange;
+function PDP_Matching_Estimator_Buyer$Estimator(props) {
+  var priceRange = props.priceRange;
   var match = React.useState(function () {
         return 100;
       });
@@ -364,7 +360,7 @@ function PDP_Matching_Estimator_Buyer$Estimator(Props) {
                 }, "매칭 계산기"), React.createElement("div", {
                   className: "w-full mt-5 flex"
                 }, React.createElement(PDP_Matching_Estimator_Buyer$PriceSlider, {
-                      weightLabel: "" + String(representativeWeight) + "kg 당 가격",
+                      weightLabel: "" + String(props.representativeWeight) + "kg 당 가격",
                       priceLabel: "" + Locale.Float.show(undefined, displayPrice, 0) + "원",
                       value: pricePercent,
                       setValue: match[1],
@@ -392,10 +388,9 @@ var Estimator = {
   make: PDP_Matching_Estimator_Buyer$Estimator
 };
 
-function PDP_Matching_Estimator_Buyer(Props) {
-  var selectedGroup = Props.selectedGroup;
-  var query = Props.query;
-  var match = use(query);
+function PDP_Matching_Estimator_Buyer(props) {
+  var selectedGroup = props.selectedGroup;
+  var match = use(props.query);
   var representativeWeight = match.representativeWeight;
   var priceRange = Belt_Option.flatMap(match.weeklyMarketPrices, (function (param) {
           return getLastAvailablePriceRange(param, selectedGroup, representativeWeight);

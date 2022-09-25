@@ -5,9 +5,9 @@ import * as Caml_int32 from "rescript/lib/es6/caml_int32.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 
-function DS_ProgressBar$StepGuide(Props) {
-  var step = Props.step;
-  var totalStep = Props.totalStep;
+function DS_ProgressBar$StepGuide(props) {
+  var totalStep = props.totalStep;
+  var step = props.step;
   React.useEffect(function () {
         var width = Belt_Option.mapWithDefault(Caml_option.nullable_to_opt(document.getElementById("ds-progress-wrap")), 0, (function (x) {
                 return x.clientWidth;

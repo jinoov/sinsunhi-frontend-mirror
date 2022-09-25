@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function Order_Uncompleted(Props) {
+function Order_Uncompleted(props) {
   return React.createElement(React.Fragment, undefined, React.createElement("tr", {
                   className: "hidden lg:table-row"
                 }, React.createElement("td", {

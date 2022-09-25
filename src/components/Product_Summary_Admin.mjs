@@ -32,9 +32,8 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function Product_Summary_Admin(Props) {
-  var query = Props.query;
-  var product = use(query);
+function Product_Summary_Admin(props) {
+  var product = use(props.query);
   return React.createElement("section", {
               className: "p-7 mt-4 mx-4 mb-7 bg-white rounded shadow-gl"
             }, React.createElement("h2", {

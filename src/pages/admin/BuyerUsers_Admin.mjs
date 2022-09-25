@@ -10,7 +10,7 @@ import * as Select_CountPerPage from "../../components/Select_CountPerPage.mjs";
 import * as User_List_Admin_Buyer from "../../components/User_List_Admin_Buyer.mjs";
 import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
 
-function BuyerUsers_Admin$Users(Props) {
+function BuyerUsers_Admin$Users(props) {
   var router = Router.useRouter();
   var rq = router.query;
   var status = Curry._1(CustomHooks.QueryUser.Buyer.use, (rq["role"] = "buyer", new URLSearchParams(rq).toString()));
@@ -44,7 +44,7 @@ var Users = {
   make: BuyerUsers_Admin$Users
 };
 
-function BuyerUsers_Admin(Props) {
+function BuyerUsers_Admin(props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(BuyerUsers_Admin$Users, {}),
               title: "관리자 바이어 사용자 조회"

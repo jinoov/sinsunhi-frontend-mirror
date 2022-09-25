@@ -91,8 +91,8 @@ var Query = {
   retain: retain
 };
 
-function BulkSale_Producer_Application_Withdrawn_Button$Reasons(Props) {
-  var applicationId = Props.applicationId;
+function BulkSale_Producer_Application_Withdrawn_Button$Reasons(props) {
+  var applicationId = props.applicationId;
   var match = use({
         applicationId: applicationId
       }, undefined, undefined, undefined, undefined);
@@ -110,15 +110,14 @@ var Reasons = {
   make: BulkSale_Producer_Application_Withdrawn_Button$Reasons
 };
 
-function BulkSale_Producer_Application_Withdrawn_Button(Props) {
-  var applicationId = Props.applicationId;
+function BulkSale_Producer_Application_Withdrawn_Button(props) {
   var match = React.useState(function () {
         return false;
       });
   var setShow = match[1];
   return React.createElement(ReactDialog.Root, {
               children: null,
-              open: match[0]
+              _open: match[0]
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Trigger, {
@@ -155,10 +154,10 @@ function BulkSale_Producer_Application_Withdrawn_Button(Props) {
                           }, React.createElement("div", {
                                 className: "pb-5"
                               }, "농민이 안심판매 신청을 취소한 사유입니다."), React.createElement(React.Suspense, {
-                                children: React.createElement(BulkSale_Producer_Application_Withdrawn_Button$Reasons, {
-                                      applicationId: applicationId
-                                    }),
-                                fallback: null
+                                children: Caml_option.some(React.createElement(BulkSale_Producer_Application_Withdrawn_Button$Reasons, {
+                                          applicationId: props.applicationId
+                                        })),
+                                fallback: Caml_option.some(null)
                               })), React.createElement("article", {
                             className: "flex justify-center items-center mt-5"
                           }, React.createElement(ReactDialog.Close, {

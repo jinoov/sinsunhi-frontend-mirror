@@ -8,6 +8,7 @@ import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as DatePicker from "./DatePicker.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
@@ -22,9 +23,8 @@ import * as ErrorMessage from "@hookform/error-message";
 import * as Web_Order_Util_Component from "./Web_Order_Util_Component.mjs";
 import * as FreightDeliveryCost_Table_Buyer from "./FreightDeliveryCost_Table_Buyer.mjs";
 
-function Web_Order_Inputs_Buyer$ReceiverNameInput(Props) {
-  var prefix = Props.prefix;
-  var formNames = Web_Order_Buyer_Form.names(prefix);
+function Web_Order_Inputs_Buyer$ReceiverNameInput(props) {
+  var formNames = Web_Order_Buyer_Form.names(props.prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -68,9 +68,8 @@ var ReceiverNameInput = {
   make: Web_Order_Inputs_Buyer$ReceiverNameInput
 };
 
-function Web_Order_Inputs_Buyer$ReceiverPhoneInput(Props) {
-  var prefix = Props.prefix;
-  var formNames = Web_Order_Buyer_Form.names(prefix);
+function Web_Order_Inputs_Buyer$ReceiverPhoneInput(props) {
+  var formNames = Web_Order_Buyer_Form.names(props.prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -90,7 +89,7 @@ function Web_Order_Inputs_Buyer$ReceiverPhoneInput(Props) {
                   className: "w-full xl:w-3/4"
                 }, React.createElement(ReactHookForm$1.Controller, {
                       name: formNames.receiverPhone,
-                      control: match.control,
+                      control: Caml_option.some(match.control),
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
@@ -118,7 +117,7 @@ function Web_Order_Inputs_Buyer$ReceiverPhoneInput(Props) {
                                         }));
                         }),
                       defaultValue: "",
-                      rules: ReactHookForm.Rules.make(true, undefined, 10, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, 10, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
                     })));
 }
 
@@ -126,16 +125,15 @@ var ReceiverPhoneInput = {
   make: Web_Order_Inputs_Buyer$ReceiverPhoneInput
 };
 
-function Web_Order_Inputs_Buyer$ReceiverAddressInput(Props) {
-  var prefix = Props.prefix;
-  var deviceType = Props.deviceType;
+function Web_Order_Inputs_Buyer$ReceiverAddressInput(props) {
+  var deviceType = props.deviceType;
   var router = Router.useRouter();
   var match = React.useState(function () {
         return false;
       });
   var setShowSearchAddress = match[1];
   var isShowSearchAddress = match[0];
-  var formNames = Web_Order_Buyer_Form.names(prefix);
+  var formNames = Web_Order_Buyer_Form.names(props.prefix);
   var match$1 = ReactHookForm$1.useFormContext({
         mode: "all"
       }, undefined);
@@ -193,7 +191,7 @@ function Web_Order_Inputs_Buyer$ReceiverAddressInput(Props) {
                           className: "flex flex-col gap-1"
                         }, React.createElement(ReactHookForm$1.Controller, {
                               name: zipcodeRegister.name,
-                              control: match$1.control,
+                              control: Caml_option.some(match$1.control),
                               render: (function (param) {
                                   var match = param.field;
                                   var onChange = match.onChange;
@@ -228,7 +226,7 @@ function Web_Order_Inputs_Buyer$ReceiverAddressInput(Props) {
                                                     })
                                                 }), React.createElement(ReactDialog.Root, {
                                                   children: null,
-                                                  open: isShowSearchAddress
+                                                  _open: isShowSearchAddress
                                                 }, React.createElement(ReactDialog.Overlay, {
                                                       className: "dialog-overlay"
                                                     }), React.createElement(ReactDialog.Content, {
@@ -264,7 +262,7 @@ function Web_Order_Inputs_Buyer$ReceiverAddressInput(Props) {
                                                         }))));
                                 }),
                               defaultValue: "",
-                              rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                              rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
                             })), React.createElement("input", {
                           ref: addressRegister.ref,
                           className: "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1",
@@ -302,11 +300,10 @@ var ReceiverAddressInput = {
   make: Web_Order_Inputs_Buyer$ReceiverAddressInput
 };
 
-function Web_Order_Inputs_Buyer$DeliveryMessageInput(Props) {
-  var prefix = Props.prefix;
-  var selfModeOpt = Props.selfMode;
-  var selfMode = selfModeOpt !== undefined ? selfModeOpt : false;
-  var formNames = Web_Order_Buyer_Form.names(prefix);
+function Web_Order_Inputs_Buyer$DeliveryMessageInput(props) {
+  var selfMode = props.selfMode;
+  var selfMode$1 = selfMode !== undefined ? selfMode : false;
+  var formNames = Web_Order_Buyer_Form.names(props.prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -320,7 +317,7 @@ function Web_Order_Inputs_Buyer$DeliveryMessageInput(Props) {
                   className: "xl:w-1/4 block font-bold",
                   htmlFor: name
                 }, "" + (
-                  selfMode ? "수령시" : "배송"
+                  selfMode$1 ? "수령시" : "배송"
                 ) + " 요청사항"), React.createElement("div", {
                   className: "w-full xl:w-3/4"
                 }, React.createElement("input", {
@@ -329,7 +326,7 @@ function Web_Order_Inputs_Buyer$DeliveryMessageInput(Props) {
                       id: name,
                       name: name,
                       placeholder: "" + (
-                        selfMode ? "수령" : "배송"
+                        selfMode$1 ? "수령" : "배송"
                       ) + "시 요청사항을 입력해주세요 (최대 100자)",
                       onBlur: match$1.onBlur,
                       onChange: match$1.onChange
@@ -353,11 +350,10 @@ var DeliveryMessageInput = {
   make: Web_Order_Inputs_Buyer$DeliveryMessageInput
 };
 
-function Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection(Props) {
-  var prefix = Props.prefix;
-  var selfModeOpt = Props.selfMode;
-  var selfMode = selfModeOpt !== undefined ? selfModeOpt : false;
-  var formNames = Web_Order_Buyer_Form.names(prefix);
+function Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection(props) {
+  var selfMode = props.selfMode;
+  var selfMode$1 = selfMode !== undefined ? selfMode : false;
+  var formNames = Web_Order_Buyer_Form.names(props.prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -371,14 +367,14 @@ function Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection(Props) {
             }, React.createElement("label", {
                   className: "xl:w-1/4 block font-bold"
                 }, "" + (
-                  selfMode ? "수령" : "배송"
+                  selfMode$1 ? "수령" : "배송"
                 ) + " 희망일"), React.createElement("div", {
                   className: "flex flex-col gap-1 w-full xl:w-3/4"
                 }, React.createElement("div", {
                       className: "flex gap-2"
                     }, React.createElement(ReactHookForm$1.Controller, {
                           name: formNames.deliveryDesiredDate,
-                          control: match.control,
+                          control: Caml_option.some(match.control),
                           render: (function (param) {
                               var onChange = param.field.onChange;
                               return React.createElement(DatePicker.make, {
@@ -387,7 +383,7 @@ function Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection(Props) {
                                               var newDate = param.detail.value;
                                               return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, newDate));
                                             }),
-                                          date: minDate,
+                                          date: Caml_option.some(minDate),
                                           minDate: Format(minDate, "yyyy-MM-dd"),
                                           firstDayOfWeek: 0,
                                           isDateDisabled: (function (d) {
@@ -399,12 +395,12 @@ function Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection(Props) {
                                             })
                                         });
                             }),
-                          defaultValue: Format(minDate, "yyy-MM-dd"),
+                          defaultValue: Caml_option.some(Format(minDate, "yyy-MM-dd")),
                           shouldUnregister: true
-                        }), selfMode ? null : React.createElement(FreightDeliveryCost_Table_Buyer.make, {})), React.createElement("span", {
+                        }), selfMode$1 ? null : React.createElement(FreightDeliveryCost_Table_Buyer.make, {})), React.createElement("span", {
                       className: "text-sm text-text-L2"
                     }, "* 원하시는 날짜에 맞춰 물량 확보 및 " + (
-                      selfMode ? "수령" : "배송"
+                      selfMode$1 ? "수령" : "배송"
                     ) + "이 가능한지 확인 후 연락 드립니다.")));
 }
 
@@ -412,10 +408,9 @@ var DeliveryDesiredDateSelection = {
   make: Web_Order_Inputs_Buyer$DeliveryDesiredDateSelection
 };
 
-function Web_Order_Inputs_Buyer$PaymentMethodSelection(Props) {
-  var prefix = Props.prefix;
-  var deviceType = Props.deviceType;
-  var formNames = Web_Order_Buyer_Form.names(prefix);
+function Web_Order_Inputs_Buyer$PaymentMethodSelection(props) {
+  var deviceType = props.deviceType;
+  var formNames = Web_Order_Buyer_Form.names(props.prefix);
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);

@@ -14,6 +14,7 @@ import * as RfqCommon from "./RfqCommon.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Float from "rescript/lib/es6/belt_Float.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as DS_ListItem from "../../../../components/common/container/DS_ListItem.mjs";
 import * as Router from "next/router";
 import * as DS_TitleList from "../../../../components/common/element/DS_TitleList.mjs";
@@ -67,20 +68,17 @@ function numberToComma(n) {
               }));
 }
 
-function RfqList_Buyer$List$Item(Props) {
-  var title = Props.title;
-  var value = Props.value;
-  var onClick = Props.onClick;
+function RfqList_Buyer$List$Item(props) {
   return React.createElement(DS_ListItem.Normal1.Item.make, {
               children: null
             }, React.createElement(DS_TitleList.Left.TitleSubtitle1.make, {
-                  title1: title,
+                  title1: props.title,
                   titleStyle: "font-normal text-text-L2"
                 }), React.createElement(DS_ListItem.Normal1.RightGroup.make, {
                   children: React.createElement(DS_TitleList.Common.TextIcon1.Root.make, {
                         children: null,
-                        onClick: onClick
-                      }, Belt_Option.mapWithDefault(value, null, (function (value$p) {
+                        onClick: props.onClick
+                      }, Belt_Option.mapWithDefault(props.value, null, (function (value$p) {
                               return React.createElement(DS_TitleList.Common.TextIcon1.$$Text.make, {
                                           children: value$p,
                                           className: "text-right word-keep-all"
@@ -125,8 +123,8 @@ function getItemCountInfo(items) {
         ];
 }
 
-function RfqList_Buyer$List(Props) {
-  var requestId = Props.requestId;
+function RfqList_Buyer$List(props) {
+  var requestId = props.requestId;
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
@@ -430,22 +428,22 @@ var List = {
   make: RfqList_Buyer$List
 };
 
-function RfqList_Buyer(Props) {
-  var requestId = Props.requestId;
+function RfqList_Buyer(props) {
+  var requestId = props.requestId;
   var router = Router.useRouter();
   if (requestId !== undefined) {
     return React.createElement(Authorization.Buyer.make, {
                 children: React.createElement(React.Suspense, {
-                      children: React.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
-                            children: React.createElement(RfqList_Buyer$List, {
-                                  requestId: requestId
-                                }),
-                            requestId: requestId
-                          }),
-                      fallback: React.createElement("div", undefined)
+                      children: Caml_option.some(React.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
+                                children: React.createElement(RfqList_Buyer$List, {
+                                      requestId: requestId
+                                    }),
+                                requestId: requestId
+                              })),
+                      fallback: Caml_option.some(React.createElement("div", undefined))
                     }),
                 title: "바이어 견적 요청",
-                fallback: null
+                fallback: Caml_option.some(null)
               });
   } else {
     React.useEffect((function () {

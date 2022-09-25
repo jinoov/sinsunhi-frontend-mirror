@@ -92,7 +92,7 @@ var Query = {
   retain: retain
 };
 
-function ShopMain_CategoryList_Buyer$PC$Placeholder(Props) {
+function ShopMain_CategoryList_Buyer$PC$Placeholder(props) {
   return React.createElement("div", undefined, React.createElement("div", {
                   className: "h-9 w-[138px] rounded-lg bg-gray-150 animate-pulse ml-5"
                 }), React.createElement("ol", {
@@ -113,15 +113,14 @@ var Placeholder = {
   make: ShopMain_CategoryList_Buyer$PC$Placeholder
 };
 
-function ShopMain_CategoryList_Buyer$PC(Props) {
-  var categories = Props.categories;
+function ShopMain_CategoryList_Buyer$PC(props) {
   return React.createElement("div", {
               className: "w-full"
             }, React.createElement("span", {
                   className: "text-2xl text-gray-800 font-bold ml-5"
                 }, "전체 카테고리"), React.createElement("ol", {
                   className: "mt-6 w-full flex items-center"
-                }, Belt_Array.map(categories, (function (param) {
+                }, Belt_Array.map(props.categories, (function (param) {
                         var id = param.id;
                         var key = "display-category-" + id + "-pc";
                         var src = Belt_Option.mapWithDefault(param.image, $$Image.Placeholder.getSrc(/* Sm */0), (function (image$p) {
@@ -162,7 +161,7 @@ var PC = {
   make: ShopMain_CategoryList_Buyer$PC
 };
 
-function ShopMain_CategoryList_Buyer$MO$Placeholder(Props) {
+function ShopMain_CategoryList_Buyer$MO$Placeholder(props) {
   return React.createElement("div", {
               className: "w-full"
             }, React.createElement("div", {
@@ -187,8 +186,7 @@ var Placeholder$1 = {
   make: ShopMain_CategoryList_Buyer$MO$Placeholder
 };
 
-function ShopMain_CategoryList_Buyer$MO(Props) {
-  var categories = Props.categories;
+function ShopMain_CategoryList_Buyer$MO(props) {
   return React.createElement("div", {
               className: "w-full"
             }, React.createElement("span", {
@@ -208,20 +206,9 @@ function ShopMain_CategoryList_Buyer$MO(Props) {
                                       }), React.createElement("p", {
                                         className: "text-gray-800 text-sm"
                                       }, "전체 상품")))
-                        })), Belt_Array.map(categories, (function (param) {
+                        })), Belt_Array.map(props.categories, (function (param) {
                         var id = param.id;
                         var key = "display-category-" + id + "-mobile";
-                        var tmp = {
-                          placeholder: /* Sm */0,
-                          alt: key,
-                          className: "w-full h-full object-cover"
-                        };
-                        var tmp$1 = Belt_Option.map(param.image, (function (param) {
-                                return param.original;
-                              }));
-                        if (tmp$1 !== undefined) {
-                          tmp.src = Caml_option.valFromOption(tmp$1);
-                        }
                         return React.createElement("li", {
                                     key: key,
                                     className: "w-full flex items-center justify-center"
@@ -231,7 +218,14 @@ function ShopMain_CategoryList_Buyer$MO(Props) {
                                                   className: "w-[90px] flex flex-col items-center justify-center"
                                                 }, React.createElement("div", {
                                                       className: "w-14 aspect-square rounded-lg overflow-hidden"
-                                                    }, React.createElement($$Image.make, tmp)), React.createElement("p", {
+                                                    }, React.createElement($$Image.make, {
+                                                          src: Belt_Option.map(param.image, (function (param) {
+                                                                  return param.original;
+                                                                })),
+                                                          placeholder: /* Sm */0,
+                                                          alt: key,
+                                                          className: "w-full h-full object-cover"
+                                                        })), React.createElement("p", {
                                                       className: "text-gray-800 text-sm"
                                                     }, param.name)))
                                       }));

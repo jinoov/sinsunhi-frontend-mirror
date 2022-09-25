@@ -18,8 +18,8 @@ function formatDate(d) {
 
 var Converter$1 = Converter.Status({});
 
-function Order_Detail_Button_Buyer_Seller(Props) {
-  var order = Props.order;
+function Order_Detail_Button_Buyer_Seller(props) {
+  var order = props.order;
   var status = CustomHooks.Courier.use(undefined);
   var courierName;
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {

@@ -14,9 +14,9 @@ import * as Router from "next/router";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import * as SignIn_Buyer_Form_SetPassword from "./SignIn_Buyer_Form_SetPassword.mjs";
 
-function SignIn_Buyer_Set_Password(Props) {
-  var onSuccess = Props.onSuccess;
-  var onError = Props.onError;
+function SignIn_Buyer_Set_Password(props) {
+  var onError = props.onError;
+  var onSuccess = props.onSuccess;
   var router = Router.useRouter();
   var match = React.useState(function () {
         return "";

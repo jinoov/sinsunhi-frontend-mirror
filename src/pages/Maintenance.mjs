@@ -468,9 +468,7 @@ var Match = {
   fromIncident: fromIncident
 };
 
-function Maintenance$View(Props) {
-  var message = Props.message;
-  var maintenanceTime = Props.maintenanceTime;
+function Maintenance$View(props) {
   return React.createElement("section", {
               className: "w-screen h-screen flex flex-col items-center justify-start dialog-overlay bg-white pointer-events-none"
             }, React.createElement("div", {
@@ -485,20 +483,20 @@ function Maintenance$View(Props) {
                       className: "flex flex-col justify-center items-center gap-5"
                     }, React.createElement("h3", {
                           className: "mt-7 text-[17px] whitespace-pre text-center"
-                        }, Belt_Option.getWithDefault(message, "점검 시간 동안 서비스 이용이 일시 중단됩니다.\n이용에 불편을 드려서 죄송합니다.")), React.createElement("div", {
+                        }, Belt_Option.getWithDefault(props.message, "점검 시간 동안 서비스 이용이 일시 중단됩니다.\n이용에 불편을 드려서 죄송합니다.")), React.createElement("div", {
                           className: "flex flex-col items-center py-3 bg-gray-gl rounded-lg w-[320px]"
                         }, React.createElement("span", {
                               className: ""
                             }, "점검 시간"), React.createElement("span", {
                               className: "text-gray-800 font-bold"
-                            }, Belt_Option.getWithDefault(Belt_Option.map(maintenanceTime, format), "불러오는 중입니다"))))));
+                            }, Belt_Option.getWithDefault(Belt_Option.map(props.maintenanceTime, format), "불러오는 중입니다"))))));
 }
 
 var View = {
   make: Maintenance$View
 };
 
-function Maintenance$Container(Props) {
+function Maintenance$Container(props) {
   var router = Router.useRouter();
   var routerPathNames = router.pathname.split("/");
   var match = Belt_Array.get(routerPathNames, 1);
@@ -568,7 +566,7 @@ function Maintenance$Container(Props) {
                             message: message,
                             maintenanceTime: maintenanceTime
                           }))),
-              open: true
+              _open: true
             });
 }
 
@@ -576,7 +574,7 @@ var Container = {
   make: Maintenance$Container
 };
 
-function Maintenance(Props) {
+function Maintenance(props) {
   var match = React.useState(function () {
         return false;
       });

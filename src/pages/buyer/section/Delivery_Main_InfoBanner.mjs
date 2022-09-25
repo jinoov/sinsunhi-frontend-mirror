@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function Delivery_Main_InfoBanner$PC$Skeleton(Props) {
+function Delivery_Main_InfoBanner$PC$Skeleton(props) {
   return React.createElement("div", {
               className: "w-[1280px] mx-auto h-[108px] rounded-[10px] animate-pulse bg-gray-150"
             });
@@ -12,7 +12,7 @@ var Skeleton = {
   make: Delivery_Main_InfoBanner$PC$Skeleton
 };
 
-function Delivery_Main_InfoBanner$PC(Props) {
+function Delivery_Main_InfoBanner$PC(props) {
   return React.createElement("div", {
               className: "w-[1280px] mx-auto h-[98px] rounded-[10px] flex items-center bg-green-50 pl-9"
             }, React.createElement("img", {
@@ -32,7 +32,7 @@ var PC = {
   make: Delivery_Main_InfoBanner$PC
 };
 
-function Delivery_Main_InfoBanner$MO$Skeleton(Props) {
+function Delivery_Main_InfoBanner$MO$Skeleton(props) {
   return React.createElement("div", {
               className: "w-full flex h-[98px] animate-pulse bg-gray-150"
             });
@@ -42,7 +42,7 @@ var Skeleton$1 = {
   make: Delivery_Main_InfoBanner$MO$Skeleton
 };
 
-function Delivery_Main_InfoBanner$MO(Props) {
+function Delivery_Main_InfoBanner$MO(props) {
   return React.createElement("div", {
               className: "w-full flex h-[98px] bg-green-50"
             }, React.createElement("div", {

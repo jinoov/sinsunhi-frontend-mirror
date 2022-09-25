@@ -34,9 +34,8 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function MyInfo_Cash_Remain_Buyer$PC(Props) {
-  var query = Props.query;
-  var match = use(query);
+function MyInfo_Cash_Remain_Buyer$PC(props) {
+  var match = use(props.query);
   return React.createElement("div", {
               className: "flex items-center justify-between p-7"
             }, React.createElement("span", {
@@ -63,9 +62,8 @@ var PC = {
   make: MyInfo_Cash_Remain_Buyer$PC
 };
 
-function MyInfo_Cash_Remain_Buyer$Mobile(Props) {
-  var query = Props.query;
-  var match = use(query);
+function MyInfo_Cash_Remain_Buyer$Mobile(props) {
+  var match = use(props.query);
   return React.createElement("div", {
               className: "p-4 flex items-center justify-between bg-surface rounded"
             }, React.createElement("div", {

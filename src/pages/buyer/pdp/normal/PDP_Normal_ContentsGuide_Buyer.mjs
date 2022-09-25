@@ -39,7 +39,7 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Normal_ContentsGuide_Buyer$Divider(Props) {
+function PDP_Normal_ContentsGuide_Buyer$Divider(props) {
   return React.createElement("div", {
               className: "w-full h-[1px] bg-gray-100"
             });
@@ -49,20 +49,18 @@ var Divider = {
   make: PDP_Normal_ContentsGuide_Buyer$Divider
 };
 
-function PDP_Normal_ContentsGuide_Buyer$PC$Info(Props) {
-  var k = Props.k;
-  var v = Props.v;
+function PDP_Normal_ContentsGuide_Buyer$PC$Info(props) {
   return React.createElement("div", {
               className: "flex items-center"
             }, React.createElement("div", {
                   className: "p-[18px] h-full flex items-center bg-gray-50"
                 }, React.createElement("span", {
                       className: "w-[140px] text-gray-900 text-[14px]"
-                    }, ReactNl2br(k))), React.createElement("div", {
+                    }, ReactNl2br(props.k))), React.createElement("div", {
                   className: "p-[18px] h-full flex items-center"
                 }, React.createElement("span", {
                       className: "w-[408px] text-gray-700 text-[14px]"
-                    }, Belt_Option.mapWithDefault(v, null, (function (prim) {
+                    }, Belt_Option.mapWithDefault(props.v, null, (function (prim) {
                             return ReactNl2br(prim);
                           })))));
 }
@@ -71,15 +69,8 @@ var Info = {
   make: PDP_Normal_ContentsGuide_Buyer$PC$Info
 };
 
-function PDP_Normal_ContentsGuide_Buyer$PC$WholeFood(Props) {
-  var displayName = Props.displayName;
-  var origin = Props.origin;
-  var tmp = {
-    k: "원산지"
-  };
-  if (origin !== undefined) {
-    tmp.v = Caml_option.valFromOption(origin);
-  }
+function PDP_Normal_ContentsGuide_Buyer$PC$WholeFood(props) {
+  var displayName = props.displayName;
   return React.createElement("div", {
               className: "w-full flex flex-wrap border-gray-100 border-y"
             }, React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
@@ -91,7 +82,10 @@ function PDP_Normal_ContentsGuide_Buyer$PC$WholeFood(Props) {
                 }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
                   k: "생산자(수입자)",
                   v: "컨텐츠 참조"
-                }), React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, tmp), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
+                }), React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
+                  k: "원산지",
+                  v: props.origin
+                }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
                   k: "제조연월일",
                   v: "컨텐츠 참조"
                 }), React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
@@ -119,13 +113,12 @@ var WholeFood = {
   make: PDP_Normal_ContentsGuide_Buyer$PC$WholeFood
 };
 
-function PDP_Normal_ContentsGuide_Buyer$PC$ProcessedFood(Props) {
-  var displayName = Props.displayName;
+function PDP_Normal_ContentsGuide_Buyer$PC$ProcessedFood(props) {
   return React.createElement("div", {
               className: "w-full flex flex-wrap border-gray-100 border-y"
             }, React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
                   k: "제품명",
-                  v: displayName
+                  v: props.displayName
                 }), React.createElement(PDP_Normal_ContentsGuide_Buyer$PC$Info, {
                   k: "식품의 유형",
                   v: "컨텐츠 참조"
@@ -163,9 +156,8 @@ var ProcessedFood = {
   make: PDP_Normal_ContentsGuide_Buyer$PC$ProcessedFood
 };
 
-function PDP_Normal_ContentsGuide_Buyer$PC(Props) {
-  var query = Props.query;
-  var match = use(query);
+function PDP_Normal_ContentsGuide_Buyer$PC(props) {
+  var match = use(props.query);
   var notationInformationType = match.notationInformationType;
   var displayName = match.displayName;
   if (notationInformationType !== undefined) {
@@ -193,22 +185,20 @@ var PC = {
   make: PDP_Normal_ContentsGuide_Buyer$PC
 };
 
-function PDP_Normal_ContentsGuide_Buyer$MO$Info(Props) {
-  var k = Props.k;
-  var v = Props.v;
+function PDP_Normal_ContentsGuide_Buyer$MO$Info(props) {
   return React.createElement("div", {
               className: "flex items-center"
             }, React.createElement("div", {
                   className: "w-[140px] p-[10px] h-full flex items-center bg-gray-50"
                 }, React.createElement("span", {
                       className: "text-gray-900 text-[14px]"
-                    }, Belt_Option.mapWithDefault(k, null, (function (prim) {
+                    }, Belt_Option.mapWithDefault(props.k, null, (function (prim) {
                             return ReactNl2br(prim);
                           })))), React.createElement("div", {
                   className: "p-[10px] h-full flex items-center"
                 }, React.createElement("span", {
                       className: "text-gray-700 text-[14px]"
-                    }, Belt_Option.mapWithDefault(v, null, (function (prim) {
+                    }, Belt_Option.mapWithDefault(props.v, null, (function (prim) {
                             return ReactNl2br(prim);
                           })))));
 }
@@ -217,15 +207,8 @@ var Info$1 = {
   make: PDP_Normal_ContentsGuide_Buyer$MO$Info
 };
 
-function PDP_Normal_ContentsGuide_Buyer$MO$WholeFood(Props) {
-  var displayName = Props.displayName;
-  var origin = Props.origin;
-  var tmp = {
-    k: "원산지"
-  };
-  if (origin !== undefined) {
-    tmp.v = Caml_option.valFromOption(origin);
-  }
+function PDP_Normal_ContentsGuide_Buyer$MO$WholeFood(props) {
+  var displayName = props.displayName;
   return React.createElement("div", {
               className: "w-full border-gray-100 border-y"
             }, React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
@@ -237,7 +220,10 @@ function PDP_Normal_ContentsGuide_Buyer$MO$WholeFood(Props) {
                 }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
                   k: "생산자(수입자)",
                   v: "컨텐츠 참조"
-                }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, tmp), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
+                }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
+                  k: "원산지",
+                  v: props.origin
+                }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
                   k: "제조연월일",
                   v: "컨텐츠 참조"
                 }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
@@ -265,13 +251,12 @@ var WholeFood$1 = {
   make: PDP_Normal_ContentsGuide_Buyer$MO$WholeFood
 };
 
-function PDP_Normal_ContentsGuide_Buyer$MO$ProcessedFood(Props) {
-  var displayName = Props.displayName;
+function PDP_Normal_ContentsGuide_Buyer$MO$ProcessedFood(props) {
   return React.createElement("div", {
               className: "w-full border-gray-100 border-y"
             }, React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
                   k: "제품명",
-                  v: displayName
+                  v: props.displayName
                 }), React.createElement(PDP_Normal_ContentsGuide_Buyer$Divider, {}), React.createElement(PDP_Normal_ContentsGuide_Buyer$MO$Info, {
                   k: "식품의 유형",
                   v: "컨텐츠 참조"
@@ -309,9 +294,8 @@ var ProcessedFood$1 = {
   make: PDP_Normal_ContentsGuide_Buyer$MO$ProcessedFood
 };
 
-function PDP_Normal_ContentsGuide_Buyer$MO(Props) {
-  var query = Props.query;
-  var match = use(query);
+function PDP_Normal_ContentsGuide_Buyer$MO(props) {
+  var match = use(props.query);
   var notationInformationType = match.notationInformationType;
   var displayName = match.displayName;
   if (notationInformationType !== undefined) {

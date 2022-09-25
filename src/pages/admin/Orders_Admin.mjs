@@ -175,7 +175,7 @@ function displayRefundReason(rr) {
   }
 }
 
-function Orders_Admin$Orders(Props) {
+function Orders_Admin$Orders(props) {
   var router = Router.useRouter();
   var user = CustomHooks.Auth.use(undefined);
   var match = Swr.useSWRConfig();
@@ -672,7 +672,7 @@ var Orders = {
   make: Orders_Admin$Orders
 };
 
-function Orders_Admin(Props) {
+function Orders_Admin(props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(Orders_Admin$Orders, {}),
               title: "관리자 주문서 조회"

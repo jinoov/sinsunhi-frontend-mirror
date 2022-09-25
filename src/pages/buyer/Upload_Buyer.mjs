@@ -20,7 +20,7 @@ import * as ChannelTalkHelper from "../../utils/ChannelTalkHelper.mjs";
 import * as Guide_Upload_Buyer from "../../components/Guide_Upload_Buyer.mjs";
 import * as UploadStatus_Buyer from "../../components/UploadStatus_Buyer.mjs";
 
-function Upload_Buyer$UserDeposit(Props) {
+function Upload_Buyer$UserDeposit(props) {
   var router = Router.useRouter();
   var status = CustomHooks.UserDeposit.use(new URLSearchParams(router.query).toString());
   var tmp;
@@ -63,25 +63,22 @@ var UserDeposit = {
   make: Upload_Buyer$UserDeposit
 };
 
-function Upload_Buyer$Tab$Selected(Props) {
-  var children = Props.children;
+function Upload_Buyer$Tab$Selected(props) {
   return React.createElement("div", {
               className: "pb-4 border-b border-gray-800 h-full"
-            }, children);
+            }, props.children);
 }
 
 var Selected = {
   make: Upload_Buyer$Tab$Selected
 };
 
-function Upload_Buyer$Tab$Unselected(Props) {
-  var href = Props.href;
-  var children = Props.children;
+function Upload_Buyer$Tab$Unselected(props) {
   return React.createElement("div", {
               className: "pb-4 text-gray-600"
             }, React.createElement(Link, {
-                  href: href,
-                  children: children
+                  href: props.href,
+                  children: props.children
                 }));
 }
 
@@ -89,18 +86,17 @@ var Unselected = {
   make: Upload_Buyer$Tab$Unselected
 };
 
-function Upload_Buyer$Tab$Container(Props) {
-  var children = Props.children;
+function Upload_Buyer$Tab$Container(props) {
   return React.createElement("div", {
               className: "container max-w-lg mx-auto p-7 pb-0 sm:shadow-gl sm:mt-4 border-b flex gap-5 text-lg font-bold"
-            }, children);
+            }, props.children);
 }
 
 var Container = {
   make: Upload_Buyer$Tab$Container
 };
 
-function Upload_Buyer$Tab$Prepaid(Props) {
+function Upload_Buyer$Tab$Prepaid(props) {
   var buyer = CustomHooks.AfterPayCredit.use(undefined);
   if (typeof buyer === "number" || !(buyer.TAG === /* Loaded */0 && buyer._0.credit.isAfterPayEnabled)) {
     return null;
@@ -120,7 +116,7 @@ var Prepaid = {
   make: Upload_Buyer$Tab$Prepaid
 };
 
-function Upload_Buyer$Tab$AfterPay(Props) {
+function Upload_Buyer$Tab$AfterPay(props) {
   return React.createElement(Upload_Buyer$Tab$Container, {
               children: null
             }, React.createElement(Upload_Buyer$Tab$Unselected, {
@@ -143,7 +139,7 @@ var Tab = {
   AfterPay: AfterPay
 };
 
-function Upload_Buyer(Props) {
+function Upload_Buyer(props) {
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;

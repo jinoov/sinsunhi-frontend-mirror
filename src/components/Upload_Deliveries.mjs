@@ -9,9 +9,9 @@ import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as IconCloseInput from "./svgs/IconCloseInput.mjs";
 import * as UploadFileToS3PresignedUrl from "../utils/UploadFileToS3PresignedUrl.mjs";
 
-function Upload_Deliveries(Props) {
-  var onSuccess = Props.onSuccess;
-  var onFailure = Props.onFailure;
+function Upload_Deliveries(props) {
+  var onFailure = props.onFailure;
+  var onSuccess = props.onSuccess;
   var match = React.useState(function () {
         
       });

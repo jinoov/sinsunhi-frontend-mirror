@@ -3,7 +3,8 @@
 import * as Env from "../../constants/Env.mjs";
 import * as Swr from "swr";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
@@ -63,7 +64,7 @@ function use(param) {
   var match = ReactRelay.useMutation(TransactionsBuyerMutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -98,21 +99,21 @@ var Mutation = {
   use: use
 };
 
-function Transactions_Buyer$Summary(Props) {
-  return React.createElement("div", {
+function Transactions_Buyer$Summary(props) {
+  return React$1.createElement("div", {
               className: "mt-4 p-5 lg:px-7 shadow-gl bg-white rounded"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex flex-col lg:flex-row justify-between items-center"
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "w-full flex items-center gap-3 lg:text-xl font-bold"
-                    }, React.createElement("h2", undefined, "주문가능 잔액"), React.createElement(Buyer_Deposit_Detail_Button_Admin.Summary.Amount.make, {
+                    }, React$1.createElement("h2", undefined, "주문가능 잔액"), React$1.createElement(Buyer_Deposit_Detail_Button_Admin.Summary.Amount.make, {
                           kind: /* Deposit */6,
                           className: "text-primary"
-                        })), React.createElement("span", {
+                        })), React$1.createElement("span", {
                       className: "flex flex-col lg:flex-row w-full mt-7 lg:mt-0 lg:justify-end"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "flex gap-3 mr-3"
-                        }, React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer.make, {}), React.createElement(Buyer_Deposit_Detail_Button_Admin.make, {})), React.createElement(Cash_Charge_Button_Buyer.make, {
+                        }, React$1.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer.make, {}), React$1.createElement(Buyer_Deposit_Detail_Button_Admin.make, {})), React$1.createElement(Cash_Charge_Button_Buyer.make, {
                           hasRequireTerms: false,
                           buttonClassName: "px-3 mt-2 lg:mt-0 h-9 max-w-fit rounded-lg text-white whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-150 focus:ring-offset-1 bg-primary",
                           buttonText: "결제하기"
@@ -123,13 +124,13 @@ var Summary = {
   make: Transactions_Buyer$Summary
 };
 
-function Transactions_Buyer$List(Props) {
-  var status = Props.status;
+function Transactions_Buyer$List(props) {
+  var status = props.status;
   if (typeof status === "number") {
-    return React.createElement("div", undefined, "로딩 중..");
+    return React$1.createElement("div", undefined, "로딩 중..");
   }
   if (status.TAG !== /* Loaded */0) {
-    return React.createElement(ErrorPanel.make, {
+    return React$1.createElement(ErrorPanel.make, {
                 error: status._0
               });
   }
@@ -137,16 +138,15 @@ function Transactions_Buyer$List(Props) {
   var tmp;
   if (transactions$p.TAG === /* Ok */0) {
     var transactions$p$1 = transactions$p._0;
-    tmp = React.createElement("ol", {
+    tmp = React$1.createElement("ol", {
           className: "divide-y divide-gray-300 lg:divide-gray-100 lg:list-height-buyer lg:overflow-y-scroll"
         }, transactions$p$1.data.length !== 0 ? Garter_Array.map(transactions$p$1.data, (function (transaction) {
-                  return React.createElement(Transaction_Buyer.make, {
-                              transaction: transaction,
-                              key: String(transaction.id)
-                            });
-                })) : React.createElement(EmptyOrders.make, {}));
+                  return React.createElementWithKey(Transaction_Buyer.make, {
+                              transaction: transaction
+                            }, String(transaction.id));
+                })) : React$1.createElement(EmptyOrders.make, {}));
   } else {
-    tmp = React.createElement(EmptyOrders.make, {});
+    tmp = React$1.createElement(EmptyOrders.make, {});
   }
   var tmp$1;
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
@@ -155,9 +155,9 @@ function Transactions_Buyer$List(Props) {
     var transactions$p$2 = CustomHooks.Transaction.response_decode(status._0);
     if (transactions$p$2.TAG === /* Ok */0) {
       var transactions$p$3 = transactions$p$2._0;
-      tmp$1 = React.createElement("div", {
+      tmp$1 = React$1.createElement("div", {
             className: "flex justify-center py-5"
-          }, React.createElement(Pagination.make, {
+          }, React$1.createElement(Pagination.make, {
                 pageDisplySize: Constants.pageDisplySize,
                 itemPerPage: transactions$p$3.limit,
                 total: transactions$p$3.count
@@ -166,19 +166,19 @@ function Transactions_Buyer$List(Props) {
       tmp$1 = null;
     }
   }
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
                   className: "w-full overflow-x-scroll"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "text-sm lg:min-w-max"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "hidden lg:grid lg:grid-cols-4-buyer-transaction bg-gray-100 text-gray-500 h-12"
-                        }, React.createElement("div", {
+                        }, React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, "정산유형"), React.createElement("div", {
+                            }, "정산유형"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, "날짜"), React.createElement("div", {
+                            }, "날짜"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center text-center whitespace-nowrap"
-                            }, "해당금액"), React.createElement("div", {
+                            }, "해당금액"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center text-center whitespace-nowrap"
                             }, "잔액")), tmp)), tmp$1);
 }
@@ -193,7 +193,7 @@ function getHtmlInputElementValue(id) {
               }));
 }
 
-function Transactions_Buyer$Transactions(Props) {
+function Transactions_Buyer$Transactions(props) {
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var swr = Swr.useSWRConfig();
@@ -201,7 +201,7 @@ function Transactions_Buyer$Transactions(Props) {
   var match$1 = use(undefined);
   var mutate = match$1[0];
   var status = CustomHooks.Transaction.use(new URLSearchParams(router.query).toString());
-  var match$2 = React.useState(function () {
+  var match$2 = React$1.useState(function () {
         return /* Hide */1;
       });
   var setShowErrorForDownload = match$2[1];
@@ -223,9 +223,9 @@ function Transactions_Buyer$Transactions(Props) {
           type_
         ]]);
   var handleError = function (message, param) {
-    addToast(React.createElement("div", {
+    addToast(React$1.createElement("div", {
               className: "flex items-center"
-            }, React.createElement(IconError.make, {
+            }, React$1.createElement(IconError.make, {
                   width: "24",
                   height: "24",
                   className: "mr-2"
@@ -243,7 +243,7 @@ function Transactions_Buyer$Transactions(Props) {
     "\t 간혹 ATM기기에서는 정상 처리되지 않는 경우가 있으니 창구입금이나 계좌이체 부탁드립니다.",
     "6. 신용카드 결제는 각 카드(개인 또는 사업자)의 한도에 따라서 최대 결제할 수 있는 금액이 정해져 있습니다. 이 금액을 초과한 경우 결제가 실패하게 되오니 양해부탁드립니다."
   ];
-  React.useEffect((function () {
+  React$1.useEffect((function () {
           var window$p = typeof window === "undefined" ? undefined : window;
           if (window$p !== undefined) {
             window$p.mutate_completepayment = (function (param) {
@@ -269,9 +269,9 @@ function Transactions_Buyer$Transactions(Props) {
                               var variant = requestPaymentApprovalKCP.NAME;
                               if (variant === "RequestPaymentApprovalKCPResult") {
                                 window.closeEventKCP();
-                                addToast(React.createElement("div", {
+                                addToast(React$1.createElement("div", {
                                           className: "flex items-center"
-                                        }, React.createElement(IconCheck.make, {
+                                        }, React$1.createElement(IconCheck.make, {
                                               height: "24",
                                               width: "24",
                                               fill: "#12B564",
@@ -316,47 +316,47 @@ function Transactions_Buyer$Transactions(Props) {
           }
           
         }), []);
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
                   className: "sm:px-10 md:px-20 text-enabled-L1"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex flex-col mx-4 lg:flex-row sm:mx-0 py-4 px-5 bg-red-gl rounded-lg text-red-500 mt-4"
-                    }, React.createElement("span", {
+                    }, React$1.createElement("span", {
                           className: "block font-bold mr-4 min-w-max"
-                        }, "[주의사항]"), React.createElement("span", {
+                        }, "[주의사항]"), React$1.createElement("span", {
                           className: "whitespace-pre-wrap"
                         }, Belt_Array.map(notices, (function (notice) {
-                                return React.createElement("p", {
+                                return React$1.createElement("p", {
                                             key: notice
                                           }, notice);
-                              })))), React.createElement(Transactions_Buyer$Summary, {}), React.createElement("div", {
+                              })))), React$1.createElement(Transactions_Buyer$Summary, {}), React$1.createElement("div", {
                       className: "px-5 lg:px-7 mt-4 shadow-gl"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "md:flex md:justify-between pb-4 text-base"
-                        }, React.createElement("div", {
+                        }, React$1.createElement("div", {
                               className: "pt-10 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
-                            }, React.createElement("h3", {
+                            }, React$1.createElement("h3", {
                                   className: "font-bold"
-                                }, "결제내역", React.createElement("span", {
+                                }, "결제내역", React$1.createElement("span", {
                                       className: "ml-1 text-green-gl font-normal"
-                                    }, "" + count + "건")), React.createElement("div", {
+                                    }, "" + count + "건")), React$1.createElement("div", {
                                   className: "flex flex-col lg:flex-row mt-4 lg:mt-0"
-                                }, React.createElement("div", {
+                                }, React$1.createElement("div", {
                                       className: "flex items-center"
-                                    }, React.createElement(Select_CountPerPage.make, {
+                                    }, React$1.createElement(Select_CountPerPage.make, {
                                           className: "mr-2"
-                                        }), React.createElement(Select_Transaction_Status.make, {
+                                        }), React$1.createElement(Select_Transaction_Status.make, {
                                           className: "mr-2"
-                                        })), React.createElement("div", {
+                                        })), React$1.createElement("div", {
                                       className: "flex mt-2 lg:mt-0"
-                                    }, React.createElement(Excel_Download_Request_Button.make, {
+                                    }, React$1.createElement(Excel_Download_Request_Button.make, {
                                           userType: /* Buyer */1,
                                           requestUrl: "/transaction/request-excel",
-                                          bodyOption: bodyOption
-                                        }))))), React.createElement(Transactions_Buyer$List, {
+                                          bodyOption: Caml_option.some(bodyOption)
+                                        }))))), React$1.createElement(Transactions_Buyer$List, {
                           status: status
-                        }))), React.createElement(Dialog.make, {
+                        }))), React$1.createElement(Dialog.make, {
                   isShow: match$2[0],
-                  children: React.createElement("p", {
+                  children: React$1.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "다운로드에 실패하였습니다.\n다시 시도하시기 바랍니다."),
                   onConfirm: (function (param) {
@@ -371,15 +371,15 @@ var Transactions = {
   make: Transactions_Buyer$Transactions
 };
 
-function Transactions_Buyer(Props) {
-  return React.createElement(Authorization.Buyer.make, {
-              children: React.createElement(RescriptReactErrorBoundary.make, {
-                    children: React.createElement(React.Suspense, {
-                          children: React.createElement(Transactions_Buyer$Transactions, {}),
-                          fallback: React.createElement("div", undefined, "로딩중..")
+function Transactions_Buyer(props) {
+  return React$1.createElement(Authorization.Buyer.make, {
+              children: React$1.createElement(RescriptReactErrorBoundary.make, {
+                    children: React$1.createElement(React$1.Suspense, {
+                          children: Caml_option.some(React$1.createElement(Transactions_Buyer$Transactions, {})),
+                          fallback: Caml_option.some(React$1.createElement("div", undefined, "로딩중.."))
                         }),
                     fallback: (function (param) {
-                        return React.createElement("div", undefined, "에러 발생");
+                        return React$1.createElement("div", undefined, "에러 발생");
                       })
                   }),
               title: "결제내역"

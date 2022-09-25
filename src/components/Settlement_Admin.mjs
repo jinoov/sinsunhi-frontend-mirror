@@ -10,8 +10,8 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
 }
 
-function Settlement_Admin$Item$Table(Props) {
-  var settlement = Props.settlement;
+function Settlement_Admin$Item$Table(props) {
+  var settlement = props.settlement;
   return React.createElement("li", {
               className: "grid grid-cols-6-admin-settlement text-gray-700"
             }, React.createElement("div", {
@@ -49,7 +49,7 @@ function Settlement_Admin$Item$Table(Props) {
                     }, "" + Locale.Float.show(undefined, settlement.completeTax, 0) + "원")));
 }
 
-function Settlement_Admin$Item$Table$Loading(Props) {
+function Settlement_Admin$Item$Table$Loading(props) {
   return React.createElement("li", {
               className: "grid grid-cols-6-admin-settlement text-gray-700"
             }, React.createElement("div", {
@@ -88,10 +88,9 @@ var Item = {
   Table: Table
 };
 
-function Settlement_Admin(Props) {
-  var settlement = Props.settlement;
+function Settlement_Admin(props) {
   return React.createElement(Settlement_Admin$Item$Table, {
-              settlement: settlement
+              settlement: props.settlement
             });
 }
 

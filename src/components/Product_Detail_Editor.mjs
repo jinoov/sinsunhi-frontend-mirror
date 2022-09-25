@@ -71,11 +71,8 @@ var Mutation = {
   use: use
 };
 
-function Product_Detail_Editor(Props) {
-  var control = Props.control;
-  var name = Props.name;
-  var defaultValue = Props.defaultValue;
-  var disabled = Props.disabled;
+function Product_Detail_Editor(props) {
+  var disabled = props.disabled;
   var match = use(undefined);
   var mutate = match[0];
   var handleImageUpload = function (blobInfo, success, failure, _progress, param) {
@@ -115,79 +112,76 @@ function Product_Detail_Editor(Props) {
         ]);
   };
   return React.createElement(ReactHookForm$1.Controller, {
-              name: name,
-              control: control,
+              name: props.name,
+              control: Caml_option.some(props.control),
               render: (function (param) {
                   var match = param.field;
                   var onChange = match.onChange;
-                  var tmp = {
-                    initOptions: {
-                      menubar: [
-                        "file",
-                        "edit",
-                        "view",
-                        "insert",
-                        "format",
-                        "tools",
-                        "table",
-                        "help"
-                      ],
-                      toolbar: [
-                        [
-                          "undo",
-                          "redo"
-                        ],
-                        [
-                          "fontsizeselect",
-                          "formatselect",
-                          "bold",
-                          "italic",
-                          "underline",
-                          "forecolor",
-                          "backcolor"
-                        ],
-                        [
-                          "alignleft",
-                          "aligncenter",
-                          "alignright"
-                        ],
-                        [
-                          "outdent",
-                          "indent"
-                        ],
-                        [
-                          "numlist",
-                          "bullist"
-                        ],
-                        [
-                          "image",
-                          "charmap",
-                          "emoticons"
-                        ],
-                        [
-                          "preview",
-                          "fullscreen"
-                        ],
-                        ["media"]
-                      ],
-                      quickbars_insert_toolbar: false,
-                      paste_data_images: true,
-                      images_upload_handler: handleImageUpload
-                    },
-                    height: 800,
-                    plugins: Editor.basicPlugins,
-                    value: Belt_Option.getWithDefault(Js_json.decodeString(match.value), ""),
-                    onEditorChange: (function (value, param) {
-                        Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, value));
-                      })
-                  };
-                  if (disabled !== undefined) {
-                    tmp.disabled = Caml_option.valFromOption(disabled);
-                  }
-                  return React.createElement(Editor.make, tmp);
+                  return React.createElement(Editor.make, {
+                              initOptions: {
+                                menubar: [
+                                  "file",
+                                  "edit",
+                                  "view",
+                                  "insert",
+                                  "format",
+                                  "tools",
+                                  "table",
+                                  "help"
+                                ],
+                                toolbar: [
+                                  [
+                                    "undo",
+                                    "redo"
+                                  ],
+                                  [
+                                    "fontsizeselect",
+                                    "formatselect",
+                                    "bold",
+                                    "italic",
+                                    "underline",
+                                    "forecolor",
+                                    "backcolor"
+                                  ],
+                                  [
+                                    "alignleft",
+                                    "aligncenter",
+                                    "alignright"
+                                  ],
+                                  [
+                                    "outdent",
+                                    "indent"
+                                  ],
+                                  [
+                                    "numlist",
+                                    "bullist"
+                                  ],
+                                  [
+                                    "image",
+                                    "charmap",
+                                    "emoticons"
+                                  ],
+                                  [
+                                    "preview",
+                                    "fullscreen"
+                                  ],
+                                  ["media"]
+                                ],
+                                quickbars_insert_toolbar: false,
+                                paste_data_images: true,
+                                images_upload_handler: handleImageUpload
+                              },
+                              height: 800,
+                              plugins: Editor.basicPlugins,
+                              value: Belt_Option.getWithDefault(Js_json.decodeString(match.value), ""),
+                              onEditorChange: (function (value, param) {
+                                  Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, value));
+                                }),
+                              disabled: disabled
+                            });
                 }),
-              defaultValue: Belt_Option.getWithDefault(defaultValue, ""),
-              rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+              defaultValue: Caml_option.some(Belt_Option.getWithDefault(props.defaultValue, "")),
+              rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
             });
 }
 

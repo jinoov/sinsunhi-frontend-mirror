@@ -79,10 +79,8 @@ var minusIcon = MinusSvg;
 
 var plusIcon = PlusSvg;
 
-function Cart_QuantitySelector(Props) {
-  var prefix = Props.prefix;
-  var quantity = Props.quantity;
-  var cartId = Props.cartId;
+function Cart_QuantitySelector(props) {
+  var cartId = props.cartId;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = ReactHookForm$1.useFormContext({
@@ -101,7 +99,7 @@ function Cart_QuantitySelector(Props) {
   };
   var match$2 = use(undefined);
   var mutate = match$2[0];
-  var formNames = Cart_Buyer_Form.names(prefix);
+  var formNames = Cart_Buyer_Form.names(props.prefix);
   var handleChange = function (changeFn, fn, v) {
     return function (param) {
       return ReactEvents.interceptingHandler((function (param) {
@@ -154,7 +152,7 @@ function Cart_QuantitySelector(Props) {
   };
   return React.createElement(ReactHookForm$1.Controller, {
               name: formNames.quantity,
-              control: match$1.control,
+              control: Caml_option.some(match$1.control),
               render: (function (param) {
                   var match = param.field;
                   var value = match.value;
@@ -175,7 +173,7 @@ function Cart_QuantitySelector(Props) {
                                       src: plusIcon
                                     })));
                 }),
-              defaultValue: quantity
+              defaultValue: Caml_option.some(props.quantity)
             });
 }
 

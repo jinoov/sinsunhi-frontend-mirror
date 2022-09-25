@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -59,7 +60,7 @@ function makeSortLabel(sort) {
   }
 }
 
-function MatchingSortSelect(Props) {
+function MatchingSortSelect(props) {
   var router = Router.useRouter();
   var label = Belt_Option.mapWithDefault(Belt_Option.flatMap(Js_dict.get(router.query, "sort"), decodeSort), "최신순", makeSortLabel);
   var match = React.useState(function () {
@@ -87,7 +88,7 @@ function MatchingSortSelect(Props) {
                   className: "text-gray-600 text-sm"
                 }, "정렬기준: "), React.createElement(ReactDropdownMenu.Root, {
                   children: null,
-                  open: match[0],
+                  _open: match[0],
                   onOpenChange: (function (to_) {
                       setOpen(function (param) {
                             return to_;
@@ -107,17 +108,17 @@ function MatchingSortSelect(Props) {
                       align: "start",
                       className: "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: makeSortLabel("UPDATED_DESC"),
+                          children: Caml_option.some(makeSortLabel("UPDATED_DESC")),
                           className: "w-[140px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg cursor-pointer",
                           onSelect: makeOnSelect("UPDATED_DESC")
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: makeSortLabel("PRICE_PER_KG_ASC"),
+                          children: Caml_option.some(makeSortLabel("PRICE_PER_KG_ASC")),
                           className: "w-[140px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg",
                           onSelect: makeOnSelect("PRICE_PER_KG_ASC")
                         }))));
 }
 
-function MatchingSortSelect$MO(Props) {
+function MatchingSortSelect$MO(props) {
   var router = Router.useRouter();
   var label = Belt_Option.mapWithDefault(Belt_Option.flatMap(Js_dict.get(router.query, "sort"), decodeSort), "최신순", makeSortLabel);
   var match = React.useState(function () {
@@ -143,7 +144,7 @@ function MatchingSortSelect$MO(Props) {
               className: "flex items-center"
             }, React.createElement(ReactDropdownMenu.Root, {
                   children: null,
-                  open: match[0],
+                  _open: match[0],
                   onOpenChange: (function (to_) {
                       setOpen(function (param) {
                             return to_;
@@ -163,11 +164,11 @@ function MatchingSortSelect$MO(Props) {
                       align: "start",
                       className: "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: makeSortLabel("UPDATED_DESC"),
+                          children: Caml_option.some(makeSortLabel("UPDATED_DESC")),
                           className: "w-[140px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg cursor-pointer",
                           onSelect: makeOnSelect("UPDATED_DESC")
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: makeSortLabel("PRICE_PER_KG_ASC"),
+                          children: Caml_option.some(makeSortLabel("PRICE_PER_KG_ASC")),
                           className: "w-[140px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg",
                           onSelect: makeOnSelect("PRICE_PER_KG_ASC")
                         }))));

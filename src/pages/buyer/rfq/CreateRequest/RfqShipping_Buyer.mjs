@@ -2,7 +2,8 @@
 
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import * as DS_Icon from "../../../../components/svgs/DS_Icon.mjs";
 import * as DataGtm from "../../../../utils/DataGtm.mjs";
 import * as DS_Toast from "../../../../components/common/container/DS_Toast.mjs";
@@ -49,7 +50,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(RfqShippingBuyer_RfqNextAcceptableDeliveryDate_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqShippingBuyer_RfqNextAcceptableDeliveryDate_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -127,7 +128,7 @@ function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$1(param) {
   var match = ReactRelay.useQueryLoader(RfqShippingBuyer_RfqTerms_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqShippingBuyer_RfqTerms_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -205,7 +206,7 @@ function use$2(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$2(param) {
   var match = ReactRelay.useQueryLoader(RfqShippingBuyer_Holidays_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqShippingBuyer_Holidays_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -307,7 +308,7 @@ function use$3(param) {
   var match = ReactRelay.useMutation(RfqShippingBuyer_UpdateDeliveryAddress_Mutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -383,7 +384,7 @@ function use$4(param) {
   var match = ReactRelay.useMutation(RfqShippingBuyer_UpdateTermAgreement_Mutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -427,25 +428,23 @@ function convertNumberInputValue(value) {
   return value.replace(/[^0-9]/g, "").replace(/^[0]/g, "");
 }
 
-function RfqShipping_Buyer$TriggerListitem(Props) {
-  var leftText = Props.leftText;
-  var rightText = Props.rightText;
-  var hasDividerOpt = Props.hasDivider;
-  var hasDivider = hasDividerOpt !== undefined ? hasDividerOpt : true;
-  return React.createElement("li", {
+function RfqShipping_Buyer$TriggerListitem(props) {
+  var hasDivider = props.hasDivider;
+  var hasDivider$1 = hasDivider !== undefined ? hasDivider : true;
+  return React$1.createElement("li", {
               className: Cx.cx([
                     "flex items-center min-h-[56px] mx-5 cursor-pointer",
-                    hasDivider ? "border-b-2 border-b-border-disabled" : ""
+                    hasDivider$1 ? "border-b-2 border-b-border-disabled" : ""
                   ])
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex flex-col justify-between truncate"
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "block text-base truncate text-text-L1"
-                    }, leftText)), React.createElement("div", {
+                    }, props.leftText)), React$1.createElement("div", {
                   className: "ml-auto pl-2"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex"
-                    }, React.createElement("span", undefined, rightText), React.createElement(DS_Icon.Common.ArrowRightLarge1.make, {
+                    }, React$1.createElement("span", undefined, props.rightText), React$1.createElement(DS_Icon.Common.ArrowRightLarge1.make, {
                           height: "24",
                           width: "24",
                           fill: "#999999",
@@ -457,13 +456,9 @@ var TriggerListitem = {
   make: RfqShipping_Buyer$TriggerListitem
 };
 
-function RfqShipping_Buyer$CalendarListitem(Props) {
-  var leftText = Props.leftText;
-  var currentDate = Props.currentDate;
-  var handleChangeDate = Props.handleChangeDate;
-  var minDate = Props.minDate;
-  var maxDate = Props.maxDate;
-  var holidays = Props.holidays;
+function RfqShipping_Buyer$CalendarListitem(props) {
+  var holidays = props.holidays;
+  var handleChangeDate = props.handleChangeDate;
   var checkHolidays = function (e) {
     var date = Format(e, "yyyy-MM-dd");
     var h = Belt_Array.map(holidays, (function (x) {
@@ -471,53 +466,50 @@ function RfqShipping_Buyer$CalendarListitem(Props) {
           }));
     return h.includes(date);
   };
-  var tmp = {
-    id: "date",
-    onChange: (function (e) {
-        var newDate = e.detail.valueAsDate;
-        handleChangeDate(function (param) {
-              return newDate;
-            });
-      }),
-    maxDate: Format(maxDate, "yyyy-MM-dd"),
-    minDate: Format(minDate, "yyyy-MM-dd"),
-    firstDayOfWeek: 0,
-    isDateDisabled: (function (e) {
-        if (checkHolidays(e)) {
-          return true;
-        } else if (e.getDay() === 0) {
-          return true;
-        } else {
-          return e.getDay() === 6;
-        }
-      }),
-    onFocus: (function (param) {
-        Belt_Option.forEach(Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById("date")), Webapi__Dom__Element.asHtmlElement), (function (inputEl$p) {
-                inputEl$p.blur();
-              }));
-      })
-  };
-  if (currentDate !== undefined) {
-    tmp.date = Caml_option.valFromOption(currentDate);
-  }
-  return React.createElement("li", {
+  return React$1.createElement("li", {
               className: "flex items-center min-h-[56px] mx-5 cursor-pointer border-b-2 border-b-border-disabled"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex flex-col justify-between truncate"
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "block text-base truncate text-text-L1"
-                    }, leftText)), React.createElement("div", {
+                    }, props.leftText)), React$1.createElement("div", {
                   className: "ml-auto pl-2"
-                }, React.createElement(DatePicker.make, tmp)));
+                }, React$1.createElement(DatePicker.make, {
+                      id: "date",
+                      onChange: (function (e) {
+                          var newDate = e.detail.valueAsDate;
+                          handleChangeDate(function (param) {
+                                return newDate;
+                              });
+                        }),
+                      date: props.currentDate,
+                      maxDate: Format(props.maxDate, "yyyy-MM-dd"),
+                      minDate: Format(props.minDate, "yyyy-MM-dd"),
+                      firstDayOfWeek: 0,
+                      isDateDisabled: (function (e) {
+                          if (checkHolidays(e)) {
+                            return true;
+                          } else if (e.getDay() === 0) {
+                            return true;
+                          } else {
+                            return e.getDay() === 6;
+                          }
+                        }),
+                      onFocus: (function (param) {
+                          Belt_Option.forEach(Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById("date")), Webapi__Dom__Element.asHtmlElement), (function (inputEl$p) {
+                                  inputEl$p.blur();
+                                }));
+                        })
+                    })));
 }
 
 var CalendarListitem = {
   make: RfqShipping_Buyer$CalendarListitem
 };
 
-function RfqShipping_Buyer$DeliveryMethodContent(Props) {
-  var currentDeliveryMethod = Props.currentDeliveryMethod;
-  var handleChangeDeliveryMethod = Props.handleChangeDeliveryMethod;
+function RfqShipping_Buyer$DeliveryMethodContent(props) {
+  var handleChangeDeliveryMethod = props.handleChangeDeliveryMethod;
+  var currentDeliveryMethod = props.currentDeliveryMethod;
   var datas = [
     {
       method: "WAREHOUSE_TRANSFER",
@@ -535,9 +527,9 @@ function RfqShipping_Buyer$DeliveryMethodContent(Props) {
       text: "직접 창고로 오셔서 수령하는 방식이에요"
     }
   ];
-  return React.createElement("ul", undefined, Belt_Array.mapWithIndex(datas, (function (index, data) {
+  return React$1.createElement("ul", undefined, Belt_Array.mapWithIndex(datas, (function (index, data) {
                     var isSelected = data.method === currentDeliveryMethod.method;
-                    return React.createElement("li", {
+                    return React$1.createElement("li", {
                                 key: String(index),
                                 className: "bg-surface flex items-center min-h-[48px] px-5 py-4 cursor-pointer ",
                                 onClick: (function (param) {
@@ -545,19 +537,19 @@ function RfqShipping_Buyer$DeliveryMethodContent(Props) {
                                           return data;
                                         });
                                   })
-                              }, React.createElement("div", {
+                              }, React$1.createElement("div", {
                                     className: "flex flex-col justify-between truncate"
-                                  }, React.createElement("span", {
+                                  }, React$1.createElement("span", {
                                         className: "block text-base truncate text-text-L1 font-bold"
-                                      }, data.title), React.createElement("span", {
+                                      }, data.title), React$1.createElement("span", {
                                         className: "block text-base truncate  font-normal text-text-L2"
-                                      }, data.text)), React.createElement("div", {
+                                      }, data.text)), React$1.createElement("div", {
                                     className: "ml-auto pl-2"
-                                  }, isSelected ? React.createElement(DS_Icon.Common.RadioOnLarge1.make, {
+                                  }, isSelected ? React$1.createElement(DS_Icon.Common.RadioOnLarge1.make, {
                                           height: "24",
                                           width: "24",
                                           fill: "#12B564"
-                                        }) : React.createElement(DS_Icon.Common.RadioOffLarge1.make, {
+                                        }) : React$1.createElement(DS_Icon.Common.RadioOffLarge1.make, {
                                           height: "24",
                                           width: "24",
                                           fill: "#B2B2B2"
@@ -569,10 +561,10 @@ var DeliveryMethodContent = {
   make: RfqShipping_Buyer$DeliveryMethodContent
 };
 
-function RfqShipping_Buyer$SearchAddress(Props) {
-  var onComplete = Props.onComplete;
-  var isShow = Props.isShow;
-  React.useLayoutEffect((function () {
+function RfqShipping_Buyer$SearchAddress(props) {
+  var isShow = props.isShow;
+  var onComplete = props.onComplete;
+  React$1.useLayoutEffect((function () {
           if (isShow) {
             var iframeWrapper = document.getElementById("iframe-embed-addr");
             if (!(iframeWrapper == null)) {
@@ -595,7 +587,7 @@ function RfqShipping_Buyer$SearchAddress(Props) {
           }
           
         }), [isShow]);
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               id: "iframe-embed-addr"
             });
 }
@@ -604,36 +596,35 @@ var SearchAddress = {
   make: RfqShipping_Buyer$SearchAddress
 };
 
-function RfqShipping_Buyer$AddressDrawer(Props) {
-  var onComplete = Props.onComplete;
-  var closeDrawer = Props.closeDrawer;
-  var isShow = Props.isShow;
-  return React.createElement(DS_BottomDrawer.Root.make, {
+function RfqShipping_Buyer$AddressDrawer(props) {
+  var isShow = props.isShow;
+  var closeDrawer = props.closeDrawer;
+  return React$1.createElement(DS_BottomDrawer.Root.make, {
               isShow: isShow,
               onClose: (function (param) {
                   Curry._1(closeDrawer, undefined);
                 }),
               children: null,
               full: true
-            }, React.createElement(DS_BottomDrawer.Header.make, {}), React.createElement(DS_BottomDrawer.Body.make, {
-                  children: React.createElement(RescriptReactErrorBoundary.make, {
-                        children: React.createElement(RfqShipping_Buyer$SearchAddress, {
-                              onComplete: onComplete,
+            }, React$1.createElement(DS_BottomDrawer.Header.make, {}), React$1.createElement(DS_BottomDrawer.Body.make, {
+                  children: React$1.createElement(RescriptReactErrorBoundary.make, {
+                        children: React$1.createElement(RfqShipping_Buyer$SearchAddress, {
+                              onComplete: props.onComplete,
                               isShow: isShow
                             }),
                         fallback: (function (param) {
-                            return React.createElement("div", {
+                            return React$1.createElement("div", {
                                         className: "flex items-center justify-center"
-                                      }, React.createElement("contents", {
+                                      }, React$1.createElement("contents", {
                                             className: "flex flex-col items-center justify-center"
-                                          }, React.createElement(IconNotFound.make, {
+                                          }, React$1.createElement(IconNotFound.make, {
                                                 width: "160",
                                                 height: "160"
-                                              }), React.createElement("h1", {
+                                              }), React$1.createElement("h1", {
                                                 className: "mt-7 text-2xl text-gray-800 font-bold"
-                                              }, "처리중 오류가 발생하였습니다."), React.createElement("span", {
+                                              }, "처리중 오류가 발생하였습니다."), React$1.createElement("span", {
                                                 className: "mt-4 text-gray-800"
-                                              }, "페이지를 불러오는 중에 문제가 발생하였습니다."), React.createElement("span", {
+                                              }, "페이지를 불러오는 중에 문제가 발생하였습니다."), React$1.createElement("span", {
                                                 className: "text-gray-800"
                                               }, "잠시 후 재시도해 주세요.")));
                           })
@@ -645,22 +636,19 @@ var AddressDrawer = {
   make: RfqShipping_Buyer$AddressDrawer
 };
 
-function RfqShipping_Buyer$AddressButton(Props) {
-  var leftText = Props.leftText;
-  var rightText = Props.rightText;
-  var handleClick = Props.handleClick;
-  return React.createElement("li", {
+function RfqShipping_Buyer$AddressButton(props) {
+  return React$1.createElement("li", {
               className: "flex items-center min-h-[56px] mx-5 cursor-pointer border-b-2 border-b-border-disabled",
-              onClick: handleClick
-            }, React.createElement("div", {
+              onClick: props.handleClick
+            }, React$1.createElement("div", {
                   className: "flex flex-col justify-between truncate"
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "block text-base truncate text-text-L1"
-                    }, leftText)), React.createElement("div", {
+                    }, props.leftText)), React$1.createElement("div", {
                   className: "ml-auto pl-2"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex"
-                    }, React.createElement("span", undefined, rightText), React.createElement(DS_Icon.Common.ArrowRightLarge1.make, {
+                    }, React$1.createElement("span", undefined, props.rightText), React$1.createElement(DS_Icon.Common.ArrowRightLarge1.make, {
                           height: "24",
                           width: "24",
                           fill: "#999999"
@@ -671,9 +659,9 @@ var AddressButton = {
   make: RfqShipping_Buyer$AddressButton
 };
 
-function RfqShipping_Buyer$DeliveryCycleContent(Props) {
-  var currentDeliveryCycle = Props.currentDeliveryCycle;
-  var handleChangeDeliveryCycle = Props.handleChangeDeliveryCycle;
+function RfqShipping_Buyer$DeliveryCycleContent(props) {
+  var handleChangeDeliveryCycle = props.handleChangeDeliveryCycle;
+  var currentDeliveryCycle = props.currentDeliveryCycle;
   var arr = [
     {
       key: "once",
@@ -718,35 +706,34 @@ function RfqShipping_Buyer$DeliveryCycleContent(Props) {
       dayCount: "90"
     }
   ];
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "bg-surface"
             }, Belt_Array.map(arr, (function (data) {
                     var isSelected = currentDeliveryCycle.key === data.key;
-                    return React.createElement(React.Fragment, {
-                                children: React.createElement("li", {
+                    return React.createElementWithKey(React$1.Fragment, {
+                                children: React$1.createElement("li", {
                                       className: "flex py-4 items-center min-h-[48px] px-5 cursor-pointer ",
                                       onClick: (function (param) {
                                           handleChangeDeliveryCycle(function (param) {
                                                 return data;
                                               });
                                         })
-                                    }, React.createElement("div", {
+                                    }, React$1.createElement("div", {
                                           className: "flex flex-col justify-between truncate"
-                                        }, React.createElement("span", {
+                                        }, React$1.createElement("span", {
                                               className: "block text-base truncate text-text-L1"
-                                            }, data.text)), React.createElement("div", {
+                                            }, data.text)), React$1.createElement("div", {
                                           className: "ml-auto pl-2"
-                                        }, isSelected ? React.createElement(DS_Icon.Common.RadioOnLarge1.make, {
+                                        }, isSelected ? React$1.createElement(DS_Icon.Common.RadioOnLarge1.make, {
                                                 height: "24",
                                                 width: "24",
                                                 fill: "#12B564"
-                                              }) : React.createElement(DS_Icon.Common.RadioOffLarge1.make, {
+                                              }) : React$1.createElement(DS_Icon.Common.RadioOffLarge1.make, {
                                                 height: "24",
                                                 width: "24",
                                                 fill: "#B2B2B2"
-                                              }))),
-                                key: data.key
-                              });
+                                              })))
+                              }, data.key);
                   })));
 }
 
@@ -754,8 +741,8 @@ var DeliveryCycleContent = {
   make: RfqShipping_Buyer$DeliveryCycleContent
 };
 
-function RfqShipping_Buyer$Shipping(Props) {
-  var requestId = Props.requestId;
+function RfqShipping_Buyer$Shipping(props) {
+  var requestId = props.requestId;
   CustomHooks.useSmoothScroll(undefined);
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
@@ -786,15 +773,15 @@ function RfqShipping_Buyer$Shipping(Props) {
   var updateRfqRequest = match$5[0];
   var match$6 = use$4(undefined);
   var updateTermAgreement = match$6[0];
-  var match$7 = React.useState(function () {
+  var match$7 = React$1.useState(function () {
         return false;
       });
   var setIsAddressDrawerShow = match$7[1];
-  var match$8 = React.useState(function () {
+  var match$8 = React$1.useState(function () {
         
       });
   var selectedDeliveryDate = match$8[0];
-  var match$9 = React.useState(function () {
+  var match$9 = React$1.useState(function () {
         return {
                 method: "",
                 title: "선택해주세요",
@@ -802,7 +789,7 @@ function RfqShipping_Buyer$Shipping(Props) {
               };
       });
   var selectedDeliveryMethod = match$9[0];
-  var match$10 = React.useState(function () {
+  var match$10 = React$1.useState(function () {
         return {
                 key: "none",
                 text: "선택해주세요",
@@ -811,18 +798,18 @@ function RfqShipping_Buyer$Shipping(Props) {
               };
       });
   var deliveryCycle = match$10[0];
-  var match$11 = React.useState(function () {
+  var match$11 = React$1.useState(function () {
         return "";
       });
   var setDeliveryAddress = match$11[1];
   var deliveryAddress = match$11[0];
-  var match$12 = React.useState(function () {
+  var match$12 = React$1.useState(function () {
         return false;
       });
   var setIsAgreedPrivacyPolicy = match$12[1];
   var isAgreedPrivacyPolicy = match$12[0];
-  var deliveryMethodRef = React.useRef(null);
-  var deliveryCycleRef = React.useRef(null);
+  var deliveryMethodRef = React$1.useRef(null);
+  var deliveryCycleRef = React$1.useRef(null);
   var scrollToTargetItem = function (text) {
     var moveScroll = function (el) {
       setTimeout((function (param) {
@@ -935,37 +922,37 @@ function RfqShipping_Buyer$Shipping(Props) {
           undefined
         ]);
   };
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl pt-14 pb-[96px] "
-            }, React.createElement(DS_TopNavigation.Detail.Root.make, {
-                  children: React.createElement(DS_TopNavigation.Detail.Left.make, {
-                        children: React.createElement("a", {
+            }, React$1.createElement(DS_TopNavigation.Detail.Root.make, {
+                  children: React$1.createElement(DS_TopNavigation.Detail.Left.make, {
+                        children: React$1.createElement("a", {
                               className: "cursor-pointer",
                               onClick: (function (param) {
                                   window.history.back();
                                 })
-                            }, React.createElement(DS_Icon.Common.ArrowLeftXLarge1.make, {
+                            }, React$1.createElement(DS_Icon.Common.ArrowLeftXLarge1.make, {
                                   height: "32",
                                   width: "32",
                                   className: "relative"
                                 }))
                       }),
                   className: "bg-white z-[5]"
-                }), React.createElement("div", {
+                }), React$1.createElement("div", {
                   className: "p-5"
-                }, React.createElement("h2", {
+                }, React$1.createElement("h2", {
                       className: "text-xl font-bold leading-8"
-                    }, React.createElement("span", {
+                    }, React$1.createElement("span", {
                           className: "block"
-                        }, "마지막으로"), React.createElement("span", undefined, "배송정보를 알려주세요"))), React.createElement("div", undefined, React.createElement("div", {
+                        }, "마지막으로"), React$1.createElement("span", undefined, "배송정보를 알려주세요"))), React$1.createElement("div", undefined, React$1.createElement("div", {
                       className: ""
-                    }, React.createElement(DS_Accordion.RootSingle.make, {
+                    }, React$1.createElement(DS_Accordion.RootSingle.make, {
                           children: null,
-                          type: "single",
+                          _type: "single",
                           collapsible: true,
                           onValueChange: scrollToTargetItem
-                        }, React.createElement(DS_Accordion.Item.make, {
-                              children: React.createElement(RfqShipping_Buyer$CalendarListitem, {
+                        }, React$1.createElement(DS_Accordion.Item.make, {
+                              children: React$1.createElement(RfqShipping_Buyer$CalendarListitem, {
                                     leftText: "최초 납품 희망일",
                                     currentDate: selectedDeliveryDate,
                                     handleChangeDate: match$8[1],
@@ -974,79 +961,79 @@ function RfqShipping_Buyer$Shipping(Props) {
                                     holidays: match$4.holidays
                                   }),
                               value: "desiredDeliveryDate"
-                            }), React.createElement(DS_Accordion.Item.make, {
+                            }), React$1.createElement(DS_Accordion.Item.make, {
                               children: null,
                               value: "deliveryMethod"
-                            }, React.createElement(DS_Accordion.Header.make, {
-                                  children: React.createElement(DS_Accordion.Trigger.make, {
-                                        children: React.createElement("div", {
+                            }, React$1.createElement(DS_Accordion.Header.make, {
+                                  children: React$1.createElement(DS_Accordion.Trigger.make, {
+                                        children: React$1.createElement("div", {
                                               ref: deliveryMethodRef
-                                            }, React.createElement(RfqShipping_Buyer$TriggerListitem, {
+                                            }, React$1.createElement(RfqShipping_Buyer$TriggerListitem, {
                                                   leftText: "수령방식",
                                                   rightText: selectedDeliveryMethod.title
                                                 })),
                                         className: "w-full"
                                       })
-                                }), React.createElement(DS_Accordion.Content.make, {
-                                  children: React.createElement(RfqShipping_Buyer$DeliveryMethodContent, {
+                                }), React$1.createElement(DS_Accordion.Content.make, {
+                                  children: React$1.createElement(RfqShipping_Buyer$DeliveryMethodContent, {
                                         currentDeliveryMethod: selectedDeliveryMethod,
                                         handleChangeDeliveryMethod: match$9[1]
                                       })
-                                })), React.createElement(DS_Accordion.Item.make, {
-                              children: React.createElement(RfqShipping_Buyer$AddressButton, {
+                                })), React$1.createElement(DS_Accordion.Item.make, {
+                              children: React$1.createElement(RfqShipping_Buyer$AddressButton, {
                                     leftText: "배송지역",
                                     rightText: deliveryAddress === "" ? "선택해주세요" : deliveryAddress,
                                     handleClick: toggleDrawer
                                   }),
                               value: "deliveryAddress"
-                            }), React.createElement(DS_Accordion.Item.make, {
+                            }), React$1.createElement(DS_Accordion.Item.make, {
                               children: null,
                               value: "deliveryCycle"
-                            }, React.createElement(DS_Accordion.Header.make, {
-                                  children: React.createElement(DS_Accordion.Trigger.make, {
-                                        children: React.createElement("div", {
+                            }, React$1.createElement(DS_Accordion.Header.make, {
+                                  children: React$1.createElement(DS_Accordion.Trigger.make, {
+                                        children: React$1.createElement("div", {
                                               ref: deliveryCycleRef
-                                            }, React.createElement(RfqShipping_Buyer$TriggerListitem, {
+                                            }, React$1.createElement(RfqShipping_Buyer$TriggerListitem, {
                                                   leftText: "정기배송 여부",
                                                   rightText: deliveryCycle.text,
                                                   hasDivider: false
                                                 })),
                                         className: "w-full"
                                       })
-                                }), React.createElement(DS_Accordion.Content.make, {
-                                  children: React.createElement(RfqShipping_Buyer$DeliveryCycleContent, {
+                                }), React$1.createElement(DS_Accordion.Content.make, {
+                                  children: React$1.createElement(RfqShipping_Buyer$DeliveryCycleContent, {
                                         currentDeliveryCycle: deliveryCycle,
                                         handleChangeDeliveryCycle: match$10[1]
                                       })
-                                })))), isTermAgree ? null : React.createElement(React.Fragment, undefined, React.createElement("div", {
+                                })))), isTermAgree ? null : React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
                             className: "h-3 bg-border-default-L2"
-                          }), React.createElement("div", {
+                          }), React$1.createElement("div", {
                             className: "pt-7"
-                          }, React.createElement("button", {
+                          }, React$1.createElement("button", {
                                 className: "text-left tab-highlight-color",
                                 onClick: (function (param) {
                                     setIsAgreedPrivacyPolicy(function (prev) {
                                           return !prev;
                                         });
                                   })
-                              }, React.createElement(DS_ListItem.Information1.make, {
-                                    children: React.createElement(DS_ListItem.Information1.Left.make, {
-                                          children: isAgreedPrivacyPolicy ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                              }, React$1.createElement(DS_ListItem.Information1.make, {
+                                    children: React$1.createElement(DS_ListItem.Information1.Left.make, {
+                                          children: isAgreedPrivacyPolicy ? React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
                                                   height: "24",
                                                   width: "24",
                                                   fill: "#12B564"
-                                                }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                                }) : React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
                                                   height: "24",
                                                   width: "24"
                                                 })
                                         }),
                                     title: "개인정보 제공에 동의해주세요",
-                                    content: React.createElement("p", {
+                                    content: React$1.createElement("p", {
                                           className: "pl-8 text-[13px] text-enabled-L2 leading-5 tracking-tight"
-                                        }, React.createElement("div", undefined, "(주)그린랩스는 다음과 같은 목적으로 개인정보를 수집합니다."), React.createElement("div", undefined, "1. 개인정보 수집 항목 : 주소"), React.createElement("div", undefined, "2. 개인정보 수집 목적 : 견적 매칭 서비스 및 구매상품 배송"), React.createElement("div", undefined, "3. 개인정보의 보유 및 이용 기간 : ", React.createElement("span", {
+                                        }, React$1.createElement("div", undefined, "(주)그린랩스는 다음과 같은 목적으로 개인정보를 수집합니다."), React$1.createElement("div", undefined, "1. 개인정보 수집 항목 : 주소"), React$1.createElement("div", undefined, "2. 개인정보 수집 목적 : 견적 매칭 서비스 및 구매상품 배송"), React$1.createElement("div", undefined, "3. 개인정보의 보유 및 이용 기간 : ", React$1.createElement("span", {
                                                   className: "font-bold"
                                                 }, "회원탈퇴 시 즉시 파기"), " 이용자는 개인정보 수집 및 이용 동의를 거부할 권리가 있습니다. 다만, 이에 동의하지 않을 경우 신선매칭 서비스 이용이 어려울 수 있습니다."))
-                                  }))))), React.createElement(DS_ButtonContainer.Floating1.make, {
+                                  }))))), React$1.createElement(DS_ButtonContainer.Floating1.make, {
                   label: "견적 요청 하기",
                   disabled: !isValidItems || match$5[1] || match$6[1],
                   onClick: (function (param) {
@@ -1082,7 +1069,7 @@ function RfqShipping_Buyer$Shipping(Props) {
                         return ;
                       }
                     })
-                }), React.createElement(RfqShipping_Buyer$AddressDrawer, {
+                }), React$1.createElement(RfqShipping_Buyer$AddressDrawer, {
                   onComplete: onCompleteAddressDrawer,
                   closeDrawer: toggleDrawer,
                   isShow: match$7[0]
@@ -1093,25 +1080,25 @@ var Shipping = {
   make: RfqShipping_Buyer$Shipping
 };
 
-function RfqShipping_Buyer(Props) {
-  var requestId = Props.requestId;
+function RfqShipping_Buyer(props) {
+  var requestId = props.requestId;
   var router = Router.useRouter();
   if (requestId !== undefined) {
-    return React.createElement(Authorization.Buyer.make, {
-                children: React.createElement(React.Suspense, {
-                      children: React.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
-                            children: React.createElement(RfqShipping_Buyer$Shipping, {
-                                  requestId: requestId
-                                }),
-                            requestId: requestId
-                          }),
-                      fallback: React.createElement("div", undefined)
+    return React$1.createElement(Authorization.Buyer.make, {
+                children: React$1.createElement(React$1.Suspense, {
+                      children: Caml_option.some(React$1.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
+                                children: React$1.createElement(RfqShipping_Buyer$Shipping, {
+                                      requestId: requestId
+                                    }),
+                                requestId: requestId
+                              })),
+                      fallback: Caml_option.some(React$1.createElement("div", undefined))
                     }),
                 title: "바이어 견적 요청",
-                fallback: null
+                fallback: Caml_option.some(null)
               });
   } else {
-    React.useEffect((function () {
+    React$1.useEffect((function () {
             router.push("/buyer/rfq");
           }), []);
     return null;
@@ -1137,4 +1124,4 @@ export {
   Shipping ,
   make ,
 }
-/* react Not a pure module */
+/* React Not a pure module */

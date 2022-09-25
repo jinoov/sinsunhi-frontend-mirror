@@ -31,8 +31,8 @@ function formatDate(d) {
 
 var Converter$1 = Converter.Status({});
 
-function Order_Detail_Button_Admin(Props) {
-  var order = Props.order;
+function Order_Detail_Button_Admin(props) {
+  var order = props.order;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -300,11 +300,11 @@ function Order_Detail_Button_Admin(Props) {
                           }, "배송정보"), React.createElement("section", {
                             className: "divide-y text-sm text-text-L2 mt-2 border-t border-b"
                           }, tmp), React.createElement(React.Suspense, {
-                            children: React.createElement(Order_Cancel_Admin.make, {
-                                  orderNo: order.orderNo,
-                                  orderProductNo: order.orderProductNo
-                                }),
-                            fallback: null
+                            children: Caml_option.some(React.createElement(Order_Cancel_Admin.make, {
+                                      orderNo: order.orderNo,
+                                      orderProductNo: order.orderProductNo
+                                    })),
+                            fallback: Caml_option.some(null)
                           }), React.createElement("h3", {
                             className: "mt-10 font-bold"
                           }, "담당MD 메모"), React.createElement("textarea", {

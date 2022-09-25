@@ -2,7 +2,8 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as $$Image from "../../../components/common/Image.mjs";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
@@ -26,7 +27,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(DeliveryMainCategoryQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, DeliveryMainCategoryQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -100,14 +101,14 @@ function fromQueryData(id, src, name) {
         };
 }
 
-function Delivery_Main_Category$ListItem$PC$Skeleton(Props) {
-  return React.createElement("li", {
+function Delivery_Main_Category$ListItem$PC$Skeleton(props) {
+  return React$1.createElement("li", {
               className: "mx-6 w-[112px]"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "w-28 aspect-square rounded-lg overflow-hidden animate-pulse bg-gray-150"
-                }), React.createElement("div", {
+                }), React$1.createElement("div", {
                   className: "text-gray-800 font-bold text-center h-7 flex justify-center items-center"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "w-14 h-6 rounded-lg animate-pulse bg-gray-150"
                     })));
 }
@@ -116,32 +117,30 @@ var Skeleton = {
   make: Delivery_Main_Category$ListItem$PC$Skeleton
 };
 
-function Delivery_Main_Category$ListItem$PC(Props) {
-  var id = Props.id;
-  var src = Props.src;
-  var name = Props.name;
+function Delivery_Main_Category$ListItem$PC(props) {
+  var id = props.id;
   var queryStr = new URLSearchParams([[
             "category-id",
             id
           ]]).toString();
-  return React.createElement("li", {
+  return React$1.createElement("li", {
               className: "cursor-pointer"
-            }, React.createElement(Link, {
+            }, React$1.createElement(Link, {
                   href: "/delivery/products?" + queryStr + "",
-                  children: React.createElement("a", {
+                  children: React$1.createElement("a", {
                         className: "w-28 flex flex-col items-center gap-[18px]"
-                      }, React.createElement("div", {
+                      }, React$1.createElement("div", {
                             className: "w-28 aspect-square rounded-lg overflow-hidden"
-                          }, React.createElement($$Image.make, {
-                                src: src,
+                          }, React$1.createElement($$Image.make, {
+                                src: props.src,
                                 placeholder: /* Sm */0,
                                 alt: id,
                                 className: "w-full h-full object-cover"
-                              })), React.createElement("div", {
+                              })), React$1.createElement("div", {
                             className: "h-[22px] flex items-center justify-center overflow-hidden"
-                          }, React.createElement("div", {
+                          }, React$1.createElement("div", {
                                 className: "w-28 h-7 overflow-hidden text-gray-800 font-bold text-center items-center whitespace-nowrap text-ellipsis block"
-                              }, name)))
+                              }, props.name)))
                 }));
 }
 
@@ -150,14 +149,14 @@ var PC = {
   make: Delivery_Main_Category$ListItem$PC
 };
 
-function Delivery_Main_Category$ListItem$MO$Skeleton(Props) {
-  return React.createElement("li", undefined, React.createElement("div", {
+function Delivery_Main_Category$ListItem$MO$Skeleton(props) {
+  return React$1.createElement("li", undefined, React$1.createElement("div", {
                   className: "flex flex-col items-center w-[75px] gap-[9px]"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "w-14 aspect-square rounded-lg overflow-hidden bg-gray-150 animate-pulse"
-                    }), React.createElement("div", {
+                    }), React$1.createElement("div", {
                       className: "h-[22px] flex items-center justify-center"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "w-8 h-3 text-gray-800 text-sm text-center leading-[22px] animate-pulse rounded-lg bg-gray-150"
                         }))));
 }
@@ -166,28 +165,26 @@ var Skeleton$1 = {
   make: Delivery_Main_Category$ListItem$MO$Skeleton
 };
 
-function Delivery_Main_Category$ListItem$MO(Props) {
-  var id = Props.id;
-  var src = Props.src;
-  var name = Props.name;
+function Delivery_Main_Category$ListItem$MO(props) {
+  var id = props.id;
   var queryStr = new URLSearchParams([[
             "category-id",
             id
           ]]).toString();
-  return React.createElement("li", undefined, React.createElement(Link, {
+  return React$1.createElement("li", undefined, React$1.createElement(Link, {
                   href: "/delivery/products?" + queryStr + "",
-                  children: React.createElement("a", {
+                  children: React$1.createElement("a", {
                         className: "w-[75px] flex flex-col items-center gap-[9px]"
-                      }, React.createElement("div", {
+                      }, React$1.createElement("div", {
                             className: "w-14 aspect-square rounded-lg overflow-hidden"
-                          }, React.createElement($$Image.make, {
-                                src: src,
+                          }, React$1.createElement($$Image.make, {
+                                src: props.src,
                                 placeholder: /* Sm */0,
                                 alt: id,
                                 className: "w-full h-full object-cover"
-                              })), React.createElement("div", {
+                              })), React$1.createElement("div", {
                             className: "w-[75px] overflow-hidden text-gray-800 text-sm text-center leading-[22px] whitespace-nowrap text-ellipsis"
-                          }, name))
+                          }, props.name))
                 }));
 }
 
@@ -202,23 +199,20 @@ var ListItem = {
   MO: MO
 };
 
-function Delivery_Main_Category$PC$View(Props) {
-  var title = Props.title;
-  var items = Props.items;
-  return React.createElement("div", {
+function Delivery_Main_Category$PC$View(props) {
+  return React$1.createElement("div", {
               className: "w-[1280px] mx-auto mt-20"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "text-2xl text-gray-800 font-bold mb-6"
-                }, React.createElement("span", undefined, title)), React.createElement("ol", {
+                }, React$1.createElement("span", undefined, props.title)), React$1.createElement("ol", {
                   className: "w-full flex overflow-hidden gap-[78px] overflow-x-scroll scrollbar-hide"
-                }, Belt_Array.map(items, (function (param) {
+                }, Belt_Array.map(props.items, (function (param) {
                         var id = param.id;
-                        return React.createElement(Delivery_Main_Category$ListItem$PC, {
+                        return React.createElementWithKey(Delivery_Main_Category$ListItem$PC, {
                                     id: id,
                                     src: param.src,
-                                    name: param.name,
-                                    key: "display-category-" + id + "-pc"
-                                  });
+                                    name: param.name
+                                  }, "display-category-" + id + "-pc");
                       }))));
 }
 
@@ -226,14 +220,14 @@ var View = {
   make: Delivery_Main_Category$PC$View
 };
 
-function Delivery_Main_Category$PC$Skeleton(Props) {
-  return React.createElement("div", {
+function Delivery_Main_Category$PC$Skeleton(props) {
+  return React$1.createElement("div", {
               className: "w-[1280px] mx-auto mt-20 overflow-hidden overflow-x-scroll scrollbar-hide"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "mb-6"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "w-40 h-8 animate-pulse rounded-lg bg-gray-150"
-                    })), React.createElement("ol", {
+                    })), React$1.createElement("ol", {
                   className: "w-full flex items-center "
                 }, Belt_Array.map([
                       0,
@@ -254,9 +248,7 @@ function Delivery_Main_Category$PC$Skeleton(Props) {
                       15
                     ], (function (index) {
                         var key = "delivery-main-category-placeholder-" + String(index) + "";
-                        return React.createElement(Delivery_Main_Category$ListItem$PC$Skeleton, {
-                                    key: key
-                                  });
+                        return React.createElementWithKey(Delivery_Main_Category$ListItem$PC$Skeleton, {}, key);
                       }))));
 }
 
@@ -264,7 +256,7 @@ var Skeleton$2 = {
   make: Delivery_Main_Category$PC$Skeleton
 };
 
-function Delivery_Main_Category$PC(Props) {
+function Delivery_Main_Category$PC(props) {
   var query = use(undefined, undefined, undefined, undefined, undefined);
   var items = Belt_Option.getWithDefault(Belt_Option.map(query.section, (function (section) {
               return Belt_Array.map(section.featuredDisplayCategories, (function (param) {
@@ -278,7 +270,7 @@ function Delivery_Main_Category$PC(Props) {
                                   };
                           }));
             })), []);
-  return React.createElement(Delivery_Main_Category$PC$View, {
+  return React$1.createElement(Delivery_Main_Category$PC$View, {
               title: "카테고리",
               items: items
             });
@@ -290,23 +282,20 @@ var PC$1 = {
   make: Delivery_Main_Category$PC
 };
 
-function Delivery_Main_Category$MO$View(Props) {
-  var title = Props.title;
-  var items = Props.items;
-  return React.createElement("div", {
+function Delivery_Main_Category$MO$View(props) {
+  return React$1.createElement("div", {
               className: "w-full flex flex-col mb-5"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "h-[50px] flex items-end  text-gray-800 font-bold ml-5 mb-6"
-                }, title), React.createElement("ol", {
+                }, props.title), React$1.createElement("ol", {
                   className: "w-full flex gap-2 overflow-x-scroll  scrollbar-hide"
-                }, Belt_Array.map(items, (function (param) {
+                }, Belt_Array.map(props.items, (function (param) {
                         var id = param.id;
-                        return React.createElement(Delivery_Main_Category$ListItem$MO, {
+                        return React.createElementWithKey(Delivery_Main_Category$ListItem$MO, {
                                     id: id,
                                     src: param.src,
-                                    name: param.name,
-                                    key: "display-category-" + id + "-mo"
-                                  });
+                                    name: param.name
+                                  }, "display-category-" + id + "-mo");
                       }))));
 }
 
@@ -314,14 +303,14 @@ var View$1 = {
   make: Delivery_Main_Category$MO$View
 };
 
-function Delivery_Main_Category$MO$Skeleton(Props) {
-  return React.createElement("div", {
+function Delivery_Main_Category$MO$Skeleton(props) {
+  return React$1.createElement("div", {
               className: "w-full flex flex-col mb-5"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "h-[50px] flex items-end  text-gray-800 font-bold ml-5"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "w-20 h-7 rounded-lg animate-pulse bg-gray-150"
-                    })), React.createElement("ol", {
+                    })), React$1.createElement("ol", {
                   className: "mt-6 w-full flex gap-2 overflow-x-scroll scrollbar-hide"
                 }, Belt_Array.map([
                       0,
@@ -334,9 +323,7 @@ function Delivery_Main_Category$MO$Skeleton(Props) {
                       7
                     ], (function (index) {
                         var key = "delivery-main-category-placeholder-" + String(index) + "";
-                        return React.createElement(Delivery_Main_Category$ListItem$MO$Skeleton, {
-                                    key: key
-                                  });
+                        return React.createElementWithKey(Delivery_Main_Category$ListItem$MO$Skeleton, {}, key);
                       }))));
 }
 
@@ -344,7 +331,7 @@ var Skeleton$3 = {
   make: Delivery_Main_Category$MO$Skeleton
 };
 
-function Delivery_Main_Category$MO(Props) {
+function Delivery_Main_Category$MO(props) {
   var query = use(undefined, undefined, undefined, undefined, undefined);
   var items = Belt_Option.getWithDefault(Belt_Option.map(query.section, (function (section) {
               return Belt_Array.map(section.featuredDisplayCategories, (function (param) {
@@ -358,7 +345,7 @@ function Delivery_Main_Category$MO(Props) {
                                   };
                           }));
             })), []);
-  return React.createElement(Delivery_Main_Category$MO$View, {
+  return React$1.createElement(Delivery_Main_Category$MO$View, {
               title: "카테고리",
               items: items
             });

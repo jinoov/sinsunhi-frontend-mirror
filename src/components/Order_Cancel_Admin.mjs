@@ -425,12 +425,10 @@ function detailJson_decode(v) {
         };
 }
 
-function Order_Cancel_Admin(Props) {
-  var orderNo = Props.orderNo;
-  var orderProductNo = Props.orderProductNo;
+function Order_Cancel_Admin(props) {
   var match = use({
-        orderNo: orderNo,
-        orderProductNo: orderProductNo
+        orderNo: props.orderNo,
+        orderProductNo: props.orderProductNo
       }, undefined, undefined, undefined, undefined);
   var decoded = Belt_Option.flatMap(Belt_Option.flatMap(match.wosOrder, (function (wosOrder$p) {
               return Belt_Array.get(Belt_Array.keepMap(wosOrder$p.eventLogs, Garter_Fn.identity), 0);

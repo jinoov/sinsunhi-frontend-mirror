@@ -41,9 +41,9 @@ function redirectByRole(param) {
   setHref(tmp);
 }
 
-function Redirect(Props) {
-  var path = Props.path;
-  var message = Props.message;
+function Redirect(props) {
+  var message = props.message;
+  var path = props.path;
   React.useEffect((function () {
           setHref(path);
         }), []);

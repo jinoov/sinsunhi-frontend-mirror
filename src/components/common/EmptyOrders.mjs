@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function EmptyOrders(Props) {
+function EmptyOrders(props) {
   return React.createElement("div", {
               className: "grid col-span-full justify-center items-center text-black-gl h-96"
             }, React.createElement("div", {

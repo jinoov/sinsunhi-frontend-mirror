@@ -5,10 +5,9 @@ import * as React from "react";
 import * as IconArrow from "../../../components/svgs/IconArrow.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 
-function Tradematch_Header_Buyer(Props) {
-  var title = Props.title;
-  var handleClickLeftButtonOpt = Props.handleClickLeftButton;
-  var handleClickLeftButton = handleClickLeftButtonOpt !== undefined ? handleClickLeftButtonOpt : (function (prim) {
+function Tradematch_Header_Buyer(props) {
+  var handleClickLeftButton = props.handleClickLeftButton;
+  var handleClickLeftButton$1 = handleClickLeftButton !== undefined ? handleClickLeftButton : (function (prim) {
         window.history.back();
       });
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
@@ -19,7 +18,7 @@ function Tradematch_Header_Buyer(Props) {
                           className: "px-5 py-4 flex justify-between"
                         }, React.createElement("button", {
                               onClick: (function (param) {
-                                  Curry._1(handleClickLeftButton, undefined);
+                                  Curry._1(handleClickLeftButton$1, undefined);
                                 })
                             }, React.createElement(IconArrow.make, {
                                   height: "24",
@@ -27,7 +26,7 @@ function Tradematch_Header_Buyer(Props) {
                                   className: "rotate-180"
                                 })), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-base"
-                                }, Belt_Option.mapWithDefault(title, "", (function (x) {
+                                }, Belt_Option.mapWithDefault(props.title, "", (function (x) {
                                         return x;
                                       })))), React.createElement("div", undefined)))), React.createElement("div", {
                   className: "w-full h-14"

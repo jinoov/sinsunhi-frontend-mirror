@@ -32,25 +32,22 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Matching_Details_Buyer$Card(Props) {
-  var label = Props.label;
-  var value = Props.value;
+function PDP_Matching_Details_Buyer$Card(props) {
   return React.createElement("div", {
               className: "p-3 border-gray-150 border rounded-lg flex flex-col"
             }, React.createElement("span", {
                   className: "text-xs text-gray-500"
-                }, label), React.createElement("span", {
+                }, props.label), React.createElement("span", {
                   className: "mt-1 text-sm text-gray-800"
-                }, value));
+                }, props.value));
 }
 
 var Card = {
   make: PDP_Matching_Details_Buyer$Card
 };
 
-function PDP_Matching_Details_Buyer(Props) {
-  var query = Props.query;
-  var match = use(query);
+function PDP_Matching_Details_Buyer(props) {
+  var match = use(props.query);
   var periodPabel = "" + String(match.releaseStartMonth) + "~" + String(match.releaseEndMonth) + "월";
   return React.createElement("section", {
               className: "w-full py-6"

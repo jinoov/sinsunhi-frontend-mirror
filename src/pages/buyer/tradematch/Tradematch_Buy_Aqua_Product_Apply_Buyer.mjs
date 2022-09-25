@@ -400,7 +400,7 @@ var Mutation = {
   DeleteTradematchDemand: DeleteTradematchDemand
 };
 
-function Tradematch_Buy_Aqua_Product_Apply_Buyer$ProgressBar(Props) {
+function Tradematch_Buy_Aqua_Product_Apply_Buyer$ProgressBar(props) {
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var percentage = (match.currentIndex + 1 | 0) / (match.length + 1 | 0) * 100;
   var style = {
@@ -462,10 +462,9 @@ function getNextStep(demand) {
   }
 }
 
-function Tradematch_Buy_Aqua_Product_Apply_Buyer$StatusChecker(Props) {
-  var currentDemand = Props.currentDemand;
-  var connectionId = Props.connectionId;
-  var children = Props.children;
+function Tradematch_Buy_Aqua_Product_Apply_Buyer$StatusChecker(props) {
+  var connectionId = props.connectionId;
+  var currentDemand = props.currentDemand;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var match$1 = match.router;
   var replace = match$1.replace;
@@ -488,7 +487,7 @@ function Tradematch_Buy_Aqua_Product_Apply_Buyer$StatusChecker(Props) {
             Curry._1(toFirst, undefined);
           }
         }), []);
-  return React.createElement(React.Fragment, undefined, showContinueDraft ? React.createElement(React.Fragment, undefined, React.createElement(Tradematch_Header_Buyer.make, {}), React.createElement(Tradematch_Skeleton_Buyer.make, {})) : children, React.createElement(DS_Dialog.Popup.Root.make, {
+  return React.createElement(React.Fragment, undefined, showContinueDraft ? React.createElement(React.Fragment, undefined, React.createElement(Tradematch_Header_Buyer.make, {}), React.createElement(Tradematch_Skeleton_Buyer.make, {})) : props.children, React.createElement(DS_Dialog.Popup.Root.make, {
                   children: React.createElement(DS_Dialog.Popup.Portal.make, {
                         children: null
                       }, React.createElement(DS_Dialog.Popup.Overlay.make, {}), React.createElement(DS_Dialog.Popup.Content.make, {
@@ -563,7 +562,7 @@ function Tradematch_Buy_Aqua_Product_Apply_Buyer$StatusChecker(Props) {
                                         }),
                                     asChild: true
                                   })))),
-                  open: showContinueDraft
+                  _open: showContinueDraft
                 }));
 }
 
@@ -572,8 +571,8 @@ var StatusChecker = {
   make: Tradematch_Buy_Aqua_Product_Apply_Buyer$StatusChecker
 };
 
-function Tradematch_Buy_Aqua_Product_Apply_Buyer$Content(Props) {
-  var pid = Props.pid;
+function Tradematch_Buy_Aqua_Product_Apply_Buyer$Content(props) {
+  var pid = props.pid;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var match$1 = match.router;
   var toFirst = match$1.toFirst;
@@ -595,35 +594,25 @@ function Tradematch_Buy_Aqua_Product_Apply_Buyer$Content(Props) {
   var tmp;
   switch (match.current) {
     case /* Origin */0 :
-        var tmp$1 = {
-          connectionId: connectionId,
-          productId: pid
-        };
-        var tmp$2 = Belt_Option.map(currentDemand, (function (param) {
-                return param.productOrigin;
-              }));
-        if (tmp$2 !== undefined) {
-          tmp$1.defaultOrigin = Caml_option.valFromOption(tmp$2);
-        }
-        if (match$3 !== undefined) {
-          tmp$1.demandId = Caml_option.valFromOption(match$3);
-        }
-        tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Origin.make, tmp$1);
+        tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Origin.make, {
+              connectionId: connectionId,
+              productId: pid,
+              defaultOrigin: Belt_Option.map(currentDemand, (function (param) {
+                      return param.productOrigin;
+                    })),
+              demandId: match$3
+            });
         break;
     case /* Weight */1 :
         if (match$3 !== undefined) {
-          var tmp$3 = {
-            demandId: match$3
-          };
-          var tmp$4 = Belt_Option.map(Belt_Option.flatMap(currentDemand, (function (param) {
-                      return param.numberOfPackagesPerTrade;
-                    })), (function (prim) {
-                  return String(prim);
-                }));
-          if (tmp$4 !== undefined) {
-            tmp$3.defaultWeight = Caml_option.valFromOption(tmp$4);
-          }
-          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Weight.make, tmp$3);
+          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Weight.make, {
+                demandId: match$3,
+                defaultWeight: Belt_Option.map(Belt_Option.flatMap(currentDemand, (function (param) {
+                            return param.numberOfPackagesPerTrade;
+                          })), (function (prim) {
+                        return String(prim);
+                      }))
+              });
         } else {
           Curry._1(toFirst, undefined);
           tmp = null;
@@ -635,19 +624,15 @@ function Tradematch_Buy_Aqua_Product_Apply_Buyer$Content(Props) {
                   return param.numberOfPackagesPerTrade;
                 }));
           if (weight$p !== undefined) {
-            var tmp$5 = {
-              demandId: match$3,
-              currentWeight: weight$p
-            };
-            var tmp$6 = Belt_Option.map(Belt_Option.flatMap(currentDemand, (function (param) {
-                        return param.wantedPricePerPackage;
-                      })), (function (prim) {
-                    return String(prim);
-                  }));
-            if (tmp$6 !== undefined) {
-              tmp$5.defaultPrice = Caml_option.valFromOption(tmp$6);
-            }
-            tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Price.make, tmp$5);
+            tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Price.make, {
+                  demandId: match$3,
+                  currentWeight: weight$p,
+                  defaultPrice: Belt_Option.map(Belt_Option.flatMap(currentDemand, (function (param) {
+                              return param.wantedPricePerPackage;
+                            })), (function (prim) {
+                          return String(prim);
+                        }))
+                });
           } else {
             Curry._1(match$1.replace, /* Weight */1);
             tmp = null;
@@ -659,16 +644,12 @@ function Tradematch_Buy_Aqua_Product_Apply_Buyer$Content(Props) {
         break;
     case /* StorageMethod */3 :
         if (match$3 !== undefined) {
-          var tmp$7 = {
-            demandId: match$3
-          };
-          var tmp$8 = Belt_Option.flatMap(currentDemand, (function (param) {
-                  return Tradematch_Buy_Aqua_Apply_Steps_Buyer.StorageMethod.fromString(param.productStorageMethod);
-                }));
-          if (tmp$8 !== undefined) {
-            tmp$7.defaultStorageMethod = Caml_option.valFromOption(tmp$8);
-          }
-          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.StorageMethod.make, tmp$7);
+          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.StorageMethod.make, {
+                demandId: match$3,
+                defaultStorageMethod: Belt_Option.flatMap(currentDemand, (function (param) {
+                        return Tradematch_Buy_Aqua_Apply_Steps_Buyer.StorageMethod.fromString(param.productStorageMethod);
+                      }))
+              });
         } else {
           Curry._1(toFirst, undefined);
           tmp = null;
@@ -676,16 +657,12 @@ function Tradematch_Buy_Aqua_Product_Apply_Buyer$Content(Props) {
         break;
     case /* Cycle */4 :
         if (match$3 !== undefined) {
-          var tmp$9 = {
-            demandId: match$3
-          };
-          var tmp$10 = Belt_Option.flatMap(currentDemand, (function (param) {
-                  return Tradematch_Buy_Aqua_Apply_Steps_Buyer.Cycle.fromString(param.tradeCycle);
-                }));
-          if (tmp$10 !== undefined) {
-            tmp$9.defaultCycle = Caml_option.valFromOption(tmp$10);
-          }
-          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Cycle.make, tmp$9);
+          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Cycle.make, {
+                demandId: match$3,
+                defaultCycle: Belt_Option.flatMap(currentDemand, (function (param) {
+                        return Tradematch_Buy_Aqua_Apply_Steps_Buyer.Cycle.fromString(param.tradeCycle);
+                      }))
+              });
         } else {
           Curry._1(toFirst, undefined);
           tmp = null;
@@ -704,22 +681,12 @@ function Tradematch_Buy_Aqua_Product_Apply_Buyer$Content(Props) {
                           param.productRequirements
                         ];
                 }));
-          var tmp$11 = {
-            demandId: match$3
-          };
-          var tmp$12 = match$4[0];
-          if (tmp$12 !== undefined) {
-            tmp$11.defaultSize = Caml_option.valFromOption(tmp$12);
-          }
-          var tmp$13 = match$4[1];
-          if (tmp$13 !== undefined) {
-            tmp$11.defaultProcess = Caml_option.valFromOption(tmp$13);
-          }
-          var tmp$14 = match$4[2];
-          if (tmp$14 !== undefined) {
-            tmp$11.defaultRequirements = Caml_option.valFromOption(tmp$14);
-          }
-          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Requirement.make, tmp$11);
+          tmp = React.createElement(Tradematch_Buy_Aqua_Apply_Steps_Buyer.Requirement.make, {
+                demandId: match$3,
+                defaultSize: match$4[0],
+                defaultProcess: match$4[1],
+                defaultRequirements: match$4[2]
+              });
         } else {
           Curry._1(toFirst, undefined);
           tmp = null;
@@ -748,10 +715,9 @@ var Content = {
   make: Tradematch_Buy_Aqua_Product_Apply_Buyer$Content
 };
 
-function Tradematch_Buy_Aqua_Product_Apply_Buyer(Props) {
-  var pNumber = Props.pNumber;
+function Tradematch_Buy_Aqua_Product_Apply_Buyer(props) {
   var match = use({
-        productNumber: pNumber
+        productNumber: props.pNumber
       }, undefined, undefined, undefined, undefined);
   var match$1 = Belt_Option.map(match.product, (function (param) {
           return [

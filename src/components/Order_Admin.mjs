@@ -9,7 +9,6 @@ import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Badge_Admin from "./Badge_Admin.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as Tracking_Admin from "./Tracking_Admin.mjs";
 import * as Order_Detail_Button_Admin from "./Order_Detail_Button_Admin.mjs";
@@ -45,11 +44,8 @@ function payTypeToText(payType) {
   }
 }
 
-function Order_Admin$Item$Table(Props) {
-  var order = Props.order;
-  var check = Props.check;
-  var onCheckOrder = Props.onCheckOrder;
-  var onClickCancel = Props.onClickCancel;
+function Order_Admin$Item$Table(props) {
+  var order = props.order;
   var match = React.useState(function () {
         return /* Hide */1;
       });
@@ -72,18 +68,12 @@ function Order_Admin$Item$Table(Props) {
   }
   var isDisabedCheckbox = !isCheckableOrder(order);
   var refundReason = order.refundReason;
-  var tmp = {
-    status: order.status
-  };
-  if (refundReason !== undefined) {
-    tmp.refundReason = Caml_option.valFromOption(refundReason);
-  }
   var match$1 = order.status;
   var match$2 = order.deliveryType;
-  var tmp$1;
+  var tmp;
   var exit = 0;
   if (match$2 === 0) {
-    tmp$1 = React.createElement("div", {
+    tmp = React.createElement("div", {
           className: "h-full flex flex-col px-4 py-2"
         }, React.createElement("span", {
               className: "block"
@@ -92,7 +82,7 @@ function Order_Admin$Item$Table(Props) {
     exit = 1;
   }
   if (exit === 1) {
-    tmp$1 = React.createElement("div", {
+    tmp = React.createElement("div", {
           className: "h-full flex flex-col px-4 py-2"
         }, React.createElement("span", {
               className: "block"
@@ -110,8 +100,8 @@ function Order_Admin$Item$Table(Props) {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement(Checkbox.make, {
                           id: "checkbox-" + order.orderProductNo + "",
-                          checked: Curry._1(check, order.orderProductNo),
-                          onChange: Curry._1(onCheckOrder, order.orderProductNo),
+                          checked: Curry._1(props.check, order.orderProductNo),
+                          onChange: Curry._1(props.onCheckOrder, order.orderProductNo),
                           disabled: isDisabedCheckbox
                         })), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
@@ -123,7 +113,10 @@ function Order_Admin$Item$Table(Props) {
                             return React.createElement("span", {
                                         className: "block mb-1"
                                       }, "(담당: " + v + ")");
-                          })), React.createElement(Badge_Admin.make, tmp)), React.createElement("div", {
+                          })), React.createElement(Badge_Admin.make, {
+                          status: order.status,
+                          refundReason: refundReason
+                        })), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement("span", {
                           className: "block mb-1"
@@ -163,7 +156,7 @@ function Order_Admin$Item$Table(Props) {
                                           return /* Show */0;
                                         });
                                   })
-                              }, "주문취소"))), tmp$1, React.createElement("div", {
+                              }, "주문취소"))), tmp, React.createElement("div", {
                       className: "p-2 pr-4 align-top"
                     }, React.createElement("span", {
                           className: "block"
@@ -177,11 +170,11 @@ function Order_Admin$Item$Table(Props) {
                   isShowCancelConfirm: match[0],
                   setShowCancelConfirm: setShowCancelConfirm,
                   selectedOrders: [order.orderProductNo],
-                  confirmFn: onClickCancel
+                  confirmFn: props.onClickCancel
                 }));
 }
 
-function Order_Admin$Item$Table$Loading(Props) {
+function Order_Admin$Item$Table$Loading(props) {
   return React.createElement("li", {
               className: "grid grid-cols-10-gl-admin"
             }, React.createElement("div", {
@@ -234,16 +227,12 @@ var Item = {
   Table: Table
 };
 
-function Order_Admin(Props) {
-  var order = Props.order;
-  var check = Props.check;
-  var onCheckOrder = Props.onCheckOrder;
-  var onClickCancel = Props.onClickCancel;
+function Order_Admin(props) {
   return React.createElement(Order_Admin$Item$Table, {
-              order: order,
-              check: check,
-              onCheckOrder: onCheckOrder,
-              onClickCancel: onClickCancel
+              order: props.order,
+              check: props.check,
+              onCheckOrder: props.onCheckOrder,
+              onClickCancel: props.onClickCancel
             });
 }
 

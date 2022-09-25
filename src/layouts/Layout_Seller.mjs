@@ -3,9 +3,8 @@
 import * as React from "react";
 import * as Header from "../components/Header.mjs";
 
-function Layout_Seller(Props) {
-  var children = Props.children;
-  return React.createElement(React.Fragment, undefined, React.createElement(Header.Seller.make, {}), children);
+function Layout_Seller(props) {
+  return React.createElement(React.Fragment, undefined, React.createElement(Header.Seller.make, {}), props.children);
 }
 
 var make = Layout_Seller;

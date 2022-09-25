@@ -92,9 +92,9 @@ function displayStatus(s) {
   }
 }
 
-function Select_BulkSale_Campaign_Status(Props) {
-  var product = Props.product;
-  var refetchSummary = Props.refetchSummary;
+function Select_BulkSale_Campaign_Status(props) {
+  var refetchSummary = props.refetchSummary;
+  var product = props.product;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);

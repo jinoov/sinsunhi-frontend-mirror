@@ -122,7 +122,7 @@ function response_decode(v) {
         };
 }
 
-function Orders_All_Admin$Orders(Props) {
+function Orders_All_Admin$Orders(props) {
   var router = Router.useRouter();
   var status = CustomHooks.OrdersAllAdmin.use(new URLSearchParams(router.query).toString());
   var count;
@@ -161,7 +161,7 @@ var Orders = {
   make: Orders_All_Admin$Orders
 };
 
-function Orders_All_Admin(Props) {
+function Orders_All_Admin(props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(Orders_All_Admin$Orders, {}),
               title: "관리자 주문서 조회"

@@ -59,9 +59,8 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function Product_Option_Admin$Item$Table(Props) {
-  var query = Props.query;
-  var productOption = use(query);
+function Product_Option_Admin$Item$Table(props) {
+  var productOption = use(props.query);
   var amountUnitToString = function (unit) {
     if (unit === "G") {
       return "g";
@@ -206,10 +205,9 @@ var Item = {
   Table: Table
 };
 
-function Product_Option_Admin(Props) {
-  var query = Props.query;
+function Product_Option_Admin(props) {
   return React.createElement(Product_Option_Admin$Item$Table, {
-              query: query
+              query: props.query
             });
 }
 

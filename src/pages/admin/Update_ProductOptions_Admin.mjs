@@ -567,8 +567,7 @@ function makeCreateOption(productNodeId, option) {
         };
 }
 
-function Update_ProductOptions_Admin$Title(Props) {
-  var productDisplayName = Props.productDisplayName;
+function Update_ProductOptions_Admin$Title(props) {
   return React.createElement("header", {
               className: "flex flex-col items-baseline px-5 py-4 pb-0 gap-1"
             }, React.createElement("div", {
@@ -579,20 +578,19 @@ function Update_ProductOptions_Admin$Title(Props) {
                       src: inequalitySignRightIcon
                     }), React.createElement("span", undefined, "단품 수정")), React.createElement("h1", {
                   className: "text-text-L1 text-xl font-bold"
-                }, "[" + productDisplayName + "] 상품의 단품 수정"));
+                }, "[" + props.productDisplayName + "] 상품의 단품 수정"));
 }
 
 var Title = {
   make: Update_ProductOptions_Admin$Title
 };
 
-function Update_ProductOptions_Admin$Bottom(Props) {
-  var onReset = Props.onReset;
+function Update_ProductOptions_Admin$Bottom(props) {
   return React.createElement("div", {
               className: "fixed bottom-0 w-[calc(100vw-300px)] bg-white h-16 flex items-center gap-2 justify-end pr-10"
             }, React.createElement("button", {
                   className: "px-3 py-2 bg-div-shape-L1 rounded-lg focus:outline-none",
-                  onClick: onReset
+                  onClick: props.onReset
                 }, "초기화"), React.createElement("button", {
                   className: "px-3 py-2 bg-green-gl text-white rounded-lg hover:bg-green-gl-dark focus:outline-none",
                   type: "submit"
@@ -603,8 +601,8 @@ var Bottom = {
   make: Update_ProductOptions_Admin$Bottom
 };
 
-function Update_ProductOptions_Admin$Presenter(Props) {
-  var query = Props.query;
+function Update_ProductOptions_Admin$Presenter(props) {
+  var query = props.query;
   var queryData = use$1(query);
   var productType = use$2(query);
   var router = Router.useRouter();
@@ -757,10 +755,9 @@ var Presenter = {
   make: Update_ProductOptions_Admin$Presenter
 };
 
-function Update_ProductOptions_Admin$Container(Props) {
-  var productId = Props.productId;
+function Update_ProductOptions_Admin$Container(props) {
   var queryData = use({
-        id: productId
+        id: props.productId
       }, /* StoreAndNetwork */2, undefined, undefined, undefined);
   var node$p = queryData.node;
   if (node$p !== undefined) {
@@ -776,16 +773,16 @@ var Container = {
   make: Update_ProductOptions_Admin$Container
 };
 
-function Update_ProductOptions_Admin(Props) {
+function Update_ProductOptions_Admin(props) {
   var router = Router.useRouter();
   var id = Js_dict.get(router.query, "pid");
   return React.createElement(RescriptReactErrorBoundary.make, {
               children: React.createElement(Authorization.Admin.make, {
                     children: React.createElement(React.Suspense, {
-                          children: id !== undefined ? React.createElement(Update_ProductOptions_Admin$Container, {
-                                  productId: id
-                                }) : React.createElement("div", undefined, "상품이 존재하지 않습니다."),
-                          fallback: React.createElement("div", undefined, "로딩 중..")
+                          children: Caml_option.some(id !== undefined ? React.createElement(Update_ProductOptions_Admin$Container, {
+                                      productId: id
+                                    }) : React.createElement("div", undefined, "상품이 존재하지 않습니다.")),
+                          fallback: Caml_option.some(React.createElement("div", undefined, "로딩 중.."))
                         }),
                     title: "관리자 단품 관리"
                   }),

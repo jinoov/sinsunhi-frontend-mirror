@@ -17,17 +17,15 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd");
 }
 
-function Cost_Admin$Item$Table(Props) {
-  var cost = Props.cost;
-  var newCost = Props.newCost;
-  var check = Props.check;
-  var onCheckCost = Props.onCheckCost;
-  var onChangePrice = Props.onChangePrice;
-  var onChangeDeliveryCost = Props.onChangeDeliveryCost;
-  var onChangeWorkingCost = Props.onChangeWorkingCost;
-  var onChangeEffectiveDate = Props.onChangeEffectiveDate;
-  var onChangeRawCost = Props.onChangeRawCost;
-  var onChangeContractType = Props.onChangeContractType;
+function Cost_Admin$Item$Table(props) {
+  var onChangeContractType = props.onChangeContractType;
+  var onChangeRawCost = props.onChangeRawCost;
+  var onChangeEffectiveDate = props.onChangeEffectiveDate;
+  var onChangeWorkingCost = props.onChangeWorkingCost;
+  var onChangeDeliveryCost = props.onChangeDeliveryCost;
+  var onChangePrice = props.onChangePrice;
+  var newCost = props.newCost;
+  var cost = props.cost;
   var handleOnChangeType = function (e) {
     var newType = e.target.value;
     var t = CustomHooks.Costs.contractType_decode(newType);
@@ -42,8 +40,8 @@ function Cost_Admin$Item$Table(Props) {
                   className: "h-full flex flex-col px-4 py-2"
                 }, React.createElement(Checkbox.make, {
                       id: "checkbox-" + cost.sku + "",
-                      checked: Curry._1(check, cost.sku),
-                      onChange: Curry._1(onCheckCost, cost.sku)
+                      checked: Curry._1(props.check, cost.sku),
+                      onChange: Curry._1(props.onCheckCost, cost.sku)
                     })), React.createElement("div", {
                   className: "h-full flex flex-col px-4 py-2"
                 }, React.createElement("span", {
@@ -98,7 +96,6 @@ function Cost_Admin$Item$Table(Props) {
                           return Curry._1(onChangeEffectiveDate, StartOfDay(newDate));
                         }),
                       size: /* Small */2,
-                      error: undefined,
                       min: "2021-01-01"
                     })), React.createElement("div", {
                   className: "p-2 px-4 ml-2 align-top"
@@ -110,8 +107,7 @@ function Cost_Admin$Item$Table(Props) {
                       onChange: (function (param) {
                           return Curry._1(onChangePrice, param.target.value);
                         }),
-                      size: /* Small */2,
-                      error: undefined
+                      size: /* Small */2
                     })), React.createElement("div", {
                   className: "p-2 pr-4 align-top"
                 }, React.createElement("div", {
@@ -128,8 +124,7 @@ function Cost_Admin$Item$Table(Props) {
                       onChange: (function (param) {
                           return Curry._1(onChangeRawCost, param.target.value);
                         }),
-                      size: /* Small */2,
-                      error: undefined
+                      size: /* Small */2
                     })), React.createElement("div", {
                   className: "p-2 pr-4 align-top"
                 }, React.createElement(Input.make, {
@@ -140,8 +135,7 @@ function Cost_Admin$Item$Table(Props) {
                       onChange: (function (param) {
                           return Curry._1(onChangeWorkingCost, param.target.value);
                         }),
-                      size: /* Small */2,
-                      error: undefined
+                      size: /* Small */2
                     })), React.createElement("div", {
                   className: "p-2 pr-4 align-top"
                 }, React.createElement(Input.make, {
@@ -152,12 +146,11 @@ function Cost_Admin$Item$Table(Props) {
                       onChange: (function (param) {
                           return Curry._1(onChangeDeliveryCost, param.target.value);
                         }),
-                      size: /* Small */2,
-                      error: undefined
+                      size: /* Small */2
                     })));
 }
 
-function Cost_Admin$Item$Table$Loading(Props) {
+function Cost_Admin$Item$Table$Loading(props) {
   return React.createElement("li", {
               className: "grid grid-cols-14-admin-cost text-gray-700"
             }, React.createElement("div", {
@@ -200,28 +193,18 @@ var Item = {
   Table: Table
 };
 
-function Cost_Admin(Props) {
-  var cost = Props.cost;
-  var newCost = Props.newCost;
-  var check = Props.check;
-  var onCheckCost = Props.onCheckCost;
-  var onChangeEffectiveDate = Props.onChangeEffectiveDate;
-  var onChangePrice = Props.onChangePrice;
-  var onChangeRawCost = Props.onChangeRawCost;
-  var onChangeDeliveryCost = Props.onChangeDeliveryCost;
-  var onChangeWorkingCost = Props.onChangeWorkingCost;
-  var onChangeContractType = Props.onChangeContractType;
+function Cost_Admin(props) {
   return React.createElement(Cost_Admin$Item$Table, {
-              cost: cost,
-              newCost: newCost,
-              check: check,
-              onCheckCost: onCheckCost,
-              onChangePrice: onChangePrice,
-              onChangeDeliveryCost: onChangeDeliveryCost,
-              onChangeWorkingCost: onChangeWorkingCost,
-              onChangeEffectiveDate: onChangeEffectiveDate,
-              onChangeRawCost: onChangeRawCost,
-              onChangeContractType: onChangeContractType
+              cost: props.cost,
+              newCost: props.newCost,
+              check: props.check,
+              onCheckCost: props.onCheckCost,
+              onChangePrice: props.onChangePrice,
+              onChangeDeliveryCost: props.onChangeDeliveryCost,
+              onChangeWorkingCost: props.onChangeWorkingCost,
+              onChangeEffectiveDate: props.onChangeEffectiveDate,
+              onChangeRawCost: props.onChangeRawCost,
+              onChangeContractType: props.onChangeContractType
             });
 }
 

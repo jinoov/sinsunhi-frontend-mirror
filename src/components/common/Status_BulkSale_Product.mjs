@@ -155,7 +155,7 @@ function displayCount(status, data) {
   }
 }
 
-function Status_BulkSale_Product$Total$Skeleton(Props) {
+function Status_BulkSale_Product$Total$Skeleton(props) {
   var router = Router.useRouter();
   return React.createElement("li", {
               className: queriedStyle(router, undefined, undefined)
@@ -168,8 +168,7 @@ var Skeleton$1 = {
   make: Status_BulkSale_Product$Total$Skeleton
 };
 
-function Status_BulkSale_Product$Total(Props) {
-  var data = Props.data;
+function Status_BulkSale_Product$Total(props) {
   var router = Router.useRouter();
   return React.createElement("li", {
               className: queriedStyle(router, undefined, undefined),
@@ -178,7 +177,7 @@ function Status_BulkSale_Product$Total(Props) {
                   className: "flex justify-center items-center pb-1 text-sm"
                 }, "전체"), React.createElement("span", {
                   className: "block font-bold sm:text-center"
-                }, "" + String(data.count) + "건"));
+                }, "" + String(props.data.count) + "건"));
 }
 
 var Total = {
@@ -186,8 +185,8 @@ var Total = {
   make: Status_BulkSale_Product$Total
 };
 
-function Status_BulkSale_Product$Item$Skeleton(Props) {
-  var kind = Props.kind;
+function Status_BulkSale_Product$Item$Skeleton(props) {
+  var kind = props.kind;
   var router = Router.useRouter();
   return React.createElement("li", {
               className: queriedStyle(router, kind, undefined)
@@ -200,9 +199,8 @@ var Skeleton$2 = {
   make: Status_BulkSale_Product$Item$Skeleton
 };
 
-function Status_BulkSale_Product$Item(Props) {
-  var kind = Props.kind;
-  var data = Props.data;
+function Status_BulkSale_Product$Item(props) {
+  var kind = props.kind;
   var router = Router.useRouter();
   return React.createElement("li", {
               className: queriedStyle(router, kind, undefined),
@@ -211,7 +209,7 @@ function Status_BulkSale_Product$Item(Props) {
                   className: "flex justify-center items-center pb-1 text-sm"
                 }, displayStatus(kind)), React.createElement("span", {
                   className: "block font-bold sm:text-center"
-                }, displayCount(kind, data)));
+                }, displayCount(kind, props.data)));
 }
 
 var Item = {

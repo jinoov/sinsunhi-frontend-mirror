@@ -2,14 +2,12 @@
 
 import * as React from "react";
 
-function IconCard(Props) {
-  var width = Props.width;
-  var height = Props.height;
-  var strokeOpt = Props.stroke;
-  var stroke = strokeOpt !== undefined ? strokeOpt : "white";
+function IconCard(props) {
+  var stroke = props.stroke;
+  var stroke$1 = stroke !== undefined ? stroke : "white";
   return React.createElement("svg", {
-              height: height,
-              width: width,
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 20 20",
               xmlns: "http://www.w3.org/2000/svg"
@@ -17,11 +15,11 @@ function IconCard(Props) {
                   clipPath: "url(#clip0_76_5372)"
                 }, React.createElement("path", {
                       d: "M15.2417 5.75H4.91667C4.27233 5.75 3.75 6.27233 3.75 6.91667V13.025C3.75 13.6693 4.27233 14.1917 4.91667 14.1917H15.2417C15.886 14.1917 16.4083 13.6693 16.4083 13.025V6.91667C16.4083 6.27233 15.886 5.75 15.2417 5.75Z",
-                      stroke: stroke,
+                      stroke: stroke$1,
                       strokeMiterlimit: "10"
                     }), React.createElement("path", {
                       d: "M3.75 8.9248H16.4083",
-                      stroke: stroke,
+                      stroke: stroke$1,
                       strokeMiterlimit: "10"
                     })), React.createElement("defs", undefined, React.createElement("clipPath", {
                       id: "clip0_76_5372"

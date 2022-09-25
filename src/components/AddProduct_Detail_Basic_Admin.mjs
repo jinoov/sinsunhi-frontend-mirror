@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as Product_Detail_Basic_Admin from "./Product_Detail_Basic_Admin.mjs";
 
-function AddProduct_Detail_Basic_Admin(Props) {
+function AddProduct_Detail_Basic_Admin(props) {
   return React.createElement(Product_Detail_Basic_Admin.make, {});
 }
 

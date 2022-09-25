@@ -34,9 +34,8 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Quoted_Details_Buyer$PC(Props) {
-  var query = Props.query;
-  var match = use(query);
+function PDP_Quoted_Details_Buyer$PC(props) {
+  var match = use(props.query);
   var category = match.category;
   var categoryLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeCategoryLabel, category.item, category.kind);
   return React.createElement("div", {
@@ -70,9 +69,8 @@ var PC = {
   make: PDP_Quoted_Details_Buyer$PC
 };
 
-function PDP_Quoted_Details_Buyer$MO(Props) {
-  var query = Props.query;
-  var match = use(query);
+function PDP_Quoted_Details_Buyer$MO(props) {
+  var match = use(props.query);
   var category = match.category;
   var categoryLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeCategoryLabel, category.item, category.kind);
   return React.createElement("div", undefined, React.createElement("h2", {

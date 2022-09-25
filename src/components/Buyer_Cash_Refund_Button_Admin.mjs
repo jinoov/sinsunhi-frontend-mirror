@@ -19,8 +19,8 @@ import * as ReactDialog from "@radix-ui/react-dialog";
 import * as ReactToastNotifications from "react-toast-notifications";
 import * as Buyer_Cash_Refund_Form_Admin from "./Buyer_Cash_Refund_Form_Admin.mjs";
 
-function Buyer_Cash_Refund_Button_Admin(Props) {
-  var buyerId = Props.buyerId;
+function Buyer_Cash_Refund_Button_Admin(props) {
+  var buyerId = props.buyerId;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var close = function (param) {

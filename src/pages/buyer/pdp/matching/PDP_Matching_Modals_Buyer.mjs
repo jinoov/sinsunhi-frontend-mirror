@@ -4,6 +4,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as IconClose from "../../../../components/svgs/IconClose.mjs";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
 import ReactNl2br from "react-nl2br";
 import * as ShopDialog_Buyer from "../../ShopDialog_Buyer.mjs";
@@ -12,13 +13,12 @@ import * as ReactScrollArea from "@radix-ui/react-scroll-area";
 import * as PDP_Matching_GradeGuide_Buyer from "./PDP_Matching_GradeGuide_Buyer.mjs";
 import * as PDP_Matching_ServiceGuide_Buyer from "./PDP_Matching_ServiceGuide_Buyer.mjs";
 
-function PDP_Matching_Modals_Buyer$Scroll(Props) {
-  var children = Props.children;
+function PDP_Matching_Modals_Buyer$Scroll(props) {
   return React.createElement(ReactScrollArea.Root, {
               children: null,
               className: "h-screen flex flex-col overflow-hidden"
             }, React.createElement(ReactScrollArea.Viewport, {
-                  children: children,
+                  children: props.children,
                   className: "w-full h-full"
                 }), React.createElement(ReactScrollArea.Scrollbar, {
                   children: React.createElement(ReactScrollArea.Thumb, {})
@@ -29,9 +29,7 @@ var Scroll = {
   make: PDP_Matching_Modals_Buyer$Scroll
 };
 
-function PDP_Matching_Modals_Buyer$ModalHeader(Props) {
-  var title = Props.title;
-  var closeFn = Props.closeFn;
+function PDP_Matching_Modals_Buyer$ModalHeader(props) {
   return React.createElement("section", {
               className: "w-full h-14 flex items-center px-4"
             }, React.createElement("div", {
@@ -40,9 +38,9 @@ function PDP_Matching_Modals_Buyer$ModalHeader(Props) {
                   className: "flex flex-1 items-center justify-center"
                 }, React.createElement("h1", {
                       className: "font-bold text-black"
-                    }, title)), React.createElement("button", {
+                    }, props.title)), React.createElement("button", {
                   className: "w-10 h-10 flex items-center justify-center ",
-                  onClick: closeFn
+                  onClick: props.closeFn
                 }, React.createElement(IconClose.make, {
                       height: "24",
                       width: "24",
@@ -54,9 +52,9 @@ var ModalHeader = {
   make: PDP_Matching_Modals_Buyer$ModalHeader
 };
 
-function PDP_Matching_Modals_Buyer$ServiceGuide(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
+function PDP_Matching_Modals_Buyer$ServiceGuide(props) {
+  var closeFn = props.closeFn;
+  var show = props.show;
   var _open;
   if (show) {
     var match = show._0;
@@ -79,7 +77,7 @@ function PDP_Matching_Modals_Buyer$ServiceGuide(Props) {
                         className: "dialog-content-base w-full max-w-[768px] min-h-screen",
                         onPointerDownOutside: closeFn
                       })),
-              open: _open
+              _open: _open
             });
 }
 
@@ -87,10 +85,9 @@ var ServiceGuide = {
   make: PDP_Matching_Modals_Buyer$ServiceGuide
 };
 
-function PDP_Matching_Modals_Buyer$GradeGuide(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
-  var query = Props.query;
+function PDP_Matching_Modals_Buyer$GradeGuide(props) {
+  var closeFn = props.closeFn;
+  var show = props.show;
   var _open = show ? show._0 === 0 : false;
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
@@ -104,12 +101,12 @@ function PDP_Matching_Modals_Buyer$GradeGuide(Props) {
                                   title: "신선하이 등급",
                                   closeFn: closeFn
                                 }), React.createElement(PDP_Matching_GradeGuide_Buyer.make, {
-                                  query: query
+                                  query: props.query
                                 })),
                         className: "dialog-content-base w-full max-w-[768px] min-h-screen",
                         onPointerDownOutside: closeFn
                       })),
-              open: _open
+              _open: _open
             });
 }
 
@@ -117,9 +114,9 @@ var GradeGuide = {
   make: PDP_Matching_Modals_Buyer$GradeGuide
 };
 
-function PDP_Matching_Modals_Buyer$Unauthorized(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
+function PDP_Matching_Modals_Buyer$Unauthorized(props) {
+  var closeFn = props.closeFn;
+  var show = props.show;
   var router = Router.useRouter();
   var match;
   if (show) {
@@ -151,11 +148,11 @@ function PDP_Matching_Modals_Buyer$Unauthorized(Props) {
               onCancel: (function (param) {
                   Curry._1(closeFn, undefined);
                 }),
-              children: React.createElement("div", {
-                    className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
-                  }, React.createElement("span", {
-                        className: "text-center"
-                      }, ReactNl2br(match[1])))
+              children: Caml_option.some(React.createElement("div", {
+                        className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
+                      }, React.createElement("span", {
+                            className: "text-center"
+                          }, ReactNl2br(match[1]))))
             });
 }
 
@@ -163,10 +160,9 @@ var Unauthorized = {
   make: PDP_Matching_Modals_Buyer$Unauthorized
 };
 
-function PDP_Matching_Modals_Buyer$MO(Props) {
-  var show = Props.show;
-  var setShow = Props.setShow;
-  var query = Props.query;
+function PDP_Matching_Modals_Buyer$MO(props) {
+  var setShow = props.setShow;
+  var show = props.show;
   var closeFn = function (param) {
     setShow(function (param) {
           return /* Hide */0;
@@ -178,7 +174,7 @@ function PDP_Matching_Modals_Buyer$MO(Props) {
                 }), React.createElement(PDP_Matching_Modals_Buyer$GradeGuide, {
                   show: show,
                   closeFn: closeFn,
-                  query: query
+                  query: props.query
                 }), React.createElement(PDP_Matching_Modals_Buyer$ServiceGuide, {
                   show: show,
                   closeFn: closeFn

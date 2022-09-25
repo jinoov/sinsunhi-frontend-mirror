@@ -10,11 +10,11 @@ import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
 import * as Input_Select_BulkSale_ProductQuantity from "./Input_Select_BulkSale_ProductQuantity.mjs";
 
-function BulkSale_ProductSaleLedgers_Button_FormEntry_Admin(Props) {
-  var id = Props.id;
-  var entries = Props.entries;
-  var setEntries = Props.setEntries;
-  var formErrors = Props.formErrors;
+function BulkSale_ProductSaleLedgers_Button_FormEntry_Admin(props) {
+  var formErrors = props.formErrors;
+  var setEntries = props.setEntries;
+  var entries = props.entries;
+  var id = props.id;
   var grade = Belt_Option.map(Belt_MapString.get(entries, id), (function (entry) {
           return entry.grade;
         }));

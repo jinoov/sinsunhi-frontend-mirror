@@ -7,10 +7,9 @@ import * as DS_BottomDrawer from "./common/container/DS_BottomDrawer.mjs";
 import * as SearchAddressEmbed from "./SearchAddressEmbed.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
 
-function Tradematch_SearchAddressDrawer_Buyer(Props) {
-  var onComplete = Props.onComplete;
-  var closeDrawer = Props.closeDrawer;
-  var isShow = Props.isShow;
+function Tradematch_SearchAddressDrawer_Buyer(props) {
+  var isShow = props.isShow;
+  var closeDrawer = props.closeDrawer;
   return React.createElement(DS_BottomDrawer.Root.make, {
               isShow: isShow,
               onClose: (function (param) {
@@ -21,7 +20,7 @@ function Tradematch_SearchAddressDrawer_Buyer(Props) {
             }, React.createElement(DS_BottomDrawer.Header.make, {}), React.createElement(DS_BottomDrawer.Body.make, {
                   children: React.createElement(RescriptReactErrorBoundary.make, {
                         children: React.createElement(SearchAddressEmbed.make, {
-                              onComplete: onComplete,
+                              onComplete: props.onComplete,
                               isShow: isShow
                             }),
                         fallback: (function (param) {

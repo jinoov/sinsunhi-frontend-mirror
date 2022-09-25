@@ -12,8 +12,8 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm:ss");
 }
 
-function User_Admin_Buyer$Item$Table(Props) {
-  var user = Props.user;
+function User_Admin_Buyer$Item$Table(props) {
+  var user = props.user;
   return React.createElement("li", {
               className: "grid grid-cols-11-admin-users-buyer text-gray-700"
             }, React.createElement("div", {
@@ -70,10 +70,9 @@ var Item = {
   Table: Table
 };
 
-function User_Admin_Buyer(Props) {
-  var user = Props.user;
+function User_Admin_Buyer(props) {
   return React.createElement(User_Admin_Buyer$Item$Table, {
-              user: user
+              user: props.user
             });
 }
 

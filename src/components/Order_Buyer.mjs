@@ -33,11 +33,9 @@ function payTypeToText(payType) {
   }
 }
 
-function Order_Buyer$Item$Table(Props) {
-  var order = Props.order;
-  var check = Props.check;
-  var onCheckOrder = Props.onCheckOrder;
-  var onClickCancel = Props.onClickCancel;
+function Order_Buyer$Item$Table(props) {
+  var onClickCancel = props.onClickCancel;
+  var order = props.order;
   var match = React.useState(function () {
         return /* Hide */1;
       });
@@ -92,8 +90,8 @@ function Order_Buyer$Item$Table(Props) {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement(Checkbox.make, {
                           id: "checkbox-" + order.orderProductNo + "",
-                          checked: Curry._1(check, order.orderProductNo),
-                          onChange: Curry._1(onCheckOrder, order.orderProductNo),
+                          checked: Curry._1(props.check, order.orderProductNo),
+                          onChange: Curry._1(props.onCheckOrder, order.orderProductNo),
                           disabled: isDisabedCheckbox
                         })), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
@@ -176,9 +174,9 @@ var Table = {
   make: Order_Buyer$Item$Table
 };
 
-function Order_Buyer$Item$Card(Props) {
-  var order = Props.order;
-  var onClickCancel = Props.onClickCancel;
+function Order_Buyer$Item$Card(props) {
+  var onClickCancel = props.onClickCancel;
+  var order = props.order;
   var match = React.useState(function () {
         return /* Hide */1;
       });
@@ -365,15 +363,13 @@ var Item = {
   Card: Card
 };
 
-function Order_Buyer(Props) {
-  var order = Props.order;
-  var check = Props.check;
-  var onCheckOrder = Props.onCheckOrder;
-  var onClickCancel = Props.onClickCancel;
+function Order_Buyer(props) {
+  var onClickCancel = props.onClickCancel;
+  var order = props.order;
   return React.createElement(React.Fragment, undefined, React.createElement(Order_Buyer$Item$Table, {
                   order: order,
-                  check: check,
-                  onCheckOrder: onCheckOrder,
+                  check: props.check,
+                  onCheckOrder: props.onCheckOrder,
                   onClickCancel: onClickCancel
                 }), React.createElement(Order_Buyer$Item$Card, {
                   order: order,

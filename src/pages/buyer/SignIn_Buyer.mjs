@@ -348,7 +348,7 @@ function $$default(props) {
                                   error: Curry._1(form.getFieldError, /* Field */{
                                         _0: /* Password */1
                                       }),
-                                  inputRef: inputPasswordRef
+                                  inputRef: Caml_option.some(inputPasswordRef)
                                 }), React.createElement("div", {
                                   className: "flex justify-between items-center mt-4"
                                 }, React.createElement("span", {

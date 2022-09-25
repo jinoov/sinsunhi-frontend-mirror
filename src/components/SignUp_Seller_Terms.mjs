@@ -6,10 +6,10 @@ import * as Checkbox from "./common/Checkbox.mjs";
 import * as IconArrow from "./svgs/IconArrow.mjs";
 import Link from "next/link";
 
-function SignUp_Seller_Terms(Props) {
-  var onConfirmed = Props.onConfirmed;
-  var isMarketing = Props.isMarketing;
-  var setMarketing = Props.setMarketing;
+function SignUp_Seller_Terms(props) {
+  var setMarketing = props.setMarketing;
+  var isMarketing = props.isMarketing;
+  var onConfirmed = props.onConfirmed;
   var match = React.useState(function () {
         return false;
       });

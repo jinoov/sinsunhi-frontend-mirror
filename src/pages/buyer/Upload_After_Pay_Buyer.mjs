@@ -18,11 +18,7 @@ import DropdownSvg from "../../../public/assets/dropdown.svg";
 
 var dropdownIcon = DropdownSvg;
 
-function Upload_After_Pay_Buyer$BalanceView(Props) {
-  var balance = Props.balance;
-  var credit = Props.credit;
-  var maxExpiryDays = Props.maxExpiryDays;
-  var rate = Props.rate;
+function Upload_After_Pay_Buyer$BalanceView(props) {
   var match = React.useState(function () {
         return false;
       });
@@ -47,7 +43,7 @@ function Upload_After_Pay_Buyer$BalanceView(Props) {
                                       className: "text-sm"
                                     }, "나중결제 가능 금액"), React.createElement("div", {
                                       className: "text-lg font-bold text-green-500"
-                                    }, "" + Locale.Float.show(undefined, balance, 0) + " 원")), React.createElement("div", {
+                                    }, "" + Locale.Float.show(undefined, props.balance, 0) + " 원")), React.createElement("div", {
                                   className: "ml-auto"
                                 }, React.createElement(ReactUtil.SpreadProps.make, {
                                       children: React.createElement("button", {
@@ -61,7 +57,7 @@ function Upload_After_Pay_Buyer$BalanceView(Props) {
                                   className: "text-sm"
                                 }, "총 나중결제 이용 한도"), React.createElement("div", {
                                   className: "text-lg font-bold"
-                                }, "" + Locale.Float.show(undefined, credit, 0) + " 원"))), React.createElement("div", {
+                                }, "" + Locale.Float.show(undefined, props.credit, 0) + " 원"))), React.createElement("div", {
                           className: "flex flex-col gap-3 text-sm py-5"
                         }, React.createElement("div", {
                               className: "flex place-content-between"
@@ -69,13 +65,13 @@ function Upload_After_Pay_Buyer$BalanceView(Props) {
                                   className: "text-gray-600"
                                 }, "수수료"), React.createElement("div", {
                                   className: "col-span-3"
-                                }, "" + rate + "%")), React.createElement("div", {
+                                }, "" + props.rate + "%")), React.createElement("div", {
                               className: "flex place-content-between"
                             }, React.createElement("div", {
                                   className: "text-gray-600"
                                 }, "만기일"), React.createElement("div", {
                                   className: "col-span-3"
-                                }, "주문서별 업로드 완료일 기준 ", React.createElement("b", undefined, "최대 " + String(maxExpiryDays) + "일"))), React.createElement("div", {
+                                }, "주문서별 업로드 완료일 기준 ", React.createElement("b", undefined, "최대 " + String(props.maxExpiryDays) + "일"))), React.createElement("div", {
                               className: "flex place-content-between"
                             }, React.createElement("div", {
                                   className: "text-gray-600"
@@ -88,7 +84,7 @@ var BalanceView = {
   make: Upload_After_Pay_Buyer$BalanceView
 };
 
-function Upload_After_Pay_Buyer$Balance(Props) {
+function Upload_After_Pay_Buyer$Balance(props) {
   var result = CustomHooks.AfterPayCredit.use(undefined);
   if (typeof result === "number") {
     return null;
@@ -113,7 +109,7 @@ var Balance = {
   make: Upload_After_Pay_Buyer$Balance
 };
 
-function Upload_After_Pay_Buyer$Notice(Props) {
+function Upload_After_Pay_Buyer$Notice(props) {
   var match = React.useState(function () {
         return "자세히 보기";
       });
@@ -155,7 +151,7 @@ function Upload_After_Pay_Buyer$Notice(Props) {
                                   className: "mt-4 accordian-trigger"
                                 })
                           })),
-                  type: "multiple",
+                  _type: "multiple",
                   onValueChange: handleChange
                 }));
 }
@@ -164,7 +160,7 @@ var Notice = {
   make: Upload_After_Pay_Buyer$Notice
 };
 
-function Upload_After_Pay_Buyer(Props) {
+function Upload_After_Pay_Buyer(props) {
   var agreements = CustomHooks.AfterPayAgreement.use(undefined);
   var router = Router.useRouter();
   React.useEffect((function () {

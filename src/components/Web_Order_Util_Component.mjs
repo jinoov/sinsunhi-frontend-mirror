@@ -11,10 +11,9 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactHookForm from "react-hook-form";
 import * as ReactTooltip from "@radix-ui/react-tooltip";
 
-function Web_Order_Util_Component$Tooltip$PC(Props) {
-  var children = Props.children;
-  var classNameOpt = Props.className;
-  var className = classNameOpt !== undefined ? classNameOpt : "";
+function Web_Order_Util_Component$Tooltip$PC(props) {
+  var className = props.className;
+  var className$1 = className !== undefined ? className : "";
   return React.createElement(ReactTooltip.Root, {
               children: null,
               delayDuration: 300,
@@ -23,7 +22,7 @@ function Web_Order_Util_Component$Tooltip$PC(Props) {
                   children: React.createElement("img", {
                         className: Cx.cx([
                               "w-5 h-5",
-                              className
+                              className$1
                             ]),
                         src: "/icons/icon_common_tooltip_q_line_20.png",
                         onClick: (function (e) {
@@ -35,7 +34,7 @@ function Web_Order_Util_Component$Tooltip$PC(Props) {
                         className: "relative w-96"
                       }, React.createElement("div", {
                             className: "absolute bottom-0 left-28 block min-w-min bg-white px-6 py-2 border-primary border rounded-xl text-sm font-bold text-primary-variant"
-                          }, children, React.createElement("div", {
+                          }, props.children, React.createElement("div", {
                                 className: "absolute left-20 h-3 w-3 -bottom-1.5 rounded-sm bg-white border-b border-r border-primary-variant transform -translate-x-1/2 rotate-45"
                               }))),
                   side: "top",
@@ -48,10 +47,9 @@ var PC = {
   make: Web_Order_Util_Component$Tooltip$PC
 };
 
-function Web_Order_Util_Component$Tooltip$Mobile(Props) {
-  var children = Props.children;
-  var classNameOpt = Props.className;
-  var className = classNameOpt !== undefined ? classNameOpt : "";
+function Web_Order_Util_Component$Tooltip$Mobile(props) {
+  var className = props.className;
+  var className$1 = className !== undefined ? className : "";
   var match = React.useState(function () {
         return false;
       });
@@ -69,14 +67,14 @@ function Web_Order_Util_Component$Tooltip$Mobile(Props) {
         }), [touch]);
   return React.createElement(ReactTooltip.Root, {
               children: null,
-              open: touch,
+              _open: touch,
               delayDuration: 300,
               className: "absolute"
             }, React.createElement(ReactTooltip.Trigger, {
                   children: React.createElement("img", {
                         className: Cx.cx([
                               "w-5 h-5",
-                              className
+                              className$1
                             ]),
                         src: "/icons/icon_common_tooltip_q_line_20.png",
                         onClick: (function (e) {
@@ -91,7 +89,7 @@ function Web_Order_Util_Component$Tooltip$Mobile(Props) {
                         className: "relative w-96"
                       }, React.createElement("div", {
                             className: "absolute bottom-0 left-28 block min-w-min bg-white px-6 py-2 border-primary border rounded-xl text-sm font-bold text-primary-variant"
-                          }, children, React.createElement("div", {
+                          }, props.children, React.createElement("div", {
                                 className: "absolute left-20 h-3 w-3 -bottom-1.5 rounded-sm bg-white border-b border-r border-primary-variant transform -translate-x-1/2 rotate-45"
                               }))),
                   side: "top",
@@ -109,7 +107,7 @@ var Tooltip = {
   Mobile: Mobile
 };
 
-function Web_Order_Util_Component$RadioButton$PlaceHolder$PC(Props) {
+function Web_Order_Util_Component$RadioButton$PlaceHolder$PC(props) {
   return React.createElement(Skeleton.Box.make, {
               className: "w-32 min-h-[2.75rem] rounded-xl"
             });
@@ -119,7 +117,7 @@ var PC$1 = {
   make: Web_Order_Util_Component$RadioButton$PlaceHolder$PC
 };
 
-function Web_Order_Util_Component$RadioButton$PlaceHolder$MO(Props) {
+function Web_Order_Util_Component$RadioButton$PlaceHolder$MO(props) {
   return React.createElement(Skeleton.Box.make, {
               className: "w-24 min-h-[2.75rem] rounded-xl"
             });
@@ -134,12 +132,11 @@ var PlaceHolder = {
   MO: MO
 };
 
-function Web_Order_Util_Component$RadioButton$PC(Props) {
-  var checked = Props.checked;
-  var name = Props.name;
+function Web_Order_Util_Component$RadioButton$PC(props) {
+  var checked = props.checked;
   return React.createElement("span", {
               className: checked ? "w-32 h-11 pl-1 flex justify-center items-center text-base text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer" : "w-32 h-11 flex justify-center items-center text-base text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
-            }, name, checked ? React.createElement(IconCheck.make, {
+            }, props.name, checked ? React.createElement(IconCheck.make, {
                     height: "20",
                     width: "30",
                     fill: "#12b564",
@@ -151,12 +148,11 @@ var PC$2 = {
   make: Web_Order_Util_Component$RadioButton$PC
 };
 
-function Web_Order_Util_Component$RadioButton$MO(Props) {
-  var checked = Props.checked;
-  var name = Props.name;
+function Web_Order_Util_Component$RadioButton$MO(props) {
+  var checked = props.checked;
   return React.createElement("span", {
               className: checked ? "w-24 h-11 pl-1 flex justify-center items-center text-sm text-primary font-bold border border-primary bg-primary-light rounded-xl cursor-pointer" : "w-24 h-11 flex justify-center items-center text-sm text-text-L1 border border-div-border-L2 rounded-xl cursor-pointer"
-            }, name, checked ? React.createElement(IconCheck.make, {
+            }, props.name, checked ? React.createElement(IconCheck.make, {
                     height: "20",
                     width: "30",
                     fill: "#12b564",
@@ -168,15 +164,13 @@ var MO$1 = {
   make: Web_Order_Util_Component$RadioButton$MO
 };
 
-function Web_Order_Util_Component$RadioButton(Props) {
-  var watchValue = Props.watchValue;
-  var name = Props.name;
-  var value = Props.value;
-  var deviceType = Props.deviceType;
-  var checked = Belt_Option.mapWithDefault(watchValue, false, (function (watch) {
+function Web_Order_Util_Component$RadioButton(props) {
+  var value = props.value;
+  var name = props.name;
+  var checked = Belt_Option.mapWithDefault(props.watchValue, false, (function (watch) {
           return Caml_obj.equal(watch, value);
         }));
-  switch (deviceType) {
+  switch (props.deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
@@ -200,15 +194,13 @@ var RadioButton = {
   make: Web_Order_Util_Component$RadioButton
 };
 
-function Web_Order_Util_Component$Hidden(Props) {
-  var value = Props.value;
-  var inputName = Props.inputName;
-  var isNumberOpt = Props.isNumber;
-  var isNumber = isNumberOpt !== undefined ? isNumberOpt : false;
+function Web_Order_Util_Component$Hidden(props) {
+  var isNumber = props.isNumber;
+  var isNumber$1 = isNumber !== undefined ? isNumber : false;
   var match = ReactHookForm.useFormContext({
         mode: "all"
       }, undefined);
-  var match$1 = match.register(inputName, isNumber ? ({
+  var match$1 = match.register(props.inputName, isNumber$1 ? ({
             valueAsNumber: true
           }) : undefined);
   var name = match$1.name;
@@ -218,8 +210,8 @@ function Web_Order_Util_Component$Hidden(Props) {
     name: name,
     type: "hidden"
   };
-  if (value !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(value);
+  if (props.value !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(props.value);
   }
   return React.createElement("input", tmp);
 }

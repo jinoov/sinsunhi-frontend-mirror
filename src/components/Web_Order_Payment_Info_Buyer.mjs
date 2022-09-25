@@ -8,7 +8,7 @@ import * as Garter_Math from "@greenlabs/garter/src/Garter_Math.mjs";
 import * as ReactHookForm from "react-hook-form";
 import * as Web_Order_Buyer_Form from "./Web_Order_Buyer_Form.mjs";
 
-function Web_Order_Payment_Info_Buyer$PlaceHolder$PC(Props) {
+function Web_Order_Payment_Info_Buyer$PlaceHolder$PC(props) {
   return React.createElement("div", {
               className: "rounded-sm bg-white p-7 w-full sticky top-64"
             }, React.createElement("span", {
@@ -49,7 +49,7 @@ var PC = {
   make: Web_Order_Payment_Info_Buyer$PlaceHolder$PC
 };
 
-function Web_Order_Payment_Info_Buyer$PlaceHolder$MO(Props) {
+function Web_Order_Payment_Info_Buyer$PlaceHolder$MO(props) {
   return React.createElement("div", {
               className: "rounded-sm bg-white p-5 w-full"
             }, React.createElement("span", {
@@ -95,10 +95,7 @@ var PlaceHolder = {
   MO: MO
 };
 
-function Web_Order_Payment_Info_Buyer$PC(Props) {
-  var renderProductPrice = Props.renderProductPrice;
-  var renderDeliveryPrice = Props.renderDeliveryPrice;
-  var totalOrderPrice = Props.totalOrderPrice;
+function Web_Order_Payment_Info_Buyer$PC(props) {
   return React.createElement("div", {
               className: "rounded-sm bg-white p-7 w-fit sticky top-64"
             }, React.createElement("span", {
@@ -112,21 +109,21 @@ function Web_Order_Payment_Info_Buyer$PC(Props) {
                           className: "text-text-L2"
                         }, "총 상품금액"), React.createElement("span", {
                           className: "text-sm font-normal"
-                        }, "" + Locale.Int.show(undefined, renderProductPrice) + "원")), React.createElement("li", {
+                        }, "" + Locale.Int.show(undefined, props.renderProductPrice) + "원")), React.createElement("li", {
                       key: "delivery-cost",
                       className: "flex justify-between items-center"
                     }, React.createElement("span", {
                           className: "text-text-L2"
                         }, "배송비"), React.createElement("span", {
                           className: "text-sm font-normal"
-                        }, renderDeliveryPrice)), React.createElement("li", {
+                        }, props.renderDeliveryPrice)), React.createElement("li", {
                       key: "total-price",
                       className: "flex justify-between items-center"
                     }, React.createElement("span", {
                           className: "text-text-L2"
                         }, "총 결제금액"), React.createElement("span", {
                           className: "text-lg text-primary font-bold"
-                        }, "" + Locale.Int.show(undefined, totalOrderPrice) + "원"))), React.createElement("div", {
+                        }, "" + Locale.Int.show(undefined, props.totalOrderPrice) + "원"))), React.createElement("div", {
                   className: "mt-7 mb-10 text-center text-text-L1"
                 }, React.createElement("span", undefined, "주문 내용을 확인했으며, 정보 제공에 동의합니다.")), React.createElement("button", {
                   className: "w-full h-14 flex justify-center items-center bg-primary text-lg text-white rounded-xl",
@@ -138,10 +135,7 @@ var PC$1 = {
   make: Web_Order_Payment_Info_Buyer$PC
 };
 
-function Web_Order_Payment_Info_Buyer$MO(Props) {
-  var renderProductPrice = Props.renderProductPrice;
-  var renderDeliveryPrice = Props.renderDeliveryPrice;
-  var totalOrderPrice = Props.totalOrderPrice;
+function Web_Order_Payment_Info_Buyer$MO(props) {
   return React.createElement("div", {
               className: "rounded-sm bg-white p-5 w-full"
             }, React.createElement("span", {
@@ -155,21 +149,21 @@ function Web_Order_Payment_Info_Buyer$MO(Props) {
                           className: "text-text-L2"
                         }, "총 상품금액"), React.createElement("span", {
                           className: "text-base font-bold"
-                        }, "" + Locale.Int.show(undefined, renderProductPrice) + "원")), React.createElement("li", {
+                        }, "" + Locale.Int.show(undefined, props.renderProductPrice) + "원")), React.createElement("li", {
                       key: "delivery-cost",
                       className: "flex justify-between items-center"
                     }, React.createElement("span", {
                           className: "text-text-L2"
                         }, "배송비"), React.createElement("span", {
                           className: "text-base font-bold"
-                        }, renderDeliveryPrice)), React.createElement("li", {
+                        }, props.renderDeliveryPrice)), React.createElement("li", {
                       key: "total-price",
                       className: "flex justify-between items-center"
                     }, React.createElement("span", {
                           className: "text-text-L2"
                         }, "총 결제금액"), React.createElement("span", {
                           className: "text-xl text-primary font-bold"
-                        }, "" + Locale.Int.show(undefined, totalOrderPrice) + "원"))), React.createElement("div", {
+                        }, "" + Locale.Int.show(undefined, props.totalOrderPrice) + "원"))), React.createElement("div", {
                   className: "mt-7 mb-10 text-center text-text-L1"
                 }, React.createElement("span", undefined, "주문 내용을 확인했으며, 정보 제공에 동의합니다.")), React.createElement("button", {
                   className: "w-full h-14 flex justify-center items-center bg-primary text-lg text-white rounded-xl",
@@ -181,11 +175,9 @@ var MO$1 = {
   make: Web_Order_Payment_Info_Buyer$MO
 };
 
-function Web_Order_Payment_Info_Buyer(Props) {
-  var prefix = Props.prefix;
-  var productInfos = Props.productInfos;
-  var deviceType = Props.deviceType;
-  var formNames = Web_Order_Buyer_Form.names(prefix);
+function Web_Order_Payment_Info_Buyer(props) {
+  var productInfos = props.productInfos;
+  var formNames = Web_Order_Buyer_Form.names(props.prefix);
   var totalOrderPrice = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
               return info.totalPrice;
             })));
@@ -232,7 +224,7 @@ function Web_Order_Payment_Info_Buyer(Props) {
   }
   var renderDeliveryPrice = match[1];
   var renderProductPrice = match[0];
-  switch (deviceType) {
+  switch (props.deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :

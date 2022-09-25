@@ -90,12 +90,11 @@ var RequestQuotationGtm = {
   make: make
 };
 
-function PDP_Normal_RfqBtn_Buyer$PC(Props) {
-  var query = Props.query;
-  var setShowModal = Props.setShowModal;
+function PDP_Normal_RfqBtn_Buyer$PC(props) {
+  var setShowModal = props.setShowModal;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use(query);
+  var match = use(props.query);
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;
@@ -161,12 +160,11 @@ var PC = {
   make: PDP_Normal_RfqBtn_Buyer$PC
 };
 
-function PDP_Normal_RfqBtn_Buyer$MO(Props) {
-  var query = Props.query;
-  var setShowModal = Props.setShowModal;
+function PDP_Normal_RfqBtn_Buyer$MO(props) {
+  var setShowModal = props.setShowModal;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use(query);
+  var match = use(props.query);
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;

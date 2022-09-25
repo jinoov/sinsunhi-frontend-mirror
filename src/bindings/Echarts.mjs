@@ -36,10 +36,9 @@ function useInstance(id) {
   return match[0];
 }
 
-function Echarts(Props) {
-  var id = Props.id;
-  var option = Props.option;
-  var className = Props.className;
+function Echarts(props) {
+  var option = props.option;
+  var id = props.id;
   React.useEffect((function () {
           var target = document.getElementById(id);
           if (target == null) {
@@ -60,7 +59,7 @@ function Echarts(Props) {
                   });
         }), []);
   return React.createElement("div", {
-              className: className,
+              className: props.className,
               id: id
             });
 }

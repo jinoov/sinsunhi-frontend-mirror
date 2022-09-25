@@ -8,6 +8,7 @@ import * as IconArrow from "./svgs/IconArrow.mjs";
 import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
@@ -23,7 +24,7 @@ import * as ShopCategorySelect_Buyer from "./ShopCategorySelect_Buyer.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
 
-function Header_Buyer$Mobile$LoggedInUserMenu(Props) {
+function Header_Buyer$Mobile$LoggedInUserMenu(props) {
   return React.createElement(React.Fragment, undefined, React.createElement(CartLinkIcon.make, {}), React.createElement(Link, {
                   href: "/buyer/me",
                   children: React.createElement("a", undefined, React.createElement("img", {
@@ -38,8 +39,7 @@ var LoggedInUserMenu = {
   make: Header_Buyer$Mobile$LoggedInUserMenu
 };
 
-function Header_Buyer$Mobile$Normal(Props) {
-  var title = Props.title;
+function Header_Buyer$Mobile$Normal(props) {
   var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
@@ -57,7 +57,7 @@ function Header_Buyer$Mobile$Normal(Props) {
                                   src: "/assets/arrow-right.svg"
                                 })), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, title)), React.createElement(HomeLinkIcon.make, {})))), React.createElement("div", {
+                                }, props.title)), React.createElement(HomeLinkIcon.make, {})))), React.createElement("div", {
                   className: "w-full h-14"
                 }));
 }
@@ -66,8 +66,7 @@ var Normal = {
   make: Header_Buyer$Mobile$Normal
 };
 
-function Header_Buyer$Mobile$BackAndCart(Props) {
-  var title = Props.title;
+function Header_Buyer$Mobile$BackAndCart(props) {
   var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
@@ -89,7 +88,7 @@ function Header_Buyer$Mobile$BackAndCart(Props) {
                               className: "w-1/3 flex justify-center"
                             }, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, title)), React.createElement("div", {
+                                }, props.title)), React.createElement("div", {
                               className: "w-1/3 flex gap-2 justify-end"
                             }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {}))))), React.createElement("div", {
                   className: "w-full h-14"
@@ -100,8 +99,7 @@ var BackAndCart = {
   make: Header_Buyer$Mobile$BackAndCart
 };
 
-function Header_Buyer$Mobile$NoBack(Props) {
-  var title = Props.title;
+function Header_Buyer$Mobile$NoBack(props) {
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
                 }, React.createElement("header", {
@@ -112,7 +110,7 @@ function Header_Buyer$Mobile$NoBack(Props) {
                               className: "w-[24px]"
                             }), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, title)), React.createElement(HomeLinkIcon.make, {})))), React.createElement("div", {
+                                }, props.title)), React.createElement(HomeLinkIcon.make, {})))), React.createElement("div", {
                   className: "w-full h-14"
                 }));
 }
@@ -121,8 +119,7 @@ var NoBack = {
   make: Header_Buyer$Mobile$NoBack
 };
 
-function Header_Buyer$Mobile$NoHome(Props) {
-  var title = Props.title;
+function Header_Buyer$Mobile$NoHome(props) {
   var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
@@ -142,7 +139,7 @@ function Header_Buyer$Mobile$NoHome(Props) {
                                   className: "rotate-180"
                                 })), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-xl"
-                                }, title)), React.createElement("div", {
+                                }, props.title)), React.createElement("div", {
                               className: "w-6"
                             })))), React.createElement("div", {
                   className: "w-full h-14"
@@ -153,9 +150,9 @@ var NoHome = {
   make: Header_Buyer$Mobile$NoHome
 };
 
-function Header_Buyer$Mobile$GnbHome(Props) {
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
+function Header_Buyer$Mobile$GnbHome(props) {
+  var displayCategories = props.displayCategories;
+  var gnbBanners = props.gnbBanners;
   var router = Router.useRouter();
   var match = React.useState(function () {
         return false;
@@ -189,11 +186,11 @@ function Header_Buyer$Mobile$GnbHome(Props) {
                       className: "flex flex-1"
                     }, match[0] ? React.createElement(RescriptReactErrorBoundary.make, {
                             children: React.createElement(React.Suspense, {
-                                  children: gnbBanners !== undefined && displayCategories !== undefined ? React.createElement(ShopCategorySelect_Buyer.Mobile.make, {
-                                          gnbBanners: gnbBanners,
-                                          displayCategories: displayCategories
-                                        }) : null,
-                                  fallback: null
+                                  children: Caml_option.some(gnbBanners !== undefined && displayCategories !== undefined ? React.createElement(ShopCategorySelect_Buyer.Mobile.make, {
+                                              gnbBanners: gnbBanners,
+                                              displayCategories: displayCategories
+                                            }) : null),
+                                  fallback: Caml_option.some(null)
                                 }),
                             fallback: (function (param) {
                                 return null;
@@ -226,7 +223,7 @@ var GnbHome = {
   make: Header_Buyer$Mobile$GnbHome
 };
 
-function Header_Buyer$Mobile$Search(Props) {
+function Header_Buyer$Mobile$Search(props) {
   var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
@@ -249,7 +246,7 @@ var Search = {
   make: Header_Buyer$Mobile$Search
 };
 
-function Header_Buyer$Mobile(Props) {
+function Header_Buyer$Mobile(props) {
   var router = Router.useRouter();
   var pathnames = Belt_Array.keep(router.pathname.split("/"), (function (x) {
           return x !== "";
@@ -258,7 +255,6 @@ function Header_Buyer$Mobile(Props) {
   var second = Belt_Array.get(pathnames, 1);
   var third = Belt_Array.get(pathnames, 2);
   var tmp;
-  var exit = 0;
   if (first !== undefined) {
     switch (first) {
       case "buyer" :
@@ -304,22 +300,16 @@ function Header_Buyer$Mobile(Props) {
                       });
                   break;
               case "products" :
-                  if (third === "advanced-search") {
-                    tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                  tmp = third === "advanced-search" ? React.createElement(Header_Buyer$Mobile$Normal, {
                           title: "상품 검색"
+                        }) : React.createElement(Header_Buyer$Mobile$Normal, {
+                          title: ""
                         });
-                  } else {
-                    exit = 1;
-                  }
                   break;
               case "signin" :
-                  tmp = third !== undefined ? (
-                      third === "find-id-password" ? React.createElement(Header_Buyer$Mobile$Normal, {
-                              title: ""
-                            }) : React.createElement(Header_Buyer$Mobile$Normal, {
-                              title: "로그인"
-                            })
-                    ) : React.createElement(Header_Buyer$Mobile$Normal, {
+                  tmp = third === "find-id-password" ? React.createElement(Header_Buyer$Mobile$Normal, {
+                          title: ""
+                        }) : React.createElement(Header_Buyer$Mobile$Normal, {
                           title: "로그인"
                         });
                   break;
@@ -339,29 +329,25 @@ function Header_Buyer$Mobile(Props) {
                       });
                   break;
               case "web-order" :
-                  tmp = third !== undefined ? (
-                      third === "complete" ? React.createElement(Header_Buyer$Mobile$NoBack, {
-                              title: "주문 완료"
-                            }) : React.createElement(Header_Buyer$Mobile$Normal, {
-                              title: "주문·결제"
-                            })
-                    ) : React.createElement(Header_Buyer$Mobile$Normal, {
+                  tmp = third === "complete" ? React.createElement(Header_Buyer$Mobile$NoBack, {
+                          title: "주문 완료"
+                        }) : React.createElement(Header_Buyer$Mobile$Normal, {
                           title: "주문·결제"
                         });
                   break;
               default:
-                exit = 1;
+                tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+                      title: ""
+                    });
             }
           } else {
             tmp = React.createElement(Header_Buyer$Mobile$GnbHome, {});
           }
           break;
       case "delivery" :
-          tmp = second !== undefined ? React.createElement(Header_Buyer$Mobile$BackAndCart, {
-                  title: "신선배송"
-                }) : React.createElement(Header_Buyer$Mobile$BackAndCart, {
-                  title: "신선배송"
-                });
+          tmp = React.createElement(Header_Buyer$Mobile$BackAndCart, {
+                title: "신선배송"
+              });
           break;
       case "matching" :
           tmp = second !== undefined ? React.createElement(Header_Buyer$Mobile$Normal, {
@@ -371,24 +357,21 @@ function Header_Buyer$Mobile(Props) {
                 });
           break;
       case "products" :
-          if (second !== undefined && second === "advanced-search" && third === undefined) {
-            tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+          tmp = second !== undefined && second === "advanced-search" && third === undefined ? React.createElement(Header_Buyer$Mobile$Normal, {
                   title: "상품 검색"
+                }) : React.createElement(Header_Buyer$Mobile$Normal, {
+                  title: ""
                 });
-          } else {
-            exit = 1;
-          }
           break;
       case "search" :
           tmp = React.createElement(Header_Buyer$Mobile$Search, {});
           break;
       default:
-        exit = 1;
+        tmp = React.createElement(Header_Buyer$Mobile$Normal, {
+              title: ""
+            });
     }
   } else {
-    exit = 1;
-  }
-  if (exit === 1) {
     tmp = React.createElement(Header_Buyer$Mobile$Normal, {
           title: ""
         });
@@ -407,8 +390,7 @@ var Mobile = {
   make: Header_Buyer$Mobile
 };
 
-function Header_Buyer$PC_Old$LoggedInUserMenu(Props) {
-  var user = Props.user;
+function Header_Buyer$PC_Old$LoggedInUserMenu(props) {
   var logOut = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   CustomHooks.Auth.logOut(undefined);
@@ -427,7 +409,7 @@ function Header_Buyer$PC_Old$LoggedInUserMenu(Props) {
                             className: "flex items-center"
                           }, React.createElement("span", {
                                 className: "text-base text-gray-800"
-                              }, Belt_Option.getWithDefault(user.email, "")), React.createElement("span", {
+                              }, Belt_Option.getWithDefault(props.user.email, "")), React.createElement("span", {
                                 className: "relative ml-1"
                               }, React.createElement(IconArrowSelect.make, {
                                     height: "22",
@@ -440,43 +422,43 @@ function Header_Buyer$PC_Old$LoggedInUserMenu(Props) {
                       align: "end",
                       className: "dropdown-content p-1 w-[140px] bg-white rounded-lg shadow-md divide-y text-gray-800"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/buyer/me",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "마이페이지"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/buyer/me",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "마이페이지"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/buyer/orders",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "주문내역"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/buyer/orders",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "주문내역"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/buyer/transactions",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "결제내역"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/buyer/transactions",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "결제내역"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/products/advanced-search",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "단품확인"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/products/advanced-search",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "단품확인"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement("button", {
-                                className: itemStyle,
-                                type: "button",
-                                onClick: logOut
-                              }, React.createElement("span", undefined, "로그아웃")),
+                          children: Caml_option.some(React.createElement("button", {
+                                    className: itemStyle,
+                                    type: "button",
+                                    onClick: logOut
+                                  }, React.createElement("span", undefined, "로그아웃"))),
                           className: "focus:outline-none"
                         }))));
 }
@@ -485,7 +467,7 @@ var LoggedInUserMenu$1 = {
   make: Header_Buyer$PC_Old$LoggedInUserMenu
 };
 
-function Header_Buyer$PC_Old$NotLoggedInUserMenu(Props) {
+function Header_Buyer$PC_Old$NotLoggedInUserMenu(props) {
   var router = Router.useRouter();
   var redirect = Js_dict.get(router.query, "redirect");
   var redirectUrl;
@@ -521,7 +503,7 @@ var NotLoggedInUserMenu = {
   make: Header_Buyer$PC_Old$NotLoggedInUserMenu
 };
 
-function Header_Buyer$PC_Old$GnbBanners(Props) {
+function Header_Buyer$PC_Old$GnbBanners(props) {
   var match = GnbBannerList_Buyer.Query.use(undefined, undefined, undefined, undefined, undefined);
   return React.createElement(GnbBannerList_Buyer.make, {
               gnbBanners: match.gnbBanners
@@ -532,7 +514,7 @@ var GnbBanners = {
   make: Header_Buyer$PC_Old$GnbBanners
 };
 
-function Header_Buyer$PC_Old$Categories(Props) {
+function Header_Buyer$PC_Old$Categories(props) {
   var match = ShopCategorySelect_Buyer.Query.use({
         onlyDisplayable: true,
         parentId: undefined,
@@ -547,7 +529,7 @@ var Categories = {
   make: Header_Buyer$PC_Old$Categories
 };
 
-function Header_Buyer$PC_Old(Props) {
+function Header_Buyer$PC_Old(props) {
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var isCsr = CustomHooks.useCsr(undefined);
   var match = typeof user === "number" ? [
@@ -592,16 +574,16 @@ function Header_Buyer$PC_Old(Props) {
                           className: "h-14 flex items-center divide-x"
                         }, React.createElement(RescriptReactErrorBoundary.make, {
                               children: React.createElement(React.Suspense, {
-                                    children: isCsr ? React.createElement(Header_Buyer$PC_Old$Categories, {}) : null,
-                                    fallback: null
+                                    children: Caml_option.some(isCsr ? React.createElement(Header_Buyer$PC_Old$Categories, {}) : null),
+                                    fallback: Caml_option.some(null)
                                   }),
                               fallback: (function (param) {
                                   return null;
                                 })
                             }), React.createElement(RescriptReactErrorBoundary.make, {
                               children: React.createElement(React.Suspense, {
-                                    children: isCsr ? React.createElement(Header_Buyer$PC_Old$GnbBanners, {}) : null,
-                                    fallback: null
+                                    children: Caml_option.some(isCsr ? React.createElement(Header_Buyer$PC_Old$GnbBanners, {}) : null),
+                                    fallback: Caml_option.some(null)
                                   }),
                               fallback: (function (param) {
                                   return null;
@@ -638,8 +620,7 @@ var PC_Old = {
   make: Header_Buyer$PC_Old
 };
 
-function Header_Buyer$PC$LoggedInUserMenu(Props) {
-  var user = Props.user;
+function Header_Buyer$PC$LoggedInUserMenu(props) {
   var logOut = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   CustomHooks.Auth.logOut(undefined);
@@ -658,7 +639,7 @@ function Header_Buyer$PC$LoggedInUserMenu(Props) {
                             className: "flex items-center"
                           }, React.createElement("span", {
                                 className: "text-base text-gray-800"
-                              }, Belt_Option.getWithDefault(user.email, "")), React.createElement("span", {
+                              }, Belt_Option.getWithDefault(props.user.email, "")), React.createElement("span", {
                                 className: "relative ml-1"
                               }, React.createElement(IconArrowSelect.make, {
                                     height: "22",
@@ -671,43 +652,43 @@ function Header_Buyer$PC$LoggedInUserMenu(Props) {
                       align: "end",
                       className: "dropdown-content p-1 w-[140px] bg-white rounded-lg shadow-md divide-y text-gray-800"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/buyer/me",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "마이페이지"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/buyer/me",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "마이페이지"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/buyer/orders",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "주문내역"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/buyer/orders",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "주문내역"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/buyer/transactions",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "결제내역"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/buyer/transactions",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "결제내역"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement(Link, {
-                                href: "/products/advanced-search",
-                                children: React.createElement("a", {
-                                      className: itemStyle
-                                    }, React.createElement("span", undefined, "단품확인"))
-                              }),
+                          children: Caml_option.some(React.createElement(Link, {
+                                    href: "/products/advanced-search",
+                                    children: React.createElement("a", {
+                                          className: itemStyle
+                                        }, React.createElement("span", undefined, "단품확인"))
+                                  })),
                           className: "focus:outline-none"
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: React.createElement("button", {
-                                className: itemStyle,
-                                type: "button",
-                                onClick: logOut
-                              }, React.createElement("span", undefined, "로그아웃")),
+                          children: Caml_option.some(React.createElement("button", {
+                                    className: itemStyle,
+                                    type: "button",
+                                    onClick: logOut
+                                  }, React.createElement("span", undefined, "로그아웃"))),
                           className: "focus:outline-none"
                         }))));
 }
@@ -716,7 +697,7 @@ var LoggedInUserMenu$2 = {
   make: Header_Buyer$PC$LoggedInUserMenu
 };
 
-function Header_Buyer$PC$NotLoggedInUserMenu(Props) {
+function Header_Buyer$PC$NotLoggedInUserMenu(props) {
   var router = Router.useRouter();
   var redirect = Js_dict.get(router.query, "redirect");
   var redirectUrl;
@@ -752,9 +733,7 @@ var NotLoggedInUserMenu$1 = {
   make: Header_Buyer$PC$NotLoggedInUserMenu
 };
 
-function Header_Buyer$PC(Props) {
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
+function Header_Buyer$PC(props) {
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = typeof user === "number" ? [
       "/buyer/signin",
@@ -797,13 +776,13 @@ function Header_Buyer$PC(Props) {
                     }, React.createElement("div", {
                           className: "h-14 flex items-center divide-x"
                         }, React.createElement(ShopCategorySelect_Buyer.PC.make, {
-                              displayCategories: displayCategories
+                              displayCategories: props.displayCategories
                             }), React.createElement(RescriptReactErrorBoundary.make, {
                               children: React.createElement(React.Suspense, {
-                                    children: React.createElement(GnbBannerList_Buyer.make, {
-                                          gnbBanners: gnbBanners
-                                        }),
-                                    fallback: null
+                                    children: Caml_option.some(React.createElement(GnbBannerList_Buyer.make, {
+                                              gnbBanners: props.gnbBanners
+                                            })),
+                                    fallback: Caml_option.some(null)
                                   }),
                               fallback: (function (param) {
                                   return null;

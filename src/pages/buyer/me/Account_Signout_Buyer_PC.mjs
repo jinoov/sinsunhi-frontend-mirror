@@ -3,7 +3,8 @@
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Env from "../../../constants/Env.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import * as Locale from "../../../utils/Locale.mjs";
 import * as Checkbox from "../../../components/common/Checkbox.mjs";
 import * as Redirect from "../../../components/Redirect.mjs";
@@ -49,7 +50,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(AccountSignoutBuyerPC_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, AccountSignoutBuyerPC_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -139,17 +140,13 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function Account_Signout_Buyer_PC$Signout(Props) {
-  var sinsunCashDeposit = Props.sinsunCashDeposit;
-  var selected = Props.selected;
-  var setSelected = Props.setSelected;
-  var etc = Props.etc;
-  var setEtc = Props.setEtc;
-  var loading = Props.loading;
-  var onClickSignout = Props.onClickSignout;
-  var debtAmount = Props.debtAmount;
+function Account_Signout_Buyer_PC$Signout(props) {
+  var debtAmount = props.debtAmount;
+  var onClickSignout = props.onClickSignout;
+  var loading = props.loading;
+  var selected = props.selected;
   var router = Router.useRouter();
-  var match = React.useState(function () {
+  var match = React$1.useState(function () {
         return false;
       });
   var setAgree = match[1];
@@ -158,38 +155,38 @@ function Account_Signout_Buyer_PC$Signout(Props) {
           return a > 0;
         }));
   var disabled = !agree || loading || Belt_SetString.isEmpty(selected) || isDebtor;
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "flex flex-col mt-10 max-w-[640px]"
-            }, React.createElement(Account_Signout_Reason_Buyer.PC.make, {
+            }, React$1.createElement(Account_Signout_Reason_Buyer.PC.make, {
                   selected: selected,
-                  setSelected: setSelected,
-                  etc: etc,
-                  setEtc: setEtc
-                }), React.createElement("div", {
+                  setSelected: props.setSelected,
+                  etc: props.etc,
+                  setEtc: props.setEtc
+                }), React$1.createElement("div", {
                   className: "mt-4 p-10 border border-[#DCDFE3]"
-                }, React.createElement("div", undefined, "회원탈퇴 전에 유의사항을 꼭 확인하세요."), React.createElement("div", {
+                }, React$1.createElement("div", undefined, "회원탈퇴 전에 유의사항을 꼭 확인하세요."), React$1.createElement("div", {
                       className: "border border-gray-100 mt-6 mb-4"
-                    }), React.createElement(Account_Signout_Term_Buyer.make, {
+                    }), React$1.createElement(Account_Signout_Term_Buyer.make, {
                       className: "mt-6 list-disc pl-4 text-sm"
-                    })), React.createElement("div", {
+                    })), React$1.createElement("div", {
                   className: "mt-4 py-[22px] px-10 border border-[#DCDFE3] flex items-center justify-between"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "text-gray-600 text-sm"
-                    }, "신선캐시 잔액"), React.createElement("div", {
+                    }, "신선캐시 잔액"), React$1.createElement("div", {
                       className: "font-bold text-text-L1 text-[15px]"
-                    }, "" + Locale.Float.show(undefined, sinsunCashDeposit, 0) + "원")), debtAmount !== undefined ? React.createElement("div", {
+                    }, "" + Locale.Float.show(undefined, props.sinsunCashDeposit, 0) + "원")), debtAmount !== undefined ? React$1.createElement("div", {
                     className: "mt-4 py-[22px] px-10 border border-[#DCDFE3] flex items-center justify-between"
-                  }, React.createElement("div", {
+                  }, React$1.createElement("div", {
                         className: "text-gray-600 text-sm"
-                      }, "나중결제 미정산 금액"), React.createElement("div", {
+                      }, "나중결제 미정산 금액"), React$1.createElement("div", {
                         className: "font-bold text-text-L1 text-[15px]"
-                      }, "" + Locale.Float.show(undefined, debtAmount, 0) + "원")) : null, isDebtor ? React.createElement("div", {
+                      }, "" + Locale.Float.show(undefined, debtAmount, 0) + "원")) : null, isDebtor ? React$1.createElement("div", {
                     className: "text-notice text-sm mt-1 text-right"
-                  }, "미정산 금액이 남아있기 때문에 탈퇴를 할 수 없습니다.") : null, React.createElement("div", {
+                  }, "미정산 금액이 남아있기 때문에 탈퇴를 할 수 없습니다.") : null, React$1.createElement("div", {
                   className: "mt-10 flex flex-col items-center mb-20"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex items-center"
-                    }, React.createElement(Checkbox.make, {
+                    }, React$1.createElement(Checkbox.make, {
                           id: "agree",
                           name: "agree",
                           checked: agree,
@@ -199,20 +196,20 @@ function Account_Signout_Buyer_PC$Signout(Props) {
                                   });
                             }),
                           disabled: isDebtor
-                        }), React.createElement("label", {
+                        }), React$1.createElement("label", {
                           className: "ml-2",
                           htmlFor: "agree"
-                        }, "유의사항을 모두 확인했습니다.")), React.createElement("div", {
+                        }, "유의사항을 모두 확인했습니다.")), React$1.createElement("div", {
                       className: "flex mt-10"
-                    }, React.createElement("button", {
+                    }, React$1.createElement("button", {
                           className: "bg-gray-150 rounded-xl focus:outline-none w-full py-4 text-center mr-1 px-[70px]",
                           disabled: loading,
                           onClick: (function (param) {
                               router.push("/buyer/me/account");
                             })
-                        }, React.createElement("span", {
+                        }, React$1.createElement("span", {
                               className: "font-bold"
-                            }, "취소")), React.createElement("button", {
+                            }, "취소")), React$1.createElement("button", {
                           className: Cx.cx([
                                 "rounded-xl focus:outline-none w-full py-4 text-center ml-1 px-[70px]",
                                 disabled ? "bg-gray-150" : "bg-[#FCF0E6]"
@@ -221,7 +218,7 @@ function Account_Signout_Buyer_PC$Signout(Props) {
                           onClick: (function (param) {
                               Curry._1(onClickSignout, undefined);
                             })
-                        }, React.createElement("span", {
+                        }, React$1.createElement("span", {
                               className: Cx.cx([
                                     "font-bold",
                                     disabled ? "text-gray-300" : "text-[#FF7A38]"
@@ -233,28 +230,27 @@ var Signout = {
   make: Account_Signout_Buyer_PC$Signout
 };
 
-function Account_Signout_Buyer_PC$Content(Props) {
-  var query = Props.query;
+function Account_Signout_Buyer_PC$Content(props) {
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
-  var match$1 = use$1(query);
-  var match$2 = React.useState(function () {
+  var match$1 = use$1(props.query);
+  var match$2 = React$1.useState(function () {
         return /* Confirm */0;
       });
   var setStep = match$2[1];
-  var match$3 = React.useState(function () {
+  var match$3 = React$1.useState(function () {
         return "";
       });
   var password = match$3[0];
-  var match$4 = React.useState(function () {
+  var match$4 = React$1.useState(function () {
         
       });
   var selected = match$4[0];
-  var match$5 = React.useState(function () {
+  var match$5 = React$1.useState(function () {
         return "";
       });
   var etc = match$5[0];
-  var match$6 = React.useState(function () {
+  var match$6 = React$1.useState(function () {
         return false;
       });
   var setLoading = match$6[1];
@@ -283,9 +279,9 @@ function Account_Signout_Buyer_PC$Content(Props) {
                           ChannelTalkHelper.logout(undefined);
                           Redirect.setHref("/");
                         }), (function (param) {
-                          addToast(React.createElement("div", {
+                          addToast(React$1.createElement("div", {
                                     className: "flex items-center"
-                                  }, React.createElement(IconError.make, {
+                                  }, React$1.createElement(IconError.make, {
                                         width: "24",
                                         height: "24",
                                         className: "mr-2"
@@ -298,13 +294,13 @@ function Account_Signout_Buyer_PC$Content(Props) {
                         }));
           }));
   };
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "m-auto pt-10 flex flex-col min-w-[375px]"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "text-center"
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "font-bold text-[26px]"
-                    }, "회원탈퇴")), match$2[0] ? React.createElement(Account_Signout_Buyer_PC$Signout, {
+                    }, "회원탈퇴")), match$2[0] ? React$1.createElement(Account_Signout_Buyer_PC$Signout, {
                     sinsunCashDeposit: match$1.sinsunCashDeposit,
                     selected: selected,
                     setSelected: match$4[1],
@@ -313,7 +309,7 @@ function Account_Signout_Buyer_PC$Content(Props) {
                     loading: match$6[0],
                     onClickSignout: onClickSignout,
                     debtAmount: match$1.debtAmount
-                  }) : React.createElement(Account_Signout_ConfirmPassword_Buyer.PC.make, {
+                  }) : React$1.createElement(Account_Signout_ConfirmPassword_Buyer.PC.make, {
                     email: match$1.uid,
                     nextStep: (function (param) {
                         setStep(function (param) {
@@ -333,28 +329,27 @@ function $$default(param) {
   var router = Router.useRouter();
   var queryData = use(undefined, undefined, undefined, undefined, undefined);
   var viewer = queryData.viewer;
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "w-full min-h-screen flex flex-col"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex"
-                }, React.createElement(Header_Buyer.PC.make, {
+                }, React.createElementWithKey(Header_Buyer.PC.make, {
                       gnbBanners: param.gnbBanners,
-                      displayCategories: param.displayCategories,
-                      key: router.asPath
-                    })), React.createElement(Authorization.Buyer.make, {
-                  children: React.createElement(RescriptReactErrorBoundary.make, {
-                        children: React.createElement(React.Suspense, {
-                              children: viewer !== undefined ? React.createElement(Account_Signout_Buyer_PC$Content, {
-                                      query: viewer.fragmentRefs
-                                    }) : React.createElement("div", undefined, "계정정보를 가져오는데 실패했습니다"),
-                              fallback: null
+                      displayCategories: param.displayCategories
+                    }, router.asPath)), React$1.createElement(Authorization.Buyer.make, {
+                  children: React$1.createElement(RescriptReactErrorBoundary.make, {
+                        children: React$1.createElement(React$1.Suspense, {
+                              children: Caml_option.some(viewer !== undefined ? React$1.createElement(Account_Signout_Buyer_PC$Content, {
+                                          query: viewer.fragmentRefs
+                                        }) : React$1.createElement("div", undefined, "계정정보를 가져오는데 실패했습니다")),
+                              fallback: Caml_option.some(null)
                             }),
                         fallback: (function (param) {
-                            return React.createElement("div", undefined, "계정정보를 가져오는데 실패했습니다");
+                            return React$1.createElement("div", undefined, "계정정보를 가져오는데 실패했습니다");
                           })
                       }),
                   title: "신선하이"
-                }), React.createElement(Footer_Buyer.PC.make, {}));
+                }), React$1.createElement(Footer_Buyer.PC.make, {}));
 }
 
 function getServerSideProps(ctx) {

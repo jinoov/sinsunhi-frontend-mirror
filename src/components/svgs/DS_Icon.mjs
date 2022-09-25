@@ -3,21 +3,17 @@
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 
-function DS_Icon$Common$LineCheckedMedium1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$LineCheckedMedium1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               viewBox: "0 0 16 16",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M12.997 5.31919L12.0158 4.33789L6.80654 9.51589L3.94123 6.7511L3.00757 7.77989L6.84312 11.4401L12.997 5.31919Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -26,22 +22,18 @@ var LineCheckedMedium1 = {
   make: DS_Icon$Common$LineCheckedMedium1
 };
 
-function DS_Icon$Common$LineCheckedLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$LineCheckedLarge1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M20.5387 7.47815C20.8269 7.77566 20.8194 8.25047 20.5218 8.53868L10.1993 18.5387C9.90842 18.8204 9.44642 18.8204 9.15557 18.5387L3.47815 13.0387C3.18065 12.7505 3.17311 12.2757 3.46132 11.9782C3.74953 11.6806 4.22434 11.6731 4.52185 11.9613L9.67742 16.9558L19.4782 7.46132C19.7757 7.17311 20.2505 7.18065 20.5387 7.47815Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -50,22 +42,18 @@ var LineCheckedLarge1 = {
   make: DS_Icon$Common$LineCheckedLarge1
 };
 
-function DS_Icon$Common$CheckedLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$CheckedLarge1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M3 1C1.89543 1 1 1.89543 1 3V21C1 22.1046 1.89543 23 3 23H21C22.1046 23 23 22.1046 23 21V3C23 1.89543 22.1046 1 21 1H3ZM17.7348 9.67829C18.1094 9.27246 18.0841 8.63981 17.6783 8.2652C17.2725 7.8906 16.6398 7.9159 16.2652 8.32172L10.9712 14.0569L7.70711 10.7929C7.31658 10.4024 6.68342 10.4024 6.29289 10.7929C5.90237 11.1834 5.90237 11.8166 6.29289 12.2071L10.2929 16.2071C10.4853 16.3996 10.7479 16.5052 11.02 16.4998C11.2921 16.4944 11.5502 16.3783 11.7348 16.1783L17.7348 9.67829Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -74,16 +62,12 @@ var CheckedLarge1 = {
   make: DS_Icon$Common$CheckedLarge1
 };
 
-function DS_Icon$Common$UncheckedLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$UncheckedLarge1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
-              fill: Belt_Option.getWithDefault(fill, "none"),
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
+              fill: Belt_Option.getWithDefault(props.fill, "none"),
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
@@ -104,21 +88,17 @@ var UncheckedLarge1 = {
   make: DS_Icon$Common$UncheckedLarge1
 };
 
-function DS_Icon$Common$DeleteMedium1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$DeleteMedium1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               viewBox: "0 0 16 16",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M7.99997 1.3335C8.29452 1.3335 8.5333 1.57228 8.5333 1.86683V3.34017H12.26H13.8333C14.1279 3.34017 14.3666 3.57895 14.3666 3.8735C14.3666 4.16805 14.1279 4.40684 13.8333 4.40684H12.7837L12.6199 13.4565C12.6146 13.7472 12.3774 13.9802 12.0866 13.9802H3.91329C3.6225 13.9802 3.38531 13.7472 3.38005 13.4565L3.21619 4.40684H2.16663C1.87208 4.40684 1.6333 4.16805 1.6333 3.8735C1.6333 3.57895 1.87208 3.34017 2.16663 3.34017H3.73996H7.46663V1.86683C7.46663 1.57228 7.70542 1.3335 7.99997 1.3335ZM11.7169 4.40684H4.28304L4.43706 12.9135H11.5629L11.7169 4.40684ZM8.49326 6.0068C8.49326 5.71225 8.25448 5.47347 7.95993 5.47347C7.66538 5.47347 7.4266 5.71225 7.4266 6.0068V11.4401C7.4266 11.7347 7.66538 11.9735 7.95993 11.9735C8.25448 11.9735 8.49326 11.7347 8.49326 11.4401V6.0068ZM10.08 5.47347C10.3745 5.47347 10.6133 5.71225 10.6133 6.0068V11.4401C10.6133 11.7347 10.3745 11.9735 10.08 11.9735C9.78541 11.9735 9.54663 11.7347 9.54663 11.4401V6.0068C9.54663 5.71225 9.78541 5.47347 10.08 5.47347ZM6.37331 6.0068C6.37331 5.71225 6.13453 5.47347 5.83997 5.47347C5.54542 5.47347 5.30664 5.71225 5.30664 6.0068V11.4401C5.30664 11.7347 5.54542 11.9735 5.83997 11.9735C6.13453 11.9735 6.37331 11.7347 6.37331 11.4401V6.0068Z",
-                  fill: Belt_Option.getWithDefault(fill, "#262626"),
+                  fill: Belt_Option.getWithDefault(props.fill, "#262626"),
                   fillRule: "evenodd"
                 }));
 }
@@ -127,22 +107,18 @@ var DeleteMedium1 = {
   make: DS_Icon$Common$DeleteMedium1
 };
 
-function DS_Icon$Common$ArrowLeftXLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$ArrowLeftXLarge1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 32 32",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M9.11631 16.8839C8.62815 16.3957 8.62815 15.6043 9.11631 15.1161L18.1162 6.11619C18.6044 5.62804 19.3958 5.62804 19.884 6.11619C20.3722 6.60435 20.3722 7.3958 19.884 7.88396L11.768 16L19.884 24.116C20.3722 24.6042 20.3722 25.3957 19.884 25.8838C19.3958 26.372 18.6044 26.372 18.1162 25.8838L9.11631 16.8839Z",
-                  fill: Belt_Option.getWithDefault(fill, "#262626"),
+                  fill: Belt_Option.getWithDefault(props.fill, "#262626"),
                   fillRule: "evenodd"
                 }));
 }
@@ -151,22 +127,18 @@ var ArrowLeftXLarge1 = {
   make: DS_Icon$Common$ArrowLeftXLarge1
 };
 
-function DS_Icon$Common$ArrowRightLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$ArrowRightLarge1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M13.5594 12L8.5 17.0345L9.4703 18L15.5 12L9.4703 6L8.5 6.96552L13.5594 12Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -175,22 +147,18 @@ var ArrowRightLarge1 = {
   make: DS_Icon$Common$ArrowRightLarge1
 };
 
-function DS_Icon$Common$RadioOnLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$RadioOnLarge1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 18.0751 5.92487 23 12 23ZM12 8C14.2091 8 16 9.79086 16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -199,15 +167,12 @@ var RadioOnLarge1 = {
   make: DS_Icon$Common$RadioOnLarge1
 };
 
-function DS_Icon$Common$RadioOffLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$RadioOffLarge1(props) {
+  var fill = props.fill;
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
@@ -227,16 +192,13 @@ var RadioOffLarge1 = {
   make: DS_Icon$Common$RadioOffLarge1
 };
 
-function DS_Icon$Common$SelectLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
-  var stroke = Props.stroke;
+function DS_Icon$Common$SelectLarge1(props) {
+  var stroke = props.stroke;
+  var fill = props.fill;
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
@@ -261,22 +223,18 @@ var SelectLarge1 = {
   make: DS_Icon$Common$SelectLarge1
 };
 
-function DS_Icon$Common$CheckedLarge2(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$CheckedLarge2(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12ZM11.0573 13.7136L16.2652 8.07172C16.6398 7.6659 17.2725 7.6406 17.6783 8.0152C18.0841 8.38981 18.1094 9.02246 17.7348 9.42829L11.7348 15.9283C11.5502 16.1283 11.2921 16.2444 11.02 16.2498C10.7479 16.2552 10.4853 16.1496 10.2929 15.9571L6.29289 11.9571C5.90237 11.5666 5.90237 10.9334 6.29289 10.5429C6.68342 10.1524 7.31658 10.1524 7.70711 10.5429L9.11515 11.9509L11.0573 13.7136Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -285,22 +243,18 @@ var CheckedLarge2 = {
   make: DS_Icon$Common$CheckedLarge2
 };
 
-function DS_Icon$Common$ArrowDownLarge1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$ArrowDownLarge1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M12 13.5594L6.96552 8.5L6 9.4703L12 15.5L18 9.4703L17.0345 8.5L12 13.5594Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -309,15 +263,11 @@ var ArrowDownLarge1 = {
   make: DS_Icon$Common$ArrowDownLarge1
 };
 
-function DS_Icon$Common$RefreshMedium1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$RefreshMedium1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 16 16",
               xmlns: "http://www.w3.org/2000/svg"
@@ -327,7 +277,7 @@ function DS_Icon$Common$RefreshMedium1(Props) {
                 }), React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M12.3 4.8V2H13.7V6.2H9.5V4.8H12.3Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -336,22 +286,18 @@ var RefreshMedium1 = {
   make: DS_Icon$Common$RefreshMedium1
 };
 
-function DS_Icon$Common$ClearMedium1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$ClearMedium1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 16 16",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM10.9593 4.57134L11.7618 5.37946L8.95312 8.20781L11.7619 11.0363L10.9594 11.8444L8.15063 9.01593L5.34184 11.8444L4.53935 11.0363L7.34814 8.20781L4.5395 5.37946L5.34199 4.57134L8.15063 7.39969L10.9593 4.57134Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -360,22 +306,18 @@ var ClearMedium1 = {
   make: DS_Icon$Common$ClearMedium1
 };
 
-function DS_Icon$Common$PlusSmall1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$PlusSmall1(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 12 12",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   clipRule: "evenodd",
                   d: "M5.3 6.7V12H6.7V6.7H12V5.3H6.7V0H5.3V5.3H0V6.7H5.3Z",
-                  fill: Belt_Option.getWithDefault(fill, "black"),
+                  fill: Belt_Option.getWithDefault(props.fill, "black"),
                   fillRule: "evenodd"
                 }));
 }
@@ -384,15 +326,12 @@ var PlusSmall1 = {
   make: DS_Icon$Common$PlusSmall1
 };
 
-function DS_Icon$Common$EditSmall1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$EditSmall1(props) {
+  var fill = props.fill;
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 14 14",
               xmlns: "http://www.w3.org/2000/svg"
@@ -413,21 +352,17 @@ var EditSmall1 = {
   make: DS_Icon$Common$EditSmall1
 };
 
-function DS_Icon$Common$CloseLarge2(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$CloseLarge2(props) {
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 24 24",
               xmlns: "http://www.w3.org/2000/svg"
             }, React.createElement("path", {
                   d: "M12.9232 12.0764L18.2973 6.69203L17.3073 5.7002L11.9333 11.0845L6.69014 5.83136L5.7002 6.8232L10.9433 12.0764L5.85222 17.1772L6.84217 18.169L11.9333 13.0682L17.1553 18.3002L18.1453 17.3084L12.9232 12.0764Z",
-                  fill: Belt_Option.getWithDefault(fill, "black")
+                  fill: Belt_Option.getWithDefault(props.fill, "black")
                 }));
 }
 
@@ -435,15 +370,12 @@ var CloseLarge2 = {
   make: DS_Icon$Common$CloseLarge2
 };
 
-function DS_Icon$Common$PeriodSmall1(Props) {
-  var height = Props.height;
-  var width = Props.width;
-  var fill = Props.fill;
-  var className = Props.className;
+function DS_Icon$Common$PeriodSmall1(props) {
+  var fill = props.fill;
   return React.createElement("svg", {
-              className: Belt_Option.getWithDefault(className, ""),
-              height: height,
-              width: width,
+              className: Belt_Option.getWithDefault(props.className, ""),
+              height: props.height,
+              width: props.width,
               fill: "none",
               viewBox: "0 0 14 14",
               xmlns: "http://www.w3.org/2000/svg"

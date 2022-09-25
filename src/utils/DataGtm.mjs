@@ -14,13 +14,11 @@ function push(data) {
   }
 }
 
-function DataGtm(Props) {
-  var children = Props.children;
-  var dataGtm = Props.dataGtm;
+function DataGtm(props) {
   return React.createElement(ReactUtil.SpreadProps.make, {
-              children: children,
+              children: props.children,
               props: {
-                "data-gtm": dataGtm
+                "data-gtm": props.dataGtm
               }
             });
 }

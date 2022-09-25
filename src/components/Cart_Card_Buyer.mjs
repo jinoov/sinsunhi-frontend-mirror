@@ -4,6 +4,7 @@ import * as React from "react";
 import * as Locale from "../utils/Locale.mjs";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Cart_Buyer_Form from "./Cart_Buyer_Form.mjs";
 import * as Cart_Buyer_Util from "./Cart_Buyer_Util.mjs";
 import * as ReactHookForm from "react-hook-form";
@@ -13,14 +14,13 @@ import CheckboxDisableSvg from "../../public/assets/checkbox-disable.svg";
 
 var checkboxDisableIcon = CheckboxDisableSvg;
 
-function Cart_Card_Buyer$SoldOut(Props) {
-  var productOption = Props.productOption;
-  var refetchCart = Props.refetchCart;
-  var prefix = Props.prefix;
+function Cart_Card_Buyer$SoldOut(props) {
+  var refetchCart = props.refetchCart;
+  var productOption = props.productOption;
   var match = ReactHookForm.useFormContext({
         mode: "onChange"
       }, undefined);
-  var formNames = Cart_Buyer_Form.names(prefix);
+  var formNames = Cart_Buyer_Form.names(props.prefix);
   return React.createElement("div", {
               className: "w-full p-3 flex flex-col gap-1 bg-gray-50 rounded-md"
             }, React.createElement("div", {
@@ -35,14 +35,14 @@ function Cart_Card_Buyer$SoldOut(Props) {
                           className: "pr-5 text-sm text-gray-600"
                         }, Belt_Option.getWithDefault(productOption.productOptionName, ""))), React.createElement(ReactHookForm.Controller, {
                       name: formNames.checked,
-                      control: match.control,
+                      control: Caml_option.some(match.control),
                       render: (function (param) {
                           return React.createElement(Cart_Delete_Button.make, {
                                       productOptions: [productOption],
                                       refetchCart: refetchCart
                                     });
                         }),
-                      defaultValue: true
+                      defaultValue: Caml_option.some(true)
                     })), React.createElement("div", {
                   className: "flex justify-end items-center pl-8 mt-1 gap-2"
                 }, React.createElement("span", {
@@ -56,11 +56,10 @@ var SoldOut = {
   make: Cart_Card_Buyer$SoldOut
 };
 
-function Cart_Card_Buyer$Container(Props) {
-  var productOption = Props.productOption;
-  var prefix = Props.prefix;
-  var refetchCart = Props.refetchCart;
+function Cart_Card_Buyer$Container(props) {
+  var productOption = props.productOption;
   var quantity = productOption.quantity;
+  var prefix = props.prefix;
   var formNames = Cart_Buyer_Form.names(prefix);
   var watchQuantity = Belt_Option.getWithDefault(Belt_Option.flatMap(ReactHookForm.useWatch({
                 name: formNames.quantity
@@ -79,7 +78,7 @@ function Cart_Card_Buyer$Container(Props) {
                           className: "pr-5 text-sm text-gray-800"
                         }, Belt_Option.getWithDefault(productOption.productOptionName, ""))), React.createElement(Cart_Delete_Button.make, {
                       productOptions: [productOption],
-                      refetchCart: refetchCart
+                      refetchCart: props.refetchCart
                     })), React.createElement("div", {
                   className: "flex justify-between items-center pl-8 mt-1"
                 }, React.createElement(Cart_QuantitySelector.make, {
@@ -95,25 +94,25 @@ var Container = {
   make: Cart_Card_Buyer$Container
 };
 
-function Cart_Card_Buyer(Props) {
-  var productOption = Props.productOption;
-  var refetchCart = Props.refetchCart;
-  var prefix = Props.prefix;
-  var productStatus = Props.productStatus;
+function Cart_Card_Buyer(props) {
+  var prefix = props.prefix;
+  var refetchCart = props.refetchCart;
+  var productOption = props.productOption;
   var match = Cart_Buyer_Form.soldable(productOption.optionStatus);
-  var match$1 = Cart_Buyer_Form.soldable(productStatus);
+  var match$1 = Cart_Buyer_Form.soldable(props.productStatus);
   if (match && match$1) {
     return React.createElement(Cart_Card_Buyer$Container, {
                 productOption: productOption,
                 prefix: prefix,
                 refetchCart: refetchCart
               });
+  } else {
+    return React.createElement(Cart_Card_Buyer$SoldOut, {
+                productOption: productOption,
+                refetchCart: refetchCart,
+                prefix: prefix
+              });
   }
-  return React.createElement(Cart_Card_Buyer$SoldOut, {
-              productOption: productOption,
-              refetchCart: refetchCart,
-              prefix: prefix
-            });
 }
 
 var Form;

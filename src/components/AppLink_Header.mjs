@@ -4,7 +4,7 @@ import * as React from "react";
 import Head from "next/head";
 import * as Router from "next/router";
 
-function AppLink_Header(Props) {
+function AppLink_Header(props) {
   var router = Router.useRouter();
   return React.createElement(Head, {
               children: null

@@ -4,7 +4,7 @@ import * as React from "react";
 import * as IconClose from "../components/svgs/IconClose.mjs";
 import Head from "next/head";
 
-function Privacy(Props) {
+function Privacy(props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "개인 정보 수집이용 동의 - 신선하이")
                 }), React.createElement("div", {

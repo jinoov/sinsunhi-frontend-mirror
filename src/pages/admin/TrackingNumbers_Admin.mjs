@@ -131,7 +131,7 @@ function response_decode(v) {
         };
 }
 
-function TrackingNumbers_Admin$Orders(Props) {
+function TrackingNumbers_Admin$Orders(props) {
   var router = Router.useRouter();
   var user = CustomHooks.Auth.use(undefined);
   var match = Swr.useSWRConfig();
@@ -371,7 +371,7 @@ var Orders = {
   make: TrackingNumbers_Admin$Orders
 };
 
-function TrackingNumbers_Admin(Props) {
+function TrackingNumbers_Admin(props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(TrackingNumbers_Admin$Orders, {}),
               title: "관리자 송장번호 조회"

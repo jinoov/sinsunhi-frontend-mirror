@@ -3,20 +3,17 @@
 import * as React from "react";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 
-function IconSise(Props) {
-  var width = Props.width;
-  var height = Props.height;
-  var fill = Props.fill;
-  var className = Props.className;
+function IconSise(props) {
+  var fill = props.fill;
   var tmp = {
-    height: height,
-    width: width,
+    height: props.height,
+    width: props.width,
     fill: "none",
     viewBox: "0 0 24 24",
     xmlns: "http://www.w3.org/2000/svg"
   };
-  if (className !== undefined) {
-    tmp.className = Caml_option.valFromOption(className);
+  if (props.className !== undefined) {
+    tmp.className = Caml_option.valFromOption(props.className);
   }
   return React.createElement("svg", tmp, React.createElement("rect", {
                   height: "24",

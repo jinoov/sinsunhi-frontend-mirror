@@ -110,8 +110,8 @@ var btnStyle = "w-full bg-blue-gray-700 rounded-xl text-white font-bold whitespa
 
 var btnStyleDisabled = "w-full bg-gray-50 rounded-xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1";
 
-function VerifyBusinessNumber(Props) {
-  var onChange = Props.onChange;
+function VerifyBusinessNumber(props) {
+  var onChange = props.onChange;
   var match = React.useState(function () {
         return false;
       });

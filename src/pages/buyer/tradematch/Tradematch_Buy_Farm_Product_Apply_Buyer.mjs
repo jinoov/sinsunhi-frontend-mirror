@@ -410,23 +410,21 @@ var Mutation = {
   DeleteTradematchDemand: DeleteTradematchDemand
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer$Layout(Props) {
-  var children = Props.children;
+function Tradematch_Buy_Farm_Product_Apply_Buyer$Layout(props) {
   return React.createElement("div", {
               className: "bg-gray-100"
             }, React.createElement("div", {
                   className: "relative container bg-white max-w-3xl mx-auto min-h-screen"
-                }, children));
+                }, props.children));
 }
 
 var Layout = {
   make: Tradematch_Buy_Farm_Product_Apply_Buyer$Layout
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer$Header(Props) {
-  var title = Props.title;
-  var handleClickLeftButtonOpt = Props.handleClickLeftButton;
-  var handleClickLeftButton = handleClickLeftButtonOpt !== undefined ? handleClickLeftButtonOpt : (function (prim) {
+function Tradematch_Buy_Farm_Product_Apply_Buyer$Header(props) {
+  var handleClickLeftButton = props.handleClickLeftButton;
+  var handleClickLeftButton$1 = handleClickLeftButton !== undefined ? handleClickLeftButton : (function (prim) {
         window.history.back();
       });
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
@@ -437,7 +435,7 @@ function Tradematch_Buy_Farm_Product_Apply_Buyer$Header(Props) {
                           className: "px-5 py-4 flex justify-between"
                         }, React.createElement("button", {
                               onClick: (function (param) {
-                                  Curry._1(handleClickLeftButton, undefined);
+                                  Curry._1(handleClickLeftButton$1, undefined);
                                 })
                             }, React.createElement(IconArrow.make, {
                                   height: "24",
@@ -445,7 +443,7 @@ function Tradematch_Buy_Farm_Product_Apply_Buyer$Header(Props) {
                                   className: "rotate-180"
                                 })), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-base"
-                                }, Belt_Option.mapWithDefault(title, "", (function (x) {
+                                }, Belt_Option.mapWithDefault(props.title, "", (function (x) {
                                         return x;
                                       })))), React.createElement("div", undefined)))), React.createElement("div", {
                   className: "w-full h-14"
@@ -456,7 +454,7 @@ var Header = {
   make: Tradematch_Buy_Farm_Product_Apply_Buyer$Header
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer$ProgressBar(Props) {
+function Tradematch_Buy_Farm_Product_Apply_Buyer$ProgressBar(props) {
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var percentage = (match.currentIndex + 1 | 0) / (match.length + 1 | 0) * 100;
   var style = {
@@ -474,7 +472,7 @@ var ProgressBar = {
   make: Tradematch_Buy_Farm_Product_Apply_Buyer$ProgressBar
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer$Skeleton(Props) {
+function Tradematch_Buy_Farm_Product_Apply_Buyer$Skeleton(props) {
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "px-5 py-9"
                 }, React.createElement(Skeleton.Box.make, {
@@ -510,7 +508,7 @@ var Skeleton$1 = {
   make: Tradematch_Buy_Farm_Product_Apply_Buyer$Skeleton
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer$NotFoundProductOrDemand(Props) {
+function Tradematch_Buy_Farm_Product_Apply_Buyer$NotFoundProductOrDemand(props) {
   return React.createElement(DS_Dialog.Popup.Root.make, {
               children: React.createElement(DS_Dialog.Popup.Portal.make, {
                     children: null
@@ -531,7 +529,7 @@ function Tradematch_Buy_Farm_Product_Apply_Buyer$NotFoundProductOrDemand(Props) 
                                   asChild: true
                                 })
                           }))),
-              open: true
+              _open: true
             });
 }
 
@@ -539,10 +537,9 @@ var NotFoundProductOrDemand = {
   make: Tradematch_Buy_Farm_Product_Apply_Buyer$NotFoundProductOrDemand
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer$StatusChecker(Props) {
-  var currentDemand = Props.currentDemand;
-  var connectionId = Props.connectionId;
-  var children = Props.children;
+function Tradematch_Buy_Farm_Product_Apply_Buyer$StatusChecker(props) {
+  var connectionId = props.connectionId;
+  var currentDemand = props.currentDemand;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var match$1 = match.router;
   var replace = match$1.replace;
@@ -563,7 +560,7 @@ function Tradematch_Buy_Farm_Product_Apply_Buyer$StatusChecker(Props) {
       });
   var setIsOpenCheckDraftDemand = match$5[1];
   var isOpenCheckDraftDemand = match$5[0];
-  return React.createElement(React.Fragment, undefined, isOpenCheckDraftDemand ? React.createElement(React.Fragment, undefined, React.createElement(Tradematch_Buy_Farm_Product_Apply_Buyer$Header, {}), React.createElement(Tradematch_Buy_Farm_Product_Apply_Buyer$Skeleton, {})) : children, React.createElement(DS_Dialog.Popup.Root.make, {
+  return React.createElement(React.Fragment, undefined, isOpenCheckDraftDemand ? React.createElement(React.Fragment, undefined, React.createElement(Tradematch_Buy_Farm_Product_Apply_Buyer$Header, {}), React.createElement(Tradematch_Buy_Farm_Product_Apply_Buyer$Skeleton, {})) : props.children, React.createElement(DS_Dialog.Popup.Root.make, {
                   children: React.createElement(DS_Dialog.Popup.Portal.make, {
                         children: null
                       }, React.createElement(DS_Dialog.Popup.Overlay.make, {}), React.createElement(DS_Dialog.Popup.Content.make, {
@@ -655,7 +652,7 @@ function Tradematch_Buy_Farm_Product_Apply_Buyer$StatusChecker(Props) {
                                         }),
                                     asChild: true
                                   })))),
-                  open: isOpenCheckDraftDemand
+                  _open: isOpenCheckDraftDemand
                 }));
 }
 
@@ -663,8 +660,8 @@ var StatusChecker = {
   make: Tradematch_Buy_Farm_Product_Apply_Buyer$StatusChecker
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer$Content(Props) {
-  var matchingProduct = Props.matchingProduct;
+function Tradematch_Buy_Farm_Product_Apply_Buyer$Content(props) {
+  var matchingProduct = props.matchingProduct;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var draftStatusTradematchDemands = use$1({
         first: 100,
@@ -713,10 +710,10 @@ function Tradematch_Buy_Farm_Product_Apply_Buyer$Content(Props) {
         break;
     case /* Shipping */5 :
         tmp = React.createElement(React.Suspense, {
-              children: React.createElement(Tradematch_Buy_Farm_Apply_Steps_Buyer.Shipping.make, {
-                    currentDemand: currentDemand
-                  }),
-              fallback: React.createElement(Tradematch_Buy_Farm_Product_Apply_Buyer$Skeleton, {})
+              children: Caml_option.some(React.createElement(Tradematch_Buy_Farm_Apply_Steps_Buyer.Shipping.make, {
+                        currentDemand: currentDemand
+                      })),
+              fallback: Caml_option.some(React.createElement(Tradematch_Buy_Farm_Product_Apply_Buyer$Skeleton, {}))
             });
         break;
     
@@ -734,10 +731,9 @@ var Content = {
   make: Tradematch_Buy_Farm_Product_Apply_Buyer$Content
 };
 
-function Tradematch_Buy_Farm_Product_Apply_Buyer(Props) {
-  var pNumber = Props.pNumber;
+function Tradematch_Buy_Farm_Product_Apply_Buyer(props) {
   var match = use({
-        productNumber: pNumber
+        productNumber: props.pNumber
       }, undefined, undefined, undefined, undefined);
   var product = match.product;
   if (product !== undefined && product.NAME === "MatchingProduct") {

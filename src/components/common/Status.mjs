@@ -121,9 +121,7 @@ function displayCount(status, s) {
   }
 }
 
-function Status$Tooltip(Props) {
-  var text = Props.text;
-  var fill = Props.fill;
+function Status$Tooltip(props) {
   return React.createElement(ReactTooltip.Root, {
               children: null,
               delayDuration: 300
@@ -131,7 +129,7 @@ function Status$Tooltip(Props) {
                   children: React.createElement(IconInfo.make, {
                         height: "16",
                         width: "16",
-                        fill: fill
+                        fill: props.fill
                       })
                 }), React.createElement(ReactTooltip.Content, {
                   children: React.createElement("div", {
@@ -140,7 +138,7 @@ function Status$Tooltip(Props) {
                             className: "absolute w-full -top-6 left-1/2 transform -translate-x-1/2 flex flex-col justify-center"
                           }, React.createElement("h5", {
                                 className: "absolute w-full left-1/2 transform -translate-x-1/2 bg-white border border-primary text-primary text-sm text-center py-1.5 font-bold rounded-xl shadow-tooltip"
-                              }, text), React.createElement("div", {
+                              }, props.text), React.createElement("div", {
                                 className: "absolute h-3 w-3 rounded-sm top-3 bg-white border-b border-r border-primary left-1/2 transform -translate-x-1/2 rotate-45"
                               }))),
                   side: "top",
@@ -152,7 +150,7 @@ var Tooltip = {
   make: Status$Tooltip
 };
 
-function Status$Total(Props) {
+function Status$Total(props) {
   var router = Router.useRouter();
   var status = CustomHooks.OrdersSummary.use(Period.currentPeriod(router), undefined);
   var totalCount = function (param) {
@@ -185,8 +183,8 @@ var Total = {
   make: Status$Total
 };
 
-function Status$Item(Props) {
-  var kind = Props.kind;
+function Status$Item(props) {
+  var kind = props.kind;
   var router = Router.useRouter();
   var status = CustomHooks.OrdersSummary.use(Period.currentPeriod(router), undefined);
   var Converter$1 = Converter.Status({});

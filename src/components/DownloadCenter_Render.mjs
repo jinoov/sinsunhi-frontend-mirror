@@ -6,8 +6,7 @@ import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as Download_Center_Table from "./Download_Center_Table.mjs";
 
-function DownloadCenter_Render(Props) {
-  var children = Props.children;
+function DownloadCenter_Render(props) {
   var router = Router.useRouter();
   var status = CustomHooks.Downloads.use(new URLSearchParams(router.query).toString());
   if (typeof status === "number") {
@@ -20,7 +19,7 @@ function DownloadCenter_Render(Props) {
   }
   var decode = CustomHooks.Downloads.downloads_decode(status._0);
   if (decode.TAG === /* Ok */0) {
-    return React.cloneElement(children, {
+    return React.cloneElement(props.children, {
                 children: React.createElement(Download_Center_Table.make, {
                       "downloads'": decode._0
                     })

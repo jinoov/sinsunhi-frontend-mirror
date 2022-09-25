@@ -63,11 +63,10 @@ var TypedProductFragment = {
   useOpt: useOpt$1
 };
 
-function Product_Admin$Product_Option_Link_Button$Link_Button(Props) {
-  var productId = Props.productId;
-  var isOptionEmpty = Props.isOptionEmpty;
+function Product_Admin$Product_Option_Link_Button$Link_Button(props) {
+  var productId = props.productId;
   var defaultStyle = "max-w-min  py-0.5 px-2 rounded mr-2 whitespace-nowrap";
-  if (isOptionEmpty) {
+  if (props.isOptionEmpty) {
     return React.createElement(Link, {
                 href: "/admin/products/" + productId + "/create-options",
                 children: React.createElement("button", {
@@ -94,8 +93,8 @@ var Link_Button = {
   make: Product_Admin$Product_Option_Link_Button$Link_Button
 };
 
-function Product_Admin$Product_Option_Link_Button(Props) {
-  var typedProduct = Props.typedProduct;
+function Product_Admin$Product_Option_Link_Button(props) {
+  var typedProduct = props.typedProduct;
   var variant = typedProduct.NAME;
   if (variant === "MatchingProduct" || variant === "QuotedProduct") {
     return React.createElement("button", {
@@ -117,9 +116,8 @@ var Product_Option_Link_Button = {
   make: Product_Admin$Product_Option_Link_Button
 };
 
-function Product_Admin(Props) {
-  var query = Props.query;
-  var product = use(query);
+function Product_Admin(props) {
+  var product = use(props.query);
   var typedProduct = use$1(product.fragmentRefs);
   var displayCategoriesToTextes = function (categories) {
     return Belt_Array.map(categories, (function (param) {

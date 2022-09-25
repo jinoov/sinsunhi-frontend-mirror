@@ -32,16 +32,12 @@ function formatTime(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "HH:mm");
 }
 
-function Order_Seller$Item$Table(Props) {
-  var order = Props.order;
-  var courierCode = Props.courierCode;
-  var setCourier = Props.setCourier;
-  var invoice = Props.invoice;
-  var onChangeInvoice = Props.onChangeInvoice;
-  var onSubmitInvoice = Props.onSubmitInvoice;
-  var check = Props.check;
-  var onCheckOrder = Props.onCheckOrder;
-  var onClickPacking = Props.onClickPacking;
+function Order_Seller$Item$Table(props) {
+  var onClickPacking = props.onClickPacking;
+  var onSubmitInvoice = props.onSubmitInvoice;
+  var invoice = props.invoice;
+  var courierCode = props.courierCode;
+  var order = props.order;
   var match = React.useState(function () {
         return /* Hide */1;
       });
@@ -98,7 +94,7 @@ function Order_Seller$Item$Table(Props) {
         var match$3 = order.invoice;
         tmp = React.createElement(React.Fragment, undefined, React.createElement(Select_Courier.make, {
                   courierCode: courierCode,
-                  setCourier: setCourier
+                  setCourier: props.setCourier
                 }), React.createElement("div", {
                   className: "flex mt-1"
                 }, React.createElement("label", {
@@ -108,9 +104,8 @@ function Order_Seller$Item$Table(Props) {
                           name: "invoice-number",
                           placeholder: "송장번호입력",
                           value: Belt_Option.getWithDefault(invoice, ""),
-                          onChange: onChangeInvoice,
-                          size: /* Small */2,
-                          error: undefined
+                          onChange: props.onChangeInvoice,
+                          size: /* Small */2
                         })), match$3 !== undefined ? React.createElement("button", {
                         className: "py-1 px-2 rounded-md bg-gray-300 text-white ml-1 whitespace-nowrap",
                         type: "button",
@@ -171,8 +166,8 @@ function Order_Seller$Item$Table(Props) {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement(Checkbox.make, {
                           id: "checkbox-" + order.orderProductNo + "",
-                          checked: Curry._1(check, order.orderProductNo),
-                          onChange: Curry._1(onCheckOrder, order.orderProductNo),
+                          checked: Curry._1(props.check, order.orderProductNo),
+                          onChange: Curry._1(props.onCheckOrder, order.orderProductNo),
                           disabled: isDisabedCheckbox
                         })), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
@@ -243,14 +238,12 @@ var Table = {
   make: Order_Seller$Item$Table
 };
 
-function Order_Seller$Item$Card(Props) {
-  var order = Props.order;
-  var courierCode = Props.courierCode;
-  var setCourier = Props.setCourier;
-  var invoice = Props.invoice;
-  var onChangeInvoice = Props.onChangeInvoice;
-  var onSubmitInvoice = Props.onSubmitInvoice;
-  var onClickPacking = Props.onClickPacking;
+function Order_Seller$Item$Card(props) {
+  var onClickPacking = props.onClickPacking;
+  var onSubmitInvoice = props.onSubmitInvoice;
+  var invoice = props.invoice;
+  var courierCode = props.courierCode;
+  var order = props.order;
   var match = React.useState(function () {
         return /* Hide */1;
       });
@@ -284,7 +277,7 @@ function Order_Seller$Item$Card(Props) {
                   className: "flex-1"
                 }, React.createElement(Select_Courier.make, {
                       courierCode: courierCode,
-                      setCourier: setCourier
+                      setCourier: props.setCourier
                     }))), React.createElement("div", {
               className: "flex-1 flex mt-1"
             }, React.createElement("span", {
@@ -298,9 +291,8 @@ function Order_Seller$Item$Card(Props) {
                           name: "invoice-number",
                           placeholder: "송장번호입력",
                           value: Belt_Option.getWithDefault(invoice, ""),
-                          onChange: onChangeInvoice,
-                          size: /* Large */0,
-                          error: undefined
+                          onChange: props.onChangeInvoice,
+                          size: /* Large */0
                         })), match$2 !== undefined ? React.createElement("button", {
                         className: "h-full px-4 rounded-xl bg-gray-300 text-white font-bold ml-1 whitespace-nowrap",
                         type: "button",
@@ -503,11 +495,9 @@ var Item = {
   Card: Card
 };
 
-function Order_Seller(Props) {
-  var order = Props.order;
-  var check = Props.check;
-  var onCheckOrder = Props.onCheckOrder;
-  var onClickPacking = Props.onClickPacking;
+function Order_Seller(props) {
+  var onClickPacking = props.onClickPacking;
+  var order = props.order;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -564,8 +554,8 @@ function Order_Seller(Props) {
                   invoice: invoice,
                   onChangeInvoice: handleOnChangeInvoice,
                   onSubmitInvoice: postCourierInvoiceNo,
-                  check: check,
-                  onCheckOrder: onCheckOrder,
+                  check: props.check,
+                  onCheckOrder: props.onCheckOrder,
                   onClickPacking: onClickPacking
                 }), React.createElement(Order_Seller$Item$Card, {
                   order: order,

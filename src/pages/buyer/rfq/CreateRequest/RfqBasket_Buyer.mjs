@@ -2,7 +2,8 @@
 
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import * as DS_Tab from "../../../../components/common/container/DS_Tab.mjs";
 import * as DS_Icon from "../../../../components/svgs/DS_Icon.mjs";
 import * as DataGtm from "../../../../utils/DataGtm.mjs";
@@ -45,7 +46,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(RfqBasketBuyer_Current_Request_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqBasketBuyer_Current_Request_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -123,7 +124,7 @@ function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$1(param) {
   var match = ReactRelay.useQueryLoader(RfqBasketBuyer_MeatSpecies_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqBasketBuyer_MeatSpecies_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -207,7 +208,7 @@ function use$2(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$2(param) {
   var match = ReactRelay.useQueryLoader(RfqBasketBuyer_MeatParts_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqBasketBuyer_MeatParts_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -298,7 +299,7 @@ function useRefetchable(fRef) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Internal.convertFragment, match[0]);
   return [
           data,
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return Curry._2(refetchFn, RescriptRelay_Internal.internal_removeUndefinedAndConvertNullsRaw(RfqBasketBuyer_RfqRequestItemsMeat_Fragment_Query_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -328,14 +329,14 @@ function usePagination(fr) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
-          loadNext: React.useMemo((function () {
+          loadNext: React$1.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadNext(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
                               });
                   };
                 }), [p.loadNext]),
-          loadPrevious: React.useMemo((function () {
+          loadPrevious: React$1.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadPrevious(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
@@ -346,7 +347,7 @@ function usePagination(fr) {
           hasPrevious: p.hasPrevious,
           isLoadingNext: p.isLoadingNext,
           isLoadingPrevious: p.isLoadingPrevious,
-          refetch: React.useMemo((function () {
+          refetch: React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return p.refetch(RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(RfqBasketBuyer_RfqRequestItemsMeat_Fragment_Query_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -359,14 +360,14 @@ function useBlockingPagination(fRef) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
-          loadNext: React.useMemo((function () {
+          loadNext: React$1.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadNext(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
                               });
                   };
                 }), [p.loadNext]),
-          loadPrevious: React.useMemo((function () {
+          loadPrevious: React$1.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadPrevious(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
@@ -375,7 +376,7 @@ function useBlockingPagination(fRef) {
                 }), [p.loadPrevious]),
           hasNext: p.hasNext,
           hasPrevious: p.hasPrevious,
-          refetch: React.useMemo((function () {
+          refetch: React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return p.refetch(RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(RfqBasketBuyer_RfqRequestItemsMeat_Fragment_Query_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -457,7 +458,7 @@ function use$4(param) {
   var match = ReactRelay.useMutation(RfqBasketBuyer_CreateRequestItemsMeat_Mutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -521,7 +522,7 @@ function use$5(param) {
   var match = ReactRelay.useMutation(RfqBasketBuyer_DeleteRequestItemsMeat_Mutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -561,40 +562,38 @@ var Mutation = {
   DeleteRequestItemsMeat: DeleteRequestItemsMeat
 };
 
-function RfqBasket_Buyer$BasketListItems(Props) {
-  var id = Props.id;
-  var isDomestic = Props.isDomestic;
-  var handleClickListitem = Props.handleClickListitem;
-  var selectedPartIds = Props.selectedPartIds;
+function RfqBasket_Buyer$BasketListItems(props) {
+  var selectedPartIds = props.selectedPartIds;
+  var handleClickListitem = props.handleClickListitem;
   var query = use$2({
-        isDomestic: isDomestic,
-        meatSpeciesIds: [id]
+        isDomestic: props.isDomestic,
+        meatSpeciesIds: [props.id]
       }, undefined, undefined, undefined, undefined);
-  return React.createElement("ul", {
+  return React$1.createElement("ul", {
               "aria-multiselectable": true,
               className: "my-4"
             }, Belt_Array.map(query.meatParts.edges, (function (param) {
                     var node = param.node;
                     var id = node.id;
                     var isSelected = selectedPartIds.includes(id);
-                    return React.createElement("li", {
+                    return React$1.createElement("li", {
                                 key: id,
                                 "aria-selected": isSelected,
                                 className: "flex items-center min-h-[48px] mx-5 cursor-pointer tab-highlight-color",
                                 onClick: (function (param) {
                                     Curry._1(handleClickListitem, id);
                                   })
-                              }, React.createElement("div", {
+                              }, React$1.createElement("div", {
                                     className: "flex flex-col justify-between truncate"
-                                  }, React.createElement("span", {
+                                  }, React$1.createElement("span", {
                                         className: "block text-base truncate text-text-L1"
-                                      }, "" + node.name)), React.createElement("div", {
+                                      }, "" + node.name)), React$1.createElement("div", {
                                     className: "ml-auto pl-2"
-                                  }, isSelected ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                  }, isSelected ? React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
                                           height: "24",
                                           width: "24",
                                           fill: "#12B564"
-                                        }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                        }) : React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
                                           height: "24",
                                           width: "24",
                                           fill: "#12B564"
@@ -606,9 +605,9 @@ var BasketListItems = {
   make: RfqBasket_Buyer$BasketListItems
 };
 
-function RfqBasket_Buyer$Basket(Props) {
-  var requestId = Props.requestId;
-  var from = Props.from;
+function RfqBasket_Buyer$Basket(props) {
+  var from = props.from;
+  var requestId = props.requestId;
   var router = Router.useRouter();
   var match = CustomHooks.Scroll.useScrollObserver({
         TAG: /* Px */1,
@@ -633,7 +632,7 @@ function RfqBasket_Buyer$Basket(Props) {
           return x.id;
         }));
   var selectedMeatsCountText = data.rfqRequestItemsMeat.edges.length;
-  var match$5 = React.useState(function () {
+  var match$5 = React$1.useState(function () {
         return [
                 Belt_Option.mapWithDefault(Garter_Array.first(query.meatSpecies.edges), "bWVhdC1zcGVjaWVzOkJFRUY=", (function (x) {
                         return x.node.id;
@@ -707,14 +706,14 @@ function RfqBasket_Buyer$Basket(Props) {
     
   };
   var paddingClassName = isScrolled ? "pt-[167px]" : "pt-14";
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: Cx.cx([
                     paddingClassName,
                     "relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl"
                   ])
-            }, React.createElement(DS_TopNavigation.Detail.Root.make, {
-                  children: React.createElement(DS_TopNavigation.Detail.Left.make, {
-                        children: React.createElement("a", {
+            }, React$1.createElement(DS_TopNavigation.Detail.Root.make, {
+                  children: React$1.createElement(DS_TopNavigation.Detail.Left.make, {
+                        children: React$1.createElement("a", {
                               className: "cursor-pointer",
                               onClick: (function (param) {
                                   if (from === "list") {
@@ -723,68 +722,70 @@ function RfqBasket_Buyer$Basket(Props) {
                                     window.history.back();
                                   }
                                 })
-                            }, React.createElement(DS_Icon.Common.ArrowLeftXLarge1.make, {
+                            }, React$1.createElement(DS_Icon.Common.ArrowLeftXLarge1.make, {
                                   height: "32",
                                   width: "32",
                                   className: "relative"
                                 }))
                       })
-                }), isScrolled ? null : React.createElement(DS_Title.Normal1.Root.make, {
-                    children: React.createElement(DS_Title.Normal1.TextGroup.make, {
+                }), isScrolled ? null : React$1.createElement(DS_Title.Normal1.Root.make, {
+                    children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
                           title1: "견적요청할 부위를",
                           title2: "선택해주세요"
                         }),
                     className: "pt-3"
-                  }), React.createElement("section", {
+                  }), React$1.createElement("section", {
                   className: isScrolled ? "sticky top-14 left-0 px-5" : "mt-9 px-5"
-                }, React.createElement(DS_Tab.LeftTab.Root.make, {
+                }, React$1.createElement(DS_Tab.LeftTab.Root.make, {
                       children: Belt_Array.map(query.meatSpecies.edges, (function (param) {
                               var node = param.node;
                               var name = node.name;
                               var id = node.id;
-                              return React.createElement(React.Fragment, {
-                                          children: null,
-                                          key: id
-                                        }, React.createElement(DS_Tab.LeftTab.Item.make, {
-                                              children: React.createElement(DS_Button.Tab.LeftTab1.make, {
-                                                    text: "" + name + "/수입",
-                                                    selected: selectedId === id && selectedDomestic === false,
-                                                    labelNumber: getLabelCount(id, false),
-                                                    onClick: (function (param) {
-                                                        setSelectedTab(function (param) {
-                                                              return [
-                                                                      id,
-                                                                      false
-                                                                    ];
-                                                            });
-                                                      })
-                                                  })
-                                            }), React.createElement(DS_Tab.LeftTab.Item.make, {
-                                              children: React.createElement(DS_Button.Tab.LeftTab1.make, {
-                                                    text: "" + name + "/국내",
-                                                    selected: selectedId === id && selectedDomestic === true,
-                                                    labelNumber: getLabelCount(id, true),
-                                                    onClick: (function (param) {
-                                                        setSelectedTab(function (param) {
-                                                              return [
-                                                                      id,
-                                                                      true
-                                                                    ];
-                                                            });
-                                                      })
-                                                  })
-                                            }));
+                              return React.createElementVariadicWithKey(React$1.Fragment, {
+                                          children: null
+                                        }, [
+                                          React$1.createElement(DS_Tab.LeftTab.Item.make, {
+                                                children: React$1.createElement(DS_Button.Tab.LeftTab1.make, {
+                                                      text: "" + name + "/수입",
+                                                      selected: selectedId === id && selectedDomestic === false,
+                                                      labelNumber: Caml_option.some(getLabelCount(id, false)),
+                                                      onClick: (function (param) {
+                                                          setSelectedTab(function (param) {
+                                                                return [
+                                                                        id,
+                                                                        false
+                                                                      ];
+                                                              });
+                                                        })
+                                                    })
+                                              }),
+                                          React$1.createElement(DS_Tab.LeftTab.Item.make, {
+                                                children: React$1.createElement(DS_Button.Tab.LeftTab1.make, {
+                                                      text: "" + name + "/국내",
+                                                      selected: selectedId === id && selectedDomestic === true,
+                                                      labelNumber: Caml_option.some(getLabelCount(id, true)),
+                                                      onClick: (function (param) {
+                                                          setSelectedTab(function (param) {
+                                                                return [
+                                                                        id,
+                                                                        true
+                                                                      ];
+                                                              });
+                                                        })
+                                                    })
+                                              })
+                                        ], id);
                             }))
-                    })), React.createElement(React.Suspense, {
-                  children: React.createElement(RfqBasket_Buyer$BasketListItems, {
-                        id: selectedId,
-                        isDomestic: selectedDomestic,
-                        handleClickListitem: handleClickListitem,
-                        selectedPartIds: selectedPartIds
-                      })
-                }), React.createElement("div", {
+                    })), React$1.createElement(React$1.Suspense, {
+                  children: Caml_option.some(React$1.createElement(RfqBasket_Buyer$BasketListItems, {
+                            id: selectedId,
+                            isDomestic: selectedDomestic,
+                            handleClickListitem: handleClickListitem,
+                            selectedPartIds: selectedPartIds
+                          }))
+                }), React$1.createElement("div", {
                   className: "h-[104px]"
-                }), React.createElement("div", {
+                }), React$1.createElement("div", {
                   onClick: (function (param) {
                       DataGtm.push(DataGtm.mergeUserIdUnsafe({
                                 event: "click_rfq_livestock_selectingpart",
@@ -792,7 +793,7 @@ function RfqBasket_Buyer$Basket(Props) {
                                 part_ids: selectedPartIds
                               }));
                     })
-                }, React.createElement(DS_ButtonContainer.Floating1.make, {
+                }, React$1.createElement(DS_ButtonContainer.Floating1.make, {
                       label: selectedMeatsCountText > 0 ? "" + selectedMeatsCountText + "개 선택하기" : "선택하기",
                       disabled: selectedMeatsCountText <= 0,
                       onClick: (function (param) {
@@ -805,26 +806,25 @@ var Basket = {
   make: RfqBasket_Buyer$Basket
 };
 
-function RfqBasket_Buyer(Props) {
-  var requestId = Props.requestId;
-  var from = Props.from;
+function RfqBasket_Buyer(props) {
+  var requestId = props.requestId;
   var router = Router.useRouter();
   if (requestId !== undefined) {
-    return React.createElement(Authorization.Buyer.make, {
-                children: React.createElement(React.Suspense, {
-                      children: React.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
-                            children: React.createElement(RfqBasket_Buyer$Basket, {
-                                  requestId: requestId,
-                                  from: from
-                                }),
-                            requestId: requestId
-                          })
+    return React$1.createElement(Authorization.Buyer.make, {
+                children: React$1.createElement(React$1.Suspense, {
+                      children: Caml_option.some(React$1.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
+                                children: React$1.createElement(RfqBasket_Buyer$Basket, {
+                                      requestId: requestId,
+                                      from: props.from
+                                    }),
+                                requestId: requestId
+                              }))
                     }),
                 title: "바이어 견적 요청",
-                fallback: null
+                fallback: Caml_option.some(null)
               });
   } else {
-    React.useEffect((function () {
+    React$1.useEffect((function () {
             router.push("/buyer/rfq");
           }), []);
     return null;
@@ -841,4 +841,4 @@ export {
   Basket ,
   make ,
 }
-/* react Not a pure module */
+/* React Not a pure module */

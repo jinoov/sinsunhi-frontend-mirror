@@ -5,6 +5,7 @@ import * as React from "react";
 import * as DS_Icon from "../../../../components/svgs/DS_Icon.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as IconClose from "../../../../components/svgs/IconClose.mjs";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
 import ReactNl2br from "react-nl2br";
 import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
@@ -15,13 +16,12 @@ import * as ReactScrollArea from "@radix-ui/react-scroll-area";
 import * as PDP_Normal_ContentsGuide_Buyer from "./PDP_Normal_ContentsGuide_Buyer.mjs";
 import * as PDP_Normal_OrderSpecification_Buyer from "./PDP_Normal_OrderSpecification_Buyer.mjs";
 
-function PDP_Normal_Modals_Buyer$ContentsGuide$Scroll(Props) {
-  var children = Props.children;
+function PDP_Normal_Modals_Buyer$ContentsGuide$Scroll(props) {
   return React.createElement(ReactScrollArea.Root, {
               children: null,
               className: "h-screen flex flex-col overflow-hidden"
             }, React.createElement(ReactScrollArea.Viewport, {
-                  children: children,
+                  children: props.children,
                   className: "w-full h-full"
                 }), React.createElement(ReactScrollArea.Scrollbar, {
                   children: React.createElement(ReactScrollArea.Thumb, {})
@@ -32,8 +32,7 @@ var Scroll = {
   make: PDP_Normal_Modals_Buyer$ContentsGuide$Scroll
 };
 
-function PDP_Normal_Modals_Buyer$ContentsGuide$ContentsGuideHeader(Props) {
-  var closeFn = Props.closeFn;
+function PDP_Normal_Modals_Buyer$ContentsGuide$ContentsGuideHeader(props) {
   return React.createElement("section", {
               className: "w-full h-14 flex items-center px-4"
             }, React.createElement("div", {
@@ -44,7 +43,7 @@ function PDP_Normal_Modals_Buyer$ContentsGuide$ContentsGuideHeader(Props) {
                       className: "font-bold text-gray-800 text-xl"
                     }, "필수 표기정보")), React.createElement("button", {
                   className: "w-10 h-10 flex items-center justify-center ",
-                  onClick: closeFn
+                  onClick: props.closeFn
                 }, React.createElement(IconClose.make, {
                       height: "24",
                       width: "24",
@@ -56,10 +55,8 @@ var ContentsGuideHeader = {
   make: PDP_Normal_Modals_Buyer$ContentsGuide$ContentsGuideHeader
 };
 
-function PDP_Normal_Modals_Buyer$ContentsGuide(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
-  var query = Props.query;
+function PDP_Normal_Modals_Buyer$ContentsGuide(props) {
+  var show = props.show;
   var _open;
   if (show) {
     var match = show._0;
@@ -76,15 +73,15 @@ function PDP_Normal_Modals_Buyer$ContentsGuide(Props) {
                         children: React.createElement(PDP_Normal_Modals_Buyer$ContentsGuide$Scroll, {
                               children: null
                             }, React.createElement(PDP_Normal_Modals_Buyer$ContentsGuide$ContentsGuideHeader, {
-                                  closeFn: closeFn
+                                  closeFn: props.closeFn
                                 }), React.createElement("div", {
                                   className: "w-full px-5 py-2"
                                 }, React.createElement(PDP_Normal_ContentsGuide_Buyer.MO.make, {
-                                      query: query
+                                      query: props.query
                                     }))),
                         className: "dialog-content-base w-full max-w-[768px] min-h-screen"
                       })),
-              open: _open
+              _open: _open
             });
 }
 
@@ -94,9 +91,9 @@ var ContentsGuide = {
   make: PDP_Normal_Modals_Buyer$ContentsGuide
 };
 
-function PDP_Normal_Modals_Buyer$Unauthorized$PC(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
+function PDP_Normal_Modals_Buyer$Unauthorized$PC(props) {
+  var closeFn = props.closeFn;
+  var show = props.show;
   var router = Router.useRouter();
   var match;
   if (show) {
@@ -132,11 +129,11 @@ function PDP_Normal_Modals_Buyer$Unauthorized$PC(Props) {
               onCancel: (function (param) {
                   Curry._1(closeFn, undefined);
                 }),
-              children: React.createElement("div", {
-                    className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
-                  }, React.createElement("span", {
-                        className: "text-center"
-                      }, ReactNl2br(match[1])))
+              children: Caml_option.some(React.createElement("div", {
+                        className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
+                      }, React.createElement("span", {
+                            className: "text-center"
+                          }, ReactNl2br(match[1]))))
             });
 }
 
@@ -144,9 +141,9 @@ var PC = {
   make: PDP_Normal_Modals_Buyer$Unauthorized$PC
 };
 
-function PDP_Normal_Modals_Buyer$Unauthorized$MO(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
+function PDP_Normal_Modals_Buyer$Unauthorized$MO(props) {
+  var closeFn = props.closeFn;
+  var show = props.show;
   var router = Router.useRouter();
   var match;
   if (show) {
@@ -182,11 +179,11 @@ function PDP_Normal_Modals_Buyer$Unauthorized$MO(Props) {
               onCancel: (function (param) {
                   Curry._1(closeFn, undefined);
                 }),
-              children: React.createElement("div", {
-                    className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
-                  }, React.createElement("span", {
-                        className: "text-center"
-                      }, ReactNl2br(match[1])))
+              children: Caml_option.some(React.createElement("div", {
+                        className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
+                      }, React.createElement("span", {
+                            className: "text-center"
+                          }, ReactNl2br(match[1]))))
             });
 }
 
@@ -199,12 +196,10 @@ var Unauthorized = {
   MO: MO
 };
 
-function PDP_Normal_Modals_Buyer$Confirm$MO(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
-  var query = Props.query;
-  var selectedOptions = Props.selectedOptions;
-  var setSelectedOptions = Props.setSelectedOptions;
+function PDP_Normal_Modals_Buyer$Confirm$MO(props) {
+  var selectedOptions = props.selectedOptions;
+  var closeFn = props.closeFn;
+  var show = props.show;
   var isShow = show ? show._0 === 1 : false;
   React.useEffect((function () {
           var match = Belt_MapString.toArray(selectedOptions);
@@ -222,13 +217,13 @@ function PDP_Normal_Modals_Buyer$Confirm$MO(Props) {
                   children: React.createElement("div", {
                         className: "pb-9"
                       }, React.createElement(React.Suspense, {
-                            children: React.createElement(PDP_Normal_OrderSpecification_Buyer.make, {
-                                  query: query,
-                                  selectedOptions: selectedOptions,
-                                  setSelectedOptions: setSelectedOptions,
-                                  closeFn: closeFn
-                                }),
-                            fallback: React.createElement(PDP_Normal_OrderSpecification_Buyer.Placeholder.make, {})
+                            children: Caml_option.some(React.createElement(PDP_Normal_OrderSpecification_Buyer.make, {
+                                      query: props.query,
+                                      selectedOptions: selectedOptions,
+                                      setSelectedOptions: props.setSelectedOptions,
+                                      closeFn: closeFn
+                                    })),
+                            fallback: Caml_option.some(React.createElement(PDP_Normal_OrderSpecification_Buyer.Placeholder.make, {}))
                           }))
                 }));
 }
@@ -237,12 +232,10 @@ var MO$1 = {
   make: PDP_Normal_Modals_Buyer$Confirm$MO
 };
 
-function PDP_Normal_Modals_Buyer$Confirm$PC(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
-  var query = Props.query;
-  var selectedOptions = Props.selectedOptions;
-  var setSelectedOptions = Props.setSelectedOptions;
+function PDP_Normal_Modals_Buyer$Confirm$PC(props) {
+  var selectedOptions = props.selectedOptions;
+  var closeFn = props.closeFn;
+  var show = props.show;
   var _open = show ? show._0 === 1 : false;
   React.useEffect((function () {
           var match = Belt_MapString.toArray(selectedOptions);
@@ -270,20 +263,20 @@ function PDP_Normal_Modals_Buyer$Confirm$PC(Props) {
                                         }))), React.createElement("section", {
                                   className: "mt-4"
                                 }, React.createElement(React.Suspense, {
-                                      children: React.createElement(PDP_Normal_OrderSpecification_Buyer.make, {
-                                            query: query,
-                                            selectedOptions: selectedOptions,
-                                            setSelectedOptions: setSelectedOptions,
-                                            closeFn: closeFn
-                                          }),
-                                      fallback: React.createElement(PDP_Normal_OrderSpecification_Buyer.Placeholder.make, {})
+                                      children: Caml_option.some(React.createElement(PDP_Normal_OrderSpecification_Buyer.make, {
+                                                query: props.query,
+                                                selectedOptions: selectedOptions,
+                                                setSelectedOptions: props.setSelectedOptions,
+                                                closeFn: closeFn
+                                              })),
+                                      fallback: Caml_option.some(React.createElement(PDP_Normal_OrderSpecification_Buyer.Placeholder.make, {}))
                                     }))),
                         className: "dialog-content-base bg-white rounded-xl w-[calc(100vw-40px)] max-w-[calc(768px-40px)]",
                         onPointerDownOutside: (function (param) {
                             Curry._1(closeFn, undefined);
                           })
                       })),
-              open: _open
+              _open: _open
             });
 }
 
@@ -296,9 +289,9 @@ var Confirm = {
   PC: PC$1
 };
 
-function PDP_Normal_Modals_Buyer$NoOption$PC(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
+function PDP_Normal_Modals_Buyer$NoOption$PC(props) {
+  var closeFn = props.closeFn;
+  var show = props.show;
   var isShow = show && show._0 === 0 ? /* Show */0 : /* Hide */1;
   return React.createElement(ShopDialog_Buyer.make, {
               isShow: isShow,
@@ -306,9 +299,9 @@ function PDP_Normal_Modals_Buyer$NoOption$PC(Props) {
               onCancel: (function (param) {
                   Curry._1(closeFn, undefined);
                 }),
-              children: React.createElement("div", {
-                    className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
-                  }, React.createElement("span", undefined, "단품을 선택해 주세요."))
+              children: Caml_option.some(React.createElement("div", {
+                        className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
+                      }, React.createElement("span", undefined, "단품을 선택해 주세요.")))
             });
 }
 
@@ -316,9 +309,9 @@ var PC$2 = {
   make: PDP_Normal_Modals_Buyer$NoOption$PC
 };
 
-function PDP_Normal_Modals_Buyer$NoOption$MO(Props) {
-  var show = Props.show;
-  var closeFn = Props.closeFn;
+function PDP_Normal_Modals_Buyer$NoOption$MO(props) {
+  var closeFn = props.closeFn;
+  var show = props.show;
   var isShow = show && show._0 === 0 ? /* Show */0 : /* Hide */1;
   return React.createElement(ShopDialog_Buyer.Mo.make, {
               isShow: isShow,
@@ -326,9 +319,9 @@ function PDP_Normal_Modals_Buyer$NoOption$MO(Props) {
               onCancel: (function (param) {
                   Curry._1(closeFn, undefined);
                 }),
-              children: React.createElement("div", {
-                    className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
-                  }, React.createElement("span", undefined, "단품을 선택해 주세요."))
+              children: Caml_option.some(React.createElement("div", {
+                        className: "h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-text-L1"
+                      }, React.createElement("span", undefined, "단품을 선택해 주세요.")))
             });
 }
 
@@ -341,12 +334,9 @@ var NoOption = {
   MO: MO$2
 };
 
-function PDP_Normal_Modals_Buyer$PC(Props) {
-  var show = Props.show;
-  var setShow = Props.setShow;
-  var selectedOptions = Props.selectedOptions;
-  var setSelectedOptions = Props.setSelectedOptions;
-  var query = Props.query;
+function PDP_Normal_Modals_Buyer$PC(props) {
+  var setShow = props.setShow;
+  var show = props.show;
   var closeFn = function (param) {
     setShow(function (param) {
           return /* Hide */0;
@@ -355,9 +345,9 @@ function PDP_Normal_Modals_Buyer$PC(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement(PDP_Normal_Modals_Buyer$Confirm$PC, {
                   show: show,
                   closeFn: closeFn,
-                  query: query,
-                  selectedOptions: selectedOptions,
-                  setSelectedOptions: setSelectedOptions
+                  query: props.query,
+                  selectedOptions: props.selectedOptions,
+                  setSelectedOptions: props.setSelectedOptions
                 }), React.createElement(PDP_Normal_Modals_Buyer$Unauthorized$PC, {
                   show: show,
                   closeFn: closeFn
@@ -371,12 +361,10 @@ var PC$3 = {
   make: PDP_Normal_Modals_Buyer$PC
 };
 
-function PDP_Normal_Modals_Buyer$MO(Props) {
-  var show = Props.show;
-  var setShow = Props.setShow;
-  var selectedOptions = Props.selectedOptions;
-  var setSelectedOptions = Props.setSelectedOptions;
-  var query = Props.query;
+function PDP_Normal_Modals_Buyer$MO(props) {
+  var query = props.query;
+  var setShow = props.setShow;
+  var show = props.show;
   var closeFn = function (param) {
     setShow(function (param) {
           return /* Hide */0;
@@ -386,8 +374,8 @@ function PDP_Normal_Modals_Buyer$MO(Props) {
                   show: show,
                   closeFn: closeFn,
                   query: query,
-                  selectedOptions: selectedOptions,
-                  setSelectedOptions: setSelectedOptions
+                  selectedOptions: props.selectedOptions,
+                  setSelectedOptions: props.setSelectedOptions
                 }), React.createElement(PDP_Normal_Modals_Buyer$Unauthorized$MO, {
                   show: show,
                   closeFn: closeFn

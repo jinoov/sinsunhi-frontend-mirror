@@ -95,7 +95,7 @@ var Query = {
   retain: retain
 };
 
-function Select_WholesalerMarket$Loading(Props) {
+function Select_WholesalerMarket$Loading(props) {
   return React.createElement("label", {
               className: "block relative mt-2"
             }, React.createElement("span", {
@@ -113,9 +113,8 @@ var Loading = {
   make: Select_WholesalerMarket$Loading
 };
 
-function Select_WholesalerMarket$WholesalerMarkets(Props) {
-  var wholesalerMarketId = Props.wholesalerMarketId;
-  var onChangeWholesalerMarket = Props.onChangeWholesalerMarket;
+function Select_WholesalerMarket$WholesalerMarkets(props) {
+  var wholesalerMarketId = props.wholesalerMarketId;
   var queryData = use({
         first: 100
       }, undefined, undefined, undefined, undefined);
@@ -138,7 +137,7 @@ function Select_WholesalerMarket$WholesalerMarkets(Props) {
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
                       value: Belt_Option.getWithDefault(wholesalerMarketId, ""),
-                      onChange: onChangeWholesalerMarket
+                      onChange: props.onChangeWholesalerMarket
                     }, React.createElement("option", {
                           value: ""
                         }, "택배사 선택"), Belt_Array.map(queryData.wholesalerMarkets.edges, (function (edge) {
@@ -153,13 +152,8 @@ var WholesalerMarkets = {
   make: Select_WholesalerMarket$WholesalerMarkets
 };
 
-function Select_WholesalerMarket(Props) {
-  var label = Props.label;
-  var wholesalerMarketId = Props.wholesalerMarketId;
-  var wholesalerId = Props.wholesalerId;
-  var onChangeWholesalerMarket = Props.onChangeWholesalerMarket;
-  var onChangeWholesaler = Props.onChangeWholesaler;
-  var error = Props.error;
+function Select_WholesalerMarket(props) {
+  var wholesalerMarketId = props.wholesalerMarketId;
   return React.createElement("section", {
               className: "w-2/3"
             }, React.createElement("div", {
@@ -168,31 +162,31 @@ function Select_WholesalerMarket(Props) {
                       className: "flex-1"
                     }, React.createElement("h3", {
                           className: "text-sm"
-                        }, label), React.createElement(RescriptReactErrorBoundary.make, {
+                        }, props.label), React.createElement(RescriptReactErrorBoundary.make, {
                           children: React.createElement(React.Suspense, {
-                                children: React.createElement(Select_WholesalerMarket$WholesalerMarkets, {
-                                      wholesalerMarketId: wholesalerMarketId,
-                                      onChangeWholesalerMarket: onChangeWholesalerMarket
-                                    }),
-                                fallback: React.createElement(Select_WholesalerMarket$Loading, {})
+                                children: Caml_option.some(React.createElement(Select_WholesalerMarket$WholesalerMarkets, {
+                                          wholesalerMarketId: wholesalerMarketId,
+                                          onChangeWholesalerMarket: props.onChangeWholesalerMarket
+                                        })),
+                                fallback: Caml_option.some(React.createElement(Select_WholesalerMarket$Loading, {}))
                               }),
                           fallback: (function (param) {
                               return React.createElement("div", undefined, "에러 발생");
                             })
                         })), React.createElement(RescriptReactErrorBoundary.make, {
                       children: React.createElement(React.Suspense, {
-                            children: React.createElement(Select_Wholesaler.make, {
-                                  label: "법인명",
-                                  wholesalerMarketId: wholesalerMarketId,
-                                  wholesalerId: wholesalerId,
-                                  onChange: onChangeWholesaler
-                                }),
-                            fallback: React.createElement(Select_Wholesaler.Loading.make, {})
+                            children: Caml_option.some(React.createElement(Select_Wholesaler.make, {
+                                      label: "법인명",
+                                      wholesalerMarketId: wholesalerMarketId,
+                                      wholesalerId: props.wholesalerId,
+                                      onChange: props.onChangeWholesaler
+                                    })),
+                            fallback: Caml_option.some(React.createElement(Select_Wholesaler.Loading.make, {}))
                           }),
                       fallback: (function (param) {
                           return React.createElement("div", undefined, "에러 발생");
                         })
-                    })), React.createElement("div", undefined, Belt_Option.getWithDefault(Belt_Option.map(error, (function (err) {
+                    })), React.createElement("div", undefined, Belt_Option.getWithDefault(Belt_Option.map(props.error, (function (err) {
                             return React.createElement("span", {
                                         className: "flex mt-2"
                                       }, React.createElement(IconError.make, {

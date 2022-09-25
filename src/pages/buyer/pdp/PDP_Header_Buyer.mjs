@@ -122,7 +122,7 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Header_Buyer$Default(Props) {
+function PDP_Header_Buyer$Default(props) {
   var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
@@ -154,7 +154,7 @@ var Default = {
   make: PDP_Header_Buyer$Default
 };
 
-function PDP_Header_Buyer$Placeholder(Props) {
+function PDP_Header_Buyer$Placeholder(props) {
   var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full fixed top-0 left-0 z-10 bg-white"
@@ -180,18 +180,13 @@ var Placeholder = {
   make: PDP_Header_Buyer$Placeholder
 };
 
-function PDP_Header_Buyer$Presenter(Props) {
-  var query = Props.query;
-  var match = use$1(query);
+function PDP_Header_Buyer$Presenter(props) {
+  var match = use$1(props.query);
   var match$1 = Product_Parser.Type.decode(match.__typename);
-  if (match$1 !== undefined) {
-    if (match$1 >= 3) {
-      return React.createElement(PDP_Matching_Header_Buyer.make, {
-                  query: match.fragmentRefs
-                });
-    } else {
-      return React.createElement(PDP_Header_Buyer$Default, {});
-    }
+  if (match$1 !== undefined && match$1 >= 3) {
+    return React.createElement(PDP_Matching_Header_Buyer.make, {
+                query: match.fragmentRefs
+              });
   } else {
     return React.createElement(PDP_Header_Buyer$Default, {});
   }
@@ -201,10 +196,9 @@ var Presenter = {
   make: PDP_Header_Buyer$Presenter
 };
 
-function PDP_Header_Buyer$Container(Props) {
-  var productId = Props.productId;
+function PDP_Header_Buyer$Container(props) {
   var match = use({
-        productId: productId
+        productId: props.productId
       }, /* StoreAndNetwork */2, undefined, undefined, undefined);
   var product = match.product;
   if (product !== undefined) {
@@ -220,7 +214,7 @@ var Container = {
   make: PDP_Header_Buyer$Container
 };
 
-function PDP_Header_Buyer(Props) {
+function PDP_Header_Buyer(props) {
   var router = Router.useRouter();
   var pid = Belt_Option.flatMap(Js_dict.get(router.query, "pid"), Belt_Int.fromString);
   if (pid !== undefined) {

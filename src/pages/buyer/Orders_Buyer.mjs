@@ -3,8 +3,9 @@
 import * as Env from "../../constants/Env.mjs";
 import * as Swr from "swr";
 import * as Curry from "rescript/lib/es6/curry.js";
+import * as React from "@rescript/react/src/React.mjs";
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
-import * as React from "react";
+import * as React$1 from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
 import * as Period from "../../utils/Period.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
@@ -62,7 +63,7 @@ function use(param) {
   var match = ReactRelay.useMutation(OrdersBuyer_Mutation_graphql.node);
   var mutate = match[0];
   return [
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -91,18 +92,16 @@ var Mutation = {
   use: use
 };
 
-function Orders_Buyer$List(Props) {
-  var status = Props.status;
-  var check = Props.check;
-  var onCheckOrder = Props.onCheckOrder;
-  var onCheckAll = Props.onCheckAll;
-  var countOfChecked = Props.countOfChecked;
-  var onClickCancel = Props.onClickCancel;
+function Orders_Buyer$List(props) {
+  var onClickCancel = props.onClickCancel;
+  var onCheckOrder = props.onCheckOrder;
+  var check = props.check;
+  var status = props.status;
   if (typeof status === "number") {
-    return React.createElement("div", undefined, "로딩 중..");
+    return React$1.createElement("div", undefined, "로딩 중..");
   }
   if (status.TAG !== /* Loaded */0) {
-    return React.createElement(ErrorPanel.make, {
+    return React$1.createElement(ErrorPanel.make, {
                 error: status._0
               });
   }
@@ -112,7 +111,7 @@ function Orders_Buyer$List(Props) {
   countOfOrdersToCheck = orders$p.TAG === /* Ok */0 ? Garter_Array.keep(orders$p._0.data, (function (order) {
             return order.status === /* CREATE */0;
           })).length : 0;
-  var isCheckAll = countOfOrdersToCheck !== 0 && countOfOrdersToCheck === countOfChecked;
+  var isCheckAll = countOfOrdersToCheck !== 0 && countOfOrdersToCheck === props.countOfChecked;
   var isDisabledCheckAll;
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     isDisabledCheckAll = true;
@@ -126,19 +125,18 @@ function Orders_Buyer$List(Props) {
   var tmp;
   if (orders$p$2.TAG === /* Ok */0) {
     var orders$p$3 = orders$p$2._0;
-    tmp = React.createElement("ol", {
+    tmp = React$1.createElement("ol", {
           className: "divide-y divide-gray-300 lg:divide-gray-100 lg:list-height-buyer lg:overflow-y-scroll"
         }, orders$p$3.data.length !== 0 ? Garter_Array.map(orders$p$3.data, (function (order) {
-                  return React.createElement(Order_Buyer.make, {
+                  return React.createElementWithKey(Order_Buyer.make, {
                               order: order,
                               check: check,
                               onCheckOrder: onCheckOrder,
-                              onClickCancel: onClickCancel,
-                              key: order.orderProductNo
-                            });
-                })) : React.createElement(EmptyOrders.make, {}));
+                              onClickCancel: onClickCancel
+                            }, order.orderProductNo);
+                })) : React$1.createElement(EmptyOrders.make, {}));
   } else {
-    tmp = React.createElement(EmptyOrders.make, {});
+    tmp = React$1.createElement(EmptyOrders.make, {});
   }
   var tmp$1;
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
@@ -147,9 +145,9 @@ function Orders_Buyer$List(Props) {
     var orders$p$4 = CustomHooks.Orders.orders_decode(status._0);
     if (orders$p$4.TAG === /* Ok */0) {
       var orders$p$5 = orders$p$4._0;
-      tmp$1 = React.createElement("div", {
+      tmp$1 = React$1.createElement("div", {
             className: "flex justify-center py-5"
-          }, React.createElement(Pagination.make, {
+          }, React$1.createElement(Pagination.make, {
                 pageDisplySize: Constants.pageDisplySize,
                 itemPerPage: orders$p$5.limit,
                 total: orders$p$5.count
@@ -158,34 +156,34 @@ function Orders_Buyer$List(Props) {
       tmp$1 = null;
     }
   }
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
                   className: "w-full overflow-x-scroll"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "text-sm lg:min-w-max"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "hidden lg:grid lg:grid-cols-9-buyer-order bg-gray-100 text-gray-500 h-12"
-                        }, React.createElement("div", {
+                        }, React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, React.createElement(Checkbox.make, {
+                            }, React$1.createElement(Checkbox.make, {
                                   id: "check-all",
                                   checked: isCheckAll,
-                                  onChange: onCheckAll,
+                                  onChange: props.onCheckAll,
                                   disabled: isDisabledCheckAll
-                                })), React.createElement("div", {
+                                })), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, "주문번호·일자·바이어"), React.createElement("div", {
+                            }, "주문번호·일자·바이어"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, "주문상품"), React.createElement("div", {
+                            }, "주문상품"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center text-center whitespace-nowrap"
-                            }, "상품금액·결제수단"), React.createElement("div", {
+                            }, "상품금액·결제수단"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center text-center whitespace-nowrap"
-                            }, "수량"), React.createElement("div", {
+                            }, "수량"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, "운송장번호"), React.createElement("div", {
+                            }, "운송장번호"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, "배송정보"), React.createElement("div", {
+                            }, "배송정보"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
-                            }, "주문자명·연락처"), React.createElement("div", {
+                            }, "주문자명·연락처"), React$1.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap text-center"
                             }, "출고일")), tmp)), tmp$1);
 }
@@ -304,7 +302,7 @@ function response_decode(v) {
         };
 }
 
-function Orders_Buyer$Orders(Props) {
+function Orders_Buyer$Orders(props) {
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -313,24 +311,24 @@ function Orders_Buyer$Orders(Props) {
   var match$2 = use(undefined);
   var cancelMutate = match$2[0];
   var status = CustomHooks.Orders.use(new URLSearchParams(router.query).toString());
-  var match$3 = React.useState(function () {
+  var match$3 = React$1.useState(function () {
         
       });
   var setOrdersToCancel = match$3[1];
   var ordersToCancel = match$3[0];
-  var match$4 = React.useState(function () {
+  var match$4 = React$1.useState(function () {
         return /* Hide */1;
       });
   var setShowCancelConfirm = match$4[1];
-  var match$5 = React.useState(function () {
+  var match$5 = React$1.useState(function () {
         return /* Hide */1;
       });
   var setShowNothingToCancel = match$5[1];
-  var match$6 = React.useState(function () {
+  var match$6 = React$1.useState(function () {
         return /* Hide */1;
       });
   var setShowCancelError = match$6[1];
-  React.useEffect((function () {
+  React$1.useEffect((function () {
           setOrdersToCancel(function (param) {
                 
               });
@@ -384,9 +382,9 @@ function Orders_Buyer$Orders(Props) {
   };
   var countOfChecked = Belt_SetString.size(ordersToCancel);
   var handleError = function (message) {
-    addToast(React.createElement("div", {
+    addToast(React$1.createElement("div", {
               className: "flex items-center"
-            }, React.createElement(IconError.make, {
+            }, React$1.createElement(IconError.make, {
                   width: "24",
                   height: "24",
                   className: "mr-2"
@@ -417,9 +415,9 @@ function Orders_Buyer$Orders(Props) {
                     });
                 mutate("" + Env.restApiUrl + "/order?" + new URLSearchParams(router.query).toString() + "", undefined, undefined);
                 mutate("" + Env.restApiUrl + "/order/summary?" + Period.currentPeriod(router) + "", undefined, undefined);
-                return addToast(React.createElement("div", {
+                return addToast(React$1.createElement("div", {
                                 className: "flex items-center"
-                              }, React.createElement(IconCheck.make, {
+                              }, React$1.createElement(IconCheck.make, {
                                     height: "24",
                                     width: "24",
                                     fill: "#12B564",
@@ -448,29 +446,29 @@ function Orders_Buyer$Orders(Props) {
   var isCreateSelected = Belt_Option.isSome(Belt_Option.keep(Js_dict.get(router.query, "status"), (function (status) {
               return status === "CREATE";
             })));
-  return React.createElement(React.Fragment, undefined, React.createElement("div", {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
                   className: "sm:px-10 md:px-20"
-                }, React.createElement(Summary_Order_Buyer.make, {}), React.createElement("div", {
+                }, React$1.createElement(Summary_Order_Buyer.make, {}), React$1.createElement("div", {
                       className: "lg:px-7 mt-4 shadow-gl"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "md:flex md:justify-between pb-4 text-base"
-                        }, React.createElement("div", {
+                        }, React$1.createElement("div", {
                               className: "pt-10 px-5 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
-                            }, React.createElement("h3", {
+                            }, React$1.createElement("h3", {
                                   className: "font-bold"
-                                }, "주문내역", React.createElement("span", {
+                                }, "주문내역", React$1.createElement("span", {
                                       className: "ml-1 text-green-gl font-normal"
-                                    }, "" + count + "건")), React.createElement("div", {
+                                    }, "" + count + "건")), React$1.createElement("div", {
                                   className: "flex flex-col lg:flex-row mt-4 lg:mt-0"
-                                }, React.createElement("div", {
+                                }, React$1.createElement("div", {
                                       className: "flex items-center"
-                                    }, React.createElement(Select_CountPerPage.make, {
+                                    }, React$1.createElement(Select_CountPerPage.make, {
                                           className: "mr-2"
-                                        }), React.createElement(Select_Sorted.make, {
+                                        }), React$1.createElement(Select_Sorted.make, {
                                           className: "mr-2"
-                                        })), React.createElement("div", {
+                                        })), React$1.createElement("div", {
                                       className: "flex mt-2 lg:mt-0"
-                                    }, isTotalSelected || isCreateSelected ? React.createElement("button", {
+                                    }, isTotalSelected || isCreateSelected ? React$1.createElement("button", {
                                             className: "hidden lg:flex items-center h-9 px-3 text-white bg-green-gl rounded-lg mr-2",
                                             onClick: (function (param) {
                                                 if (countOfChecked > 0) {
@@ -483,17 +481,17 @@ function Orders_Buyer$Orders(Props) {
                                                             });
                                                 }
                                               })
-                                          }, "선택한 항목 주문 취소") : null, React.createElement(Excel_Download_Request_Button.make, {
+                                          }, "선택한 항목 주문 취소") : null, React$1.createElement(Excel_Download_Request_Button.make, {
                                           userType: /* Buyer */1,
                                           requestUrl: "/order/request-excel/buyer"
-                                        }))))), React.createElement(Orders_Buyer$List, {
+                                        }))))), React$1.createElement(Orders_Buyer$List, {
                           status: status,
                           check: check,
                           onCheckOrder: handleOnCheckOrder,
                           onCheckAll: handleCheckAll,
                           countOfChecked: countOfChecked,
                           onClickCancel: cancelOrder
-                        }))), React.createElement(Dialog.make, {
+                        }))), React$1.createElement(Dialog.make, {
                   isShow: match$4[0],
                   children: null,
                   onCancel: (function (param) {
@@ -506,16 +504,16 @@ function Orders_Buyer$Orders(Props) {
                     }),
                   textOnCancel: "취소",
                   textOnConfirm: "확인"
-                }, React.createElement("a", {
+                }, React$1.createElement("a", {
                       className: "hidden",
                       id: "link-of-guide",
                       href: Env.cancelFormUrl,
                       target: "_blank"
-                    }), React.createElement("p", {
+                    }), React$1.createElement("p", {
                       className: "text-black-gl text-center whitespace-pre-wrap"
-                    }, React.createElement("span", {
+                    }, React$1.createElement("span", {
                           className: "font-bold"
-                        }, "선택한 " + String(countOfChecked) + "개"), "의 주문을 취소하시겠습니까?")), React.createElement(Dialog.make, {
+                        }, "선택한 " + String(countOfChecked) + "개"), "의 주문을 취소하시겠습니까?")), React$1.createElement(Dialog.make, {
                   isShow: match$5[0],
                   children: null,
                   onCancel: (function (param) {
@@ -524,16 +522,16 @@ function Orders_Buyer$Orders(Props) {
                           });
                     }),
                   textOnCancel: "확인"
-                }, React.createElement("a", {
+                }, React$1.createElement("a", {
                       className: "hidden",
                       id: "link-of-guide",
                       href: Env.cancelFormUrl,
                       target: "_blank"
-                    }), React.createElement("p", {
+                    }), React$1.createElement("p", {
                       className: "text-black-gl text-center whitespace-pre-wrap"
-                    }, "취소할 주문을 선택해주세요.")), React.createElement(Dialog.make, {
+                    }, "취소할 주문을 선택해주세요.")), React$1.createElement(Dialog.make, {
                   isShow: match$6[0],
-                  children: React.createElement("p", {
+                  children: React$1.createElement("p", {
                         className: "text-gray-500 text-center whitespace-pre-wrap"
                       }, "주문 취소에 실패하였습니다.\n다시 시도하시기 바랍니다."),
                   onConfirm: (function (param) {
@@ -548,9 +546,9 @@ var Orders = {
   make: Orders_Buyer$Orders
 };
 
-function Orders_Buyer(Props) {
-  return React.createElement(Authorization.Buyer.make, {
-              children: React.createElement(Orders_Buyer$Orders, {}),
+function Orders_Buyer(props) {
+  return React$1.createElement(Authorization.Buyer.make, {
+              children: React$1.createElement(Orders_Buyer$Orders, {}),
               title: "주문내역 조회"
             });
 }

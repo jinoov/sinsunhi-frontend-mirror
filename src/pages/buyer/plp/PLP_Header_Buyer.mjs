@@ -94,10 +94,9 @@ var Query = {
   retain: retain
 };
 
-function PLP_Header_Buyer$DisplayCategoryName(Props) {
-  var displayCategoryId = Props.displayCategoryId;
+function PLP_Header_Buyer$DisplayCategoryName(props) {
   var match = use({
-        displayCategoryId: displayCategoryId
+        displayCategoryId: props.displayCategoryId
       }, undefined, undefined, undefined, undefined);
   var node = match.node;
   var title;
@@ -119,7 +118,7 @@ var DisplayCategoryName = {
   make: PLP_Header_Buyer$DisplayCategoryName
 };
 
-function PLP_Header_Buyer(Props) {
+function PLP_Header_Buyer(props) {
   var router = Router.useRouter();
   var cid = Js_dict.get(router.query, "cid");
   var displayCategoryId = cid !== undefined ? cid : Js_dict.get(router.query, "category-id");
@@ -156,10 +155,10 @@ function PLP_Header_Buyer(Props) {
                                   }, React.createElement("div", {
                                         className: "w-1/3 flex justify-center"
                                       }, React.createElement(React.Suspense, {
-                                            children: React.createElement(PLP_Header_Buyer$DisplayCategoryName, {
-                                                  displayCategoryId: displayCategoryId
-                                                }),
-                                            fallback: React.createElement("span", undefined)
+                                            children: Caml_option.some(React.createElement(PLP_Header_Buyer$DisplayCategoryName, {
+                                                      displayCategoryId: displayCategoryId
+                                                    })),
+                                            fallback: Caml_option.some(React.createElement("span", undefined))
                                           })), React.createElement("div", {
                                         className: "w-1/3 flex justify-end gap-2"
                                       }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {}))) : React.createElement(React.Fragment, undefined, React.createElement("div", {

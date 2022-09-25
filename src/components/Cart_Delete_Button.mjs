@@ -155,16 +155,14 @@ var CartQuery = {
   retain: retain
 };
 
-function Cart_Delete_Button$Dialog(Props) {
-  var show = Props.show;
-  var setShow = Props.setShow;
-  var n = Props.n;
-  var confirmFnOpt = Props.confirmFn;
-  var cancelFnOpt = Props.cancelFn;
-  var confirmFn = confirmFnOpt !== undefined ? confirmFnOpt : (function (prim) {
+function Cart_Delete_Button$Dialog(props) {
+  var cancelFn = props.cancelFn;
+  var confirmFn = props.confirmFn;
+  var setShow = props.setShow;
+  var cancelFn$1 = cancelFn !== undefined ? cancelFn : (function (prim) {
         
       });
-  var cancelFn = cancelFnOpt !== undefined ? cancelFnOpt : (function (prim) {
+  var confirmFn$1 = confirmFn !== undefined ? confirmFn : (function (prim) {
         
       });
   return React.createElement(ReactDialog.Root, {
@@ -177,7 +175,7 @@ function Cart_Delete_Button$Dialog(Props) {
                         className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
                       }, React.createElement("span", {
                             className: "whitespace-pre text-center text-text-L1 pt-3"
-                          }, "선택하신 상품 " + String(n) + "개를\n장바구니에서 삭제하시겠어요?"), React.createElement("div", {
+                          }, "선택하신 상품 " + String(props.n) + "개를\n장바구니에서 삭제하시겠어요?"), React.createElement("div", {
                             className: "flex w-full justify-center items-center gap-2"
                           }, React.createElement("button", {
                                 className: "w-1/2 rounded-xl h-13 bg-enabled-L5",
@@ -186,21 +184,21 @@ function Cart_Delete_Button$Dialog(Props) {
                                                   setShow(function (param) {
                                                         return false;
                                                       });
-                                                  Curry._1(cancelFn, undefined);
+                                                  Curry._1(cancelFn$1, undefined);
                                                 }), param);
                                   })
                               }, "취소"), React.createElement("button", {
                                 className: "w-1/2 rounded-xl h-13 bg-red-100 text-notice font-bold",
                                 onClick: (function (param) {
                                     return ReactEvents.interceptingHandler((function (param) {
-                                                  Curry._1(confirmFn, undefined);
+                                                  Curry._1(confirmFn$1, undefined);
                                                   setShow(function (param) {
                                                         return false;
                                                       });
                                                 }), param);
                                   })
                               }, "삭제")))),
-              open: show
+              _open: props.show
             });
 }
 
@@ -208,9 +206,8 @@ var Dialog = {
   make: Cart_Delete_Button$Dialog
 };
 
-function Cart_Delete_Button$NoSelectDialog(Props) {
-  var show = Props.show;
-  var setShow = Props.setShow;
+function Cart_Delete_Button$NoSelectDialog(props) {
+  var setShow = props.setShow;
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
                     children: null
@@ -233,7 +230,7 @@ function Cart_Delete_Button$NoSelectDialog(Props) {
                                                 }), param);
                                   })
                               }, "확인")))),
-              open: show
+              _open: props.show
             });
 }
 
@@ -241,19 +238,19 @@ var NoSelectDialog = {
   make: Cart_Delete_Button$NoSelectDialog
 };
 
-function Cart_Delete_Button(Props) {
-  var productOptions = Props.productOptions;
-  var refetchCart = Props.refetchCart;
-  var widthOpt = Props.width;
-  var heightOpt = Props.height;
-  var fillOpt = Props.fill;
-  var childrenOpt = Props.children;
-  var isIconOpt = Props.isIcon;
-  var width = widthOpt !== undefined ? widthOpt : "1rem";
-  var height = heightOpt !== undefined ? heightOpt : "1rem";
-  var fill = fillOpt !== undefined ? fillOpt : "#727272";
-  var children = childrenOpt !== undefined ? Caml_option.valFromOption(childrenOpt) : null;
-  var isIcon = isIconOpt !== undefined ? isIconOpt : true;
+function Cart_Delete_Button(props) {
+  var isIcon = props.isIcon;
+  var children = props.children;
+  var fill = props.fill;
+  var height = props.height;
+  var width = props.width;
+  var refetchCart = props.refetchCart;
+  var productOptions = props.productOptions;
+  var isIcon$1 = isIcon !== undefined ? isIcon : true;
+  var children$1 = children !== undefined ? Caml_option.valFromOption(children) : null;
+  var fill$1 = fill !== undefined ? fill : "#727272";
+  var height$1 = height !== undefined ? height : "1rem";
+  var width$1 = width !== undefined ? width : "1rem";
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = React.useState(function () {
@@ -350,11 +347,11 @@ function Cart_Delete_Button(Props) {
                                     }
                                   }), param);
                     })
-                }, isIcon ? React.createElement(IconClose.make, {
-                        height: height,
-                        width: width,
-                        fill: fill
-                      }) : children));
+                }, isIcon$1 ? React.createElement(IconClose.make, {
+                        height: height$1,
+                        width: width$1,
+                        fill: fill$1
+                      }) : children$1));
 }
 
 var Form;

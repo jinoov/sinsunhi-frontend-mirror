@@ -67,11 +67,10 @@ var QuotationType = {
   stringify: stringify
 };
 
-function Select_Product_QuotationType_Admin(Props) {
-  var status = Props.status;
-  var onChange = Props.onChange;
-  var forwardRef = Props.forwardRef;
-  var disabled = Props.disabled;
+function Select_Product_QuotationType_Admin(props) {
+  var disabled = props.disabled;
+  var onChange = props.onChange;
+  var status = props.status;
   var label = Belt_Option.getWithDefault(Belt_Option.map(status, makeLabel), "견적 유형 선택");
   var value = Belt_Option.getWithDefault(Belt_Option.flatMap(status, (function (v) {
               return Js_json.decodeString(v ? "RFQ_LIVESTOCK" : "TRADEMATCH_AQUATIC");
@@ -81,7 +80,7 @@ function Select_Product_QuotationType_Admin(Props) {
   };
   var defaultStyle = "flex px-3 py-2 border items-center border-border-default-L1 rounded-lg h-9 text-enabled-L1 focus:outline";
   var tmp = {
-    ref: forwardRef,
+    ref: props.forwardRef,
     className: "block w-full h-full absolute top-0 opacity-0",
     value: value,
     onChange: handleChange

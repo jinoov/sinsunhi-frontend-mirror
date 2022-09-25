@@ -10,6 +10,7 @@ import * as ReForm from "@rescriptbr/reform/src/ReForm.mjs";
 import * as ReactUtil from "../utils/ReactUtil.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as FetchHelper from "../utils/FetchHelper.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
@@ -67,8 +68,8 @@ var sendBtnStyle = "w-full bg-blue-gray-700 rounded-xl text-white font-bold whit
 
 var resendBtnStyle = "w-full bg-gray-50 rounded-xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1";
 
-function VerifyBuyerPhoneNumber(Props) {
-  var onVerified = Props.onVerified;
+function VerifyBuyerPhoneNumber(props) {
+  var onVerified = props.onVerified;
   var router = Router.useRouter();
   var match = React.useState(function () {
         return /* BeforeSendSMS */0;
@@ -299,7 +300,7 @@ function VerifyBuyerPhoneNumber(Props) {
                                 _0: /* VerificationCode */0
                               }),
                           disabled: isDisabledVerifyCodeForm,
-                          inputRef: inputVerificationCodeRef
+                          inputRef: Caml_option.some(inputVerificationCodeRef)
                         }), sms !== 2 ? null : (
                         verificationCode !== 2 ? React.createElement(Timer.make, {
                                 status: timerStatus,

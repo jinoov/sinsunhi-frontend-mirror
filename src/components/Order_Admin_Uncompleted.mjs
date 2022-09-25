@@ -10,8 +10,8 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
 }
 
-function Order_Admin_Uncompleted$Item$Table(Props) {
-  var order = Props.order;
+function Order_Admin_Uncompleted$Item$Table(props) {
+  var order = props.order;
   var match = React.useState(function () {
         return /* Hide */1;
       });
@@ -130,12 +130,11 @@ var Item = {
   Table: Table
 };
 
-function Order_Admin_Uncompleted(Props) {
-  var order = Props.order;
+function Order_Admin_Uncompleted(props) {
   return React.createElement("li", {
               className: "table-row text-gray-700"
             }, React.createElement(Order_Admin_Uncompleted$Item$Table, {
-                  order: order
+                  order: props.order
                 }));
 }
 

@@ -120,12 +120,10 @@ function style(error, disabled) {
   }
 }
 
-function Select_BulkSale_ProductGrade(Props) {
-  var productCategoryId = Props.productCategoryId;
-  var preferredGrade = Props.preferredGrade;
-  var onChange = Props.onChange;
-  var error = Props.error;
-  var disabled = Props.disabled;
+function Select_BulkSale_ProductGrade(props) {
+  var error = props.error;
+  var preferredGrade = props.preferredGrade;
+  var productCategoryId = props.productCategoryId;
   var queryData = use({
         count: productCategoryId ? 1000 : 0,
         cursor: undefined,
@@ -136,7 +134,7 @@ function Select_BulkSale_ProductGrade(Props) {
             }, React.createElement("h3", undefined, "등급"), React.createElement("label", {
                   className: "block relative mt-2"
                 }, React.createElement("span", {
-                      className: style(error, disabled)
+                      className: style(error, props.disabled)
                     }, Belt_Option.getWithDefault(preferredGrade, "등급 선택")), React.createElement("span", {
                       className: "absolute top-1.5 right-2"
                     }, React.createElement(IconArrowSelect.make, {
@@ -146,7 +144,7 @@ function Select_BulkSale_ProductGrade(Props) {
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
                       value: Belt_Option.getWithDefault(preferredGrade, ""),
-                      onChange: onChange
+                      onChange: props.onChange
                     }, React.createElement("option", {
                           key: "0",
                           value: ""

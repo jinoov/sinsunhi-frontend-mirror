@@ -13,6 +13,7 @@ import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as ReactUtil from "../utils/ReactUtil.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as FetchHelper from "../utils/FetchHelper.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
@@ -124,12 +125,10 @@ function formatPhoneNumber(s) {
   return s.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
 }
 
-function FindId_Buyer_VerifyPhoneNumber(Props) {
-  var phoneNumberInputRef = Props.phoneNumberInputRef;
-  var phoneNumber = Props.phoneNumber;
-  var onVerified = Props.onVerified;
+function FindId_Buyer_VerifyPhoneNumber(props) {
+  var onVerified = props.onVerified;
   var initialStateVerifyPhoneNumber = {
-    phoneNumber: Belt_Option.mapWithDefault(phoneNumber, "", formatPhoneNumber)
+    phoneNumber: Belt_Option.mapWithDefault(props.phoneNumber, "", formatPhoneNumber)
   };
   var match = React.useState(function () {
         return /* BeforeSendSMS */0;
@@ -371,7 +370,7 @@ function FindId_Buyer_VerifyPhoneNumber(Props) {
                                 _0: /* PhoneNumber */0
                               }),
                           disabled: isDisabledVerifyPhoneNumberForm,
-                          inputRef: phoneNumberInputRef
+                          inputRef: Caml_option.some(props.phoneNumberInputRef)
                         }), React.createElement("span", {
                           className: "flex ml-2 w-24 h-13"
                         }, React.createElement("button", {
@@ -397,7 +396,7 @@ function FindId_Buyer_VerifyPhoneNumber(Props) {
                                   _0: /* VerificationCode */0
                                 }),
                           disabled: isDisabledVerifyCodeForm,
-                          inputRef: inputVerificationCodeRef
+                          inputRef: Caml_option.some(inputVerificationCodeRef)
                         }), tmp), React.createElement("span", {
                       className: "flex h-13 mt-3"
                     }, React.createElement("button", {

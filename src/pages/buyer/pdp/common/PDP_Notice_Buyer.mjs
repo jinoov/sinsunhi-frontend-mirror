@@ -7,11 +7,9 @@ import * as ChannelTalk from "../../../../bindings/ChannelTalk.mjs";
 import ReactNl2br from "react-nl2br";
 import * as PDP_Parser_Buyer from "../../../../utils/PDP_Parser_Buyer.mjs";
 
-function PDP_Notice_Buyer$PC(Props) {
-  var notice = Props.notice;
-  var noticeStartAt = Props.noticeStartAt;
-  var noticeEndAt = Props.noticeEndAt;
-  var noticeDateLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeNoticeDateLabel, noticeStartAt, noticeEndAt);
+function PDP_Notice_Buyer$PC(props) {
+  var notice = props.notice;
+  var noticeDateLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeNoticeDateLabel, props.noticeStartAt, props.noticeEndAt);
   if (notice !== undefined) {
     return React.createElement("div", {
                 className: "mt-14 flex min-h-[204px]"
@@ -47,11 +45,9 @@ var PC = {
   make: PDP_Notice_Buyer$PC
 };
 
-function PDP_Notice_Buyer$MO(Props) {
-  var notice = Props.notice;
-  var noticeStartAt = Props.noticeStartAt;
-  var noticeEndAt = Props.noticeEndAt;
-  var noticeDateLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeNoticeDateLabel, noticeStartAt, noticeEndAt);
+function PDP_Notice_Buyer$MO(props) {
+  var notice = props.notice;
+  var noticeDateLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeNoticeDateLabel, props.noticeStartAt, props.noticeEndAt);
   if (notice !== undefined) {
     return React.createElement("div", {
                 className: "flex flex-col gap-2 bg-surface p-4 rounded-2xl"

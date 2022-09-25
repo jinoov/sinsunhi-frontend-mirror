@@ -28,11 +28,9 @@ var Form = {
   }
 };
 
-function Product_Detail_Description_Admin$NoticeDateInput(Props) {
-  var name = Props.name;
-  var defaultValue = Props.defaultValue;
-  var minDate = Props.minDate;
-  var disabled = Props.disabled;
+function Product_Detail_Description_Admin$NoticeDateInput(props) {
+  var disabled = props.disabled;
+  var minDate = props.minDate;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -47,31 +45,23 @@ function Product_Detail_Description_Admin$NoticeDateInput(Props) {
                 }));
   };
   return React.createElement(ReactHookForm$1.Controller, {
-              name: name,
-              control: match.control,
+              name: props.name,
+              control: Caml_option.some(match.control),
               render: (function (param) {
                   var match = param.field;
                   var onChange = match.onChange;
-                  var tmp = {
-                    id: match.name,
-                    onChange: (function (e) {
-                        Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
-                      }),
-                    firstDayOfWeek: 0
-                  };
-                  var tmp$1 = jsonToStr(match.value);
-                  if (tmp$1 !== undefined) {
-                    tmp.date = Caml_option.valFromOption(tmp$1);
-                  }
-                  if (minDate !== undefined) {
-                    tmp.minDate = Caml_option.valFromOption(minDate);
-                  }
-                  if (disabled !== undefined) {
-                    tmp.disabled = Caml_option.valFromOption(disabled);
-                  }
-                  return React.createElement(DatePicker.make, tmp);
+                  return React.createElement(DatePicker.make, {
+                              id: match.name,
+                              onChange: (function (e) {
+                                  Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
+                                }),
+                              date: jsonToStr(match.value),
+                              minDate: minDate,
+                              firstDayOfWeek: 0,
+                              disabled: disabled
+                            });
                 }),
-              defaultValue: Belt_Option.mapWithDefault(defaultValue, "", strToJson)
+              defaultValue: Caml_option.some(Belt_Option.mapWithDefault(props.defaultValue, "", strToJson))
             });
 }
 
@@ -79,11 +69,10 @@ var NoticeDateInput = {
   make: Product_Detail_Description_Admin$NoticeDateInput
 };
 
-function Product_Detail_Description_Admin$ThumbnailUploadInput(Props) {
-  var name = Props.name;
-  var defaultValue = Props.defaultValue;
-  var disabledOpt = Props.disabled;
-  var disabled = disabledOpt !== undefined ? disabledOpt : false;
+function Product_Detail_Description_Admin$ThumbnailUploadInput(props) {
+  var disabled = props.disabled;
+  var name = props.name;
+  var disabled$1 = disabled !== undefined ? disabled : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -97,7 +86,7 @@ function Product_Detail_Description_Admin$ThumbnailUploadInput(Props) {
                       className: "text-text-L2 ml-2"
                     }, "*이미지 파일 형식 등록 가능")), React.createElement("div", undefined, React.createElement(ReactHookForm$1.Controller, {
                       name: name,
-                      control: match.control,
+                      control: Caml_option.some(match.control),
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
@@ -107,18 +96,18 @@ function Product_Detail_Description_Admin$ThumbnailUploadInput(Props) {
                                           Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Upload_Thumbnail_Admin.Form.image_encode(imageUrls)));
                                         }),
                                       value: Belt_Result.getWithDefault(Upload_Thumbnail_Admin.Form.image_decode(match.value), Upload_Thumbnail_Admin.Form.resetImage),
-                                      disabled: disabled
+                                      disabled: disabled$1
                                     });
                         }),
-                      defaultValue: Upload_Thumbnail_Admin.Form.image_encode(Belt_Option.getWithDefault(defaultValue, Upload_Thumbnail_Admin.Form.resetImage)),
-                      rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([[
-                                      "required",
-                                      ReactHookForm.Validation.sync(function (value) {
-                                            return Belt_Result.mapWithDefault(Upload_Thumbnail_Admin.Form.image_decode(value), false, (function (image) {
-                                                          return image.original !== "";
-                                                        }));
-                                          })
-                                    ]])), undefined, undefined, undefined)
+                      defaultValue: Caml_option.some(Upload_Thumbnail_Admin.Form.image_encode(Belt_Option.getWithDefault(props.defaultValue, Upload_Thumbnail_Admin.Form.resetImage))),
+                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([[
+                                          "required",
+                                          ReactHookForm.Validation.sync(function (value) {
+                                                return Belt_Result.mapWithDefault(Upload_Thumbnail_Admin.Form.image_decode(value), false, (function (image) {
+                                                              return image.original !== "";
+                                                            }));
+                                              })
+                                        ]])), undefined, undefined, undefined))
                     }), React.createElement(ErrorMessage.ErrorMessage, {
                       name: name,
                       errors: match.formState.errors,
@@ -139,27 +128,21 @@ var ThumbnailUploadInput = {
   make: Product_Detail_Description_Admin$ThumbnailUploadInput
 };
 
-function Product_Detail_Description_Admin(Props) {
-  var defaultNotice = Props.defaultNotice;
-  var defaultDescription = Props.defaultDescription;
-  var defaultThumbnail = Props.defaultThumbnail;
-  var defaultSalesDocument = Props.defaultSalesDocument;
-  var defaultNoticeStratAt = Props.defaultNoticeStratAt;
-  var defaultNoticeEndAt = Props.defaultNoticeEndAt;
-  var noticeDisabledOpt = Props.noticeDisabled;
-  var noticeStartAtDisabledOpt = Props.noticeStartAtDisabled;
-  var noticeEndAtDisabledOpt = Props.noticeEndAtDisabled;
-  var thumbnailDisabledOpt = Props.thumbnailDisabled;
-  var documentURLDisabledOpt = Props.documentURLDisabled;
-  var discriptionDisabledOpt = Props.discriptionDisabled;
-  var allFieldsDisabledOpt = Props.allFieldsDisabled;
-  var noticeDisabled = noticeDisabledOpt !== undefined ? noticeDisabledOpt : false;
-  var noticeStartAtDisabled = noticeStartAtDisabledOpt !== undefined ? noticeStartAtDisabledOpt : false;
-  var noticeEndAtDisabled = noticeEndAtDisabledOpt !== undefined ? noticeEndAtDisabledOpt : false;
-  var thumbnailDisabled = thumbnailDisabledOpt !== undefined ? thumbnailDisabledOpt : false;
-  var documentURLDisabled = documentURLDisabledOpt !== undefined ? documentURLDisabledOpt : false;
-  var discriptionDisabled = discriptionDisabledOpt !== undefined ? discriptionDisabledOpt : false;
-  var allFieldsDisabled = allFieldsDisabledOpt !== undefined ? allFieldsDisabledOpt : false;
+function Product_Detail_Description_Admin(props) {
+  var allFieldsDisabled = props.allFieldsDisabled;
+  var discriptionDisabled = props.discriptionDisabled;
+  var documentURLDisabled = props.documentURLDisabled;
+  var thumbnailDisabled = props.thumbnailDisabled;
+  var noticeEndAtDisabled = props.noticeEndAtDisabled;
+  var noticeStartAtDisabled = props.noticeStartAtDisabled;
+  var noticeDisabled = props.noticeDisabled;
+  var allFieldsDisabled$1 = allFieldsDisabled !== undefined ? allFieldsDisabled : false;
+  var discriptionDisabled$1 = discriptionDisabled !== undefined ? discriptionDisabled : false;
+  var documentURLDisabled$1 = documentURLDisabled !== undefined ? documentURLDisabled : false;
+  var thumbnailDisabled$1 = thumbnailDisabled !== undefined ? thumbnailDisabled : false;
+  var noticeEndAtDisabled$1 = noticeEndAtDisabled !== undefined ? noticeEndAtDisabled : false;
+  var noticeStartAtDisabled$1 = noticeStartAtDisabled !== undefined ? noticeStartAtDisabled : false;
+  var noticeDisabled$1 = noticeDisabled !== undefined ? noticeDisabled : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -172,29 +155,6 @@ function Product_Detail_Description_Admin(Props) {
         maxLength: 1000
       });
   var documentURL = register("document-url", undefined);
-  var tmp = {
-    name: "notice-date-from",
-    minDate: "2021-01-01",
-    disabled: allFieldsDisabled || noticeStartAtDisabled
-  };
-  if (defaultNoticeStratAt !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(defaultNoticeStratAt);
-  }
-  var tmp$1 = {
-    name: "notice-date-to",
-    minDate: Belt_Option.getWithDefault(noticeDateFrom, ""),
-    disabled: allFieldsDisabled || noticeEndAtDisabled
-  };
-  if (defaultNoticeEndAt !== undefined) {
-    tmp$1.defaultValue = Caml_option.valFromOption(defaultNoticeEndAt);
-  }
-  var tmp$2 = {
-    name: "thumbnail",
-    disabled: allFieldsDisabled || thumbnailDisabled
-  };
-  if (defaultThumbnail !== undefined) {
-    tmp$2.defaultValue = Caml_option.valFromOption(defaultThumbnail);
-  }
   return React.createElement("div", undefined, React.createElement("h2", {
                   className: "text-text-L1 text-lg font-bold"
                 }, "상품상세설명"), React.createElement("div", {
@@ -207,10 +167,10 @@ function Product_Detail_Description_Admin(Props) {
                               className: "font-bold"
                             }, "공지사항")), React.createElement("textarea", {
                           ref: notice.ref,
-                          defaultValue: Belt_Option.getWithDefault(defaultNotice, ""),
+                          defaultValue: Belt_Option.getWithDefault(props.defaultNotice, ""),
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-24 focus:outline-none min-w-1/2 max-w-2xl",
                           id: notice.name,
-                          disabled: allFieldsDisabled || noticeDisabled,
+                          disabled: allFieldsDisabled$1 || noticeDisabled$1,
                           name: notice.name,
                           placeholder: "공지사항 또는 메모 입력(최대 1000자)",
                           onBlur: notice.onBlur,
@@ -234,18 +194,32 @@ function Product_Detail_Description_Admin(Props) {
                           className: "font-bold"
                         }, "공지사항 적용기간"), React.createElement("div", {
                           className: "flex gap-1"
-                        }, React.createElement(Product_Detail_Description_Admin$NoticeDateInput, tmp), React.createElement("span", {
+                        }, React.createElement(Product_Detail_Description_Admin$NoticeDateInput, {
+                              name: "notice-date-from",
+                              defaultValue: props.defaultNoticeStratAt,
+                              minDate: "2021-01-01",
+                              disabled: allFieldsDisabled$1 || noticeStartAtDisabled$1
+                            }), React.createElement("span", {
                               className: "flex items-center"
-                            }, "~"), React.createElement(Product_Detail_Description_Admin$NoticeDateInput, tmp$1))), React.createElement(Product_Detail_Description_Admin$ThumbnailUploadInput, tmp$2), React.createElement("div", {
+                            }, "~"), React.createElement(Product_Detail_Description_Admin$NoticeDateInput, {
+                              name: "notice-date-to",
+                              defaultValue: props.defaultNoticeEndAt,
+                              minDate: Belt_Option.getWithDefault(noticeDateFrom, ""),
+                              disabled: allFieldsDisabled$1 || noticeEndAtDisabled$1
+                            }))), React.createElement(Product_Detail_Description_Admin$ThumbnailUploadInput, {
+                      name: "thumbnail",
+                      defaultValue: props.defaultThumbnail,
+                      disabled: allFieldsDisabled$1 || thumbnailDisabled$1
+                    }), React.createElement("div", {
                       className: "flex flex-col gap-2"
                     }, React.createElement("label", {
                           className: "block font-bold"
                         }, "판매자료 URL"), React.createElement("input", {
                           ref: documentURL.ref,
-                          defaultValue: Belt_Option.getWithDefault(defaultSalesDocument, ""),
+                          defaultValue: Belt_Option.getWithDefault(props.defaultSalesDocument, ""),
                           className: "py-2 px-3 h-9 border-border-default-L1 border rounded-lg focus:outline-none min-w-1/2 max-w-2xl",
                           id: documentURL.name,
-                          disabled: allFieldsDisabled || documentURLDisabled,
+                          disabled: allFieldsDisabled$1 || documentURLDisabled$1,
                           name: documentURL.name,
                           onBlur: documentURL.onBlur,
                           onChange: documentURL.onChange
@@ -273,8 +247,8 @@ function Product_Detail_Description_Admin(Props) {
                             })), React.createElement("div", undefined, React.createElement(Product_Detail_Editor.make, {
                               control: match.control,
                               name: "description-html",
-                              defaultValue: Belt_Option.getWithDefault(defaultDescription, ""),
-                              disabled: allFieldsDisabled || discriptionDisabled
+                              defaultValue: Belt_Option.getWithDefault(props.defaultDescription, ""),
+                              disabled: allFieldsDisabled$1 || discriptionDisabled$1
                             })))));
 }
 

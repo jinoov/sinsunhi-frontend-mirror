@@ -6,12 +6,9 @@ import * as Locale from "../../../../utils/Locale.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
 
-function PDP_Normal_Title_Buyer$PC(Props) {
-  var displayName = Props.displayName;
-  var price = Props.price;
-  var isSoldout = Props.isSoldout;
+function PDP_Normal_Title_Buyer$PC(props) {
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var priceLabel = Belt_Option.mapWithDefault(price, "", (function (price$p) {
+  var priceLabel = Belt_Option.mapWithDefault(props.price, "", (function (price$p) {
           return Locale.Float.show(undefined, price$p, 0);
         }));
   var tmp;
@@ -20,7 +17,7 @@ function PDP_Normal_Title_Buyer$PC(Props) {
             className: "mt-4 text-[28px] text-green-500 font-bold"
           }, "공급가 회원공개") : null;
   } else {
-    var textColor = isSoldout ? "text-gray-600" : "text-gray-800";
+    var textColor = props.isSoldout ? "text-gray-600" : "text-gray-800";
     tmp = React.createElement("h1", {
           className: "mt-4 text-[32px] leading-[38px] font-bold " + textColor
         }, priceLabel, React.createElement("span", {
@@ -29,7 +26,7 @@ function PDP_Normal_Title_Buyer$PC(Props) {
   }
   return React.createElement("section", undefined, React.createElement("h1", {
                   className: "text-[32px] leading-[44px] text-gray-800"
-                }, displayName), tmp, React.createElement("span", {
+                }, props.displayName), tmp, React.createElement("span", {
                   className: "mt-4 text-red-500 text-[15px]"
                 }, "시세에 따라 가격이 변동될 수 있습니다"));
 }
@@ -38,12 +35,9 @@ var PC = {
   make: PDP_Normal_Title_Buyer$PC
 };
 
-function PDP_Normal_Title_Buyer$MO(Props) {
-  var displayName = Props.displayName;
-  var price = Props.price;
-  var isSoldout = Props.isSoldout;
+function PDP_Normal_Title_Buyer$MO(props) {
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var priceLabel = Belt_Option.mapWithDefault(price, "", (function (price$p) {
+  var priceLabel = Belt_Option.mapWithDefault(props.price, "", (function (price$p) {
           return Locale.Float.show(undefined, price$p, 0);
         }));
   var tmp;
@@ -52,7 +46,7 @@ function PDP_Normal_Title_Buyer$MO(Props) {
             className: "text-xl text-green-500 font-bold"
           }, "공급가 회원공개") : null;
   } else {
-    var textColor = isSoldout ? "text-gray-600" : "text-gray-800";
+    var textColor = props.isSoldout ? "text-gray-600" : "text-gray-800";
     tmp = React.createElement("h1", {
           className: "text-[22px] font-bold " + textColor
         }, priceLabel, React.createElement("span", {
@@ -61,7 +55,7 @@ function PDP_Normal_Title_Buyer$MO(Props) {
   }
   return React.createElement("section", undefined, React.createElement("h1", {
                   className: "text-lg text-gray-800"
-                }, displayName), tmp, React.createElement("span", {
+                }, props.displayName), tmp, React.createElement("span", {
                   className: "mt-4 text-red-500 text-[13px]"
                 }, "시세에 따라 가격이 변동될 수 있습니다"));
 }

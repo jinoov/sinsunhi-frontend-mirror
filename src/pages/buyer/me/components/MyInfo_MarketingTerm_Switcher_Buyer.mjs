@@ -96,9 +96,8 @@ var Mutation = {
   use: use$1
 };
 
-function MyInfo_MarketingTerm_Switcher_Buyer(Props) {
-  var query = Props.query;
-  var match = use(query);
+function MyInfo_MarketingTerm_Switcher_Buyer(props) {
+  var match = use(props.query);
   var match$1 = use$1(undefined);
   var mutate = match$1[0];
   var status = Belt_Option.isSome(Belt_List.getAssoc(Belt_List.fromArray(Belt_Array.map(match.terms.edges, (function (param) {

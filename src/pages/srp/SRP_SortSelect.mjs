@@ -4,6 +4,7 @@ import * as Cn from "rescript-classnames/src/Cn.mjs";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as PLP_FilterOption from "../buyer/plp/PLP_FilterOption.mjs";
@@ -12,7 +13,7 @@ import ArrowGray800UpDownSvg from "../../../public/assets/arrow-gray800-up-down.
 
 var arrowUpDownIcon = ArrowGray800UpDownSvg;
 
-function SRP_SortSelect$PC(Props) {
+function SRP_SortSelect$PC(props) {
   var router = Router.useRouter();
   var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section"));
   var label = PLP_FilterOption.Sort.makeSortLabel(Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "sort"), (function (param) {
@@ -45,7 +46,7 @@ function SRP_SortSelect$PC(Props) {
                   className: "text-gray-600 text-sm"
                 }, "정렬기준: "), React.createElement(ReactDropdownMenu.Root, {
                   children: null,
-                  open: match[0],
+                  _open: match[0],
                   onOpenChange: (function (to_) {
                       setOpen(function (param) {
                             return to_;
@@ -65,14 +66,14 @@ function SRP_SortSelect$PC(Props) {
                       align: "start",
                       className: "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: PLP_FilterOption.Sort.makeSortLabel("UPDATED_DESC"),
+                          children: Caml_option.some(PLP_FilterOption.Sort.makeSortLabel("UPDATED_DESC")),
                           className: Cn.make([
                                 itemWidth,
                                 "p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"
                               ]),
                           onSelect: makeOnSelect("UPDATED_DESC")
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: PLP_FilterOption.Sort.makeSortLabel(priceOption),
+                          children: Caml_option.some(PLP_FilterOption.Sort.makeSortLabel(priceOption)),
                           className: Cn.make([
                                 itemWidth,
                                 " p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"
@@ -85,7 +86,7 @@ var PC = {
   make: SRP_SortSelect$PC
 };
 
-function SRP_SortSelect$MO(Props) {
+function SRP_SortSelect$MO(props) {
   var router = Router.useRouter();
   var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section"));
   var label = PLP_FilterOption.Sort.makeSortLabel(Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "sort"), (function (param) {
@@ -116,7 +117,7 @@ function SRP_SortSelect$MO(Props) {
               className: "flex items-center"
             }, React.createElement(ReactDropdownMenu.Root, {
                   children: null,
-                  open: match[0],
+                  _open: match[0],
                   onOpenChange: (function (to_) {
                       setOpen(function (param) {
                             return to_;
@@ -136,14 +137,14 @@ function SRP_SortSelect$MO(Props) {
                       align: "start",
                       className: "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: PLP_FilterOption.Sort.makeSortLabel("UPDATED_DESC"),
+                          children: Caml_option.some(PLP_FilterOption.Sort.makeSortLabel("UPDATED_DESC")),
                           className: Cn.make([
                                 itemWidth,
                                 "p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"
                               ]),
                           onSelect: makeOnSelect("UPDATED_DESC")
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: PLP_FilterOption.Sort.makeSortLabel(priceOption),
+                          children: Caml_option.some(PLP_FilterOption.Sort.makeSortLabel(priceOption)),
                           className: Cn.make([
                                 itemWidth,
                                 "p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"

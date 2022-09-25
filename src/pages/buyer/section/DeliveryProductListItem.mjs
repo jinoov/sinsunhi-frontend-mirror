@@ -106,9 +106,8 @@ var Fragments = {
   Quotable: Quotable
 };
 
-function DeliveryProductListItem$Soldout$PC(Props) {
-  var show = Props.show;
-  if (show) {
+function DeliveryProductListItem$Soldout$PC(props) {
+  if (props.show) {
     return React.createElement(React.Fragment, undefined, React.createElement("div", {
                     className: "w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl"
                   }), React.createElement("div", {
@@ -125,9 +124,8 @@ var PC = {
   make: DeliveryProductListItem$Soldout$PC
 };
 
-function DeliveryProductListItem$Soldout$MO(Props) {
-  var show = Props.show;
-  if (show) {
+function DeliveryProductListItem$Soldout$MO(props) {
+  if (props.show) {
     return React.createElement(React.Fragment, undefined, React.createElement("div", {
                     className: "w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl"
                   }), React.createElement("div", {
@@ -149,11 +147,10 @@ var Soldout = {
   MO: MO
 };
 
-function DeliveryProductListItem$Normal$PC(Props) {
-  var query = Props.query;
+function DeliveryProductListItem$Normal$PC(props) {
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var router = Router.useRouter();
-  var match = use$1(query);
+  var match = use$1(props.query);
   var productId = match.productId;
   var price = match.price;
   var isSoldout = match.status === "SOLDOUT";
@@ -203,11 +200,10 @@ var PC$1 = {
   make: DeliveryProductListItem$Normal$PC
 };
 
-function DeliveryProductListItem$Normal$MO(Props) {
-  var query = Props.query;
+function DeliveryProductListItem$Normal$MO(props) {
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var router = Router.useRouter();
-  var match = use$1(query);
+  var match = use$1(props.query);
   var productId = match.productId;
   var price = match.price;
   var isSoldout = match.status === "SOLDOUT";
@@ -262,11 +258,10 @@ var Normal$1 = {
   MO: MO$1
 };
 
-function DeliveryProductListItem$Quotable$PC(Props) {
-  var query = Props.query;
+function DeliveryProductListItem$Quotable$PC(props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use$2(query);
+  var match = use$2(props.query);
   var productId = match.productId;
   var price = match.price;
   var isSoldout = match.status === "SOLDOUT";
@@ -313,12 +308,11 @@ var PC$2 = {
   make: DeliveryProductListItem$Quotable$PC
 };
 
-function DeliveryProductListItem$Quotable$MO(Props) {
-  var query = Props.query;
+function DeliveryProductListItem$Quotable$MO(props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   console.log(user);
-  var match = use$2(query);
+  var match = use$2(props.query);
   var productId = match.productId;
   var price = match.price;
   var isSoldout = match.status === "SOLDOUT";
@@ -370,7 +364,7 @@ var Quotable$1 = {
   MO: MO$2
 };
 
-function DeliveryProductListItem$PC$Placeholder(Props) {
+function DeliveryProductListItem$PC$Placeholder(props) {
   return React.createElement("div", {
               className: "w-[280px] h-[376px]"
             }, React.createElement("div", {
@@ -386,9 +380,8 @@ var Placeholder = {
   make: DeliveryProductListItem$PC$Placeholder
 };
 
-function DeliveryProductListItem$PC(Props) {
-  var query = Props.query;
-  var match = use(query);
+function DeliveryProductListItem$PC(props) {
+  var match = use(props.query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   if (match$1 !== undefined) {
@@ -415,7 +408,7 @@ var PC$3 = {
   make: DeliveryProductListItem$PC
 };
 
-function DeliveryProductListItem$MO$Placeholder(Props) {
+function DeliveryProductListItem$MO$Placeholder(props) {
   return React.createElement("div", undefined, React.createElement("div", {
                   className: "w-full aspect-square animate-pulse rounded-xl bg-gray-100"
                 }), React.createElement("div", {
@@ -429,9 +422,8 @@ var Placeholder$1 = {
   make: DeliveryProductListItem$MO$Placeholder
 };
 
-function DeliveryProductListItem$MO(Props) {
-  var query = Props.query;
-  var match = use(query);
+function DeliveryProductListItem$MO(props) {
+  var match = use(props.query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   if (match$1 !== undefined) {

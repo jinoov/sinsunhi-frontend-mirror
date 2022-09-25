@@ -47,15 +47,12 @@ function status_decode(v) {
   }
 }
 
-function Select_Delivery_Available(Props) {
-  var value = Props.value;
-  var onChange = Props.onChange;
-  var name = Props.name;
+function Select_Delivery_Available(props) {
   return React.createElement(ReactRadioGroup.Root, {
               children: null,
-              value: Belt_Option.getWithDefault(Js_json.decodeString(status_encode(value)), "all"),
-              onValueChange: onChange,
-              name: name,
+              value: Belt_Option.getWithDefault(Js_json.decodeString(status_encode(props.value)), "all"),
+              onValueChange: props.onChange,
+              name: props.name,
               className: "flex items-center"
             }, React.createElement(ReactRadioGroup.Item, {
                   children: React.createElement(ReactRadioGroup.Indicator, {

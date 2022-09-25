@@ -3,8 +3,8 @@
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as React from "react";
 
-function Skeleton$Box(Props) {
-  var className = Props.className;
+function Skeleton$Box(props) {
+  var className = props.className;
   return React.createElement("div", {
               className: Cx.cx([
                     "flex h-6 animate-pulse rounded-lg bg-gray-100 my-0.5",

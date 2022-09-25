@@ -11,16 +11,15 @@ function colorStyle(colorType) {
   }
 }
 
-function DS_Badge$Medium(Props) {
-  var text = Props.text;
-  var colorTypeOpt = Props.colorType;
-  var colorType = colorTypeOpt !== undefined ? colorTypeOpt : "primary";
+function DS_Badge$Medium(props) {
+  var colorType = props.colorType;
+  var colorType$1 = colorType !== undefined ? colorType : "primary";
   return React.createElement("label", {
               className: Cn.make([
-                    colorStyle(colorType),
+                    colorStyle(colorType$1),
                     "px-2 py-1 rounded-[4px] text-sm"
                   ])
-            }, text);
+            }, props.text);
 }
 
 var Medium = {

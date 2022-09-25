@@ -194,7 +194,7 @@ var QueryCategories = {
   retain: retain$1
 };
 
-function Products_Admin$Skeleton(Props) {
+function Products_Admin$Skeleton(props) {
   return React.createElement("div", {
               className: "max-w-gnb-panel overflow-auto overflow-x-scroll bg-div-shape-L1 min-h-gnb-admin"
             }, React.createElement("header", {
@@ -228,7 +228,7 @@ function useCategorySearchInput(param) {
         };
 }
 
-function Products_Admin$Search(Props) {
+function Products_Admin$Search(props) {
   var defaultValue = useSearchDefaultValue(undefined);
   var categorySearchInput = useCategorySearchInput(undefined);
   var categoryQueryData = use$1(categorySearchInput, undefined, undefined, undefined, undefined);
@@ -362,7 +362,7 @@ function useSearchInput(param) {
         };
 }
 
-function Products_Admin$List(Props) {
+function Products_Admin$List(props) {
   var user = CustomHooks.Auth.use(undefined);
   var searchInput = useSearchInput(undefined);
   var queryData = use(searchInput, /* NetworkOnly */3, undefined, undefined, undefined);
@@ -391,7 +391,7 @@ var List = {
   make: Products_Admin$List
 };
 
-function Products_Admin$Products(Props) {
+function Products_Admin$Products(props) {
   return React.createElement("div", {
               className: "max-w-gnb-panel overflow-auto overflow-x-scroll bg-div-shape-L1 min-h-screen"
             }, React.createElement("header", {
@@ -399,13 +399,13 @@ function Products_Admin$Products(Props) {
                 }, React.createElement("h1", {
                       className: "text-text-L1 text-xl font-bold"
                     }, "상품 조회")), React.createElement(React.Suspense, {
-                  children: React.createElement(Products_Admin$Search, {}),
-                  fallback: React.createElement("div", undefined)
+                  children: Caml_option.some(React.createElement(Products_Admin$Search, {})),
+                  fallback: Caml_option.some(React.createElement("div", undefined))
                 }), React.createElement("div", {
                   className: "p-7 m-4 overflow-auto overflow-x-scroll bg-white rounded shadow-gl"
                 }, React.createElement(React.Suspense, {
-                      children: React.createElement(Products_Admin$List, {}),
-                      fallback: React.createElement(Products_List_Admin.Skeleton.make, {})
+                      children: Caml_option.some(React.createElement(Products_Admin$List, {})),
+                      fallback: Caml_option.some(React.createElement(Products_List_Admin.Skeleton.make, {}))
                     })));
 }
 
@@ -413,12 +413,12 @@ var Products = {
   make: Products_Admin$Products
 };
 
-function Products_Admin(Props) {
+function Products_Admin(props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(RescriptReactErrorBoundary.make, {
                     children: React.createElement(React.Suspense, {
-                          children: React.createElement(Products_Admin$Products, {}),
-                          fallback: React.createElement(Products_Admin$Skeleton, {})
+                          children: Caml_option.some(React.createElement(Products_Admin$Products, {})),
+                          fallback: Caml_option.some(React.createElement(Products_Admin$Skeleton, {}))
                         }),
                     fallback: (function (param) {
                         return React.createElement("div", undefined, "에러 발생");

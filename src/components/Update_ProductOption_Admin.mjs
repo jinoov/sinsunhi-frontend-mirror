@@ -2,8 +2,9 @@
 
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
+import * as React from "@rescript/react/src/React.mjs";
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
-import * as React from "react";
+import * as React$1 from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Checkbox from "./common/Checkbox.mjs";
@@ -166,69 +167,59 @@ var DecodeProductOption = {
   hasEach: hasEach
 };
 
-function Update_ProductOption_Admin$Each(Props) {
-  var minNum = Props.minNum;
-  var maxNum = Props.maxNum;
-  var amount = Props.amount;
-  var amountUnit = Props.amountUnit;
-  var perAmountMin = Props.perAmountMin;
-  var perAmountMax = Props.perAmountMax;
-  var perAmountUnit = Props.perAmountUnit;
-  var minSize = Props.minSize;
-  var maxSize = Props.maxSize;
-  var sizeUnit = Props.sizeUnit;
-  return React.createElement("div", {
+function Update_ProductOption_Admin$Each(props) {
+  return React$1.createElement("div", {
               className: "py-6 flex flex-col gap-2"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex gap-2 items-center"
-                }, React.createElement("label", {
+                }, React$1.createElement("label", {
                       className: "block"
-                    }, "입수 정보"), React.createElement("div", {
+                    }, "입수 정보"), React$1.createElement("div", {
                       className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 leading-4.5"
-                    }, "" + Belt_Option.mapWithDefault(amount, "", (function (prim) {
+                    }, "" + Belt_Option.mapWithDefault(props.amount, "", (function (prim) {
                             return String(prim);
-                          })) + "\n          " + Belt_Option.mapWithDefault(amountUnit, "", Select_Product_Option_Unit.Amount.toString) + ""), React.createElement("div", undefined, React.createElement("div", {
+                          })) + "\n          " + Belt_Option.mapWithDefault(props.amountUnit, "", Select_Product_Option_Unit.Amount.toString) + ""), React$1.createElement("div", undefined, React$1.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none bg-disabled-L3 w-36"
-                        }, Belt_Option.mapWithDefault(minNum, "", (function (prim) {
+                        }, Belt_Option.mapWithDefault(props.minNum, "", (function (prim) {
                                 return String(prim);
-                              })))), React.createElement("span", undefined, "~"), React.createElement("div", undefined, React.createElement("div", {
+                              })))), React$1.createElement("span", undefined, "~"), React$1.createElement("div", undefined, React$1.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none bg-disabled-L3 w-36"
-                        }, Belt_Option.mapWithDefault(maxNum, "", (function (prim) {
+                        }, Belt_Option.mapWithDefault(props.maxNum, "", (function (prim) {
                                 return String(prim);
-                              }))))), React.createElement("div", {
+                              }))))), React$1.createElement("div", {
                   className: "flex gap-4 flex-wrap"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex gap-2 items-center pr-4 border-r border-div-border-L2"
-                    }, React.createElement("label", {
+                    }, React$1.createElement("label", {
                           className: "block shrink-0"
-                        }, "개당 무게"), React.createElement("div", {
+                        }, "개당 무게"), React$1.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
-                        }, Belt_Option.mapWithDefault(perAmountMin, "", (function (prim) {
+                        }, Belt_Option.mapWithDefault(props.perAmountMin, "", (function (prim) {
                                 return String(prim);
-                              }))), React.createElement("span", undefined, "~"), React.createElement("div", {
+                              }))), React$1.createElement("span", undefined, "~"), React$1.createElement("div", {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
-                        }, Belt_Option.mapWithDefault(perAmountMax, "", (function (prim) {
+                        }, Belt_Option.mapWithDefault(props.perAmountMax, "", (function (prim) {
                                 return String(prim);
-                              }))), React.createElement(Select_Product_Option_Unit.Amount.make, {
-                          status: Belt_Option.getWithDefault(perAmountUnit, /* G */0),
+                              }))), React$1.createElement(Select_Product_Option_Unit.Amount.make, {
+                          status: Belt_Option.getWithDefault(props.perAmountUnit, /* G */0),
                           onChange: (function (param) {
                               
                             }),
                           disabled: true
-                        })), React.createElement("div", {
+                        })), React$1.createElement("div", {
                       className: "flex gap-2 items-center"
-                    }, React.createElement("label", {
+                    }, React$1.createElement("label", {
                           className: "block shrink-0"
-                        }, "개당 크기"), React.createElement("div", undefined, React.createElement("div", {
+                        }, "개당 크기"), React$1.createElement("div", undefined, React$1.createElement("div", {
                               className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none shrink bg-disabled-L3 w-36"
-                            }, Belt_Option.mapWithDefault(minSize, "", (function (prim) {
+                            }, Belt_Option.mapWithDefault(props.minSize, "", (function (prim) {
                                     return String(prim);
-                                  })))), React.createElement("span", undefined, "~"), React.createElement("div", undefined, React.createElement("div", {
+                                  })))), React$1.createElement("span", undefined, "~"), React$1.createElement("div", undefined, React$1.createElement("div", {
                               className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none shrink bg-disabled-L3 w-36"
-                            }, Belt_Option.mapWithDefault(maxSize, "", (function (prim) {
+                            }, Belt_Option.mapWithDefault(props.maxSize, "", (function (prim) {
                                     return String(prim);
-                                  })))), React.createElement(Select_Product_Option_Unit.Size.make, {
-                          status: Belt_Option.getWithDefault(sizeUnit, /* MM */0),
+                                  })))), React$1.createElement(Select_Product_Option_Unit.Size.make, {
+                          status: Belt_Option.getWithDefault(props.sizeUnit, /* MM */0),
                           onChange: (function (param) {
                               
                             }),
@@ -550,17 +541,15 @@ var Form = {
   makeAddProductOptionDefaultValue: makeAddProductOptionDefaultValue
 };
 
-function Update_ProductOption_Admin$ReadOnlyOptionId(Props) {
-  var inputName = Props.inputName;
-  var value = Props.value;
+function Update_ProductOption_Admin$ReadOnlyOptionId(props) {
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(inputName, undefined);
+  var match$1 = match.register(props.inputName, undefined);
   var name = match$1.name;
-  return React.createElement("input", {
+  return React$1.createElement("input", {
               ref: match$1.ref,
-              defaultValue: value,
+              defaultValue: props.value,
               id: name,
               name: name,
               type: "hidden"
@@ -571,19 +560,17 @@ var ReadOnlyOptionId = {
   make: Update_ProductOption_Admin$ReadOnlyOptionId
 };
 
-function Update_ProductOption_Admin$EditName(Props) {
-  var inputName = Props.inputName;
-  var defaultValue = Props.defaultValue;
-  var disabled = Props.disabled;
+function Update_ProductOption_Admin$EditName(props) {
+  var disabled = props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(inputName, undefined);
+  var match$1 = match.register(props.inputName, undefined);
   var name = match$1.name;
   var disabledStyle = disabled ? "bg-gray-100 focus:outline-none" : "";
-  return React.createElement("input", {
+  return React$1.createElement("input", {
               ref: match$1.ref,
-              defaultValue: defaultValue,
+              defaultValue: props.defaultValue,
               className: Cx.cx([
                     "px-3 py-2 border border-gray-300 rounded-lg h-9 w-1/3 max-w-sm",
                     disabledStyle
@@ -637,14 +624,12 @@ var Fragment$1 = {
   useOpt: useOpt$1
 };
 
-function Update_ProductOption_Admin$ReadOnlyAutoGenName(Props) {
-  var inputName = Props.inputName;
-  var query = Props.query;
-  var match = use$1(query);
+function Update_ProductOption_Admin$ReadOnlyAutoGenName(props) {
+  var match = use$1(props.query);
   var match$1 = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$2 = match$1.register(inputName, undefined);
+  var match$2 = match$1.register(props.inputName, undefined);
   var name = match$2.name;
   var parsedAmountUnit = amountUnit(match.amountUnit);
   var parsedPerAmountUnit = Belt_Option.map(match.perAmountUnit, perAmountUnit);
@@ -658,7 +643,7 @@ function Update_ProductOption_Admin$ReadOnlyAutoGenName(Props) {
             })), Belt_Option.map(match.perSizeMax, (function (prim) {
               return String(prim);
             })), Belt_Option.map(parsedPerSizeUnit, Select_Product_Option_Unit.Size.toString), true, undefined);
-  return React.createElement("input", {
+  return React$1.createElement("input", {
               ref: match$2.ref,
               defaultValue: autoGenName,
               className: "px-3 py-2 border border-gray-300 bg-gray-100 rounded-lg h-9 w-1/3 max-w-sm text-gray-500",
@@ -674,89 +659,81 @@ var ReadOnlyAutoGenName = {
   make: Update_ProductOption_Admin$ReadOnlyAutoGenName
 };
 
-function Update_ProductOption_Admin$ReadOnlyStockSku(Props) {
-  var value = Props.value;
-  return React.createElement("div", {
+function Update_ProductOption_Admin$ReadOnlyStockSku(props) {
+  return React$1.createElement("div", {
               className: "h-9 w-1/6 max-w-xs px-3 py-2 border border-gray-300 bg-gray-100 rounded-lg"
-            }, React.createElement("span", {
+            }, React$1.createElement("span", {
                   className: "text-gray-500"
-                }, value));
+                }, props.value));
 }
 
 var ReadOnlyStockSku = {
   make: Update_ProductOption_Admin$ReadOnlyStockSku
 };
 
-function Update_ProductOption_Admin$ReadOnlyGrade(Props) {
-  var value = Props.value;
-  return React.createElement("div", {
+function Update_ProductOption_Admin$ReadOnlyGrade(props) {
+  return React$1.createElement("div", {
               className: "flex flex-col gap-2  w-1/3 max-w-sm"
-            }, React.createElement("label", {
+            }, React$1.createElement("label", {
                   className: "font-bold"
-                }, "등급(용도)"), React.createElement("div", {
+                }, "등급(용도)"), React$1.createElement("div", {
                   className: "px-3 py-2 border border-gray-300 text-gray-800 bg-gray-100 rounded-lg h-9"
-                }, Belt_Option.getWithDefault(value, "")));
+                }, Belt_Option.getWithDefault(props.value, "")));
 }
 
 var ReadOnlyGrade = {
   make: Update_ProductOption_Admin$ReadOnlyGrade
 };
 
-function Update_ProductOption_Admin$ReadOnlyPackage(Props) {
-  var value = Props.value;
-  return React.createElement("div", {
+function Update_ProductOption_Admin$ReadOnlyPackage(props) {
+  return React$1.createElement("div", {
               className: "flex flex-col gap-2  w-1/3 max-w-sm"
-            }, React.createElement("span", {
+            }, React$1.createElement("span", {
                   className: "font-bold"
-                }, "포장재질"), React.createElement("div", {
+                }, "포장재질"), React$1.createElement("div", {
                   className: "px-3 py-2 border border-gray-300 text-gray-800 bg-gray-100 rounded-lg h-9"
-                }, Belt_Option.getWithDefault(value, "")));
+                }, Belt_Option.getWithDefault(props.value, "")));
 }
 
 var ReadOnlyPackage = {
   make: Update_ProductOption_Admin$ReadOnlyPackage
 };
 
-function Update_ProductOption_Admin$ReadOnlyAmount(Props) {
-  var value = Props.value;
-  var unit = Props.unit;
-  var showEach = Props.showEach;
-  return React.createElement("div", {
+function Update_ProductOption_Admin$ReadOnlyAmount(props) {
+  return React$1.createElement("div", {
               className: "py-6 flex flex-col gap-2"
-            }, React.createElement("div", undefined, React.createElement("span", {
+            }, React$1.createElement("div", undefined, React$1.createElement("span", {
                       className: "font-bold"
-                    }, "중량"), React.createElement("span", {
+                    }, "중량"), React$1.createElement("span", {
                       className: "text-red-500"
-                    }, "*")), React.createElement("div", {
+                    }, "*")), React$1.createElement("div", {
                   className: "flex"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex-nowrap flex gap-2"
-                    }, React.createElement("div", undefined, React.createElement("div", {
+                    }, React$1.createElement("div", undefined, React$1.createElement("div", {
                               className: "px-3 py-2 border border-gray-300 bg-gray-100 rounded-lg h-9 w-36"
-                            }, Belt_Option.mapWithDefault(value, "", (function (prim) {
+                            }, Belt_Option.mapWithDefault(props.value, "", (function (prim) {
                                     return String(prim);
-                                  })))), React.createElement(Select_Product_Option_Unit.Amount.make, {
-                          status: Belt_Option.mapWithDefault(unit, /* G */0, amountUnit),
+                                  })))), React$1.createElement(Select_Product_Option_Unit.Amount.make, {
+                          status: Belt_Option.mapWithDefault(props.unit, /* G */0, amountUnit),
                           onChange: (function (param) {
                               
                             }),
                           disabled: true
-                        }), React.createElement("div", {
+                        }), React$1.createElement("div", {
                           className: "flex gap-2 items-center grow"
-                        }, React.createElement(Checkbox.make, {
-                              checked: showEach,
+                        }, React$1.createElement(Checkbox.make, {
+                              checked: props.showEach,
                               disabled: true
-                            }), React.createElement("label", undefined, "입수 정보 확인")))));
+                            }), React$1.createElement("label", undefined, "입수 정보 확인")))));
 }
 
 var ReadOnlyAmount = {
   make: Update_ProductOption_Admin$ReadOnlyAmount
 };
 
-function Update_ProductOption_Admin$EditStatus(Props) {
-  var inputName = Props.inputName;
-  var defaultValue = Props.defaultValue;
-  var disabled = Props.disabled;
+function Update_ProductOption_Admin$EditStatus(props) {
+  var disabled = props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -766,46 +743,46 @@ function Update_ProductOption_Admin$EditStatus(Props) {
                   return v;
                 }));
   };
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "flex flex-col gap-2"
-            }, React.createElement("label", {
+            }, React$1.createElement("label", {
                   className: "block"
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "font-bold"
-                    }, "운영상태"), React.createElement("span", {
+                    }, "운영상태"), React$1.createElement("span", {
                       className: "text-red-500"
-                    }, "*")), React.createElement("span", {
+                    }, "*")), React$1.createElement("span", {
                   className: "w-44 h-9"
-                }, React.createElement(ReactHookForm$1.Controller, {
-                      name: inputName,
-                      control: match.control,
+                }, React$1.createElement(ReactHookForm$1.Controller, {
+                      name: props.inputName,
+                      control: Caml_option.some(match.control),
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
-                          return React.createElement("div", undefined, React.createElement(Select_ProductOption_Operation_Status.Base.make, {
+                          return React$1.createElement("div", undefined, React$1.createElement(Select_ProductOption_Operation_Status.Base.make, {
                                           status: toStatus(match.value),
                                           onChange: (function (selected) {
                                               Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_ProductOption_Operation_Status.Base.status_encode(selected)));
                                             }),
                                           forwardRef: match.ref,
                                           disabled: disabled
-                                        }), React.createElement(ErrorMessage.ErrorMessage, {
+                                        }), React$1.createElement(ErrorMessage.ErrorMessage, {
                                           name: match.name,
                                           errors: errors,
                                           render: (function (param) {
-                                              return React.createElement("span", {
+                                              return React$1.createElement("span", {
                                                           className: "flex"
-                                                        }, React.createElement(IconError.make, {
+                                                        }, React$1.createElement(IconError.make, {
                                                               width: "20",
                                                               height: "20"
-                                                            }), React.createElement("span", {
+                                                            }), React$1.createElement("span", {
                                                               className: "text-sm text-notice ml-1"
                                                             }, "운영상태를 입력해주세요."));
                                             })
                                         }));
                         }),
-                      defaultValue: Select_ProductOption_Operation_Status.Base.status_encode(status(defaultValue)),
-                      rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                      defaultValue: Caml_option.some(Select_ProductOption_Operation_Status.Base.status_encode(status(props.defaultValue))),
+                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
                     })));
 }
 
@@ -813,10 +790,8 @@ var EditStatus = {
   make: Update_ProductOption_Admin$EditStatus
 };
 
-function Update_ProductOption_Admin$EditIsFreeShipping(Props) {
-  var inputName = Props.inputName;
-  var defaultValue = Props.defaultValue;
-  var disabled = Props.disabled;
+function Update_ProductOption_Admin$EditIsFreeShipping(props) {
+  var disabled = props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -826,46 +801,46 @@ function Update_ProductOption_Admin$EditIsFreeShipping(Props) {
                   return v;
                 }));
   };
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "flex flex-col gap-2"
-            }, React.createElement("label", {
+            }, React$1.createElement("label", {
                   className: "block"
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "font-bold"
-                    }, "배송비 타입"), React.createElement("span", {
+                    }, "배송비 타입"), React$1.createElement("span", {
                       className: "text-red-500"
-                    }, "*")), React.createElement("span", {
+                    }, "*")), React$1.createElement("span", {
                   className: "w-44 h-9"
-                }, React.createElement(ReactHookForm$1.Controller, {
-                      name: inputName,
-                      control: match.control,
+                }, React$1.createElement(ReactHookForm$1.Controller, {
+                      name: props.inputName,
+                      control: Caml_option.some(match.control),
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
-                          return React.createElement("div", undefined, React.createElement(Select_Product_Shipping_Type.make, {
+                          return React$1.createElement("div", undefined, React$1.createElement(Select_Product_Shipping_Type.make, {
                                           status: toStatus(match.value),
                                           onChange: (function (selected) {
                                               Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Shipping_Type.status_encode(selected)));
                                             }),
                                           forwardRef: match.ref,
                                           disabled: disabled
-                                        }), React.createElement(ErrorMessage.ErrorMessage, {
+                                        }), React$1.createElement(ErrorMessage.ErrorMessage, {
                                           name: match.name,
                                           errors: errors,
                                           render: (function (param) {
-                                              return React.createElement("span", {
+                                              return React$1.createElement("span", {
                                                           className: "flex"
-                                                        }, React.createElement(IconError.make, {
+                                                        }, React$1.createElement(IconError.make, {
                                                               width: "20",
                                                               height: "20"
-                                                            }), React.createElement("span", {
+                                                            }), React$1.createElement("span", {
                                                               className: "text-sm text-notice ml-1"
                                                             }, "배송비 타입을 입력해주세요."));
                                             })
                                         }));
                         }),
-                      defaultValue: Select_Product_Shipping_Type.status_encode(defaultValue),
-                      rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                      defaultValue: Caml_option.some(Select_Product_Shipping_Type.status_encode(props.defaultValue)),
+                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
                     })));
 }
 
@@ -873,30 +848,28 @@ var EditIsFreeShipping = {
   make: Update_ProductOption_Admin$EditIsFreeShipping
 };
 
-function Update_ProductOption_Admin$EditShippingUnitQuantity(Props) {
-  var inputName = Props.inputName;
-  var defaultValue = Props.defaultValue;
+function Update_ProductOption_Admin$EditShippingUnitQuantity(props) {
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(inputName, {
+  var match$1 = match.register(props.inputName, {
         required: true,
         min: 1,
         valueAsNumber: true
       });
   var name = match$1.name;
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "flex flex-col w-[158px] min-w-[158px]"
-            }, React.createElement("label", {
+            }, React$1.createElement("label", {
                   className: "block",
                   htmlFor: name
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "font-bold"
-                    }, "배송 합포장 단위"), React.createElement("span", {
+                    }, "배송 합포장 단위"), React$1.createElement("span", {
                       className: "text-red-500"
-                    }, "*")), React.createElement("input", {
+                    }, "*")), React$1.createElement("input", {
                   ref: match$1.ref,
-                  defaultValue: String(defaultValue),
+                  defaultValue: String(props.defaultValue),
                   className: "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none",
                   id: name,
                   name: name,
@@ -904,16 +877,16 @@ function Update_ProductOption_Admin$EditShippingUnitQuantity(Props) {
                   type: "number",
                   onBlur: match$1.onBlur,
                   onChange: match$1.onChange
-                }), React.createElement(ErrorMessage.ErrorMessage, {
+                }), React$1.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
                   errors: match.formState.errors,
                   render: (function (e) {
-                      return React.createElement("span", {
+                      return React$1.createElement("span", {
                                   className: "flex"
-                                }, React.createElement(IconError.make, {
+                                }, React$1.createElement(IconError.make, {
                                       width: "20",
                                       height: "20"
-                                    }), React.createElement("span", {
+                                    }), React$1.createElement("span", {
                                       className: "text-sm text-notice ml-1"
                                     }, "합포장 단위를 입력해주세요. (1 미만 입력 불가)"));
                     })
@@ -924,27 +897,25 @@ var EditShippingUnitQuantity = {
   make: Update_ProductOption_Admin$EditShippingUnitQuantity
 };
 
-function Update_ProductOption_Admin$EditCutOffTime(Props) {
-  var inputName = Props.inputName;
-  var disabled = Props.disabled;
-  var defaultValue = Props.defaultValue;
+function Update_ProductOption_Admin$EditCutOffTime(props) {
+  var disabled = props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(inputName, {
+  var match$1 = match.register(props.inputName, {
         maxLength: 100
       });
   var name = match$1.name;
   var disabledStyle = disabled ? "bg-gray-100 focus:outline-none" : "";
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "flex flex-col gap-2 min-w-1/2 max-w-2xl"
-            }, React.createElement("label", {
+            }, React$1.createElement("label", {
                   htmlFor: name
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "font-bold"
-                    }, "출고기준시간")), React.createElement("textarea", {
+                    }, "출고기준시간")), React$1.createElement("textarea", {
                   ref: match$1.ref,
-                  defaultValue: Belt_Option.getWithDefault(defaultValue, ""),
+                  defaultValue: Belt_Option.getWithDefault(props.defaultValue, ""),
                   className: Cx.cx([
                         "px-3 py-2 border border-gray-300 rounded-lg focus:outline-none h-9",
                         disabledStyle
@@ -955,16 +926,16 @@ function Update_ProductOption_Admin$EditCutOffTime(Props) {
                   readOnly: disabled,
                   onBlur: match$1.onBlur,
                   onChange: match$1.onChange
-                }), React.createElement(ErrorMessage.ErrorMessage, {
+                }), React$1.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
                   errors: match.formState.errors,
                   render: (function (param) {
-                      return React.createElement("span", {
+                      return React$1.createElement("span", {
                                   className: "flex"
-                                }, React.createElement(IconError.make, {
+                                }, React$1.createElement(IconError.make, {
                                       width: "20",
                                       height: "20"
-                                    }), React.createElement("span", {
+                                    }), React$1.createElement("span", {
                                       className: "text-sm text-notice ml-1"
                                     }, "최대 100자까지 입력가능합니다."));
                     })
@@ -975,27 +946,25 @@ var EditCutOffTime = {
   make: Update_ProductOption_Admin$EditCutOffTime
 };
 
-function Update_ProductOption_Admin$EditMemo(Props) {
-  var inputName = Props.inputName;
-  var disabled = Props.disabled;
-  var defaultValue = Props.defaultValue;
+function Update_ProductOption_Admin$EditMemo(props) {
+  var disabled = props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var match$1 = match.register(inputName, {
+  var match$1 = match.register(props.inputName, {
         maxLength: 100
       });
   var name = match$1.name;
   var disabledStyle = disabled ? "bg-gray-100 focus:outline-none" : "";
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: "flex flex-col gap-2 min-w-1/2 max-w-2xl"
-            }, React.createElement("label", {
+            }, React$1.createElement("label", {
                   htmlFor: name
-                }, React.createElement("span", {
+                }, React$1.createElement("span", {
                       className: "font-bold"
-                    }, "메모")), React.createElement("textarea", {
+                    }, "메모")), React$1.createElement("textarea", {
                   ref: match$1.ref,
-                  defaultValue: Belt_Option.getWithDefault(defaultValue, ""),
+                  defaultValue: Belt_Option.getWithDefault(props.defaultValue, ""),
                   className: Cx.cx([
                         "px-3 py-2 border border-gray-300 rounded-lg focus:outline-none h-9",
                         disabledStyle
@@ -1006,16 +975,16 @@ function Update_ProductOption_Admin$EditMemo(Props) {
                   readOnly: disabled,
                   onBlur: match$1.onBlur,
                   onChange: match$1.onChange
-                }), React.createElement(ErrorMessage.ErrorMessage, {
+                }), React$1.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
                   errors: match.formState.errors,
                   render: (function (param) {
-                      return React.createElement("span", {
+                      return React$1.createElement("span", {
                                   className: "flex"
-                                }, React.createElement(IconError.make, {
+                                }, React$1.createElement(IconError.make, {
                                       width: "20",
                                       height: "20"
-                                    }), React.createElement("span", {
+                                    }), React$1.createElement("span", {
                                       className: "text-sm text-notice ml-1"
                                     }, "최대 100자까지 입력가능합니다."));
                     })
@@ -1026,15 +995,11 @@ var EditMemo = {
   make: Update_ProductOption_Admin$EditMemo
 };
 
-function Update_ProductOption_Admin(Props) {
-  var prefix = Props.prefix;
-  var index = Props.index;
-  var prepend = Props.prepend;
-  var productDisplayName = Props.productDisplayName;
-  var applyAll = Props.applyAll;
-  var setApplyAll = Props.setApplyAll;
-  var query = Props.query;
-  var productOption = use(query);
+function Update_ProductOption_Admin(props) {
+  var setApplyAll = props.setApplyAll;
+  var prepend = props.prepend;
+  var prefix = props.prefix;
+  var productOption = use(props.query);
   var disabled = productOption.status === "RETIRE";
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
@@ -1068,85 +1033,68 @@ function Update_ProductOption_Admin(Props) {
                       });
                 }), param);
   };
-  React.useLayoutEffect((function () {
+  React$1.useLayoutEffect((function () {
           trigger(inputNames.id);
         }), []);
-  var tmp = {
-    inputName: inputNames.cutOffTime,
-    disabled: disabled,
-    defaultValue: productOption.cutOffTime
-  };
-  if (productOption.cutOffTime !== undefined) {
-    tmp.key = productOption.cutOffTime;
-  }
-  var tmp$1 = {
-    inputName: inputNames.memo,
-    disabled: disabled,
-    defaultValue: productOption.memo
-  };
-  if (productOption.memo !== undefined) {
-    tmp$1.key = productOption.memo;
-  }
   var match$1 = productOption.status !== "RETIRE";
-  return React.createElement(ReactCollapsible.Root, {
-              children: React.createElement("div", {
+  return React$1.createElement(ReactCollapsible.Root, {
+              children: React$1.createElement("div", {
                     className: "bg-bg-pressed-L1 border border-div-border-L2 px-3 py-7 rounded text-sm"
-                  }, React.createElement("div", {
+                  }, React$1.createElement("div", {
                         className: "flex flex-col gap-6 "
-                      }, React.createElement("div", {
+                      }, React$1.createElement("div", {
                             className: "flex flex-col gap-2"
-                          }, React.createElement("div", {
+                          }, React$1.createElement("div", {
                                 className: "flex justify-between"
-                              }, React.createElement("div", {
+                              }, React$1.createElement("div", {
                                     className: "flex items-center"
-                                  }, React.createElement("span", {
+                                  }, React$1.createElement("span", {
                                         className: "block font-bold"
-                                      }, "단품 기본정보"), React.createElement("div", {
+                                      }, "단품 기본정보"), React$1.createElement("div", {
                                         className: "flex gap-2 ml-2"
-                                      }, React.createElement("button", {
+                                      }, React$1.createElement("button", {
                                             className: "px-2 py-1 bg-primary text-white focus:outline-none rounded",
                                             onClick: onClickCopy
-                                          }, "복사하기"))), React.createElement(ReactCollapsible.Trigger, {
-                                    children: React.createElement("div", {
+                                          }, "복사하기"))), React$1.createElement(ReactCollapsible.Trigger, {
+                                    children: React$1.createElement("div", {
                                           className: "flex items-center cursor-pointer relative gap-1"
-                                        }, React.createElement("span", {
+                                        }, React$1.createElement("span", {
                                               className: "underline"
-                                            }, "단품정보 접기"), React.createElement(IconArrow.make, {
+                                            }, "단품정보 접기"), React$1.createElement(IconArrow.make, {
                                               height: "16",
                                               width: "16",
                                               fill: "#000000",
                                               className: "transform -rotate-90"
                                             })),
                                     className: "collabsible-trigger"
-                                  })), React.createElement("div", {
+                                  })), React$1.createElement("div", {
                                 className: "flex gap-2"
-                              }, React.createElement(Update_ProductOption_Admin$ReadOnlyOptionId, {
+                              }, React$1.createElement(Update_ProductOption_Admin$ReadOnlyOptionId, {
                                     inputName: inputNames.id,
                                     value: productOption.id
-                                  }), React.createElement(Update_ProductOption_Admin$EditName, {
+                                  }), React.createElementWithKey(Update_ProductOption_Admin$EditName, {
                                     inputName: inputNames.name,
                                     defaultValue: productOption.optionName,
-                                    disabled: disabled,
-                                    key: productOption.optionName
-                                  }), React.createElement(Update_ProductOption_Admin$ReadOnlyAutoGenName, {
+                                    disabled: disabled
+                                  }, productOption.optionName), React$1.createElement(Update_ProductOption_Admin$ReadOnlyAutoGenName, {
                                     inputName: inputNames.autoGenName,
                                     query: productOption.fragmentRefs
-                                  }), React.createElement(Update_ProductOption_Admin$ReadOnlyStockSku, {
+                                  }), React$1.createElement(Update_ProductOption_Admin$ReadOnlyStockSku, {
                                     value: productOption.stockSku
-                                  })))), React.createElement(ReactCollapsible.Content, {
-                        children: React.createElement("div", {
+                                  })))), React$1.createElement(ReactCollapsible.Content, {
+                        children: React$1.createElement("div", {
                               className: "divide-y"
-                            }, React.createElement("div", {
+                            }, React$1.createElement("div", {
                                   className: "flex gap-4 py-6"
-                                }, React.createElement(Update_ProductOption_Admin$ReadOnlyGrade, {
+                                }, React$1.createElement(Update_ProductOption_Admin$ReadOnlyGrade, {
                                       value: productOption.grade
-                                    }), React.createElement(Update_ProductOption_Admin$ReadOnlyPackage, {
+                                    }), React$1.createElement(Update_ProductOption_Admin$ReadOnlyPackage, {
                                       value: productOption.packageType
-                                    })), React.createElement(Update_ProductOption_Admin$ReadOnlyAmount, {
+                                    })), React$1.createElement(Update_ProductOption_Admin$ReadOnlyAmount, {
                                   value: productOption.amount,
                                   unit: productOption.amountUnit,
                                   showEach: showEach
-                                }), showEach ? React.createElement(Update_ProductOption_Admin$Each, {
+                                }), showEach ? React$1.createElement(Update_ProductOption_Admin$Each, {
                                     minNum: productOption.countPerPackageMin,
                                     maxNum: productOption.countPerPackageMax,
                                     amount: productOption.amount,
@@ -1157,33 +1105,40 @@ function Update_ProductOption_Admin(Props) {
                                     minSize: productOption.perSizeMin,
                                     maxSize: productOption.perSizeMax,
                                     sizeUnit: perSizeUnit$1
-                                  }) : null, React.createElement("div", {
+                                  }) : null, React$1.createElement("div", {
                                   className: "flex flex-col gap-6 py-6 w-full"
-                                }, React.createElement("span", {
+                                }, React$1.createElement("span", {
                                       className: "text-text-L2"
-                                    }, "*단품 가격정보는 단품 가격관리에서 수정이 가능합니다."), React.createElement("div", {
+                                    }, "*단품 가격정보는 단품 가격관리에서 수정이 가능합니다."), React$1.createElement("div", {
                                       className: "flex gap-4 w-2/3 max-w-2xl"
-                                    }, React.createElement(Update_ProductOption_Admin$EditStatus, {
+                                    }, React.createElementWithKey(Update_ProductOption_Admin$EditStatus, {
                                           inputName: inputNames.operationStatus,
                                           defaultValue: productOption.status,
-                                          disabled: disabled,
-                                          key: stringifyStatus(productOption.status)
-                                        }), React.createElement(Update_ProductOption_Admin$EditIsFreeShipping, {
+                                          disabled: disabled
+                                        }, stringifyStatus(productOption.status)), React$1.createElement(Update_ProductOption_Admin$EditIsFreeShipping, {
                                           inputName: inputNames.isFreeShipping,
                                           defaultValue: productOption.isFreeShipping ? /* FREE */1 : /* NOTFREE */0,
                                           disabled: disabled
-                                        }), React.createElement(Update_ProductOption_Admin$EditShippingUnitQuantity, {
+                                        }), React$1.createElement(Update_ProductOption_Admin$EditShippingUnitQuantity, {
                                           inputName: inputNames.shippingUnitQuantity,
                                           defaultValue: productOption.shippingUnitQuantity
-                                        }))), React.createElement("div", {
+                                        }))), React$1.createElement("div", {
                                   className: "flex flex-col gap-6 py-6 w-full"
-                                }, React.createElement(Update_ProductOption_Admin$EditCutOffTime, tmp), React.createElement(Update_ProductOption_Admin$EditMemo, tmp$1), index !== 0 || !match$1 ? null : React.createElement("div", {
+                                }, React.createElementWithKey(Update_ProductOption_Admin$EditCutOffTime, {
+                                      inputName: inputNames.cutOffTime,
+                                      disabled: disabled,
+                                      defaultValue: productOption.cutOffTime
+                                    }, Belt_Option.getWithDefault(productOption.cutOffTime, "")), React.createElementWithKey(Update_ProductOption_Admin$EditMemo, {
+                                      inputName: inputNames.memo,
+                                      disabled: disabled,
+                                      defaultValue: productOption.memo
+                                    }, Belt_Option.getWithDefault(productOption.memo, "")), props.index !== 0 || !match$1 ? null : React$1.createElement("div", {
                                         className: "flex gap-2 items-center"
-                                      }, React.createElement("button", {
+                                      }, React$1.createElement("button", {
                                             onClick: onClickApplyAll
-                                          }, React.createElement("img", {
-                                                src: applyAll ? checkboxCheckedIcon : checkboxUncheckedIcon
-                                              })), React.createElement("span", undefined, "[" + productDisplayName + "] 전체 단품에 출고기준시간과 메모 동일하게 적용하기")))),
+                                          }, React$1.createElement("img", {
+                                                src: props.applyAll ? checkboxCheckedIcon : checkboxUncheckedIcon
+                                              })), React$1.createElement("span", undefined, "[" + props.productDisplayName + "] 전체 단품에 출고기준시간과 메모 동일하게 적용하기")))),
                         className: "collabsible-content"
                       })),
               defaultOpen: true

@@ -89,12 +89,11 @@ function makeInput(progress, reason) {
         };
 }
 
-function BulkSale_Producer_Application_Rejected_Button(Props) {
-  var application = Props.application;
-  var isShow = Props.isShow;
-  var _open = Props.open;
-  var close = Props.close;
-  var refetchSummary = Props.refetchSummary;
+function BulkSale_Producer_Application_Rejected_Button(props) {
+  var refetchSummary = props.refetchSummary;
+  var close = props.close;
+  var _open = props._open;
+  var application = props.application;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
@@ -116,7 +115,7 @@ function BulkSale_Producer_Application_Rejected_Button(Props) {
   var triggerStyle = match$4 === "REJECTED" ? "absolute top-9 left-0 text-text-L2 focus:outline-none text-left underline" : "hidden";
   return React.createElement(ReactDialog.Root, {
               children: null,
-              open: isShow
+              _open: props.isShow
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Trigger, {

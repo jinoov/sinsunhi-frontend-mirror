@@ -2,7 +2,8 @@
 
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "react";
+import * as React from "@rescript/react/src/React.mjs";
+import * as React$1 from "react";
 import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Skeleton from "./Skeleton.mjs";
 import * as Garter_Fn from "@greenlabs/garter/src/Garter_Fn.mjs";
@@ -51,7 +52,7 @@ function useRefetchable(fRef) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(CartBuyerItemFragment_graphql.Internal.convertFragment, match[0]);
   return [
           data,
-          React.useMemo((function () {
+          React$1.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return Curry._2(refetchFn, RescriptRelay_Internal.internal_removeUndefinedAndConvertNullsRaw(CartItemBuyerRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -106,7 +107,7 @@ function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(CartBuyerItemQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, CartBuyerItemQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -184,7 +185,7 @@ function use$2(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$1(param) {
   var match = ReactRelay.useQueryLoader(CartBuyerItemQuery_Temp_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React.useMemo((function () {
+  var loadQuery = React$1.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, CartBuyerItemQuery_Temp_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -250,21 +251,21 @@ var TempQuery = {
   retain: retain$1
 };
 
-function Cart_Buyer_Item$NoItem(Props) {
-  var classNameOpt = Props.className;
-  var className = classNameOpt !== undefined ? classNameOpt : "";
-  return React.createElement("div", {
+function Cart_Buyer_Item$NoItem(props) {
+  var className = props.className;
+  var className$1 = className !== undefined ? className : "";
+  return React$1.createElement("div", {
               className: Cx.cx([
                     "flex flex-col items-center justify-center gap-1 xl:gap-7 h-[500px] xl:h-[700px]",
-                    className
+                    className$1
                   ])
-            }, React.createElement("span", {
+            }, React$1.createElement("span", {
                   className: "text-text-L1 text-lg xl:text-3xl font-bold xl:font-normal"
-                }, "장바구니에 담긴 상품이 없습니다."), React.createElement("span", {
+                }, "장바구니에 담긴 상품이 없습니다."), React$1.createElement("span", {
                   className: "whitespace-pre-wrap text-center text-text-L2 text-[17px]"
-                }, "원하는 상품을 장바구니에 담아보세요.\n\n*현재는 1개의 배송지로 가는 상품만 지원합니다.\n2개이상 배송지를 구매하고 싶은 경우에는 \n주문서 업로드를 이용해주세요."), React.createElement(Link, {
+                }, "원하는 상품을 장바구니에 담아보세요.\n\n*현재는 1개의 배송지로 가는 상품만 지원합니다.\n2개이상 배송지를 구매하고 싶은 경우에는 \n주문서 업로드를 이용해주세요."), React$1.createElement(Link, {
                   href: "/buyer",
-                  children: React.createElement("a", {
+                  children: React$1.createElement("a", {
                         className: "mt-12 xl:mt-0 px-4 xl:px-20 py-4 flex justify-center items-center border border-green-500 text-green-500 font-bold rounded-xl"
                       }, "상품 둘러보기")
                 }));
@@ -274,24 +275,24 @@ var NoItem = {
   make: Cart_Buyer_Item$NoItem
 };
 
-function Cart_Buyer_Item$Notice$PC(Props) {
-  return React.createElement("div", {
+function Cart_Buyer_Item$Notice$PC(props) {
+  return React$1.createElement("div", {
               className: "w-full px-0 bg-white pt-0 mb-7 mt-0"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "w-full flex flex-col px-3 py-2.5 text-orange-500 text-sm rounded-[10px] bg-red-50"
-                }, React.createElement("span", undefined, "- 산지 사정에 따라, 상품 상태(ex. 품절) 및 가격이 변동될 수 있습니다. 주문 전 반드시 확인해주세요."), React.createElement("span", undefined, "- 장바구니를 통한 주문은 오직 한 곳의 배송지로만 상품을 보낼 수 있습니다.")));
+                }, React$1.createElement("span", undefined, "- 산지 사정에 따라, 상품 상태(ex. 품절) 및 가격이 변동될 수 있습니다. 주문 전 반드시 확인해주세요."), React$1.createElement("span", undefined, "- 장바구니를 통한 주문은 오직 한 곳의 배송지로만 상품을 보낼 수 있습니다.")));
 }
 
 var PC = {
   make: Cart_Buyer_Item$Notice$PC
 };
 
-function Cart_Buyer_Item$Notice$MO(Props) {
-  return React.createElement("div", {
+function Cart_Buyer_Item$Notice$MO(props) {
+  return React$1.createElement("div", {
               className: "w-full px-4 bg-white pt-7 mb-0 mt-12"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "w-full flex flex-col px-3 py-2.5 text-orange-500 text-sm rounded-[10px] bg-red-50"
-                }, React.createElement("span", undefined, "- 산지 사정에 따라, 상품 상태(ex. 품절) 및 가격이 변동될 수 있습니다. 주문 전 반드시 확인해주세요."), React.createElement("span", undefined, "- 장바구니를 통한 주문은 오직 한 곳의 배송지로만 상품을 보낼 수 있습니다.")));
+                }, React$1.createElement("span", undefined, "- 산지 사정에 따라, 상품 상태(ex. 품절) 및 가격이 변동될 수 있습니다. 주문 전 반드시 확인해주세요."), React$1.createElement("span", undefined, "- 장바구니를 통한 주문은 오직 한 곳의 배송지로만 상품을 보낼 수 있습니다.")));
 }
 
 var MO = {
@@ -303,24 +304,24 @@ var Notice = {
   MO: MO
 };
 
-function Cart_Buyer_Item$SelectAll$PlaceHolder$PC(Props) {
-  return React.createElement("div", {
+function Cart_Buyer_Item$SelectAll$PlaceHolder$PC(props) {
+  return React$1.createElement("div", {
               className: "w-full"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex w-full justify-around bg-white py-3 mb-5"
-                }, React.createElement(Skeleton.Box.make, {
+                }, React$1.createElement(Skeleton.Box.make, {
                       className: "w-1/3"
-                    }), React.createElement(Skeleton.Box.make, {
+                    }), React$1.createElement(Skeleton.Box.make, {
                       className: "w-1/3"
-                    })), React.createElement("div", {
+                    })), React$1.createElement("div", {
                   className: "pb-5 mb-5 mt-0 px-0 w-full relative top-0 bg-white flex justify-between border border-x-0 border-t-0 border-div-border-L2"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex gap-2 items-center"
-                    }, React.createElement(Skeleton.Box.make, {
+                    }, React$1.createElement(Skeleton.Box.make, {
                           className: "w-6"
-                        }), React.createElement(Skeleton.Box.make, {
+                        }), React$1.createElement(Skeleton.Box.make, {
                           className: "w-18"
-                        })), React.createElement(Skeleton.Box.make, {
+                        })), React$1.createElement(Skeleton.Box.make, {
                       className: "w-12"
                     })));
 }
@@ -329,14 +330,14 @@ var PC$1 = {
   make: Cart_Buyer_Item$SelectAll$PlaceHolder$PC
 };
 
-function Cart_Buyer_Item$SelectAll$PlaceHolder$MO(Props) {
-  return React.createElement("div", {
+function Cart_Buyer_Item$SelectAll$PlaceHolder$MO(props) {
+  return React$1.createElement("div", {
               className: "w-full pb-5 mb-5 px-4 mt-16 fixed top-0 bg-white"
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex w-full justify-around bg-white py-3 mb-5"
-                }, React.createElement(Skeleton.Box.make, {
+                }, React$1.createElement(Skeleton.Box.make, {
                       className: "w-1/3"
-                    }), React.createElement(Skeleton.Box.make, {
+                    }), React$1.createElement(Skeleton.Box.make, {
                       className: "w-1/3"
                     })));
 }
@@ -350,14 +351,10 @@ var PlaceHolder = {
   MO: MO$1
 };
 
-function Cart_Buyer_Item$SelectAll$PC(Props) {
-  var prefix = Props.prefix;
-  var refetchCart = Props.refetchCart;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var classNameOpt = Props.className;
-  var className = classNameOpt !== undefined ? classNameOpt : "";
-  var formNames = Cart_Buyer_Form.names(prefix);
+function Cart_Buyer_Item$SelectAll$PC(props) {
+  var className = props.className;
+  var className$1 = className !== undefined ? className : "";
+  var formNames = Cart_Buyer_Form.names(props.prefix);
   var watchCart = ReactHookForm.useWatch({
         name: formNames.name
       });
@@ -425,29 +422,29 @@ function Cart_Buyer_Item$SelectAll$PC(Props) {
   }
   var targetNames = match$3[2];
   var selectedItems = match$3[0];
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: Cx.cx([
                     "pb-5 mb-5 mt-0 pt-0 w-full relative top-0 bg-white border border-x-0 border-t-0 border-div-border-L2",
-                    className
+                    className$1
                   ])
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex w-full justify-start bg-white"
                 }, Belt_Array.map([
                       [
                         "courier-available",
-                        "택배배송 가능 상품 " + String(availableNum) + ""
+                        "택배배송 가능 상품 " + String(props.availableNum) + ""
                       ],
                       [
                         "un-courier-available",
-                        "택배배송 불가 상품 " + String(unavailableNum) + ""
+                        "택배배송 불가 상품 " + String(props.unavailableNum) + ""
                       ]
                     ], (function (param) {
                         var n = param[1];
                         var value = param[0];
-                        return React.createElement("label", {
+                        return React$1.createElement("label", {
                                     key: n,
                                     className: "w-1/2"
-                                  }, React.createElement("input", {
+                                  }, React$1.createElement("input", {
                                         ref: ref,
                                         className: "sr-only",
                                         id: name,
@@ -456,28 +453,28 @@ function Cart_Buyer_Item$SelectAll$PC(Props) {
                                         value: value,
                                         onBlur: onBlur,
                                         onChange: onChange
-                                      }), React.createElement(Cart_Buyer_Util.RadioButton.PC.make, {
+                                      }), React$1.createElement(Cart_Buyer_Util.RadioButton.PC.make, {
                                         watchValue: watchOrderType,
                                         name: n,
                                         value: value
                                       }));
-                      }))), React.createElement("div", {
+                      }))), React$1.createElement("div", {
                   className: "flex justify-between items-center px-0 mt-10"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex gap-2 items-center"
-                    }, React.createElement(Cart_Buyer_Util.Checkbox.make, {
+                    }, React$1.createElement(Cart_Buyer_Util.Checkbox.make, {
                           name: formNames.checked,
                           watchNames: targetNames,
                           targetNames: targetNames,
                           status: "SALE"
-                        }), React.createElement("span", {
+                        }), React$1.createElement("span", {
                           className: "text-gray-800"
-                        }, "전체 선택 (" + String(selectedItems.length) + "/" + String(match$3[1].length) + ")")), React.createElement(Cart_Delete_Button.make, {
+                        }, "전체 선택 (" + String(selectedItems.length) + "/" + String(match$3[1].length) + ")")), React$1.createElement(Cart_Delete_Button.make, {
                       productOptions: selectedItems,
-                      refetchCart: refetchCart,
-                      children: React.createElement("span", {
-                            className: "text-gray-600 text-sm"
-                          }, "선택 삭제"),
+                      refetchCart: props.refetchCart,
+                      children: Caml_option.some(React$1.createElement("span", {
+                                className: "text-gray-600 text-sm"
+                              }, "선택 삭제")),
                       isIcon: false
                     })));
 }
@@ -486,14 +483,10 @@ var PC$2 = {
   make: Cart_Buyer_Item$SelectAll$PC
 };
 
-function Cart_Buyer_Item$SelectAll$MO(Props) {
-  var prefix = Props.prefix;
-  var refetchCart = Props.refetchCart;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var classNameOpt = Props.className;
-  var className = classNameOpt !== undefined ? classNameOpt : "";
-  var formNames = Cart_Buyer_Form.names(prefix);
+function Cart_Buyer_Item$SelectAll$MO(props) {
+  var className = props.className;
+  var className$1 = className !== undefined ? className : "";
+  var formNames = Cart_Buyer_Form.names(props.prefix);
   var watchCart = ReactHookForm.useWatch({
         name: formNames.name
       });
@@ -561,29 +554,29 @@ function Cart_Buyer_Item$SelectAll$MO(Props) {
   }
   var targetNames = match$3[2];
   var selectedItems = match$3[0];
-  return React.createElement("div", {
+  return React$1.createElement("div", {
               className: Cx.cx([
                     "pb-3 mb-5 pt-2 w-full fixed top-12 mt-1 bg-white border border-x-0 border-t-0 border-div-border-L2",
-                    className
+                    className$1
                   ])
-            }, React.createElement("div", {
+            }, React$1.createElement("div", {
                   className: "flex w-full justify-center bg-white"
                 }, Belt_Array.map([
                       [
                         "courier-available",
-                        "택배배송 가능 상품 " + String(availableNum) + ""
+                        "택배배송 가능 상품 " + String(props.availableNum) + ""
                       ],
                       [
                         "un-courier-available",
-                        "택배배송 불가 상품 " + String(unavailableNum) + ""
+                        "택배배송 불가 상품 " + String(props.unavailableNum) + ""
                       ]
                     ], (function (param) {
                         var n = param[1];
                         var value = param[0];
-                        return React.createElement("label", {
+                        return React$1.createElement("label", {
                                     key: n,
                                     className: "w-1/2"
-                                  }, React.createElement("input", {
+                                  }, React$1.createElement("input", {
                                         ref: ref,
                                         className: "sr-only",
                                         id: name,
@@ -592,28 +585,28 @@ function Cart_Buyer_Item$SelectAll$MO(Props) {
                                         value: value,
                                         onBlur: onBlur,
                                         onChange: onChange
-                                      }), React.createElement(Cart_Buyer_Util.RadioButton.MO.make, {
+                                      }), React$1.createElement(Cart_Buyer_Util.RadioButton.MO.make, {
                                         watchValue: watchOrderType,
                                         name: n,
                                         value: value
                                       }));
-                      }))), React.createElement("div", {
+                      }))), React$1.createElement("div", {
                   className: "flex justify-between items-center px-4 mt-4"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex gap-2 items-center"
-                    }, React.createElement(Cart_Buyer_Util.Checkbox.make, {
+                    }, React$1.createElement(Cart_Buyer_Util.Checkbox.make, {
                           name: formNames.checked,
                           watchNames: targetNames,
                           targetNames: targetNames,
                           status: "SALE"
-                        }), React.createElement("span", {
+                        }), React$1.createElement("span", {
                           className: "text-gray-800"
-                        }, "전체 선택 (" + String(selectedItems.length) + "/" + String(match$3[1].length) + ")")), React.createElement(Cart_Delete_Button.make, {
+                        }, "전체 선택 (" + String(selectedItems.length) + "/" + String(match$3[1].length) + ")")), React$1.createElement(Cart_Delete_Button.make, {
                       productOptions: selectedItems,
-                      refetchCart: refetchCart,
-                      children: React.createElement("span", {
-                            className: "text-gray-600 text-sm "
-                          }, "선택 삭제"),
+                      refetchCart: props.refetchCart,
+                      children: Caml_option.some(React$1.createElement("span", {
+                                className: "text-gray-600 text-sm "
+                              }, "선택 삭제")),
                       isIcon: false
                     })));
 }
@@ -628,79 +621,73 @@ var SelectAll = {
   MO: MO$2
 };
 
-function Cart_Buyer_Item$PlaceHolder$PC(Props) {
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item$PlaceHolder$PC(props) {
   var router = Router.useRouter();
-  return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.PC_Old.make, {
-                  key: router.asPath
-                }), React.createElement("main", {
+  return React$1.createElement(React$1.Fragment, undefined, React.createElementWithKey(Header_Buyer.PC_Old.make, {}, router.asPath), React$1.createElement("main", {
                   className: "flex flex-col gap-5 px-[14%] py-20 bg-surface pb-20"
-                }, React.createElement("h1", {
+                }, React$1.createElement("h1", {
                       className: "flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
-                    }, "장바구니"), React.createElement("div", {
+                    }, "장바구니"), React$1.createElement("div", {
                       className: "flex flex-row gap-4 xl:gap-5"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "w-2/3 flex flex-col gap-5"
-                        }, React.createElement("div", {
+                        }, React$1.createElement("div", {
                               className: "flex flex-col pt-7 px-7 bg-white"
-                            }, React.createElement("div", {
+                            }, React$1.createElement("div", {
                                   className: "flex flex-col items-center"
-                                }, React.createElement(Cart_Buyer_Item$SelectAll$PlaceHolder$PC, {}), React.createElement(Skeleton.Box.make, {
+                                }, React$1.createElement(Cart_Buyer_Item$SelectAll$PlaceHolder$PC, {}), React$1.createElement(Skeleton.Box.make, {
                                       className: "w-full px-0 min-h-[4rem] mt-0"
-                                    })), React.createElement("div", {
+                                    })), React$1.createElement("div", {
                                   className: "flex flex-col gap-4 mt-7 mb-10 bg-white"
-                                }, React.createElement(Cart_Card_List_Buyer.PlaceHolder.make, {
-                                      deviceType: deviceType
-                                    })))), React.createElement("div", {
+                                }, React$1.createElement(Cart_Card_List_Buyer.PlaceHolder.make, {
+                                      deviceType: props.deviceType
+                                    })))), React$1.createElement("div", {
                           className: "w-1/3 xl:min-h-full relative bottom-0"
-                        }, React.createElement(Cart_Payment_Info_Buyer.PlaceHolder.PC.make, {})))), React.createElement(Footer_Buyer.PC.make, {}));
+                        }, React$1.createElement(Cart_Payment_Info_Buyer.PlaceHolder.PC.make, {})))), React$1.createElement(Footer_Buyer.PC.make, {}));
 }
 
 var PC$3 = {
   make: Cart_Buyer_Item$PlaceHolder$PC
 };
 
-function Cart_Buyer_Item$PlaceHolder$MO(Props) {
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item$PlaceHolder$MO(props) {
   var router = Router.useRouter();
-  return React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.Mobile.make, {
-                  key: router.asPath
-                }), React.createElement("main", {
+  return React$1.createElement(React$1.Fragment, undefined, React.createElementWithKey(Header_Buyer.Mobile.make, {}, router.asPath), React$1.createElement("main", {
                   className: "flex flex-col gap-5 bg-surface pb-[11rem]"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "flex flex-col gap-4 xl:gap-5"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "w-full flex flex-col gap-5"
-                        }, React.createElement("div", {
+                        }, React$1.createElement("div", {
                               className: "flex flex-col pt-7 px-0 bg-white"
-                            }, React.createElement("div", {
+                            }, React$1.createElement("div", {
                                   className: "flex flex-col items-center"
-                                }, React.createElement(Cart_Buyer_Item$SelectAll$PlaceHolder$MO, {}), React.createElement(Skeleton.Box.make, {
+                                }, React$1.createElement(Cart_Buyer_Item$SelectAll$PlaceHolder$MO, {}), React$1.createElement(Skeleton.Box.make, {
                                       className: "w-[92%] min-h-[4rem] mt-10"
-                                    })), React.createElement("div", {
+                                    })), React$1.createElement("div", {
                                   className: "flex flex-col gap-4 bg-surface"
-                                }, React.createElement(Cart_Card_List_Buyer.PlaceHolder.make, {
-                                      deviceType: deviceType
-                                    })))), React.createElement("div", {
+                                }, React$1.createElement(Cart_Card_List_Buyer.PlaceHolder.make, {
+                                      deviceType: props.deviceType
+                                    })))), React$1.createElement("div", {
                           className: "w-full fixed bottom-0"
-                        }, React.createElement(Cart_Payment_Info_Buyer.PlaceHolder.MO.make, {})))), React.createElement(Footer_Buyer.MO.make, {}));
+                        }, React$1.createElement(Cart_Payment_Info_Buyer.PlaceHolder.MO.make, {})))), React$1.createElement(Footer_Buyer.MO.make, {}));
 }
 
 var MO$3 = {
   make: Cart_Buyer_Item$PlaceHolder$MO
 };
 
-function Cart_Buyer_Item$PlaceHolder(Props) {
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item$PlaceHolder(props) {
+  var deviceType = props.deviceType;
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React.createElement(Cart_Buyer_Item$PlaceHolder$PC, {
+        return React$1.createElement(Cart_Buyer_Item$PlaceHolder$PC, {
                     deviceType: deviceType
                   });
     case /* Mobile */2 :
-        return React.createElement(Cart_Buyer_Item$PlaceHolder$MO, {
+        return React$1.createElement(Cart_Buyer_Item$PlaceHolder$MO, {
                     deviceType: deviceType
                   });
     
@@ -713,54 +700,51 @@ var PlaceHolder$1 = {
   make: Cart_Buyer_Item$PlaceHolder
 };
 
-function Cart_Buyer_Item$RenderByOrderType$PC(Props) {
-  var data = Props.data;
-  var refetchCart = Props.refetchCart;
-  var formNames = Props.formNames;
-  var orderType = Props.orderType;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item$RenderByOrderType$PC(props) {
+  var deviceType = props.deviceType;
+  var orderType = props.orderType;
+  var formNames = props.formNames;
+  var refetchCart = props.refetchCart;
+  var data = props.data;
   var watchOrderType = ReactHookForm.useWatch({
         name: Cart_Buyer_Form.names(Cart_Buyer_Form.name).orderType
       });
   var isSelected = Belt_Option.mapWithDefault(watchOrderType, false, (function (watch) {
           return Caml_obj.equal(watch, Cart_Buyer_Form.orderType_encode(orderType));
         }));
-  return React.createElement(React.Fragment, undefined, React.createElement(Cart_Buyer_Util.HiddenInputs.make, {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement(Cart_Buyer_Util.HiddenInputs.make, {
                   data: data,
                   prefix: formNames.name
-                }), React.createElement("div", {
+                }), React$1.createElement("div", {
                   className: isSelected ? "flex flex-row gap-5" : "hidden"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "w-2/3 flex flex-col gap-5 pt-0 min-w-[550px]"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "flex flex-col pt-0 px-7 bg-white"
-                        }, React.createElement(Cart_Buyer_Item$SelectAll$PC, {
+                        }, React$1.createElement(Cart_Buyer_Item$SelectAll$PC, {
                               prefix: formNames.name,
                               refetchCart: refetchCart,
-                              availableNum: availableNum,
-                              unavailableNum: unavailableNum
-                            }), React.createElement("div", {
+                              availableNum: props.availableNum,
+                              unavailableNum: props.unavailableNum
+                            }), React$1.createElement("div", {
                               className: "flex flex-col gap-4 mb-10 bg-white"
-                            }, data.length !== 0 ? React.createElement("div", {
+                            }, data.length !== 0 ? React$1.createElement("div", {
                                     className: "flex flex-col"
-                                  }, React.createElement(Cart_Buyer_Item$Notice$PC, {}), React.createElement("div", {
+                                  }, React$1.createElement(Cart_Buyer_Item$Notice$PC, {}), React$1.createElement("div", {
                                         className: "flex flex-col gap-7"
                                       }, Belt_Array.mapWithIndex(data, (function (index, cartItem) {
-                                              return React.createElement(Cart_Card_List_Buyer.make, {
+                                              return React.createElementWithKey(Cart_Card_List_Buyer.make, {
                                                           cartItem: cartItem,
                                                           refetchCart: refetchCart,
                                                           prefix: "" + formNames.cartItems + "." + String(index) + "",
                                                           isLast: (index + 1 | 0) === data.length,
-                                                          deviceType: deviceType,
-                                                          key: "" + formNames.cartItems + "." + String(index) + ""
-                                                        });
-                                            })))) : React.createElement(Cart_Buyer_Item$NoItem, {
+                                                          deviceType: deviceType
+                                                        }, "" + formNames.cartItems + "." + String(index) + "");
+                                            })))) : React$1.createElement(Cart_Buyer_Item$NoItem, {
                                     className: "bg-white"
-                                  })))), React.createElement("div", {
+                                  })))), React$1.createElement("div", {
                       className: "w-1/3 min-h-full relative bottom-0"
-                    }, React.createElement(Cart_Payment_Info_Buyer.PC.make, {
+                    }, React$1.createElement(Cart_Payment_Info_Buyer.PC.make, {
                           prefix: formNames.name
                         }))));
 }
@@ -769,54 +753,51 @@ var PC$4 = {
   make: Cart_Buyer_Item$RenderByOrderType$PC
 };
 
-function Cart_Buyer_Item$RenderByOrderType$MO(Props) {
-  var data = Props.data;
-  var refetchCart = Props.refetchCart;
-  var formNames = Props.formNames;
-  var orderType = Props.orderType;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item$RenderByOrderType$MO(props) {
+  var deviceType = props.deviceType;
+  var orderType = props.orderType;
+  var formNames = props.formNames;
+  var refetchCart = props.refetchCart;
+  var data = props.data;
   var watchOrderType = ReactHookForm.useWatch({
         name: Cart_Buyer_Form.names(Cart_Buyer_Form.name).orderType
       });
   var isSelected = Belt_Option.mapWithDefault(watchOrderType, false, (function (watch) {
           return Caml_obj.equal(watch, Cart_Buyer_Form.orderType_encode(orderType));
         }));
-  return React.createElement(React.Fragment, undefined, React.createElement(Cart_Buyer_Util.HiddenInputs.make, {
+  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement(Cart_Buyer_Util.HiddenInputs.make, {
                   data: data,
                   prefix: formNames.name
-                }), React.createElement("div", {
+                }), React$1.createElement("div", {
                   className: isSelected ? "flex flex-col gap-4" : "hidden"
-                }, React.createElement("div", {
+                }, React$1.createElement("div", {
                       className: "w-full flex flex-col gap-5 pt-14"
-                    }, React.createElement("div", {
+                    }, React$1.createElement("div", {
                           className: "flex flex-col pt-0 px-0 bg-white"
-                        }, React.createElement(Cart_Buyer_Item$SelectAll$MO, {
+                        }, React$1.createElement(Cart_Buyer_Item$SelectAll$MO, {
                               prefix: formNames.name,
                               refetchCart: refetchCart,
-                              availableNum: availableNum,
-                              unavailableNum: unavailableNum
-                            }), React.createElement("div", {
+                              availableNum: props.availableNum,
+                              unavailableNum: props.unavailableNum
+                            }), React$1.createElement("div", {
                               className: "flex flex-col gap-2 bg-surface"
-                            }, data.length !== 0 ? React.createElement("div", {
+                            }, data.length !== 0 ? React$1.createElement("div", {
                                     className: "flex flex-col"
-                                  }, React.createElement(Cart_Buyer_Item$Notice$MO, {}), React.createElement("div", {
+                                  }, React$1.createElement(Cart_Buyer_Item$Notice$MO, {}), React$1.createElement("div", {
                                         className: "flex flex-col gap-3"
                                       }, Belt_Array.mapWithIndex(data, (function (index, cartItem) {
-                                              return React.createElement(Cart_Card_List_Buyer.make, {
+                                              return React.createElementWithKey(Cart_Card_List_Buyer.make, {
                                                           cartItem: cartItem,
                                                           refetchCart: refetchCart,
                                                           prefix: "" + formNames.cartItems + "." + String(index) + "",
                                                           isLast: (index + 1 | 0) === data.length,
-                                                          deviceType: deviceType,
-                                                          key: "" + formNames.cartItems + "." + String(index) + ""
-                                                        });
-                                            })))) : React.createElement(Cart_Buyer_Item$NoItem, {
+                                                          deviceType: deviceType
+                                                        }, "" + formNames.cartItems + "." + String(index) + "");
+                                            })))) : React$1.createElement(Cart_Buyer_Item$NoItem, {
                                     className: "bg-white"
-                                  })))), React.createElement("div", {
+                                  })))), React$1.createElement("div", {
                       className: "w-full fixed bottom-0"
-                    }, React.createElement(Cart_Payment_Info_Buyer.MO.make, {
+                    }, React$1.createElement(Cart_Payment_Info_Buyer.MO.make, {
                           prefix: formNames.name
                         }))));
 }
@@ -825,19 +806,19 @@ var MO$4 = {
   make: Cart_Buyer_Item$RenderByOrderType$MO
 };
 
-function Cart_Buyer_Item$RenderByOrderType(Props) {
-  var data = Props.data;
-  var refetchCart = Props.refetchCart;
-  var formNames = Props.formNames;
-  var orderType = Props.orderType;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item$RenderByOrderType(props) {
+  var deviceType = props.deviceType;
+  var unavailableNum = props.unavailableNum;
+  var availableNum = props.availableNum;
+  var orderType = props.orderType;
+  var formNames = props.formNames;
+  var refetchCart = props.refetchCart;
+  var data = props.data;
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React.createElement(Cart_Buyer_Item$RenderByOrderType$PC, {
+        return React$1.createElement(Cart_Buyer_Item$RenderByOrderType$PC, {
                     data: data,
                     refetchCart: refetchCart,
                     formNames: formNames,
@@ -847,7 +828,7 @@ function Cart_Buyer_Item$RenderByOrderType(Props) {
                     deviceType: deviceType
                   });
     case /* Mobile */2 :
-        return React.createElement(Cart_Buyer_Item$RenderByOrderType$MO, {
+        return React$1.createElement(Cart_Buyer_Item$RenderByOrderType$MO, {
                     data: data,
                     refetchCart: refetchCart,
                     formNames: formNames,
@@ -866,28 +847,26 @@ var RenderByOrderType = {
   make: Cart_Buyer_Item$RenderByOrderType
 };
 
-function Cart_Buyer_Item$PC(Props) {
-  var renderParams = Props.renderParams;
-  var refetchCart = Props.refetchCart;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var deviceType = Props.deviceType;
-  return React.createElement("main", {
+function Cart_Buyer_Item$PC(props) {
+  var deviceType = props.deviceType;
+  var unavailableNum = props.unavailableNum;
+  var availableNum = props.availableNum;
+  var refetchCart = props.refetchCart;
+  return React$1.createElement("main", {
               className: "w-full flex flex-col gap-5 px-[14%] py-20 bg-surface pb-20"
-            }, React.createElement("h1", {
+            }, React$1.createElement("h1", {
                   className: "flex ml-5 mb-3 text-3xl font-bold text-enabled-L1"
-                }, "장바구니"), Belt_Array.map(renderParams, (function (param) {
+                }, "장바구니"), Belt_Array.map(props.renderParams, (function (param) {
                     var formNames = param.formNames;
-                    return React.createElement(Cart_Buyer_Item$RenderByOrderType, {
+                    return React.createElementWithKey(Cart_Buyer_Item$RenderByOrderType, {
                                 data: param.data,
                                 refetchCart: refetchCart,
                                 formNames: formNames,
                                 orderType: param.orderType,
                                 availableNum: availableNum,
                                 unavailableNum: unavailableNum,
-                                deviceType: deviceType,
-                                key: formNames.name
-                              });
+                                deviceType: deviceType
+                              }, formNames.name);
                   })));
 }
 
@@ -895,26 +874,24 @@ var PC$5 = {
   make: Cart_Buyer_Item$PC
 };
 
-function Cart_Buyer_Item$MO(Props) {
-  var renderParams = Props.renderParams;
-  var refetchCart = Props.refetchCart;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var deviceType = Props.deviceType;
-  return React.createElement("main", {
+function Cart_Buyer_Item$MO(props) {
+  var deviceType = props.deviceType;
+  var unavailableNum = props.unavailableNum;
+  var availableNum = props.availableNum;
+  var refetchCart = props.refetchCart;
+  return React$1.createElement("main", {
               className: "w-full flex flex-col gap-3 bg-surface pb-44"
-            }, Belt_Array.map(renderParams, (function (param) {
+            }, Belt_Array.map(props.renderParams, (function (param) {
                     var formNames = param.formNames;
-                    return React.createElement(Cart_Buyer_Item$RenderByOrderType, {
+                    return React.createElementWithKey(Cart_Buyer_Item$RenderByOrderType, {
                                 data: param.data,
                                 refetchCart: refetchCart,
                                 formNames: formNames,
                                 orderType: param.orderType,
                                 availableNum: availableNum,
                                 unavailableNum: unavailableNum,
-                                deviceType: deviceType,
-                                key: formNames.name
-                              });
+                                deviceType: deviceType
+                              }, formNames.name);
                   })));
 }
 
@@ -922,17 +899,17 @@ var MO$5 = {
   make: Cart_Buyer_Item$MO
 };
 
-function Cart_Buyer_Item$Container(Props) {
-  var renderParams = Props.renderParams;
-  var refetchCart = Props.refetchCart;
-  var availableNum = Props.availableNum;
-  var unavailableNum = Props.unavailableNum;
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item$Container(props) {
+  var deviceType = props.deviceType;
+  var unavailableNum = props.unavailableNum;
+  var availableNum = props.availableNum;
+  var refetchCart = props.refetchCart;
+  var renderParams = props.renderParams;
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React.createElement(Cart_Buyer_Item$PC, {
+        return React$1.createElement(Cart_Buyer_Item$PC, {
                     renderParams: renderParams,
                     refetchCart: refetchCart,
                     availableNum: availableNum,
@@ -940,7 +917,7 @@ function Cart_Buyer_Item$Container(Props) {
                     deviceType: deviceType
                   });
     case /* Mobile */2 :
-        return React.createElement(Cart_Buyer_Item$MO, {
+        return React$1.createElement(Cart_Buyer_Item$MO, {
                     renderParams: renderParams,
                     refetchCart: refetchCart,
                     availableNum: availableNum,
@@ -955,16 +932,14 @@ var Container = {
   make: Cart_Buyer_Item$Container
 };
 
-function Cart_Buyer_Item(Props) {
-  var query = Props.query;
-  var deviceType = Props.deviceType;
+function Cart_Buyer_Item(props) {
   var router = Router.useRouter();
   var match = ReactHookForm.useFormContext({
         mode: "onChange"
       }, undefined);
   var setValue = match.setValue;
   var formNames = Cart_Buyer_Form.names(Cart_Buyer_Form.name);
-  var match$1 = useRefetchable(query);
+  var match$1 = useRefetchable(props.query);
   var queryData = match$1[0];
   var refetchCart = function (param) {
     router.reload(router.pathname);
@@ -1026,17 +1001,17 @@ function Cart_Buyer_Item(Props) {
                             return option.cartId;
                           }));
             })));
-  React.useEffect((function () {
+  React$1.useEffect((function () {
           setValue(formNames.orderType, Cart_Buyer_Form.orderType_encode(defaultOrderType));
           Cart_Buyer_Form.cartGtmPush(data, cartIds, "view_cart");
         }), []);
-  return React.createElement(React.Fragment, undefined, data.length !== 0 ? React.createElement(Cart_Buyer_Item$Container, {
+  return React$1.createElement(React$1.Fragment, undefined, data.length !== 0 ? React$1.createElement(Cart_Buyer_Item$Container, {
                     renderParams: renderParams,
                     refetchCart: refetchCart,
                     availableNum: availableNum,
                     unavailableNum: unavailableNum,
-                    deviceType: deviceType
-                  }) : React.createElement(Cart_Buyer_Item$NoItem, {}));
+                    deviceType: props.deviceType
+                  }) : React$1.createElement(Cart_Buyer_Item$NoItem, {}));
 }
 
 var Form;
@@ -1064,4 +1039,4 @@ export {
   Container ,
   make ,
 }
-/* react Not a pure module */
+/* React Not a pure module */

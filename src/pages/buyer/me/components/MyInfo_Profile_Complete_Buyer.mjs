@@ -49,18 +49,6 @@ function useCards(query, sectorsOnclick, salesOnClick, categoriesOnClick, bizOnC
   var match$1 = Belt_Option.map(match.verifications, (function (param) {
           return param.valid;
         }));
-  var tmp;
-  var exit = 0;
-  if (match$1 !== undefined && match$1) {
-    tmp = undefined;
-  } else {
-    exit = 1;
-  }
-  if (exit === 1) {
-    tmp = Caml_option.some(React.createElement(MyInfo_ProfileInfo_Promote_Card.BusinessNumber.make, {
-              onClick: bizOnClick
-            }));
-  }
   return Belt_Option.getWithDefault(Helper.$$Option.sequence(Belt_Array.keep([
                       Garter_Array.isEmpty(Belt_Option.getWithDefault(match.sectors, [])) ? Caml_option.some(React.createElement(MyInfo_ProfileInfo_Promote_Card.Sectors.make, {
                                   onClick: sectorsOnclick
@@ -71,21 +59,22 @@ function useCards(query, sectorsOnclick, salesOnClick, categoriesOnClick, bizOnC
                       Garter_Array.isEmpty(Belt_Option.getWithDefault(match.interestedItemCategories, [])) ? Caml_option.some(React.createElement(MyInfo_ProfileInfo_Promote_Card.InterestCategories.make, {
                                   onClick: categoriesOnClick
                                 })) : undefined,
-                      tmp,
+                      match$1 !== undefined && match$1 ? undefined : Caml_option.some(React.createElement(MyInfo_ProfileInfo_Promote_Card.BusinessNumber.make, {
+                                  onClick: bizOnClick
+                                })),
                       Belt_Option.getWithDefault(match.manager, "") === "" ? Caml_option.some(React.createElement(MyInfo_ProfileInfo_Promote_Card.Manager.make, {
                                   onClick: managerOnClick
                                 })) : undefined
                     ], Belt_Option.isSome)), []);
 }
 
-function MyInfo_Profile_Complete_Buyer$PC(Props) {
-  var query = Props.query;
+function MyInfo_Profile_Complete_Buyer$PC(props) {
   var match = React.useState(function () {
         
       });
   var setOpenModal = match[1];
   var openModal = match[0];
-  var items = useCards(query, (function (param) {
+  var items = useCards(props.query, (function (param) {
           setOpenModal(function (param) {
                 return /* SectorAndSale */0;
               });
@@ -176,8 +165,7 @@ function toFragment(modal) {
   }
 }
 
-function MyInfo_Profile_Complete_Buyer$Mobile(Props) {
-  var query = Props.query;
+function MyInfo_Profile_Complete_Buyer$Mobile(props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         
@@ -192,7 +180,7 @@ function MyInfo_Profile_Complete_Buyer$Mobile(Props) {
           return modal;
         });
   };
-  var items = useCards(query, (function (param) {
+  var items = useCards(props.query, (function (param) {
           open_(/* SectorAndSale */0);
         }), (function (param) {
           open_(/* SectorAndSale */0);

@@ -3,17 +3,15 @@
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactDialog from "@radix-ui/react-dialog";
 
-function Dialog$ButtonBox(Props) {
-  var onCancel = Props.onCancel;
-  var onConfirm = Props.onConfirm;
-  var textOnCancel = Props.textOnCancel;
-  var textOnConfirm = Props.textOnConfirm;
-  var kindOfConfirm = Props.kindOfConfirm;
-  var confirmBg = Props.confirmBg;
-  var confirmTextColor = Props.confirmTextColor;
+function Dialog$ButtonBox(props) {
+  var confirmTextColor = props.confirmTextColor;
+  var confirmBg = props.confirmBg;
+  var kindOfConfirm = props.kindOfConfirm;
+  var textOnConfirm = props.textOnConfirm;
+  var onConfirm = props.onConfirm;
+  var onCancel = props.onCancel;
   var tmp;
   var exit = 0;
   var f;
@@ -61,52 +59,21 @@ function Dialog$ButtonBox(Props) {
                         ]),
                     type: "button",
                     onClick: onCancel
-                  }, Belt_Option.getWithDefault(textOnCancel, "취소")) : null, tmp);
+                  }, Belt_Option.getWithDefault(props.textOnCancel, "취소")) : null, tmp);
 }
 
 var ButtonBox = {
   make: Dialog$ButtonBox
 };
 
-function Dialog(Props) {
-  var isShow = Props.isShow;
-  var children = Props.children;
-  var onCancel = Props.onCancel;
-  var onConfirm = Props.onConfirm;
-  var textOnCancel = Props.textOnCancel;
-  var textOnConfirm = Props.textOnConfirm;
-  var kindOfConfirm = Props.kindOfConfirm;
-  var confirmBg = Props.confirmBg;
-  var confirmTextColor = Props.confirmTextColor;
-  var boxStyle = Props.boxStyle;
-  var _open = isShow ? false : true;
+function Dialog(props) {
+  var boxStyle = props.boxStyle;
+  var _open = props.isShow ? false : true;
   var boxBase = "dialog-content";
   var boxClassName = boxStyle !== undefined ? Cx.cx([
           boxBase,
           boxStyle
         ]) : boxBase;
-  var tmp = {};
-  if (onCancel !== undefined) {
-    tmp.onCancel = Caml_option.valFromOption(onCancel);
-  }
-  if (onConfirm !== undefined) {
-    tmp.onConfirm = Caml_option.valFromOption(onConfirm);
-  }
-  if (textOnCancel !== undefined) {
-    tmp.textOnCancel = Caml_option.valFromOption(textOnCancel);
-  }
-  if (textOnConfirm !== undefined) {
-    tmp.textOnConfirm = Caml_option.valFromOption(textOnConfirm);
-  }
-  if (kindOfConfirm !== undefined) {
-    tmp.kindOfConfirm = Caml_option.valFromOption(kindOfConfirm);
-  }
-  if (confirmBg !== undefined) {
-    tmp.confirmBg = Caml_option.valFromOption(confirmBg);
-  }
-  if (confirmTextColor !== undefined) {
-    tmp.confirmTextColor = Caml_option.valFromOption(confirmTextColor);
-  }
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
                     children: null
@@ -117,8 +84,16 @@ function Dialog(Props) {
                         className: boxClassName
                       }, React.createElement("div", {
                             className: "pt-10 px-7"
-                          }, children), React.createElement(Dialog$ButtonBox, tmp))),
-              open: _open
+                          }, props.children), React.createElement(Dialog$ButtonBox, {
+                            onCancel: props.onCancel,
+                            onConfirm: props.onConfirm,
+                            textOnCancel: props.textOnCancel,
+                            textOnConfirm: props.textOnConfirm,
+                            kindOfConfirm: props.kindOfConfirm,
+                            confirmBg: props.confirmBg,
+                            confirmTextColor: props.confirmTextColor
+                          }))),
+              _open: _open
             });
 }
 

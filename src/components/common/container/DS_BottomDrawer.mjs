@@ -5,6 +5,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as IconClose from "../../svgs/IconClose.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactPortal from "@radix-ui/react-portal";
 
 function toStyle(isShow, show, hide, style) {
@@ -41,12 +42,10 @@ var context = React.createContext(function (param) {
 
 var provider = context.Provider;
 
-function DS_BottomDrawer$BottomDrawerContext$Provider(Props) {
-  var value = Props.value;
-  var children = Props.children;
+function DS_BottomDrawer$BottomDrawerContext$Provider(props) {
   return React.createElement(provider, {
-              value: value,
-              children: children
+              value: props.value,
+              children: props.children
             });
 }
 
@@ -60,8 +59,8 @@ var BottomDrawerContext = {
   Provider: Provider
 };
 
-function DS_BottomDrawer$Overlay(Props) {
-  var isShow = Props.isShow;
+function DS_BottomDrawer$Overlay(props) {
+  var isShow = props.isShow;
   var overlayStyle = function (param) {
     return toStyle(isShow, "opacity-100", "opacity-0 pointer-events-none", param);
   };
@@ -78,14 +77,13 @@ var Overlay = {
   make: DS_BottomDrawer$Overlay
 };
 
-function DS_BottomDrawer$Header(Props) {
-  var children = Props.children;
+function DS_BottomDrawer$Header(props) {
   var handleClose = React.useContext(context);
   return React.createElement("header", {
               className: "flex justify-between items-center"
             }, React.createElement("div", {
                   className: "m-4"
-                }, Belt_Option.getWithDefault(children, null)), React.createElement("span", {
+                }, Belt_Option.getWithDefault(props.children, null)), React.createElement("span", {
                   className: "cursor-pointer p-4",
                   onClick: (function (param) {
                       Curry._1(handleClose, undefined);
@@ -100,46 +98,43 @@ var Header = {
   make: DS_BottomDrawer$Header
 };
 
-function DS_BottomDrawer$Body(Props) {
-  var children = Props.children;
+function DS_BottomDrawer$Body(props) {
   return React.createElement("div", {
               className: "flex flex-col overflow-hidden"
-            }, children);
+            }, props.children);
 }
 
 var Body = {
   make: DS_BottomDrawer$Body
 };
 
-function DS_BottomDrawer$Root(Props) {
-  var isShow = Props.isShow;
-  var onClose = Props.onClose;
-  var children = Props.children;
-  var fullOpt = Props.full;
-  var dimLocationOpt = Props.dimLocation;
-  var full = fullOpt !== undefined ? fullOpt : false;
-  var dimLocation = dimLocationOpt !== undefined ? dimLocationOpt : /* Declared */1;
+function DS_BottomDrawer$Root(props) {
+  var dimLocation = props.dimLocation;
+  var full = props.full;
+  var isShow = props.isShow;
+  var dimLocation$1 = dimLocation !== undefined ? dimLocation : /* Declared */1;
+  var full$1 = full !== undefined ? full : false;
   useLockBodyScroll(isShow);
   var showStyle = function (param) {
     return toStyle(isShow, "bottom-0", "-bottom-full", param);
   };
   var content = React.createElement(DS_BottomDrawer$BottomDrawerContext$Provider, {
-        value: onClose,
+        value: props.onClose,
         children: null
       }, React.createElement(DS_BottomDrawer$Overlay, {
             isShow: isShow
           }), React.createElement("div", {
             "aria-hidden": !isShow,
             className: showStyle(Cx.cx([
-                      full ? "h-full" : "max-h-[85vh]",
+                      full$1 ? "h-full" : "max-h-[85vh]",
                       "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
                     ]))
-          }, children));
-  if (dimLocation) {
+          }, props.children));
+  if (dimLocation$1) {
     return content;
   } else {
     return React.createElement(ReactPortal.Root, {
-                children: content
+                children: Caml_option.some(content)
               });
   }
 }

@@ -431,9 +431,9 @@ function makeCreateOption(productNodeId, option) {
         };
 }
 
-function Add_ProductOptions_Admin$Presenter(Props) {
-  var query = Props.query;
-  var productId = Props.productId;
+function Add_ProductOptions_Admin$Presenter(props) {
+  var productId = props.productId;
+  var query = props.query;
   var match = use$1(query);
   var router = Router.useRouter();
   var match$1 = use$2(undefined);
@@ -613,8 +613,8 @@ var Presenter = {
   make: Add_ProductOptions_Admin$Presenter
 };
 
-function Add_ProductOptions_Admin$Container(Props) {
-  var productId = Props.productId;
+function Add_ProductOptions_Admin$Container(props) {
+  var productId = props.productId;
   var queryData = use({
         id: productId
       }, /* StoreAndNetwork */2, undefined, undefined, undefined);
@@ -633,16 +633,16 @@ var Container = {
   make: Add_ProductOptions_Admin$Container
 };
 
-function Add_ProductOptions_Admin(Props) {
+function Add_ProductOptions_Admin(props) {
   var router = Router.useRouter();
   var id = Js_dict.get(router.query, "pid");
   return React.createElement(RescriptReactErrorBoundary.make, {
               children: React.createElement(Authorization.Admin.make, {
                     children: React.createElement(React.Suspense, {
-                          children: id !== undefined ? React.createElement(Add_ProductOptions_Admin$Container, {
-                                  productId: id
-                                }) : React.createElement("div", undefined, "상품이 존재하지 않습니다"),
-                          fallback: React.createElement("div", undefined, "로딩 중..")
+                          children: Caml_option.some(id !== undefined ? React.createElement(Add_ProductOptions_Admin$Container, {
+                                      productId: id
+                                    }) : React.createElement("div", undefined, "상품이 존재하지 않습니다")),
+                          fallback: Caml_option.some(React.createElement("div", undefined, "로딩 중.."))
                         }),
                     title: "관리자 단품 관리"
                   }),

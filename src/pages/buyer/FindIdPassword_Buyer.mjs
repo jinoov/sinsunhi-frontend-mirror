@@ -12,6 +12,7 @@ import * as ReactUtil from "../../utils/ReactUtil.mjs";
 import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as FetchHelper from "../../utils/FetchHelper.mjs";
 import * as ReactEvents from "../../utils/ReactEvents.mjs";
@@ -22,8 +23,7 @@ import * as ResetPassword_Style from "../../components/ResetPassword_Style.mjs";
 import * as ReactSeparator from "@radix-ui/react-separator";
 import * as FindId_Buyer_VerifyPhoneNumber from "../../components/FindId_Buyer_VerifyPhoneNumber.mjs";
 
-function FindIdPassword_Buyer$FindId(Props) {
-  var phoneNumber = Props.phoneNumber;
+function FindIdPassword_Buyer$FindId(props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return /* VerifyPhoneNumber */0;
@@ -68,7 +68,7 @@ function FindIdPassword_Buyer$FindId(Props) {
                   className: "py-4 mt-12"
                 }, React.createElement(FindId_Buyer_VerifyPhoneNumber.make, {
                       phoneNumberInputRef: phoneNumberInputRef,
-                      phoneNumber: phoneNumber,
+                      phoneNumber: props.phoneNumber,
                       onVerified: onVerified
                     })));
         break;
@@ -141,10 +141,9 @@ var Form = ReForm.Make({
       get: get
     });
 
-function FindIdPassword_Buyer$ResetPassword(Props) {
-  var uid = Props.uid;
+function FindIdPassword_Buyer$ResetPassword(props) {
   var initialState = {
-    email: Belt_Option.getWithDefault(uid, "")
+    email: Belt_Option.getWithDefault(props.uid, "")
   };
   var router = Router.useRouter();
   var match = React.useState(function () {
@@ -207,7 +206,7 @@ function FindIdPassword_Buyer$ResetPassword(Props) {
                           error: Curry._1(form.getFieldError, /* Field */{
                                 _0: /* Email */0
                               }),
-                          inputRef: emailInputRef
+                          inputRef: Caml_option.some(emailInputRef)
                         })), React.createElement("div", {
                       className: "mt-5 pb-96 sm:pb-0"
                     }, React.createElement("button", {
@@ -246,8 +245,8 @@ var ResetPassword = {
   make: FindIdPassword_Buyer$ResetPassword
 };
 
-function FindIdPassword_Buyer$Tab(Props) {
-  var mode = Props.mode;
+function FindIdPassword_Buyer$Tab(props) {
+  var mode = props.mode;
   var router = Router.useRouter();
   var style = function (self, mode) {
     if (Caml_obj.equal(self, mode)) {

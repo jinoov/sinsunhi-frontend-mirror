@@ -18,14 +18,13 @@ function Select(Status) {
   };
   var fromString = Curry.__1(status_decode);
   var defaultStyle = "md:w-20 flex items-center border border-border-default-L1 rounded-md px-3 text-enabled-L1 h-9";
-  var Select_Product_Option_Unit$Select = function (Props) {
-    var status = Props.status;
-    var availableOptionsOpt = Props.availableOptions;
-    var onChange = Props.onChange;
-    var forwardRef = Props.forwardRef;
-    var disabledOpt = Props.disabled;
-    var availableOptions = availableOptionsOpt !== undefined ? availableOptionsOpt : Status.options;
-    var disabled = disabledOpt !== undefined ? disabledOpt : false;
+  var Select_Product_Option_Unit$Select = function (props) {
+    var disabled = props.disabled;
+    var onChange = props.onChange;
+    var availableOptions = props.availableOptions;
+    var status = props.status;
+    var disabled$1 = disabled !== undefined ? disabled : false;
+    var availableOptions$1 = availableOptions !== undefined ? availableOptions : Status.options;
     var displayStatus = toString(status);
     var handleProductOptionUnit = function (e) {
       var value = e.target.value;
@@ -37,17 +36,17 @@ function Select(Status) {
     };
     var tmp = {
       className: "block w-full h-full absolute top-0 opacity-0",
-      disabled: disabled,
+      disabled: disabled$1,
       value: toString(status),
       onChange: handleProductOptionUnit
     };
-    if (forwardRef !== undefined) {
-      tmp.ref = Caml_option.valFromOption(forwardRef);
+    if (props.forwardRef !== undefined) {
+      tmp.ref = Caml_option.valFromOption(props.forwardRef);
     }
     return React.createElement("span", undefined, React.createElement("label", {
                     className: "block relative"
                   }, React.createElement("span", {
-                        className: disabled ? Cx.cx([
+                        className: disabled$1 ? Cx.cx([
                                 defaultStyle,
                                 "bg-disabled-L3"
                               ]) : Cx.cx([
@@ -60,7 +59,7 @@ function Select(Status) {
                             height: "24",
                             width: "24",
                             fill: "#121212"
-                          })), React.createElement("select", tmp, Garter_Array.map(availableOptions, (function (s) {
+                          })), React.createElement("select", tmp, Garter_Array.map(availableOptions$1, (function (s) {
                               return React.createElement("option", {
                                           key: toString(s),
                                           value: toString(s)
@@ -249,14 +248,13 @@ var fromString = status_decode;
 
 var defaultStyle = "md:w-20 flex items-center border border-border-default-L1 rounded-md px-3 text-enabled-L1 h-9";
 
-function Select_Product_Option_Unit$Select(Props) {
-  var status = Props.status;
-  var availableOptionsOpt = Props.availableOptions;
-  var onChange = Props.onChange;
-  var forwardRef = Props.forwardRef;
-  var disabledOpt = Props.disabled;
-  var availableOptions = availableOptionsOpt !== undefined ? availableOptionsOpt : options;
-  var disabled = disabledOpt !== undefined ? disabledOpt : false;
+function Select_Product_Option_Unit$Select(props) {
+  var disabled = props.disabled;
+  var onChange = props.onChange;
+  var availableOptions = props.availableOptions;
+  var status = props.status;
+  var disabled$1 = disabled !== undefined ? disabled : false;
+  var availableOptions$1 = availableOptions !== undefined ? availableOptions : options;
   var displayStatus = toString(status);
   var handleProductOptionUnit = function (e) {
     var value = e.target.value;
@@ -268,17 +266,17 @@ function Select_Product_Option_Unit$Select(Props) {
   };
   var tmp = {
     className: "block w-full h-full absolute top-0 opacity-0",
-    disabled: disabled,
+    disabled: disabled$1,
     value: toString(status),
     onChange: handleProductOptionUnit
   };
-  if (forwardRef !== undefined) {
-    tmp.ref = Caml_option.valFromOption(forwardRef);
+  if (props.forwardRef !== undefined) {
+    tmp.ref = Caml_option.valFromOption(props.forwardRef);
   }
   return React.createElement("span", undefined, React.createElement("label", {
                   className: "block relative"
                 }, React.createElement("span", {
-                      className: disabled ? Cx.cx([
+                      className: disabled$1 ? Cx.cx([
                               defaultStyle,
                               "bg-disabled-L3"
                             ]) : Cx.cx([
@@ -291,7 +289,7 @@ function Select_Product_Option_Unit$Select(Props) {
                           height: "24",
                           width: "24",
                           fill: "#121212"
-                        })), React.createElement("select", tmp, Garter_Array.map(availableOptions, (function (s) {
+                        })), React.createElement("select", tmp, Garter_Array.map(availableOptions$1, (function (s) {
                             return React.createElement("option", {
                                         key: toString(s),
                                         value: toString(s)
@@ -317,14 +315,13 @@ var fromString$1 = status_decode$1;
 
 var defaultStyle$1 = "md:w-20 flex items-center border border-border-default-L1 rounded-md px-3 text-enabled-L1 h-9";
 
-function Select_Product_Option_Unit$Select$1(Props) {
-  var status = Props.status;
-  var availableOptionsOpt = Props.availableOptions;
-  var onChange = Props.onChange;
-  var forwardRef = Props.forwardRef;
-  var disabledOpt = Props.disabled;
-  var availableOptions = availableOptionsOpt !== undefined ? availableOptionsOpt : options$1;
-  var disabled = disabledOpt !== undefined ? disabledOpt : false;
+function Select_Product_Option_Unit$Select$1(props) {
+  var disabled = props.disabled;
+  var onChange = props.onChange;
+  var availableOptions = props.availableOptions;
+  var status = props.status;
+  var disabled$1 = disabled !== undefined ? disabled : false;
+  var availableOptions$1 = availableOptions !== undefined ? availableOptions : options$1;
   var displayStatus = toString$1(status);
   var handleProductOptionUnit = function (e) {
     var value = e.target.value;
@@ -336,17 +333,17 @@ function Select_Product_Option_Unit$Select$1(Props) {
   };
   var tmp = {
     className: "block w-full h-full absolute top-0 opacity-0",
-    disabled: disabled,
+    disabled: disabled$1,
     value: toString$1(status),
     onChange: handleProductOptionUnit
   };
-  if (forwardRef !== undefined) {
-    tmp.ref = Caml_option.valFromOption(forwardRef);
+  if (props.forwardRef !== undefined) {
+    tmp.ref = Caml_option.valFromOption(props.forwardRef);
   }
   return React.createElement("span", undefined, React.createElement("label", {
                   className: "block relative"
                 }, React.createElement("span", {
-                      className: disabled ? Cx.cx([
+                      className: disabled$1 ? Cx.cx([
                               defaultStyle$1,
                               "bg-disabled-L3"
                             ]) : Cx.cx([
@@ -359,7 +356,7 @@ function Select_Product_Option_Unit$Select$1(Props) {
                           height: "24",
                           width: "24",
                           fill: "#121212"
-                        })), React.createElement("select", tmp, Garter_Array.map(availableOptions, (function (s) {
+                        })), React.createElement("select", tmp, Garter_Array.map(availableOptions$1, (function (s) {
                             return React.createElement("option", {
                                         key: toString$1(s),
                                         value: toString$1(s)

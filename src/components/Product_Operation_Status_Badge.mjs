@@ -37,9 +37,8 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function Product_Operation_Status_Badge(Props) {
-  var query = Props.query;
-  var match = use(query);
+function Product_Operation_Status_Badge(props) {
+  var match = use(props.query);
   var status = match.status;
   var displayStyle = status === "RETIRE" || status === "HIDDEN_SALE" || status === "SOLDOUT" || status === "NOSALE" || status !== "SALE" ? "max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap" : "max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap";
   var displayText = status === "NOSALE" ? "숨김" : (

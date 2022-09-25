@@ -238,27 +238,25 @@ function toStringPackageMethod(v) {
   }
 }
 
-function RfqApply_Buyer$Layout(Props) {
-  var children = Props.children;
+function RfqApply_Buyer$Layout(props) {
   return React.createElement("div", {
               className: "bg-gray-100"
             }, React.createElement("div", {
                   className: "relative container bg-white max-w-3xl mx-auto min-h-screen"
-                }, children));
+                }, props.children));
 }
 
 var Layout = {
   make: RfqApply_Buyer$Layout
 };
 
-function RfqApply_Buyer$Header(Props) {
-  var title = Props.title;
-  var handleClickLeftButtonOpt = Props.handleClickLeftButton;
-  var updateItem = Props.updateItem;
-  var requestId = Props.requestId;
-  var itemId = Props.itemId;
-  var dispatch = Props.dispatch;
-  var handleClickLeftButton = handleClickLeftButtonOpt !== undefined ? handleClickLeftButtonOpt : (function (prim) {
+function RfqApply_Buyer$Header(props) {
+  var dispatch = props.dispatch;
+  var itemId = props.itemId;
+  var requestId = props.requestId;
+  var updateItem = props.updateItem;
+  var handleClickLeftButton = props.handleClickLeftButton;
+  var handleClickLeftButton$1 = handleClickLeftButton !== undefined ? handleClickLeftButton : (function (prim) {
         window.history.back();
       });
   var match = RfqApply_Steps_Buyer.RfqApplyStep.use(undefined);
@@ -302,7 +300,7 @@ function RfqApply_Buyer$Header(Props) {
                         }, React.createElement("button", {
                               className: "min-w-[60px]",
                               onClick: (function (param) {
-                                  Curry._1(handleClickLeftButton, undefined);
+                                  Curry._1(handleClickLeftButton$1, undefined);
                                 })
                             }, React.createElement("img", {
                                   className: "w-6 h-6 rotate-180 pointer-events-none",
@@ -311,7 +309,7 @@ function RfqApply_Buyer$Header(Props) {
                               className: "text-center truncate"
                             }, React.createElement("span", {
                                   className: "font-bold text-base"
-                                }, Belt_Option.mapWithDefault(title, "", (function (x) {
+                                }, Belt_Option.mapWithDefault(props.title, "", (function (x) {
                                         return x;
                                       })))), React.createElement("div", {
                               className: "min-w-[60px] flex justify-end"
@@ -348,10 +346,8 @@ var Header = {
   make: RfqApply_Buyer$Header
 };
 
-function RfqApply_Buyer$ProgressBar(Props) {
-  var totalCount = Props.totalCount;
-  var currentCount = Props.currentCount;
-  var percentage = currentCount / totalCount * 100;
+function RfqApply_Buyer$ProgressBar(props) {
+  var percentage = props.currentCount / props.totalCount * 100;
   var style = {
     width: "" + String(percentage) + "%"
   };
@@ -588,9 +584,9 @@ function reducer(state, action) {
   }
 }
 
-function RfqApply_Buyer$Apply(Props) {
-  var itemId = Props.itemId;
-  var requestId = Props.requestId;
+function RfqApply_Buyer$Apply(props) {
+  var requestId = props.requestId;
+  var itemId = props.itemId;
   var match = RfqApply_Steps_Buyer.RfqApplyStep.use(undefined);
   var current = match.current;
   var match$1 = use({
@@ -769,18 +765,18 @@ function RfqApply_Buyer$Apply(Props) {
                                     });
                       case /* Brand */6 :
                           return React.createElement(React.Suspense, {
-                                      children: React.createElement(RfqApply_Steps_Buyer.Brand.make, {
-                                            meatBrandIds: meatBrandIds,
-                                            dispatch: dispatch,
-                                            isMutating: isMutating,
-                                            updateItem: updateItem,
-                                            itemId: itemId,
-                                            requestId: requestId,
-                                            isNotExistGrades: isNotExistGrades,
-                                            grade: grade,
-                                            node: node$p
-                                          }),
-                                      fallback: React.createElement(RfqApply_Steps_Skeleton_Buyer.make, {})
+                                      children: Caml_option.some(React.createElement(RfqApply_Steps_Buyer.Brand.make, {
+                                                meatBrandIds: meatBrandIds,
+                                                dispatch: dispatch,
+                                                isMutating: isMutating,
+                                                updateItem: updateItem,
+                                                itemId: itemId,
+                                                requestId: requestId,
+                                                isNotExistGrades: isNotExistGrades,
+                                                grade: grade,
+                                                node: node$p
+                                              })),
+                                      fallback: Caml_option.some(React.createElement(RfqApply_Steps_Skeleton_Buyer.make, {}))
                                     });
                       case /* Etc */7 :
                           return React.createElement(RfqApply_Steps_Buyer.Etc.make, {
@@ -802,25 +798,25 @@ var Apply = {
   make: RfqApply_Buyer$Apply
 };
 
-function RfqApply_Buyer(Props) {
-  var itemId = Props.itemId;
-  var requestId = Props.requestId;
+function RfqApply_Buyer(props) {
+  var requestId = props.requestId;
+  var itemId = props.itemId;
   var router = Router.useRouter();
   if (itemId !== undefined && requestId !== undefined) {
     return React.createElement(Authorization.Buyer.make, {
                 children: React.createElement(React.Suspense, {
-                      children: React.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
-                            children: React.createElement(RfqApply_Buyer$Layout, {
-                                  children: React.createElement(RfqApply_Buyer$Apply, {
-                                        itemId: itemId,
-                                        requestId: requestId
-                                      })
-                                }),
-                            requestId: requestId
-                          })
+                      children: Caml_option.some(React.createElement(RfqCommon.CheckBuyerRequestStatus.make, {
+                                children: React.createElement(RfqApply_Buyer$Layout, {
+                                      children: React.createElement(RfqApply_Buyer$Apply, {
+                                            itemId: itemId,
+                                            requestId: requestId
+                                          })
+                                    }),
+                                requestId: requestId
+                              }))
                     }),
                 title: "바이어 견적 요청",
-                fallback: null
+                fallback: Caml_option.some(null)
               });
   }
   React.useEffect((function () {

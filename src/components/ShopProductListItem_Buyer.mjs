@@ -140,26 +140,24 @@ var Fragments = {
   Matching: Matching
 };
 
-function ShopProductListItem_Buyer$StatusLabel(Props) {
-  var text = Props.text;
+function ShopProductListItem_Buyer$StatusLabel(props) {
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl"
                 }), React.createElement("div", {
                   className: "absolute bottom-0 w-full h-10 bg-gray-600 flex items-center justify-center opacity-90"
                 }, React.createElement("span", {
                       className: "text-white text-xl font-bold"
-                    }, text)));
+                    }, props.text)));
 }
 
 var StatusLabel = {
   make: ShopProductListItem_Buyer$StatusLabel
 };
 
-function ShopProductListItem_Buyer$Normal$PC(Props) {
-  var query = Props.query;
+function ShopProductListItem_Buyer$Normal$PC(props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use$1(query);
+  var match = use$1(props.query);
   var status = match.status;
   var productId = match.productId;
   var priceLabel = Belt_Option.mapWithDefault(match.price, "", (function (price$p) {
@@ -213,11 +211,10 @@ var PC = {
   make: ShopProductListItem_Buyer$Normal$PC
 };
 
-function ShopProductListItem_Buyer$Normal$MO(Props) {
-  var query = Props.query;
+function ShopProductListItem_Buyer$Normal$MO(props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use$1(query);
+  var match = use$1(props.query);
   var status = match.status;
   var productId = match.productId;
   var isSoldout = status === "SOLDOUT";
@@ -277,10 +274,9 @@ var Normal$1 = {
   MO: MO
 };
 
-function ShopProductListItem_Buyer$Quoted$PC(Props) {
-  var query = Props.query;
+function ShopProductListItem_Buyer$Quoted$PC(props) {
   var router = Router.useRouter();
-  var match = use$2(query);
+  var match = use$2(props.query);
   var status = match.status;
   var productId = match.productId;
   return React.createElement("div", {
@@ -322,10 +318,9 @@ var PC$1 = {
   make: ShopProductListItem_Buyer$Quoted$PC
 };
 
-function ShopProductListItem_Buyer$Quoted$MO(Props) {
-  var query = Props.query;
+function ShopProductListItem_Buyer$Quoted$MO(props) {
   var router = Router.useRouter();
-  var match = use$2(query);
+  var match = use$2(props.query);
   var status = match.status;
   var productId = match.productId;
   return React.createElement("div", {
@@ -372,24 +367,20 @@ var Quoted$1 = {
   MO: MO$1
 };
 
-function ShopProductListItem_Buyer$Matching$ProductName$PC(Props) {
-  var productName = Props.productName;
-  var representativeWeight = Props.representativeWeight;
+function ShopProductListItem_Buyer$Matching$ProductName$PC(props) {
   return React.createElement("span", {
               className: "text-gray-800 flex-wrap overflow-hidden gap-1"
-            }, React.createElement("span", undefined, productName), React.createElement("span", undefined, "," + Locale.Float.show(undefined, representativeWeight, 1) + "Kg "));
+            }, React.createElement("span", undefined, props.productName), React.createElement("span", undefined, "," + Locale.Float.show(undefined, props.representativeWeight, 1) + "Kg "));
 }
 
 var PC$2 = {
   make: ShopProductListItem_Buyer$Matching$ProductName$PC
 };
 
-function ShopProductListItem_Buyer$Matching$ProductName$MO(Props) {
-  var productName = Props.productName;
-  var representativeWeight = Props.representativeWeight;
+function ShopProductListItem_Buyer$Matching$ProductName$MO(props) {
   return React.createElement("span", {
               className: "text-gray-800 line-clamp-2 text-sm"
-            }, React.createElement("span", undefined, productName), React.createElement("span", undefined, "," + Locale.Float.show(undefined, representativeWeight, 1) + "Kg"));
+            }, React.createElement("span", undefined, props.productName), React.createElement("span", undefined, "," + Locale.Float.show(undefined, props.representativeWeight, 1) + "Kg"));
 }
 
 var MO$2 = {
@@ -401,40 +392,34 @@ var ProductName = {
   MO: MO$2
 };
 
-function ShopProductListItem_Buyer$Matching$PriceText$PC(Props) {
-  var price = Props.price;
-  var pricePerKg = Props.pricePerKg;
-  var isSoldout = Props.isSoldout;
+function ShopProductListItem_Buyer$Matching$PriceText$PC(props) {
   return React.createElement("div", {
               className: "inline-flex flex-col"
             }, React.createElement("span", {
                   className: Cn.make([
                         "mt-1 font-bold text-lg",
-                        isSoldout ? "text-text-L3" : "text-text-L1"
+                        props.isSoldout ? "text-text-L3" : "text-text-L1"
                       ])
-                }, "" + Locale.Float.show(undefined, price, 0) + "원"), React.createElement("span", {
+                }, "" + Locale.Float.show(undefined, props.price, 0) + "원"), React.createElement("span", {
                   className: "text-sm text-text-L2"
-                }, "kg당 " + Locale.Float.show(undefined, pricePerKg, 0) + "원"));
+                }, "kg당 " + Locale.Float.show(undefined, props.pricePerKg, 0) + "원"));
 }
 
 var PC$3 = {
   make: ShopProductListItem_Buyer$Matching$PriceText$PC
 };
 
-function ShopProductListItem_Buyer$Matching$PriceText$MO(Props) {
-  var price = Props.price;
-  var pricePerKg = Props.pricePerKg;
-  var isSoldout = Props.isSoldout;
+function ShopProductListItem_Buyer$Matching$PriceText$MO(props) {
   return React.createElement("div", {
               className: "inline-flex flex-col"
             }, React.createElement("span", {
                   className: Cn.make([
                         "mt-1 font-bold",
-                        isSoldout ? "text-text-L3" : "text-text-L1"
+                        props.isSoldout ? "text-text-L3" : "text-text-L1"
                       ])
-                }, "" + Locale.Float.show(undefined, price, 0) + "원"), React.createElement("span", {
+                }, "" + Locale.Float.show(undefined, props.price, 0) + "원"), React.createElement("span", {
                   className: "text-sm text-text-L2"
-                }, "kg당 " + Locale.Float.show(undefined, pricePerKg, 0) + "원"));
+                }, "kg당 " + Locale.Float.show(undefined, props.pricePerKg, 0) + "원"));
 }
 
 var MO$3 = {
@@ -446,11 +431,10 @@ var PriceText = {
   MO: MO$3
 };
 
-function ShopProductListItem_Buyer$Matching$PC(Props) {
-  var query = Props.query;
+function ShopProductListItem_Buyer$Matching$PC(props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use$3(query);
+  var match = use$3(props.query);
   var status = match.status;
   var representativeWeight = match.representativeWeight;
   var productId = match.productId;
@@ -522,11 +506,10 @@ var PC$4 = {
   make: ShopProductListItem_Buyer$Matching$PC
 };
 
-function ShopProductListItem_Buyer$Matching$MO(Props) {
-  var query = Props.query;
+function ShopProductListItem_Buyer$Matching$MO(props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use$3(query);
+  var match = use$3(props.query);
   var status = match.status;
   var representativeWeight = match.representativeWeight;
   var productId = match.productId;
@@ -605,7 +588,7 @@ var Matching$1 = {
   MO: MO$4
 };
 
-function ShopProductListItem_Buyer$PC$Placeholder(Props) {
+function ShopProductListItem_Buyer$PC$Placeholder(props) {
   return React.createElement("div", {
               className: "w-[280px] h-[376px]"
             }, React.createElement("div", {
@@ -621,9 +604,8 @@ var Placeholder = {
   make: ShopProductListItem_Buyer$PC$Placeholder
 };
 
-function ShopProductListItem_Buyer$PC(Props) {
-  var query = Props.query;
-  var match = use(query);
+function ShopProductListItem_Buyer$PC(props) {
+  var match = use(props.query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   if (match$1 !== undefined) {
@@ -652,7 +634,7 @@ var PC$5 = {
   make: ShopProductListItem_Buyer$PC
 };
 
-function ShopProductListItem_Buyer$MO$Placeholder(Props) {
+function ShopProductListItem_Buyer$MO$Placeholder(props) {
   return React.createElement("div", undefined, React.createElement("div", {
                   className: "w-full aspect-square animate-pulse rounded-xl bg-gray-100"
                 }), React.createElement("div", {
@@ -666,9 +648,8 @@ var Placeholder$1 = {
   make: ShopProductListItem_Buyer$MO$Placeholder
 };
 
-function ShopProductListItem_Buyer$MO(Props) {
-  var query = Props.query;
-  var match = use(query);
+function ShopProductListItem_Buyer$MO(props) {
+  var match = use(props.query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   if (match$1 !== undefined) {
