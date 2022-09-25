@@ -1,7 +1,10 @@
 {
   "name": "sinsun-market-client",
-  "reason": {
-    "react-jsx": 3
+  "jsx": {
+    "version": 3,
+    "v3-dependencies": [
+      "rescript-relay"
+    ]
   },
   "sources": [
     {
@@ -41,9 +44,14 @@
     "@greenlabs/ppx-spice",
     "rescript-relay"
   ],
-  "bs-dev-dependencies": ["@glennsl/bs-jest"],
+  "bs-dev-dependencies": [
+    "@glennsl/bs-jest"
+  ],
   "ppx-flags": [
-    ["@greenlabs/res-tailwindcss/ppx", "--path styles/.tailwind.dev.css"],
+    [
+      "@greenlabs/res-tailwindcss/ppx",
+      "--path styles/.tailwind.dev.css"
+    ],
     "lenses-ppx/ppx",
     "@greenlabs/ppx-spice/ppx",
     "rescript-relay/ppx"
@@ -57,5 +65,9 @@
     "shims": []
   },
   "generators": [],
-  "bsc-flags": ["-open Belt", "-open Cx"]
+  "bsc-flags": [
+    "-open Belt",
+    "-open Cx",
+    "-open ReactV3"
+  ]
 }

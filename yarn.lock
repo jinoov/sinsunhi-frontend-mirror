@@ -2933,10 +2933,10 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@rescript/react@^0.10.3":
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/@rescript/react/-/react-0.10.3.tgz#a2a8bed6b017940ec26c2154764b350f50348889"
-  integrity sha512-Lf9rzrR3bQPKJjOK3PBRa/B3xrJ7CqQ1HYr9VHPVxJidarIJJFZBhj0Dg1uZURX+Wg/xiP0PHFxXmdj2bK8Vxw==
+"@rescript/react@^0.11.0-alpha.1":
+  version "0.11.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@rescript/react/-/react-0.11.0-alpha.1.tgz#e9be1cdcac55a436f1b14ceb4294a4f8cfd61884"
+  integrity sha512-9JN9+K1MFrVIMncAJlCM5MjENP/MfPZxXmIKAD31cAYoDPAeSzYn/+theay93B/BsF71tSw8UUKQEgG8MB6e/g==
 
 "@rescript/std@^10.0.0":
   version "10.0.0"
@@ -9621,10 +9621,10 @@ rescript-react-update@^3.0.1:
   resolved "https://registry.yarnpkg.com/rescript-react-update/-/rescript-react-update-3.0.2.tgz#8efece4c578110a35fdb1389d890a186dcdf03c6"
   integrity sha512-oOOaeWma6XEhfZwlB/hB6u+UfYtuHjWS4RpoBeE8NbPX60GYLx5BLoVjEqLKoqXFPJv/2ZgghOKBn2LZo0VaJg==
 
-rescript-relay@^1.0.0-beta.26:
-  version "1.0.0-beta.26"
-  resolved "https://registry.yarnpkg.com/rescript-relay/-/rescript-relay-1.0.0-beta.26.tgz#8499d3f15485184e3fd30f9a320586826cd04430"
-  integrity sha512-lojumAz+Sfp1MdB3ZvjJMOluIF2imICznAo5oteXKS6XjOopaQhMn2djZUVWo0CFubHLP61iV/cI62lc3Uy1Ag==
+rescript-relay@0.0.0-connection-id-maker-fix-24be613b:
+  version "0.0.0-connection-id-maker-fix-24be613b"
+  resolved "https://registry.yarnpkg.com/rescript-relay/-/rescript-relay-0.0.0-connection-id-maker-fix-24be613b.tgz#75d5d8aaca7d5b1aed3e24ca5c3d91cac9d62cfa"
+  integrity sha512-QkkjYMumckgPHwZb3mgD+gtvyMpt/YsSYPn4YJ/WA/uLRZVCq7OSKjj8OYc491TBriB5gseFjxzZCqYTKR8mWg==
   dependencies:
     detect-libc "^2.0.1"
 
@@ -9633,10 +9633,10 @@ rescript-webapi@^0.6.0:
   resolved "https://registry.yarnpkg.com/rescript-webapi/-/rescript-webapi-0.6.0.tgz#6d6e7c115388aecf705241666f84b05aabe75e0c"
   integrity sha512-tFSEdsFb91diP/4cspDQEg4pMRw1WXeIAf5bINed6NZpG1Hu/i5BiSHDnmORMgP8unyqBp77UZM3BWCXJpoLWA==
 
-rescript@10:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.0.0.tgz#8460bc6f7d94bc580eac02d7c7efdf0a470916b8"
-  integrity sha512-LhNg/4+0j8NvoFeslgAeYLlzUwkq6kR6l6v8BnZ61VDTxopK2l96uT1lq5lv1aMxzMDynvE2qnX0zalre+6XxA==
+rescript@^10.1.0-alpha.2:
+  version "10.1.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.1.0-alpha.2.tgz#f9df7f3fb98a07676236aaf0e789ab60d0210231"
+  integrity sha512-uaWt6+Br7rxV339mE2ir80fjihq3XtQ88uPYt4otd1VgFXQRA+x/kof1xAUQULMEJKxBz0ifDDoL+3K6JiNG7Q==
 
 resize-observer-polyfill@^1.5.0:
   version "1.5.1"
