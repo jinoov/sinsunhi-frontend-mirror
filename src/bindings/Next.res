@@ -61,9 +61,9 @@ module Link = {
     ~href: string,
     ~_as: string=?,
     ~prefetch: bool=?,
-    ~replace: option<bool>=?,
-    ~shallow: option<bool>=?,
-    ~passHref: option<bool>=?,
+    ~replace: bool=?,
+    ~shallow: bool=?,
+    ~passHref: bool=?,
     ~children: React.element,
   ) => React.element = "default"
 }

@@ -378,7 +378,7 @@ module HoverCard = {
       ~className: string=?,
       ~defaultOpen: bool=?,
       ~open_: bool=?,
-      ~onOpenChange: option<bool => unit>=?,
+      ~onOpenChange: bool => unit=?,
       ~openDelay: int=?,
       ~closeDelay: int=?,
     ) => React.element = "Root"
