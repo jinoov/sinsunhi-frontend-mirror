@@ -308,7 +308,7 @@ function reason_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".reason_desc" + e.path,
+                path: "." + ("reason_desc" + e.path),
                 message: e.message,
                 value: e.value
               }
@@ -318,7 +318,7 @@ function reason_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".reason_type" + e$1.path,
+              path: "." + ("reason_type" + e$1.path),
               message: e$1.message,
               value: e$1.value
             }

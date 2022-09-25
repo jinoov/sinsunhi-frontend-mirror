@@ -307,7 +307,7 @@ function submit_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".edit" + e.path,
+                path: "." + ("edit" + e.path),
                 message: e.message,
                 value: e.value
               }
@@ -317,7 +317,7 @@ function submit_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".create" + e$1.path,
+              path: "." + ("create" + e$1.path),
               message: e$1.message,
               value: e$1.value
             }
@@ -327,7 +327,7 @@ function submit_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".connection-id" + e$2.path,
+            path: "." + ("connection-id" + e$2.path),
             message: e$2.message,
             value: e$2.value
           }
@@ -362,7 +362,7 @@ function productOption_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".product-options" + e.path,
+            path: "." + ("product-options" + e.path),
             message: e.message,
             value: e.value
           }

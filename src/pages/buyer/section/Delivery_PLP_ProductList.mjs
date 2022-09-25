@@ -212,16 +212,16 @@ function useBlockingPagination(fRef) {
 
 var makeRefetchVariables = DeliveryPLPProductListRefetchQuery_graphql.Types.makeRefetchVariables;
 
+var Fragment_getConnectionNodes = DeliveryPLPProductListFragment_graphql.Utils.getConnectionNodes;
+
 var Fragment_displayCategoryType_decode = DeliveryPLPProductListFragment_graphql.Utils.displayCategoryType_decode;
 
 var Fragment_displayCategoryType_fromString = DeliveryPLPProductListFragment_graphql.Utils.displayCategoryType_fromString;
 
-var Fragment_getConnectionNodes = DeliveryPLPProductListFragment_graphql.Utils.getConnectionNodes;
-
 var Fragment = {
+  getConnectionNodes: Fragment_getConnectionNodes,
   displayCategoryType_decode: Fragment_displayCategoryType_decode,
   displayCategoryType_fromString: Fragment_displayCategoryType_fromString,
-  getConnectionNodes: Fragment_getConnectionNodes,
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,

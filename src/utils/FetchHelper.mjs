@@ -472,7 +472,7 @@ function responseToken_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".refresh-token" + e.path,
+              path: "." + ("refresh-token" + e.path),
               message: e.message,
               value: e.value
             }

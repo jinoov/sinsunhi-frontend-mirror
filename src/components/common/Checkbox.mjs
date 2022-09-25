@@ -67,7 +67,7 @@ function Checkbox$Uncontrolled(Props) {
   var disabled = Props.disabled;
   var inputRef = Props.inputRef;
   var tmp = {
-    className: "peer hidden",
+    className: "peer " + "hidden",
     type: "checkbox"
   };
   if (inputRef !== undefined) {

@@ -11,7 +11,7 @@ module CheckBuyerRequestStatus = {
     }
   `)
 
-  type status = RfqCommon_RfqRequest_Query_graphql.Types.enum_RfqRequestStatus
+  type status = RelaySchemaAssets_graphql.enum_RfqRequestStatus
   type result = Unknown | RequestStatus(status)
 
   let use = id => {

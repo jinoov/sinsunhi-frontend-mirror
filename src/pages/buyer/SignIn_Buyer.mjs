@@ -91,7 +91,7 @@ function info_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".activation-method" + e$1.path,
+              path: "." + ("activation-method" + e$1.path),
               message: e$1.message,
               value: e$1.value
             }

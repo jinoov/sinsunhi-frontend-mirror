@@ -191,7 +191,7 @@ function data_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".update-count" + e.path,
+              path: "." + ("update-count" + e.path),
               message: e.message,
               value: e.value
             }
@@ -201,7 +201,7 @@ function data_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".total-count" + e$1.path,
+            path: "." + ("total-count" + e$1.path),
             message: e$1.message,
             value: e$1.value
           }

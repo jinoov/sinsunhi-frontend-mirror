@@ -60,7 +60,7 @@ type detail = {
 type detailJson = {detail: detail}
 
 type wosOder = {
-  eventType: OrderCancelAdmin_Query_graphql.Types.enum_WosOrderEventLogType,
+  eventType: RelaySchemaAssets_graphql.enum_WosOrderEventLogType,
   createdAt: string,
   detailJson: detailJson,
 }

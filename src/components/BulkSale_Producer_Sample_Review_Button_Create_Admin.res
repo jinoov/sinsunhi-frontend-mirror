@@ -41,9 +41,11 @@ let stringifyPackageUnit = s =>
   }
 // FIXME: [> #KG | #G | #MG] vs. [#KG | #G | #MG]
 // 응답 받은 enum 타입과 muation으로 전달해야하는 타입이 다르다. 왜??
-let convertPackageUnit = (
-  s: BulkSaleProducerAdminFragment_bulkSaleApplication_graphql.Types.enum_ProductPackageMassUnit,
-): [#G | #KG | #MG] =>
+let convertPackageUnit = (s: RelaySchemaAssets_graphql.enum_ProductPackageMassUnit): [
+  | #G
+  | #KG
+  | #MG
+] =>
   switch s {
   | #KG => #KG
   | #G => #G
@@ -81,9 +83,12 @@ let displayScore = s =>
   }
 // FIXME
 // 응답 받은 enum 타입과 muation으로 전달해야하는 타입이 다르다. 왜??
-let convertScore = (
-  s: BulkSaleProducerSampleReviewButtonAdminFragment_graphql.Types.enum_ReviewScore,
-): [#VERY_BAD | #BAD | #GOOD | #VERY_GOOD] =>
+let convertScore = (s: RelaySchemaAssets_graphql.enum_ReviewScore): [
+  | #VERY_BAD
+  | #BAD
+  | #GOOD
+  | #VERY_GOOD
+] =>
   switch s {
   | #VERY_BAD => #VERY_BAD
   | #BAD => #BAD
@@ -102,10 +107,10 @@ let makeInput = (
 ): BulkSaleProducerSampleReviewButtonCreateAdminMutation_graphql.Types.bulkSaleSampleReviewCreateInput => {
   {
     bulkSaleApplicationId: applicationId,
-    quantity: {amount: amount, unit: unit},
-    brix: brix,
-    packageScore: packageScore,
-    marketabilityScore: marketabilityScore,
+    quantity: {amount, unit},
+    brix,
+    packageScore,
+    marketabilityScore,
   }
 }
 

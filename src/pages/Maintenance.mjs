@@ -158,7 +158,7 @@ function t_decode$1(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".created_at" + e.path,
+                path: "." + ("created_at" + e.path),
                 message: e.message,
                 value: e.value
               }
@@ -178,7 +178,7 @@ function t_decode$1(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".affected_components" + e$2.path,
+            path: "." + ("affected_components" + e$2.path),
             message: e$2.message,
             value: e$2.value
           }
@@ -277,7 +277,7 @@ function incident_decode(v) {
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".incident_updates" + e.path,
+                            path: "." + ("incident_updates" + e.path),
                             message: e.message,
                             value: e.value
                           }
@@ -287,7 +287,7 @@ function incident_decode(v) {
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".started_at" + e$1.path,
+                          path: "." + ("started_at" + e$1.path),
                           message: e$1.message,
                           value: e$1.value
                         }
@@ -297,7 +297,7 @@ function incident_decode(v) {
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".scheduled_until" + e$2.path,
+                        path: "." + ("scheduled_until" + e$2.path),
                         message: e$2.message,
                         value: e$2.value
                       }
@@ -307,7 +307,7 @@ function incident_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".scheduled_for" + e$3.path,
+                      path: "." + ("scheduled_for" + e$3.path),
                       message: e$3.message,
                       value: e$3.value
                     }
@@ -317,7 +317,7 @@ function incident_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".created_at" + e$4.path,
+                    path: "." + ("created_at" + e$4.path),
                     message: e$4.message,
                     value: e$4.value
                   }

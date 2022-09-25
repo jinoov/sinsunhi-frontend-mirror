@@ -226,7 +226,7 @@ function item_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".item_variant" + e$3.path,
+                  path: "." + ("item_variant" + e$3.path),
                   message: e$3.message,
                   value: e$3.value
                 }
@@ -246,7 +246,7 @@ function item_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".item_name" + e$5.path,
+              path: "." + ("item_name" + e$5.path),
               message: e$5.message,
               value: e$5.value
             }
@@ -256,7 +256,7 @@ function item_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".item_id" + e$6.path,
+            path: "." + ("item_id" + e$6.path),
             message: e$6.message,
             value: e$6.value
           }
@@ -315,7 +315,7 @@ function ecommerce_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".shipping_value" + e.path,
+                  path: "." + ("shipping_value" + e.path),
                   message: e.message,
                   value: e.value
                 }
@@ -345,7 +345,7 @@ function ecommerce_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".transaction_id" + e$3.path,
+            path: "." + ("transaction_id" + e$3.path),
             message: e$3.message,
             value: e$3.value
           }

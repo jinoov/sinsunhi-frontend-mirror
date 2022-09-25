@@ -31,9 +31,7 @@ let decodeStatus = s =>
   } else {
     Error()
   }
-let stringifyStatus = (
-  s: BulkSaleProducerAdminFragment_bulkSaleApplication_graphql.Types.enum_BulkSaleApplicationProgress,
-) =>
+let stringifyStatus = (s: RelaySchemaAssets_graphql.enum_BulkSaleApplicationProgress) =>
   switch s {
   | #APPLIED => "applied"
   | #UNDER_DISCUSSION => "under-discussion"
@@ -45,9 +43,7 @@ let stringifyStatus = (
   | #WITHDRAWN => "withdrawn"
   | _ => ""
   }
-let displayStatus = (
-  s: BulkSaleProducerAdminFragment_bulkSaleApplication_graphql.Types.enum_BulkSaleApplicationProgress,
-) =>
+let displayStatus = (s: RelaySchemaAssets_graphql.enum_BulkSaleApplicationProgress) =>
   switch s {
   | #APPLIED => `신청 접수 중`
   | #UNDER_DISCUSSION => `판매 협의 중`

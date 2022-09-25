@@ -308,7 +308,7 @@ function Delivery_PLP_Category$MO$View(Props) {
                                             router.replace(query);
                                           })
                                       }, React.createElement("div", {
-                                            className: selectedStyle + " pt-2 pb-3 border-b-2 w-fit whitespace-nowrap"
+                                            className: selectedStyle + " " + "pt-2 pb-3 border-b-2 w-fit whitespace-nowrap"
                                           }, item.name));
                           })))));
 }

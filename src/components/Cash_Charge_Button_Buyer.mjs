@@ -93,7 +93,7 @@ function form_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".payment-method" + e$1.path,
+            path: "." + ("payment-method" + e$1.path),
             message: e$1.message,
             value: e$1.value
           }
