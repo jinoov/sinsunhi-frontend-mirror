@@ -240,7 +240,7 @@ module Mobile = {
       <Update_Manager_Buyer
         isOpen={openModal == Some(Manager)}
         onClose={_ => router->Next.Router.back}
-        key=?{manager}
+        key={manager->Option.getWithDefault("")}
         defaultValue=?{manager}
       />
     </>

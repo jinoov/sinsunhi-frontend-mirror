@@ -956,13 +956,13 @@ let make = (
           </div>
           <div className=%twc("flex flex-col gap-6 py-6 w-full")>
             <EditCutOffTime
-              key=?productOption.cutOffTime
+              key={productOption.cutOffTime->Option.getWithDefault("")}
               inputName=inputNames.cutOffTime
               defaultValue=productOption.cutOffTime
               disabled
             />
             <EditMemo
-              key=?productOption.memo
+              key={productOption.memo->Option.getWithDefault("")}
               inputName=inputNames.memo
               defaultValue=productOption.memo
               disabled
