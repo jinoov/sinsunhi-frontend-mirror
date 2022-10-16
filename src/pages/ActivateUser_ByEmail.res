@@ -46,12 +46,25 @@ module SentEmail = {
   let make = (~email, ~uid, ~role) => {
     let {addToast} = ReactToastNotifications.useToasts()
     let _ = uid
+
+    let onSuccess = () =>
+      addToast(.
+        <div className=%twc("flex items-center")>
+          <IconCheck height="24" width="24" fill="#12B564" className=%twc("mr-2") />
+          {`이메일을 다시 전송하였습니다`->React.string}
+        </div>,
+        {appearance: "success"},
+      )
+
     <>
-      <Next.Head> <title> {j`이메일로 휴면계정 해제`->React.string} </title> </Next.Head>
+      <Next.Head>
+        <title> {j`이메일로 휴면계정 해제`->React.string} </title>
+      </Next.Head>
       <div
         className=%twc(
           "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"
-        )>
+        )
+      >
         <div className=%twc("flex-auto flex flex-col xl:justify-center items-center")>
           <div className=%twc("w-full p-5 xl:py-12 sm:px-20")>
             <h2 className=%twc("text-xl font-bold whitespace-pre")>
@@ -59,17 +72,9 @@ module SentEmail = {
             </h2>
             <div className=%twc("mt-10")>
               <button
-                onClick={_ =>
-                  submitEmail(~uid, ~addToast, ~role, ~onSuccess=_ =>
-                    addToast(.
-                      <div className=%twc("flex items-center")>
-                        <IconCheck height="24" width="24" fill="#12B564" className=%twc("mr-2") />
-                        {`이메일을 다시 전송하였습니다`->React.string}
-                      </div>,
-                      {appearance: "success"},
-                    )
-                  )}
-                className=%twc("w-full flex justify-between items-center")>
+                onClick={_ => submitEmail(~uid, ~addToast, ~role, ~onSuccess)}
+                className=%twc("w-full flex justify-between items-center")
+              >
                 <span className=%twc("flex items-center")>
                   <img src=iconEmail />
                   <span className=%twc("ml-3")> {`이메일 다시 보내기`->React.string} </span>
@@ -80,7 +85,8 @@ module SentEmail = {
             <div className=%twc("mt-8")>
               <button
                 onClick={_ => ChannelTalk.showMessenger()}
-                className=%twc("w-full flex justify-between items-center")>
+                className=%twc("w-full flex justify-between items-center")
+              >
                 <span className=%twc("flex items-center")>
                   <img src=iconChat />
                   <span className=%twc("ml-3")>
@@ -104,11 +110,14 @@ module SendEmail = {
     let router = Next.Router.useRouter()
 
     <>
-      <Next.Head> <title> {j`이메일로 휴면계정 해제`->React.string} </title> </Next.Head>
+      <Next.Head>
+        <title> {j`이메일로 휴면계정 해제`->React.string} </title>
+      </Next.Head>
       <div
         className=%twc(
           "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"
-        )>
+        )
+      >
         <div className=%twc("flex-auto flex flex-col xl:justify-center items-center")>
           <div className=%twc("w-full p-5 xl:py-12 text-text-L1")>
             <h2 className=%twc("text-xl font-bold whitespace-pre")>
@@ -131,7 +140,8 @@ module SendEmail = {
                 onClick={_ =>
                   submitEmail(~uid, ~addToast, ~role, ~onSuccess=_ =>
                     router->Next.Router.push(router.asPath ++ "&sent-email=true")
-                  )}>
+                  )}
+              >
                 {`인증 메일 보내기`->React.string}
               </button>
             </div>
@@ -152,9 +162,8 @@ module Error = {
     })
 
     <div
-      className=%twc(
-        "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center"
-      )>
+      className=%twc("container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center")
+    >
       <Skeleton.Box className=%twc("h-10") />
     </div>
   }
