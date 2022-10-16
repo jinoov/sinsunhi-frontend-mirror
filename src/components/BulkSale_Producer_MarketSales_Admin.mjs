@@ -3,9 +3,10 @@
 import * as React from "react";
 import * as BulkSale_MarketSalesInfo_Button_Admin from "./BulkSale_MarketSalesInfo_Button_Admin.mjs";
 
-function BulkSale_Producer_MarketSales_Admin(props) {
+function BulkSale_Producer_MarketSales_Admin(Props) {
+  var query = Props.query;
   return React.createElement(BulkSale_MarketSalesInfo_Button_Admin.make, {
-              query: props.query
+              query: query
             });
 }
 

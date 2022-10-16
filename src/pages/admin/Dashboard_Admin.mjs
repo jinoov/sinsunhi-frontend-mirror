@@ -5,7 +5,7 @@ import * as ErrorPanel from "../../components/common/ErrorPanel.mjs";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as Authorization from "../../utils/Authorization.mjs";
 
-function Dashboard_Admin$Item(props) {
+function Dashboard_Admin$Item(Props) {
   var status = CustomHooks.OrdersSummaryAdminDashboard.use(undefined);
   if (typeof status === "number") {
     return React.createElement("div", undefined, "로딩 중..");
@@ -97,7 +97,7 @@ var Item = {
   make: Dashboard_Admin$Item
 };
 
-function Dashboard_Admin(props) {
+function Dashboard_Admin(Props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(Dashboard_Admin$Item, {}),
               title: "관리자 대시보드"

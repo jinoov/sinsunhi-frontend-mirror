@@ -34,10 +34,18 @@ var basicPlugins = [
   "media"
 ];
 
-function Editor(props) {
-  var initOptions = props.initOptions;
+function Editor(Props) {
+  var initOptions = Props.initOptions;
+  var height = Props.height;
+  var plugins = Props.plugins;
+  var initialValue = Props.initialValue;
+  var id = Props.id;
+  var name = Props.name;
+  var value = Props.value;
+  var onEditorChange = Props.onEditorChange;
+  var disabled = Props.disabled;
   var init = {
-    height: props.height,
+    height: height,
     menubar: Garter_Array.joinWith(Belt_Array.map(Belt_Option.getWithDefault(Caml_option.undefined_to_opt(initOptions.menubar), []), TinyMCE.Menu.toString), " ", Garter_Fn.identity),
     toolbar: Garter_Array.joinWith(Belt_Option.getWithDefault(Caml_option.undefined_to_opt(initOptions.toolbar), []), " | ", (function (block) {
             return Garter_Array.joinWith(Belt_Array.map(block, TinyMCE.Tool.toString), " ", Garter_Fn.identity);
@@ -50,31 +58,54 @@ function Editor(props) {
     table_responsive_width: true,
     content_css: "/tinymce/skins/content/default/content.css"
   };
-  var plugins$p = Garter_Array.joinWith(Belt_Array.map(props.plugins, TinyMCE.$$Plugin.toString), " ", Garter_Fn.identity);
-  return React.createElement(TinymceReact.Editor, {
-              id: props.id,
-              name: props.name,
-              value: props.value,
-              onEditorChange: props.onEditorChange,
-              init: Caml_option.some(init),
-              initialValue: props.initialValue,
-              plugins: plugins$p,
-              tinymceScriptSrc: "/tinymce/tinymce.min.js",
-              disabled: props.disabled
-            });
+  var plugins$p = Garter_Array.joinWith(Belt_Array.map(plugins, TinyMCE.$$Plugin.toString), " ", Garter_Fn.identity);
+  var tmp = {
+    init: init,
+    plugins: plugins$p,
+    tinymceScriptSrc: "/tinymce/tinymce.min.js"
+  };
+  if (id !== undefined) {
+    tmp.id = id;
+  }
+  if (name !== undefined) {
+    tmp.name = name;
+  }
+  if (value !== undefined) {
+    tmp.value = value;
+  }
+  if (onEditorChange !== undefined) {
+    tmp.onEditorChange = Caml_option.valFromOption(onEditorChange);
+  }
+  if (initialValue !== undefined) {
+    tmp.initialValue = initialValue;
+  }
+  if (disabled !== undefined) {
+    tmp.disabled = disabled;
+  }
+  return React.createElement(TinymceReact.Editor, tmp);
 }
 
-function Editor$Viewer(props) {
+function Editor$Viewer(Props) {
+  var id = Props.id;
+  var name = Props.name;
+  var value = Props.value;
+  var tmp = {
+    tinymceScriptSrc: "/tinymce/tinymce.min.js",
+    disabled: true,
+    inline: true
+  };
+  if (id !== undefined) {
+    tmp.id = id;
+  }
+  if (name !== undefined) {
+    tmp.name = name;
+  }
+  if (value !== undefined) {
+    tmp.value = value;
+  }
   return React.createElement("div", {
               id: "editor-inline"
-            }, React.createElement(TinymceReact.Editor, {
-                  id: props.id,
-                  name: props.name,
-                  value: props.value,
-                  tinymceScriptSrc: "/tinymce/tinymce.min.js",
-                  disabled: true,
-                  inline: true
-                }));
+            }, React.createElement(TinymceReact.Editor, tmp));
 }
 
 var Viewer = {

@@ -2,9 +2,8 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Input from "./common/Input.mjs";
-import * as React from "@rescript/react/src/React.mjs";
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as DS_Tab from "./common/container/DS_Tab.mjs";
 import * as DS_Icon from "./svgs/DS_Icon.mjs";
 import * as DataGtm from "../utils/DataGtm.mjs";
@@ -45,27 +44,33 @@ import * as BuyerInformationBuyerInterestedCategoryMutation_graphql from "../__g
 import * as BuyerInformationBuyerInterestedItemCategoryQuery_graphql from "../__generated__/BuyerInformationBuyerInterestedItemCategoryQuery_graphql.mjs";
 import * as BuyerInformationBuyerInterestedCategoryListingQuery_graphql from "../__generated__/BuyerInformationBuyerInterestedCategoryListingQuery_graphql.mjs";
 
-function BuyerInformation_Buyer$Button(props) {
+function BuyerInformation_Buyer$Button(Props) {
+  var label = Props.label;
+  var disabled = Props.disabled;
+  var onClick = Props.onClick;
   var tmp = {
     className: "bg-primary text-white font-bold h-13 rounded-xl w-full",
-    disabled: props.disabled
+    disabled: disabled
   };
-  if (props.onClick !== undefined) {
-    tmp.onClick = Caml_option.valFromOption(props.onClick);
+  if (onClick !== undefined) {
+    tmp.onClick = Caml_option.valFromOption(onClick);
   }
-  return React$1.createElement("button", tmp, props.label);
+  return React.createElement("button", tmp, label);
 }
 
 var Button = {
   make: BuyerInformation_Buyer$Button
 };
 
-function BuyerInformation_Buyer$SectorAndSale$Capsule(props) {
-  var className = props.selected ? "px-4 py-2 rounded-[20px] bg-primary-light-variant text-primary" : "px-4 py-2 rounded-[20px] bg-gray-50";
-  return React$1.createElement("button", {
+function BuyerInformation_Buyer$SectorAndSale$Capsule(Props) {
+  var label = Props.label;
+  var selected = Props.selected;
+  var onClick = Props.onClick;
+  var className = selected ? "px-4 py-2 rounded-[20px] bg-primary-light-variant text-primary" : "px-4 py-2 rounded-[20px] bg-gray-50";
+  return React.createElement("button", {
               className: className,
-              onClick: props.onClick
-            }, props.label);
+              onClick: onClick
+            }, label);
 }
 
 var Capsule = {
@@ -84,7 +89,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(BuyerInformationBuyerBusinessSectorListingQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, BuyerInformationBuyerBusinessSectorListingQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -156,29 +161,31 @@ var Query = {
   retain: retain
 };
 
-function BuyerInformation_Buyer$SectorAndSale$Sector(props) {
-  var hasSelected = props.hasSelected;
-  var onClick = props.onClick;
-  var selected = props.selected;
+function BuyerInformation_Buyer$SectorAndSale$Sector(Props) {
+  var selected = Props.selected;
+  var onClick = Props.onClick;
+  var hasSelected = Props.hasSelected;
+  var queriedSectors = Props.queriedSectors;
   var queryData = use(undefined, undefined, undefined, undefined, undefined);
-  props.queriedSectors.current = queryData.selfReportedBusinessSectorListing;
+  queriedSectors.current = queryData.selfReportedBusinessSectorListing;
   var listing = queryData.selfReportedBusinessSectorListing;
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", undefined, React$1.createElement("h3", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", undefined, React.createElement("h3", {
                       className: "font-bold"
-                    }, "업종")), React$1.createElement("section", {
+                    }, "업종")), React.createElement("section", {
                   className: "flex flex-wrap gap-2 mt-5"
                 }, listing !== undefined ? Belt_Array.map(listing, (function (d) {
                           var partial_arg = d.id;
-                          return React.createElementWithKey(BuyerInformation_Buyer$SectorAndSale$Capsule, {
+                          return React.createElement(BuyerInformation_Buyer$SectorAndSale$Capsule, {
                                       label: d.label,
                                       selected: Curry._2(hasSelected, selected, d.id),
                                       onClick: (function (param) {
                                           return Curry._1(onClick, partial_arg);
-                                        })
-                                    }, d.id);
-                        })) : "업종 정보를 찾을 수 없습니다."), React$1.createElement("section", {
+                                        }),
+                                      key: d.id
+                                    });
+                        })) : "업종 정보를 찾을 수 없습니다."), React.createElement("section", {
                   className: "mt-4 text-text-L3"
-                }, React$1.createElement("div", undefined, "* 슈퍼마켓 : 정육이나 수산은 취급하지 않아요."), React$1.createElement("div", undefined, "* 마트 : 정육이나 수산도 취급해요.")));
+                }, React.createElement("div", undefined, "* 슈퍼마켓 : 정육이나 수산은 취급하지 않아요."), React.createElement("div", undefined, "* 마트 : 정육이나 수산도 취급해요.")));
 }
 
 var Sector = {
@@ -198,7 +205,7 @@ function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$1(param) {
   var match = ReactRelay.useQueryLoader(BuyerInformationBuyerSalesBinQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, BuyerInformationBuyerSalesBinQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -270,27 +277,29 @@ var Query$1 = {
   retain: retain$1
 };
 
-function BuyerInformation_Buyer$SectorAndSale$Sale(props) {
-  var onClick = props.onClick;
-  var selected = props.selected;
+function BuyerInformation_Buyer$SectorAndSale$Sale(Props) {
+  var selected = Props.selected;
+  var onClick = Props.onClick;
+  var queriedSales = Props.queriedSales;
   var queryData = use$1(undefined, undefined, undefined, undefined, undefined);
-  props.queriedSales.current = queryData.selfReportedSalesBinListing;
+  queriedSales.current = queryData.selfReportedSalesBinListing;
   var listing = queryData.selfReportedSalesBinListing;
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "mt-12"
-                }, React$1.createElement("h3", {
+                }, React.createElement("h3", {
                       className: "font-bold"
-                    }, "연매출")), React$1.createElement("section", {
+                    }, "연매출")), React.createElement("section", {
                   className: "flex flex-wrap gap-2 mt-5"
                 }, listing !== undefined ? Belt_Array.map(listing, (function (d) {
                           var partial_arg = d.id;
-                          return React.createElementWithKey(BuyerInformation_Buyer$SectorAndSale$Capsule, {
+                          return React.createElement(BuyerInformation_Buyer$SectorAndSale$Capsule, {
                                       label: d.label,
                                       selected: Caml_obj.equal(selected, d.id),
                                       onClick: (function (param) {
                                           return Curry._1(onClick, partial_arg);
-                                        })
-                                    }, d.id);
+                                        }),
+                                      key: d.id
+                                    });
                         })) : "연매출 정보를 찾을 수 없습니다."));
 }
 
@@ -328,7 +337,7 @@ function use$2(param) {
   var match = ReactRelay.useMutation(BuyerInformationBuyerSectorSalesMutation_graphql.node);
   var mutate = match[0];
   return [
-          React$1.useMemo((function () {
+          React.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -375,10 +384,10 @@ var Mutation = {
   use: use$2
 };
 
-function BuyerInformation_Buyer$SectorAndSale(props) {
-  var close = props.close;
-  var changeModeToInterestedItemCategory = props.changeModeToInterestedItemCategory;
-  var selected = props.selected;
+function BuyerInformation_Buyer$SectorAndSale(Props) {
+  var selected = Props.selected;
+  var changeModeToInterestedItemCategory = Props.changeModeToInterestedItemCategory;
+  var close = Props.close;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var selectedSector = selected !== undefined ? Belt_Option.flatMap(selected[0], (function (bs) {
@@ -389,12 +398,12 @@ function BuyerInformation_Buyer$SectorAndSale(props) {
   var selectedBin = selected !== undefined ? Belt_Option.map(selected[1], (function (sb) {
             return sb.id;
           })) : undefined;
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         return selectedSector;
       });
   var setBusinessSector = match$1[1];
   var businessSector = match$1[0];
-  var match$2 = React$1.useState(function () {
+  var match$2 = React.useState(function () {
         return selectedBin;
       });
   var setSalesBin = match$2[1];
@@ -422,34 +431,34 @@ function BuyerInformation_Buyer$SectorAndSale(props) {
       return false;
     }
   };
-  var queriedSectors = React$1.useRef(undefined);
-  var queriedSales = React$1.useRef(undefined);
-  React$1.useEffect((function () {
+  var queriedSectors = React.useRef(undefined);
+  var queriedSales = React.useRef(undefined);
+  React.useEffect((function () {
           ChannelTalk.hideChannelButton(undefined);
           return (function (param) {
                     ChannelTalk.showChannelButton(undefined);
                   });
         }), []);
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "p-5 pt-0 text-text-L1"
-                }, React$1.createElement("article", undefined, React$1.createElement("h2", {
+                }, React.createElement("article", undefined, React.createElement("h2", {
                           className: "text-xl font-bold whitespace-pre-wrap"
-                        }, "프로필이 자세할 수록\n", React$1.createElement("span", {
+                        }, "프로필이 자세할 수록\n", React.createElement("span", {
                               className: "text-primary"
-                            }, "맞춤 소싱 정보"), React$1.createElement("span", undefined, "를 알려드릴 수 있어요")))), React$1.createElement("section", {
+                            }, "맞춤 소싱 정보"), React.createElement("span", undefined, "를 알려드릴 수 있어요")))), React.createElement("section", {
                   className: "p-5 text-text-L1"
-                }, React$1.createElement(BuyerInformation_Buyer$SectorAndSale$Sector, {
+                }, React.createElement(BuyerInformation_Buyer$SectorAndSale$Sector, {
                       selected: businessSector,
                       onClick: handleClickBusiSector,
                       hasSelected: hasItem,
                       queriedSectors: queriedSectors
-                    }), React$1.createElement(BuyerInformation_Buyer$SectorAndSale$Sale, {
+                    }), React.createElement(BuyerInformation_Buyer$SectorAndSale$Sale, {
                       selected: salesBin,
                       onClick: handleClickSalesBin,
                       queriedSales: queriedSales
-                    })), React$1.createElement("section", {
+                    })), React.createElement("section", {
                   className: "p-5"
-                }, React$1.createElement(BuyerInformation_Buyer$Button, {
+                }, React.createElement(BuyerInformation_Buyer$Button, {
                       label: "저장",
                       disabled: match$3[1],
                       onClick: (function (param) {
@@ -471,9 +480,9 @@ function BuyerInformation_Buyer$SectorAndSale(props) {
                             if (businessSector !== undefined) {
                               Curry.app(mutate, [
                                     (function (param) {
-                                        addToast(React$1.createElement("div", {
+                                        addToast(React.createElement("div", {
                                                   className: "flex items-center"
-                                                }, React$1.createElement(IconError.make, {
+                                                }, React.createElement(IconError.make, {
                                                       width: "24",
                                                       height: "24",
                                                       className: "mr-2"
@@ -482,9 +491,9 @@ function BuyerInformation_Buyer$SectorAndSale(props) {
                                             });
                                       }),
                                     (function (param, param$1) {
-                                        addToast(React$1.createElement("div", {
+                                        addToast(React.createElement("div", {
                                                   className: "flex items-center"
-                                                }, React$1.createElement(IconCheck.make, {
+                                                }, React.createElement(IconCheck.make, {
                                                       height: "24",
                                                       width: "24",
                                                       fill: "#12B564",
@@ -518,9 +527,9 @@ function BuyerInformation_Buyer$SectorAndSale(props) {
                                   ]);
                               return ;
                             } else {
-                              return addToast(React$1.createElement("div", {
+                              return addToast(React.createElement("div", {
                                               className: "flex items-center"
-                                            }, React$1.createElement(IconWarning.make, {
+                                            }, React.createElement(IconWarning.make, {
                                                   width: "24",
                                                   height: "24",
                                                   className: "mr-2"
@@ -529,9 +538,9 @@ function BuyerInformation_Buyer$SectorAndSale(props) {
                                         });
                             }
                           } else if (businessSector !== undefined) {
-                            return addToast(React$1.createElement("div", {
+                            return addToast(React.createElement("div", {
                                             className: "flex items-center"
-                                          }, React$1.createElement(IconWarning.make, {
+                                          }, React.createElement(IconWarning.make, {
                                                 width: "24",
                                                 height: "24",
                                                 className: "mr-2"
@@ -539,9 +548,9 @@ function BuyerInformation_Buyer$SectorAndSale(props) {
                                         appearance: "success"
                                       });
                           } else {
-                            return addToast(React$1.createElement("div", {
+                            return addToast(React.createElement("div", {
                                             className: "flex items-center"
-                                          }, React$1.createElement(IconWarning.make, {
+                                          }, React.createElement(IconWarning.make, {
                                                 width: "24",
                                                 height: "24",
                                                 className: "mr-2"
@@ -561,17 +570,17 @@ var SectorAndSale = {
   make: BuyerInformation_Buyer$SectorAndSale
 };
 
-function BuyerInformation_Buyer$InterestedCategories$Capsule(props) {
-  var onClick = props.onClick;
-  var item = props.item;
-  return React$1.createElement("button", {
+function BuyerInformation_Buyer$InterestedCategories$Capsule(Props) {
+  var item = Props.item;
+  var onClick = Props.onClick;
+  return React.createElement("button", {
               className: "px-4 py-2 rounded-[20px] bg-gray-50 flex items-center whitespace-pre",
               onClick: (function (param) {
                   Curry._1(onClick, item.id);
                 })
-            }, item.name, React$1.createElement("span", {
+            }, item.name, React.createElement("span", {
                   className: "ml-1"
-                }, React$1.createElement(IconClose.make, {
+                }, React.createElement(IconClose.make, {
                       height: "16",
                       width: "16",
                       fill: "#000000"
@@ -582,34 +591,36 @@ var Capsule$1 = {
   make: BuyerInformation_Buyer$InterestedCategories$Capsule
 };
 
-function BuyerInformation_Buyer$InterestedCategories$Search(props) {
-  var onClear = props.onClear;
-  var search = props.search;
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", undefined, React$1.createElement("h3", {
+function BuyerInformation_Buyer$InterestedCategories$Search(Props) {
+  var search = Props.search;
+  var onChange = Props.onChange;
+  var onClear = Props.onClear;
+  return React.createElement(React.Fragment, undefined, React.createElement("section", undefined, React.createElement("h3", {
                       className: "font-bold"
-                    }, "관심 상품 찾기", React$1.createElement("span", {
+                    }, "관심 상품 찾기", React.createElement("span", {
                           className: "ml-1 text-sm font-normal text-text-L2"
-                        }, "*최대 20품목 선택가능"))), React$1.createElement("section", {
+                        }, "*최대 20품목 선택가능"))), React.createElement("section", {
                   className: "flex flex-wrap gap-2 mt-5 relative"
-                }, React$1.createElement(Input.make, {
+                }, React.createElement(Input.make, {
                       type_: "text",
                       name: "search-category",
                       placeholder: "상품을 검색해보세요.",
                       className: "pl-11",
                       value: search,
-                      onChange: props.onChange,
-                      size: /* Large */0
-                    }), React$1.createElement(IconSearch.make, {
+                      onChange: onChange,
+                      size: /* Large */0,
+                      error: undefined
+                    }), React.createElement(IconSearch.make, {
                       width: "24",
                       height: "24",
                       fill: "#262626",
                       className: "absolute left-3 top-1/2 transform -translate-y-1/2"
-                    }), search.length > 0 ? React$1.createElement("span", {
+                    }), search.length > 0 ? React.createElement("span", {
                         className: "absolute p-2 right-1 top-1/2 transform -translate-y-1/2 cursor-pointer",
                         onClick: (function (param) {
                             Curry._1(onClear, undefined);
                           })
-                      }, React$1.createElement(IconCloseInput.make, {
+                      }, React.createElement(IconCloseInput.make, {
                             height: "24",
                             width: "24",
                             fill: "#DDDDDD"
@@ -620,10 +631,10 @@ var Search = {
   make: BuyerInformation_Buyer$InterestedCategories$Search
 };
 
-function BuyerInformation_Buyer$InterestedCategories$Selected(props) {
-  var onClick = props.onClick;
-  var selected = props.selected;
-  var data = props.data;
+function BuyerInformation_Buyer$InterestedCategories$Selected(Props) {
+  var data = Props.data;
+  var selected = Props.selected;
+  var onClick = Props.onClick;
   var matchedItem = function (id) {
     return Belt_Option.flatMap(data, (function (d) {
                   return Belt_Array.getBy(d, (function (d) {
@@ -632,15 +643,16 @@ function BuyerInformation_Buyer$InterestedCategories$Selected(props) {
                 }));
   };
   var hasSelected = !Garter_Array.isEmpty(selected);
-  return React$1.createElement("section", {
+  return React.createElement("section", {
               className: hasSelected ? "my-4 flex gap-2 overflow-x-auto scrollbar-hide" : "flex gap-2 overflow-x-auto scrollbar-hide"
             }, Belt_Array.map(Belt_Array.reverse(selected), (function (id) {
                     var item = matchedItem(id);
                     if (item !== undefined) {
-                      return React.createElementWithKey(BuyerInformation_Buyer$InterestedCategories$Capsule, {
+                      return React.createElement(BuyerInformation_Buyer$InterestedCategories$Capsule, {
                                   item: item,
-                                  onClick: onClick
-                                }, item.id);
+                                  onClick: onClick,
+                                  key: item.id
+                                });
                     } else {
                       return null;
                     }
@@ -651,40 +663,40 @@ var Selected = {
   make: BuyerInformation_Buyer$InterestedCategories$Selected
 };
 
-function BuyerInformation_Buyer$InterestedCategories$ListItems(props) {
-  var items = props.items;
+function BuyerInformation_Buyer$InterestedCategories$ListItems(Props) {
+  var items = Props.items;
+  var selected = Props.selected;
+  var onClickItem = Props.onClickItem;
+  var hasItem = Props.hasItem;
   if (items === undefined) {
     return "검색 결과가 없습니다.";
   }
-  var hasItem = props.hasItem;
-  var onClickItem = props.onClickItem;
-  var selected = props.selected;
   var hasSelected = !Garter_Array.isEmpty(selected);
   var style = {};
-  return React$1.createElement("ul", {
+  return React.createElement("ul", {
               "aria-multiselectable": true,
               className: hasSelected ? "my-4 overflow-scroll scrollbar-hide h-[calc(90vh-476px)] h-lg:h-[calc(900px-482px)]" : "my-4 overflow-scroll scrollbar-hide h-[calc(90vh-416px)] h-lg:h-[calc(900px-422px)]",
               style: (style["content-visibility"] = "auto", style)
             }, Belt_Array.map(items, (function (param) {
                     var id = param.id;
-                    return React$1.createElement("li", {
+                    return React.createElement("li", {
                                 key: id,
                                 "aria-selected": Curry._2(hasItem, selected, id),
                                 className: "flex items-center min-h-[48px] cursor-pointer tab-highlight-color",
                                 onClick: (function (param) {
                                     Curry._1(onClickItem, id);
                                   })
-                              }, React$1.createElement("div", {
+                              }, React.createElement("div", {
                                     className: "flex flex-col justify-between truncate"
-                                  }, React$1.createElement("span", {
+                                  }, React.createElement("span", {
                                         className: "block text-base truncate text-text-L1"
-                                      }, "" + param.name)), React$1.createElement("div", {
+                                      }, "" + param.name)), React.createElement("div", {
                                     className: "ml-auto pl-2"
-                                  }, Curry._2(hasItem, selected, id) ? React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                  }, Curry._2(hasItem, selected, id) ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
                                           height: "24",
                                           width: "24",
                                           fill: "#12B564"
-                                        }) : React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                        }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
                                           height: "24",
                                           width: "24",
                                           fill: "#12B564"
@@ -708,7 +720,7 @@ function use$3(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$2(param) {
   var match = ReactRelay.useQueryLoader(BuyerInformationBuyerInterestedItemCategoryQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, BuyerInformationBuyerInterestedItemCategoryQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -774,12 +786,14 @@ var Query$2 = {
   retain: retain$2
 };
 
-function BuyerInformation_Buyer$InterestedCategories$SearchResults(props) {
-  var hasItem = props.hasItem;
-  var onClickItem = props.onClickItem;
-  var save = props.save;
-  var selected = props.selected;
-  var match = CustomHooks.useDebounce(props.search, 500);
+function BuyerInformation_Buyer$InterestedCategories$SearchResults(Props) {
+  var search = Props.search;
+  var selected = Props.selected;
+  var isMutating = Props.isMutating;
+  var save = Props.save;
+  var onClickItem = Props.onClickItem;
+  var hasItem = Props.hasItem;
+  var match = CustomHooks.useDebounce(search, 500);
   var queryData = use$3({
         q: match[0]
       }, undefined, undefined, undefined, undefined);
@@ -788,37 +802,37 @@ function BuyerInformation_Buyer$InterestedCategories$SearchResults(props) {
   var itemCategories = Belt_Option.flatMap(queryData.searchInterestedItemCategoryListing, (function (listing) {
           return listing.itemCategories;
         }));
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("ul", {
+  return React.createElement(React.Fragment, undefined, React.createElement("ul", {
                   "aria-multiselectable": true,
                   className: hasSelected ? "my-4 overflow-scroll scrollbar-hide h-[calc(90vh-398px)] h-lg:h-[calc(900px-398px)]" : "my-4 overflow-scroll scrollbar-hide h-[calc(90vh-358px)] h-lg:h-[calc(900px-358px)]",
                   style: (style["content-visibility"] = "auto", style)
                 }, itemCategories !== undefined ? Belt_Array.map(itemCategories, (function (param) {
                           var id = param.id;
-                          return React$1.createElement("li", {
+                          return React.createElement("li", {
                                       key: id,
                                       "aria-selected": Curry._2(hasItem, selected, id),
                                       className: "flex items-center min-h-[48px] cursor-pointer tab-highlight-color",
                                       onClick: (function (param) {
                                           Curry._1(onClickItem, id);
                                         })
-                                    }, React$1.createElement("div", {
+                                    }, React.createElement("div", {
                                           className: "flex flex-col justify-between truncate"
-                                        }, React$1.createElement("span", {
+                                        }, React.createElement("span", {
                                               className: "block text-base truncate text-text-L1"
-                                            }, "" + param.name)), React$1.createElement("div", {
+                                            }, "" + param.name)), React.createElement("div", {
                                           className: "ml-auto pl-2"
-                                        }, Curry._2(hasItem, selected, id) ? React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                        }, Curry._2(hasItem, selected, id) ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
                                                 height: "24",
                                                 width: "24",
                                                 fill: "#12B564"
-                                              }) : React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                              }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
                                                 height: "24",
                                                 width: "24",
                                                 fill: "#12B564"
                                               })));
-                        })) : "검색 결과가 없습니다."), React$1.createElement(DS_ButtonContainer.Floating1.make, {
+                        })) : "검색 결과가 없습니다."), React.createElement(DS_ButtonContainer.Floating1.make, {
                   label: "저장",
-                  disabled: props.isMutating,
+                  disabled: isMutating,
                   onClick: (function (param) {
                       Curry._1(save, undefined);
                     }),
@@ -831,17 +845,20 @@ var SearchResults = {
   make: BuyerInformation_Buyer$InterestedCategories$SearchResults
 };
 
-function BuyerInformation_Buyer$InterestedCategories$List(props) {
-  var clickCategoryIds = props.clickCategoryIds;
-  var selected = props.selected;
-  var save = props.save;
-  var data = props.data;
+function BuyerInformation_Buyer$InterestedCategories$List(Props) {
+  var data = Props.data;
+  var isMutating = Props.isMutating;
+  var save = Props.save;
+  var selected = Props.selected;
+  var onClickItem = Props.onClickItem;
+  var hasItem = Props.hasItem;
+  var clickCategoryIds = Props.clickCategoryIds;
   var initialSelectedDepth0Category = Belt_Option.map(Belt_Option.flatMap(data.interestedCategoryListing, (function (listing) {
               return Garter_Array.first(listing.depth0Categories);
             })), (function (depth0Categories) {
           return depth0Categories.id;
         }));
-  var match = React$1.useState(function () {
+  var match = React.useState(function () {
         return initialSelectedDepth0Category;
       });
   var setSelectedDepth0Category = match[1];
@@ -875,16 +892,16 @@ function BuyerInformation_Buyer$InterestedCategories$List(props) {
                 }));
   };
   var list = data.interestedCategoryListing;
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "mt-4"
-                }, React$1.createElement(DS_Tab.LeftTab.Root.make, {
+                }, React.createElement(DS_Tab.LeftTab.Root.make, {
                       children: list !== undefined ? Belt_Array.map(list.depth0Categories, (function (param) {
                                 var id = param.id;
-                                return React.createElementWithKey(DS_Tab.LeftTab.Item.make, {
-                                            children: React$1.createElement(DS_Button.Tab.LeftTab1.make, {
+                                return React.createElement(DS_Tab.LeftTab.Item.make, {
+                                            children: React.createElement(DS_Button.Tab.LeftTab1.make, {
                                                   text: param.name,
                                                   selected: Caml_obj.equal(id, selectedDepth0Category),
-                                                  labelNumber: Caml_option.some(countOfSelected(id)),
+                                                  labelNumber: countOfSelected(id),
                                                   onClick: (function (param) {
                                                       setSelectedDepth0Category(function (param) {
                                                             return id;
@@ -892,21 +909,23 @@ function BuyerInformation_Buyer$InterestedCategories$List(props) {
                                                       clickCategoryIds.current = Belt_Array.concat(clickCategoryIds.current, [id]);
                                                     })
                                                 }),
-                                            className: "mx-2 first:ml-0 last:mr-0"
-                                          }, id);
+                                            className: "mx-2 first:ml-0 last:mr-0",
+                                            key: id
+                                          });
                               })) : null
-                    })), React$1.createElement(React$1.Suspense, {
-                  children: Caml_option.some(React.createElementWithKey(BuyerInformation_Buyer$InterestedCategories$ListItems, {
-                            items: itemCategories,
-                            selected: selected,
-                            onClickItem: props.onClickItem,
-                            hasItem: props.hasItem
-                          }, Belt_Option.getWithDefault(selectedDepth0Category, "")))
-                }), React$1.createElement("div", {
+                    })), React.createElement(React.Suspense, {
+                  children: React.createElement(BuyerInformation_Buyer$InterestedCategories$ListItems, {
+                        items: itemCategories,
+                        selected: selected,
+                        onClickItem: onClickItem,
+                        hasItem: hasItem,
+                        key: Belt_Option.getWithDefault(selectedDepth0Category, "")
+                      })
+                }), React.createElement("div", {
                   className: "h-[56px]"
-                }), React$1.createElement(DS_ButtonContainer.Floating1.make, {
+                }), React.createElement(DS_ButtonContainer.Floating1.make, {
                   label: "저장",
-                  disabled: props.isMutating,
+                  disabled: isMutating,
                   onClick: (function (param) {
                       Curry._1(save, undefined);
                     }),
@@ -947,7 +966,7 @@ function use$4(param) {
   var match = ReactRelay.useMutation(BuyerInformationBuyerInterestedCategoryMutation_graphql.node);
   var mutate = match[0];
   return [
-          React$1.useMemo((function () {
+          React.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -982,17 +1001,17 @@ var Mutation$1 = {
   use: use$4
 };
 
-function BuyerInformation_Buyer$InterestedCategories$SearchAndList(props) {
-  var close = props.close;
-  var changeModeToSectorSale = props.changeModeToSectorSale;
-  var selected = props.selected;
-  var data = props.data;
+function BuyerInformation_Buyer$InterestedCategories$SearchAndList(Props) {
+  var data = Props.data;
+  var selected = Props.selected;
+  var changeModeToSectorSale = Props.changeModeToSectorSale;
+  var close = Props.close;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var selected$1 = selected !== undefined ? Belt_Array.map(selected, (function (s) {
             return s.id;
           })) : [];
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         return selected$1;
       });
   var setSelected = match$1[1];
@@ -1000,14 +1019,14 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(props) {
   var match$2 = use$4(undefined);
   var isMutating = match$2[1];
   var mutate = match$2[0];
-  var clickCategoryIds = React$1.useRef([]);
+  var clickCategoryIds = React.useRef([]);
   var save = function (param) {
     if (selected$2.length !== 0) {
       Curry.app(mutate, [
             (function (param) {
-                addToast(React$1.createElement("div", {
+                addToast(React.createElement("div", {
                           className: "flex items-center"
-                        }, React$1.createElement(IconError.make, {
+                        }, React.createElement(IconError.make, {
                               width: "24",
                               height: "24",
                               className: "mr-2"
@@ -1016,9 +1035,9 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(props) {
                     });
               }),
             (function (param, param$1) {
-                addToast(React$1.createElement("div", {
+                addToast(React.createElement("div", {
                           className: "flex items-center"
-                        }, React$1.createElement(IconCheck.make, {
+                        }, React.createElement(IconCheck.make, {
                               height: "24",
                               width: "24",
                               fill: "#12B564",
@@ -1051,9 +1070,9 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(props) {
           ]);
       return ;
     } else {
-      return addToast(React$1.createElement("div", {
+      return addToast(React.createElement("div", {
                       className: "flex items-center"
-                    }, React$1.createElement(IconWarning.make, {
+                    }, React.createElement(IconWarning.make, {
                           width: "24",
                           height: "24",
                           className: "mr-2"
@@ -1078,9 +1097,9 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(props) {
           } else if (prev.length < 20) {
             return Garter_Array.concat(prev, [item]);
           } else {
-            addToast(React$1.createElement("div", {
+            addToast(React.createElement("div", {
                       className: "flex items-center whitespace-pre-line sm:whitespace-normal"
-                    }, React$1.createElement(IconWarning.make, {
+                    }, React.createElement(IconWarning.make, {
                           width: "24",
                           height: "24",
                           className: "mr-2",
@@ -1097,7 +1116,7 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(props) {
                   return Caml_obj.equal(i, item);
                 }));
   };
-  var match$3 = React$1.useState(function () {
+  var match$3 = React.useState(function () {
         return "";
       });
   var setSearch = match$3[1];
@@ -1113,27 +1132,28 @@ function BuyerInformation_Buyer$InterestedCategories$SearchAndList(props) {
           return "";
         });
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement(BuyerInformation_Buyer$InterestedCategories$Search, {
+  return React.createElement(React.Fragment, undefined, React.createElement(BuyerInformation_Buyer$InterestedCategories$Search, {
                   search: search,
                   onChange: handleOnChange,
                   onClear: handleOnClear
-                }), React$1.createElement(BuyerInformation_Buyer$InterestedCategories$Selected, {
+                }), React.createElement(BuyerInformation_Buyer$InterestedCategories$Selected, {
                   data: itemCategories,
                   selected: selected$2,
                   onClick: handleClickItemCategory
-                }), search.length > 0 ? React$1.createElement(React$1.Suspense, {
-                    children: Caml_option.some(React.createElementWithKey(BuyerInformation_Buyer$InterestedCategories$SearchResults, {
-                              search: search,
-                              selected: selected$2,
-                              isMutating: isMutating,
-                              save: save,
-                              onClickItem: handleClickItemCategory,
-                              hasItem: hasItem
-                            }, search)),
-                    fallback: Caml_option.some(React$1.createElement("div", {
-                              className: "h-[500px]"
-                            }))
-                  }) : React$1.createElement(BuyerInformation_Buyer$InterestedCategories$List, {
+                }), search.length > 0 ? React.createElement(React.Suspense, {
+                    children: React.createElement(BuyerInformation_Buyer$InterestedCategories$SearchResults, {
+                          search: search,
+                          selected: selected$2,
+                          isMutating: isMutating,
+                          save: save,
+                          onClickItem: handleClickItemCategory,
+                          hasItem: hasItem,
+                          key: search
+                        }),
+                    fallback: React.createElement("div", {
+                          className: "h-[500px]"
+                        })
+                  }) : React.createElement(BuyerInformation_Buyer$InterestedCategories$List, {
                     data: data,
                     isMutating: isMutating,
                     save: save,
@@ -1160,7 +1180,7 @@ function use$5(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$3(param) {
   var match = ReactRelay.useQueryLoader(BuyerInformationBuyerInterestedCategoryListingQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, BuyerInformationBuyerInterestedCategoryListingQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -1226,28 +1246,36 @@ var Query$3 = {
   retain: retain$3
 };
 
-function BuyerInformation_Buyer$InterestedCategories(props) {
+function BuyerInformation_Buyer$InterestedCategories(Props) {
+  var selected = Props.selected;
+  var changeModeToSectorSale = Props.changeModeToSectorSale;
+  var close = Props.close;
   var queryData = use$5(undefined, undefined, undefined, undefined, undefined);
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           ChannelTalk.hideChannelButton(undefined);
           return (function (param) {
                     ChannelTalk.showChannelButton(undefined);
                   });
         }), []);
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  var tmp = {
+    data: queryData,
+    selected: selected
+  };
+  if (changeModeToSectorSale !== undefined) {
+    tmp.changeModeToSectorSale = Caml_option.valFromOption(changeModeToSectorSale);
+  }
+  if (close !== undefined) {
+    tmp.close = Caml_option.valFromOption(close);
+  }
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "p-5 pt-0 text-text-L1"
-                }, React$1.createElement("article", undefined, React$1.createElement("h2", {
+                }, React.createElement("article", undefined, React.createElement("h2", {
                           className: "text-xl font-bold whitespace-pre-wrap"
-                        }, "관심 상품을 입력하고\n", React$1.createElement("span", {
+                        }, "관심 상품을 입력하고\n", React.createElement("span", {
                               className: "text-primary"
-                            }, "더 유리한 소싱 조건"), React$1.createElement("span", undefined, "을 받아보세요!")))), React$1.createElement("section", {
+                            }, "더 유리한 소싱 조건"), React.createElement("span", undefined, "을 받아보세요!")))), React.createElement("section", {
                   className: "p-5 text-text-L1"
-                }, React$1.createElement(BuyerInformation_Buyer$InterestedCategories$SearchAndList, {
-                      data: queryData,
-                      selected: props.selected,
-                      changeModeToSectorSale: props.changeModeToSectorSale,
-                      close: props.close
-                    })));
+                }, React.createElement(BuyerInformation_Buyer$InterestedCategories$SearchAndList, tmp)));
 }
 
 var InterestedCategories = {
@@ -1275,7 +1303,7 @@ function use$6(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader$4(param) {
   var match = ReactRelay.useQueryLoader(BuyerInformationBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, BuyerInformationBuyerQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -1429,19 +1457,19 @@ function makeLastShown(id) {
                 }));
 }
 
-function BuyerInformation_Buyer$Fetcher(props) {
-  var match = React$1.useState(function () {
+function BuyerInformation_Buyer$Fetcher(Props) {
+  var match = React.useState(function () {
         return /* Hide */1;
       });
   var setOpen = match[1];
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         return /* InterestedCategories */1;
       });
   var setMode = match$1[1];
   var mode = match$1[0];
   var queryData = use$6(undefined, undefined, undefined, undefined, undefined);
   var user = CustomHooks.Auth.use(undefined);
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           if (typeof user !== "number") {
             var match = user._0;
             if (match.role === 1) {
@@ -1525,19 +1553,19 @@ function BuyerInformation_Buyer$Fetcher(props) {
                       }));
         }));
   var contentStyle = mode ? "dialog-content-full overflow-y-auto sm:rounded-2xl" : "dialog-content-detail overflow-y-auto rounded-2xl";
-  return React$1.createElement(ReactDialog.Root, {
+  return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: match[0] ? false : true
-            }, React$1.createElement(ReactDialog.Overlay, {
+              open: match[0] ? false : true
+            }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
-                }), React$1.createElement(ReactDialog.Content, {
+                }), React.createElement(ReactDialog.Content, {
                   children: null,
                   className: contentStyle
-                }, React$1.createElement("section", {
+                }, React.createElement("section", {
                       className: "text-text-L1"
-                    }, React$1.createElement("article", {
+                    }, React.createElement("article", {
                           className: "flex"
-                        }, React$1.createElement(ReactDialog.Close, {
+                        }, React.createElement(ReactDialog.Close, {
                               onClick: (function (param) {
                                   if (mode === /* SectorAndSale */0 && !hasInputInterestedItemCategory) {
                                     return setMode(function (param) {
@@ -1549,18 +1577,18 @@ function BuyerInformation_Buyer$Fetcher(props) {
                                               });
                                   }
                                 }),
-                              children: React$1.createElement(IconClose.make, {
+                              children: React.createElement(IconClose.make, {
                                     height: "24",
                                     width: "24",
                                     fill: "#262626"
                                   }),
                               className: "p-2 m-3 mb-0 focus:outline-none ml-auto"
-                            }))), mode ? React$1.createElement(BuyerInformation_Buyer$InterestedCategories, {
+                            }))), mode ? React.createElement(BuyerInformation_Buyer$InterestedCategories, {
                         selected: Belt_Option.flatMap(queryData.viewer, (function (v) {
                                 return v.interestedItemCategories;
                               })),
                         close: close
-                      }) : React$1.createElement(BuyerInformation_Buyer$SectorAndSale, {
+                      }) : React.createElement(BuyerInformation_Buyer$SectorAndSale, {
                         selected: Belt_Option.map(queryData.viewer, (function (v) {
                                 return [
                                         v.selfReportedBusinessSectors,
@@ -1579,14 +1607,14 @@ var Fetcher = {
   make: BuyerInformation_Buyer$Fetcher
 };
 
-function BuyerInformation_Buyer(props) {
+function BuyerInformation_Buyer(Props) {
   var user = CustomHooks.Auth.use(undefined);
   if (typeof user === "number" || user._0.role !== 1) {
     return null;
   } else {
-    return React$1.createElement(React$1.Suspense, {
-                children: Caml_option.some(React$1.createElement(BuyerInformation_Buyer$Fetcher, {})),
-                fallback: Caml_option.some(null)
+    return React.createElement(React.Suspense, {
+                children: React.createElement(BuyerInformation_Buyer$Fetcher, {}),
+                fallback: null
               });
   }
 }

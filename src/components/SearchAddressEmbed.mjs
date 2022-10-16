@@ -2,9 +2,9 @@
 
 import * as React from "react";
 
-function SearchAddressEmbed(props) {
-  var isShow = props.isShow;
-  var onComplete = props.onComplete;
+function SearchAddressEmbed(Props) {
+  var onComplete = Props.onComplete;
+  var isShow = Props.isShow;
   React.useLayoutEffect((function () {
           if (isShow) {
             var iframeWrapper = document.getElementById("iframe-embed-addr");

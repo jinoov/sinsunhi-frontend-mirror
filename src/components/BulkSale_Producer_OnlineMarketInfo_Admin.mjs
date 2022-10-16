@@ -139,13 +139,15 @@ var Fragment = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-function BulkSale_Producer_OnlineMarketInfo_Admin(props) {
-  var onlineMarkets = use(props.query);
+function BulkSale_Producer_OnlineMarketInfo_Admin(Props) {
+  var query = Props.query;
+  var applicationId = Props.applicationId;
+  var onlineMarkets = use(query);
   return React.createElement(React.Fragment, undefined, React.createElement(BulkSale_Producer_RawOnlineMarketInfo_Button_Admin.make, {
                   onlineMarkets: onlineMarkets
                 }), React.createElement(BulkSale_Producer_OnlineMarketInfo_Button_Admin.make, {
                   onlineMarkets: onlineMarkets,
-                  applicationId: props.applicationId
+                  applicationId: applicationId
                 }));
 }
 

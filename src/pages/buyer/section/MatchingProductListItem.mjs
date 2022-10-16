@@ -106,8 +106,9 @@ var Fragments = {
   Matching: Matching
 };
 
-function MatchingProductListItem$Soldout$PC(props) {
-  if (props.show) {
+function MatchingProductListItem$Soldout$PC(Props) {
+  var show = Props.show;
+  if (show) {
     return React.createElement(React.Fragment, undefined, React.createElement("div", {
                     className: "w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl"
                   }), React.createElement("div", {
@@ -124,8 +125,9 @@ var PC = {
   make: MatchingProductListItem$Soldout$PC
 };
 
-function MatchingProductListItem$Soldout$MO(props) {
-  if (props.show) {
+function MatchingProductListItem$Soldout$MO(Props) {
+  var show = Props.show;
+  if (show) {
     return React.createElement(React.Fragment, undefined, React.createElement("div", {
                     className: "w-full h-full absolute top-0 left-0 bg-white opacity-40 rounded-xl"
                   }), React.createElement("div", {
@@ -147,9 +149,10 @@ var Soldout = {
   MO: MO
 };
 
-function MatchingProductListItem$Quoted$PC(props) {
+function MatchingProductListItem$Quoted$PC(Props) {
+  var query = Props.query;
   var router = Router.useRouter();
-  var match = use$1(props.query);
+  var match = use$1(query);
   var productId = match.productId;
   var isSoldout = match.status === "SOLDOUT";
   var onClick = function (param) {
@@ -186,9 +189,10 @@ var PC$1 = {
   make: MatchingProductListItem$Quoted$PC
 };
 
-function MatchingProductListItem$Quoted$MO(props) {
+function MatchingProductListItem$Quoted$MO(Props) {
+  var query = Props.query;
   var router = Router.useRouter();
-  var match = use$1(props.query);
+  var match = use$1(query);
   var productId = match.productId;
   var isSoldout = match.status === "SOLDOUT";
   var onClick = function (param) {
@@ -230,10 +234,11 @@ var Quoted$1 = {
   MO: MO$1
 };
 
-function MatchingProductListItem$Matching$PC(props) {
+function MatchingProductListItem$Matching$PC(Props) {
+  var query = Props.query;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use$2(props.query);
+  var match = use$2(query);
   var representativeWeight = match.representativeWeight;
   var productId = match.productId;
   var pricePerKg = match.pricePerKg;
@@ -295,10 +300,11 @@ var PC$2 = {
   make: MatchingProductListItem$Matching$PC
 };
 
-function MatchingProductListItem$Matching$MO(props) {
+function MatchingProductListItem$Matching$MO(Props) {
+  var query = Props.query;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use$2(props.query);
+  var match = use$2(query);
   var representativeWeight = match.representativeWeight;
   var productId = match.productId;
   var pricePerKg = match.pricePerKg;
@@ -365,7 +371,7 @@ var Matching$1 = {
   MO: MO$2
 };
 
-function MatchingProductListItem$PC$Placeholder(props) {
+function MatchingProductListItem$PC$Placeholder(Props) {
   return React.createElement("div", {
               className: "w-[280px] h-[376px]"
             }, React.createElement("div", {
@@ -381,8 +387,9 @@ var Placeholder = {
   make: MatchingProductListItem$PC$Placeholder
 };
 
-function MatchingProductListItem$PC(props) {
-  var match = use(props.query);
+function MatchingProductListItem$PC(Props) {
+  var query = Props.query;
+  var match = use(query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   if (match$1 !== undefined) {
@@ -409,7 +416,7 @@ var PC$3 = {
   make: MatchingProductListItem$PC
 };
 
-function MatchingProductListItem$MO$Placeholder(props) {
+function MatchingProductListItem$MO$Placeholder(Props) {
   return React.createElement("div", undefined, React.createElement("div", {
                   className: "w-full aspect-square animate-pulse rounded-xl bg-gray-100"
                 }), React.createElement("div", {
@@ -423,8 +430,9 @@ var Placeholder$1 = {
   make: MatchingProductListItem$MO$Placeholder
 };
 
-function MatchingProductListItem$MO(props) {
-  var match = use(props.query);
+function MatchingProductListItem$MO(Props) {
+  var query = Props.query;
+  var match = use(query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   if (match$1 !== undefined) {

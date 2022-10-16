@@ -531,7 +531,8 @@ var Form = {
   submit_decode: submit_decode
 };
 
-function Update_Normal_Product_Form_Admin$ReadOnlyProducer(props) {
+function Update_Normal_Product_Form_Admin$ReadOnlyProducer(Props) {
+  var value = Props.value;
   return React.createElement("div", {
               className: "flex flex-col gap-2"
             }, React.createElement("div", undefined, React.createElement("span", {
@@ -543,7 +544,7 @@ function Update_Normal_Product_Form_Admin$ReadOnlyProducer(props) {
                 }, React.createElement("div", {
                       className: "absolute w-full"
                     }, React.createElement(Async, {
-                          value: props.value,
+                          value: value,
                           cacheOptions: false,
                           defaultOptions: false,
                           loadOptions: (function (param) {
@@ -578,7 +579,8 @@ var ReadOnlyProducer = {
   make: Update_Normal_Product_Form_Admin$ReadOnlyProducer
 };
 
-function Update_Normal_Product_Form_Admin$Category(props) {
+function Update_Normal_Product_Form_Admin$Category(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -590,7 +592,7 @@ function Update_Normal_Product_Form_Admin$Category(props) {
                       className: "text-notice"
                     }, "*")), React.createElement(Select_Product_Categories.make, {
                   control: match.control,
-                  name: props.name,
+                  name: name,
                   disabled: false
                 }));
 }
@@ -599,7 +601,9 @@ var Category = {
   make: Update_Normal_Product_Form_Admin$Category
 };
 
-function Update_Normal_Product_Form_Admin$DisplayCategoryInput(props) {
+function Update_Normal_Product_Form_Admin$DisplayCategoryInput(Props) {
+  var name = Props.name;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -611,8 +615,8 @@ function Update_Normal_Product_Form_Admin$DisplayCategoryInput(props) {
                       className: "text-notice"
                     }, "*")), React.createElement(Product_Detail_Display_Categories.make, {
                   control: match.control,
-                  name: props.name,
-                  disabled: props.disabled
+                  name: name,
+                  disabled: disabled
                 }), React.createElement("div", undefined));
 }
 
@@ -620,18 +624,22 @@ var DisplayCategoryInput = {
   make: Update_Normal_Product_Form_Admin$DisplayCategoryInput
 };
 
-function Update_Normal_Product_Form_Admin$ProductNameInputs(props) {
-  var disabled = props.disabled;
+function Update_Normal_Product_Form_Admin$ProductNameInputs(Props) {
+  var producerProductName = Props.producerProductName;
+  var producerProductNameDefaultValue = Props.producerProductNameDefaultValue;
+  var buyerProductName = Props.buyerProductName;
+  var buyerProductNameDefaultValue = Props.buyerProductNameDefaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var register = match.register;
   var errors = match.formState.errors;
-  var producerProductNameInput = register(props.producerProductName, {
+  var producerProductNameInput = register(producerProductName, {
         required: true,
         maxLength: 100
       });
-  var buyerProductNameInput = register(props.buyerProductName, {
+  var buyerProductNameInput = register(buyerProductName, {
         required: true,
         maxLength: 100
       });
@@ -646,7 +654,7 @@ function Update_Normal_Product_Form_Admin$ProductNameInputs(props) {
                           className: "text-notice"
                         }, "*")), React.createElement("div", undefined, React.createElement("input", {
                           ref: producerProductNameInput.ref,
-                          defaultValue: props.producerProductNameDefaultValue,
+                          defaultValue: producerProductNameDefaultValue,
                           className: getTextInputStyle(disabled),
                           id: producerProductNameInput.name,
                           disabled: disabled,
@@ -678,7 +686,7 @@ function Update_Normal_Product_Form_Admin$ProductNameInputs(props) {
                           className: "text-notice"
                         }, "*")), React.createElement("input", {
                       ref: buyerProductNameInput.ref,
-                      defaultValue: props.buyerProductNameDefaultValue,
+                      defaultValue: buyerProductNameDefaultValue,
                       className: getTextInputStyle(disabled),
                       id: buyerProductNameInput.name,
                       disabled: disabled,
@@ -706,7 +714,8 @@ var ProductNameInputs = {
   make: Update_Normal_Product_Form_Admin$ProductNameInputs
 };
 
-function Update_Normal_Product_Form_Admin$ReadOnlyProductId(props) {
+function Update_Normal_Product_Form_Admin$ReadOnlyProductId(Props) {
+  var productId = Props.productId;
   return React.createElement("div", {
               className: "flex flex-col gap-2"
             }, React.createElement("div", undefined, React.createElement("span", {
@@ -715,16 +724,17 @@ function Update_Normal_Product_Form_Admin$ReadOnlyProductId(props) {
                   className: "px-3 py-2 border border-border-default-L1 bg-disabled-L3 text-disabled-L1 rounded-lg h-9 max-w-md w-1/3"
                 }, React.createElement("span", {
                       className: "text-enabled-L1"
-                    }, props.productId)));
+                    }, productId)));
 }
 
 var ReadOnlyProductId = {
   make: Update_Normal_Product_Form_Admin$ReadOnlyProductId
 };
 
-function Update_Normal_Product_Form_Admin$DisplayPriceInput(props) {
-  var disabled = props.disabled;
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$DisplayPriceInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -752,7 +762,7 @@ function Update_Normal_Product_Form_Admin$DisplayPriceInput(props) {
                       className: "text-notice"
                     }, "*")), React.createElement(ReactHookForm$1.Controller, {
                   name: name,
-                  control: Caml_option.some(match.control),
+                  control: match.control,
                   render: (function (param) {
                       var match = param.field;
                       var onChange = match.onChange;
@@ -776,8 +786,8 @@ function Update_Normal_Product_Form_Admin$DisplayPriceInput(props) {
                                     })
                                 });
                     }),
-                  defaultValue: Caml_option.some(props.defaultValue),
-                  rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
+                  defaultValue: defaultValue,
+                  rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                 }), React.createElement(ErrorMessage.ErrorMessage, {
                   name: name,
                   errors: match.formState.errors,
@@ -798,9 +808,10 @@ var DisplayPriceInput = {
   make: Update_Normal_Product_Form_Admin$DisplayPriceInput
 };
 
-function Update_Normal_Product_Form_Admin$OperationStatusInput(props) {
-  var disabled = props.disabled;
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$OperationStatusInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -810,51 +821,55 @@ function Update_Normal_Product_Form_Admin$OperationStatusInput(props) {
         return /* Hide */1;
       });
   var setShowProductOperationNoSale = match$1[1];
+  var tmp = {
+    name: name,
+    control: match.control,
+    render: (function (param) {
+        var match = param.field;
+        var onChange = match.onChange;
+        return React.createElement("div", undefined, React.createElement(Select_Product_Operation_Status.Base.make, {
+                        status: Belt_Result.mapWithDefault(Select_Product_Operation_Status.Base.status_decode(match.value), undefined, (function (status) {
+                                return status;
+                              })),
+                        onChange: (function (param) {
+                            if (param !== 3) {
+                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Operation_Status.Base.status_encode(param)));
+                            } else {
+                              return setShowProductOperationNoSale(function (param) {
+                                          return /* Show */0;
+                                        });
+                            }
+                          }),
+                        forwardRef: match.ref,
+                        disabled: disabled
+                      }), React.createElement(ErrorMessage.ErrorMessage, {
+                        name: name,
+                        errors: errors,
+                        render: (function (param) {
+                            return React.createElement("span", {
+                                        className: "flex"
+                                      }, React.createElement(IconError.make, {
+                                            width: "20",
+                                            height: "20"
+                                          }), React.createElement("span", {
+                                            className: "text-sm text-notice ml-1"
+                                          }, "운영상태를 선택해주세요."));
+                          })
+                      }));
+      }),
+    rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+  };
+  var tmp$1 = Belt_Option.map(defaultValue, Select_Product_Operation_Status.Base.status_encode);
+  if (tmp$1 !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(tmp$1);
+  }
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "flex flex-col gap-2 max-w-md w-1/3"
                 }, React.createElement("div", undefined, React.createElement("span", {
                           className: "font-bold"
                         }, "운영상태"), React.createElement("span", {
                           className: "text-notice"
-                        }, "*")), React.createElement(ReactHookForm$1.Controller, {
-                      name: name,
-                      control: Caml_option.some(match.control),
-                      render: (function (param) {
-                          var match = param.field;
-                          var onChange = match.onChange;
-                          return React.createElement("div", undefined, React.createElement(Select_Product_Operation_Status.Base.make, {
-                                          status: Belt_Result.mapWithDefault(Select_Product_Operation_Status.Base.status_decode(match.value), undefined, (function (status) {
-                                                  return status;
-                                                })),
-                                          onChange: (function (param) {
-                                              if (param !== 3) {
-                                                return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Operation_Status.Base.status_encode(param)));
-                                              } else {
-                                                return setShowProductOperationNoSale(function (param) {
-                                                            return /* Show */0;
-                                                          });
-                                              }
-                                            }),
-                                          forwardRef: match.ref,
-                                          disabled: disabled
-                                        }), React.createElement(ErrorMessage.ErrorMessage, {
-                                          name: name,
-                                          errors: errors,
-                                          render: (function (param) {
-                                              return React.createElement("span", {
-                                                          className: "flex"
-                                                        }, React.createElement(IconError.make, {
-                                                              width: "20",
-                                                              height: "20"
-                                                            }), React.createElement("span", {
-                                                              className: "text-sm text-notice ml-1"
-                                                            }, "운영상태를 선택해주세요."));
-                                            })
-                                        }));
-                        }),
-                      defaultValue: Belt_Option.map(props.defaultValue, Select_Product_Operation_Status.Base.status_encode),
-                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
-                    })), React.createElement(Dialog.make, {
+                        }, "*")), React.createElement(ReactHookForm$1.Controller, tmp)), React.createElement(Dialog.make, {
                   isShow: match$1[0],
                   children: React.createElement("p", undefined, "영구판매중지 상태를 선택 후 저장하시면", React.createElement("br", undefined), "추후 해당 상품을 수정할 수 없습니다.", React.createElement("br", undefined), React.createElement("br", undefined), "영구판매중지 상태로 변경할까요?"),
                   onCancel: (function (param) {
@@ -879,9 +894,10 @@ var OperationStatusInput = {
   make: Update_Normal_Product_Form_Admin$OperationStatusInput
 };
 
-function Update_Normal_Product_Form_Admin$OriginInput(props) {
-  var disabled = props.disabled;
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$OriginInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -898,8 +914,8 @@ function Update_Normal_Product_Form_Admin$OriginInput(props) {
     onBlur: productOrigin.onBlur,
     onChange: productOrigin.onChange
   };
-  if (props.defaultValue !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(props.defaultValue);
+  if (defaultValue !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(defaultValue);
   }
   return React.createElement("div", {
               className: "flex flex-col gap-2 max-w-md w-1/3"
@@ -930,57 +946,63 @@ var OriginInput = {
   make: Update_Normal_Product_Form_Admin$OriginInput
 };
 
-function Update_Normal_Product_Form_Admin$NotationTypeInput(props) {
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$NotationTypeInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var errors = match.formState.errors;
+  var tmp = {
+    name: name,
+    control: match.control,
+    render: (function (param) {
+        var match = param.field;
+        var onChange = match.onChange;
+        return React.createElement("div", undefined, React.createElement(Select_Product_NotationType_Admin.Notation.make, {
+                        status: Belt_Result.mapWithDefault(Select_Product_NotationType_Admin.Notation.status_decode(match.value), undefined, (function (status) {
+                                return status;
+                              })),
+                        onChange: (function (param) {
+                            return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_NotationType_Admin.Notation.status_encode(param)));
+                          }),
+                        forwardRef: match.ref
+                      }), React.createElement(ErrorMessage.ErrorMessage, {
+                        name: name,
+                        errors: errors,
+                        render: (function (param) {
+                            return React.createElement("span", {
+                                        className: "flex"
+                                      }, React.createElement(IconError.make, {
+                                            width: "20",
+                                            height: "20"
+                                          }), React.createElement("span", {
+                                            className: "text-sm text-notice ml-1"
+                                          }, "필수 표기정보 유형을 선택해주세요."));
+                          })
+                      }));
+      }),
+    rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+  };
+  var tmp$1 = Belt_Option.map(defaultValue, Select_Product_NotationType_Admin.Notation.status_encode);
+  if (tmp$1 !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(tmp$1);
+  }
   return React.createElement("div", {
               className: "flex flex-col gap-2 max-w-md w-1/3"
             }, React.createElement("div", undefined, React.createElement("span", {
                       className: "font-bold"
                     }, "필수 표기정보 유형"), React.createElement("span", {
                       className: "text-notice"
-                    }, "*")), React.createElement(ReactHookForm$1.Controller, {
-                  name: name,
-                  control: Caml_option.some(match.control),
-                  render: (function (param) {
-                      var match = param.field;
-                      var onChange = match.onChange;
-                      return React.createElement("div", undefined, React.createElement(Select_Product_NotationType_Admin.Notation.make, {
-                                      status: Belt_Result.mapWithDefault(Select_Product_NotationType_Admin.Notation.status_decode(match.value), undefined, (function (status) {
-                                              return status;
-                                            })),
-                                      onChange: (function (param) {
-                                          return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_NotationType_Admin.Notation.status_encode(param)));
-                                        }),
-                                      forwardRef: match.ref
-                                    }), React.createElement(ErrorMessage.ErrorMessage, {
-                                      name: name,
-                                      errors: errors,
-                                      render: (function (param) {
-                                          return React.createElement("span", {
-                                                      className: "flex"
-                                                    }, React.createElement(IconError.make, {
-                                                          width: "20",
-                                                          height: "20"
-                                                        }), React.createElement("span", {
-                                                          className: "text-sm text-notice ml-1"
-                                                        }, "필수 표기정보 유형을 선택해주세요."));
-                                        })
-                                    }));
-                    }),
-                  defaultValue: Belt_Option.map(props.defaultValue, Select_Product_NotationType_Admin.Notation.status_encode),
-                  rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
-                }));
+                    }, "*")), React.createElement(ReactHookForm$1.Controller, tmp));
 }
 
 var NotationTypeInput = {
   make: Update_Normal_Product_Form_Admin$NotationTypeInput
 };
 
-function Update_Normal_Product_Form_Admin$ReadOnlyIsVat(props) {
+function Update_Normal_Product_Form_Admin$ReadOnlyIsVat(Props) {
+  var status = Props.status;
   return React.createElement("div", {
               className: "flex flex-col gap-2 max-w-md w-1/3"
             }, React.createElement("div", undefined, React.createElement("span", {
@@ -988,7 +1010,7 @@ function Update_Normal_Product_Form_Admin$ReadOnlyIsVat(props) {
                     }, "과세여부"), React.createElement("span", {
                       className: "text-notice"
                     }, "*")), React.createElement(Select_Tax_Status.make, {
-                  status: props.status,
+                  status: status,
                   onChange: (function (param) {
                       
                     }),
@@ -1000,9 +1022,10 @@ var ReadOnlyIsVat = {
   make: Update_Normal_Product_Form_Admin$ReadOnlyIsVat
 };
 
-function Update_Normal_Product_Form_Admin$IsCourierAvailableInput(props) {
-  var disabled = props.disabled;
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$IsCourierAvailableInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -1015,7 +1038,7 @@ function Update_Normal_Product_Form_Admin$IsCourierAvailableInput(props) {
                       className: "text-notice"
                     }, "*")), React.createElement(ReactHookForm$1.Controller, {
                   name: name,
-                  control: Caml_option.some(match.control),
+                  control: match.control,
                   render: (function (param) {
                       var match = param.field;
                       var onChange = match.onChange;
@@ -1043,8 +1066,8 @@ function Update_Normal_Product_Form_Admin$IsCourierAvailableInput(props) {
                                         })
                                     }));
                     }),
-                  defaultValue: Caml_option.some(Select_Delivery.status_encode(props.defaultValue)),
-                  rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
+                  defaultValue: Select_Delivery.status_encode(defaultValue),
+                  rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                 }));
 }
 
@@ -1052,11 +1075,14 @@ var IsCourierAvailableInput = {
   make: Update_Normal_Product_Form_Admin$IsCourierAvailableInput
 };
 
-function Update_Normal_Product_Form_Admin$QuotableCheckbox(props) {
+function Update_Normal_Product_Form_Admin$QuotableCheckbox(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var quotable = match.register(props.name, undefined);
+  var quotable = match.register(name, undefined);
   return React.createElement("div", {
               className: "flex flex-col gap-2 max-w-md w-1/3"
             }, React.createElement("div", {
@@ -1068,11 +1094,11 @@ function Update_Normal_Product_Form_Admin$QuotableCheckbox(props) {
                 }, React.createElement(Checkbox.Uncontrolled.make, {
                       id: quotable.name,
                       name: quotable.name,
-                      defaultChecked: props.defaultValue,
+                      defaultChecked: defaultValue,
                       onBlur: quotable.onBlur,
                       onChange: quotable.onChange,
-                      disabled: props.disabled,
-                      inputRef: Caml_option.some(quotable.ref)
+                      disabled: disabled,
+                      inputRef: quotable.ref
                     }), React.createElement("label", {
                       className: "cursor-pointer",
                       htmlFor: quotable.name
@@ -1083,18 +1109,21 @@ var QuotableCheckbox = {
   make: Update_Normal_Product_Form_Admin$QuotableCheckbox
 };
 
-function Update_Normal_Product_Form_Admin$QuotationTypeInput(props) {
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$QuotationTypeInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var quotableCheckboxName = Props.quotableCheckboxName;
+  var defaultQuotable = Props.defaultQuotable;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var errors = match.formState.errors;
   var quotableCheckboxValue = ReactHookForm$1.useWatch({
-        name: props.quotableCheckboxName,
-        defaultValue: props.defaultQuotable
+        name: quotableCheckboxName,
+        defaultValue: defaultQuotable
       });
   var disabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
-  var t = Belt_Option.map(props.defaultValue, Select_Product_QuotationType_Admin.QuotationType.t_encode);
+  var t = Belt_Option.map(defaultValue, Select_Product_QuotationType_Admin.QuotationType.t_encode);
   return React.createElement("div", {
               className: "flex flex-col gap-2 max-w-md w-1/3"
             }, React.createElement("div", undefined, React.createElement("span", {
@@ -1103,7 +1132,7 @@ function Update_Normal_Product_Form_Admin$QuotationTypeInput(props) {
                       className: disabled ? "text-gray-400" : "text-notice"
                     }, "*")), React.createElement(ReactHookForm$1.Controller, {
                   name: name,
-                  control: Caml_option.some(match.control),
+                  control: match.control,
                   render: (function (param) {
                       var match = param.field;
                       var onChange = match.onChange;
@@ -1131,8 +1160,8 @@ function Update_Normal_Product_Form_Admin$QuotationTypeInput(props) {
                                         })
                                     }));
                     }),
-                  defaultValue: Caml_option.some(t !== undefined ? Caml_option.valFromOption(t) : null),
-                  rules: Caml_option.some(ReactHookForm.Rules.make(!disabled, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
+                  defaultValue: t !== undefined ? Caml_option.valFromOption(t) : null,
+                  rules: ReactHookForm.Rules.make(!disabled, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                 }));
 }
 
@@ -1140,9 +1169,11 @@ var QuotationTypeInput = {
   make: Update_Normal_Product_Form_Admin$QuotationTypeInput
 };
 
-function Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput(props) {
-  var disabled = props.disabled;
-  var minDate = props.minDate;
+function Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput(Props) {
+  var name = Props.name;
+  var minDate = Props.minDate;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -1157,23 +1188,31 @@ function Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput(props) {
                 }));
   };
   return React.createElement(ReactHookForm$1.Controller, {
-              name: props.name,
-              control: Caml_option.some(match.control),
+              name: name,
+              control: match.control,
               render: (function (param) {
                   var match = param.field;
                   var onChange = match.onChange;
-                  return React.createElement(DatePicker.make, {
-                              id: match.name,
-                              onChange: (function (e) {
-                                  Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
-                                }),
-                              date: jsonToStr(match.value),
-                              minDate: minDate,
-                              firstDayOfWeek: 0,
-                              disabled: disabled
-                            });
+                  var tmp = {
+                    id: match.name,
+                    onChange: (function (e) {
+                        Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
+                      }),
+                    firstDayOfWeek: 0
+                  };
+                  var tmp$1 = jsonToStr(match.value);
+                  if (tmp$1 !== undefined) {
+                    tmp.date = Caml_option.valFromOption(tmp$1);
+                  }
+                  if (minDate !== undefined) {
+                    tmp.minDate = Caml_option.valFromOption(minDate);
+                  }
+                  if (disabled !== undefined) {
+                    tmp.disabled = Caml_option.valFromOption(disabled);
+                  }
+                  return React.createElement(DatePicker.make, tmp);
                 }),
-              defaultValue: Caml_option.some(Belt_Option.mapWithDefault(props.defaultValue, "", strToJson))
+              defaultValue: Belt_Option.mapWithDefault(defaultValue, "", strToJson)
             });
 }
 
@@ -1181,16 +1220,21 @@ var DateInput = {
   make: Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput
 };
 
-function Update_Normal_Product_Form_Admin$NoticeAndDateInput(props) {
-  var disabled = props.disabled;
-  var noticeFromName = props.noticeFromName;
+function Update_Normal_Product_Form_Admin$NoticeAndDateInput(Props) {
+  var noticeName = Props.noticeName;
+  var defaultNotice = Props.defaultNotice;
+  var noticeFromName = Props.noticeFromName;
+  var defaultNoticeFrom = Props.defaultNoticeFrom;
+  var noticeToName = Props.noticeToName;
+  var defaultNoticeTo = Props.defaultNoticeTo;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var noticeDateFrom = ReactHookForm$1.useWatch({
         name: noticeFromName
       });
-  var notice = match.register(props.noticeName, {
+  var notice = match.register(noticeName, {
         maxLength: 1000
       });
   var tmp = {
@@ -1203,8 +1247,24 @@ function Update_Normal_Product_Form_Admin$NoticeAndDateInput(props) {
     onBlur: notice.onBlur,
     onChange: notice.onChange
   };
-  if (props.defaultNotice !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(props.defaultNotice);
+  if (defaultNotice !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(defaultNotice);
+  }
+  var tmp$1 = {
+    name: noticeFromName,
+    minDate: "2021-01-01",
+    disabled: disabled
+  };
+  if (defaultNoticeFrom !== undefined) {
+    tmp$1.defaultValue = Caml_option.valFromOption(defaultNoticeFrom);
+  }
+  var tmp$2 = {
+    name: noticeToName,
+    minDate: Belt_Option.getWithDefault(noticeDateFrom, ""),
+    disabled: disabled
+  };
+  if (defaultNoticeTo !== undefined) {
+    tmp$2.defaultValue = Caml_option.valFromOption(defaultNoticeTo);
   }
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "flex flex-col gap-2"
@@ -1231,19 +1291,9 @@ function Update_Normal_Product_Form_Admin$NoticeAndDateInput(props) {
                       className: "font-bold"
                     }, "공지사항 적용기간"), React.createElement("div", {
                       className: "flex gap-1"
-                    }, React.createElement(Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput, {
-                          name: noticeFromName,
-                          minDate: "2021-01-01",
-                          defaultValue: props.defaultNoticeFrom,
-                          disabled: disabled
-                        }), React.createElement("span", {
+                    }, React.createElement(Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput, tmp$1), React.createElement("span", {
                           className: "flex items-center"
-                        }, "~"), React.createElement(Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput, {
-                          name: props.noticeToName,
-                          minDate: Belt_Option.getWithDefault(noticeDateFrom, ""),
-                          defaultValue: props.defaultNoticeTo,
-                          disabled: disabled
-                        }))));
+                        }, "~"), React.createElement(Update_Normal_Product_Form_Admin$NoticeAndDateInput$DateInput, tmp$2))));
 }
 
 var NoticeAndDateInput = {
@@ -1251,9 +1301,10 @@ var NoticeAndDateInput = {
   make: Update_Normal_Product_Form_Admin$NoticeAndDateInput
 };
 
-function Update_Normal_Product_Form_Admin$ThumbnailUploadInput(props) {
-  var disabled = props.disabled;
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$ThumbnailUploadInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -1267,7 +1318,7 @@ function Update_Normal_Product_Form_Admin$ThumbnailUploadInput(props) {
                       className: "text-text-L2 ml-2"
                     }, "*이미지 파일 형식 등록 가능")), React.createElement("div", undefined, React.createElement(ReactHookForm$1.Controller, {
                       name: name,
-                      control: Caml_option.some(match.control),
+                      control: match.control,
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
@@ -1280,15 +1331,15 @@ function Update_Normal_Product_Form_Admin$ThumbnailUploadInput(props) {
                                       disabled: disabled
                                     });
                         }),
-                      defaultValue: Caml_option.some(Upload_Thumbnail_Admin.Form.image_encode(props.defaultValue)),
-                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([[
-                                          "required",
-                                          ReactHookForm.Validation.sync(function (value) {
-                                                return Belt_Result.mapWithDefault(Upload_Thumbnail_Admin.Form.image_decode(value), false, (function (image) {
-                                                              return image.original !== "";
-                                                            }));
-                                              })
-                                        ]])), undefined, undefined, undefined))
+                      defaultValue: Upload_Thumbnail_Admin.Form.image_encode(defaultValue),
+                      rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([[
+                                      "required",
+                                      ReactHookForm.Validation.sync(function (value) {
+                                            return Belt_Result.mapWithDefault(Upload_Thumbnail_Admin.Form.image_decode(value), false, (function (image) {
+                                                          return image.original !== "";
+                                                        }));
+                                          })
+                                    ]])), undefined, undefined, undefined)
                     }), React.createElement(ErrorMessage.ErrorMessage, {
                       name: name,
                       errors: match.formState.errors,
@@ -1309,22 +1360,25 @@ var ThumbnailUploadInput = {
   make: Update_Normal_Product_Form_Admin$ThumbnailUploadInput
 };
 
-function Update_Normal_Product_Form_Admin$SalesDocumentURLInput(props) {
+function Update_Normal_Product_Form_Admin$SalesDocumentURLInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var documentURL = match.register(props.name, undefined);
+  var documentURL = match.register(name, undefined);
   var tmp = {
     ref: documentURL.ref,
     className: "py-2 px-3 h-9 border-border-default-L1 border rounded-lg focus:outline-none min-w-1/2 max-w-2xl",
     id: documentURL.name,
-    disabled: props.disabled,
+    disabled: disabled,
     name: documentURL.name,
     onBlur: documentURL.onBlur,
     onChange: documentURL.onChange
   };
-  if (props.defaultValue !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(props.defaultValue);
+  if (defaultValue !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(defaultValue);
   }
   return React.createElement("div", {
               className: "flex flex-col gap-2"
@@ -1337,8 +1391,10 @@ var SalesDocumentURLInput = {
   make: Update_Normal_Product_Form_Admin$SalesDocumentURLInput
 };
 
-function Update_Normal_Product_Form_Admin$EditorInput(props) {
-  var name = props.name;
+function Update_Normal_Product_Form_Admin$EditorInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabled = Props.disabled;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -1366,8 +1422,8 @@ function Update_Normal_Product_Form_Admin$EditorInput(props) {
                     })), React.createElement("div", undefined, React.createElement(Product_Detail_Editor.make, {
                       control: match.control,
                       name: name,
-                      defaultValue: props.defaultValue,
-                      disabled: props.disabled
+                      defaultValue: defaultValue,
+                      disabled: disabled
                     })));
 }
 
@@ -1612,10 +1668,11 @@ function makeNormalProductVariables(productId, form) {
   return tmp$1;
 }
 
-function Update_Normal_Product_Form_Admin(props) {
-  var isQuotable = props.isQuotable;
+function Update_Normal_Product_Form_Admin(Props) {
+  var query = Props.query;
+  var isQuotable = Props.isQuotable;
   var router = Router.useRouter();
-  var product = use(props.query);
+  var product = use(query);
   var match = use$1(undefined);
   var isNormalMutating = match[1];
   var normalMutate = match[0];

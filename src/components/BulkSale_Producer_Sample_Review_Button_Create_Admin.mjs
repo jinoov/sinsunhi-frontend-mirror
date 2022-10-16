@@ -218,9 +218,9 @@ function makeInput(applicationId, amount, unit, brix, packageScore, marketabilit
         };
 }
 
-function BulkSale_Producer_Sample_Review_Button_Create_Admin(props) {
-  var refetchSampleReviews = props.refetchSampleReviews;
-  var applicationId = props.applicationId;
+function BulkSale_Producer_Sample_Review_Button_Create_Admin(Props) {
+  var applicationId = Props.applicationId;
+  var refetchSampleReviews = Props.refetchSampleReviews;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
@@ -335,6 +335,7 @@ function BulkSale_Producer_Sample_Review_Button_Create_Admin(props) {
                                   return handleOnChange(undefined, setBrix, param);
                                 }),
                               size: /* Small */2,
+                              error: undefined,
                               textAlign: /* Right */2
                             }))), React.createElement("article", {
                       className: "mt-5"

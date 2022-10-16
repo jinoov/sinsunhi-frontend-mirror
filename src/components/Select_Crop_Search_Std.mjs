@@ -36,8 +36,9 @@ function formatStd(std) {
   }
 }
 
-function Select_Crop_Search_Std(props) {
-  var std = props.std;
+function Select_Crop_Search_Std(Props) {
+  var std = Props.std;
+  var onChange = Props.onChange;
   var displayStd = formatStd(std);
   return React.createElement("span", undefined, React.createElement("label", {
                   className: "block relative"
@@ -52,7 +53,7 @@ function Select_Crop_Search_Std(props) {
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
                       value: toString(std),
-                      onChange: props.onChange
+                      onChange: onChange
                     }, Garter_Array.map([
                           "Crop",
                           "Cultivar"

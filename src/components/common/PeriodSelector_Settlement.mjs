@@ -44,10 +44,11 @@ function setPeriod(setFn, period, to_) {
   }
 }
 
-function PeriodSelector_Settlement(props) {
-  var onSelect = props.onSelect;
-  var to_ = props.to_;
-  var period = getPeriod(props.from, to_);
+function PeriodSelector_Settlement(Props) {
+  var from = Props.from;
+  var to_ = Props.to_;
+  var onSelect = Props.onSelect;
+  var period = getPeriod(from, to_);
   return React.createElement(React.Fragment, undefined, React.createElement("button", {
                   className: Cx.cx([
                         PeriodSelector.defaultStyle,

@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as Status_BulkSale_Product from "./common/Status_BulkSale_Product.mjs";
 
-function Summary_BulkSale_Products_Admin$Skeleton(props) {
+function Summary_BulkSale_Products_Admin$Skeleton(Props) {
   return React.createElement("div", {
               className: "py-3 px-7 mt-4 mx-4 shadow-gl bg-white rounded"
             }, React.createElement("ol", {
@@ -19,8 +19,8 @@ var Skeleton = {
   make: Summary_BulkSale_Products_Admin$Skeleton
 };
 
-function Summary_BulkSale_Products_Admin$StatusFilter(props) {
-  var data = props.data;
+function Summary_BulkSale_Products_Admin$StatusFilter(Props) {
+  var data = Props.data;
   return React.createElement("ol", {
               className: "grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 lg:justify-between lg:w-full lg:py-3"
             }, React.createElement(Status_BulkSale_Product.Total.make, {
@@ -38,11 +38,12 @@ var StatusFilter = {
   make: Summary_BulkSale_Products_Admin$StatusFilter
 };
 
-function Summary_BulkSale_Products_Admin(props) {
+function Summary_BulkSale_Products_Admin(Props) {
+  var summary = Props.summary;
   return React.createElement("div", {
               className: "py-3 px-7 mt-4 mx-4 shadow-gl bg-white rounded"
             }, React.createElement(Summary_BulkSale_Products_Admin$StatusFilter, {
-                  data: props.summary
+                  data: summary
                 }));
 }
 

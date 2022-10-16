@@ -24,17 +24,17 @@ var checkboxUncheckedIcon = CheckboxDimUncheckedSvg;
 
 var checkboxDisableIcon = CheckboxDisableSvg;
 
-function Cart_Buyer_Util$Hidden(props) {
-  var isNumber = props.isNumber;
-  var inputName = props.inputName;
-  var value = props.value;
-  var isNumber$1 = isNumber !== undefined ? isNumber : false;
+function Cart_Buyer_Util$Hidden(Props) {
+  var value = Props.value;
+  var inputName = Props.inputName;
+  var isNumberOpt = Props.isNumber;
+  var isNumber = isNumberOpt !== undefined ? isNumberOpt : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "all",
         shouldUnregister: true
       }, undefined);
   var setValue = match.setValue;
-  var match$1 = match.register(inputName, isNumber$1 ? ({
+  var match$1 = match.register(inputName, isNumber ? ({
             valueAsNumber: true
           }) : undefined);
   var name = match$1.name;
@@ -57,26 +57,26 @@ var Hidden = {
   make: Cart_Buyer_Util$Hidden
 };
 
-function Cart_Buyer_Util$Checkbox(props) {
-  var status = props.status;
-  var targetNames = props.targetNames;
-  var watchNames = props.watchNames;
-  var name = props.name;
-  var targetNames$1 = targetNames !== undefined ? targetNames : [];
-  var watchNames$1 = watchNames !== undefined ? watchNames : [];
+function Cart_Buyer_Util$Checkbox(Props) {
+  var name = Props.name;
+  var watchNamesOpt = Props.watchNames;
+  var targetNamesOpt = Props.targetNames;
+  var status = Props.status;
+  var watchNames = watchNamesOpt !== undefined ? watchNamesOpt : [];
+  var targetNames = targetNamesOpt !== undefined ? targetNamesOpt : [];
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var setValue = match.setValue;
   var watchValues = ReactHookForm$1.useWatch({
-        name: watchNames$1
+        name: watchNames
       });
   var handleCheckBox = function (changeFn, v) {
     return function (param) {
       return ReactEvents.interceptingHandler((function (param) {
                     Belt_Option.forEach(Js_json.decodeBoolean(v), (function (v$p) {
                             Curry._1(changeFn, Curry._1(ReactHookForm.Controller.OnChangeArg.value, !v$p));
-                            Belt_Array.forEach(targetNames$1, (function (targetName) {
+                            Belt_Array.forEach(targetNames, (function (targetName) {
                                     setValue(targetName, !v$p);
                                   }));
                           }));
@@ -85,7 +85,7 @@ function Cart_Buyer_Util$Checkbox(props) {
   };
   React.useEffect((function () {
           Belt_Option.forEach(Belt_Option.map(watchValues, (function (watchValues$p) {
-                      if (watchValues$p.length === watchNames$1.length) {
+                      if (watchValues$p.length === watchNames.length) {
                         return Belt_Array.reduce(Belt_Array.keepMap(watchValues$p, Garter_Fn.identity), true, (function (acc, cur) {
                                       if (acc) {
                                         return cur;
@@ -102,12 +102,12 @@ function Cart_Buyer_Util$Checkbox(props) {
         }), [watchValues]);
   return React.createElement(ReactHookForm$1.Controller, {
               name: name,
-              control: Caml_option.some(match.control),
+              control: match.control,
               render: (function (param) {
                   var match = param.field;
                   var value = match.value;
                   var match$1 = Cart_Buyer_Form.soldable(status);
-                  if (match$1 && targetNames$1.length !== 0) {
+                  if (match$1 && targetNames.length !== 0) {
                     return React.createElement("button", {
                                 className: "self-start w-6 h-6 min-w-max",
                                 onClick: handleCheckBox(match.onChange, value)
@@ -123,7 +123,7 @@ function Cart_Buyer_Util$Checkbox(props) {
                               src: checkboxDisableIcon
                             });
                 }),
-              defaultValue: Caml_option.some(true)
+              defaultValue: true
             });
 }
 
@@ -131,8 +131,9 @@ var Checkbox = {
   make: Cart_Buyer_Util$Checkbox
 };
 
-function Cart_Buyer_Util$SubmitDialog(props) {
-  var setOpen = props.setOpen;
+function Cart_Buyer_Util$SubmitDialog(Props) {
+  var _open = Props.open;
+  var setOpen = Props.setOpen;
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
                     children: null
@@ -155,7 +156,7 @@ function Cart_Buyer_Util$SubmitDialog(props) {
                                                 }), param);
                                   })
                               }, "확인")))),
-              _open: props._open
+              open: _open
             });
 }
 
@@ -163,9 +164,11 @@ var SubmitDialog = {
   make: Cart_Buyer_Util$SubmitDialog
 };
 
-function Cart_Buyer_Util$HiddenInputs(props) {
-  var parnetFormName = Cart_Buyer_Form.names(props.prefix);
-  return Belt_Array.mapWithIndex(props.data, (function (cartIndex, cartItem) {
+function Cart_Buyer_Util$HiddenInputs(Props) {
+  var data = Props.data;
+  var prefix = Props.prefix;
+  var parnetFormName = Cart_Buyer_Form.names(prefix);
+  return Belt_Array.mapWithIndex(data, (function (cartIndex, cartItem) {
                 var formNames = Cart_Buyer_Form.names("" + parnetFormName.cartItems + "." + String(cartIndex) + "");
                 return React.createElement("div", {
                             key: formNames.name,
@@ -228,7 +231,7 @@ var HiddenInputs = {
   make: Cart_Buyer_Util$HiddenInputs
 };
 
-function Cart_Buyer_Util$RadioButton$PlaceHolder(props) {
+function Cart_Buyer_Util$RadioButton$PlaceHolder(Props) {
   return React.createElement(Skeleton.Box.make, {
               className: "w-32 xl:w-52 min-h-[2.75rem] rounded-xl"
             });
@@ -238,28 +241,32 @@ var PlaceHolder = {
   make: Cart_Buyer_Util$RadioButton$PlaceHolder
 };
 
-function Cart_Buyer_Util$RadioButton$PC(props) {
-  var value = props.value;
-  var checked = Belt_Option.mapWithDefault(props.watchValue, false, (function (watch) {
+function Cart_Buyer_Util$RadioButton$PC(Props) {
+  var watchValue = Props.watchValue;
+  var name = Props.name;
+  var value = Props.value;
+  var checked = Belt_Option.mapWithDefault(watchValue, false, (function (watch) {
           return Caml_obj.equal(watch, value);
         }));
   return React.createElement("div", {
               className: checked ? "w-full pt-7 pb-4 border border-x-0 border-t-0 text-lg text-center text-text-L1 font-bold border-border-active cursor-pointer " : "w-full pt-7 pb-4 border border-x-0 border-t-0 text-lg text-center text-text-L2 font-bold border-border-default-L2 cursor-pointer"
-            }, props.name);
+            }, name);
 }
 
 var PC = {
   make: Cart_Buyer_Util$RadioButton$PC
 };
 
-function Cart_Buyer_Util$RadioButton$MO(props) {
-  var value = props.value;
-  var checked = Belt_Option.mapWithDefault(props.watchValue, false, (function (watch) {
+function Cart_Buyer_Util$RadioButton$MO(Props) {
+  var watchValue = Props.watchValue;
+  var name = Props.name;
+  var value = Props.value;
+  var checked = Belt_Option.mapWithDefault(watchValue, false, (function (watch) {
           return Caml_obj.equal(watch, value);
         }));
   return React.createElement("div", {
               className: checked ? "w-full pt-4 pb-4 border border-x-0 border-t-0 text-base text-center text-text-L1 font-bold border-border-active cursor-pointer " : "w-full pt-4 pb-4 border border-x-0 border-t-0 text-base text-center text-text-L2 font-bold border-border-default-L2 cursor-pointer"
-            }, props.name);
+            }, name);
 }
 
 var MO = {

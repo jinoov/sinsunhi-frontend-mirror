@@ -17,8 +17,8 @@ function formatTime(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "HH:mm");
 }
 
-function Settlement_Buyer$Item$Table(props) {
-  var settlement = props.settlement;
+function Settlement_Buyer$Item$Table(Props) {
+  var settlement = Props.settlement;
   return React.createElement("li", {
               className: "hidden lg:grid lg:grid-cols-9-gl-buyer text-gray-700"
             }, React.createElement("div", {
@@ -74,8 +74,8 @@ var Table = {
   make: Settlement_Buyer$Item$Table
 };
 
-function Settlement_Buyer$Item$Card(props) {
-  var settlement = props.settlement;
+function Settlement_Buyer$Item$Card(Props) {
+  var settlement = Props.settlement;
   return React.createElement("li", {
               className: "py-7 px-5 lg:mb-4 lg:hidden text-black-gl"
             }, React.createElement("section", {
@@ -172,8 +172,8 @@ var Item = {
   Card: Card
 };
 
-function Settlement_Buyer(props) {
-  var settlement = props.settlement;
+function Settlement_Buyer(Props) {
+  var settlement = Props.settlement;
   return React.createElement(React.Fragment, undefined, React.createElement(Settlement_Buyer$Item$Table, {
                   settlement: settlement
                 }), React.createElement(Settlement_Buyer$Item$Card, {

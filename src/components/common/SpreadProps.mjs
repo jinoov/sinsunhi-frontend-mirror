@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-function SpreadProps(props) {
-  return React.cloneElement(props.children, props.props);
+function SpreadProps(Props) {
+  return React.cloneElement(Props.children, Props.props);
 }
 
 var make = SpreadProps;

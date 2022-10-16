@@ -17,10 +17,11 @@ function Select(Status) {
     return Js_json.decodeString(Curry._1(status_encode, status));
   };
   var defaultStyle = "flex px-3 py-2 border items-center border-border-default-L1 rounded-lg h-9 text-enabled-L1 focus:outline";
-  var Select_Product_Operation_Status$Select = function (props) {
-    var disabled = props.disabled;
-    var onChange = props.onChange;
-    var status = props.status;
+  var Select_Product_Operation_Status$Select = function (Props) {
+    var status = Props.status;
+    var onChange = Props.onChange;
+    var forwardRef = Props.forwardRef;
+    var disabled = Props.disabled;
     var displayStatus = Belt_Option.getWithDefault(Belt_Option.map(status, Status.toDisplay), "운영상태 선택");
     var value = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "");
     var handleProductOperationStatus = function (e) {
@@ -32,7 +33,7 @@ function Select(Status) {
       
     };
     var tmp = {
-      ref: props.forwardRef,
+      ref: forwardRef,
       className: "block w-full h-full absolute top-0 opacity-0",
       value: value,
       onChange: handleProductOperationStatus
@@ -276,10 +277,11 @@ function toString(status) {
 
 var defaultStyle = "flex px-3 py-2 border items-center border-border-default-L1 rounded-lg h-9 text-enabled-L1 focus:outline";
 
-function Select_Product_Operation_Status$Select(props) {
-  var disabled = props.disabled;
-  var onChange = props.onChange;
-  var status = props.status;
+function Select_Product_Operation_Status$Select(Props) {
+  var status = Props.status;
+  var onChange = Props.onChange;
+  var forwardRef = Props.forwardRef;
+  var disabled = Props.disabled;
   var displayStatus = Belt_Option.getWithDefault(Belt_Option.map(status, toDisplay), "운영상태 선택");
   var value = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "");
   var handleProductOperationStatus = function (e) {
@@ -291,7 +293,7 @@ function Select_Product_Operation_Status$Select(props) {
     
   };
   var tmp = {
-    ref: props.forwardRef,
+    ref: forwardRef,
     className: "block w-full h-full absolute top-0 opacity-0",
     value: value,
     onChange: handleProductOperationStatus
@@ -353,10 +355,11 @@ function toString$1(status) {
 
 var defaultStyle$1 = "flex px-3 py-2 border items-center border-border-default-L1 rounded-lg h-9 text-enabled-L1 focus:outline";
 
-function Select_Product_Operation_Status$Select$1(props) {
-  var disabled = props.disabled;
-  var onChange = props.onChange;
-  var status = props.status;
+function Select_Product_Operation_Status$Select$1(Props) {
+  var status = Props.status;
+  var onChange = Props.onChange;
+  var forwardRef = Props.forwardRef;
+  var disabled = Props.disabled;
   var displayStatus = Belt_Option.getWithDefault(Belt_Option.map(status, toDisplay$1), "운영상태 선택");
   var value = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString$1), "");
   var handleProductOperationStatus = function (e) {
@@ -368,7 +371,7 @@ function Select_Product_Operation_Status$Select$1(props) {
     
   };
   var tmp = {
-    ref: props.forwardRef,
+    ref: forwardRef,
     className: "block w-full h-full absolute top-0 opacity-0",
     value: value,
     onChange: handleProductOperationStatus

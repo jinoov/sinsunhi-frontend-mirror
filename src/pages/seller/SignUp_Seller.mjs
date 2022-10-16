@@ -25,11 +25,13 @@ import * as VerifyPhoneNumber from "../../components/VerifyPhoneNumber.mjs";
 import * as SignUp_Seller_Form from "../../components/SignUp_Seller_Form.mjs";
 import * as SignUp_Seller_Terms from "../../components/SignUp_Seller_Terms.mjs";
 
-function SignUp_Seller$Select(props) {
-  var isError = props.isError;
-  var display = props.display;
-  var title = props.title;
-  var t = props.t;
+function SignUp_Seller$Select(Props) {
+  var t = Props.t;
+  var values = Props.values;
+  var title = Props.title;
+  var display = Props.display;
+  var onChange = Props.onChange;
+  var isError = Props.isError;
   return React.createElement("div", undefined, React.createElement("label", {
                   className: "block text-sm font-medium text-gray-700",
                   id: "select-occupation"
@@ -55,10 +57,10 @@ function SignUp_Seller$Select(props) {
                             }))), React.createElement("select", {
                       className: "absolute left-0 w-full py-3 opacity-0",
                       value: Belt_Option.getWithDefault(Belt_Option.map(t, Curry.__1(display)), "" + title + " 선택"),
-                      onChange: props.onChange
+                      onChange: onChange
                     }, React.createElement("option", {
                           value: title
-                        }, "-- " + title + " 선택 --"), Belt_Array.map(props.values, (function (value) {
+                        }, "-- " + title + " 선택 --"), Belt_Array.map(values, (function (value) {
                             return React.createElement("option", {
                                         key: value,
                                         value: value
@@ -77,7 +79,7 @@ var Select = {
   make: SignUp_Seller$Select
 };
 
-function SignUp_Seller(props) {
+function SignUp_Seller(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return /* Unverified */1;
@@ -386,6 +388,7 @@ function SignUp_Seller(props) {
                                           className: "flex-1",
                                           defaultValue: SignUp_Seller_Form.FormFields.get(form.values, /* Address */4),
                                           size: /* Large */0,
+                                          error: undefined,
                                           disabled: true
                                         }), React.createElement("span", {
                                           className: "flex w-24 h-13 ml-2"
@@ -400,7 +403,8 @@ function SignUp_Seller(props) {
                                       className: "mt-2",
                                       value: detailedAddress,
                                       onChange: handleOnChangeDetailedAddress,
-                                      size: /* Large */0
+                                      size: /* Large */0,
+                                      error: undefined
                                     })), React.createElement("div", {
                                   className: "py-4"
                                 }, React.createElement(Input.make, {
@@ -433,7 +437,8 @@ function SignUp_Seller(props) {
                                       className: "mt-2",
                                       value: passwordConfirm,
                                       onChange: handleOnChangePasswordConfirm,
-                                      size: /* Large */0
+                                      size: /* Large */0,
+                                      error: undefined
                                     }), isPasswordConfirmed(undefined) ? React.createElement("span", {
                                         className: "flex mt-1"
                                       }, React.createElement(IconError.make, {
@@ -471,7 +476,8 @@ function SignUp_Seller(props) {
                                       placeholder: tmp,
                                       value: businessRegistrationNumber,
                                       onChange: handleOnChangeBusinessRegistrationNumber,
-                                      size: /* Large */0
+                                      size: /* Large */0,
+                                      error: undefined
                                     }), React.createElement("span", {
                                       className: "block text-text-L2 -mt-1"
                                     }, "*등록번호가 없을 경우 빈칸으로 제출해 주세요.")), React.createElement(SignUp_Seller_Terms.make, {

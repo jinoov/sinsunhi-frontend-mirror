@@ -8,9 +8,10 @@ import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as Web_Order_Buyer_Form from "./Web_Order_Buyer_Form.mjs";
 import * as Web_Order_Util_Component from "./Web_Order_Util_Component.mjs";
 
-function Web_Order_Orderer_Info_Buyer$PlaceHolder(props) {
+function Web_Order_Orderer_Info_Buyer$PlaceHolder(Props) {
+  var deviceType = Props.deviceType;
   var tmp;
-  switch (props.deviceType) {
+  switch (deviceType) {
     case /* Unknown */0 :
         tmp = null;
         break;
@@ -47,14 +48,15 @@ var PlaceHolder = {
   make: Web_Order_Orderer_Info_Buyer$PlaceHolder
 };
 
-function Web_Order_Orderer_Info_Buyer(props) {
+function Web_Order_Orderer_Info_Buyer(Props) {
+  var deviceType = Props.deviceType;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var formNames = Web_Order_Buyer_Form.names(Web_Order_Buyer_Form.name);
   var toPhoneNumberForm = function (s) {
     return s.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
   };
   var tmp;
-  switch (props.deviceType) {
+  switch (deviceType) {
     case /* Unknown */0 :
         tmp = null;
         break;

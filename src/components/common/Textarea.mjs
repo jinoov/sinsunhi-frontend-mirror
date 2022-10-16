@@ -79,42 +79,53 @@ function styleBySize(style, size) {
   }
 }
 
-function Textarea(props) {
-  var disabled = props.disabled;
-  var error = props.error;
-  var size = props.size;
+function Textarea(Props) {
+  var type_ = Props.type_;
+  var name = Props.name;
+  var placeholder = Props.placeholder;
+  var className = Props.className;
+  var value = Props.value;
+  var onChange = Props.onChange;
+  var defaultValue = Props.defaultValue;
+  var size = Props.size;
+  var error = Props.error;
+  var disabled = Props.disabled;
+  var tabIndex = Props.tabIndex;
+  var rows = Props.rows;
+  var maxLength = Props.maxLength;
+  var onKeyDown = Props.onKeyDown;
   var tmp = {
     className: styleBySize(style(error, disabled), size),
-    name: props.name,
-    placeholder: props.placeholder,
-    type: props.type_
+    name: name,
+    placeholder: placeholder,
+    type: type_
   };
-  if (props.defaultValue !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(props.defaultValue);
+  if (defaultValue !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(defaultValue);
   }
-  if (props.tabIndex !== undefined) {
-    tmp.tabIndex = Caml_option.valFromOption(props.tabIndex);
+  if (tabIndex !== undefined) {
+    tmp.tabIndex = Caml_option.valFromOption(tabIndex);
   }
   if (disabled !== undefined) {
     tmp.disabled = Caml_option.valFromOption(disabled);
   }
-  if (props.maxLength !== undefined) {
-    tmp.maxLength = Caml_option.valFromOption(props.maxLength);
+  if (maxLength !== undefined) {
+    tmp.maxLength = Caml_option.valFromOption(maxLength);
   }
-  if (props.rows !== undefined) {
-    tmp.rows = Caml_option.valFromOption(props.rows);
+  if (rows !== undefined) {
+    tmp.rows = Caml_option.valFromOption(rows);
   }
-  if (props.value !== undefined) {
-    tmp.value = Caml_option.valFromOption(props.value);
+  if (value !== undefined) {
+    tmp.value = Caml_option.valFromOption(value);
   }
-  if (props.onKeyDown !== undefined) {
-    tmp.onKeyDown = Caml_option.valFromOption(props.onKeyDown);
+  if (onKeyDown !== undefined) {
+    tmp.onKeyDown = Caml_option.valFromOption(onKeyDown);
   }
-  if (props.onChange !== undefined) {
-    tmp.onChange = Caml_option.valFromOption(props.onChange);
+  if (onChange !== undefined) {
+    tmp.onChange = Caml_option.valFromOption(onChange);
   }
   return React.createElement("label", {
-              className: Belt_Option.mapWithDefault(props.className, "flex flex-col", (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, "flex flex-col", (function (className$p) {
                       return Cx.cx([
                                   "flex flex-col",
                                   className$p

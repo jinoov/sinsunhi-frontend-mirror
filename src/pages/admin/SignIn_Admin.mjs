@@ -17,7 +17,7 @@ import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import * as LocalStorageHooks from "../../utils/LocalStorageHooks.mjs";
 import * as SignIn_Admin_Form from "../../components/SignIn_Admin_Form.mjs";
 
-function SignIn_Admin(props) {
+function SignIn_Admin(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return true;

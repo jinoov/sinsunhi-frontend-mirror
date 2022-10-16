@@ -4,13 +4,13 @@ import * as React from "react";
 import * as Web_Order_Buyer_Form from "./Web_Order_Buyer_Form.mjs";
 import * as Web_Order_Inputs_Buyer from "./Web_Order_Inputs_Buyer.mjs";
 
-function Web_Order_Delivery_Form(props) {
-  var watchValue = props.watchValue;
+function Web_Order_Delivery_Form(Props) {
+  var watchValue = Props.watchValue;
+  var prefix = Props.prefix;
+  var deviceType = Props.deviceType;
   if (watchValue === undefined) {
     return null;
   }
-  var deviceType = props.deviceType;
-  var prefix = props.prefix;
   var decode$p = Web_Order_Buyer_Form.deliveryType_decode(watchValue);
   if (decode$p.TAG !== /* Ok */0) {
     return null;

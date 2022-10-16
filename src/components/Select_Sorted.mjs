@@ -51,7 +51,8 @@ function formatSorted(sorted) {
   }
 }
 
-function Select_Sorted(props) {
+function Select_Sorted(Props) {
+  var className = Props.className;
   var router = Router.useRouter();
   var onChange = function (e) {
     var sorted = e.target.value;
@@ -63,8 +64,8 @@ function Select_Sorted(props) {
     return Belt_Result.mapWithDefault(parseSorted(q), "최신순", formatSorted);
   };
   var tmp = {};
-  if (props.className !== undefined) {
-    tmp.className = Caml_option.valFromOption(props.className);
+  if (className !== undefined) {
+    tmp.className = Caml_option.valFromOption(className);
   }
   return React.createElement("span", tmp, React.createElement("label", {
                   className: "block relative"

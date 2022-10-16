@@ -76,9 +76,9 @@ var Mutation = {
   use: use
 };
 
-function BulkSale_Producer_Memo_Update_Button(props) {
-  var memoData = props.memoData;
-  var applicationId = props.applicationId;
+function BulkSale_Producer_Memo_Update_Button(Props) {
+  var applicationId = Props.applicationId;
+  var memoData = Props.memoData;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
@@ -134,7 +134,8 @@ function BulkSale_Producer_Memo_Update_Button(props) {
                                                     return value;
                                                   });
                                       }),
-                                    size: /* XLarge */0
+                                    size: /* XLarge */0,
+                                    error: undefined
                                   }))), React.createElement("div", {
                             className: "flex justify-center items-center mt-8"
                           }, React.createElement(ReactDialog.Close, {

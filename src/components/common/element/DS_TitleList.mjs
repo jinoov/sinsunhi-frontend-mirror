@@ -6,18 +6,22 @@ import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 
-function DS_TitleList$Left$Title2Subtitle1(props) {
-  var subTitleStyle = props.subTitleStyle;
+function DS_TitleList$Left$Title2Subtitle1(Props) {
+  var title1 = Props.title1;
+  var title2 = Props.title2;
+  var titleStyle = Props.titleStyle;
+  var subTitle = Props.subTitle;
+  var subTitleStyle = Props.subTitleStyle;
   return React.createElement("div", undefined, React.createElement("div", {
-                  className: Belt_Option.mapWithDefault(props.titleStyle, "flex justify-start items-center space-x-2 leading-7 font-bold", (function (style) {
+                  className: Belt_Option.mapWithDefault(titleStyle, "flex justify-start items-center space-x-2 leading-7 font-bold", (function (style) {
                           return Cn.make([
                                       style,
                                       "flex justify-start items-center space-x-2 leading-7"
                                     ]);
                         }))
-                }, React.createElement("span", undefined, props.title1), React.createElement("div", {
+                }, React.createElement("span", undefined, title1), React.createElement("div", {
                       className: "border-r-[2px] border-gray-400 h-4"
-                    }), React.createElement("span", undefined, props.title2)), Belt_Option.mapWithDefault(props.subTitle, null, (function (subTitle$p) {
+                    }), React.createElement("span", undefined, title2)), Belt_Option.mapWithDefault(subTitle, null, (function (subTitle$p) {
                     return React.createElement("p", {
                                 className: Belt_Option.mapWithDefault(subTitleStyle, "mt-3 text-gray-500 text-sm leading-4 whitespace-pre-line", (function (style) {
                                         return Cn.make([
@@ -33,24 +37,29 @@ var Title2Subtitle1 = {
   make: DS_TitleList$Left$Title2Subtitle1
 };
 
-function DS_TitleList$Left$Title3Subtitle1(props) {
-  var subTitleStyle = props.subTitleStyle;
+function DS_TitleList$Left$Title3Subtitle1(Props) {
+  var title1 = Props.title1;
+  var title2 = Props.title2;
+  var title3 = Props.title3;
+  var titleStyle = Props.titleStyle;
+  var subTitle = Props.subTitle;
+  var subTitleStyle = Props.subTitleStyle;
   return React.createElement("div", undefined, React.createElement("div", {
-                  className: Belt_Option.mapWithDefault(props.titleStyle, "flex justify-start items-center space-x-2 leading-7 font-bold", (function (style) {
+                  className: Belt_Option.mapWithDefault(titleStyle, "flex justify-start items-center space-x-2 leading-7 font-bold", (function (style) {
                           return Cn.make([
                                       style,
                                       "flex justify-start items-center space-x-2 leading-7"
                                     ]);
                         }))
-                }, React.createElement("span", undefined, props.title1), Belt_Option.mapWithDefault(props.title2, null, (function (title2$p) {
+                }, React.createElement("span", undefined, title1), Belt_Option.mapWithDefault(title2, null, (function (title2$p) {
                         return React.createElement(React.Fragment, undefined, React.createElement("div", {
                                         className: "border-r-[2px] border-gray-400 h-4"
                                       }), React.createElement("span", undefined, title2$p));
-                      })), Belt_Option.mapWithDefault(props.title3, null, (function (title3$p) {
+                      })), Belt_Option.mapWithDefault(title3, null, (function (title3$p) {
                         return React.createElement(React.Fragment, undefined, React.createElement("div", {
                                         className: "border-r-[2px] border-gray-400 h-4"
                                       }), React.createElement("span", undefined, title3$p));
-                      }))), Belt_Option.mapWithDefault(props.subTitle, null, (function (subTitle$p) {
+                      }))), Belt_Option.mapWithDefault(subTitle, null, (function (subTitle$p) {
                     return React.createElement("p", {
                                 className: Belt_Option.mapWithDefault(subTitleStyle, "mt-3 text-gray-500 text-sm leading-4 whitespace-pre-line", (function (style) {
                                         return Cn.make([
@@ -66,10 +75,14 @@ var Title3Subtitle1 = {
   make: DS_TitleList$Left$Title3Subtitle1
 };
 
-function DS_TitleList$Left$TitleSubtitle1(props) {
-  var subTitleStyle = props.subTitleStyle;
+function DS_TitleList$Left$TitleSubtitle1(Props) {
+  var title1 = Props.title1;
+  var title2 = Props.title2;
+  var titleStyle = Props.titleStyle;
+  var subTitle = Props.subTitle;
+  var subTitleStyle = Props.subTitleStyle;
   return React.createElement("div", undefined, React.createElement("div", {
-                  className: Belt_Option.mapWithDefault(props.titleStyle, "flex flex-col justify-start items-start text-xl font-bold text-text-L1 leading-8 tracking-tight", (function (style) {
+                  className: Belt_Option.mapWithDefault(titleStyle, "flex flex-col justify-start items-start text-xl font-bold text-text-L1 leading-8 tracking-tight", (function (style) {
                           return Cn.make([
                                       style,
                                       "flex flex-col justify-start items-start tracking-tight"
@@ -77,9 +90,9 @@ function DS_TitleList$Left$TitleSubtitle1(props) {
                         }))
                 }, React.createElement("span", {
                       className: "truncate"
-                    }, props.title1), Belt_Option.mapWithDefault(props.title2, null, (function (x) {
+                    }, title1), Belt_Option.mapWithDefault(title2, null, (function (x) {
                         return React.createElement("span", undefined, x);
-                      }))), Belt_Option.mapWithDefault(props.subTitle, null, (function (x) {
+                      }))), Belt_Option.mapWithDefault(subTitle, null, (function (x) {
                     return React.createElement("p", {
                                 className: Belt_Option.mapWithDefault(subTitleStyle, "mt-1 text-text-L2 text-sm leading-5 tracking-tight whitespace-pre-line", (function (style) {
                                         return Cn.make([
@@ -101,42 +114,47 @@ var Left = {
   TitleSubtitle1: TitleSubtitle1
 };
 
-function DS_TitleList$Common$IconText1$Root(props) {
+function DS_TitleList$Common$IconText1$Root(Props) {
+  var children = Props.children;
+  var className = Props.className;
   var defaultStyle = "flex justify-center items-center space-x-1 cursor-pointer";
   return React.createElement("div", {
-              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, props.children);
+            }, children);
 }
 
 var Root = {
   make: DS_TitleList$Common$IconText1$Root
 };
 
-function DS_TitleList$Common$IconText1$Icon(props) {
+function DS_TitleList$Common$IconText1$Icon(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "flex justify-start items-center"
-            }, props.children);
+            }, children);
 }
 
 var Icon = {
   make: DS_TitleList$Common$IconText1$Icon
 };
 
-function DS_TitleList$Common$IconText1$Text(props) {
+function DS_TitleList$Common$IconText1$Text(Props) {
+  var children = Props.children;
+  var className = Props.className;
   var defaultStyle = "truncate";
   return React.createElement("span", {
-              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, props.children);
+            }, children);
 }
 
 var $$Text = {
@@ -149,67 +167,76 @@ var IconText1 = {
   $$Text: $$Text
 };
 
-function DS_TitleList$Common$TextIcon1$Root(props) {
+function DS_TitleList$Common$TextIcon1$Root(Props) {
+  var children = Props.children;
+  var className = Props.className;
+  var onClick = Props.onClick;
   var defaultStyle = "flex justify-start items-center space-x-1 cursor-pointer";
   var tmp = {
-    className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+    className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
             return Cx.cx([
                         defaultStyle,
                         className$p
                       ]);
           }))
   };
-  if (props.onClick !== undefined) {
-    tmp.onClick = Caml_option.valFromOption(props.onClick);
+  if (onClick !== undefined) {
+    tmp.onClick = Caml_option.valFromOption(onClick);
   }
-  return React.createElement("div", tmp, props.children);
+  return React.createElement("div", tmp, children);
 }
 
 var Root$1 = {
   make: DS_TitleList$Common$TextIcon1$Root
 };
 
-function DS_TitleList$Common$TextIcon1$Icon(props) {
+function DS_TitleList$Common$TextIcon1$Icon(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "flex justify-start items-center"
-            }, props.children);
+            }, children);
 }
 
 var Icon$1 = {
   make: DS_TitleList$Common$TextIcon1$Icon
 };
 
-function DS_TitleList$Common$TextIcon1$Text(props) {
+function DS_TitleList$Common$TextIcon1$Text(Props) {
+  var children = Props.children;
+  var className = Props.className;
   var defaultStyle = "pl-2";
   return React.createElement("span", {
-              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, props.children);
+            }, children);
 }
 
 var $$Text$1 = {
   make: DS_TitleList$Common$TextIcon1$Text
 };
 
-function DS_TitleList$Common$TextIcon1(props) {
-  var fontStyle = props.fontStyle;
-  var fontStyle$1 = fontStyle !== undefined ? fontStyle : "";
+function DS_TitleList$Common$TextIcon1(Props) {
+  var children = Props.children;
+  var label = Props.label;
+  var onClick = Props.onClick;
+  var fontStyleOpt = Props.fontStyle;
+  var fontStyle = fontStyleOpt !== undefined ? fontStyleOpt : "";
   var tmp = {
     className: "flex justify-start items-center space-x-1 cursor-pointer"
   };
-  if (props.onClick !== undefined) {
-    tmp.onClick = Caml_option.valFromOption(props.onClick);
+  if (onClick !== undefined) {
+    tmp.onClick = Caml_option.valFromOption(onClick);
   }
   return React.createElement("div", tmp, React.createElement("span", {
                   className: Cn.make([
-                        fontStyle$1,
+                        fontStyle,
                         "truncate"
                       ])
-                }, props.label), props.children);
+                }, label), children);
 }
 
 var TextIcon1 = {

@@ -61,13 +61,14 @@ var RequestQuotationGtm = {
   make: make
 };
 
-function PDP_Matching_Submit_Buyer$MO(props) {
-  var selectedGroup = props.selectedGroup;
-  var setShowModal = props.setShowModal;
+function PDP_Matching_Submit_Buyer$MO(Props) {
+  var setShowModal = Props.setShowModal;
+  var selectedGroup = Props.selectedGroup;
+  var query = Props.query;
   var buttonText = "최저가 견적받기";
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use(props.query);
+  var match = use(query);
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;
@@ -115,7 +116,7 @@ function PDP_Matching_Submit_Buyer$MO(props) {
         }, buttonText);
   }
   return React.createElement(PDP_CTA_Container_Buyer.make, {
-              children: Caml_option.some(tmp)
+              children: tmp
             });
 }
 

@@ -2,10 +2,11 @@
 
 import * as React from "react";
 
-function MyInfo_Capsule_Buyer(props) {
+function MyInfo_Capsule_Buyer(Props) {
+  var content = Props.content;
   return React.createElement("div", {
               className: "text-primary bg-primary-light px-2 rounded text-sm"
-            }, props.content);
+            }, content);
 }
 
 var make = MyInfo_Capsule_Buyer;

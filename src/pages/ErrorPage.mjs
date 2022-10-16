@@ -4,7 +4,7 @@ import * as React from "react";
 import Head from "next/head";
 import * as IconNotFound from "../components/svgs/IconNotFound.mjs";
 
-function ErrorPage(props) {
+function ErrorPage(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "신선하이")
                 }), React.createElement("div", {

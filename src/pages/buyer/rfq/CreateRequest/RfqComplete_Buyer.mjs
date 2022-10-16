@@ -11,7 +11,7 @@ import * as Authorization from "../../../../utils/Authorization.mjs";
 import * as DS_TopNavigation from "../../../../components/common/container/DS_TopNavigation.mjs";
 import * as DS_ButtonContainer from "../../../../components/common/container/DS_ButtonContainer.mjs";
 
-function RfqComplete_Buyer$Complete(props) {
+function RfqComplete_Buyer$Complete(Props) {
   var router = Router.useRouter();
   return React.createElement("div", {
               className: "relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl pt-11"
@@ -58,7 +58,7 @@ var Complete = {
   make: RfqComplete_Buyer$Complete
 };
 
-function RfqComplete_Buyer(props) {
+function RfqComplete_Buyer(Props) {
   return React.createElement(Authorization.Buyer.make, {
               children: React.createElement(RfqComplete_Buyer$Complete, {}),
               title: "바이어 견적 요청"

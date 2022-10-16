@@ -293,8 +293,8 @@ var Skeleton = Caml_module.init_mod([
         ]]
     });
 
-function Search_Product_Category$Skeleton(props) {
-  var placeholders = props.placeholders;
+function Search_Product_Category$Skeleton(Props) {
+  var placeholders = Props.placeholders;
   var placeholder$p = Garter_Array.first(placeholders);
   if (placeholder$p !== undefined) {
     return React.createElement(React.Fragment, undefined, React.createElement("div", {
@@ -362,27 +362,32 @@ var $$Selection = Caml_module.init_mod([
         ]]
     });
 
-function Search_Product_Category$Category(props) {
-  var placeholders = props.placeholders;
-  var categoryNamePrefixes = props.categoryNamePrefixes;
+function Search_Product_Category$Category(Props) {
+  var parentId = Props.parentId;
+  var control = Props.control;
+  var name = Props.name;
+  var categoryNamePrefixes = Props.categoryNamePrefixes;
+  var placeholders = Props.placeholders;
+  var disabled = Props.disabled;
+  var required = Props.required;
   var prefix = Garter_Array.first(categoryNamePrefixes);
   var placeholder = Garter_Array.first(placeholders);
   if (prefix !== undefined && placeholder !== undefined) {
     return React.createElement(React.Suspense, {
-                children: Caml_option.some(React.createElement($$Selection.make, {
-                          parentId: props.parentId,
-                          control: props.control,
-                          name: props.name,
-                          prefix: prefix,
-                          placeholder: placeholder,
-                          categoryNamePrefixes: categoryNamePrefixes,
-                          placeholders: placeholders,
-                          disabled: props.disabled,
-                          required: props.required
-                        })),
-                fallback: Caml_option.some(React.createElement(Skeleton.make, {
-                          placeholders: placeholders
-                        }))
+                children: React.createElement($$Selection.make, {
+                      parentId: parentId,
+                      control: control,
+                      name: name,
+                      prefix: prefix,
+                      placeholder: placeholder,
+                      categoryNamePrefixes: categoryNamePrefixes,
+                      placeholders: placeholders,
+                      disabled: disabled,
+                      required: required
+                    }),
+                fallback: React.createElement(Skeleton.make, {
+                      placeholders: placeholders
+                    })
               });
   } else {
     return null;
@@ -399,14 +404,16 @@ Caml_module.update_mod({
       make: Search_Product_Category$Category
     });
 
-function Search_Product_Category$Selection(props) {
-  var required = props.required;
-  var disabled = props.disabled;
-  var placeholder = props.placeholder;
-  var prefix = props.prefix;
-  var name = props.name;
-  var control = props.control;
-  var parentId = props.parentId;
+function Search_Product_Category$Selection(Props) {
+  var parentId = Props.parentId;
+  var control = Props.control;
+  var name = Props.name;
+  var prefix = Props.prefix;
+  var placeholder = Props.placeholder;
+  var categoryNamePrefixes = Props.categoryNamePrefixes;
+  var placeholders = Props.placeholders;
+  var disabled = Props.disabled;
+  var required = Props.required;
   var match = use({
         parentId: parentId
       }, undefined, undefined, undefined, undefined);
@@ -443,7 +450,7 @@ function Search_Product_Category$Selection(props) {
                         className: "absolute w-full"
                       }, React.createElement(ReactHookForm$1.Controller, {
                             name: "" + name + "." + prefix + "",
-                            control: Caml_option.some(control),
+                            control: control,
                             render: (function (param) {
                                 var match = param.field;
                                 var onChange = match.onChange;
@@ -472,11 +479,11 @@ function Search_Product_Category$Selection(props) {
                                                             });
                                                 })
                                             },
-                                            ref: Caml_option.some(match.ref)
+                                            ref: match.ref
                                           });
                               }),
-                            defaultValue: Caml_option.some(ReactSelect.encoderRule(/* NotSelected */0)),
-                            rules: Caml_option.some(ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)),
+                            defaultValue: ReactSelect.encoderRule(/* NotSelected */0),
+                            rules: ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined),
                             shouldUnregister: true
                           }))), React.createElement(Category.make, {
                     parentId: Belt_Option.flatMap(selectedId, (function (prim) {
@@ -488,8 +495,8 @@ function Search_Product_Category$Selection(props) {
                           })),
                     control: control,
                     name: name,
-                    categoryNamePrefixes: Garter_Array.sliceToEnd(props.categoryNamePrefixes, 1),
-                    placeholders: Garter_Array.sliceToEnd(props.placeholders, 1),
+                    categoryNamePrefixes: Garter_Array.sliceToEnd(categoryNamePrefixes, 1),
+                    placeholders: Garter_Array.sliceToEnd(placeholders, 1),
                     disabled: disabled,
                     required: required
                   }));
@@ -508,7 +515,9 @@ Caml_module.update_mod({
       make: Search_Product_Category$Selection
     });
 
-function Search_Product_Category(props) {
+function Search_Product_Category(Props) {
+  var control = Props.control;
+  var name = Props.name;
   var categoryNamePrefixes = [
     "c1",
     "c2",
@@ -525,8 +534,8 @@ function Search_Product_Category(props) {
   ];
   return React.createElement(Category.make, {
               parentId: undefined,
-              control: props.control,
-              name: props.name,
+              control: control,
+              name: name,
               categoryNamePrefixes: categoryNamePrefixes,
               placeholders: placeholders,
               disabled: false,

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function SectionMain_PC_Title$Skeleton(props) {
+function SectionMain_PC_Title$Skeleton(Props) {
   return React.createElement("div", {
               className: "mt-20 mb-8 mx-auto w-[1280px] "
             }, React.createElement("div", {
@@ -14,10 +14,11 @@ var Skeleton = {
   make: SectionMain_PC_Title$Skeleton
 };
 
-function SectionMain_PC_Title(props) {
+function SectionMain_PC_Title(Props) {
+  var title = Props.title;
   return React.createElement("div", {
               className: "text-[32px] w-[1280px] mx-auto font-bold leading-[44px] mt-20 mb-8"
-            }, React.createElement("h1", undefined, React.createElement("span", undefined, props.title)));
+            }, React.createElement("h1", undefined, React.createElement("span", undefined, title)));
 }
 
 var make = SectionMain_PC_Title;

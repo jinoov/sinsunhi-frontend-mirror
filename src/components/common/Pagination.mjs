@@ -13,11 +13,13 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
 
-function Pagination$Template(props) {
-  var handleOnChangePage = props.handleOnChangePage;
-  var pageDisplySize = props.pageDisplySize;
-  var cur = props.cur;
-  var totalPage = Js_math.ceil_int(props.total / props.itemPerPage);
+function Pagination$Template(Props) {
+  var cur = Props.cur;
+  var pageDisplySize = Props.pageDisplySize;
+  var itemPerPage = Props.itemPerPage;
+  var total = Props.total;
+  var handleOnChangePage = Props.handleOnChangePage;
+  var totalPage = Js_math.ceil_int(total / itemPerPage);
   var nth = Caml_int32.div(cur - 1 | 0, pageDisplySize);
   var start = Math.imul(pageDisplySize, nth) + 1 | 0;
   var end = Math.min((start + pageDisplySize | 0) - 1 | 0, totalPage);
@@ -82,9 +84,11 @@ var Template = {
   make: Pagination$Template
 };
 
-function Pagination(props) {
-  var onChangePage = props.onChangePage;
-  var itemPerPage = props.itemPerPage;
+function Pagination(Props) {
+  var pageDisplySize = Props.pageDisplySize;
+  var itemPerPage = Props.itemPerPage;
+  var total = Props.total;
+  var onChangePage = Props.onChangePage;
   var router = Router.useRouter();
   var cur = Belt_Option.getWithDefault(Belt_Option.flatMap(Js_dict.get(router.query, "offset"), (function (offset$p) {
               return Belt_Option.map(Belt_Int.fromString(offset$p), (function (offset$p$p) {
@@ -106,9 +110,9 @@ function Pagination(props) {
   };
   return React.createElement(Pagination$Template, {
               cur: cur,
-              pageDisplySize: props.pageDisplySize,
+              pageDisplySize: pageDisplySize,
               itemPerPage: itemPerPage,
-              total: props.total,
+              total: total,
               handleOnChangePage: handleOnChangePage
             });
 }

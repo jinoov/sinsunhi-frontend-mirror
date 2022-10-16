@@ -2,8 +2,7 @@
 
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as Hoverable from "./common/Hoverable.mjs";
 import * as IconArrow from "./svgs/IconArrow.mjs";
 import * as IconClose from "./svgs/IconClose.mjs";
@@ -35,7 +34,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(ShopCategorySelectBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, ShopCategorySelectBuyerQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -107,30 +106,33 @@ var Query = {
   retain: retain
 };
 
-function ShopCategorySelect_Buyer$Mobile$Sub(props) {
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement(Link, {
-                  href: "/categories/" + props.parentId + "",
-                  children: React$1.createElement("button", {
+function ShopCategorySelect_Buyer$Mobile$Sub(Props) {
+  var parentId = Props.parentId;
+  var displayCategories = Props.displayCategories;
+  return React.createElement(React.Fragment, undefined, React.createElement(Link, {
+                  href: "/categories/" + parentId + "",
+                  children: React.createElement("button", {
                         className: "text-left px-5 py-3 bg-white flex justify-between items-center active:bg-bg-pressed-L2"
-                      }, React$1.createElement("span", {
+                      }, React.createElement("span", {
                             className: "font-bold"
-                          }, "전체보기"), React$1.createElement(IconArrow.make, {
+                          }, "전체보기"), React.createElement(IconArrow.make, {
                             height: "16",
                             width: "16",
                             stroke: "#B2B2B2"
                           }))
-                }), Belt_Array.map(props.displayCategories, (function (param) {
+                }), Belt_Array.map(displayCategories, (function (param) {
                     var id = param.id;
-                    return React.createElementWithKey(Link, {
+                    return React.createElement(Link, {
                                 href: "/categories/" + id + "",
-                                children: React$1.createElement("button", {
+                                children: React.createElement("button", {
                                       className: "text-left px-5 py-3 bg-white flex justify-between items-center active:bg-bg-pressed-L2"
-                                    }, param.name, React$1.createElement(IconArrow.make, {
+                                    }, param.name, React.createElement(IconArrow.make, {
                                           height: "16",
                                           width: "16",
                                           stroke: "#B2B2B2"
-                                        }))
-                              }, id);
+                                        })),
+                                key: id
+                              });
                   })));
 }
 
@@ -138,16 +140,17 @@ var Sub = {
   make: ShopCategorySelect_Buyer$Mobile$Sub
 };
 
-function ShopCategorySelect_Buyer$Mobile(props) {
-  var displayCategories = props.displayCategories;
-  var match = React$1.useState(function () {
+function ShopCategorySelect_Buyer$Mobile(Props) {
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var match = React.useState(function () {
         return false;
       });
   var setOpen = match[1];
   var defaultParentId = Belt_Option.map(Belt_Array.get(displayCategories, 0), (function (param) {
           return param.id;
         }));
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         return defaultParentId;
       });
   var setParentId = match$1[1];
@@ -168,47 +171,47 @@ function ShopCategorySelect_Buyer$Mobile(props) {
                   }), param);
     };
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("button", {
+  return React.createElement(React.Fragment, undefined, React.createElement("button", {
                   onClick: (function (param) {
                       setOpen(function (param) {
                             return true;
                           });
                     })
-                }, React$1.createElement(IconHamburger.make, {
+                }, React.createElement(IconHamburger.make, {
                       width: "24",
                       height: "24",
                       fill: "#12B564"
-                    })), match[0] ? React$1.createElement(ReactRemoveScroll.RemoveScroll, {
-                    children: React$1.createElement("div", {
+                    })), match[0] ? React.createElement(ReactRemoveScroll.RemoveScroll, {
+                    children: React.createElement("div", {
                           className: Cx.cx(["w-full h-full fixed top-0 left-0 bg-gray-50 z-20 overflow-y-auto"])
-                        }, React$1.createElement("div", {
+                        }, React.createElement("div", {
                               className: "w-full max-w-3xl mx-auto bg-white min-h-full"
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "relative overflow-auto"
-                                }, React$1.createElement("div", {
+                                }, React.createElement("div", {
                                       className: "h-14 text-center py-4 px-5"
-                                    }, React$1.createElement("span", {
+                                    }, React.createElement("span", {
                                           className: "font-bold text-xl"
-                                        }, "카테고리"), React$1.createElement("button", {
+                                        }, "카테고리"), React.createElement("button", {
                                           className: "float-right",
                                           onClick: (function (param) {
                                               setOpen(function (param) {
                                                     return false;
                                                   });
                                             })
-                                        }, React$1.createElement(IconClose.make, {
+                                        }, React.createElement(IconClose.make, {
                                               height: "24",
                                               width: "24",
                                               fill: "#262626"
-                                            }))), React$1.createElement("div", {
+                                            }))), React.createElement("div", {
                                       className: "flex flex-col"
-                                    }, React$1.createElement("div", {
+                                    }, React.createElement("div", {
                                           className: "grid grid-cols-10 border-y min-h-[432px] text-[15px]"
-                                        }, React$1.createElement("div", {
+                                        }, React.createElement("div", {
                                               className: "col-span-4 flex flex-col bg-surface"
-                                            }, React$1.createElement(Link, {
+                                            }, React.createElement(Link, {
                                                   href: "/products",
-                                                  children: React$1.createElement("a", {
+                                                  children: React.createElement("a", {
                                                         className: Cx.cx([
                                                               "text-left px-5 py-3 border-b last:border-none active:bg-bg-pressed-L2",
                                                               clickedStyle("buyer-products")
@@ -216,7 +219,7 @@ function ShopCategorySelect_Buyer$Mobile(props) {
                                                       }, "전체 상품")
                                                 }), Belt_Array.map(displayCategories, (function (param) {
                                                     var id = param.id;
-                                                    return React$1.createElement("button", {
+                                                    return React.createElement("button", {
                                                                 key: id,
                                                                 className: Cx.cx([
                                                                       "text-left px-5 py-3 border-b last:border-none active:bg-bg-pressed-L2",
@@ -224,10 +227,10 @@ function ShopCategorySelect_Buyer$Mobile(props) {
                                                                     ]),
                                                                 onClick: makeOnClick(id)
                                                               }, param.name);
-                                                  }))), React$1.createElement("div", {
+                                                  }))), React.createElement("div", {
                                               className: "col-span-6 flex flex-col border-none"
                                             }, Belt_Option.mapWithDefault(parentId, null, (function (parentId$p) {
-                                                    return React$1.createElement(ShopCategorySelect_Buyer$Mobile$Sub, {
+                                                    return React.createElement(ShopCategorySelect_Buyer$Mobile$Sub, {
                                                                 parentId: parentId$p,
                                                                 displayCategories: Belt_Option.mapWithDefault(Garter_Array.first(Belt_Array.keep(displayCategories, (function (displayCategory) {
                                                                                 return displayCategory.id === parentId$p;
@@ -235,19 +238,20 @@ function ShopCategorySelect_Buyer$Mobile(props) {
                                                                         return displayCategory.children;
                                                                       }))
                                                               });
-                                                  })))), Belt_Array.map(props.gnbBanners, (function (param) {
-                                            return React.createElementWithKey(Link, {
+                                                  })))), Belt_Array.map(gnbBanners, (function (param) {
+                                            return React.createElement(Link, {
                                                         href: param.landingUrl,
-                                                        children: React$1.createElement("a", {
+                                                        children: React.createElement("a", {
                                                               className: "py-4 px-5 flex justify-between active:bg-bg-pressed-L2",
                                                               rel: "noopener noreferer",
                                                               target: param.isNewTabMobile ? "_blank" : ""
-                                                            }, React$1.createElement("div", undefined, param.title), React$1.createElement(IconArrow.make, {
+                                                            }, React.createElement("div", undefined, param.title), React.createElement(IconArrow.make, {
                                                                   height: "24",
                                                                   width: "24",
                                                                   stroke: "#B2B2B2"
-                                                                }))
-                                                      }, param.id);
+                                                                })),
+                                                        key: param.id
+                                                      });
                                           }))))))
                   }) : null);
 }
@@ -257,34 +261,35 @@ var Mobile = {
   make: ShopCategorySelect_Buyer$Mobile
 };
 
-function ShopCategorySelect_Buyer$PC$Sub(props) {
-  var displayCategories = props.displayCategories;
+function ShopCategorySelect_Buyer$PC$Sub(Props) {
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   if (displayCategories.length !== 0) {
-    return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+    return React.createElement(React.Fragment, undefined, React.createElement("div", {
                     className: "w-[222px] px-8 py-5 flex flex-col"
                   }, Belt_Array.map(displayCategories, (function (param) {
                           var id = param.id;
-                          return React.createElementWithKey(Hoverable.make, {
+                          return React.createElement(Hoverable.make, {
                                       className: "mt-3",
-                                      children: React$1.createElement("div", {
+                                      children: React.createElement("div", {
                                             className: "w-full flex items-center justify-between group cursor-pointer group",
                                             onClick: (function (param) {
                                                 return ReactEvents.interceptingHandler((function (param) {
                                                               router.push("/categories/" + id + "");
                                                             }), param);
                                               })
-                                          }, React$1.createElement("span", {
+                                          }, React.createElement("span", {
                                                 className: "text-[15px] text-gray-800 group-hover:text-green-600 group-hover:font-bold"
-                                              }, param.name), React$1.createElement("span", {
+                                              }, param.name), React.createElement("span", {
                                                 className: "w-4 h-4"
-                                              }, React$1.createElement(IconArrow.make, {
+                                              }, React.createElement(IconArrow.make, {
                                                     height: "16",
                                                     width: "16",
                                                     stroke: "#12B564",
                                                     className: "hidden group-hover:block"
-                                                  })))
-                                    }, id);
+                                                  }))),
+                                      key: id
+                                    });
                         }))));
   } else {
     return null;
@@ -295,14 +300,14 @@ var Sub$1 = {
   make: ShopCategorySelect_Buyer$PC$Sub
 };
 
-function ShopCategorySelect_Buyer$PC(props) {
-  var displayCategories = props.displayCategories;
+function ShopCategorySelect_Buyer$PC(Props) {
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  var match = React$1.useState(function () {
+  var match = React.useState(function () {
         return false;
       });
   var setIsHovered = match[1];
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         
       });
   var setHoveredId = match$1[1];
@@ -320,36 +325,36 @@ function ShopCategorySelect_Buyer$PC(props) {
   var tmp;
   if (match[0]) {
     var partial_arg = [];
-    tmp = React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+    tmp = React.createElement(React.Fragment, undefined, React.createElement("div", {
               className: "flex items-center w-56 h-[54px] px-7 whitespace-nowrap border-t border-x border-primary"
-            }, React$1.createElement(IconHamburger.make, {
+            }, React.createElement(IconHamburger.make, {
                   width: "24",
                   height: "24",
                   fill: "#12B564"
-                }), React$1.createElement("span", {
+                }), React.createElement("span", {
                   className: "mx-2 text-lg font-bold text-primary"
-                }, "전체 카테고리"), React$1.createElement(IconArrow.make, {
+                }, "전체 카테고리"), React.createElement(IconArrow.make, {
                   height: "20",
                   width: "20",
                   fill: "#12B564",
                   className: "-rotate-90"
-                })), React$1.createElement("div", {
+                })), React.createElement("div", {
               className: "relative"
-            }, React$1.createElement("div", {
+            }, React.createElement("div", {
                   className: "h-[434px] bg-white absolute top-0 border border-green-500 flex divide-x"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "w-[222px] px-8 py-5 flex flex-col"
-                    }, React$1.createElement(Hoverable.make, {
+                    }, React.createElement(Hoverable.make, {
                           className: "mt-3",
-                          children: React$1.createElement(Link, {
+                          children: React.createElement(Link, {
                                 href: "/products",
-                                children: React$1.createElement("a", {
+                                children: React.createElement("a", {
                                       className: "w-full flex items-center justify-between group cursor-pointer group"
-                                    }, React$1.createElement("span", {
+                                    }, React.createElement("span", {
                                           className: "text-[15px] text-gray-800 group-hover:text-green-600 group-hover:font-bold"
-                                        }, "전체 상품"), React$1.createElement("span", {
+                                        }, "전체 상품"), React.createElement("span", {
                                           className: "w-4 h-4"
-                                        }, React$1.createElement(IconArrow.make, {
+                                        }, React.createElement(IconArrow.make, {
                                               height: "16",
                                               width: "16",
                                               stroke: "#12B564",
@@ -362,20 +367,20 @@ function ShopCategorySelect_Buyer$PC(props) {
                         }), Belt_Array.map(displayCategories, (function (param) {
                             var id = param.id;
                             var children = param.children;
-                            return React.createElementWithKey(Hoverable.make, {
+                            return React.createElement(Hoverable.make, {
                                         className: "mt-3",
-                                        children: React$1.createElement("div", {
+                                        children: React.createElement("div", {
                                               className: "w-full flex items-center justify-between group cursor-pointer group",
                                               onClick: (function (param) {
                                                   return ReactEvents.interceptingHandler((function (param) {
                                                                 router.push("/categories/" + id + "");
                                                               }), param);
                                                 })
-                                            }, React$1.createElement("span", {
+                                            }, React.createElement("span", {
                                                   className: "text-[15px] text-gray-800 group-hover:text-green-600 group-hover:font-bold"
-                                                }, param.name), React$1.createElement("span", {
+                                                }, param.name), React.createElement("span", {
                                                   className: "w-4 h-4"
-                                                }, React$1.createElement(IconArrow.make, {
+                                                }, React.createElement(IconArrow.make, {
                                                       height: "16",
                                                       width: "16",
                                                       stroke: "#12B564",
@@ -383,36 +388,38 @@ function ShopCategorySelect_Buyer$PC(props) {
                                                     }))),
                                         onHoverChange: (function (param) {
                                             return makeHoverChange(id, children, param);
-                                          })
-                                      }, id);
+                                          }),
+                                        key: id
+                                      });
                           }))), Belt_Option.mapWithDefault(match$1[0], null, (function (hoveredId$p) {
-                        return React.createElementWithKey(ShopCategorySelect_Buyer$PC$Sub, {
+                        return React.createElement(ShopCategorySelect_Buyer$PC$Sub, {
                                     displayCategories: Belt_Option.mapWithDefault(Garter_Array.first(Belt_Array.keep(displayCategories, (function (displayCategory) {
                                                     return displayCategory.id === hoveredId$p;
                                                   }))), [], (function (displayCategory) {
                                             return displayCategory.children;
-                                          }))
-                                  }, hoveredId$p);
-                      }))), React$1.createElement("div", {
+                                          })),
+                                    key: hoveredId$p
+                                  });
+                      }))), React.createElement("div", {
                   className: "w-[222px] bg-white absolute top-0 left-[1px] h-1"
                 })));
   } else {
-    tmp = React$1.createElement("div", {
+    tmp = React.createElement("div", {
           className: "flex items-center w-56 h-[54px] px-7 whitespace-nowrap border-t border-x border-transparent"
-        }, React$1.createElement(IconHamburger.make, {
+        }, React.createElement(IconHamburger.make, {
               width: "24",
               height: "24",
               fill: "#12B564"
-            }), React$1.createElement("span", {
+            }), React.createElement("span", {
               className: "mx-2 text-lg font-bold text-text-L1"
-            }, "전체 카테고리"), React$1.createElement(IconArrow.make, {
+            }, "전체 카테고리"), React.createElement(IconArrow.make, {
               height: "20",
               width: "20",
               fill: "#B2B2B2",
               className: "rotate-90"
             }));
   }
-  return React$1.createElement("div", undefined, React$1.createElement(Hoverable.make, {
+  return React.createElement("div", undefined, React.createElement(Hoverable.make, {
                   children: tmp,
                   onHoverChange: (function (to_) {
                       setIsHovered(function (param) {
@@ -432,4 +439,4 @@ export {
   Mobile ,
   PC ,
 }
-/* React Not a pure module */
+/* react Not a pure module */

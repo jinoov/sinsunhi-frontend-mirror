@@ -45,9 +45,11 @@ function toString(status) {
   return Js_json.decodeString(status ? "무료" : "유료");
 }
 
-function Select_Product_Shipping_Type(props) {
-  var onChange = props.onChange;
-  var status = props.status;
+function Select_Product_Shipping_Type(Props) {
+  var status = Props.status;
+  var onChange = Props.onChange;
+  var forwardRef = Props.forwardRef;
+  var disabled = Props.disabled;
   var displayStatus = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "배송비 타입 선택");
   var value = Belt_Option.getWithDefault(Belt_Option.flatMap(status, toString), "");
   var handleOnChange = function (e) {
@@ -59,13 +61,13 @@ function Select_Product_Shipping_Type(props) {
     
   };
   var tmp = {
-    ref: props.forwardRef,
+    ref: forwardRef,
     className: "block w-full h-full absolute top-0 opacity-0",
     value: value,
     onChange: handleOnChange
   };
-  if (props.disabled !== undefined) {
-    tmp.disabled = Caml_option.valFromOption(props.disabled);
+  if (disabled !== undefined) {
+    tmp.disabled = Caml_option.valFromOption(disabled);
   }
   return React.createElement("span", undefined, React.createElement("label", {
                   className: "block relative"

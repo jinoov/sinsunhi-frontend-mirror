@@ -142,7 +142,7 @@ var Fragment = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-function BulkSale_Products_List_Admin$Header(props) {
+function BulkSale_Products_List_Admin$Header(Props) {
   return React.createElement("div", {
               className: "grid grid-cols-7-admin-bulk-sale-product bg-gray-50 text-gray-500 h-12 divide-y divide-gray-100"
             }, React.createElement("div", {
@@ -164,7 +164,7 @@ var Header = {
   make: BulkSale_Products_List_Admin$Header
 };
 
-function BulkSale_Products_List_Admin$Loading(props) {
+function BulkSale_Products_List_Admin$Loading(Props) {
   return React.createElement("div", {
               className: "w-full overflow-x-scroll"
             }, React.createElement("div", {
@@ -180,7 +180,7 @@ var Loading = {
   make: BulkSale_Products_List_Admin$Loading
 };
 
-function BulkSale_Products_List_Admin$Skeleton(props) {
+function BulkSale_Products_List_Admin$Skeleton(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "md:flex md:justify-between pb-4"
                 }, React.createElement("div", {
@@ -206,9 +206,10 @@ var Skeleton$1 = {
   make: BulkSale_Products_List_Admin$Skeleton
 };
 
-function BulkSale_Products_List_Admin$List(props) {
-  var statistics = props.statistics;
-  var refetchSummary = props.refetchSummary;
+function BulkSale_Products_List_Admin$List(Props) {
+  var query = Props.query;
+  var refetchSummary = Props.refetchSummary;
+  var statistics = Props.statistics;
   var router = Router.useRouter();
   var queried = Belt_Option.flatMap(Js_dict.get(router.query, "status"), (function (status) {
           var status$p = Status_BulkSale_Product.status_decode(status);
@@ -240,7 +241,7 @@ function BulkSale_Products_List_Admin$List(props) {
   }
   var listContainerRef = React.useRef(null);
   var loadMoreRef = React.useRef(null);
-  var match = usePagination(props.query);
+  var match = usePagination(query);
   var hasNext = match.hasNext;
   var loadNext = match.loadNext;
   var data = match.data;
@@ -289,11 +290,14 @@ var List = {
   make: BulkSale_Products_List_Admin$List
 };
 
-function BulkSale_Products_List_Admin(props) {
+function BulkSale_Products_List_Admin(Props) {
+  var query = Props.query;
+  var refetchSummary = Props.refetchSummary;
+  var statistics = Props.statistics;
   return React.createElement(BulkSale_Products_List_Admin$List, {
-              query: props.query,
-              refetchSummary: props.refetchSummary,
-              statistics: props.statistics
+              query: query,
+              refetchSummary: refetchSummary,
+              statistics: statistics
             });
 }
 

@@ -96,9 +96,9 @@ function formatValidator(phoneNumber) {
   }
 }
 
-function Update_PhoneNumber_Buyer(props) {
-  var onClose = props.onClose;
-  var isOpen = props.isOpen;
+function Update_PhoneNumber_Buyer(Props) {
+  var isOpen = Props.isOpen;
+  var onClose = Props.onClose;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = ValidatedState.use(/* String */0, "", [formatValidator]);
@@ -360,7 +360,7 @@ function Update_PhoneNumber_Buyer(props) {
   }
   return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: isOpen
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {
@@ -424,7 +424,7 @@ function Update_PhoneNumber_Buyer(props) {
                                             disabled: smsStatus !== undefined ? (
                                                 smsStatus !== 1 ? smsStatus < 3 : false
                                               ) : true,
-                                            inputRef: Caml_option.some(inputVerificationCodeRef)
+                                            inputRef: inputVerificationCodeRef
                                           }), smsStatus !== undefined && smsStatus !== 0 ? (
                                           smsStatus >= 3 ? React.createElement(Timer.make, {
                                                   status: /* Stop */3,

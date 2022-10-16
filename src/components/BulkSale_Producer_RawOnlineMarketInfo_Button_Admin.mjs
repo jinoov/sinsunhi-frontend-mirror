@@ -33,7 +33,8 @@ function displayRawMarket(rm) {
   }
 }
 
-function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$Names(props) {
+function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$Names(Props) {
+  var market = Props.market;
   return React.createElement(React.Fragment, undefined, React.createElement("h3", {
                   className: "mt-4"
                 }, "유통경로"), React.createElement("article", {
@@ -42,14 +43,15 @@ function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$Names(props) {
                       className: "bg-surface rounded-lg p-3"
                     }, React.createElement("p", {
                           className: "text-text-L2"
-                        }, displayRawMarket(props.market)))));
+                        }, displayRawMarket(market)))));
 }
 
 var Names = {
   make: BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$Names
 };
 
-function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$DeliveryCompany(props) {
+function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$DeliveryCompany(Props) {
+  var deliveryCompany = Props.deliveryCompany;
   return React.createElement(React.Fragment, undefined, React.createElement("h3", {
                   className: "mt-4"
                 }, "계약된 택배사"), React.createElement("article", {
@@ -58,15 +60,15 @@ function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$DeliveryCompany(prop
                       className: "bg-surface rounded-lg p-3"
                     }, React.createElement("p", {
                           className: "text-text-L2"
-                        }, props.deliveryCompany.name))));
+                        }, deliveryCompany.name))));
 }
 
 var DeliveryCompany = {
   make: BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$DeliveryCompany
 };
 
-function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$Urls(props) {
-  var url = props.url;
+function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$Urls(Props) {
+  var url = Props.url;
   return React.createElement(React.Fragment, undefined, React.createElement("h3", {
                   className: "mt-4"
                 }, "판매했던 URL"), React.createElement("article", {
@@ -82,8 +84,8 @@ var Urls = {
   make: BulkSale_Producer_RawOnlineMarketInfo_Button_Admin$Urls
 };
 
-function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin(props) {
-  var onlineMarkets = props.onlineMarkets;
+function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin(Props) {
+  var onlineMarkets = Props.onlineMarkets;
   var match = onlineMarkets.bulkSaleRawOnlineSale;
   return React.createElement(ReactDialog.Root, {
               children: null

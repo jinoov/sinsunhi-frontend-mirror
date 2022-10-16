@@ -37,7 +37,7 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Matching_GradeGuide_Buyer$Banner(props) {
+function PDP_Matching_GradeGuide_Buyer$Banner(Props) {
   return React.createElement("section", {
               className: "w-full"
             }, React.createElement("div", {
@@ -57,11 +57,14 @@ var Banner = {
   make: PDP_Matching_GradeGuide_Buyer$Banner
 };
 
-function PDP_Matching_GradeGuide_Buyer$Tab(props) {
-  var btnStyle = props.isSelected ? "text-gray-800 border-b-[2px] border-gray-800 font-bold pt-2 pb-3 whitespace-nowrap flex flex-1 items-center justify-center" : "text-gray-400 border-b-[2px] border-transparent pt-2 pb-3 whitespace-nowrap flex flex-1 items-center justify-center";
+function PDP_Matching_GradeGuide_Buyer$Tab(Props) {
+  var label = Props.label;
+  var value = Props.value;
+  var isSelected = Props.isSelected;
+  var btnStyle = isSelected ? "text-gray-800 border-b-[2px] border-gray-800 font-bold pt-2 pb-3 whitespace-nowrap flex flex-1 items-center justify-center" : "text-gray-400 border-b-[2px] border-transparent pt-2 pb-3 whitespace-nowrap flex flex-1 items-center justify-center";
   return React.createElement(ReactTabs.Trigger, {
-              children: React.createElement("span", undefined, props.label),
-              value: props.value,
+              children: React.createElement("span", undefined, label),
+              value: value,
               className: btnStyle
             });
 }
@@ -70,21 +73,33 @@ var Tab = {
   make: PDP_Matching_GradeGuide_Buyer$Tab
 };
 
-function PDP_Matching_GradeGuide_Buyer$Content(props) {
+function PDP_Matching_GradeGuide_Buyer$Content(Props) {
+  var value = Props.value;
+  var description = Props.description;
+  var sugar = Props.sugar;
+  var perSize = Props.perSize;
+  var perRegularity = Props.perRegularity;
+  var color = Props.color;
+  var freshness = Props.freshness;
+  var fault = Props.fault;
+  var length = Props.length;
+  var foreignMatter = Props.foreignMatter;
+  var shape = Props.shape;
+  var trimming = Props.trimming;
   return React.createElement(ReactTabs.Content, {
               children: null,
-              value: props.value
+              value: value
             }, React.createElement("section", {
                   className: "w-full px-4 py-8"
                 }, React.createElement("span", {
                       className: "text-base text-black"
-                    }, props.description)), React.createElement("section", {
+                    }, description)), React.createElement("section", {
                   className: "px-4"
                 }, React.createElement(Divider.make, {
                       className: "h-[2px] bg-gray-100"
                     })), React.createElement("section", {
                   className: "w-full px-4 divide-y divide-dashed pb-14"
-                }, Belt_Option.mapWithDefault(props.sugar, null, (function (sugar$p) {
+                }, Belt_Option.mapWithDefault(sugar, null, (function (sugar$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -92,7 +107,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "당도"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(sugar$p)));
-                      })), Belt_Option.mapWithDefault(props.perSize, null, (function (perSize$p) {
+                      })), Belt_Option.mapWithDefault(perSize, null, (function (perSize$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -100,7 +115,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "낱개 크기"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(perSize$p)));
-                      })), Belt_Option.mapWithDefault(props.perRegularity, null, (function (perRegularity$p) {
+                      })), Belt_Option.mapWithDefault(perRegularity, null, (function (perRegularity$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -108,7 +123,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "낱개 고르기"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(perRegularity$p)));
-                      })), Belt_Option.mapWithDefault(props.length, null, (function (length$p) {
+                      })), Belt_Option.mapWithDefault(length, null, (function (length$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -116,7 +131,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "길이"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(length$p)));
-                      })), Belt_Option.mapWithDefault(props.shape, null, (function (shape$p) {
+                      })), Belt_Option.mapWithDefault(shape, null, (function (shape$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -124,7 +139,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "모양"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(shape$p)));
-                      })), Belt_Option.mapWithDefault(props.trimming, null, (function (trimming$p) {
+                      })), Belt_Option.mapWithDefault(trimming, null, (function (trimming$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -132,7 +147,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "손질"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(trimming$p)));
-                      })), Belt_Option.mapWithDefault(props.color, null, (function (color$p) {
+                      })), Belt_Option.mapWithDefault(color, null, (function (color$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -140,7 +155,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "색택"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(color$p)));
-                      })), Belt_Option.mapWithDefault(props.freshness, null, (function (freshness$p) {
+                      })), Belt_Option.mapWithDefault(freshness, null, (function (freshness$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -148,7 +163,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "신선도"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(freshness$p)));
-                      })), Belt_Option.mapWithDefault(props.fault, null, (function (fault$p) {
+                      })), Belt_Option.mapWithDefault(fault, null, (function (fault$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -156,7 +171,7 @@ function PDP_Matching_GradeGuide_Buyer$Content(props) {
                                       }, "결점"), React.createElement("div", {
                                         className: "ml-5 w-full"
                                       }, ReactNl2br(fault$p)));
-                      })), Belt_Option.mapWithDefault(props.foreignMatter, null, (function (foreignMatter$p) {
+                      })), Belt_Option.mapWithDefault(foreignMatter, null, (function (foreignMatter$p) {
                         return React.createElement("div", {
                                     className: "w-full flex py-4"
                                   }, React.createElement("div", {
@@ -171,9 +186,11 @@ var Content = {
   make: PDP_Matching_GradeGuide_Buyer$Content
 };
 
-function PDP_Matching_GradeGuide_Buyer$Trigger(props) {
+function PDP_Matching_GradeGuide_Buyer$Trigger(Props) {
+  var onClick = Props.onClick;
+  var className = Props.className;
   return React.createElement("div", {
-              className: "w-full bg-green-50 rounded-xl p-6 " + Belt_Option.getWithDefault(props.className, "")
+              className: "w-full bg-green-50 rounded-xl p-6 " + Belt_Option.getWithDefault(className, "")
             }, React.createElement("div", {
                   className: "flex items-center"
                 }, React.createElement("img", {
@@ -187,7 +204,7 @@ function PDP_Matching_GradeGuide_Buyer$Trigger(props) {
                       className: "text-sm text-gray-600"
                     }, ReactNl2br("고객의 구매 목적을 고려한 신선하이 등급을 통해\n상품의 품질별 시세의 흐름을 한눈에 파악할 수 있습니다."))), React.createElement("button", {
                   className: "mt-4 flex items-center",
-                  onClick: props.onClick
+                  onClick: onClick
                 }, React.createElement("span", {
                       className: "text-sm text-primary font-bold"
                     }, "신선하이 등급보러가기"), React.createElement(IconArrow.make, {
@@ -201,18 +218,22 @@ var Trigger = {
   make: PDP_Matching_GradeGuide_Buyer$Trigger
 };
 
-function PDP_Matching_GradeGuide_Buyer$Divider(props) {
-  return React.createElement(ReactSeparator.Root, {
-              className: props.className
-            });
+function PDP_Matching_GradeGuide_Buyer$Divider(Props) {
+  var className = Props.className;
+  var tmp = {};
+  if (className !== undefined) {
+    tmp.className = className;
+  }
+  return React.createElement(ReactSeparator.Root, tmp);
 }
 
 var Divider$1 = {
   make: PDP_Matching_GradeGuide_Buyer$Divider
 };
 
-function PDP_Matching_GradeGuide_Buyer(props) {
-  var match = use(props.query);
+function PDP_Matching_GradeGuide_Buyer(Props) {
+  var query = Props.query;
+  var match = use(query);
   var match$1 = match.qualityStandard;
   var medium = match$1.medium;
   var low = match$1.low;

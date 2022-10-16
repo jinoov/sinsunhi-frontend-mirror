@@ -2,8 +2,7 @@
 
 import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as Dialog from "./common/Dialog.mjs";
 import * as Locale from "../utils/Locale.mjs";
 import * as IconClose from "./svgs/IconClose.mjs";
@@ -33,7 +32,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(VirtualAccountPaymentConfirmationButtonBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, VirtualAccountPaymentConfirmationButtonBuyerQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -142,18 +141,18 @@ function formatTime(d) {
   return Format(new Date(d), "HH:mm:ss");
 }
 
-function Virtual_Account_Payment_Confirmation_Button_Buyer$TitleAndCloseButton(props) {
-  var close = props.close;
-  return React$1.createElement("div", {
+function Virtual_Account_Payment_Confirmation_Button_Buyer$TitleAndCloseButton(Props) {
+  var close = Props.close;
+  return React.createElement("div", {
               className: "flex mb-5 md:mb-10 justify-between items-center"
-            }, React$1.createElement("h3", {
+            }, React.createElement("h3", {
                   className: "font-bold text-xl"
-                }, "가상계좌 결제 확인"), React$1.createElement("button", {
+                }, "가상계좌 결제 확인"), React.createElement("button", {
                   className: "cursor-pointer border-none",
                   onClick: (function (param) {
                       Curry._1(close, undefined);
                     })
-                }, React$1.createElement(IconClose.make, {
+                }, React.createElement(IconClose.make, {
                       height: "24",
                       width: "24",
                       fill: "#262626"
@@ -164,12 +163,12 @@ var TitleAndCloseButton = {
   make: Virtual_Account_Payment_Confirmation_Button_Buyer$TitleAndCloseButton
 };
 
-function Virtual_Account_Payment_Confirmation_Button_Buyer$TableHead(props) {
-  return React$1.createElement("div", {
+function Virtual_Account_Payment_Confirmation_Button_Buyer$TableHead(Props) {
+  return React.createElement("div", {
               className: "hidden md:flex md:bg-div-shape-L2 md:text-text-L2 md:rounded min-w-max"
             }, Belt_Array.map(columnsWithWidth, (function (param) {
                     var column = param[0];
-                    return React$1.createElement("div", {
+                    return React.createElement("div", {
                                 key: "head-" + column + "",
                                 className: Cx.cx([
                                       "mr-5 first:ml-5 last:mr-0 py-1 md:py-2 text-center break-all",
@@ -183,8 +182,8 @@ var TableHead = {
   make: Virtual_Account_Payment_Confirmation_Button_Buyer$TableHead
 };
 
-function Virtual_Account_Payment_Confirmation_Button_Buyer$TableRow(props) {
-  var rowData = props.rowData;
+function Virtual_Account_Payment_Confirmation_Button_Buyer$TableRow(Props) {
+  var rowData = Props.rowData;
   var virtualAccount = rowData.virtualAccount;
   var id = rowData.id;
   var statusToString = function (status) {
@@ -200,39 +199,39 @@ function Virtual_Account_Payment_Confirmation_Button_Buyer$TableRow(props) {
   if (virtualAccount !== undefined) {
     var expiredAt = virtualAccount.expiredAt;
     var createdAt = virtualAccount.createdAt;
-    tmp = React$1.createElement("div", {
+    tmp = React.createElement("div", {
           className: "flex flex-col md:flex-row md:justify-center md:items-center whitespace-pre md:h-16"
-        }, React$1.createElement("div", {
+        }, React.createElement("div", {
               className: "mr-5 md:ml-5 md:text-center md:w-20 py-1 md:py-2"
-            }, React$1.createElement("div", {
+            }, React.createElement("div", {
                   className: "flex md:flex-col"
-                }, React$1.createElement("p", undefined, Format(new Date(createdAt), "yyyy-MM-dd")), React$1.createElement("p", {
+                }, React.createElement("p", undefined, Format(new Date(createdAt), "yyyy-MM-dd")), React.createElement("p", {
                       className: "text-text-L2 ml-1 md:ml-0"
-                    }, Format(new Date(createdAt), "HH:mm:ss")))), React$1.createElement("div", {
+                    }, Format(new Date(createdAt), "HH:mm:ss")))), React.createElement("div", {
               className: "flex md:flex-col mr-5 md:text-center md:w-32 py-1 md:py-2"
-            }, React$1.createElement("p", undefined, virtualAccount.bank.name), React$1.createElement("p", {
+            }, React.createElement("p", undefined, virtualAccount.bank.name), React.createElement("p", {
                   className: "ml-1 md:ml-0"
-                }, virtualAccount.accountNo)), React$1.createElement("div", {
+                }, virtualAccount.accountNo)), React.createElement("div", {
               className: "mr-5 md:text-right md:w-32 py-1 md:py-2"
-            }, React$1.createElement("p", undefined, "" + Locale.Int.show(undefined, Belt_Option.getWithDefault(rowData.amount, 0)) + " 원")), React$1.createElement("div", {
+            }, React.createElement("p", undefined, "" + Locale.Int.show(undefined, Belt_Option.getWithDefault(rowData.amount, 0)) + " 원")), React.createElement("div", {
               className: "mr-5 md:text-center md:w-20 py-1 md:py-2"
-            }, React$1.createElement("div", {
+            }, React.createElement("div", {
                   className: "flex md:flex-col"
-                }, React$1.createElement("p", undefined, Format(new Date(expiredAt), "yyyy-MM-dd")), React$1.createElement("p", {
+                }, React.createElement("p", undefined, Format(new Date(expiredAt), "yyyy-MM-dd")), React.createElement("p", {
                       className: "text-text-L2 ml-1 md:ml-0"
-                    }, Format(new Date(expiredAt), "HH:mm:ss")))), React$1.createElement("div", {
+                    }, Format(new Date(expiredAt), "HH:mm:ss")))), React.createElement("div", {
               className: "mr-0 md:text-center md:w-20 py-1 md:py-2"
-            }, React$1.createElement("p", undefined, statusToString(rowData.status))));
+            }, React.createElement("p", undefined, statusToString(rowData.status))));
   } else {
     tmp = null;
   }
-  return React$1.createElement("li", {
+  return React.createElement("li", {
               className: "flex border-b py-2 border-div-border-L2"
-            }, React$1.createElement("div", {
+            }, React.createElement("div", {
                   className: "md:hidden w-2/6 text-text-L2 min-w-max mr-3"
                 }, Belt_Array.map(columnsWithWidth, (function (param) {
                         var column = param[0];
-                        return React$1.createElement("p", {
+                        return React.createElement("p", {
                                     key: "" + id + "-" + column + "",
                                     className: "py-1 md:py-2"
                                   }, column);
@@ -243,33 +242,35 @@ var TableRow = {
   make: Virtual_Account_Payment_Confirmation_Button_Buyer$TableRow
 };
 
-function Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton(props) {
-  return React$1.createElement("div", {
+function Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton(Props) {
+  var children = Props.children;
+  return React.createElement("div", {
               className: "flex items-center justify-center md:h-[30vh] h-[60vh] font-bold"
-            }, props.children);
+            }, children);
 }
 
 var ContentsSkeleton = {
   make: Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton
 };
 
-function Virtual_Account_Payment_Confirmation_Button_Buyer$List(props) {
+function Virtual_Account_Payment_Confirmation_Button_Buyer$List(Props) {
   var queryData = use({
         paymentMethod: "VIRTUAL_ACCOUNT",
         status: "PENDING"
       }, /* NetworkOnly */3, undefined, undefined, undefined);
   var charges$p = queryData.payments;
   if (charges$p.length !== 0) {
-    return React$1.createElement("ul", {
+    return React.createElement("ul", {
                 className: "md:min-h-[30vh] min-h-[60vh]"
               }, Belt_Array.map(charges$p, (function (rowData) {
-                      return React.createElementWithKey(Virtual_Account_Payment_Confirmation_Button_Buyer$TableRow, {
-                                  rowData: rowData
-                                }, rowData.id);
+                      return React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$TableRow, {
+                                  rowData: rowData,
+                                  key: rowData.id
+                                });
                     })));
   } else {
-    return React$1.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton, {
-                children: React$1.createElement("p", {
+    return React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton, {
+                children: React.createElement("p", {
                       className: "text-text-L3"
                     }, "가상계좌 결제 확인 내역이 없습니다.")
               });
@@ -280,48 +281,48 @@ var List = {
   make: Virtual_Account_Payment_Confirmation_Button_Buyer$List
 };
 
-function Virtual_Account_Payment_Confirmation_Button_Buyer(props) {
+function Virtual_Account_Payment_Confirmation_Button_Buyer(Props) {
   var close = function (param) {
     var buttonClose = document.getElementById("btn-close");
     Belt_Option.forEach(Belt_Option.flatMap((buttonClose == null) ? undefined : Caml_option.some(buttonClose), Webapi__Dom__Element.asHtmlElement), (function (buttonClose$p) {
             buttonClose$p.click();
           }));
   };
-  return React$1.createElement(ReactDialog.Root, {
+  return React.createElement(ReactDialog.Root, {
               children: null
-            }, React$1.createElement(ReactDialog.Overlay, {
+            }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
-                }), React$1.createElement(ReactDialog.Trigger, {
-                  children: React$1.createElement("span", undefined, "가상계좌 결제 확인"),
+                }), React.createElement(ReactDialog.Trigger, {
+                  children: React.createElement("span", undefined, "가상계좌 결제 확인"),
                   className: "px-3 h-9 rounded-lg text-enabled-L1 bg-div-shape-L1 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-150 focus:ring-offset-1"
-                }), React$1.createElement(ReactDialog.Content, {
+                }), React.createElement(ReactDialog.Content, {
                   children: null,
                   className: "dialog-content-fix p-5 overflow-y-auto text-sm text-text-L1 rounded-2xl min-w-max"
-                }, React$1.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$TitleAndCloseButton, {
+                }, React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$TitleAndCloseButton, {
                       close: close
-                    }), React$1.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$TableHead, {}), React$1.createElement(RescriptReactErrorBoundary.make, {
-                      children: React$1.createElement(React$1.Suspense, {
-                            children: Caml_option.some(React$1.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$List, {})),
-                            fallback: Caml_option.some(React$1.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton, {
-                                      children: React$1.createElement("p", {
-                                            className: "text-text-L3"
-                                          }, "로딩 중..")
-                                    }))
+                    }), React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$TableHead, {}), React.createElement(RescriptReactErrorBoundary.make, {
+                      children: React.createElement(React.Suspense, {
+                            children: React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$List, {}),
+                            fallback: React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton, {
+                                  children: React.createElement("p", {
+                                        className: "text-text-L3"
+                                      }, "로딩 중..")
+                                })
                           }),
                       fallback: (function (param) {
-                          return React$1.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton, {
-                                      children: React$1.createElement("p", {
+                          return React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$ContentsSkeleton, {
+                                      children: React.createElement("p", {
                                             className: "text-notice"
                                           }, "에러 발생")
                                     });
                         })
-                    }), React$1.createElement(ReactDialog.Close, {
+                    }), React.createElement(ReactDialog.Close, {
                       children: "",
                       className: "hidden",
                       id: "btn-close"
-                    }), React$1.createElement("span", {
+                    }), React.createElement("span", {
                       className: "md:hidden"
-                    }, React$1.createElement(Dialog.ButtonBox.make, {
+                    }, React.createElement(Dialog.ButtonBox.make, {
                           onCancel: (function (param) {
                               close(undefined);
                             }),
@@ -343,4 +344,4 @@ export {
   List ,
   make ,
 }
-/* React Not a pure module */
+/* react Not a pure module */

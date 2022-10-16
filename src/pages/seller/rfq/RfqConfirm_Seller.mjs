@@ -91,9 +91,10 @@ var Query = {
   retain: retain
 };
 
-function RfqConfirm_Seller$ConfirmPageRouter(props) {
+function RfqConfirm_Seller$ConfirmPageRouter(Props) {
+  var quotationId = Props.quotationId;
   var match = use({
-        id: props.quotationId
+        id: quotationId
       }, undefined, undefined, undefined, undefined);
   var node = match.node;
   var router = Router.useRouter();
@@ -111,18 +112,18 @@ var ConfirmPageRouter = {
   make: RfqConfirm_Seller$ConfirmPageRouter
 };
 
-function RfqConfirm_Seller(props) {
-  var quotationId = props.quotationId;
+function RfqConfirm_Seller(Props) {
+  var quotationId = Props.quotationId;
   return React.createElement(Authorization.Seller.make, {
               children: React.createElement(React.Suspense, {
-                    children: Caml_option.some(quotationId !== undefined ? React.createElement(RfqConfirm_Seller$ConfirmPageRouter, {
-                                quotationId: quotationId
-                              }) : React.createElement(DS_None.Default.make, {
-                                message: "견적요청서 정보를 불러올 수 없습니다. 관리자에게 문의해주세요."
-                              }))
+                    children: quotationId !== undefined ? React.createElement(RfqConfirm_Seller$ConfirmPageRouter, {
+                            quotationId: quotationId
+                          }) : React.createElement(DS_None.Default.make, {
+                            message: "견적요청서 정보를 불러올 수 없습니다. 관리자에게 문의해주세요."
+                          })
                   }),
               title: "견적 확인",
-              fallback: Caml_option.some(null)
+              fallback: null
             });
 }
 

@@ -10,8 +10,8 @@ import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 
-function Product_Badge(props) {
-  var status = props.status;
+function Product_Badge(Props) {
+  var status = Props.status;
   var displayStyle = status !== 1 && status === 0 ? "max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap" : "max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap";
   var Converter$1 = Converter.SalesStatus({});
   var displayText = Curry._1(Converter$1.statusToString, status);
@@ -104,9 +104,9 @@ function status_decode(v) {
   return Spice.error(undefined, "Invalid variant constructor", Belt_Array.getExn(json_arr$1, 0));
 }
 
-function Product_Badge$V2(props) {
-  var status = props.status;
-  var className = props.className;
+function Product_Badge$V2(Props) {
+  var className = Props.className;
+  var status = Props.status;
   var displayText;
   switch (status) {
     case /* SALE */0 :

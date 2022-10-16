@@ -5,8 +5,8 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Webapi__Dom__HtmlInputElement from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__HtmlInputElement.mjs";
 
-function ReactUtil$SpreadProps(props) {
-  return React.cloneElement(props.children, props.props);
+function ReactUtil$SpreadProps(Props) {
+  return React.cloneElement(Props.children, Props.props);
 }
 
 var SpreadProps = {

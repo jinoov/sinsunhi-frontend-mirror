@@ -42,11 +42,24 @@ var iconEmail = EmailContainerSvg;
 
 var iconChat = ChatContainerSvg;
 
-function ActivateUser_ByEmail$SentEmail(props) {
-  var role = props.role;
-  var uid = props.uid;
+function ActivateUser_ByEmail$SentEmail(Props) {
+  var email = Props.email;
+  var uid = Props.uid;
+  var role = Props.role;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
+  var onSuccess = function (param) {
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconCheck.make, {
+                  height: "24",
+                  width: "24",
+                  fill: "#12B564",
+                  className: "mr-2"
+                }), "이메일을 다시 전송하였습니다"), {
+          appearance: "success"
+        });
+  };
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "이메일로 휴면계정 해제")
                 }), React.createElement("div", {
@@ -57,23 +70,12 @@ function ActivateUser_ByEmail$SentEmail(props) {
                           className: "w-full p-5 xl:py-12 sm:px-20"
                         }, React.createElement("h2", {
                               className: "text-xl font-bold whitespace-pre"
-                            }, "" + props.email + "로\n인증메일이 발송됐어요\n이메일을 확인해주세요"), React.createElement("div", {
+                            }, "" + email + "로\n인증메일이 발송됐어요\n이메일을 확인해주세요"), React.createElement("div", {
                               className: "mt-10"
                             }, React.createElement("button", {
                                   className: "w-full flex justify-between items-center",
                                   onClick: (function (param) {
-                                      submitEmail(uid, role, (function (param) {
-                                              addToast(React.createElement("div", {
-                                                        className: "flex items-center"
-                                                      }, React.createElement(IconCheck.make, {
-                                                            height: "24",
-                                                            width: "24",
-                                                            fill: "#12B564",
-                                                            className: "mr-2"
-                                                          }), "이메일을 다시 전송하였습니다"), {
-                                                    appearance: "success"
-                                                  });
-                                            }), addToast);
+                                      submitEmail(uid, role, onSuccess, addToast);
                                     })
                                 }, React.createElement("span", {
                                       className: "flex items-center"
@@ -109,9 +111,10 @@ var SentEmail = {
   make: ActivateUser_ByEmail$SentEmail
 };
 
-function ActivateUser_ByEmail$SendEmail(props) {
-  var role = props.role;
-  var uid = props.uid;
+function ActivateUser_ByEmail$SendEmail(Props) {
+  var email = Props.email;
+  var uid = Props.uid;
+  var role = Props.role;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var router = Router.useRouter();
@@ -133,7 +136,7 @@ function ActivateUser_ByEmail$SendEmail(props) {
                               className: "mt-2"
                             }, React.createElement("span", {
                                   className: "text-lg font-bold"
-                                }, props.email)), React.createElement("div", {
+                                }, email)), React.createElement("div", {
                               className: "mt-10"
                             }, React.createElement("button", {
                                   className: "w-full bg-primary rounded-xl text-white font-bold whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1 h-14",
@@ -150,8 +153,8 @@ var SendEmail = {
   make: ActivateUser_ByEmail$SendEmail
 };
 
-function ActivateUser_ByEmail$Error(props) {
-  var message = props.message;
+function ActivateUser_ByEmail$Error(Props) {
+  var message = Props.message;
   React.useEffect((function () {
           window.alert(message);
         }), []);
@@ -166,40 +169,31 @@ var $$Error = {
   make: ActivateUser_ByEmail$Error
 };
 
-function ActivateUser_ByEmail(props) {
-  var role = props.role;
-  var email = props.email;
-  var uid = props.uid;
-  if (email === undefined) {
-    return React.createElement(ActivateUser_ByEmail$Error, {
-                message: "잘못된 접근 입니다."
-              });
+function ActivateUser_ByEmail(Props) {
+  var uid = Props.uid;
+  var email = Props.email;
+  var sentEmail = Props.sentEmail;
+  var role = Props.role;
+  if (email !== undefined && uid !== undefined && role !== undefined) {
+    var role$1 = Caml_option.valFromOption(role);
+    var uid$1 = Caml_option.valFromOption(uid);
+    if (sentEmail !== undefined) {
+      return React.createElement(ActivateUser_ByEmail$SentEmail, {
+                  email: email,
+                  uid: uid$1,
+                  role: role$1
+                });
+    } else {
+      return React.createElement(ActivateUser_ByEmail$SendEmail, {
+                  email: email,
+                  uid: uid$1,
+                  role: role$1
+                });
+    }
   }
-  if (uid === undefined) {
-    return React.createElement(ActivateUser_ByEmail$Error, {
-                message: "잘못된 접근 입니다."
-              });
-  }
-  if (role === undefined) {
-    return React.createElement(ActivateUser_ByEmail$Error, {
-                message: "잘못된 접근 입니다."
-              });
-  }
-  var role$1 = Caml_option.valFromOption(role);
-  var uid$1 = Caml_option.valFromOption(uid);
-  if (props.sentEmail !== undefined) {
-    return React.createElement(ActivateUser_ByEmail$SentEmail, {
-                email: email,
-                uid: uid$1,
-                role: role$1
-              });
-  } else {
-    return React.createElement(ActivateUser_ByEmail$SendEmail, {
-                email: email,
-                uid: uid$1,
-                role: role$1
-              });
-  }
+  return React.createElement(ActivateUser_ByEmail$Error, {
+              message: "잘못된 접근 입니다."
+            });
 }
 
 var make = ActivateUser_ByEmail;

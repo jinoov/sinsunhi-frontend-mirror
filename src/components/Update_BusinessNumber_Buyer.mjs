@@ -150,14 +150,14 @@ function formatValidator(businessNumber) {
   }
 }
 
-function Update_BusinessNumber_Buyer(props) {
-  var defaultValue = props.defaultValue;
-  var onClose = props.onClose;
-  var isOpen = props.isOpen;
-  var defaultValue$1 = defaultValue !== undefined ? defaultValue : "";
+function Update_BusinessNumber_Buyer(Props) {
+  var isOpen = Props.isOpen;
+  var onClose = Props.onClose;
+  var defaultValueOpt = Props.defaultValue;
+  var defaultValue = defaultValueOpt !== undefined ? defaultValueOpt : "";
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
-  var match$1 = ValidatedState.use(/* String */0, defaultValue$1, [formatValidator]);
+  var match$1 = ValidatedState.use(/* String */0, defaultValue, [formatValidator]);
   var state = match$1[2];
   var setBusinessNumber = match$1[1];
   var businessNumber = match$1[0];
@@ -173,7 +173,7 @@ function Update_BusinessNumber_Buyer(props) {
     Curry._3(setBusinessNumber, newValue, true, undefined);
   };
   var reset = function (param) {
-    Curry._3(setBusinessNumber, defaultValue$1, true, undefined);
+    Curry._3(setBusinessNumber, defaultValue, true, undefined);
     setIsVerifying(function (param) {
           return false;
         });
@@ -294,7 +294,7 @@ function Update_BusinessNumber_Buyer(props) {
         }), [isOpen]);
   return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: isOpen
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {

@@ -75,11 +75,11 @@ var Mutation = {
   use: use
 };
 
-function Update_Address_Buyer(props) {
-  var popup = props.popup;
-  var onClose = props.onClose;
-  var isOpen = props.isOpen;
-  var popup$1 = popup !== undefined ? popup : false;
+function Update_Address_Buyer(Props) {
+  var isOpen = Props.isOpen;
+  var onClose = Props.onClose;
+  var popupOpt = Props.popup;
+  var popup = popupOpt !== undefined ? popupOpt : false;
   var match = React.useState(function () {
         return false;
       });
@@ -117,7 +117,7 @@ function Update_Address_Buyer(props) {
         });
   };
   var handleOnclickSearchAddress = function (param) {
-    if (!popup$1) {
+    if (!popup) {
       return setShowSearch(function (param) {
                   return true;
                 });
@@ -227,7 +227,7 @@ function Update_Address_Buyer(props) {
         }), [isOpen]);
   return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: isOpen
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {
@@ -278,6 +278,7 @@ function Update_Address_Buyer(props) {
                                                       
                                                     }),
                                                   size: /* Large */0,
+                                                  error: undefined,
                                                   disabled: true
                                                 }), React.createElement("button", {
                                                   className: "py-3 px-3 w-[120px] rounded-xl bg-blue-gray-700 ml-2 h-13",
@@ -293,6 +294,7 @@ function Update_Address_Buyer(props) {
                                               value: detailAddress,
                                               onChange: handleDetailAddressOnChange,
                                               size: /* Large */0,
+                                              error: undefined,
                                               disabled: address === ""
                                             })), React.createElement("button", {
                                           className: Cx.cx([

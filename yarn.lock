@@ -9633,10 +9633,10 @@ rescript-webapi@^0.6.0:
   resolved "https://registry.yarnpkg.com/rescript-webapi/-/rescript-webapi-0.6.0.tgz#6d6e7c115388aecf705241666f84b05aabe75e0c"
   integrity sha512-tFSEdsFb91diP/4cspDQEg4pMRw1WXeIAf5bINed6NZpG1Hu/i5BiSHDnmORMgP8unyqBp77UZM3BWCXJpoLWA==
 
-rescript@^10.1.0-alpha.2:
-  version "10.1.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.1.0-alpha.2.tgz#f9df7f3fb98a07676236aaf0e789ab60d0210231"
-  integrity sha512-uaWt6+Br7rxV339mE2ir80fjihq3XtQ88uPYt4otd1VgFXQRA+x/kof1xAUQULMEJKxBz0ifDDoL+3K6JiNG7Q==
+rescript@^10.1.0-rc.1:
+  version "10.1.0-rc.1"
+  resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.1.0-rc.1.tgz#690f10f22084a0328868950fa810e29c4ee990a0"
+  integrity sha512-xnYefPaLtSVgchYy5KOzTJti/PtACeZmj1wfmsWtvpvZ9wqF2YRsj+3Ga7+6iIhRS8A/RKKBTCui3mxSXGfESg==
 
 resize-observer-polyfill@^1.5.0:
   version "1.5.1"

@@ -80,46 +80,60 @@ function styleByTextAlign(style, textAlign) {
   }
 }
 
-function Input(props) {
-  var disabled = props.disabled;
-  var error = props.error;
+function Input(Props) {
+  var id = Props.id;
+  var type_ = Props.type_;
+  var name = Props.name;
+  var placeholder = Props.placeholder;
+  var className = Props.className;
+  var value = Props.value;
+  var onChange = Props.onChange;
+  var defaultValue = Props.defaultValue;
+  var size = Props.size;
+  var error = Props.error;
+  var disabled = Props.disabled;
+  var tabIndex = Props.tabIndex;
+  var min = Props.min;
+  var step = Props.step;
+  var textAlign = Props.textAlign;
+  var ref = Props.inputRef;
   var tmp = {
     className: Cx.cx([
-          styleByTextAlign(inputStyleBySize(style(error, disabled), props.size), props.textAlign),
-          Belt_Option.getWithDefault(props.className, "")
+          styleByTextAlign(inputStyleBySize(style(error, disabled), size), textAlign),
+          Belt_Option.getWithDefault(className, "")
         ]),
-    name: props.name,
-    type: props.type_
+    name: name,
+    type: type_
   };
-  if (props.inputRef !== undefined) {
-    tmp.ref = Caml_option.valFromOption(props.inputRef);
+  if (ref !== undefined) {
+    tmp.ref = Caml_option.valFromOption(ref);
   }
-  if (props.defaultValue !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(props.defaultValue);
+  if (defaultValue !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(defaultValue);
   }
-  if (props.id !== undefined) {
-    tmp.id = Caml_option.valFromOption(props.id);
+  if (id !== undefined) {
+    tmp.id = Caml_option.valFromOption(id);
   }
-  if (props.tabIndex !== undefined) {
-    tmp.tabIndex = Caml_option.valFromOption(props.tabIndex);
+  if (tabIndex !== undefined) {
+    tmp.tabIndex = Caml_option.valFromOption(tabIndex);
   }
   if (disabled !== undefined) {
     tmp.disabled = Caml_option.valFromOption(disabled);
   }
-  if (props.min !== undefined) {
-    tmp.min = Caml_option.valFromOption(props.min);
+  if (min !== undefined) {
+    tmp.min = Caml_option.valFromOption(min);
   }
-  if (props.placeholder !== undefined) {
-    tmp.placeholder = Caml_option.valFromOption(props.placeholder);
+  if (placeholder !== undefined) {
+    tmp.placeholder = Caml_option.valFromOption(placeholder);
   }
-  if (props.step !== undefined) {
-    tmp.step = Caml_option.valFromOption(props.step);
+  if (step !== undefined) {
+    tmp.step = Caml_option.valFromOption(step);
   }
-  if (props.value !== undefined) {
-    tmp.value = Caml_option.valFromOption(props.value);
+  if (value !== undefined) {
+    tmp.value = Caml_option.valFromOption(value);
   }
-  if (props.onChange !== undefined) {
-    tmp.onChange = Caml_option.valFromOption(props.onChange);
+  if (onChange !== undefined) {
+    tmp.onChange = Caml_option.valFromOption(onChange);
   }
   return React.createElement("div", {
               className: "flex-1"
@@ -135,41 +149,53 @@ function Input(props) {
                       })), null));
 }
 
-function Input$InputWithRef(props) {
-  var disabled = props.disabled;
-  var error = props.error;
+function Input$InputWithRef(Props) {
+  var type_ = Props.type_;
+  var name = Props.name;
+  var placeholder = Props.placeholder;
+  var className = Props.className;
+  var value = Props.value;
+  var onChange = Props.onChange;
+  var defaultValue = Props.defaultValue;
+  var size = Props.size;
+  var error = Props.error;
+  var disabled = Props.disabled;
+  var tabIndex = Props.tabIndex;
+  var min = Props.min;
+  var step = Props.step;
+  var inputRef = Props.inputRef;
   var tmp = {
-    ref: props.inputRef,
-    className: inputStyleBySize(style(error, disabled), props.size),
-    name: props.name,
-    type: props.type_
+    ref: inputRef,
+    className: inputStyleBySize(style(error, disabled), size),
+    name: name,
+    type: type_
   };
-  if (props.defaultValue !== undefined) {
-    tmp.defaultValue = Caml_option.valFromOption(props.defaultValue);
+  if (defaultValue !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(defaultValue);
   }
-  if (props.tabIndex !== undefined) {
-    tmp.tabIndex = Caml_option.valFromOption(props.tabIndex);
+  if (tabIndex !== undefined) {
+    tmp.tabIndex = Caml_option.valFromOption(tabIndex);
   }
   if (disabled !== undefined) {
     tmp.disabled = Caml_option.valFromOption(disabled);
   }
-  if (props.min !== undefined) {
-    tmp.min = Caml_option.valFromOption(props.min);
+  if (min !== undefined) {
+    tmp.min = Caml_option.valFromOption(min);
   }
-  if (props.placeholder !== undefined) {
-    tmp.placeholder = Caml_option.valFromOption(props.placeholder);
+  if (placeholder !== undefined) {
+    tmp.placeholder = Caml_option.valFromOption(placeholder);
   }
-  if (props.step !== undefined) {
-    tmp.step = Caml_option.valFromOption(props.step);
+  if (step !== undefined) {
+    tmp.step = Caml_option.valFromOption(step);
   }
-  if (props.value !== undefined) {
-    tmp.value = Caml_option.valFromOption(props.value);
+  if (value !== undefined) {
+    tmp.value = Caml_option.valFromOption(value);
   }
-  if (props.onChange !== undefined) {
-    tmp.onChange = Caml_option.valFromOption(props.onChange);
+  if (onChange !== undefined) {
+    tmp.onChange = Caml_option.valFromOption(onChange);
   }
   return React.createElement("label", {
-              className: Belt_Option.mapWithDefault(props.className, "flex flex-col min-w-0 relative", (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, "flex flex-col min-w-0 relative", (function (className$p) {
                       return Cx.cx([
                                   "flex flex-col min-w-0 relative",
                                   className$p

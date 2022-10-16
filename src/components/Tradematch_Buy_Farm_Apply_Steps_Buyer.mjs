@@ -347,25 +347,28 @@ function getUpdateMutateVariables(id, deliveryAddress1Opt, deliveryAddress2Opt, 
         };
 }
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$Layout(props) {
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$Layout(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "relative container max-w-3xl mx-auto min-h-screen"
-            }, props.children);
+            }, children);
 }
 
 var Layout = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$Layout
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$Title(props) {
-  var subText = props.subText;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$Title(Props) {
+  var text = Props.text;
+  var subText = Props.subText;
+  var label = Props.label;
   return React.createElement("div", {
               className: "px-5 py-9"
-            }, Belt_Option.mapWithDefault(props.label, null, (function (x) {
+            }, Belt_Option.mapWithDefault(label, null, (function (x) {
                     return x;
                   })), React.createElement("h2", {
                   className: "text-2xl font-bold whitespace-pre-line"
-                }, props.text), subText !== undefined ? React.createElement("h3", {
+                }, text), subText !== undefined ? React.createElement("h3", {
                     className: "text-gray-600 whitespace-pre-line text-sm mt-3"
                   }, subText) : null);
 }
@@ -374,9 +377,10 @@ var Title = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$Title
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$FloatingButton(props) {
-  var disabled = props.disabled;
-  var disabled$1 = disabled !== undefined ? disabled : false;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$FloatingButton(Props) {
+  var handleClickButton = Props.handleClickButton;
+  var disabledOpt = Props.disabled;
+  var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var buttonText = match.isLast ? "견적 신청 완료" : "다음";
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
@@ -388,8 +392,8 @@ function Tradematch_Buy_Farm_Apply_Steps_Buyer$Common$FloatingButton(props) {
                                 "h-14 w-full rounded-xl bg-primary text-white text-lg font-bold",
                                 "disabled:bg-disabled-L2 disabled:text-inverted disabled:text-opacity-50"
                               ]),
-                          disabled: disabled$1,
-                          onClick: props.handleClickButton
+                          disabled: disabled,
+                          onClick: handleClickButton
                         }, buttonText))), React.createElement("div", {
                   className: "h-24"
                 }));
@@ -405,50 +409,57 @@ var Common = {
   FloatingButton: FloatingButton
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$CalendarListitem(props) {
-  var handleChangeDate = props.handleChangeDate;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$CalendarListitem(Props) {
+  var leftText = Props.leftText;
+  var currentDate = Props.currentDate;
+  var handleChangeDate = Props.handleChangeDate;
+  var minDate = Props.minDate;
+  var maxDate = Props.maxDate;
+  var tmp = {
+    id: "date",
+    onChange: (function (e) {
+        var newDate = e.detail.valueAsDate;
+        handleChangeDate(function (param) {
+              return newDate;
+            });
+      }),
+    maxDate: Format(maxDate, "yyyy-MM-dd"),
+    minDate: Format(minDate, "yyyy-MM-dd"),
+    firstDayOfWeek: 0,
+    isDateDisabled: (function (e) {
+        if (e.getDay() === 0) {
+          return true;
+        } else {
+          return e.getDay() === 6;
+        }
+      }),
+    onFocus: (function (param) {
+        Belt_Option.forEach(Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById("date")), Webapi__Dom__Element.asHtmlElement), (function (inputEl$p) {
+                inputEl$p.blur();
+              }));
+      })
+  };
+  if (currentDate !== undefined) {
+    tmp.date = Caml_option.valFromOption(currentDate);
+  }
   return React.createElement("li", {
               className: "flex items-center min-h-[56px] mx-5 cursor-pointer border-b-2 border-b-border-disabled"
             }, React.createElement("div", {
                   className: "flex flex-col justify-between truncate"
                 }, React.createElement("span", {
                       className: "block text-base truncate"
-                    }, props.leftText)), React.createElement("div", {
+                    }, leftText)), React.createElement("div", {
                   className: "ml-auto pl-2"
-                }, React.createElement(DatePicker.make, {
-                      id: "date",
-                      onChange: (function (e) {
-                          var newDate = e.detail.valueAsDate;
-                          handleChangeDate(function (param) {
-                                return newDate;
-                              });
-                        }),
-                      date: props.currentDate,
-                      maxDate: Format(props.maxDate, "yyyy-MM-dd"),
-                      minDate: Format(props.minDate, "yyyy-MM-dd"),
-                      firstDayOfWeek: 0,
-                      isDateDisabled: (function (e) {
-                          if (e.getDay() === 0) {
-                            return true;
-                          } else {
-                            return e.getDay() === 6;
-                          }
-                        }),
-                      onFocus: (function (param) {
-                          Belt_Option.forEach(Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById("date")), Webapi__Dom__Element.asHtmlElement), (function (inputEl$p) {
-                                  inputEl$p.blur();
-                                }));
-                        })
-                    })));
+                }, React.createElement(DatePicker.make, tmp)));
 }
 
 var CalendarListitem = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$CalendarListitem
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$SearchAddress(props) {
-  var isShow = props.isShow;
-  var onComplete = props.onComplete;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$SearchAddress(Props) {
+  var onComplete = Props.onComplete;
+  var isShow = Props.isShow;
   React.useLayoutEffect((function () {
           if (isShow) {
             var iframeWrapper = document.getElementById("iframe-embed-addr");
@@ -481,9 +492,10 @@ var SearchAddress = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$SearchAddress
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$AddressDrawer(props) {
-  var isShow = props.isShow;
-  var closeDrawer = props.closeDrawer;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$AddressDrawer(Props) {
+  var onComplete = Props.onComplete;
+  var closeDrawer = Props.closeDrawer;
+  var isShow = Props.isShow;
   return React.createElement(DS_BottomDrawer.Root.make, {
               isShow: isShow,
               onClose: (function (param) {
@@ -494,7 +506,7 @@ function Tradematch_Buy_Farm_Apply_Steps_Buyer$AddressDrawer(props) {
             }, React.createElement(DS_BottomDrawer.Header.make, {}), React.createElement(DS_BottomDrawer.Body.make, {
                   children: React.createElement(RescriptReactErrorBoundary.make, {
                         children: React.createElement(Tradematch_Buy_Farm_Apply_Steps_Buyer$SearchAddress, {
-                              onComplete: props.onComplete,
+                              onComplete: onComplete,
                               isShow: isShow
                             }),
                         fallback: (function (param) {
@@ -521,11 +533,11 @@ var AddressDrawer = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$AddressDrawer
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Grade(props) {
-  var connectionId = props.connectionId;
-  var product = props.product;
-  var currentDemand = props.currentDemand;
-  var pid = props.pid;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Grade(Props) {
+  var pid = Props.pid;
+  var currentDemand = Props.currentDemand;
+  var product = Props.product;
+  var connectionId = Props.connectionId;
   var router = Router.useRouter();
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var toNext = match.router.toNext;
@@ -862,9 +874,9 @@ var Grade = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$Grade
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Count(props) {
-  var currentDemand = props.currentDemand;
-  var product = props.product;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Count(Props) {
+  var product = Props.product;
+  var currentDemand = Props.currentDemand;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -1023,9 +1035,9 @@ var Count = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$Count
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Price(props) {
-  var currentDemand = props.currentDemand;
-  var product = props.product;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Price(Props) {
+  var product = Props.product;
+  var currentDemand = Props.currentDemand;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -1260,8 +1272,8 @@ var Price = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$Price
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Cycle(props) {
-  var currentDemand = props.currentDemand;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Cycle(Props) {
+  var currentDemand = Props.currentDemand;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -1392,8 +1404,8 @@ var Cycle = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$Cycle
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Requirement(props) {
-  var currentDemand = props.currentDemand;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Requirement(Props) {
+  var currentDemand = Props.currentDemand;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -1545,8 +1557,8 @@ var Requirement = {
   make: Tradematch_Buy_Farm_Apply_Steps_Buyer$Requirement
 };
 
-function Tradematch_Buy_Farm_Apply_Steps_Buyer$Shipping(props) {
-  var currentDemand = props.currentDemand;
+function Tradematch_Buy_Farm_Apply_Steps_Buyer$Shipping(Props) {
+  var currentDemand = Props.currentDemand;
   var match = use(undefined, undefined, undefined, undefined, undefined);
   var tradematchDeliveryPolicy = match.tradematchDeliveryPolicy;
   var match$1 = Curry._5(RfqShipping_Buyer.Query.RfqTerms.use, undefined, undefined, undefined, undefined, undefined);

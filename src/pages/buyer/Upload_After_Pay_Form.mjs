@@ -12,7 +12,7 @@ import * as ChannelTalkHelper from "../../utils/ChannelTalkHelper.mjs";
 import * as UploadStatus_Buyer from "../../components/UploadStatus_Buyer.mjs";
 import * as Upload_After_Pay_Orders from "../../components/Upload_After_Pay_Orders.mjs";
 
-function Upload_After_Pay_Form$UploadForm(props) {
+function Upload_After_Pay_Form$UploadForm(Props) {
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
   var user = Curry._1(CustomHooks.User.Buyer.use, undefined);
@@ -92,7 +92,7 @@ var UploadForm = {
   make: Upload_After_Pay_Form$UploadForm
 };
 
-function Upload_After_Pay_Form$UploadResult(props) {
+function Upload_After_Pay_Form$UploadResult(Props) {
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
   var creditUrl = CustomHooks.AfterPayCredit.useGetUrl(undefined);

@@ -9,7 +9,7 @@ import * as Garter_Math from "@greenlabs/garter/src/Garter_Math.mjs";
 import * as Cart_Buyer_Form from "./Cart_Buyer_Form.mjs";
 import * as ReactHookForm from "react-hook-form";
 
-function Cart_Payment_Info_Buyer$PlaceHolder$PC(props) {
+function Cart_Payment_Info_Buyer$PlaceHolder$PC(Props) {
   return React.createElement("div", {
               className: "rounded-sm bg-white p-7 w-fit sticky top-64"
             }, React.createElement(Skeleton.Box.make, {
@@ -45,7 +45,7 @@ var PC = {
   make: Cart_Payment_Info_Buyer$PlaceHolder$PC
 };
 
-function Cart_Payment_Info_Buyer$PlaceHolder$MO(props) {
+function Cart_Payment_Info_Buyer$PlaceHolder$MO(Props) {
   return React.createElement("div", {
               className: "rounded-sm bg-white px-4 pb-4 w-full"
             }, React.createElement("div", {
@@ -74,9 +74,10 @@ var PlaceHolder = {
   MO: MO
 };
 
-function Cart_Payment_Info_Buyer$PC(props) {
+function Cart_Payment_Info_Buyer$PC(Props) {
+  var prefix = Props.prefix;
   var watchOptions = ReactHookForm.useWatch({
-        name: props.prefix
+        name: prefix
       });
   var match = Belt_Option.map(watchOptions, Cart_Buyer_Form.cart_decode);
   var match$1;
@@ -144,9 +145,10 @@ var PC$1 = {
   make: Cart_Payment_Info_Buyer$PC
 };
 
-function Cart_Payment_Info_Buyer$MO(props) {
+function Cart_Payment_Info_Buyer$MO(Props) {
+  var prefix = Props.prefix;
   var watchOptions = ReactHookForm.useWatch({
-        name: props.prefix
+        name: prefix
       });
   var match = Belt_Option.map(watchOptions, Cart_Buyer_Form.cart_decode);
   var match$1;

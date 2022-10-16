@@ -127,43 +127,43 @@ var $$Selection = Caml_module.init_mod([
         ]]
     });
 
-function Select_Display_Category$Category(props) {
-  var isClearable = props.isClearable;
-  var required = props.required;
-  var disabled = props.disabled;
-  var categoryNamePrefixes = props.categoryNamePrefixes;
-  var name = props.name;
-  var control = props.control;
-  var parentId = props.parentId;
+function Select_Display_Category$Category(Props) {
+  var parentId = Props.parentId;
+  var control = Props.control;
+  var name = Props.name;
+  var categoryNamePrefixes = Props.categoryNamePrefixes;
+  var disabled = Props.disabled;
+  var required = Props.required;
+  var isClearable = Props.isClearable;
   var prefix = Garter_Array.first(categoryNamePrefixes);
   if (prefix !== undefined) {
     if (parentId !== undefined) {
       return React.createElement(React.Suspense, {
-                  children: Caml_option.some(React.createElement($$Selection.make, {
-                            parentId: parentId,
-                            control: control,
-                            name: name,
-                            prefix: prefix,
-                            categoryNamePrefixes: categoryNamePrefixes,
-                            disabled: disabled,
-                            required: required,
-                            isClearable: isClearable
-                          })),
-                  fallback: Caml_option.some(React.createElement("div", undefined))
+                  children: React.createElement($$Selection.make, {
+                        parentId: parentId,
+                        control: control,
+                        name: name,
+                        prefix: prefix,
+                        categoryNamePrefixes: categoryNamePrefixes,
+                        disabled: disabled,
+                        required: required,
+                        isClearable: isClearable
+                      }),
+                  fallback: React.createElement("div", undefined)
                 });
     } else if (prefix === "c1") {
       return React.createElement(React.Suspense, {
-                  children: Caml_option.some(React.createElement($$Selection.make, {
-                            parentId: undefined,
-                            control: control,
-                            name: name,
-                            prefix: prefix,
-                            categoryNamePrefixes: categoryNamePrefixes,
-                            disabled: disabled,
-                            required: required,
-                            isClearable: isClearable
-                          })),
-                  fallback: Caml_option.some(React.createElement("div", undefined))
+                  children: React.createElement($$Selection.make, {
+                        parentId: undefined,
+                        control: control,
+                        name: name,
+                        prefix: prefix,
+                        categoryNamePrefixes: categoryNamePrefixes,
+                        disabled: disabled,
+                        required: required,
+                        isClearable: isClearable
+                      }),
+                  fallback: React.createElement("div", undefined)
                 });
     } else {
       return null;
@@ -183,14 +183,15 @@ Caml_module.update_mod({
       make: Select_Display_Category$Category
     });
 
-function Select_Display_Category$Selection(props) {
-  var isClearable = props.isClearable;
-  var required = props.required;
-  var disabled = props.disabled;
-  var prefix = props.prefix;
-  var name = props.name;
-  var control = props.control;
-  var parentId = props.parentId;
+function Select_Display_Category$Selection(Props) {
+  var parentId = Props.parentId;
+  var control = Props.control;
+  var name = Props.name;
+  var prefix = Props.prefix;
+  var categoryNamePrefixes = Props.categoryNamePrefixes;
+  var disabled = Props.disabled;
+  var required = Props.required;
+  var isClearable = Props.isClearable;
   var categoryType = Belt_Option.getWithDefault(ReactHookForm$1.useWatch({
             name: "" + name + ".categoryType.value",
             control: control
@@ -252,7 +253,7 @@ function Select_Display_Category$Selection(props) {
                         className: "absolute w-full"
                       }, React.createElement(ReactHookForm$1.Controller, {
                             name: "" + name + "." + prefix + "",
-                            control: Caml_option.some(control),
+                            control: control,
                             render: (function (param) {
                                 var match = param.field;
                                 var onChange = match.onChange;
@@ -281,11 +282,11 @@ function Select_Display_Category$Selection(props) {
                                                             });
                                                 })
                                             },
-                                            ref: Caml_option.some(match.ref)
+                                            ref: match.ref
                                           });
                               }),
-                            defaultValue: Caml_option.some(ReactSelect.encoderRule(/* NotSelected */0)),
-                            rules: Caml_option.some(ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
+                            defaultValue: ReactSelect.encoderRule(/* NotSelected */0),
+                            rules: ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                           }))), React.createElement(Category.make, {
                     parentId: Belt_Option.flatMap(selectedId, (function (prim) {
                             if (prim == null) {
@@ -296,7 +297,7 @@ function Select_Display_Category$Selection(props) {
                           })),
                     control: control,
                     name: name,
-                    categoryNamePrefixes: Garter_Array.sliceToEnd(props.categoryNamePrefixes, 1),
+                    categoryNamePrefixes: Garter_Array.sliceToEnd(categoryNamePrefixes, 1),
                     disabled: disabled,
                     required: required,
                     isClearable: isClearable
@@ -316,9 +317,13 @@ Caml_module.update_mod({
       make: Select_Display_Category$Selection
     });
 
-function Select_Display_Category(props) {
-  var isClearable = props.isClearable;
-  var isClearable$1 = isClearable !== undefined ? isClearable : false;
+function Select_Display_Category(Props) {
+  var control = Props.control;
+  var name = Props.name;
+  var disabled = Props.disabled;
+  var required = Props.required;
+  var isClearableOpt = Props.isClearable;
+  var isClearable = isClearableOpt !== undefined ? isClearableOpt : false;
   var categoryNamePrefixes = [
     "c1",
     "c2",
@@ -328,12 +333,12 @@ function Select_Display_Category(props) {
   ];
   return React.createElement(Category.make, {
               parentId: undefined,
-              control: props.control,
-              name: props.name,
+              control: control,
+              name: name,
               categoryNamePrefixes: categoryNamePrefixes,
-              disabled: props.disabled,
-              required: props.required,
-              isClearable: isClearable$1
+              disabled: disabled,
+              required: required,
+              isClearable: isClearable
             });
 }
 

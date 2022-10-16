@@ -4,48 +4,67 @@ import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as React from "react";
 import * as DS_Badge from "../element/DS_Badge.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as DS_TitleList from "../element/DS_TitleList.mjs";
 
-function DS_Title$Normal1$Root(props) {
+function DS_Title$Normal1$Root(Props) {
+  var children = Props.children;
+  var className = Props.className;
   var defaultStyle = "flex justify-between items-center px-5";
   return React.createElement("div", {
-              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, props.children);
+            }, children);
 }
 
 var Root = {
   make: DS_Title$Normal1$Root
 };
 
-function DS_Title$Normal1$TextGroup(props) {
+function DS_Title$Normal1$TextGroup(Props) {
+  var title1 = Props.title1;
+  var title2 = Props.title2;
+  var badge = Props.badge;
+  var titleStyle = Props.titleStyle;
+  var subTitle = Props.subTitle;
+  var subTitleStyle = Props.subTitleStyle;
+  var tmp = {
+    title1: title1
+  };
+  if (title2 !== undefined) {
+    tmp.title2 = Caml_option.valFromOption(title2);
+  }
+  if (titleStyle !== undefined) {
+    tmp.titleStyle = Caml_option.valFromOption(titleStyle);
+  }
+  if (subTitle !== undefined) {
+    tmp.subTitle = Caml_option.valFromOption(subTitle);
+  }
+  if (subTitleStyle !== undefined) {
+    tmp.subTitleStyle = Caml_option.valFromOption(subTitleStyle);
+  }
   return React.createElement("div", {
               className: "flex flex-col items-start space-y-3"
-            }, Belt_Option.mapWithDefault(props.badge, null, (function (b) {
+            }, Belt_Option.mapWithDefault(badge, null, (function (b) {
                     return React.createElement(DS_Badge.Medium.make, {
                                 text: b
                               });
-                  })), React.createElement(DS_TitleList.Left.TitleSubtitle1.make, {
-                  title1: props.title1,
-                  title2: props.title2,
-                  titleStyle: props.titleStyle,
-                  subTitle: props.subTitle,
-                  subTitleStyle: props.subTitleStyle
-                }));
+                  })), React.createElement(DS_TitleList.Left.TitleSubtitle1.make, tmp));
 }
 
 var TextGroup = {
   make: DS_Title$Normal1$TextGroup
 };
 
-function DS_Title$Normal1$RightGroup(props) {
+function DS_Title$Normal1$RightGroup(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "ml-2"
-            }, props.children);
+            }, children);
 }
 
 var RightGroup = {

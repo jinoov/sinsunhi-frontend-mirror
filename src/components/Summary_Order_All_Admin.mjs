@@ -21,7 +21,7 @@ import Format from "date-fns/format";
 import SubDays from "date-fns/subDays";
 import * as Query_Order_All_Form_Admin from "./Query_Order_All_Form_Admin.mjs";
 
-function Summary_Order_All_Admin(props) {
+function Summary_Order_All_Admin(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         
@@ -283,7 +283,7 @@ function Summary_Order_All_Admin(props) {
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* From */0, param);
                                     }),
-                                  date: Caml_option.some(query.from),
+                                  date: query.from,
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   firstDayOfWeek: 0
                                 }), React.createElement("span", {
@@ -293,7 +293,7 @@ function Summary_Order_All_Admin(props) {
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* To */1, param);
                                     }),
-                                  date: Caml_option.some(query.to_),
+                                  date: query.to_,
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   minDate: Format(query.from, "yyyy-MM-dd"),
                                   firstDayOfWeek: 0

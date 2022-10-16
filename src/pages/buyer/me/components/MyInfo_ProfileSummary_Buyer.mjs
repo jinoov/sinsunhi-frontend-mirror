@@ -37,8 +37,9 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function MyInfo_ProfileSummary_Buyer$PC(props) {
-  var match = use(props.query);
+function MyInfo_ProfileSummary_Buyer$PC(Props) {
+  var query = Props.query;
+  var match = use(query);
   var company = match.name;
   return React.createElement("div", {
               className: "pb-5 flex items-center justify-between"
@@ -68,8 +69,9 @@ var PC = {
   make: MyInfo_ProfileSummary_Buyer$PC
 };
 
-function MyInfo_ProfileSummary_Buyer$Mobile(props) {
-  var match = use(props.query);
+function MyInfo_ProfileSummary_Buyer$Mobile(Props) {
+  var query = Props.query;
+  var match = use(query);
   var company = match.name;
   return React.createElement(Link, {
               href: "/buyer/me/profile",

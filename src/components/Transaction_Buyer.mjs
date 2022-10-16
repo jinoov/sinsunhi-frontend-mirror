@@ -16,8 +16,8 @@ function formatTime(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "HH:mm");
 }
 
-function Transaction_Buyer$Item$Table(props) {
-  var transaction = props.transaction;
+function Transaction_Buyer$Item$Table(Props) {
+  var transaction = Props.transaction;
   return React.createElement("li", {
               className: "hidden lg:grid lg:grid-cols-4-buyer-transaction text-text-L1"
             }, React.createElement("div", {
@@ -43,8 +43,8 @@ var Table = {
   make: Transaction_Buyer$Item$Table
 };
 
-function Transaction_Buyer$Item$Card(props) {
-  var transaction = props.transaction;
+function Transaction_Buyer$Item$Card(Props) {
+  var transaction = Props.transaction;
   return React.createElement("li", {
               className: "py-4 lg:mb-4 lg:hidden text-black-gl"
             }, React.createElement("section", {
@@ -71,8 +71,8 @@ var Item = {
   Card: Card
 };
 
-function Transaction_Buyer(props) {
-  var transaction = props.transaction;
+function Transaction_Buyer(Props) {
+  var transaction = Props.transaction;
   return React.createElement(React.Fragment, undefined, React.createElement(Transaction_Buyer$Item$Table, {
                   transaction: transaction
                 }), React.createElement(Transaction_Buyer$Item$Card, {

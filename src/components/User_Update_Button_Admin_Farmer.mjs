@@ -89,8 +89,9 @@ var initialState = {
   etc: ""
 };
 
-function User_Update_Button_Admin_Farmer(props) {
-  var user = props.user;
+function User_Update_Button_Admin_Farmer(Props) {
+  var user = Props.user;
+  var className = Props.className;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -167,8 +168,8 @@ function User_Update_Button_Admin_Farmer(props) {
   var tmp = {
     src: editIcon
   };
-  if (props.className !== undefined) {
-    tmp.className = Caml_option.valFromOption(props.className);
+  if (className !== undefined) {
+    tmp.className = Caml_option.valFromOption(className);
   }
   var partial_arg = Curry._1(form.handleChange, /* Rep */0);
   var partial_arg$1 = Curry._1(form.handleChange, /* Manager */1);
@@ -208,7 +209,8 @@ function User_Update_Button_Admin_Farmer(props) {
                                         value: form.values.rep,
                                         onChange: (function (param) {
                                             return ReForm__Helpers.handleChange(partial_arg, param);
-                                          })
+                                          }),
+                                        error: undefined
                                       }))), React.createElement("section", {
                                 className: "mt-5"
                               }, React.createElement("h3", undefined, "담당자"), React.createElement("div", {
@@ -220,7 +222,8 @@ function User_Update_Button_Admin_Farmer(props) {
                                         value: form.values.manager,
                                         onChange: (function (param) {
                                             return ReForm__Helpers.handleChange(partial_arg$1, param);
-                                          })
+                                          }),
+                                        error: undefined
                                       }))), React.createElement("section", {
                                 className: "mt-5"
                               }, React.createElement("h3", undefined, "담당자 연락처"), React.createElement("div", {
@@ -246,6 +249,7 @@ function User_Update_Button_Admin_Farmer(props) {
                                         onChange: (function (param) {
                                             return ReForm__Helpers.handleChange(partial_arg$2, param);
                                           }),
+                                        error: undefined,
                                         rows: 4,
                                         maxLength: 200
                                       }))), React.createElement("section", {

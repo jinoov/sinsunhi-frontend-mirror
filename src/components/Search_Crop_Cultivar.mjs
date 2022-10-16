@@ -21,8 +21,10 @@ function decodeSearchType(type_) {
   }
 }
 
-function Search_Crop_Cultivar(props) {
-  var type_ = props.type_;
+function Search_Crop_Cultivar(Props) {
+  var type_ = Props.type_;
+  var value = Props.value;
+  var onChange = Props.onChange;
   var handleLoadOptions = function (inputValue) {
     return Js_promise.then_((function (result) {
                   var result$p = Belt_Result.map(CustomHooks.CropCategory.response_decode(result), (function (response$p) {
@@ -45,11 +47,11 @@ function Search_Crop_Cultivar(props) {
                 }), FetchHelper.fetchWithRetry(FetchHelper.getWithToken, "" + Env.restApiUrl + "/category/search?type=" + decodeSearchType(type_) + "&query=" + inputValue + "", "", 3));
   };
   return React.createElement(Async, {
-              value: props.value,
+              value: value,
               cacheOptions: false,
               defaultOptions: false,
               loadOptions: Helper.Debounce.make1(handleLoadOptions, 500),
-              onChange: props.onChange,
+              onChange: onChange,
               placeholder: type_ === "Crop" ? "작물명으로 찾기" : (
                   type_ === "Cultivar" ? "품종명으로 찾기" : "작물-품종명으로 찾기"
                 ),

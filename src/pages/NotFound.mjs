@@ -27,7 +27,7 @@ function getFirstPath(pathname) {
   return Belt_Array.get(pathname.split("/"), 1);
 }
 
-function NotFound$Buyer(props) {
+function NotFound$Buyer(Props) {
   var match = GnbBannerList_Buyer.Query.use(undefined, /* StoreOrNetwork */1, undefined, undefined, undefined);
   var match$1 = ShopCategorySelect_Buyer.Query.use({
         onlyDisplayable: true,
@@ -57,7 +57,7 @@ var Buyer = {
   make: NotFound$Buyer
 };
 
-function NotFound$Default(props) {
+function NotFound$Default(Props) {
   return React.createElement("div", {
               className: "w-screen h-screen flex items-center justify-center"
             }, React.createElement("div", {
@@ -78,11 +78,15 @@ var Default = {
   make: NotFound$Default
 };
 
-function NotFound$Container(props) {
+function NotFound$Container(Props) {
   var router = Router.useRouter();
   var service = Belt_Option.flatMap(getFirstPath(router.asPath), parsePath);
-  if (service === 1) {
-    return React.createElement(NotFound$Buyer, {});
+  if (service !== undefined) {
+    if (service !== 1) {
+      return React.createElement(NotFound$Default, {});
+    } else {
+      return React.createElement(NotFound$Buyer, {});
+    }
   } else {
     return React.createElement(NotFound$Default, {});
   }
@@ -92,7 +96,7 @@ var Container = {
   make: NotFound$Container
 };
 
-function NotFound(props) {
+function NotFound(Props) {
   var match = React.useState(function () {
         return false;
       });

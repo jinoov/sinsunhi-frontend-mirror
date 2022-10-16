@@ -102,8 +102,8 @@ var Query = {
   retain: retain
 };
 
-function Tradematch_Buy_Product_Apply_Buyer$Content(props) {
-  var pNumber = props.pNumber;
+function Tradematch_Buy_Product_Apply_Buyer$Content(Props) {
+  var pNumber = Props.pNumber;
   var match = use({
         productNumber: pNumber
       }, undefined, undefined, undefined, undefined);
@@ -135,8 +135,8 @@ function Tradematch_Buy_Product_Apply_Buyer$Content(props) {
                   className: "relative container bg-white max-w-3xl mx-auto min-h-screen"
                 }, React.createElement(RescriptReactErrorBoundary.make, {
                       children: React.createElement(React.Suspense, {
-                            children: Caml_option.some(tmp),
-                            fallback: Caml_option.some(React.createElement(React.Fragment, undefined, React.createElement(Tradematch_Header_Buyer.make, {}), React.createElement(Tradematch_Skeleton_Buyer.make, {})))
+                            children: tmp,
+                            fallback: React.createElement(React.Fragment, undefined, React.createElement(Tradematch_Header_Buyer.make, {}), React.createElement(Tradematch_Skeleton_Buyer.make, {}))
                           }),
                       fallback: (function (param) {
                           return React.createElement(React.Fragment, undefined, React.createElement(Tradematch_Header_Buyer.make, {}), React.createElement(Tradematch_Skeleton_Buyer.make, {}), React.createElement(Tradematch_NotFound_Buyer.make, {}));
@@ -148,8 +148,9 @@ var Content = {
   make: Tradematch_Buy_Product_Apply_Buyer$Content
 };
 
-function Tradematch_Buy_Product_Apply_Buyer(props) {
-  var pNumber = Belt_Int.fromString(props.pid);
+function Tradematch_Buy_Product_Apply_Buyer(Props) {
+  var pid = Props.pid;
+  var pNumber = Belt_Int.fromString(pid);
   return React.createElement(Authorization.Buyer.make, {
               children: pNumber !== undefined ? React.createElement(Tradematch_Buy_Product_Apply_Buyer$Content, {
                       pNumber: pNumber

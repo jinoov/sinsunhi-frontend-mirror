@@ -120,12 +120,14 @@ var Hooks = {
 
 var P = {};
 
-function ReactHookForm$Provider(props) {
+function ReactHookForm$Provider(Props) {
+  var children = Props.children;
+  var methods = Props.methods;
   return React.createElement(ReactUtil.SpreadProps.make, {
               children: React.createElement(ReactHookForm.FormProvider, {
-                    children: props.children
+                    children: children
                   }),
-              props: props.methods
+              props: methods
             });
 }
 

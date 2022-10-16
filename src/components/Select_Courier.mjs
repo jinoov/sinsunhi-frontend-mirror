@@ -8,9 +8,9 @@ import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as IconArrowSelect from "./svgs/IconArrowSelect.mjs";
 
-function Select_Courier(props) {
-  var setCourier = props.setCourier;
-  var courierCode = props.courierCode;
+function Select_Courier(Props) {
+  var courierCode = Props.courierCode;
+  var setCourier = Props.setCourier;
   var status = CustomHooks.Courier.use(undefined);
   var onChange = function (e) {
     var code = e.target.value;

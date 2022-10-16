@@ -5,7 +5,7 @@ import * as Skeleton from "../../../../components/Skeleton.mjs";
 import * as IconArrow from "../../../../components/svgs/IconArrow.mjs";
 import Link from "next/link";
 
-function MyInfo_Skeleton_Buyer$PC(props) {
+function MyInfo_Skeleton_Buyer$PC(Props) {
   return React.createElement("section", {
               className: "flex-col bg-surface"
             }, React.createElement("div", {
@@ -85,7 +85,7 @@ var PC = {
   make: MyInfo_Skeleton_Buyer$PC
 };
 
-function MyInfo_Skeleton_Buyer$Mobile$Main(props) {
+function MyInfo_Skeleton_Buyer$Mobile$Main(Props) {
   return React.createElement("div", {
               className: "w-full bg-white absolute top-0 pt-14 min-h-screen"
             }, React.createElement("div", {
@@ -235,7 +235,7 @@ var Main = {
   make: MyInfo_Skeleton_Buyer$Mobile$Main
 };
 
-function MyInfo_Skeleton_Buyer$Mobile$Account(props) {
+function MyInfo_Skeleton_Buyer$Mobile$Account(Props) {
   return React.createElement("div", {
               className: "block w-full bg-white absolute top-0 pt-14 min-h-screen"
             }, React.createElement("div", {

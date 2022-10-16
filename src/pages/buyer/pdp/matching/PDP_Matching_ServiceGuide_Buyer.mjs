@@ -3,22 +3,23 @@
 import * as $$Image from "../../../../components/common/Image.mjs";
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import ReactNl2br from "react-nl2br";
 
-function PDP_Matching_ServiceGuide_Buyer$Card(props) {
+function PDP_Matching_ServiceGuide_Buyer$Card(Props) {
+  var className = Props.className;
+  var children = Props.children;
   return React.createElement("div", {
-              className: "w-full bg-[#ECF6EC] rounded-xl py-10 px-7 flex flex-col items-center " + Belt_Option.getWithDefault(props.className, "")
-            }, Belt_Option.getWithDefault(props.children, null));
+              className: "w-full bg-[#ECF6EC] rounded-xl py-10 px-7 flex flex-col items-center " + Belt_Option.getWithDefault(className, "")
+            }, Belt_Option.getWithDefault(children, null));
 }
 
 var Card = {
   make: PDP_Matching_ServiceGuide_Buyer$Card
 };
 
-function PDP_Matching_ServiceGuide_Buyer$PriceCard(props) {
+function PDP_Matching_ServiceGuide_Buyer$PriceCard(Props) {
   return React.createElement(PDP_Matching_ServiceGuide_Buyer$Card, {
-              children: Caml_option.some(null)
+              children: null
             }, React.createElement("span", {
                   className: "text-[26px] font-bold text-text-L1"
                 }, "국내", React.createElement("span", {
@@ -39,10 +40,10 @@ var PriceCard = {
   make: PDP_Matching_ServiceGuide_Buyer$PriceCard
 };
 
-function PDP_Matching_ServiceGuide_Buyer$GradeCard(props) {
+function PDP_Matching_ServiceGuide_Buyer$GradeCard(Props) {
   return React.createElement(PDP_Matching_ServiceGuide_Buyer$Card, {
               className: "mt-4",
-              children: Caml_option.some(null)
+              children: null
             }, React.createElement("span", {
                   className: "text-[26px] font-bold text-text-L1"
                 }, "신선하이 자체"), React.createElement("span", {
@@ -63,10 +64,10 @@ var GradeCard = {
   make: PDP_Matching_ServiceGuide_Buyer$GradeCard
 };
 
-function PDP_Matching_ServiceGuide_Buyer$DeliveryCard(props) {
+function PDP_Matching_ServiceGuide_Buyer$DeliveryCard(Props) {
   return React.createElement(PDP_Matching_ServiceGuide_Buyer$Card, {
               className: "mt-4",
-              children: Caml_option.some(null)
+              children: null
             }, React.createElement("span", {
                   className: "text-[26px] font-bold text-text-L1"
                 }, "당일 매칭,"), React.createElement("span", {
@@ -87,7 +88,7 @@ var DeliveryCard = {
   make: PDP_Matching_ServiceGuide_Buyer$DeliveryCard
 };
 
-function PDP_Matching_ServiceGuide_Buyer$Banner(props) {
+function PDP_Matching_ServiceGuide_Buyer$Banner(Props) {
   return React.createElement("div", {
               className: "w-full relative"
             }, React.createElement("picture", undefined, React.createElement("source", {
@@ -121,7 +122,7 @@ var Banner = {
   make: PDP_Matching_ServiceGuide_Buyer$Banner
 };
 
-function PDP_Matching_ServiceGuide_Buyer$Footer(props) {
+function PDP_Matching_ServiceGuide_Buyer$Footer(Props) {
   return React.createElement("section", {
               className: "py-[60px] px-[30px] bg-blue-gray-700"
             }, React.createElement("div", {
@@ -139,7 +140,7 @@ var Footer = {
   make: PDP_Matching_ServiceGuide_Buyer$Footer
 };
 
-function PDP_Matching_ServiceGuide_Buyer$Content(props) {
+function PDP_Matching_ServiceGuide_Buyer$Content(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement(PDP_Matching_ServiceGuide_Buyer$Banner, {}), React.createElement("section", {
                   className: "px-5 pt-10 pb-[66px]"
                 }, React.createElement(PDP_Matching_ServiceGuide_Buyer$PriceCard, {}), React.createElement(PDP_Matching_ServiceGuide_Buyer$GradeCard, {}), React.createElement(PDP_Matching_ServiceGuide_Buyer$DeliveryCard, {})), React.createElement(PDP_Matching_ServiceGuide_Buyer$Footer, {}));
@@ -149,10 +150,11 @@ var Content = {
   make: PDP_Matching_ServiceGuide_Buyer$Content
 };
 
-function PDP_Matching_ServiceGuide_Buyer$Trigger(props) {
+function PDP_Matching_ServiceGuide_Buyer$Trigger(Props) {
+  var onClick = Props.onClick;
   return React.createElement("button", {
               className: "w-full p-5 rounded-xl bg-[#EFF7FC] flex items-center justify-between",
-              onClick: props.onClick
+              onClick: onClick
             }, React.createElement("div", {
                   className: "flex flex-col items-start"
                 }, React.createElement("span", {

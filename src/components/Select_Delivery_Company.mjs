@@ -128,10 +128,13 @@ function style(error, disabled) {
   }
 }
 
-function Select_Delivery_Company(props) {
-  var disabled = props.disabled;
-  var error = props.error;
-  var deliveryCompanyId = props.deliveryCompanyId;
+function Select_Delivery_Company(Props) {
+  var label = Props.label;
+  var deliveryCompanyId = Props.deliveryCompanyId;
+  var onChange = Props.onChange;
+  var className = Props.className;
+  var error = Props.error;
+  var disabled = Props.disabled;
   var queryData = use({
         first: 100,
         orderBy: "NAME",
@@ -140,7 +143,7 @@ function Select_Delivery_Company(props) {
   var tmp = {
     className: "block w-full h-full absolute top-0 opacity-0",
     value: Belt_Option.getWithDefault(deliveryCompanyId, ""),
-    onChange: props.onChange
+    onChange: onChange
   };
   if (disabled !== undefined) {
     tmp.disabled = Caml_option.valFromOption(disabled);
@@ -149,10 +152,10 @@ function Select_Delivery_Company(props) {
               className: "mt-7 px-5 max-w-sm"
             }, React.createElement("h3", {
                   className: "text-sm"
-                }, props.label), React.createElement("label", {
+                }, label), React.createElement("label", {
                   className: "block relative mt-2"
                 }, React.createElement("span", {
-                      className: Belt_Option.mapWithDefault(props.className, style(error, disabled), (function (className$p) {
+                      className: Belt_Option.mapWithDefault(className, style(error, disabled), (function (className$p) {
                               return Cx.cx([
                                           style(error, disabled),
                                           className$p

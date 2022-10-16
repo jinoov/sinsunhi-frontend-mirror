@@ -6,7 +6,7 @@ import HomeSvg from "../../public/assets/home.svg";
 
 var homeIcon = HomeSvg;
 
-function HomeLinkIcon(props) {
+function HomeLinkIcon(Props) {
   var router = Router.useRouter();
   return React.createElement("button", {
               className: "w-6 h-[30px]",

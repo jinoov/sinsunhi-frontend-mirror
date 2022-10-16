@@ -287,15 +287,17 @@ var Mutation = {
   UpdateTermAgreement: undefined
 };
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Title(props) {
-  var subText = props.subText;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Title(Props) {
+  var text = Props.text;
+  var subText = Props.subText;
+  var label = Props.label;
   return React.createElement("div", {
               className: "px-5 py-9"
-            }, Belt_Option.mapWithDefault(props.label, null, (function (x) {
+            }, Belt_Option.mapWithDefault(label, null, (function (x) {
                     return x;
                   })), React.createElement("h2", {
                   className: "text-2xl font-bold whitespace-pre-line"
-                }, props.text), subText !== undefined ? React.createElement("h3", {
+                }, text), subText !== undefined ? React.createElement("h3", {
                     className: "text-gray-600 whitespace-pre-line text-sm mt-3"
                   }, subText) : null);
 }
@@ -304,9 +306,10 @@ var Title = {
   make: Tradematch_Buy_Aqua_Apply_Steps_Buyer$Title
 };
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$FloatingButton(props) {
-  var disabled = props.disabled;
-  var disabled$1 = disabled !== undefined ? disabled : false;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$FloatingButton(Props) {
+  var handleClickButton = Props.handleClickButton;
+  var disabledOpt = Props.disabled;
+  var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var match = CustomHooks.FarmTradematchStep.use(undefined);
   var buttonText = match.isLast ? "견적 신청 완료" : "다음";
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
@@ -318,8 +321,8 @@ function Tradematch_Buy_Aqua_Apply_Steps_Buyer$FloatingButton(props) {
                                 "h-14 w-full rounded-xl bg-primary text-white text-lg font-bold",
                                 "disabled:bg-disabled-L2 disabled:text-inverted disabled:text-opacity-50"
                               ]),
-                          disabled: disabled$1,
-                          onClick: props.handleClickButton
+                          disabled: disabled,
+                          onClick: handleClickButton
                         }, buttonText))), React.createElement("div", {
                   className: "h-24"
                 }));
@@ -329,41 +332,48 @@ var FloatingButton = {
   make: Tradematch_Buy_Aqua_Apply_Steps_Buyer$FloatingButton
 };
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$CalendarListitem(props) {
-  var handleChangeDate = props.handleChangeDate;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$CalendarListitem(Props) {
+  var leftText = Props.leftText;
+  var currentDate = Props.currentDate;
+  var handleChangeDate = Props.handleChangeDate;
+  var minDate = Props.minDate;
+  var maxDate = Props.maxDate;
+  var tmp = {
+    id: "date",
+    onChange: (function (e) {
+        var newDate = e.detail.valueAsDate;
+        handleChangeDate(function (param) {
+              return newDate;
+            });
+      }),
+    maxDate: Format(maxDate, "yyyy-MM-dd"),
+    minDate: Format(minDate, "yyyy-MM-dd"),
+    firstDayOfWeek: 0,
+    isDateDisabled: (function (e) {
+        if (e.getDay() === 0) {
+          return true;
+        } else {
+          return e.getDay() === 6;
+        }
+      }),
+    onFocus: (function (param) {
+        Belt_Option.forEach(Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById("date")), Webapi__Dom__Element.asHtmlElement), (function (inputEl$p) {
+                inputEl$p.blur();
+              }));
+      })
+  };
+  if (currentDate !== undefined) {
+    tmp.date = Caml_option.valFromOption(currentDate);
+  }
   return React.createElement("li", {
               className: "flex items-center min-h-[56px] mx-5 cursor-pointer border-b-2 border-b-border-disabled"
             }, React.createElement("div", {
                   className: "flex flex-col justify-between truncate"
                 }, React.createElement("span", {
                       className: "block text-base truncate"
-                    }, props.leftText)), React.createElement("div", {
+                    }, leftText)), React.createElement("div", {
                   className: "ml-auto pl-2"
-                }, React.createElement(DatePicker.make, {
-                      id: "date",
-                      onChange: (function (e) {
-                          var newDate = e.detail.valueAsDate;
-                          handleChangeDate(function (param) {
-                                return newDate;
-                              });
-                        }),
-                      date: props.currentDate,
-                      maxDate: Format(props.maxDate, "yyyy-MM-dd"),
-                      minDate: Format(props.minDate, "yyyy-MM-dd"),
-                      firstDayOfWeek: 0,
-                      isDateDisabled: (function (e) {
-                          if (e.getDay() === 0) {
-                            return true;
-                          } else {
-                            return e.getDay() === 6;
-                          }
-                        }),
-                      onFocus: (function (param) {
-                          Belt_Option.forEach(Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById("date")), Webapi__Dom__Element.asHtmlElement), (function (inputEl$p) {
-                                  inputEl$p.blur();
-                                }));
-                        })
-                    })));
+                }, React.createElement(DatePicker.make, tmp)));
 }
 
 var CalendarListitem = {
@@ -390,11 +400,11 @@ function toString(origin) {
   }
 }
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Origin(props) {
-  var demandId = props.demandId;
-  var defaultOrigin = props.defaultOrigin;
-  var productId = props.productId;
-  var connectionId = props.connectionId;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Origin(Props) {
+  var connectionId = Props.connectionId;
+  var productId = Props.productId;
+  var defaultOrigin = Props.defaultOrigin;
+  var demandId = Props.demandId;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -599,9 +609,9 @@ function convertNumberInputValue(value) {
   return value.replace(/[^0-9]/g, "").replace(/^[0]/g, "");
 }
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Weight(props) {
-  var defaultWeight = props.defaultWeight;
-  var demandId = props.demandId;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Weight(Props) {
+  var demandId = Props.demandId;
+  var defaultWeight = Props.defaultWeight;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -696,7 +706,7 @@ function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Weight(props) {
                                 });
                           }),
                         unit: "Kg",
-                        errorMessage: Caml_option.some(match$3[0]),
+                        errorMessage: match$3[0],
                         maxLength: 11
                       }),
                   className: "mt-4"
@@ -715,10 +725,10 @@ function convertNumberInputValue$1(value) {
   return value.replace(/[^0-9]/g, "").replace(/^[0]/g, "");
 }
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Price(props) {
-  var defaultPrice = props.defaultPrice;
-  var currentWeight = props.currentWeight;
-  var demandId = props.demandId;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Price(Props) {
+  var demandId = Props.demandId;
+  var currentWeight = Props.currentWeight;
+  var defaultPrice = Props.defaultPrice;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -813,7 +823,7 @@ function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Price(props) {
                                 });
                           }),
                         unit: "원/Kg",
-                        errorMessage: Caml_option.some(match$3[0]),
+                        errorMessage: match$3[0],
                         maxLength: 11
                       }),
                   className: "mt-4"
@@ -897,9 +907,9 @@ function fromString$1(str) {
   }
 }
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$StorageMethod(props) {
-  var defaultStorageMethod = props.defaultStorageMethod;
-  var demandId = props.demandId;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$StorageMethod(Props) {
+  var demandId = Props.demandId;
+  var defaultStorageMethod = Props.defaultStorageMethod;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -1084,9 +1094,9 @@ function fromString$2(str) {
   }
 }
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Cycle(props) {
-  var defaultCycle = props.defaultCycle;
-  var demandId = props.demandId;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Cycle(Props) {
+  var demandId = Props.demandId;
+  var defaultCycle = Props.defaultCycle;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -1198,11 +1208,11 @@ var Cycle = {
   make: Tradematch_Buy_Aqua_Apply_Steps_Buyer$Cycle
 };
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Requirement(props) {
-  var defaultRequirements = props.defaultRequirements;
-  var defaultProcess = props.defaultProcess;
-  var defaultSize = props.defaultSize;
-  var demandId = props.demandId;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Requirement(Props) {
+  var demandId = Props.demandId;
+  var defaultSize = Props.defaultSize;
+  var defaultProcess = Props.defaultProcess;
+  var defaultRequirements = Props.defaultRequirements;
   var match = CustomHooks.AquaTradematchStep.use(undefined);
   var toNext = match.router.toNext;
   var match$1 = ReactToastNotifications.useToasts();
@@ -1329,8 +1339,8 @@ var Requirement = {
   make: Tradematch_Buy_Aqua_Apply_Steps_Buyer$Requirement
 };
 
-function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Shipping(props) {
-  var demandId = props.demandId;
+function Tradematch_Buy_Aqua_Apply_Steps_Buyer$Shipping(Props) {
+  var demandId = Props.demandId;
   var match = use(undefined, undefined, undefined, undefined, undefined);
   var tradematchDeliveryPolicy = match.tradematchDeliveryPolicy;
   var match$1 = Curry._5(RfqShipping_Buyer.Query.RfqTerms.use, undefined, undefined, undefined, undefined, undefined);

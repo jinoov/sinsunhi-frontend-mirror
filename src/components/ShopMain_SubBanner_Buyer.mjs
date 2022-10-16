@@ -90,7 +90,7 @@ var Query = {
   retain: retain
 };
 
-function ShopMain_SubBanner_Buyer$PC$Placeholder(props) {
+function ShopMain_SubBanner_Buyer$PC$Placeholder(Props) {
   return React.createElement("div", {
               className: "w-full flex flex-col gap-3"
             }, Belt_Array.map([
@@ -109,10 +109,11 @@ var Placeholder = {
   make: ShopMain_SubBanner_Buyer$PC$Placeholder
 };
 
-function ShopMain_SubBanner_Buyer$PC(props) {
+function ShopMain_SubBanner_Buyer$PC(Props) {
+  var subBanners = Props.subBanners;
   return React.createElement("div", {
               className: "w-full flex flex-col gap-3"
-            }, Belt_Array.map(props.subBanners, (function (param) {
+            }, Belt_Array.map(subBanners, (function (param) {
                     var key = "sub-banner-" + param.id + "";
                     var target = param.isNewTabPc ? "_blank" : "_self";
                     return React.createElement("div", {
@@ -137,7 +138,7 @@ var PC = {
   make: ShopMain_SubBanner_Buyer$PC
 };
 
-function ShopMain_SubBanner_Buyer$MO$Placeholder(props) {
+function ShopMain_SubBanner_Buyer$MO$Placeholder(Props) {
   return React.createElement("div", {
               className: "w-full flex items-center gap-[10px]"
             }, Belt_Array.map([
@@ -156,10 +157,11 @@ var Placeholder$1 = {
   make: ShopMain_SubBanner_Buyer$MO$Placeholder
 };
 
-function ShopMain_SubBanner_Buyer$MO(props) {
+function ShopMain_SubBanner_Buyer$MO(Props) {
+  var subBanners = Props.subBanners;
   return React.createElement("div", {
               className: "w-full flex items-center gap-[10px]"
-            }, Belt_Array.map(props.subBanners, (function (param) {
+            }, Belt_Array.map(subBanners, (function (param) {
                     var key = "sub-banner-" + param.id + "";
                     var target = param.isNewTabMobile ? "_blank" : "_self";
                     return React.createElement("div", {

@@ -9,8 +9,8 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 
-function Tracking_Admin(props) {
-  var order = props.order;
+function Tracking_Admin(Props) {
+  var order = Props.order;
   var status = CustomHooks.SweetTracker.use(undefined);
   var openPopupPostFormData = function (param) {
     return ReactEvents.interceptingHandler((function (param) {

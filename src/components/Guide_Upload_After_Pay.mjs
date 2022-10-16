@@ -5,12 +5,12 @@ import * as React from "react";
 import * as IconArrowSelect from "./svgs/IconArrowSelect.mjs";
 import * as ReactAccordion from "@radix-ui/react-accordion";
 
-function Guide_Upload_After_Pay(props) {
+function Guide_Upload_After_Pay(Props) {
   return React.createElement("div", {
               className: "container max-w-lg mx-auto sm:mt-4 sm:shadow-gl mb-10"
             }, React.createElement(ReactAccordion.Root, {
                   children: null,
-                  _type: "multiple"
+                  type: "multiple"
                 }, React.createElement(ReactAccordion.Item, {
                       children: null,
                       value: "guide-1"

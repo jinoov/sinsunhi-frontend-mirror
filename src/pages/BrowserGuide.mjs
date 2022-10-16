@@ -11,7 +11,7 @@ import ChromeSvg from "../../public/assets/chrome.svg";
 
 var chromeIcon = ChromeSvg;
 
-function BrowserGuide(props) {
+function BrowserGuide(Props) {
   React.useEffect((function () {
           new Clipboard(".btn-link");
         }), []);

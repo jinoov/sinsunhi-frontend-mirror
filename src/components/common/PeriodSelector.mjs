@@ -35,10 +35,11 @@ function getPeriod(from, to_) {
   }
 }
 
-function PeriodSelector(props) {
-  var onSelect = props.onSelect;
-  var to_ = props.to_;
-  var period = getPeriod(props.from, to_);
+function PeriodSelector(Props) {
+  var from = Props.from;
+  var to_ = Props.to_;
+  var onSelect = Props.onSelect;
+  var period = getPeriod(from, to_);
   var handleOnSelect = function (s) {
     return function (param) {
       return ReactEvents.interceptingHandler((function (param) {

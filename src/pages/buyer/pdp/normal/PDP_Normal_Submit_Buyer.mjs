@@ -138,11 +138,14 @@ var ClickPurchaseGtm = {
   make: make
 };
 
-function PDP_Normal_Submit_Buyer$PC$ActionBtn(props) {
-  var setShowModal = props.setShowModal;
-  var selectedOptions = props.selectedOptions;
+function PDP_Normal_Submit_Buyer$PC$ActionBtn(Props) {
+  var query = Props.query;
+  var className = Props.className;
+  var selectedOptions = Props.selectedOptions;
+  var setShowModal = Props.setShowModal;
+  var children = Props.children;
   var availableButton = ToggleOrderAndPayment.use(undefined);
-  var product = use$1(props.query);
+  var product = use$1(query);
   var onClick = function (param) {
     if (availableButton) {
       Belt_Option.map(make(product, selectedOptions), (function (event$p) {
@@ -162,23 +165,25 @@ function PDP_Normal_Submit_Buyer$PC$ActionBtn(props) {
     }
   };
   return React.createElement("button", {
-              className: props.className,
+              className: className,
               onClick: onClick
-            }, props.children);
+            }, children);
 }
 
 var ActionBtn = {
   make: PDP_Normal_Submit_Buyer$PC$ActionBtn
 };
 
-function PDP_Normal_Submit_Buyer$PC$OrderBtn(props) {
-  var setShowModal = props.setShowModal;
-  var selectedOptions = props.selectedOptions;
+function PDP_Normal_Submit_Buyer$PC$OrderBtn(Props) {
+  var status = Props.status;
+  var selectedOptions = Props.selectedOptions;
+  var setShowModal = Props.setShowModal;
+  var query = Props.query;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var btnStyle = "w-full h-16 rounded-xl flex items-center justify-center bg-primary hover:bg-primary-variant text-lg font-bold text-white";
   var disabledStyle = "w-full h-16 rounded-xl flex items-center justify-center bg-gray-300 text-white font-bold text-xl";
   var orderStatus;
-  if (props.status === "SOLDOUT") {
+  if (status === "SOLDOUT") {
     orderStatus = /* Soldout */1;
   } else if (typeof user === "number") {
     orderStatus = user !== 0 ? /* Unauthorized */2 : /* Loading */0;
@@ -190,7 +195,7 @@ function PDP_Normal_Submit_Buyer$PC$OrderBtn(props) {
   }
   if (typeof orderStatus !== "number") {
     return React.createElement(PDP_Normal_Submit_Buyer$PC$ActionBtn, {
-                query: props.query,
+                query: query,
                 className: btnStyle,
                 selectedOptions: orderStatus._0,
                 setShowModal: setShowModal,
@@ -240,16 +245,18 @@ var OrderBtn = {
   make: PDP_Normal_Submit_Buyer$PC$OrderBtn
 };
 
-function PDP_Normal_Submit_Buyer$PC(props) {
-  var setShowModal = props.setShowModal;
-  var match = use(props.query);
+function PDP_Normal_Submit_Buyer$PC(Props) {
+  var query = Props.query;
+  var selectedOptions = Props.selectedOptions;
+  var setShowModal = Props.setShowModal;
+  var match = use(query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   return React.createElement("section", {
               className: "w-full"
             }, React.createElement(PDP_Normal_Submit_Buyer$PC$OrderBtn, {
                   status: match.status,
-                  selectedOptions: props.selectedOptions,
+                  selectedOptions: selectedOptions,
                   setShowModal: setShowModal,
                   query: fragmentRefs
                 }), match$1 === 1 ? React.createElement(PDP_Normal_RfqBtn_Buyer.PC.make, {
@@ -264,11 +271,14 @@ var PC = {
   make: PDP_Normal_Submit_Buyer$PC
 };
 
-function PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn(props) {
-  var setShowModal = props.setShowModal;
-  var selectedOptions = props.selectedOptions;
+function PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn(Props) {
+  var query = Props.query;
+  var className = Props.className;
+  var selectedOptions = Props.selectedOptions;
+  var setShowModal = Props.setShowModal;
+  var children = Props.children;
   var availableButton = ToggleOrderAndPayment.use(undefined);
-  var product = use$1(props.query);
+  var product = use$1(query);
   var onClick = function (param) {
     if (availableButton) {
       Belt_Option.map(make(product, selectedOptions), (function (event$p) {
@@ -288,23 +298,25 @@ function PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn(props) {
     }
   };
   return React.createElement("button", {
-              className: props.className,
+              className: className,
               onClick: onClick
-            }, props.children);
+            }, children);
 }
 
 var ActionBtn$1 = {
   make: PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn
 };
 
-function PDP_Normal_Submit_Buyer$MO$OrderBtn(props) {
-  var setShowModal = props.setShowModal;
-  var selectedOptions = props.selectedOptions;
+function PDP_Normal_Submit_Buyer$MO$OrderBtn(Props) {
+  var status = Props.status;
+  var selectedOptions = Props.selectedOptions;
+  var setShowModal = Props.setShowModal;
+  var query = Props.query;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var btnStyle = "flex flex-1 rounded-xl items-center justify-center bg-primary font-bold text-white";
   var disabledStyle = "flex flex-1 rounded-xl items-center justify-center bg-gray-300 text-white font-bold";
   var orderStatus;
-  if (props.status === "SOLDOUT") {
+  if (status === "SOLDOUT") {
     orderStatus = /* Soldout */1;
   } else if (typeof user === "number") {
     orderStatus = user !== 0 ? /* Unauthorized */2 : /* Loading */0;
@@ -316,7 +328,7 @@ function PDP_Normal_Submit_Buyer$MO$OrderBtn(props) {
   }
   if (typeof orderStatus !== "number") {
     return React.createElement(PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn, {
-                query: props.query,
+                query: query,
                 className: btnStyle,
                 selectedOptions: orderStatus._0,
                 setShowModal: setShowModal,
@@ -367,13 +379,15 @@ var OrderBtn$1 = {
   make: PDP_Normal_Submit_Buyer$MO$OrderBtn
 };
 
-function PDP_Normal_Submit_Buyer$MO(props) {
-  var setShowModal = props.setShowModal;
-  var match = use(props.query);
+function PDP_Normal_Submit_Buyer$MO(Props) {
+  var query = Props.query;
+  var selectedOptions = Props.selectedOptions;
+  var setShowModal = Props.setShowModal;
+  var match = use(query);
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   return React.createElement(PDP_CTA_Container_Buyer.make, {
-              children: Caml_option.some(null)
+              children: null
             }, match$1 === 1 ? React.createElement(React.Fragment, undefined, React.createElement(PDP_Normal_RfqBtn_Buyer.MO.make, {
                         query: fragmentRefs,
                         setShowModal: setShowModal
@@ -381,7 +395,7 @@ function PDP_Normal_Submit_Buyer$MO(props) {
                         className: "w-2"
                       })) : null, React.createElement(PDP_Normal_Submit_Buyer$MO$OrderBtn, {
                   status: match.status,
-                  selectedOptions: props.selectedOptions,
+                  selectedOptions: selectedOptions,
                   setShowModal: setShowModal,
                   query: fragmentRefs
                 }));

@@ -2,8 +2,7 @@
 
 import * as Cn from "rescript-classnames/src/Cn.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as Divider from "../../../components/common/Divider.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as IconArrow from "../../../components/svgs/IconArrow.mjs";
@@ -33,7 +32,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(PLPScrollableHeaderQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, PLPScrollableHeaderQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -105,17 +104,18 @@ var Query = {
   retain: retain
 };
 
-function PLP_Scrollable_Header$PC$ScrollTab(props) {
+function PLP_Scrollable_Header$PC$ScrollTab(Props) {
+  var items = Props.items;
   var router = Router.useRouter();
   var cid = Js_dict.get(router.query, "cid");
   var categoryId = cid !== undefined ? cid : Js_dict.get(router.query, "category-id");
-  var container = React$1.useRef(null);
-  var target = React$1.useRef(null);
-  var match = React$1.useState(function () {
+  var container = React.useRef(null);
+  var target = React.useRef(null);
+  var match = React.useState(function () {
         return false;
       });
   var setShowLeftArrow = match[1];
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         return false;
       });
   var setShowRightArrow = match$1[1];
@@ -151,7 +151,7 @@ function PLP_Scrollable_Header$PC$ScrollTab(props) {
             match.scrollLeft = (targetLeft$p - (containerClientWidth / 2 | 0) | 0) + (targetWidth / 2 | 0) | 0;
           }));
   };
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           scrollToSelectedItem(undefined);
           modifyArrowVisibility(undefined);
         }), [categoryId]);
@@ -179,36 +179,37 @@ function PLP_Scrollable_Header$PC$ScrollTab(props) {
     }
     
   };
-  return React$1.createElement("div", {
+  return React.createElement("div", {
               className: "inline-flex flex-col w-full"
-            }, React$1.createElement("section", {
+            }, React.createElement("section", {
                   className: "w-full mx-auto bg-white border-b border-gray-50 scroll-smooth"
-                }, React$1.createElement("ol", {
+                }, React.createElement("ol", {
                       ref: container,
                       className: "overflow-x-scroll scrollbar-hide flex items-center px-2 gap-4",
                       id: "horizontal-scroll-container",
                       onScroll: modifyArrowVisibility
-                    }, Belt_Array.map(props.items, (function (item) {
-                            return React.createElementWithKey(PLP_Scrollable_Tab_Item.PC.make, {
+                    }, Belt_Array.map(items, (function (item) {
+                            return React.createElement(PLP_Scrollable_Tab_Item.PC.make, {
                                         selected: item.id === Belt_Option.getWithDefault(categoryId, ""),
-                                        item: item
-                                      }, item.id);
-                          })))), React$1.createElement("div", {
+                                        item: item,
+                                        key: item.id
+                                      });
+                          })))), React.createElement("div", {
                   className: "-mt-11 flex pointer-events-none"
-                }, match[0] ? React$1.createElement("div", {
+                }, match[0] ? React.createElement("div", {
                         className: "w-[88px] h-11 inline-flex gradient-tab-l mr-auto"
-                      }, React$1.createElement("button", {
+                      }, React.createElement("button", {
                             className: "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto rotate-180",
                             onClick: handleClickLeftArrow
-                          }, React$1.createElement(IconArrow.make, {
+                          }, React.createElement(IconArrow.make, {
                                 height: "16px",
                                 width: "16px"
-                              }))) : null, match$1[0] ? React$1.createElement("div", {
+                              }))) : null, match$1[0] ? React.createElement("div", {
                         className: "w-[88px] h-11 float-left inline-flex gradient-tab-r justify-end self-end ml-auto"
-                      }, React$1.createElement("button", {
+                      }, React.createElement("button", {
                             className: "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto",
                             onClick: handleClickRightArrow
-                          }, React$1.createElement(IconArrow.make, {
+                          }, React.createElement(IconArrow.make, {
                                 height: "16px",
                                 width: "16px"
                               }))) : null));
@@ -218,17 +219,19 @@ var ScrollTab = {
   make: PLP_Scrollable_Header$PC$ScrollTab
 };
 
-function PLP_Scrollable_Header$PC$Skeleton(props) {
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+function PLP_Scrollable_Header$PC$Skeleton(Props) {
+  return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "inline-flex flex-col w-full"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "w-[160px] h-6 rounded-lg animate-pulse bg-gray-150 mb-9"
-                    }), React$1.createElement("div", {
+                    }), React.createElement("div", {
                       className: "h-12 px-5 scrollbar-hide border-b border-gray-50"
-                    }, React$1.createElement("div", {
+                    }, React.createElement("div", {
                           className: "flex gap-4 h-full"
                         }, Belt_Array.map(Belt_Array.range(0, 10), (function (idx) {
-                                return React.createElementWithKey(PLP_Scrollable_Tab_Item.PC.Skeleton.make, {}, String(idx));
+                                return React.createElement(PLP_Scrollable_Tab_Item.PC.Skeleton.make, {
+                                            key: String(idx)
+                                          });
                               }))))));
 }
 
@@ -236,13 +239,14 @@ var Skeleton = {
   make: PLP_Scrollable_Header$PC$Skeleton
 };
 
-function PLP_Scrollable_Header$PC(props) {
+function PLP_Scrollable_Header$PC(Props) {
+  var parentId = Props.parentId;
   var match = use({
-        parentId: props.parentId
+        parentId: parentId
       }, undefined, undefined, undefined, undefined);
   var node = match.node;
   if (node === undefined) {
-    return React$1.createElement(PLP_Scrollable_Header$PC$Skeleton, {});
+    return React.createElement(PLP_Scrollable_Header$PC$Skeleton, {});
   }
   var match$1 = node.type_;
   var match$2 = node.children;
@@ -309,15 +313,15 @@ function PLP_Scrollable_Header$PC(props) {
   var items = Belt_Array.concat([firstItem], Belt_Array.map(match$3[1], (function (item) {
               return PLP_Scrollable_Tab_Item.Data.make(item.id, item.name, /* Specific */1);
             })));
-  return React$1.createElement(React$1.Suspense, {
-              children: Caml_option.some(React$1.createElement("div", {
-                        className: "inline-flex flex-col w-full"
-                      }, React$1.createElement("div", {
-                            className: "font-bold text-3xl text-gray-800 mb-[29px]"
-                          }, title), match$3[3] ? React$1.createElement(PLP_Scrollable_Header$PC$ScrollTab, {
-                              items: items
-                            }) : null)),
-              fallback: Caml_option.some(React$1.createElement(PLP_Scrollable_Header$PC$Skeleton, {}))
+  return React.createElement(React.Suspense, {
+              children: React.createElement("div", {
+                    className: "inline-flex flex-col w-full"
+                  }, React.createElement("div", {
+                        className: "font-bold text-3xl text-gray-800 mb-[29px]"
+                      }, title), match$3[3] ? React.createElement(PLP_Scrollable_Header$PC$ScrollTab, {
+                          items: items
+                        }) : null),
+              fallback: React.createElement(PLP_Scrollable_Header$PC$Skeleton, {})
             });
 }
 
@@ -327,12 +331,13 @@ var PC = {
   make: PLP_Scrollable_Header$PC
 };
 
-function PLP_Scrollable_Header$MO$View(props) {
+function PLP_Scrollable_Header$MO$View(Props) {
+  var items = Props.items;
   var router = Router.useRouter();
   var cid = Js_dict.get(router.query, "cid");
   var categoryId = cid !== undefined ? cid : Js_dict.get(router.query, "category-id");
-  var container = React$1.useRef(null);
-  React$1.useEffect((function () {
+  var container = React.useRef(null);
+  React.useEffect((function () {
           var windowWidth = window.innerWidth;
           var target = document.getElementById("category-" + Belt_Option.getWithDefault(categoryId, "") + "");
           var match = container.current;
@@ -346,19 +351,20 @@ function PLP_Scrollable_Header$MO$View(props) {
           }
           
         }), [categoryId]);
-  return React$1.createElement("div", {
+  return React.createElement("div", {
               className: Cn.make(["w-full z-[5] bg-white left-0"])
-            }, React$1.createElement("section", {
+            }, React.createElement("section", {
                   className: "w-full max-w-3xl mx-auto bg-white border-b border-gray-50"
-                }, React$1.createElement("ol", {
+                }, React.createElement("ol", {
                       ref: container,
                       className: "overflow-x-scroll scrollbar-hide flex items-center px-4 gap-4",
                       id: "horizontal-scroll-container"
-                    }, Belt_Array.map(props.items, (function (item) {
-                            return React.createElementWithKey(PLP_Scrollable_Tab_Item.MO.make, {
+                    }, Belt_Array.map(items, (function (item) {
+                            return React.createElement(PLP_Scrollable_Tab_Item.MO.make, {
                                         selected: item.id === Belt_Option.getWithDefault(categoryId, ""),
-                                        item: item
-                                      }, item.id);
+                                        item: item,
+                                        key: item.id
+                                      });
                           })))));
 }
 
@@ -366,14 +372,16 @@ var View = {
   make: PLP_Scrollable_Header$MO$View
 };
 
-function PLP_Scrollable_Header$MO$Skeleton(props) {
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+function PLP_Scrollable_Header$MO$Skeleton(Props) {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "h-11 px-2 scrollbar-hide w-full overflow-x-scroll"
-                }, React$1.createElement("ol", {
+                }, React.createElement("ol", {
                       className: "w-fit flex items-center gap-2"
                     }, Belt_Array.map(Belt_Array.range(0, 8), (function (idx) {
-                            return React.createElementWithKey(PLP_Scrollable_Tab_Item.MO.Skeleton.make, {}, String(idx));
-                          })))), React$1.createElement(Divider.make, {
+                            return React.createElement(PLP_Scrollable_Tab_Item.MO.Skeleton.make, {
+                                        key: String(idx)
+                                      });
+                          })))), React.createElement(Divider.make, {
                   className: "mt-0 bg-gray-50"
                 }));
 }
@@ -382,9 +390,10 @@ var Skeleton$1 = {
   make: PLP_Scrollable_Header$MO$Skeleton
 };
 
-function PLP_Scrollable_Header$MO(props) {
+function PLP_Scrollable_Header$MO(Props) {
+  var parentId = Props.parentId;
   var match = use({
-        parentId: props.parentId
+        parentId: parentId
       }, undefined, undefined, undefined, undefined);
   var node = match.node;
   var children = Belt_Option.mapWithDefault(node, [], (function (node) {
@@ -430,11 +439,11 @@ function PLP_Scrollable_Header$MO(props) {
   var items = Belt_Array.concat([match$1[0]], Belt_Array.map(match$1[1], (function (item) {
               return PLP_Scrollable_Tab_Item.Data.make(item.id, item.name, /* Specific */1);
             })));
-  return React$1.createElement(React$1.Suspense, {
-              children: Caml_option.some(React$1.createElement(PLP_Scrollable_Header$MO$View, {
-                        items: items
-                      })),
-              fallback: Caml_option.some(React$1.createElement(PLP_Scrollable_Header$MO$Skeleton, {}))
+  return React.createElement(React.Suspense, {
+              children: React.createElement(PLP_Scrollable_Header$MO$View, {
+                    items: items
+                  }),
+              fallback: React.createElement(PLP_Scrollable_Header$MO$Skeleton, {})
             });
 }
 
@@ -449,4 +458,4 @@ export {
   PC ,
   MO ,
 }
-/* React Not a pure module */
+/* react Not a pure module */

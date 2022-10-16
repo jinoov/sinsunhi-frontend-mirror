@@ -54,9 +54,9 @@ function toString(status) {
   return Belt_Option.getWithDefault(Js_json.decodeString(status_encode(status)), "");
 }
 
-function Select_Product_Type(props) {
-  var onChange = props.onChange;
-  var status = props.status;
+function Select_Product_Type(Props) {
+  var status = Props.status;
+  var onChange = Props.onChange;
   var tmp;
   switch (status) {
     case /* NORMAL */0 :
@@ -183,9 +183,9 @@ function toDisplayName(status) {
 
 var defaultStyle = "flex px-3 py-2 border items-center border-border-default-L1 rounded-lg h-9 text-enabled-L1 focus:outline bg-white";
 
-function Select_Product_Type$Search(props) {
-  var onChange = props.onChange;
-  var status = props.status;
+function Select_Product_Type$Search(Props) {
+  var status = Props.status;
+  var onChange = Props.onChange;
   var value = toString$1(status);
   var handleProductOperationStatus = function (e) {
     var status = e.target.value;

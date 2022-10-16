@@ -7,10 +7,12 @@ import InputCheckSvg from "../../../public/assets/input-check.svg";
 
 var inputCheckIcon = InputCheckSvg;
 
-function Checkbox(props) {
-  var disabled = props.disabled;
-  var checked = props.checked;
-  var id = props.id;
+function Checkbox(Props) {
+  var id = Props.id;
+  var name = Props.name;
+  var checked = Props.checked;
+  var onChange = Props.onChange;
+  var disabled = Props.disabled;
   var style;
   var exit = 0;
   if (disabled !== undefined && disabled) {
@@ -36,11 +38,11 @@ function Checkbox(props) {
   if (disabled !== undefined) {
     tmp.disabled = Caml_option.valFromOption(disabled);
   }
-  if (props.name !== undefined) {
-    tmp.name = Caml_option.valFromOption(props.name);
+  if (name !== undefined) {
+    tmp.name = Caml_option.valFromOption(name);
   }
-  if (props.onChange !== undefined) {
-    tmp.onChange = Caml_option.valFromOption(props.onChange);
+  if (onChange !== undefined) {
+    tmp.onChange = Caml_option.valFromOption(onChange);
   }
   return React.createElement(React.Fragment, undefined, React.createElement("input", tmp), React.createElement("label", {
                   className: style,
@@ -56,32 +58,38 @@ function Checkbox(props) {
                       }))));
 }
 
-function Checkbox$Uncontrolled(props) {
-  var id = props.id;
+function Checkbox$Uncontrolled(Props) {
+  var id = Props.id;
+  var name = Props.name;
+  var defaultChecked = Props.defaultChecked;
+  var onBlur = Props.onBlur;
+  var onChange = Props.onChange;
+  var disabled = Props.disabled;
+  var inputRef = Props.inputRef;
   var tmp = {
     className: "peer " + "hidden",
     type: "checkbox"
   };
-  if (props.inputRef !== undefined) {
-    tmp.ref = Caml_option.valFromOption(props.inputRef);
+  if (inputRef !== undefined) {
+    tmp.ref = Caml_option.valFromOption(inputRef);
   }
-  if (props.defaultChecked !== undefined) {
-    tmp.defaultChecked = Caml_option.valFromOption(props.defaultChecked);
+  if (defaultChecked !== undefined) {
+    tmp.defaultChecked = Caml_option.valFromOption(defaultChecked);
   }
   if (id !== undefined) {
     tmp.id = Caml_option.valFromOption(id);
   }
-  if (props.disabled !== undefined) {
-    tmp.disabled = Caml_option.valFromOption(props.disabled);
+  if (disabled !== undefined) {
+    tmp.disabled = Caml_option.valFromOption(disabled);
   }
-  if (props.name !== undefined) {
-    tmp.name = Caml_option.valFromOption(props.name);
+  if (name !== undefined) {
+    tmp.name = Caml_option.valFromOption(name);
   }
-  if (props.onBlur !== undefined) {
-    tmp.onBlur = Caml_option.valFromOption(props.onBlur);
+  if (onBlur !== undefined) {
+    tmp.onBlur = Caml_option.valFromOption(onBlur);
   }
-  if (props.onChange !== undefined) {
-    tmp.onChange = Caml_option.valFromOption(props.onChange);
+  if (onChange !== undefined) {
+    tmp.onChange = Caml_option.valFromOption(onChange);
   }
   return React.createElement(React.Fragment, undefined, React.createElement("input", tmp), React.createElement("label", {
                   className: "w-5 h-5 rounded flex justify-center items-center peer-default:bg-white border-2 peer-default:border-gray-300 peer-checked:bg-green-gl peer-disabled:border-2 peer-disabled:border-gray-200 peer-disabled:bg-gray-100",

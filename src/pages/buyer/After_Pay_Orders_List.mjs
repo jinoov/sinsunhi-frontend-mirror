@@ -45,10 +45,11 @@ var Mock = {
   data: data
 };
 
-function After_Pay_Orders_List$Th(props) {
+function After_Pay_Orders_List$Th(Props) {
+  var children = Props.children;
   return React.createElement("th", {
               className: "font-normal p-2 bg-gray-50"
-            }, props.children);
+            }, children);
 }
 
 var Th = {
@@ -57,11 +58,13 @@ var Th = {
 
 var tdBorderBottom = "p-3 border-b border-gray-200 ";
 
-function After_Pay_Orders_List$Td(props) {
-  var mergedClassName = Belt_Option.getWithDefault(props.className, "");
+function After_Pay_Orders_List$Td(Props) {
+  var className = Props.className;
+  var children = Props.children;
+  var mergedClassName = Belt_Option.getWithDefault(className, "");
   return React.createElement("td", {
               className: tdBorderBottom + mergedClassName
-            }, props.children);
+            }, children);
 }
 
 var Td = {
@@ -69,7 +72,8 @@ var Td = {
   make: After_Pay_Orders_List$Td
 };
 
-function After_Pay_Orders_List$List(props) {
+function After_Pay_Orders_List$List(Props) {
+  var data = Props.data;
   var makeDate = function (d) {
     return Belt_Option.getWithDefault(Belt_Array.get(d.split(" "), 0), "-");
   };
@@ -85,7 +89,7 @@ function After_Pay_Orders_List$List(props) {
                           children: "만기일"
                         }), React.createElement(After_Pay_Orders_List$Th, {
                           children: "상환 상태"
-                        }))), React.createElement("tbody", undefined, Belt_Array.mapWithIndex(props.data, (function (i, order) {
+                        }))), React.createElement("tbody", undefined, Belt_Array.mapWithIndex(data, (function (i, order) {
                         var match = order.state;
                         var stateColor = match !== 3 ? "" : " text-red-500";
                         return React.createElement("tr", {
@@ -113,14 +117,16 @@ var List = {
   make: After_Pay_Orders_List$List
 };
 
-function After_Pay_Orders_List$Dialog(props) {
+function After_Pay_Orders_List$Dialog(Props) {
+  var open_ = Props.open_;
+  var children = Props.children;
   return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: props.open_
+              open: open_
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {
-                  children: props.children,
+                  children: children,
                   className: "w-fit shadow-[0px_10px_40px_10px_rgba(0,0,0,0.3)] rounded-2xl p-5 dialog-content-nosize"
                 }));
 }
@@ -146,8 +152,8 @@ function useFetchWithPrevios(page) {
   }
 }
 
-function After_Pay_Orders_List$View(props) {
-  var setOpen = props.setOpen;
+function After_Pay_Orders_List$View(Props) {
+  var setOpen = Props.setOpen;
   var match = React.useState(function () {
         return 1;
       });
@@ -214,11 +220,13 @@ var View = {
   make: After_Pay_Orders_List$View
 };
 
-function After_Pay_Orders_List(props) {
+function After_Pay_Orders_List(Props) {
+  var open_ = Props.open_;
+  var setOpen = Props.setOpen;
   return React.createElement(After_Pay_Orders_List$Dialog, {
-              open_: props.open_,
+              open_: open_,
               children: React.createElement(After_Pay_Orders_List$View, {
-                    setOpen: props.setOpen
+                    setOpen: setOpen
                   })
             });
 }

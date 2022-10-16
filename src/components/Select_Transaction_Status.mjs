@@ -20,7 +20,8 @@ function getKind(q) {
               }));
 }
 
-function Select_Transaction_Status(props) {
+function Select_Transaction_Status(Props) {
+  var className = Props.className;
   var router = Router.useRouter();
   var onChange = function (e) {
     var type_ = e.target.value;
@@ -29,8 +30,8 @@ function Select_Transaction_Status(props) {
     router.push("" + router.pathname + "?" + new URLSearchParams(router.query).toString() + "");
   };
   var tmp = {};
-  if (props.className !== undefined) {
-    tmp.className = Caml_option.valFromOption(props.className);
+  if (className !== undefined) {
+    tmp.className = Caml_option.valFromOption(className);
   }
   return React.createElement("span", tmp, React.createElement("label", {
                   className: "block relative"

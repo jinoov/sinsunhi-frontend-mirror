@@ -44,8 +44,8 @@ function convertCost(cost) {
         ];
 }
 
-function CostManagement_Admin$Costs(props) {
-  var status = props.status;
+function CostManagement_Admin$Costs(Props) {
+  var status = Props.status;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -424,7 +424,7 @@ function CostManagement_Admin$Costs(props) {
                                 }, React.createElement(DatePicker.make, {
                                       id: "start-date",
                                       onChange: handleOnChangeDate,
-                                      date: Caml_option.some(startDate),
+                                      date: startDate,
                                       minDate: "2021-01-01",
                                       firstDayOfWeek: 0,
                                       align: /* Left */0
@@ -492,7 +492,7 @@ var Costs = {
   make: CostManagement_Admin$Costs
 };
 
-function CostManagement_Admin(props) {
+function CostManagement_Admin(Props) {
   var router = Router.useRouter();
   var status = CustomHooks.Costs.use(new URLSearchParams(router.query).toString());
   return React.createElement(Authorization.Admin.make, {

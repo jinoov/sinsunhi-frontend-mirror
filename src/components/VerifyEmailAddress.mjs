@@ -99,9 +99,9 @@ var btnStyle = "w-full bg-enabled-L5 rounded-xl text-text-L1 whitespace-nowrap f
 
 var btnStyleDisabled = "w-full bg-enabled-L4 rounded-xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1";
 
-function VerifyEmailAddress(props) {
-  var onEmailChange = props.onEmailChange;
-  var emailExisted = props.emailExisted;
+function VerifyEmailAddress(Props) {
+  var emailExisted = Props.emailExisted;
+  var onEmailChange = Props.onEmailChange;
   var router = Router.useRouter();
   var match = React.useState(function () {
         return false;

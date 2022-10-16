@@ -37,7 +37,7 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$PC(props) {
+function Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$PC(Props) {
   return React.createElement("section", {
               className: "flex flex-col p-7 gap-5 bg-white rounded-sm"
             }, React.createElement("span", {
@@ -53,7 +53,7 @@ var PC = {
   make: Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$PC
 };
 
-function Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$MO(props) {
+function Web_Order_Delivery_Method_Selection_Buyer$PlaceHoder$MO(Props) {
   return React.createElement("section", {
               className: "flex flex-col p-7 gap-5 bg-white rounded-sm"
             }, React.createElement("span", {
@@ -74,11 +74,12 @@ var PlaceHoder = {
   MO: MO
 };
 
-function Web_Order_Delivery_Method_Selection_Buyer(props) {
-  var deviceType = props.deviceType;
-  var isCourierAvailable = props.isCourierAvailable;
-  var isSameCourierAvailable = props.isSameCourierAvailable;
-  var formNames = Web_Order_Buyer_Form.names(props.prefix);
+function Web_Order_Delivery_Method_Selection_Buyer(Props) {
+  var isSameCourierAvailable = Props.isSameCourierAvailable;
+  var isCourierAvailable = Props.isCourierAvailable;
+  var prefix = Props.prefix;
+  var deviceType = Props.deviceType;
+  var formNames = Web_Order_Buyer_Form.names(prefix);
   var match = ReactHookForm.useFormContext({
         mode: "onChange"
       }, undefined);

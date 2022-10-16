@@ -14,7 +14,9 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
 }
 
-function Buyer_Deposit_Detail_Button_Admin$Summary$Amount(props) {
+function Buyer_Deposit_Detail_Button_Admin$Summary$Amount(Props) {
+  var kind = Props.kind;
+  var className = Props.className;
   var router = Router.useRouter();
   var status = CustomHooks.TransactionSummary.use(new URLSearchParams(router.query).toString());
   if (typeof status === "number") {
@@ -28,11 +30,11 @@ function Buyer_Deposit_Detail_Button_Admin$Summary$Amount(props) {
       var response$p$1 = response$p._0;
       console.log(response$p$1);
       var tmp = {};
-      if (props.className !== undefined) {
-        tmp.className = Caml_option.valFromOption(props.className);
+      if (className !== undefined) {
+        tmp.className = Caml_option.valFromOption(className);
       }
       var tmp$1;
-      switch (props.kind) {
+      switch (kind) {
         case /* OrderComplete */0 :
             tmp$1 = "" + Locale.Float.show(true, response$p$1.data.orderComplete, 0) + "원";
             break;
@@ -76,7 +78,7 @@ var Amount = {
   make: Buyer_Deposit_Detail_Button_Admin$Summary$Amount
 };
 
-function Buyer_Deposit_Detail_Button_Admin$Summary(props) {
+function Buyer_Deposit_Detail_Button_Admin$Summary(Props) {
   return React.createElement("div", {
               className: "p-5"
             }, React.createElement("ol", {
@@ -131,7 +133,7 @@ var Summary = {
   make: Buyer_Deposit_Detail_Button_Admin$Summary
 };
 
-function Buyer_Deposit_Detail_Button_Admin(props) {
+function Buyer_Deposit_Detail_Button_Admin(Props) {
   return React.createElement(ReactDialog.Root, {
               children: null
             }, React.createElement(ReactDialog.Overlay, {

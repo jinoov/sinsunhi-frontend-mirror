@@ -254,9 +254,12 @@ function getPerAmount(amount, amountUnit, perNum, unitAmount) {
               }));
 }
 
-function Product_Option_Each_Admin(props) {
-  var readOnly = props.readOnly;
-  var readOnly$1 = readOnly !== undefined ? readOnly : false;
+function Product_Option_Each_Admin(Props) {
+  var prefix = Props.prefix;
+  var amountInputName = Props.amountInputName;
+  var amountUnitInputName = Props.amountUnitInputName;
+  var readOnlyOpt = Props.readOnly;
+  var readOnly = readOnlyOpt !== undefined ? readOnlyOpt : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -266,8 +269,8 @@ function Product_Option_Each_Admin(props) {
   var control = match.control;
   var amountAndUnit = ReactHookForm$1.useWatch({
         name: [
-          props.amountInputName,
-          props.amountUnitInputName
+          amountInputName,
+          amountUnitInputName
         ]
       });
   var match$1 = Belt_Option.getWithDefault(Belt_Option.map(Belt_Option.flatMap(Belt_Option.flatMap(Belt_Option.map(amountAndUnit, (function (a) {
@@ -301,7 +304,7 @@ function Product_Option_Each_Admin(props) {
       ]);
   var amountUnit = match$1[1];
   var amount = match$1[0];
-  var inputNames = getNamesWithPrefix(props.prefix);
+  var inputNames = getNamesWithPrefix(prefix);
   var eachValues = ReactHookForm$1.useWatch({
         name: inputNames.values
       });
@@ -385,12 +388,12 @@ function Product_Option_Each_Admin(props) {
                           defaultValue: String(1.0),
                           className: Cx.cx([
                                 "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none",
-                                readOnly$1 ? "bg-disabled-L3" : "bg-white"
+                                readOnly ? "bg-disabled-L3" : "bg-white"
                               ]),
                           id: eachMinNum.name,
                           name: eachMinNum.name,
                           placeholder: "입수 입력",
-                          readOnly: readOnly$1,
+                          readOnly: readOnly,
                           type: "number",
                           onBlur: eachMinNum.onBlur,
                           onChange: eachMinNum.onChange
@@ -412,12 +415,12 @@ function Product_Option_Each_Admin(props) {
                           defaultValue: String(1.0),
                           className: Cx.cx([
                                 "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none",
-                                readOnly$1 ? "bg-disabled-L3" : "bg-white"
+                                readOnly ? "bg-disabled-L3" : "bg-white"
                               ]),
                           id: eachMaxNum.name,
                           name: eachMaxNum.name,
                           placeholder: "입수 입력",
-                          readOnly: readOnly$1,
+                          readOnly: readOnly,
                           type: "number",
                           onBlur: eachMaxNum.onBlur,
                           onChange: eachMaxNum.onChange
@@ -446,7 +449,7 @@ function Product_Option_Each_Admin(props) {
                           className: "px-3 py-2 border border-border-default-L1 rounded-lg h-9 bg-disabled-L3 w-36 text-disabled-L1 leading-4.5 focus:outline-none"
                         }, amount !== undefined && watchMinNum !== undefined ? getPerAmount(amount, amountUnit, watchMinNum, watchAmountUnit) : "자동계산"), React.createElement(ReactHookForm$1.Controller, {
                           name: inputNames.unitAmount,
-                          control: Caml_option.some(control),
+                          control: control,
                           render: (function (param) {
                               var match = param.field;
                               var onChange = match.onChange;
@@ -456,11 +459,11 @@ function Product_Option_Each_Admin(props) {
                                           onChange: (function (status) {
                                               Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Amount.status_encode(status)));
                                             }),
-                                          forwardRef: Caml_option.some(match.ref),
-                                          disabled: readOnly$1
+                                          forwardRef: match.ref,
+                                          disabled: readOnly
                                         });
                             }),
-                          defaultValue: Caml_option.some(Select_Product_Option_Unit.Amount.status_encode(amountUnit))
+                          defaultValue: Select_Product_Option_Unit.Amount.status_encode(amountUnit)
                         })), React.createElement("div", {
                       className: "flex gap-2 items-center"
                     }, React.createElement("label", {
@@ -470,12 +473,12 @@ function Product_Option_Each_Admin(props) {
                               defaultValue: String(0.0),
                               className: Cx.cx([
                                     "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none shrink",
-                                    readOnly$1 ? "bg-disabled-L3" : "bg-white"
+                                    readOnly ? "bg-disabled-L3" : "bg-white"
                                   ]),
                               id: eachMinSize.name,
                               name: eachMinSize.name,
                               placeholder: "최소 크기",
-                              readOnly: readOnly$1,
+                              readOnly: readOnly,
                               type: "number",
                               onBlur: eachMinSize.onBlur,
                               onChange: eachMinSize.onChange
@@ -497,12 +500,12 @@ function Product_Option_Each_Admin(props) {
                               defaultValue: String(0.0),
                               className: Cx.cx([
                                     "px-3 py-2 border border-border-default-L1 rounded-lg h-9 focus:outline-none shrink",
-                                    readOnly$1 ? "bg-disabled-L3" : "bg-white"
+                                    readOnly ? "bg-disabled-L3" : "bg-white"
                                   ]),
                               id: eachMaxSize.name,
                               name: eachMaxSize.name,
                               placeholder: "최대 크기",
-                              readOnly: readOnly$1,
+                              readOnly: readOnly,
                               type: "number",
                               onBlur: eachMaxSize.onBlur,
                               onChange: eachMaxSize.onChange
@@ -521,7 +524,7 @@ function Product_Option_Each_Admin(props) {
                                 })
                             })), React.createElement(ReactHookForm$1.Controller, {
                           name: inputNames.unitSize,
-                          control: Caml_option.some(control),
+                          control: control,
                           render: (function (param) {
                               var match = param.field;
                               var onChange = match.onChange;
@@ -530,8 +533,8 @@ function Product_Option_Each_Admin(props) {
                                           onChange: (function (status) {
                                               Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Option_Unit.Size.status_encode(status)));
                                             }),
-                                          forwardRef: Caml_option.some(match.ref),
-                                          disabled: readOnly$1
+                                          forwardRef: match.ref,
+                                          disabled: readOnly
                                         });
                             })
                         }))));

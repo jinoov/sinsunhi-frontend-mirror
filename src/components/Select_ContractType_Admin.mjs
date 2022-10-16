@@ -21,8 +21,9 @@ function toContractTypeDisplay(str) {
   }
 }
 
-function Select_ContractType_Admin(props) {
-  var contractType = props.contractType;
+function Select_ContractType_Admin(Props) {
+  var contractType = Props.contractType;
+  var onChange = Props.onChange;
   return React.createElement(React.Fragment, undefined, React.createElement("span", {
                   className: "flex items-center border border-border-default-L1 rounded-lg py-1.5 px-3 text-enabled-L1 bg-white leading-4.5"
                 }, Belt_Option.mapWithDefault(Js_json.decodeString(CustomHooks.Costs.contractType_encode(contractType)), "온라인", toContractTypeDisplay)), React.createElement("span", {
@@ -35,7 +36,7 @@ function Select_ContractType_Admin(props) {
                   className: "block w-full h-full absolute top-0 opacity-0",
                   id: "new-isBulksale",
                   value: Belt_Option.getWithDefault(Js_json.decodeString(CustomHooks.Costs.contractType_encode(contractType)), "online"),
-                  onChange: props.onChange
+                  onChange: onChange
                 }, React.createElement("option", {
                       value: Belt_Option.getWithDefault(Js_json.decodeString(CustomHooks.Costs.contractType_encode(/* Online */1)), "online")
                     }, "온라인"), React.createElement("option", {

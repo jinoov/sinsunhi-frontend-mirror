@@ -48,7 +48,7 @@ function makeTermUrl(termId) {
   return "https://sinsun-policy.oopy.io/" + termId + "";
 }
 
-function SignUp_Buyer(props) {
+function SignUp_Buyer(Props) {
   var router = Router.useRouter();
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;

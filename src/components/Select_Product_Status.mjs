@@ -69,8 +69,9 @@ function formatStatus(status) {
   }
 }
 
-function Select_Product_Status(props) {
-  var status = props.status;
+function Select_Product_Status(Props) {
+  var status = Props.status;
+  var onChange = Props.onChange;
   var displayStatus = formatStatus(status);
   return React.createElement("span", undefined, React.createElement("label", {
                   className: "block relative"
@@ -85,7 +86,7 @@ function Select_Product_Status(props) {
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
                       value: encodeStatus(status),
-                      onChange: props.onChange
+                      onChange: onChange
                     }, Garter_Array.map([
                           /* ALL */0,
                           /* SALE */1,

@@ -6,9 +6,10 @@ import * as Skeleton from "./Skeleton.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 
-function Web_Order_Complete_Orderer_Info_Buyer$Placeholder(props) {
+function Web_Order_Complete_Orderer_Info_Buyer$Placeholder(Props) {
+  var deviceType = Props.deviceType;
   var tmp;
-  switch (props.deviceType) {
+  switch (deviceType) {
     case /* Unknown */0 :
         tmp = null;
         break;
@@ -53,8 +54,8 @@ var Placeholder = {
   make: Web_Order_Complete_Orderer_Info_Buyer$Placeholder
 };
 
-function Web_Order_Complete_Orderer_Info_Buyer(props) {
-  var deviceType = props.deviceType;
+function Web_Order_Complete_Orderer_Info_Buyer(Props) {
+  var deviceType = Props.deviceType;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var toPhoneNumberForm = function (s) {
     return s.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");

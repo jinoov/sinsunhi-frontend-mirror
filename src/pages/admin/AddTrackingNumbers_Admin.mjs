@@ -33,8 +33,8 @@ function removeQueriesFarmerName(q) {
                   })));
 }
 
-function AddTrackingNumbers_Admin$QueryFarmerPresenter(props) {
-  var farmer = props.farmer;
+function AddTrackingNumbers_Admin$QueryFarmerPresenter(Props) {
+  var farmer = Props.farmer;
   var router = Router.useRouter();
   var match = React.useState(function () {
         return /* NotSelected */0;
@@ -110,8 +110,9 @@ var QueryFarmerPresenter = {
   make: AddTrackingNumbers_Admin$QueryFarmerPresenter
 };
 
-function AddTrackingNumbers_Admin$QueryFarmerWithId(props) {
-  var status = Curry._1(CustomHooks.QueryUser.Farmer.use, "user-id=" + props.id + "&role=farmer");
+function AddTrackingNumbers_Admin$QueryFarmerWithId(Props) {
+  var id = Props.id;
+  var status = Curry._1(CustomHooks.QueryUser.Farmer.use, "user-id=" + id + "&role=farmer");
   var farmer;
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     farmer = undefined;
@@ -128,7 +129,7 @@ var QueryFarmerWithId = {
   make: AddTrackingNumbers_Admin$QueryFarmerWithId
 };
 
-function AddTrackingNumbers_Admin$QueryFarmerWithoutId(props) {
+function AddTrackingNumbers_Admin$QueryFarmerWithoutId(Props) {
   return React.createElement(AddTrackingNumbers_Admin$QueryFarmerPresenter, {
               farmer: undefined
             });
@@ -138,7 +139,7 @@ var QueryFarmerWithoutId = {
   make: AddTrackingNumbers_Admin$QueryFarmerWithoutId
 };
 
-function AddTrackingNumbers_Admin$QueryFarmer(props) {
+function AddTrackingNumbers_Admin$QueryFarmer(Props) {
   var router = Router.useRouter();
   var id = Js_dict.get(router.query, "farmer-id");
   if (id !== undefined) {
@@ -154,7 +155,7 @@ var QueryFarmer = {
   make: AddTrackingNumbers_Admin$QueryFarmer
 };
 
-function AddTrackingNumbers_Admin$Orders(props) {
+function AddTrackingNumbers_Admin$Orders(Props) {
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -257,7 +258,7 @@ function AddTrackingNumbers_Admin$Orders(props) {
                                         }, "1.상품준비중인 건 다운로드")), React.createElement(Excel_Download_Request_Button.make, {
                                       userType: /* Admin */2,
                                       requestUrl: "/order/request-excel/farmer",
-                                      bodyOption: Caml_option.some(dictSet(router.query, "status", "PACKING"))
+                                      bodyOption: dictSet(router.query, "status", "PACKING")
                                     }))), React.createElement(Upload_Delivery_Admin.make, {
                               onSuccess: (function (param) {
                                   setShowSuccessUpload(function (param) {
@@ -295,7 +296,7 @@ function AddTrackingNumbers_Admin$Orders(props) {
                                               onChange: (function (param) {
                                                   return handleOnChangeDate(/* From */0, param);
                                                 }),
-                                              date: Caml_option.some(query.from),
+                                              date: query.from,
                                               maxDate: Format(new Date(), "yyyy-MM-dd"),
                                               firstDayOfWeek: 0
                                             })), React.createElement("span", {
@@ -307,7 +308,7 @@ function AddTrackingNumbers_Admin$Orders(props) {
                                               onChange: (function (param) {
                                                   return handleOnChangeDate(/* To */1, param);
                                                 }),
-                                              date: Caml_option.some(query.to_),
+                                              date: query.to_,
                                               maxDate: Format(new Date(), "yyyy-MM-dd"),
                                               minDate: Format(query.from, "yyyy-MM-dd"),
                                               firstDayOfWeek: 0
@@ -363,7 +364,7 @@ var Orders = {
   make: AddTrackingNumbers_Admin$Orders
 };
 
-function AddTrackingNumbers_Admin(props) {
+function AddTrackingNumbers_Admin(Props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(AddTrackingNumbers_Admin$Orders, {}),
               title: "관리자 송장번호 등록"

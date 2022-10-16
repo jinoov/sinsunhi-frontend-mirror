@@ -4,7 +4,7 @@ import * as React from "react";
 import * as DS_Button from "../../../components/common/element/DS_Button.mjs";
 import * as DS_Dialog from "../../../components/common/container/DS_Dialog.mjs";
 
-function Tradematch_NotFound_Buyer(props) {
+function Tradematch_NotFound_Buyer(Props) {
   return React.createElement(DS_Dialog.Popup.Root.make, {
               children: React.createElement(DS_Dialog.Popup.Portal.make, {
                     children: null
@@ -25,7 +25,7 @@ function Tradematch_NotFound_Buyer(props) {
                                   asChild: true
                                 })
                           }))),
-              _open: true
+              open: true
             });
 }
 

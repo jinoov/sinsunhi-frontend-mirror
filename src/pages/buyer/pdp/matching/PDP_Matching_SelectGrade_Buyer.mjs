@@ -51,10 +51,14 @@ var ClickPriceGroupFilterGtm = {
   make: make
 };
 
-function PDP_Matching_SelectGrade_Buyer$Item(props) {
-  var representativeWeight = props.representativeWeight;
-  var itemId = props.itemId;
-  var priceLabel = Belt_Option.mapWithDefault(props.price, "", (function (price$p) {
+function PDP_Matching_SelectGrade_Buyer$Item(Props) {
+  var itemId = Props.itemId;
+  var value = Props.value;
+  var label = Props.label;
+  var description = Props.description;
+  var price = Props.price;
+  var representativeWeight = Props.representativeWeight;
+  var priceLabel = Belt_Option.mapWithDefault(price, "", (function (price$p) {
           return "" + Locale.Float.show(undefined, price$p * representativeWeight, 0) + "원(" + String(representativeWeight) + "kg당)";
         }));
   return React.createElement("div", {
@@ -64,15 +68,15 @@ function PDP_Matching_SelectGrade_Buyer$Item(props) {
                   htmlFor: itemId
                 }, React.createElement("span", {
                       className: "text-gray-800 font-bold"
-                    }, props.label), React.createElement("span", {
+                    }, label), React.createElement("span", {
                       className: "text-gray-600 text-sm"
-                    }, props.description), React.createElement("span", {
+                    }, description), React.createElement("span", {
                       className: "text-primary text-base"
                     }, priceLabel)), React.createElement(ReactRadioGroup.Item, {
                   children: React.createElement(ReactRadioGroup.Indicator, {
                         className: "radio-indicator"
                       }),
-                  value: props.value,
+                  value: value,
                   className: "radio-item",
                   id: itemId
                 }));
@@ -82,9 +86,11 @@ var Item = {
   make: PDP_Matching_SelectGrade_Buyer$Item
 };
 
-function PDP_Matching_SelectGrade_Buyer$RadioSelector(props) {
-  var setSelectedGroup = props.setSelectedGroup;
-  var match = use(props.query);
+function PDP_Matching_SelectGrade_Buyer$RadioSelector(Props) {
+  var query = Props.query;
+  var selectedGroup = Props.selectedGroup;
+  var setSelectedGroup = Props.setSelectedGroup;
+  var match = use(query);
   var recentMarketPrice = match.recentMarketPrice;
   if (recentMarketPrice === undefined) {
     return null;
@@ -93,7 +99,7 @@ function PDP_Matching_SelectGrade_Buyer$RadioSelector(props) {
   var qualityStandard = match.qualityStandard;
   return React.createElement(ReactRadioGroup.Root, {
               children: null,
-              value: props.selectedGroup,
+              value: selectedGroup,
               onValueChange: (function (value) {
                   setSelectedGroup(function (param) {
                         return value;
@@ -129,11 +135,15 @@ var RadioSelector = {
   make: PDP_Matching_SelectGrade_Buyer$RadioSelector
 };
 
-function PDP_Matching_SelectGrade_Buyer$BottomSheet(props) {
-  var setShowModal = props.setShowModal;
-  var onClose = props.onClose;
+function PDP_Matching_SelectGrade_Buyer$BottomSheet(Props) {
+  var show = Props.show;
+  var onClose = Props.onClose;
+  var setShowModal = Props.setShowModal;
+  var query = Props.query;
+  var selectedGroup = Props.selectedGroup;
+  var setSelectedGroup = Props.setSelectedGroup;
   return React.createElement(DS_BottomDrawer.Root.make, {
-              isShow: props.show,
+              isShow: show,
               onClose: onClose,
               children: null
             }, React.createElement("section", {
@@ -166,9 +176,9 @@ function PDP_Matching_SelectGrade_Buyer$BottomSheet(props) {
                 }, React.createElement("section", {
                       className: "px-4"
                     }, React.createElement(PDP_Matching_SelectGrade_Buyer$RadioSelector, {
-                          query: props.query,
-                          selectedGroup: props.selectedGroup,
-                          setSelectedGroup: props.setSelectedGroup
+                          query: query,
+                          selectedGroup: selectedGroup,
+                          setSelectedGroup: setSelectedGroup
                         })), React.createElement("section", {
                       className: "px-4 py-5"
                     }, React.createElement("button", {
@@ -183,10 +193,11 @@ var BottomSheet = {
   make: PDP_Matching_SelectGrade_Buyer$BottomSheet
 };
 
-function PDP_Matching_SelectGrade_Buyer(props) {
-  var selectedGroup = props.selectedGroup;
-  var query = props.query;
-  var setShowModal = props.setShowModal;
+function PDP_Matching_SelectGrade_Buyer(Props) {
+  var setShowModal = Props.setShowModal;
+  var query = Props.query;
+  var selectedGroup = Props.selectedGroup;
+  var setSelectedGroup = Props.setSelectedGroup;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = React.useState(function () {
         return false;
@@ -256,7 +267,7 @@ function PDP_Matching_SelectGrade_Buyer(props) {
               setShowModal: setShowModal,
               query: query,
               selectedGroup: selectedGroup,
-              setSelectedGroup: props.setSelectedGroup
+              setSelectedGroup: setSelectedGroup
             }));
   }
   return React.createElement(React.Fragment, undefined, tmp);

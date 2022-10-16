@@ -74,12 +74,12 @@ var Mutation = {
   use: use
 };
 
-function Update_Manager_Buyer(props) {
-  var defaultValue = props.defaultValue;
-  var onClose = props.onClose;
-  var isOpen = props.isOpen;
-  var defaultValue$1 = defaultValue !== undefined ? defaultValue : "";
-  var match = ValidatedState.use(/* String */0, defaultValue$1, []);
+function Update_Manager_Buyer(Props) {
+  var isOpen = Props.isOpen;
+  var onClose = Props.onClose;
+  var defaultValueOpt = Props.defaultValue;
+  var defaultValue = defaultValueOpt !== undefined ? defaultValueOpt : "";
+  var match = ValidatedState.use(/* String */0, defaultValue, []);
   var setManager = match[1];
   var manager = match[0];
   var match$1 = use(undefined);
@@ -157,13 +157,13 @@ function Update_Manager_Buyer(props) {
   };
   React.useEffect((function () {
           if (!isOpen) {
-            Curry._3(setManager, defaultValue$1, undefined, undefined);
+            Curry._3(setManager, defaultValue, undefined, undefined);
           }
           
         }), [isOpen]);
   return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: isOpen
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {

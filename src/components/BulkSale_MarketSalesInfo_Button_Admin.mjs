@@ -35,8 +35,9 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function BulkSale_MarketSalesInfo_Button_Admin(props) {
-  var detail = use(props.query);
+function BulkSale_MarketSalesInfo_Button_Admin(Props) {
+  var query = Props.query;
+  var detail = use(query);
   var edges = Belt_Option.mapWithDefault(detail.bulkSaleProducerDetail, [], (function (d) {
           return d.experiencedMarkets.edges;
         }));

@@ -2,8 +2,7 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Input from "./common/Input.mjs";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as Helper from "../utils/Helper.mjs";
 import * as ReForm from "@rescriptbr/reform/src/ReForm.mjs";
 import Uniqid from "uniqid";
@@ -77,29 +76,29 @@ var initialState = {
   farmAddress: ""
 };
 
-function Search_Producers_Admin(props) {
+function Search_Producers_Admin(Props) {
   var router = Router.useRouter();
-  var match = React$1.useState(function () {
+  var match = React.useState(function () {
         return /* NotSelected */0;
       });
   var setCropId = match[1];
   var cropId = match[0];
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         return /* NotSelected */0;
       });
   var setProductCategoryId = match$1[1];
   var productCategoryId = match$1[0];
-  var match$2 = React$1.useState(function () {
+  var match$2 = React.useState(function () {
         return false;
       });
   var setCheckTest = match$2[1];
   var checkTest = match$2[0];
-  var match$3 = React$1.useState(function () {
+  var match$3 = React.useState(function () {
         return /* NotSelected */0;
       });
   var setSelectStaff = match$3[1];
   var selectStaff = match$3[0];
-  var match$4 = React$1.useState(function () {
+  var match$4 = React.useState(function () {
         return {
                 from: $$Set(new Date(), {
                       year: 2022,
@@ -172,7 +171,7 @@ function Search_Producers_Admin(props) {
                   Curry._1(form.submit, undefined);
                 }), param);
   };
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           Curry._1(form.resetForm, undefined);
           Garter_Array.forEach(Js_dict.entries(router.query), (function (entry) {
                   var v = entry[1];
@@ -306,26 +305,26 @@ function Search_Producers_Admin(props) {
             return /* NotSelected */0;
           });
     });
-  return React$1.createElement("div", {
+  return React.createElement("div", {
               className: "bg-white rounded"
-            }, React$1.createElement("form", {
+            }, React.createElement("form", {
                   onSubmit: handleOnSubmit
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "py-3 flex flex-col text-sm bg-gray-gl rounded-xl"
-                    }, React$1.createElement("div", {
+                    }, React.createElement("div", {
                           className: "flex"
-                        }, React$1.createElement("div", {
+                        }, React.createElement("div", {
                               className: "w-32 font-bold mt-2 pl-7 whitespace-nowrap"
-                            }, "검색"), React$1.createElement("div", {
+                            }, "검색"), React.createElement("div", {
                               className: "flex-1"
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "flex"
-                                }, React$1.createElement("div", {
+                                }, React.createElement("div", {
                                       className: "w-64 flex items-center mr-16"
-                                    }, React$1.createElement("label", {
+                                    }, React.createElement("label", {
                                           className: "whitespace-nowrap mr-2",
                                           htmlFor: "farmer-name"
-                                        }, "사용자명"), React$1.createElement(Input.make, {
+                                        }, "사용자명"), React.createElement(Input.make, {
                                           type_: "text",
                                           name: "farmer-name",
                                           placeholder: "사용자명 입력",
@@ -337,12 +336,12 @@ function Search_Producers_Admin(props) {
                                                 _0: /* ApplicantName */0
                                               }),
                                           tabIndex: 1
-                                        })), React$1.createElement("div", {
+                                        })), React.createElement("div", {
                                       className: "w-64 flex items-center mr-16"
-                                    }, React$1.createElement("label", {
+                                    }, React.createElement("label", {
                                           className: "whitespace-nowrap mr-2",
                                           htmlFor: "farmer-name"
-                                        }, "사업자명"), React$1.createElement(Input.make, {
+                                        }, "사업자명"), React.createElement(Input.make, {
                                           type_: "text",
                                           name: "farmer-name",
                                           placeholder: "사업자명 입력",
@@ -354,26 +353,27 @@ function Search_Producers_Admin(props) {
                                                 _0: /* BusinessName */1
                                               }),
                                           tabIndex: 1
-                                        }))), React$1.createElement("div", {
+                                        }))), React.createElement("div", {
                                   className: "flex mt-3"
-                                }, React$1.createElement("div", {
+                                }, React.createElement("div", {
                                       className: "w-64 flex items-center mr-16"
-                                    }, React$1.createElement("label", {
+                                    }, React.createElement("label", {
                                           className: "whitespace-nowrap mr-2",
                                           htmlFor: "farmer-name"
-                                        }, "담당자명"), React.createElementWithKey(Select_BulkSale_Search.Staff.make, {
+                                        }, "담당자명"), React.createElement(Select_BulkSale_Search.Staff.make, {
                                           staffInfo: selectStaff,
                                           onChange: (function (v) {
                                               setSelectStaff(function (param) {
                                                     return v;
                                                   });
-                                            })
-                                        }, Uniqid("bulkSaleSearch"))), React$1.createElement("div", {
+                                            }),
+                                          key: Uniqid("bulkSaleSearch")
+                                        })), React.createElement("div", {
                                       className: "w-[350px] flex items-center mr-16"
-                                    }, React$1.createElement("label", {
+                                    }, React.createElement("label", {
                                           className: "whitespace-nowrap mr-8",
                                           htmlFor: "farmer-name"
-                                        }, "주소"), React$1.createElement(Input.make, {
+                                        }, "주소"), React.createElement(Input.make, {
                                           type_: "text",
                                           name: "farmer-name",
                                           placeholder: "정확한 키워드로 단위로 주소를 검색하세요",
@@ -385,70 +385,71 @@ function Search_Producers_Admin(props) {
                                                 _0: /* FarmAddress */2
                                               }),
                                           tabIndex: 1
-                                        }))), React$1.createElement("div", {
+                                        }))), React.createElement("div", {
                                   className: "flex mt-3"
-                                }, React$1.createElement("div", {
+                                }, React.createElement("div", {
                                       className: "h-9 flex justify-start items-center"
-                                    }, React$1.createElement("label", {
+                                    }, React.createElement("label", {
                                           className: "whitespace-nowrap mr-2",
                                           htmlFor: "crop-kind"
-                                        }, "작물품종")), React$1.createElement("div", {
+                                        }, "작물품종")), React.createElement("div", {
                                       className: "relative"
-                                    }, React$1.createElement("div", {
+                                    }, React.createElement("div", {
                                           className: "absolute w-[200px] left-0"
-                                        }, React$1.createElement(React$1.Suspense, {
-                                              children: Caml_option.some(React$1.createElement(Select_BulkSale_Search.Crop.make, {
-                                                        cropId: cropId,
-                                                        onChange: (function (param) {
-                                                            return handleOnSelect(partial_arg$3, setCropId, param);
-                                                          })
-                                                      })),
-                                              fallback: Caml_option.some(React$1.createElement("div", undefined, "로딩 중.."))
-                                            })), React$1.createElement("div", {
+                                        }, React.createElement(React.Suspense, {
+                                              children: React.createElement(Select_BulkSale_Search.Crop.make, {
+                                                    cropId: cropId,
+                                                    onChange: (function (param) {
+                                                        return handleOnSelect(partial_arg$3, setCropId, param);
+                                                      })
+                                                  }),
+                                              fallback: React.createElement("div", undefined, "로딩 중..")
+                                            })), React.createElement("div", {
                                           className: "absolute w-[296px] left-[221px]"
-                                        }, React$1.createElement(React$1.Suspense, {
-                                              children: Caml_option.some(React.createElementWithKey(Select_BulkSale_Search.ProductCategory.make, {
-                                                        cropId: cropId,
-                                                        productCategoryId: productCategoryId,
-                                                        onChange: (function (param) {
-                                                            return handleOnSelect(undefined, setProductCategoryId, param);
-                                                          })
-                                                      }, cropId ? cropId.value : "")),
-                                              fallback: Caml_option.some(React$1.createElement("div", undefined, "로딩 중.."))
-                                            })))))), React$1.createElement("div", {
+                                        }, React.createElement(React.Suspense, {
+                                              children: React.createElement(Select_BulkSale_Search.ProductCategory.make, {
+                                                    cropId: cropId,
+                                                    productCategoryId: productCategoryId,
+                                                    onChange: (function (param) {
+                                                        return handleOnSelect(undefined, setProductCategoryId, param);
+                                                      }),
+                                                    key: cropId ? cropId.value : ""
+                                                  }),
+                                              fallback: React.createElement("div", undefined, "로딩 중..")
+                                            })))))), React.createElement("div", {
                           className: "flex mt-3"
-                        }, React$1.createElement("div", {
+                        }, React.createElement("div", {
                               className: "w-32 font-bold flex items-center pl-7"
-                            }, "기간"), React$1.createElement("div", {
+                            }, "기간"), React.createElement("div", {
                               className: "flex"
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "flex mr-8"
-                                }, React$1.createElement(PeriodSelector.make, {
+                                }, React.createElement(PeriodSelector.make, {
                                       from: query.from,
                                       to_: query.to_,
                                       onSelect: handleOnChangePeriod
-                                    })), React$1.createElement(DatePicker.make, {
+                                    })), React.createElement(DatePicker.make, {
                                   id: "from",
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* From */0, param);
                                     }),
-                                  date: Caml_option.some(query.from),
+                                  date: query.from,
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   firstDayOfWeek: 0
-                                }), React$1.createElement("span", {
+                                }), React.createElement("span", {
                                   className: "flex items-center mr-1"
-                                }, "~"), React$1.createElement(DatePicker.make, {
+                                }, "~"), React.createElement(DatePicker.make, {
                                   id: "to",
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* To */1, param);
                                     }),
-                                  date: Caml_option.some(query.to_),
+                                  date: query.to_,
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   minDate: Format(query.from, "yyyy-MM-dd"),
                                   firstDayOfWeek: 0
-                                })), React$1.createElement("div", {
+                                })), React.createElement("div", {
                               className: "flex items-center justify-start ml-8"
-                            }, React$1.createElement(Checkbox.make, {
+                            }, React.createElement(Checkbox.make, {
                                   id: "check-all",
                                   checked: checkTest,
                                   onChange: (function (param) {
@@ -456,17 +457,17 @@ function Search_Producers_Admin(props) {
                                             return !prev;
                                           });
                                     })
-                                }), React$1.createElement("span", {
+                                }), React.createElement("span", {
                                   className: "ml-2"
-                                }, "TEST건 제외")))), React$1.createElement("div", {
+                                }, "TEST건 제외")))), React.createElement("div", {
                       className: "flex justify-center mt-5"
-                    }, React$1.createElement("input", {
+                    }, React.createElement("input", {
                           className: "w-20 py-2 bg-gray-button-gl text-black-gl rounded-xl ml-2 hover:bg-gray-button-gl focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-gl focus:ring-opacity-100",
                           tabIndex: 5,
                           type: "button",
                           value: "초기화",
                           onClick: handleOnReset
-                        }), React$1.createElement("input", {
+                        }), React.createElement("input", {
                           className: "w-20 py-2 bg-green-gl text-white font-bold rounded-xl ml-2 hover:bg-green-gl-dark focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-gl focus:ring-opacity-100",
                           tabIndex: 4,
                           type: "submit",

@@ -8,7 +8,7 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 
-function ShopSearchInput_Buyer(props) {
+function ShopSearchInput_Buyer(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return "";
@@ -93,7 +93,7 @@ function ShopSearchInput_Buyer(props) {
                         }, "검색"))));
 }
 
-function ShopSearchInput_Buyer$MO(props) {
+function ShopSearchInput_Buyer$MO(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return "";

@@ -4,11 +4,12 @@ import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 
-function Divider(props) {
+function Divider(Props) {
+  var className = Props.className;
   return React.createElement("div", {
               className: Cx.cx([
                     "my-5 w-full h-px bg-disabled-L2",
-                    Belt_Option.getWithDefault(props.className, "")
+                    Belt_Option.getWithDefault(className, "")
                   ])
             });
 }

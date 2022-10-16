@@ -51,11 +51,12 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function Account_Signout_Buyer_Mobile$Signout(props) {
-  var debtAmount = props.debtAmount;
-  var loading = props.loading;
-  var onClickSignout = props.onClickSignout;
-  var onClose = props.onClose;
+function Account_Signout_Buyer_Mobile$Signout(Props) {
+  var onClose = Props.onClose;
+  var sinsunCashDeposit = Props.sinsunCashDeposit;
+  var onClickSignout = Props.onClickSignout;
+  var loading = Props.loading;
+  var debtAmount = Props.debtAmount;
   var match = React.useState(function () {
         return false;
       });
@@ -83,7 +84,7 @@ function Account_Signout_Buyer_Mobile$Signout(props) {
                                   className: "text-gray-600"
                                 }, "신선캐시 잔액")), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold"
-                                }, "" + Locale.Float.show(undefined, props.sinsunCashDeposit, 0) + "원"))), debtAmount !== undefined ? React.createElement("div", {
+                                }, "" + Locale.Float.show(undefined, sinsunCashDeposit, 0) + "원"))), debtAmount !== undefined ? React.createElement("div", {
                             className: "border border-div-border-L3 rounded p-4"
                           }, React.createElement("div", {
                                 className: "flex items-center justify-between "
@@ -141,12 +142,13 @@ var Signout = {
   make: Account_Signout_Buyer_Mobile$Signout
 };
 
-function Account_Signout_Buyer_Mobile(props) {
-  var onClose = props.onClose;
-  var isOpen = props.isOpen;
+function Account_Signout_Buyer_Mobile(Props) {
+  var query = Props.query;
+  var isOpen = Props.isOpen;
+  var onClose = Props.onClose;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
-  var match$1 = use(props.query);
+  var match$1 = use(query);
   var match$2 = React.useState(function () {
         return /* Confirm */0;
       });
@@ -270,7 +272,7 @@ function Account_Signout_Buyer_Mobile(props) {
   }
   return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: isOpen,
+              open: isOpen,
               onOpenChange: reset
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"

@@ -91,11 +91,12 @@ var RequestQuotationGtm = {
   make: make
 };
 
-function PDP_Quoted_RfqBtn_Buyer$PC(props) {
-  var setShowModal = props.setShowModal;
+function PDP_Quoted_RfqBtn_Buyer$PC(Props) {
+  var setShowModal = Props.setShowModal;
+  var query = Props.query;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use(props.query);
+  var match = use(query);
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;
@@ -155,11 +156,12 @@ var PC = {
   make: PDP_Quoted_RfqBtn_Buyer$PC
 };
 
-function PDP_Quoted_RfqBtn_Buyer$MO(props) {
-  var setShowModal = props.setShowModal;
+function PDP_Quoted_RfqBtn_Buyer$MO(Props) {
+  var setShowModal = Props.setShowModal;
+  var query = Props.query;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var match = use(props.query);
+  var match = use(query);
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;
@@ -190,26 +192,26 @@ function PDP_Quoted_RfqBtn_Buyer$MO(props) {
                                   });
                             })
                         }, "최저가 견적받기"), React.createElement(PDP_CTA_Container_Buyer.make, {
-                          children: Caml_option.some(React.createElement("button", {
-                                    className: btnStyle,
-                                    onClick: (function (param) {
-                                        setShowModal(function (param) {
-                                              return /* Show */{
-                                                      _0: /* Unauthorized */0
-                                                    };
-                                            });
-                                      })
-                                  }, "최저가 견적받기"))
+                          children: React.createElement("button", {
+                                className: btnStyle,
+                                onClick: (function (param) {
+                                    setShowModal(function (param) {
+                                          return /* Show */{
+                                                  _0: /* Unauthorized */0
+                                                };
+                                        });
+                                  })
+                              }, "최저가 견적받기")
                         }));
       case /* NoPermission */2 :
           return React.createElement(React.Fragment, undefined, React.createElement("button", {
                           className: disabledStyle,
                           disabled: true
                         }, "최저가 견적받기"), React.createElement(PDP_CTA_Container_Buyer.make, {
-                          children: Caml_option.some(React.createElement("button", {
-                                    className: disabledStyle,
-                                    disabled: true
-                                  }, "최저가 견적받기"))
+                          children: React.createElement("button", {
+                                className: disabledStyle,
+                                disabled: true
+                              }, "최저가 견적받기")
                         }));
       
     }
@@ -224,10 +226,10 @@ function PDP_Quoted_RfqBtn_Buyer$MO(props) {
                       className: btnStyle,
                       onClick: onClick
                     }, "최저가 견적받기"), React.createElement(PDP_CTA_Container_Buyer.make, {
-                      children: Caml_option.some(React.createElement("button", {
-                                className: btnStyle,
-                                onClick: onClick
-                              }, "최저가 견적받기"))
+                      children: React.createElement("button", {
+                            className: btnStyle,
+                            onClick: onClick
+                          }, "최저가 견적받기")
                     }));
     }
     var onClick$1 = function (param) {
@@ -239,13 +241,13 @@ function PDP_Quoted_RfqBtn_Buyer$MO(props) {
                         className: btnStyle,
                         buttonText: "최저가 견적받기"
                       })), React.createElement(PDP_CTA_Container_Buyer.make, {
-                    children: Caml_option.some(React.createElement("div", {
-                              className: "w-full",
-                              onClick: onClick$1
-                            }, React.createElement(RfqCreateRequestButton.make, {
-                                  className: btnStyle,
-                                  buttonText: "최저가 견적받기"
-                                })))
+                    children: React.createElement("div", {
+                          className: "w-full",
+                          onClick: onClick$1
+                        }, React.createElement(RfqCreateRequestButton.make, {
+                              className: btnStyle,
+                              buttonText: "최저가 견적받기"
+                            }))
                   }));
   }
 }

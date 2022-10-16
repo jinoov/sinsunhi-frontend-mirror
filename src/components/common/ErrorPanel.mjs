@@ -3,9 +3,11 @@
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 
-function ErrorPanel(props) {
-  if (props.error.status === 401) {
-    return Belt_Option.getWithDefault(props.renderOnRetry, React.createElement("div", undefined, "새로운 데이터 확인 중.."));
+function ErrorPanel(Props) {
+  var error = Props.error;
+  var renderOnRetry = Props.renderOnRetry;
+  if (error.status === 401) {
+    return Belt_Option.getWithDefault(renderOnRetry, React.createElement("div", undefined, "새로운 데이터 확인 중.."));
   } else {
     return React.createElement("div", undefined, "에러가 발생하였습니다.");
   }

@@ -20,10 +20,11 @@ var options = {
   "9": "기타"
 };
 
-function Account_Signout_Reason_Buyer$PC(props) {
-  var setEtc = props.setEtc;
-  var setSelected = props.setSelected;
-  var selected = props.selected;
+function Account_Signout_Reason_Buyer$PC(Props) {
+  var selected = Props.selected;
+  var setSelected = Props.setSelected;
+  var etc = Props.etc;
+  var setEtc = Props.setEtc;
   var handleOnChange = function (reason, param) {
     var newSet = Belt_SetString.has(selected, reason) ? Belt_SetString.remove(selected, reason) : Belt_SetString.add(selected, reason);
     setSelected(function (param) {
@@ -167,9 +168,10 @@ function Account_Signout_Reason_Buyer$PC(props) {
                       name: "etc",
                       placeholder: "기타 탈퇴사유를 적어주세요.",
                       className: "w-full",
-                      value: props.etc,
+                      value: etc,
                       onChange: handleEtcChange,
-                      size: /* Large */0
+                      size: /* Large */0,
+                      error: undefined
                     })));
 }
 
@@ -177,12 +179,13 @@ var PC = {
   make: Account_Signout_Reason_Buyer$PC
 };
 
-function Account_Signout_Reason_Buyer$Mobile(props) {
-  var setEtc = props.setEtc;
-  var setSelected = props.setSelected;
-  var selected = props.selected;
-  var onClose = props.onClose;
-  var onClickNext = props.onClickNext;
+function Account_Signout_Reason_Buyer$Mobile(Props) {
+  var onClickNext = Props.onClickNext;
+  var onClose = Props.onClose;
+  var selected = Props.selected;
+  var setSelected = Props.setSelected;
+  var etc = Props.etc;
+  var setEtc = Props.setEtc;
   var handleOnChange = function (reason, param) {
     var newSet = Belt_SetString.has(selected, reason) ? Belt_SetString.remove(selected, reason) : Belt_SetString.add(selected, reason);
     setSelected(function (param) {
@@ -336,9 +339,10 @@ function Account_Signout_Reason_Buyer$Mobile(props) {
                                     name: "etc",
                                     placeholder: "기타 탈퇴사유를 적어주세요.",
                                     className: "w-full",
-                                    value: props.etc,
+                                    value: etc,
                                     onChange: handleEtcChange,
-                                    size: /* Large */0
+                                    size: /* Large */0,
+                                    error: undefined
                                   }) : null)), React.createElement("div", {
                           className: "flex"
                         }, React.createElement("button", {

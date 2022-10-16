@@ -31,8 +31,9 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Normal_DeliveryGuide_Buyer$PC(props) {
-  var match = use(props.query);
+function PDP_Normal_DeliveryGuide_Buyer$PC(Props) {
+  var query = Props.query;
+  var match = use(query);
   var isCourierAvailable;
   if (typeof match === "object") {
     var variant = match.NAME;
@@ -91,8 +92,9 @@ var PC = {
   make: PDP_Normal_DeliveryGuide_Buyer$PC
 };
 
-function PDP_Normal_DeliveryGuide_Buyer$MO(props) {
-  var match = use(props.query);
+function PDP_Normal_DeliveryGuide_Buyer$MO(Props) {
+  var query = Props.query;
+  var match = use(query);
   var isCourierAvailable;
   if (typeof match === "object") {
     var variant = match.NAME;

@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as Skeleton from "../../../components/Skeleton.mjs";
 
-function Tradematch_Skeleton_Buyer(props) {
+function Tradematch_Skeleton_Buyer(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "px-5 py-9"
                 }, React.createElement(Skeleton.Box.make, {

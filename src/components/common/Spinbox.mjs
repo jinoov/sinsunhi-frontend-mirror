@@ -18,17 +18,17 @@ function setIntInRange(number, min, max) {
   }
 }
 
-function Spinbox(props) {
-  var onChange = props.onChange;
-  var value = props.value;
-  var max = props.max;
-  var min = props.min;
-  var max$1 = max !== undefined ? max : 999;
-  var min$1 = min !== undefined ? min : 1;
+function Spinbox(Props) {
+  var minOpt = Props.min;
+  var maxOpt = Props.max;
+  var value = Props.value;
+  var onChange = Props.onChange;
+  var min = minOpt !== undefined ? minOpt : 1;
+  var max = maxOpt !== undefined ? maxOpt : 999;
   var onChangeValue = function (e) {
     var nonEmptyStr = e.target.value;
-    var parsed = nonEmptyStr === "" ? min$1 : Belt_Option.map(Belt_Int.fromString(nonEmptyStr.replace(/[^0-9]/g, "")), (function (v$p) {
-              return setIntInRange(v$p, min$1, max$1);
+    var parsed = nonEmptyStr === "" ? min : Belt_Option.map(Belt_Int.fromString(nonEmptyStr.replace(/[^0-9]/g, "")), (function (v$p) {
+              return setIntInRange(v$p, min, max);
             }));
     Belt_Option.map(parsed, onChange);
   };
@@ -36,12 +36,12 @@ function Spinbox(props) {
               className: "w-[7.5rem] h-10 flex border rounded-xl divide-x"
             }, React.createElement("button", {
                   className: "w-9 flex items-center justify-center",
-                  disabled: value === min$1,
+                  disabled: value === min,
                   onClick: (function (param) {
                       Curry._1(onChange, value - 1 | 0);
                     })
                 }, React.createElement(IconSpinnerMinus.make, {
-                      fill: value === min$1 ? "#cccccc" : "#262626"
+                      fill: value === min ? "#cccccc" : "#262626"
                     })), React.createElement("div", {
                   className: "flex flex-1 items-center justify-center"
                 }, React.createElement("input", {
@@ -50,12 +50,12 @@ function Spinbox(props) {
                       onChange: onChangeValue
                     })), React.createElement("button", {
                   className: "w-9 flex items-center justify-center",
-                  disabled: value === max$1,
+                  disabled: value === max,
                   onClick: (function (param) {
                       Curry._1(onChange, value + 1 | 0);
                     })
                 }, React.createElement(IconSpinnerPlus.make, {
-                      fill: value === max$1 ? "#cccccc" : "#262626"
+                      fill: value === max ? "#cccccc" : "#262626"
                     })));
 }
 

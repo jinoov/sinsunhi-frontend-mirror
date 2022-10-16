@@ -451,17 +451,19 @@ function getTextInputStyle(disabled) {
   }
 }
 
-function Add_Matching_Product_Form_Admin$ProductNameInputs(props) {
+function Add_Matching_Product_Form_Admin$ProductNameInputs(Props) {
+  var producerProductName = Props.producerProductName;
+  var buyerProductName = Props.buyerProductName;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var register = match.register;
   var errors = match.formState.errors;
-  var producerProductNameInput = register(props.producerProductName, {
+  var producerProductNameInput = register(producerProductName, {
         required: true,
         maxLength: 100
       });
-  var buyerProductNameInput = register(props.buyerProductName, {
+  var buyerProductNameInput = register(buyerProductName, {
         required: true,
         maxLength: 100
       });
@@ -532,7 +534,8 @@ var ProductNameInputs = {
   make: Add_Matching_Product_Form_Admin$ProductNameInputs
 };
 
-function Add_Matching_Product_Form_Admin$Category(props) {
+function Add_Matching_Product_Form_Admin$Category(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -544,7 +547,7 @@ function Add_Matching_Product_Form_Admin$Category(props) {
                       className: "text-notice"
                     }, "*")), React.createElement(Select_Product_Categories.make, {
                   control: match.control,
-                  name: props.name,
+                  name: name,
                   disabled: false
                 }));
 }
@@ -553,7 +556,8 @@ var Category = {
   make: Add_Matching_Product_Form_Admin$Category
 };
 
-function Add_Matching_Product_Form_Admin$DisplayCategory(props) {
+function Add_Matching_Product_Form_Admin$DisplayCategory(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -565,7 +569,7 @@ function Add_Matching_Product_Form_Admin$DisplayCategory(props) {
                       className: "text-notice"
                     }, "*")), React.createElement(Product_Detail_Display_Categories.make, {
                   control: match.control,
-                  name: props.name,
+                  name: name,
                   disabled: false
                 }), React.createElement("div", undefined));
 }
@@ -574,7 +578,7 @@ var DisplayCategory = {
   make: Add_Matching_Product_Form_Admin$DisplayCategory
 };
 
-function Add_Matching_Product_Form_Admin$ReadOnlyProductId(props) {
+function Add_Matching_Product_Form_Admin$ReadOnlyProductId(Props) {
   return React.createElement("div", {
               className: "flex flex-col gap-2"
             }, React.createElement("div", undefined, React.createElement("span", {
@@ -590,8 +594,8 @@ var ReadOnlyProductId = {
   make: Add_Matching_Product_Form_Admin$ReadOnlyProductId
 };
 
-function Add_Matching_Product_Form_Admin$OperationStatusInput(props) {
-  var name = props.name;
+function Add_Matching_Product_Form_Admin$OperationStatusInput(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -609,7 +613,7 @@ function Add_Matching_Product_Form_Admin$OperationStatusInput(props) {
                           className: "text-notice"
                         }, "*")), React.createElement(ReactHookForm$1.Controller, {
                       name: name,
-                      control: Caml_option.some(match.control),
+                      control: match.control,
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
@@ -643,7 +647,7 @@ function Add_Matching_Product_Form_Admin$OperationStatusInput(props) {
                                         }));
                         }),
                       defaultValue: "",
-                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
+                      rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                     })), React.createElement(Dialog.make, {
                   isShow: match$1[0],
                   children: React.createElement("p", undefined, "영구판매중지 상태를 선택 후 저장하시면", React.createElement("br", undefined), "추후 해당 상품을 수정할 수 없습니다.", React.createElement("br", undefined), React.createElement("br", undefined), "영구판매중지 상태로 변경할까요?"),
@@ -669,11 +673,12 @@ var OperationStatusInput = {
   make: Add_Matching_Product_Form_Admin$OperationStatusInput
 };
 
-function Add_Matching_Product_Form_Admin$OriginInput(props) {
+function Add_Matching_Product_Form_Admin$OriginInput(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var productOrigin = match.register(props.name, {
+  var productOrigin = match.register(name, {
         required: true
       });
   return React.createElement("div", {
@@ -729,8 +734,9 @@ function getError(fromName, toName, errors) {
   }
 }
 
-function Add_Matching_Product_Form_Admin$ShipMonthInput(props) {
-  var fromName = props.fromName;
+function Add_Matching_Product_Form_Admin$ShipMonthInput(Props) {
+  var fromName = Props.fromName;
+  var toName = Props.toName;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -742,7 +748,7 @@ function Add_Matching_Product_Form_Admin$ShipMonthInput(props) {
         min: 1,
         pattern: /^[0-9]{1,2}$/
       });
-  var to = register(props.toName, {
+  var to = register(toName, {
         required: true,
         max: 12,
         min: 1,
@@ -812,8 +818,9 @@ var ShipMonthInput = {
   make: Add_Matching_Product_Form_Admin$ShipMonthInput
 };
 
-function Add_Matching_Product_Form_Admin$NoticeAndDateInput$DateInput(props) {
-  var minDate = props.minDate;
+function Add_Matching_Product_Form_Admin$NoticeAndDateInput$DateInput(Props) {
+  var name = Props.name;
+  var minDate = Props.minDate;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -825,20 +832,26 @@ function Add_Matching_Product_Form_Admin$NoticeAndDateInput$DateInput(props) {
                 }));
   };
   return React.createElement(ReactHookForm$1.Controller, {
-              name: props.name,
-              control: Caml_option.some(match.control),
+              name: name,
+              control: match.control,
               render: (function (param) {
                   var match = param.field;
                   var onChange = match.onChange;
-                  return React.createElement(DatePicker.make, {
-                              id: match.name,
-                              onChange: (function (e) {
-                                  Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
-                                }),
-                              date: jsonToStr(match.value),
-                              minDate: minDate,
-                              firstDayOfWeek: 0
-                            });
+                  var tmp = {
+                    id: match.name,
+                    onChange: (function (e) {
+                        Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, e.detail.value));
+                      }),
+                    firstDayOfWeek: 0
+                  };
+                  var tmp$1 = jsonToStr(match.value);
+                  if (tmp$1 !== undefined) {
+                    tmp.date = Caml_option.valFromOption(tmp$1);
+                  }
+                  if (minDate !== undefined) {
+                    tmp.minDate = Caml_option.valFromOption(minDate);
+                  }
+                  return React.createElement(DatePicker.make, tmp);
                 }),
               defaultValue: ""
             });
@@ -848,15 +861,17 @@ var DateInput = {
   make: Add_Matching_Product_Form_Admin$NoticeAndDateInput$DateInput
 };
 
-function Add_Matching_Product_Form_Admin$NoticeAndDateInput(props) {
-  var noticeFromName = props.noticeFromName;
+function Add_Matching_Product_Form_Admin$NoticeAndDateInput(Props) {
+  var noticeName = Props.noticeName;
+  var noticeFromName = Props.noticeFromName;
+  var noticeToName = Props.noticeToName;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
   var noticeDateFrom = ReactHookForm$1.useWatch({
         name: noticeFromName
       });
-  var notice = match.register(props.noticeName, {
+  var notice = match.register(noticeName, {
         maxLength: 1000
       });
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
@@ -898,7 +913,7 @@ function Add_Matching_Product_Form_Admin$NoticeAndDateInput(props) {
                         }), React.createElement("span", {
                           className: "flex items-center"
                         }, "~"), React.createElement(Add_Matching_Product_Form_Admin$NoticeAndDateInput$DateInput, {
-                          name: props.noticeToName,
+                          name: noticeToName,
                           minDate: Belt_Option.getWithDefault(noticeDateFrom, "")
                         }))));
 }
@@ -908,8 +923,8 @@ var NoticeAndDateInput = {
   make: Add_Matching_Product_Form_Admin$NoticeAndDateInput
 };
 
-function Add_Matching_Product_Form_Admin$ThumbnailUploadInput(props) {
-  var name = props.name;
+function Add_Matching_Product_Form_Admin$ThumbnailUploadInput(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -923,7 +938,7 @@ function Add_Matching_Product_Form_Admin$ThumbnailUploadInput(props) {
                       className: "text-text-L2 ml-2"
                     }, "*이미지 파일 형식 등록 가능")), React.createElement("div", undefined, React.createElement(ReactHookForm$1.Controller, {
                       name: name,
-                      control: Caml_option.some(match.control),
+                      control: match.control,
                       render: (function (param) {
                           var match = param.field;
                           var onChange = match.onChange;
@@ -935,15 +950,15 @@ function Add_Matching_Product_Form_Admin$ThumbnailUploadInput(props) {
                                       value: Belt_Result.getWithDefault(Upload_Thumbnail_Admin.Form.image_decode(match.value), Upload_Thumbnail_Admin.Form.resetImage)
                                     });
                         }),
-                      defaultValue: Caml_option.some(Upload_Thumbnail_Admin.Form.image_encode(Upload_Thumbnail_Admin.Form.resetImage)),
-                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([[
-                                          "required",
-                                          ReactHookForm.Validation.sync(function (value) {
-                                                return Belt_Result.mapWithDefault(Upload_Thumbnail_Admin.Form.image_decode(value), false, (function (image) {
-                                                              return image.original !== "";
-                                                            }));
-                                              })
-                                        ]])), undefined, undefined, undefined))
+                      defaultValue: Upload_Thumbnail_Admin.Form.image_encode(Upload_Thumbnail_Admin.Form.resetImage),
+                      rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([[
+                                      "required",
+                                      ReactHookForm.Validation.sync(function (value) {
+                                            return Belt_Result.mapWithDefault(Upload_Thumbnail_Admin.Form.image_decode(value), false, (function (image) {
+                                                          return image.original !== "";
+                                                        }));
+                                          })
+                                    ]])), undefined, undefined, undefined)
                     }), React.createElement(ErrorMessage.ErrorMessage, {
                       name: name,
                       errors: match.formState.errors,
@@ -964,11 +979,12 @@ var ThumbnailUploadInput = {
   make: Add_Matching_Product_Form_Admin$ThumbnailUploadInput
 };
 
-function Add_Matching_Product_Form_Admin$SalesDocumentURLInput(props) {
+function Add_Matching_Product_Form_Admin$SalesDocumentURLInput(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
-  var documentURL = match.register(props.name, undefined);
+  var documentURL = match.register(name, undefined);
   return React.createElement("div", {
               className: "flex flex-col gap-2"
             }, React.createElement("label", {
@@ -987,8 +1003,8 @@ var SalesDocumentURLInput = {
   make: Add_Matching_Product_Form_Admin$SalesDocumentURLInput
 };
 
-function Add_Matching_Product_Form_Admin$EditorInput(props) {
-  var name = props.name;
+function Add_Matching_Product_Form_Admin$EditorInput(Props) {
+  var name = Props.name;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -1023,10 +1039,11 @@ var EditorInput = {
   make: Add_Matching_Product_Form_Admin$EditorInput
 };
 
-function Add_Matching_Product_Form_Admin$MatchingSuccessDialog(props) {
+function Add_Matching_Product_Form_Admin$MatchingSuccessDialog(Props) {
+  var isShow = Props.isShow;
   var router = Router.useRouter();
   return React.createElement(Dialog.make, {
-              isShow: props.isShow,
+              isShow: isShow,
               children: React.createElement("div", {
                     className: "flex flex-col"
                   }, React.createElement("span", undefined, "매칭상품등록이 완료되었습니다.")),
@@ -1111,7 +1128,7 @@ function makeMatchingProductVariables(form) {
   return tmp$1;
 }
 
-function Add_Matching_Product_Form_Admin(props) {
+function Add_Matching_Product_Form_Admin(Props) {
   var match = use(undefined);
   var isMatchingMutating = match[1];
   var matchingMutate = match[0];

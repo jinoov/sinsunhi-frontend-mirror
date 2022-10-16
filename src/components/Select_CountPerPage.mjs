@@ -14,7 +14,8 @@ function getCountPerPage(q) {
   return Belt_Option.flatMap(Js_dict.get(q, "limit"), Belt_Int.fromString);
 }
 
-function Select_CountPerPage(props) {
+function Select_CountPerPage(Props) {
+  var className = Props.className;
   var router = Router.useRouter();
   var onChange = function (e) {
     var limit = e.target.value;
@@ -28,8 +29,8 @@ function Select_CountPerPage(props) {
                 }));
   };
   var tmp = {};
-  if (props.className !== undefined) {
-    tmp.className = Caml_option.valFromOption(props.className);
+  if (className !== undefined) {
+    tmp.className = Caml_option.valFromOption(className);
   }
   return React.createElement("span", tmp, React.createElement("label", {
                   className: "block relative"

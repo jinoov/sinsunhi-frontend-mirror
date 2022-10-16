@@ -51,18 +51,24 @@ function queryImageToFormImage(image) {
         };
 }
 
-function UpdateProduct_Detail_Description_Admin(props) {
-  var data = use(props.query);
+function UpdateProduct_Detail_Description_Admin(Props) {
+  var query = Props.query;
+  var data = use(query);
   var allFieldsDisabled = data.status === "NOSALE";
-  return React.createElement(Product_Detail_Description_Admin.make, {
-              defaultNotice: Belt_Option.getWithDefault(data.notice, ""),
-              defaultDescription: data.description,
-              defaultThumbnail: queryImageToFormImage(data.image),
-              defaultSalesDocument: Belt_Option.getWithDefault(data.salesDocument, ""),
-              defaultNoticeStratAt: data.noticeStartAt,
-              defaultNoticeEndAt: data.noticeEndAt,
-              allFieldsDisabled: allFieldsDisabled
-            });
+  var tmp = {
+    defaultNotice: Belt_Option.getWithDefault(data.notice, ""),
+    defaultDescription: data.description,
+    defaultThumbnail: queryImageToFormImage(data.image),
+    defaultSalesDocument: Belt_Option.getWithDefault(data.salesDocument, ""),
+    allFieldsDisabled: allFieldsDisabled
+  };
+  if (data.noticeStartAt !== undefined) {
+    tmp.defaultNoticeStratAt = Caml_option.valFromOption(data.noticeStartAt);
+  }
+  if (data.noticeEndAt !== undefined) {
+    tmp.defaultNoticeEndAt = Caml_option.valFromOption(data.noticeEndAt);
+  }
+  return React.createElement(Product_Detail_Description_Admin.make, tmp);
 }
 
 var make = UpdateProduct_Detail_Description_Admin;

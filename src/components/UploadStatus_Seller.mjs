@@ -50,7 +50,8 @@ function displayStatus(status, successCount, failCount) {
   }
 }
 
-function UploadStatus_Seller(props) {
+function UploadStatus_Seller(Props) {
+  var kind = Props.kind;
   var match = React.useState(function () {
         return {
                 failCodes: undefined,
@@ -59,7 +60,7 @@ function UploadStatus_Seller(props) {
       });
   var setFailDetail = match[1];
   var failDetail = match[0];
-  var status = CustomHooks.UploadStatus.use(props.kind, /* Invoice */1);
+  var status = CustomHooks.UploadStatus.use(kind, /* Invoice */1);
   var tmp;
   if (typeof status === "number") {
     tmp = React.createElement("div", undefined, "로딩 중..");

@@ -216,8 +216,8 @@ function makeInput(amount, unit, brix, packageScore, marketabilityScore) {
         };
 }
 
-function BulkSale_Producer_Sample_Review_Button_Update_Admin$UpdateSampleReview(props) {
-  var sampleReview = props.sampleReview;
+function BulkSale_Producer_Sample_Review_Button_Update_Admin$UpdateSampleReview(Props) {
+  var sampleReview = Props.sampleReview;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
@@ -317,6 +317,7 @@ function BulkSale_Producer_Sample_Review_Button_Update_Admin$UpdateSampleReview(
                                   return handleOnChange(undefined, setBrix, param);
                                 }),
                               size: /* Small */2,
+                              error: undefined,
                               textAlign: /* Right */2
                             }))), React.createElement("article", {
                       className: "mt-5"
@@ -443,9 +444,10 @@ var UpdateSampleReview = {
   make: BulkSale_Producer_Sample_Review_Button_Update_Admin$UpdateSampleReview
 };
 
-function BulkSale_Producer_Sample_Review_Button_Update_Admin(props) {
+function BulkSale_Producer_Sample_Review_Button_Update_Admin(Props) {
+  var sampleReview = Props.sampleReview;
   return React.createElement(BulkSale_Producer_Sample_Review_Button_Update_Admin$UpdateSampleReview, {
-              sampleReview: props.sampleReview
+              sampleReview: sampleReview
             });
 }
 

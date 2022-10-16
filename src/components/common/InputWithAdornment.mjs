@@ -4,45 +4,50 @@ import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 
-function InputWithAdornment(props) {
-  var className = props.className;
-  var helperText = props.helperText;
-  var errored = props.errored;
-  var textLocation = props.textLocation;
-  var adornmentLocation = props.adornmentLocation;
-  var value = props.value;
-  var type_ = props.type_;
-  var className$1 = className !== undefined ? className : "";
-  var helperText$1 = helperText !== undefined ? helperText : "";
-  var errored$1 = errored !== undefined ? errored : false;
-  var textLocation$1 = textLocation !== undefined ? textLocation : /* End */1;
-  var adornmentLocation$1 = adornmentLocation !== undefined ? adornmentLocation : /* End */1;
-  var type_$1 = type_ !== undefined ? type_ : "string";
+function InputWithAdornment(Props) {
+  var name = Props.name;
+  var type_Opt = Props.type_;
+  var value = Props.value;
+  var onChange = Props.onChange;
+  var adornmentLocationOpt = Props.adornmentLocation;
+  var textLocationOpt = Props.textLocation;
+  var adornment = Props.adornment;
+  var placeholder = Props.placeholder;
+  var erroredOpt = Props.errored;
+  var errorElement = Props.errorElement;
+  var helperTextOpt = Props.helperText;
+  var classNameOpt = Props.className;
+  var type_ = type_Opt !== undefined ? type_Opt : "string";
+  var adornmentLocation = adornmentLocationOpt !== undefined ? adornmentLocationOpt : /* End */1;
+  var textLocation = textLocationOpt !== undefined ? textLocationOpt : /* End */1;
+  var errored = erroredOpt !== undefined ? erroredOpt : false;
+  var helperText = helperTextOpt !== undefined ? helperTextOpt : "";
+  var className = classNameOpt !== undefined ? classNameOpt : "";
   var match = React.useState(function () {
         return false;
       });
   var setBlur = match[1];
-  var notice = errored$1 && match[0] && value !== "";
+  var notice = errored && match[0] && value !== "";
   var outerCommonClassName = Cx.cx([
         "flex w-full border rounded-lg items-center p-2 focus-within:ring-1-gl focus-within:border-border-active focus-within:ring-opacity-100",
-        className$1
+        className
       ]);
   var outerClassName = Cx.cx([
         notice ? (
-            adornmentLocation$1 ? "flex-row-reverse border-notice" : "border-notice"
+            adornmentLocation ? "flex-row-reverse border-notice" : "border-notice"
           ) : (
-            adornmentLocation$1 ? "flex-row-reverse border-border-default-L1" : "border-border-default-L1"
+            adornmentLocation ? "flex-row-reverse border-border-default-L1" : "border-border-default-L1"
           ),
         outerCommonClassName
       ]);
-  var inputClassName = textLocation$1 ? "border-0 focus:outline-none text-right mr-1 w-full remove-spin-button" : "border-0 focus:outline-none mr-1 w-full remove-spin-button";
+  var inputClassName = textLocation ? "border-0 focus:outline-none text-right mr-1 w-full remove-spin-button" : "border-0 focus:outline-none mr-1 w-full remove-spin-button";
   return React.createElement(React.Fragment, undefined, React.createElement("label", {
                   className: outerClassName
-                }, props.adornment, React.createElement("input", {
+                }, adornment, React.createElement("input", {
                       className: inputClassName,
-                      name: props.name,
-                      placeholder: props.placeholder,
-                      type: type_$1,
+                      name: name,
+                      placeholder: placeholder,
+                      type: type_,
                       value: value,
                       onFocus: (function (param) {
                           setBlur(function (param) {
@@ -54,12 +59,12 @@ function InputWithAdornment(props) {
                                 return true;
                               });
                         }),
-                      onChange: props.onChange
+                      onChange: onChange
                     })), notice ? React.createElement("div", {
                     className: "flex items-center mt-1 h-5 text-notice"
-                  }, Belt_Option.getWithDefault(props.errorElement, null)) : React.createElement("div", {
+                  }, Belt_Option.getWithDefault(errorElement, null)) : React.createElement("div", {
                     className: inputClassName
-                  }, helperText$1));
+                  }, helperText));
 }
 
 var make = InputWithAdornment;

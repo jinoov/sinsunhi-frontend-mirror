@@ -15,7 +15,7 @@ function stringToPhoneFormat(str) {
   return str.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
 }
 
-function Search_Buyer_Admin(props) {
+function Search_Buyer_Admin(Props) {
   var router = Router.useRouter();
   var onSubmit = function (param) {
     var state = param.state;

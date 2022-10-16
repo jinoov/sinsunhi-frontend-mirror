@@ -4,7 +4,7 @@ import * as React from "react";
 import * as DS_Icon from "../../svgs/DS_Icon.mjs";
 import * as IconError from "../../svgs/IconError.mjs";
 
-function DS_Toast$Normal$IconSuccess(props) {
+function DS_Toast$Normal$IconSuccess(Props) {
   return React.createElement("span", {
               className: "min-w-[24px] mr-1"
             }, React.createElement(DS_Icon.Common.LineCheckedLarge1.make, {
@@ -18,7 +18,7 @@ var IconSuccess = {
   make: DS_Toast$Normal$IconSuccess
 };
 
-function DS_Toast$Normal$IconError(props) {
+function DS_Toast$Normal$IconError(Props) {
   return React.createElement("span", {
               className: "min-w-[24px] mr-1"
             }, React.createElement(IconError.make, {
@@ -31,20 +31,22 @@ var IconError$1 = {
   make: DS_Toast$Normal$IconError
 };
 
-function DS_Toast$Normal$Root(props) {
+function DS_Toast$Normal$Root(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "w-full flex items-center truncate"
-            }, props.children);
+            }, children);
 }
 
 var Root = {
   make: DS_Toast$Normal$Root
 };
 
-function DS_Toast$Normal$Content(props) {
+function DS_Toast$Normal$Content(Props) {
+  var children = Props.children;
   return React.createElement("span", {
               className: "text-white truncate tracking-tight"
-            }, props.children);
+            }, children);
 }
 
 var Content = {

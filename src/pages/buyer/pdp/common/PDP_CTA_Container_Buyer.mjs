@@ -6,7 +6,8 @@ import * as ReactUtil from "../../../../utils/ReactUtil.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as ChannelTalk from "../../../../bindings/ChannelTalk.mjs";
 
-function PDP_CTA_Container_Buyer(props) {
+function PDP_CTA_Container_Buyer(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "fixed w-full bottom-0 left-0"
             }, React.createElement("div", {
@@ -31,7 +32,7 @@ function PDP_CTA_Container_Buyer(props) {
                           props: {
                             "data-gtm": "click_chatbot"
                           }
-                        }), Belt_Option.getWithDefault(props.children, null))));
+                        }), Belt_Option.getWithDefault(children, null))));
 }
 
 var make = PDP_CTA_Container_Buyer;

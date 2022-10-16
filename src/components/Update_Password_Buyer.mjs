@@ -79,8 +79,10 @@ var Mutation = {
   use: use
 };
 
-function Update_Password_Buyer$ConfirmView(props) {
-  var nextStep = props.nextStep;
+function Update_Password_Buyer$ConfirmView(Props) {
+  var email = Props.email;
+  var handleCloseButton = Props.handleCloseButton;
+  var nextStep = Props.nextStep;
   var match = React.useState(function () {
         return "";
       });
@@ -137,7 +139,7 @@ function Update_Password_Buyer$ConfirmView(props) {
                             }, "비밀번호 재설정")), React.createElement("button", {
                           className: "focus:outline-none",
                           type: "button",
-                          onClick: props.handleCloseButton
+                          onClick: handleCloseButton
                         }, React.createElement(IconClose.make, {
                               height: "24",
                               width: "24",
@@ -158,7 +160,7 @@ function Update_Password_Buyer$ConfirmView(props) {
                                   className: "font-bold"
                                 }, "이메일")), React.createElement("div", {
                               className: "border border-border-default-L1 bg-disabled-L3 rounded-xl p-3"
-                            }, props.email)), React.createElement("div", {
+                            }, email)), React.createElement("div", {
                           className: "flex flex-col mb-10"
                         }, React.createElement("div", {
                               className: "mb-2"
@@ -216,8 +218,9 @@ function formatValidator(password) {
   }
 }
 
-function Update_Password_Buyer$UpdateView(props) {
-  var close = props.close;
+function Update_Password_Buyer$UpdateView(Props) {
+  var handleCloseButton = Props.handleCloseButton;
+  var close = Props.close;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = React.useState(function () {
@@ -315,7 +318,7 @@ function Update_Password_Buyer$UpdateView(props) {
                             }, "비밀번호 재설정")), React.createElement("button", {
                           className: "focus:outline-none",
                           type: "button",
-                          onClick: props.handleCloseButton
+                          onClick: handleCloseButton
                         }, React.createElement(IconClose.make, {
                               height: "24",
                               width: "24",
@@ -373,9 +376,10 @@ var UpdateView = {
   make: Update_Password_Buyer$UpdateView
 };
 
-function Update_Password_Buyer(props) {
-  var onClose = props.onClose;
-  var isOpen = props.isOpen;
+function Update_Password_Buyer(Props) {
+  var isOpen = Props.isOpen;
+  var onClose = Props.onClose;
+  var email = Props.email;
   var match = React.useState(function () {
         return /* Confirm */0;
       });
@@ -410,7 +414,7 @@ function Update_Password_Buyer(props) {
       ]);
   return React.createElement(React.Fragment, undefined, React.createElement(ReactDialog.Root, {
                   children: null,
-                  _open: isOpen
+                  open: isOpen
                 }, React.createElement(ReactDialog.Overlay, {
                       className: "dialog-overlay"
                     }), React.createElement(ReactDialog.Content, {
@@ -425,7 +429,7 @@ function Update_Password_Buyer(props) {
                                       Curry._1(onClose, undefined);
                                     })
                                 }) : React.createElement(Update_Password_Buyer$ConfirmView, {
-                                  email: props.email,
+                                  email: email,
                                   handleCloseButton: handleCloseButton,
                                   nextStep: (function (param) {
                                       setStep(function (param) {

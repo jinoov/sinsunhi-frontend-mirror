@@ -16,8 +16,10 @@ import * as Webapi__Dom__Element from "rescript-webapi/src/Webapi/Dom/Webapi__Do
 import * as ReactDialog from "@radix-ui/react-dialog";
 import * as Freight_Delivery_Cost_Table_Data from "../data/Freight_Delivery_Cost_Table_Data.mjs";
 
-function FreightDeliveryCost_Table_Buyer$Select(props) {
-  var t = props.t;
+function FreightDeliveryCost_Table_Buyer$Select(Props) {
+  var t = Props.t;
+  var values = Props.values;
+  var onChange = Props.onChange;
   return React.createElement("div", undefined, React.createElement("label", {
                   className: "block text-sm font-medium text-gray-700",
                   id: "select-occupation"
@@ -39,8 +41,8 @@ function FreightDeliveryCost_Table_Buyer$Select(props) {
                             }))), React.createElement("select", {
                       className: "absolute left-0 w-full py-3 opacity-0",
                       value: t,
-                      onChange: props.onChange
-                    }, Belt_Array.map(props.values, (function (value) {
+                      onChange: onChange
+                    }, Belt_Array.map(values, (function (value) {
                             return React.createElement("option", {
                                         key: value,
                                         value: value
@@ -52,8 +54,8 @@ var Select = {
   make: FreightDeliveryCost_Table_Buyer$Select
 };
 
-function FreightDeliveryCost_Table_Buyer$TitleAndCloseButton(props) {
-  var close = props.close;
+function FreightDeliveryCost_Table_Buyer$TitleAndCloseButton(Props) {
+  var close = Props.close;
   return React.createElement("div", {
               className: "flex mb-5 md:mb-10 justify-between items-center"
             }, React.createElement("h3", {
@@ -97,7 +99,7 @@ var TableRow = {
   render: render
 };
 
-function FreightDeliveryCost_Table_Buyer(props) {
+function FreightDeliveryCost_Table_Buyer(Props) {
   var match = React.useState(function () {
         return Freight_Delivery_Cost_Table_Data.defaultOptionName;
       });

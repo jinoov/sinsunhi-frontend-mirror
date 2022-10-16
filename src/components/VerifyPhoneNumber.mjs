@@ -10,7 +10,6 @@ import * as ReForm from "@rescriptbr/reform/src/ReForm.mjs";
 import * as ReactUtil from "../utils/ReactUtil.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as FetchHelper from "../utils/FetchHelper.mjs";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
@@ -63,8 +62,8 @@ var initialStateVerificationCode = {
   verificationCode: ""
 };
 
-function VerifyPhoneNumber(props) {
-  var onVerified = props.onVerified;
+function VerifyPhoneNumber(Props) {
+  var onVerified = Props.onVerified;
   var match = React.useState(function () {
         return /* BeforeSendSMS */0;
       });
@@ -307,7 +306,7 @@ function VerifyPhoneNumber(props) {
                                 _0: /* VerificationCode */0
                               }),
                           disabled: isDisabledVerifyCodeForm,
-                          inputRef: Caml_option.some(inputVerificationCodeRef)
+                          inputRef: inputVerificationCodeRef
                         }), sms !== 2 ? null : (
                         verificationCode !== 2 ? React.createElement(Timer.make, {
                                 status: timerStatus,

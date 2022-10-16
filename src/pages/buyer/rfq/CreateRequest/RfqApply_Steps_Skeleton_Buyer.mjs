@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as Skeleton from "../../../../components/Skeleton.mjs";
 
-function RfqApply_Steps_Skeleton_Buyer(props) {
+function RfqApply_Steps_Skeleton_Buyer(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
                 }, React.createElement("div", {

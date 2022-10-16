@@ -145,9 +145,10 @@ function openInNewTab(elementId) {
   
 }
 
-function UploadStatus_Buyer(props) {
-  var uploadType = props.uploadType;
-  var onChangeLatestUpload = props.onChangeLatestUpload;
+function UploadStatus_Buyer(Props) {
+  var kind = Props.kind;
+  var onChangeLatestUpload = Props.onChangeLatestUpload;
+  var uploadType = Props.uploadType;
   var prevUploadedDateTime = React.useRef(undefined);
   var match = React.useState(function () {
         return {
@@ -157,7 +158,7 @@ function UploadStatus_Buyer(props) {
       });
   var setErrorDetail = match[1];
   var errorDetail = match[0];
-  var status = CustomHooks.UploadStatus.use(props.kind, uploadType);
+  var status = CustomHooks.UploadStatus.use(kind, uploadType);
   React.useEffect((function () {
           if (typeof status !== "number" && status.TAG === /* Loaded */0) {
             var data$p = CustomHooks.UploadStatus.response_decode(status._0);

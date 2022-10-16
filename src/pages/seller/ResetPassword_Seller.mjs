@@ -93,7 +93,7 @@ function checkPasswordConfirmed(pw1, pw2) {
   }
 }
 
-function ResetPassword_Seller(props) {
+function ResetPassword_Seller(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return /* BeforeRequestVerificationCode */0;
@@ -371,6 +371,7 @@ function ResetPassword_Seller(props) {
                                       value: passwordConfirm,
                                       onChange: handleOnChangePasswordConfirm,
                                       size: /* Large */0,
+                                      error: undefined,
                                       disabled: isDisabledResetPasswordForm
                                     }), isPasswordConfirmed >= 2 ? React.createElement("span", {
                                         className: "flex mt-1"

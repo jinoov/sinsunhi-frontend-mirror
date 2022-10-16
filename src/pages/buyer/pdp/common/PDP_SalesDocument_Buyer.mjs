@@ -3,13 +3,13 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import Link from "next/link";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as ShopDialog_Buyer from "../../ShopDialog_Buyer.mjs";
 import * as IconDownloadCenter from "../../../../components/svgs/IconDownloadCenter.mjs";
 
-function PDP_SalesDocument_Buyer$MO(props) {
+function PDP_SalesDocument_Buyer$MO(Props) {
+  var salesDocument = Props.salesDocument;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = React.useState(function () {
@@ -52,12 +52,12 @@ function PDP_SalesDocument_Buyer$MO(props) {
                                           return /* Hide */1;
                                         });
                                   }),
-                                children: Caml_option.some(React.createElement("div", {
-                                          className: "w-full h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-gray-800"
-                                        }, React.createElement("span", undefined, "로그인을 하시면"), React.createElement("span", undefined, "판매자료를 다운받으실 수 있습니다.")))
+                                children: React.createElement("div", {
+                                      className: "w-full h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-gray-800"
+                                    }, React.createElement("span", undefined, "로그인을 하시면"), React.createElement("span", undefined, "판매자료를 다운받으실 수 있습니다."))
                               })) : null
                   ) : React.createElement(Link, {
-                        href: props.salesDocument,
+                        href: salesDocument,
                         children: React.createElement("a", {
                               className: btnStyle,
                               target: "_blank"
@@ -75,7 +75,8 @@ var MO = {
   make: PDP_SalesDocument_Buyer$MO
 };
 
-function PDP_SalesDocument_Buyer$PC(props) {
+function PDP_SalesDocument_Buyer$PC(Props) {
+  var salesDocument = Props.salesDocument;
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = React.useState(function () {
@@ -116,12 +117,12 @@ function PDP_SalesDocument_Buyer$PC(props) {
                                           return /* Hide */1;
                                         });
                                   }),
-                                children: Caml_option.some(React.createElement("div", {
-                                          className: "w-full h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-gray-800"
-                                        }, React.createElement("span", undefined, "로그인을 하시면"), React.createElement("span", undefined, "판매자료를 다운받으실 수 있습니다.")))
+                                children: React.createElement("div", {
+                                      className: "w-full h-18 mt-8 px-8 py-6 flex flex-col items-center justify-center text-lg text-gray-800"
+                                    }, React.createElement("span", undefined, "로그인을 하시면"), React.createElement("span", undefined, "판매자료를 다운받으실 수 있습니다."))
                               })) : null
                   ) : React.createElement(Link, {
-                        href: props.salesDocument,
+                        href: salesDocument,
                         children: React.createElement("a", {
                               className: btnStyle,
                               target: "_blank"

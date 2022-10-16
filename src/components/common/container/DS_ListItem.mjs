@@ -6,27 +6,31 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as DS_TitleList from "../element/DS_TitleList.mjs";
 
-function DS_ListItem$Normal1$Root(props) {
+function DS_ListItem$Normal1$Root(Props) {
+  var children = Props.children;
+  var className = Props.className;
   var defaultStyle = "px-5 flex flex-col tab-highlight-color";
   return React.createElement("ul", {
-              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, props.children);
+            }, children);
 }
 
 var Root = {
   make: DS_ListItem$Normal1$Root
 };
 
-function DS_ListItem$Normal1$Item(props) {
-  var onClick = props.onClick;
+function DS_ListItem$Normal1$Item(Props) {
+  var children = Props.children;
+  var className = Props.className;
+  var onClick = Props.onClick;
   var defaultStyle = onClick !== undefined ? "flex justify-between items-center cursor-pointer appearance-none" : "flex justify-between items-center";
   var tmp = {
-    className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+    className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
             return Cx.cx([
                         defaultStyle,
                         className$p
@@ -36,33 +40,45 @@ function DS_ListItem$Normal1$Item(props) {
   if (onClick !== undefined) {
     tmp.onClick = Caml_option.valFromOption(onClick);
   }
-  return React.createElement("li", tmp, props.children);
+  return React.createElement("li", tmp, children);
 }
 
 var Item = {
   make: DS_ListItem$Normal1$Item
 };
 
-function DS_ListItem$Normal1$TextGroup(props) {
-  var titleStyle = props.titleStyle;
-  var titleStyle$1 = titleStyle !== undefined ? titleStyle : "";
-  return React.createElement(DS_TitleList.Left.TitleSubtitle1.make, {
-              title1: props.title1,
-              title2: props.title2,
-              titleStyle: titleStyle$1,
-              subTitle: props.subTitle,
-              subTitleStyle: props.subTitleStyle
-            });
+function DS_ListItem$Normal1$TextGroup(Props) {
+  var title1 = Props.title1;
+  var title2 = Props.title2;
+  var titleStyleOpt = Props.titleStyle;
+  var subTitle = Props.subTitle;
+  var subTitleStyle = Props.subTitleStyle;
+  var titleStyle = titleStyleOpt !== undefined ? titleStyleOpt : "";
+  var tmp = {
+    title1: title1,
+    titleStyle: titleStyle
+  };
+  if (title2 !== undefined) {
+    tmp.title2 = Caml_option.valFromOption(title2);
+  }
+  if (subTitle !== undefined) {
+    tmp.subTitle = Caml_option.valFromOption(subTitle);
+  }
+  if (subTitleStyle !== undefined) {
+    tmp.subTitleStyle = Caml_option.valFromOption(subTitleStyle);
+  }
+  return React.createElement(DS_TitleList.Left.TitleSubtitle1.make, tmp);
 }
 
 var TextGroup = {
   make: DS_ListItem$Normal1$TextGroup
 };
 
-function DS_ListItem$Normal1$RightGroup(props) {
+function DS_ListItem$Normal1$RightGroup(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "flex justify-end items-center"
-            }, props.children);
+            }, children);
 }
 
 var RightGroup = {
@@ -76,20 +92,24 @@ var Normal1 = {
   RightGroup: RightGroup
 };
 
-function DS_ListItem$Information1(props) {
+function DS_ListItem$Information1(Props) {
+  var children = Props.children;
+  var title = Props.title;
+  var content = Props.content;
   return React.createElement("div", {
               className: "px-5 flex flex-col justify-start items-start space-y-3"
             }, React.createElement("div", {
                   className: "flex justify-between items-center space-x-2"
-                }, props.children, React.createElement("span", {
+                }, children, React.createElement("span", {
                       className: "font-bold leading-7 tracking-tight text-enabled-L1"
-                    }, props.title)), props.content);
+                    }, title)), content);
 }
 
-function DS_ListItem$Information1$Left(props) {
+function DS_ListItem$Information1$Left(Props) {
+  var children = Props.children;
   return React.createElement("div", {
               className: "flex items-center"
-            }, props.children);
+            }, children);
 }
 
 var Left = {

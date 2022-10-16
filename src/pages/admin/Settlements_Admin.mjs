@@ -4,7 +4,6 @@ import * as React from "react";
 import * as Dialog from "../../components/common/Dialog.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as Authorization from "../../utils/Authorization.mjs";
@@ -15,7 +14,7 @@ import * as Settlements_List_Admin from "../../components/Settlements_List_Admin
 import * as Summary_Settlement_Admin from "../../components/Summary_Settlement_Admin.mjs";
 import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
 
-function Settlements_Admin$Settlements(props) {
+function Settlements_Admin$Settlements(Props) {
   var router = Router.useRouter();
   var status = CustomHooks.Settlements.use(new URLSearchParams(router.query).toString());
   var match = React.useState(function () {
@@ -89,7 +88,7 @@ function Settlements_Admin$Settlements(props) {
                                       userType: /* Admin */2,
                                       requestUrl: "/settlement/request-excel",
                                       buttonText: "주문서 원본 엑셀 다운로드 요청",
-                                      bodyOption: Caml_option.some(bodyOption)
+                                      bodyOption: bodyOption
                                     })))), React.createElement(Settlements_List_Admin.make, {
                           status: status,
                           producerCodeToDownload: producerCodeToDownload,
@@ -123,7 +122,7 @@ var Settlements = {
   make: Settlements_Admin$Settlements
 };
 
-function Settlements_Admin(props) {
+function Settlements_Admin(Props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(Settlements_Admin$Settlements, {}),
               title: "관리자 정산기초금액 조회"

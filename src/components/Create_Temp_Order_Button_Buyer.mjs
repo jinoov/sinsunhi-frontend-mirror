@@ -72,13 +72,13 @@ var Mutation = {
   use: use
 };
 
-function Create_Temp_Order_Button_Buyer(props) {
-  var cartIds = props.cartIds;
-  var cartItems = props.cartItems;
-  var buttonText = props.buttonText;
-  var className = props.className;
-  var buttonText$1 = buttonText !== undefined ? buttonText : "바로구매";
-  var className$1 = className !== undefined ? className : "w-20 h-10 border border-primary text-primary rounded-[10px]";
+function Create_Temp_Order_Button_Buyer(Props) {
+  var classNameOpt = Props.className;
+  var buttonTextOpt = Props.buttonText;
+  var cartItems = Props.cartItems;
+  var cartIds = Props.cartIds;
+  var className = classNameOpt !== undefined ? classNameOpt : "w-20 h-10 border border-primary text-primary rounded-[10px]";
+  var buttonText = buttonTextOpt !== undefined ? buttonTextOpt : "바로구매";
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var router = Router.useRouter();
@@ -100,10 +100,10 @@ function Create_Temp_Order_Button_Buyer(props) {
         });
   };
   return React.createElement(React.Fragment, undefined, React.createElement(Cart_Buyer_Util.SubmitDialog.make, {
-                  _open: match$2[0],
+                  open: match$2[0],
                   setOpen: setShowNoSelect
                 }), React.createElement("button", {
-                  className: className$1,
+                  className: className,
                   onClick: (function (param) {
                       return ReactEvents.interceptingHandler((function (param) {
                                     if (cartIds.length !== 0) {
@@ -153,7 +153,7 @@ function Create_Temp_Order_Button_Buyer(props) {
                                     }
                                   }), param);
                     })
-                }, buttonText$1));
+                }, buttonText));
 }
 
 var Util;

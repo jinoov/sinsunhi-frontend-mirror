@@ -17,7 +17,8 @@ import * as UploadStatus_Buyer from "../../components/UploadStatus_Buyer.mjs";
 import Async from "react-select/async";
 import * as Upload_Orders_Admin from "../../components/Upload_Orders_Admin.mjs";
 
-function AddOrders_Admin$Upload(props) {
+function AddOrders_Admin$Upload(Props) {
+  var userId = Props.userId;
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
   var match$1 = React.useState(function () {
@@ -31,7 +32,7 @@ function AddOrders_Admin$Upload(props) {
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "p-7 relative"
                 }, React.createElement(Upload_Orders_Admin.make, {
-                      userId: props.userId,
+                      userId: userId,
                       onSuccess: (function (param) {
                           setShowSuccess(function (param) {
                                 return /* Show */0;
@@ -70,7 +71,7 @@ var Upload = {
   make: AddOrders_Admin$Upload
 };
 
-function AddOrders_Admin(props) {
+function AddOrders_Admin(Props) {
   var match = React.useState(function () {
         return /* NotSelected */0;
       });

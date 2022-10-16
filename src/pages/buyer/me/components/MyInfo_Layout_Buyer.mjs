@@ -5,7 +5,9 @@ import Link from "next/link";
 import * as Router from "next/router";
 import * as MyInfo_ProfileSummary_Buyer from "./MyInfo_ProfileSummary_Buyer.mjs";
 
-function MyInfo_Layout_Buyer(props) {
+function MyInfo_Layout_Buyer(Props) {
+  var query = Props.query;
+  var children = Props.children;
   var router = Router.useRouter();
   var str = router.asPath;
   var str$1 = router.asPath;
@@ -25,7 +27,7 @@ function MyInfo_Layout_Buyer(props) {
                         }, React.createElement("div", {
                               className: "px-7 mb-9"
                             }, React.createElement(MyInfo_ProfileSummary_Buyer.PC.make, {
-                                  query: props.query
+                                  query: query
                                 })), React.createElement("div", {
                               className: "border-b border-gray-100 mb-[3px]"
                             }), React.createElement("div", {
@@ -89,7 +91,7 @@ function MyInfo_Layout_Buyer(props) {
                                   children: React.createElement("a", {
                                         className: "py-[18px] text-left px-7"
                                       }, "공지사항")
-                                }))), props.children)));
+                                }))), children)));
 }
 
 var make = MyInfo_Layout_Buyer;

@@ -1,7 +1,10 @@
 {
   "name": "sinsun-market-client",
   "jsx": {
-    "version": 4
+    "version": 3,
+    "v3-dependencies": [
+      "rescript-relay"
+    ]
   },
   "sources": [
     {
@@ -64,6 +67,7 @@
   "generators": [],
   "bsc-flags": [
     "-open Belt",
-    "-open Cx"
+    "-open Cx",
+    "-open ReactV3"
   ]
 }

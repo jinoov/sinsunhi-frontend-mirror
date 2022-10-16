@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function LoadMore(props) {
+function LoadMore(Props) {
   return React.createElement("div", {
               className: "text-center"
             }, React.createElement("button", {

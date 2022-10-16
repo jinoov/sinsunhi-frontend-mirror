@@ -4,7 +4,7 @@ import * as React from "react";
 import Head from "next/head";
 import * as Router from "next/router";
 
-function Index_Seller(props) {
+function Index_Seller(Props) {
   var router = Router.useRouter();
   React.useEffect(function () {
         router.replace("/seller/orders?status=CREATE&sort=created");

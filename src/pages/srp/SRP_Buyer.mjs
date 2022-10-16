@@ -2,8 +2,7 @@
 
 import * as Cn from "rescript-classnames/src/Cn.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as Global from "../../components/Global.mjs";
 import * as DataGtm from "../../utils/DataGtm.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
@@ -47,7 +46,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(SRPBuyerQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, SRPBuyerQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -144,7 +143,7 @@ function useRefetchable(fRef) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(SRPBuyer_fragment_graphql.Internal.convertFragment, match[0]);
   return [
           data,
-          React$1.useMemo((function () {
+          React.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return Curry._2(refetchFn, RescriptRelay_Internal.internal_removeUndefinedAndConvertNullsRaw(ShopSearchBuyerRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -174,14 +173,14 @@ function usePagination(fr) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(SRPBuyer_fragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
-          loadNext: React$1.useMemo((function () {
+          loadNext: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadNext(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
                               });
                   };
                 }), [p.loadNext]),
-          loadPrevious: React$1.useMemo((function () {
+          loadPrevious: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadPrevious(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
@@ -192,7 +191,7 @@ function usePagination(fr) {
           hasPrevious: p.hasPrevious,
           isLoadingNext: p.isLoadingNext,
           isLoadingPrevious: p.isLoadingPrevious,
-          refetch: React$1.useMemo((function () {
+          refetch: React.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return p.refetch(RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(ShopSearchBuyerRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -205,14 +204,14 @@ function useBlockingPagination(fRef) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(SRPBuyer_fragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
-          loadNext: React$1.useMemo((function () {
+          loadNext: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadNext(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
                               });
                   };
                 }), [p.loadNext]),
-          loadPrevious: React$1.useMemo((function () {
+          loadPrevious: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadPrevious(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
@@ -221,7 +220,7 @@ function useBlockingPagination(fRef) {
                 }), [p.loadPrevious]),
           hasNext: p.hasNext,
           hasPrevious: p.hasPrevious,
-          refetch: React$1.useMemo((function () {
+          refetch: React.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return p.refetch(RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(ShopSearchBuyerRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -246,52 +245,62 @@ var Fragment = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-function SRP_Buyer$Placeholder(props) {
+function SRP_Buyer$Placeholder(Props) {
+  var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  switch (props.deviceType) {
+  switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React$1.createElement("div", {
+        return React.createElement("div", {
                     className: "w-full min-w-[1280px] min-h-screen flex flex-col"
-                  }, React.createElementWithKey(Header_Buyer.PC.make, {
-                        gnbBanners: props.gnbBanners,
-                        displayCategories: props.displayCategories
-                      }, router.asPath), React$1.createElement("main", {
+                  }, React.createElement(Header_Buyer.PC.make, {
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories,
+                        key: router.asPath
+                      }), React.createElement("main", {
                         className: "flex flex-col grow w-full h-full bg-white"
-                      }, React$1.createElement("div", {
+                      }, React.createElement("div", {
                             className: "w-[1280px] pt-20 mx-auto"
-                          }, React$1.createElement("section", {
+                          }, React.createElement("section", {
                                 className: "w-full flex items-center justify-center"
-                              }, React$1.createElement("div", {
+                              }, React.createElement("div", {
                                     className: "bg-gray-150 animate-pulse rounded-xl w-[400px] h-[48px]"
-                                  })), React$1.createElement("section", {
+                                  })), React.createElement("section", {
                                 className: "mt-20 w-full flex items-center justify-end"
-                              }, React$1.createElement("div", {
+                              }, React.createElement("div", {
                                     className: "bg-gray-150 animate-pulse rounded-xl w-32 h-5"
-                                  })), React$1.createElement("section", {
+                                  })), React.createElement("section", {
                                 className: "w-full mt-12"
-                              }, React$1.createElement("ol", {
+                              }, React.createElement("ol", {
                                     className: "grid grid-cols-4 gap-x-10 gap-y-16"
                                   }, Belt_Array.map(Belt_Array.range(1, 300), (function (number) {
-                                          return React.createElementWithKey(ShopProductListItem_Buyer.PC.Placeholder.make, {}, "box-" + String(number) + "");
-                                        })))))), React$1.createElement(Footer_Buyer.PC.make, {}));
+                                          return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
+                                                      key: "box-" + String(number) + ""
+                                                    });
+                                        })))))), React.createElement(Footer_Buyer.PC.make, {}));
     case /* Mobile */2 :
-        return React$1.createElement("div", {
+        return React.createElement("div", {
                     className: "w-full bg-white"
-                  }, React.createElementWithKey(Header_Buyer.Mobile.make, {}, router.asPath), React$1.createElement("main", {
+                  }, React.createElement(Header_Buyer.Mobile.make, {
+                        key: router.asPath
+                      }), React.createElement("main", {
                         className: "w-full max-w-3xl mx-auto relative bg-white min-h-screen"
-                      }, React$1.createElement("div", {
+                      }, React.createElement("div", {
                             className: "w-full pb-8 px-5"
-                          }, React$1.createElement("div", {
+                          }, React.createElement("div", {
                                 className: "w-full py-4  flex items-center justify-end"
-                              }, React$1.createElement("div", {
+                              }, React.createElement("div", {
                                     className: "w-12 h-5 rounded-lg animate-pulse bg-gray-150"
-                                  })), React$1.createElement("div", undefined, React$1.createElement("ol", {
+                                  })), React.createElement("div", undefined, React.createElement("ol", {
                                     className: "grid grid-cols-2 gap-x-4 gap-y-8"
                                   }, Belt_Array.map(Belt_Array.range(1, 300), (function (idx) {
-                                          return React.createElementWithKey(ShopProductListItem_Buyer.MO.Placeholder.make, {}, "search-result-skeleton-" + String(idx) + "");
-                                        })))))), React$1.createElement(Footer_Buyer.MO.make, {}));
+                                          return React.createElement(ShopProductListItem_Buyer.MO.Placeholder.make, {
+                                                      key: "search-result-skeleton-" + String(idx) + ""
+                                                    });
+                                        })))))), React.createElement(Footer_Buyer.MO.make, {}));
     
   }
 }
@@ -300,34 +309,40 @@ var Placeholder = {
   make: SRP_Buyer$Placeholder
 };
 
-function SRP_Buyer$Error(props) {
+function SRP_Buyer$Error(Props) {
+  var deviceType = Props.deviceType;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  switch (props.deviceType) {
+  switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React$1.createElement("div", {
+        return React.createElement("div", {
                     className: "w-full min-w-[1280px] min-h-screen flex flex-col"
-                  }, React.createElementWithKey(Header_Buyer.PC.make, {
-                        gnbBanners: props.gnbBanners,
-                        displayCategories: props.displayCategories
-                      }, router.asPath), React$1.createElement("main", {
+                  }, React.createElement(Header_Buyer.PC.make, {
+                        gnbBanners: gnbBanners,
+                        displayCategories: displayCategories,
+                        key: router.asPath
+                      }), React.createElement("main", {
                         className: "flex flex-col grow w-full h-full bg-white"
-                      }, React$1.createElement("div", {
+                      }, React.createElement("div", {
                             className: "w-full flex items-center justify-center mt-40"
-                          }, React$1.createElement("span", {
+                          }, React.createElement("span", {
                                 className: "text-3xl text-gray-800"
-                              }, "검색에 실패하였습니다"))), React$1.createElement(Footer_Buyer.PC.make, {}));
+                              }, "검색에 실패하였습니다"))), React.createElement(Footer_Buyer.PC.make, {}));
     case /* Mobile */2 :
-        return React$1.createElement("div", {
+        return React.createElement("div", {
                     className: "w-full bg-white"
-                  }, React.createElementWithKey(Header_Buyer.Mobile.make, {}, router.asPath), React$1.createElement("main", {
+                  }, React.createElement(Header_Buyer.Mobile.make, {
+                        key: router.asPath
+                      }), React.createElement("main", {
                         className: "w-full max-w-3xl mx-auto relative bg-white min-h-screen"
-                      }, React$1.createElement("div", {
+                      }, React.createElement("div", {
                             className: "w-full flex items-center justify-center pt-[134px] px-5"
-                          }, React$1.createElement("span", {
+                          }, React.createElement("span", {
                                 className: "text-gray-800 text-xl text-center"
-                              }, "검색에 실패하였습니다"))), React$1.createElement(Footer_Buyer.MO.make, {}));
+                              }, "검색에 실패하였습니다"))), React.createElement(Footer_Buyer.MO.make, {}));
     
   }
 }
@@ -336,20 +351,23 @@ var $$Error = {
   make: SRP_Buyer$Error
 };
 
-function SRP_Buyer$PC(props) {
-  var keyword = props.keyword;
+function SRP_Buyer$PC(Props) {
+  var keyword = Props.keyword;
+  var query = Props.query;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  var match = usePagination(props.query);
+  var match = usePagination(query);
   var hasNext = match.hasNext;
   var loadNext = match.loadNext;
   var products = match.data.products;
-  var loadMoreRef = React$1.useRef(null);
+  var loadMoreRef = React.useRef(null);
   var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
   var currentSection = Product_FilterOption.Section.make(Js_dict.get(router.query, "section"));
   var resultObjLabel = currentSection === "DELIVERY" ? "신선배송 상품이" : (
       currentSection === "MATCHING" ? "신선매칭 상품이" : "검색결과가"
     );
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           if (hasNext && isIntersecting) {
             Curry._3(loadNext, 20, undefined, undefined);
           }
@@ -371,18 +389,19 @@ function SRP_Buyer$PC(props) {
         });
   };
   var edges = products.edges;
-  return React$1.createElement("div", {
+  return React.createElement("div", {
               className: "w-full min-w-[1280px] min-h-screen flex flex-col"
-            }, React.createElementWithKey(Header_Buyer.PC.make, {
-                  gnbBanners: props.gnbBanners,
-                  displayCategories: props.displayCategories
-                }, router.asPath), React$1.createElement("main", {
+            }, React.createElement(Header_Buyer.PC.make, {
+                  gnbBanners: gnbBanners,
+                  displayCategories: displayCategories,
+                  key: router.asPath
+                }), React.createElement("main", {
                   className: "flex flex-col grow w-full h-full bg-white"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "w-[1280px] mt-16 mx-auto h-12 px-5"
-                    }, React$1.createElement("div", {
+                    }, React.createElement("div", {
                           className: "flex flex-row justify-start border-b-[1px] border-gray-100 gap-[10px] "
-                        }, React$1.createElement("button", {
+                        }, React.createElement("button", {
                               className: Cn.make([
                                     Caml_obj.equal(currentSection, "ALL") ? "text-gray-800" : "text-gray-400",
                                     "flex justify-center items-center h-full"
@@ -390,16 +409,16 @@ function SRP_Buyer$PC(props) {
                               onClick: (function (param) {
                                   onTabClickHandler("ALL");
                                 })
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "flex flex-col w-full h-full justify-center items-center"
-                                }, React$1.createElement("div", {
+                                }, React.createElement("div", {
                                       className: "inline-flex flex-1 items-center justify-center font-bold px-[10px] py-3"
-                                    }, "전체"), React$1.createElement("div", {
+                                    }, "전체"), React.createElement("div", {
                                       className: Cn.make([
                                             Caml_obj.equal(currentSection, "ALL") ? "bg-gray-800" : "bg-transparent",
                                             "h-[2px] w-full rounded -mt-[3px]"
                                           ])
-                                    }))), React$1.createElement("button", {
+                                    }))), React.createElement("button", {
                               className: Cn.make([
                                     Caml_obj.equal(currentSection, "DELIVERY") ? "text-gray-800" : "text-gray-400",
                                     "flex justify-center items-center h-full"
@@ -407,16 +426,16 @@ function SRP_Buyer$PC(props) {
                               onClick: (function (param) {
                                   onTabClickHandler("DELIVERY");
                                 })
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "flex flex-col w-full h-full justify-center items-center"
-                                }, React$1.createElement("div", {
+                                }, React.createElement("div", {
                                       className: "inline-flex flex-1 items-center justify-center font-bold px-[10px] py-3"
-                                    }, "신선배송"), React$1.createElement("div", {
+                                    }, "신선배송"), React.createElement("div", {
                                       className: Cn.make([
                                             Caml_obj.equal(currentSection, "DELIVERY") ? "bg-gray-800" : "bg-transparent",
                                             "h-[2px] w-full rounded -mt-[3px]"
                                           ])
-                                    }))), React$1.createElement("button", {
+                                    }))), React.createElement("button", {
                               className: Cn.make([
                                     Caml_obj.equal(currentSection, "MATCHING") ? "text-gray-800" : "text-gray-400",
                                     "flex justify-center items-center h-full"
@@ -424,67 +443,69 @@ function SRP_Buyer$PC(props) {
                               onClick: (function (param) {
                                   onTabClickHandler("MATCHING");
                                 })
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "flex flex-col w-full h-full justify-center items-center"
-                                }, React$1.createElement("div", {
+                                }, React.createElement("div", {
                                       className: "inline-flex flex-1 items-center justify-center font-bold px-[10px] py-3"
-                                    }, "신선매칭"), React$1.createElement("div", {
+                                    }, "신선매칭"), React.createElement("div", {
                                       className: Cn.make([
                                             Caml_obj.equal(currentSection, "MATCHING") ? "bg-gray-800" : "bg-transparent",
                                             "h-[2px] w-full rounded -mt-[3px]"
                                           ])
-                                    }))))), edges.length !== 0 ? React$1.createElement("div", {
+                                    }))))), edges.length !== 0 ? React.createElement("div", {
                         className: "w-[1280px] mx-auto min-h-full px-5"
-                      }, React$1.createElement("div", {
+                      }, React.createElement("div", {
                             className: "mt-10 w-full flex items-center justify-between"
-                          }, React$1.createElement("div", {
+                          }, React.createElement("div", {
                                 className: "text-sm mr-1 text-gray-800"
-                              }, "총 " + String(products.totalCount) + "개"), React$1.createElement(SRP_SortSelect.PC.make, {})), React$1.createElement("div", undefined, React$1.createElement("ol", {
+                              }, "총 " + String(products.totalCount) + "개"), React.createElement(SRP_SortSelect.PC.make, {})), React.createElement("div", undefined, React.createElement("ol", {
                                 className: "mt-6 grid grid-cols-4 gap-x-10 gap-y-16"
                               }, Belt_Array.map(edges, (function (param) {
-                                      return React.createElementWithKey(ShopProductListItem_Buyer.PC.make, {
-                                                  query: param.node.fragmentRefs
-                                                }, param.cursor);
-                                    }))), React$1.createElement("div", {
+                                      return React.createElement(ShopProductListItem_Buyer.PC.make, {
+                                                  query: param.node.fragmentRefs,
+                                                  key: param.cursor
+                                                });
+                                    }))), React.createElement("div", {
                                 ref: loadMoreRef,
                                 className: "h-20 w-full"
-                              }))) : React$1.createElement("div", {
+                              }))) : React.createElement("div", {
                         className: "my-40"
-                      }, React$1.createElement("div", {
+                      }, React.createElement("div", {
                             className: "w-full flex items-center justify-center"
-                          }, React$1.createElement("span", {
+                          }, React.createElement("span", {
                                 className: "text-3xl text-gray-800"
-                              }, React$1.createElement("span", {
+                              }, React.createElement("span", {
                                     className: "font-bold"
-                                  }, keyword), "에 대한 검색결과")), React$1.createElement("div", {
+                                  }, keyword), "에 대한 검색결과")), React.createElement("div", {
                             className: "mt-7 w-full flex flex-col items-center justify-center"
-                          }, React$1.createElement("span", {
+                          }, React.createElement("span", {
                                 className: "text-gray-800"
-                              }, React$1.createElement("span", {
+                              }, React.createElement("span", {
                                     className: "text-green-500 font-bold"
-                                  }, keyword), "의 " + resultObjLabel + " 없습니다."), React$1.createElement("span", {
+                                  }, keyword), "의 " + resultObjLabel + " 없습니다."), React.createElement("span", {
                                 className: "text-gray-800"
-                              }, "다른 검색어를 입력하시거나 철자와 띄어쓰기를 확인해 보세요.")))), React$1.createElement(Footer_Buyer.PC.make, {}));
+                              }, "다른 검색어를 입력하시거나 철자와 띄어쓰기를 확인해 보세요.")))), React.createElement(Footer_Buyer.PC.make, {}));
 }
 
 var PC = {
   make: SRP_Buyer$PC
 };
 
-function SRP_Buyer$MO(props) {
-  var keyword = props.keyword;
+function SRP_Buyer$MO(Props) {
+  var keyword = Props.keyword;
+  var query = Props.query;
   var router = Router.useRouter();
-  var match = usePagination(props.query);
+  var match = usePagination(query);
   var hasNext = match.hasNext;
   var loadNext = match.loadNext;
   var products = match.data.products;
-  var loadMoreRef = React$1.useRef(null);
+  var loadMoreRef = React.useRef(null);
   var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
   var currentSection = Product_FilterOption.Section.make(Js_dict.get(router.query, "section"));
   var resultObjLabel = currentSection === "DELIVERY" ? "신선배송 상품이" : (
       currentSection === "MATCHING" ? "신선매칭 상품이" : "검색결과가"
     );
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           if (hasNext && isIntersecting) {
             Curry._3(loadNext, 20, undefined, undefined);
           }
@@ -506,13 +527,15 @@ function SRP_Buyer$MO(props) {
         });
   };
   var edges = products.edges;
-  return React$1.createElement("div", {
+  return React.createElement("div", {
               className: "w-full bg-white"
-            }, React.createElementWithKey(Header_Buyer.Mobile.make, {}, router.asPath), React$1.createElement("main", {
+            }, React.createElement(Header_Buyer.Mobile.make, {
+                  key: router.asPath
+                }), React.createElement("main", {
                   className: "w-full max-w-3xl mx-auto relative bg-white min-h-screen"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "flex flex-row  h-12 border-b-[1px] border-gray-100 mt-[2px]"
-                    }, React$1.createElement("button", {
+                    }, React.createElement("button", {
                           className: Cn.make([
                                 Caml_obj.equal(currentSection, "ALL") ? "text-gray-800" : "text-gray-400",
                                 "flex flex-1 justify-center items-center h-full "
@@ -520,16 +543,16 @@ function SRP_Buyer$MO(props) {
                           onClick: (function (param) {
                               onTabClickHandler("ALL");
                             })
-                        }, React$1.createElement("div", {
+                        }, React.createElement("div", {
                               className: "flex flex-col w-full h-full justify-center items-center px-5"
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "inline-flex flex-1 items-center justify-center font-bold"
-                                }, "전체"), React$1.createElement("div", {
+                                }, "전체"), React.createElement("div", {
                                   className: Cn.make([
                                         Caml_obj.equal(currentSection, "ALL") ? "bg-gray-800" : "bg-transparent",
                                         "h-[2px] w-full rounded"
                                       ])
-                                }))), React$1.createElement("button", {
+                                }))), React.createElement("button", {
                           className: Cn.make([
                                 Caml_obj.equal(currentSection, "DELIVERY") ? "text-gray-800" : "text-gray-400",
                                 "flex flex-1 justify-center items-center h-full "
@@ -537,16 +560,16 @@ function SRP_Buyer$MO(props) {
                           onClick: (function (param) {
                               onTabClickHandler("DELIVERY");
                             })
-                        }, React$1.createElement("div", {
+                        }, React.createElement("div", {
                               className: "flex flex-col w-full h-full justify-center items-center px-5"
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "inline-flex flex-1 items-center justify-center font-bold"
-                                }, "신선배송"), React$1.createElement("div", {
+                                }, "신선배송"), React.createElement("div", {
                                   className: Cn.make([
                                         Caml_obj.equal(currentSection, "DELIVERY") ? "bg-gray-800" : "bg-transparent",
                                         "h-[2px] w-full rounded"
                                       ])
-                                }))), React$1.createElement("button", {
+                                }))), React.createElement("button", {
                           className: Cn.make([
                                 Caml_obj.equal(currentSection, "MATCHING") ? "text-gray-800" : "text-gray-400",
                                 "flex flex-1 justify-center items-center h-full "
@@ -554,76 +577,82 @@ function SRP_Buyer$MO(props) {
                           onClick: (function (param) {
                               onTabClickHandler("MATCHING");
                             })
-                        }, React$1.createElement("div", {
+                        }, React.createElement("div", {
                               className: "flex flex-col w-full h-full justify-center items-center px-5"
-                            }, React$1.createElement("div", {
+                            }, React.createElement("div", {
                                   className: "inline-flex flex-1 items-center justify-center font-bold"
-                                }, "신선매칭"), React$1.createElement("div", {
+                                }, "신선매칭"), React.createElement("div", {
                                   className: Cn.make([
                                         Caml_obj.equal(currentSection, "MATCHING") ? "bg-gray-800" : "bg-transparent",
                                         "h-[2px] w-full rounded"
                                       ])
-                                })))), edges.length !== 0 ? React$1.createElement("div", {
+                                })))), edges.length !== 0 ? React.createElement("div", {
                         className: "w-full px-5"
-                      }, React$1.createElement("div", {
+                      }, React.createElement("div", {
                             className: "pt-5 pb-4 w-full flex items-center justify-between"
-                          }, React$1.createElement("div", {
+                          }, React.createElement("div", {
                                 className: "text-gray-800 text-sm"
-                              }, "총 " + String(products.totalCount) + "개"), React$1.createElement(SRP_SortSelect.MO.make, {})), React$1.createElement("div", undefined, React$1.createElement("ol", {
+                              }, "총 " + String(products.totalCount) + "개"), React.createElement(SRP_SortSelect.MO.make, {})), React.createElement("div", undefined, React.createElement("ol", {
                                 className: "grid grid-cols-2 gap-x-4 gap-y-8"
                               }, Belt_Array.map(edges, (function (param) {
-                                      return React.createElementWithKey(ShopProductListItem_Buyer.MO.make, {
-                                                  query: param.node.fragmentRefs
-                                                }, param.cursor);
-                                    }))), React$1.createElement("div", {
+                                      return React.createElement(ShopProductListItem_Buyer.MO.make, {
+                                                  query: param.node.fragmentRefs,
+                                                  key: param.cursor
+                                                });
+                                    }))), React.createElement("div", {
                                 ref: loadMoreRef,
                                 className: "h-20 w-full"
-                              }))) : React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+                              }))) : React.createElement(React.Fragment, undefined, React.createElement("div", {
                             className: "w-full flex items-center justify-center pt-[134px] px-5"
-                          }, React$1.createElement("span", {
+                          }, React.createElement("span", {
                                 className: "text-gray-800 text-xl text-center"
-                              }, React$1.createElement("span", {
+                              }, React.createElement("span", {
                                     className: "font-bold"
-                                  }, keyword), "에 대한 검색결과")), React$1.createElement("div", {
+                                  }, keyword), "에 대한 검색결과")), React.createElement("div", {
                             className: "mt-2 w-full flex flex-col items-center justify-center text-center text-base text-gray-600"
-                          }, React$1.createElement("span", undefined, React$1.createElement("span", {
+                          }, React.createElement("span", undefined, React.createElement("span", {
                                     className: "text-green-500 font-bold"
-                                  }, keyword), "의 " + resultObjLabel + " 없습니다."), React$1.createElement("span", undefined, "다른 검색어를 입력하시거나"), React$1.createElement("span", undefined, "철자와 띄어쓰기를 확인해 보세요.")))), React$1.createElement(Footer_Buyer.MO.make, {}));
+                                  }, keyword), "의 " + resultObjLabel + " 없습니다."), React.createElement("span", undefined, "다른 검색어를 입력하시거나"), React.createElement("span", undefined, "철자와 띄어쓰기를 확인해 보세요.")))), React.createElement(Footer_Buyer.MO.make, {}));
 }
 
 var MO = {
   make: SRP_Buyer$MO
 };
 
-function SRP_Buyer$Container(props) {
-  var keyword = props.keyword;
+function SRP_Buyer$Container(Props) {
+  var deviceType = Props.deviceType;
+  var keyword = Props.keyword;
+  var sort = Props.sort;
+  var gnbBanners = Props.gnbBanners;
+  var displayCategories = Props.displayCategories;
+  var section = Props.section;
   ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
   var match = use({
         count: 20,
         name: keyword,
         onlyBuyable: true,
-        sort: props.sort,
-        types: PLP_FilterOption.Section.toQueryParam(props.section)
+        sort: sort,
+        types: PLP_FilterOption.Section.toQueryParam(section)
       }, /* StoreOrNetwork */1, undefined, undefined, undefined);
   var fragmentRefs = match.fragmentRefs;
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           DataGtm.push(DataGtm.mergeUserIdUnsafe({
                     event: "view_search_results",
                     keyword: keyword
                   }));
         }), [keyword]);
-  switch (props.deviceType) {
+  switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React$1.createElement(SRP_Buyer$PC, {
+        return React.createElement(SRP_Buyer$PC, {
                     keyword: keyword,
                     query: fragmentRefs,
-                    gnbBanners: props.gnbBanners,
-                    displayCategories: props.displayCategories
+                    gnbBanners: gnbBanners,
+                    displayCategories: displayCategories
                   });
     case /* Mobile */2 :
-        return React$1.createElement(SRP_Buyer$MO, {
+        return React.createElement(SRP_Buyer$MO, {
                     keyword: keyword,
                     query: fragmentRefs
                   });
@@ -647,11 +676,11 @@ function $$default(props) {
   var sort = Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "sort"), (function (sortStr) {
               return PLP_FilterOption.Sort.decodeSort(section, sortStr);
             })), "UPDATED_DESC");
-  var match = React$1.useState(function () {
+  var match = React.useState(function () {
         return false;
       });
   var setIsCsr = match[1];
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           setIsCsr(function (param) {
                 return true;
               });
@@ -661,30 +690,40 @@ function $$default(props) {
                       }, undefined);
                 }));
         }), []);
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement(Head, {
-                  children: React$1.createElement("title", undefined, "신선하이")
-                }), React$1.createElement(RescriptReactErrorBoundary.make, {
-                  children: React$1.createElement(React$1.Suspense, {
-                        children: Caml_option.some(match[0] && keyword !== undefined ? React$1.createElement(SRP_Buyer$Container, {
-                                    deviceType: deviceType,
-                                    keyword: keyword,
-                                    sort: sort,
-                                    gnbBanners: gnbBanners,
-                                    displayCategories: displayCategories,
-                                    section: section
-                                  }) : React$1.createElement(SRP_Buyer$Placeholder, {
-                                    deviceType: deviceType,
-                                    gnbBanners: gnbBanners,
-                                    displayCategories: displayCategories
-                                  })),
-                        fallback: Caml_option.some(React$1.createElement(SRP_Buyer$Placeholder, {
-                                  deviceType: deviceType,
-                                  gnbBanners: gnbBanners,
-                                  displayCategories: displayCategories
-                                }))
+  var tmp;
+  var exit = 0;
+  if (match[0] && keyword !== undefined) {
+    tmp = React.createElement(SRP_Buyer$Container, {
+          deviceType: deviceType,
+          keyword: keyword,
+          sort: sort,
+          gnbBanners: gnbBanners,
+          displayCategories: displayCategories,
+          section: section
+        });
+  } else {
+    exit = 1;
+  }
+  if (exit === 1) {
+    tmp = React.createElement(SRP_Buyer$Placeholder, {
+          deviceType: deviceType,
+          gnbBanners: gnbBanners,
+          displayCategories: displayCategories
+        });
+  }
+  return React.createElement(React.Fragment, undefined, React.createElement(Head, {
+                  children: React.createElement("title", undefined, "신선하이")
+                }), React.createElement(RescriptReactErrorBoundary.make, {
+                  children: React.createElement(React.Suspense, {
+                        children: tmp,
+                        fallback: React.createElement(SRP_Buyer$Placeholder, {
+                              deviceType: deviceType,
+                              gnbBanners: gnbBanners,
+                              displayCategories: displayCategories
+                            })
                       }),
                   fallback: (function (param) {
-                      return React$1.createElement(SRP_Buyer$Error, {
+                      return React.createElement(SRP_Buyer$Error, {
                                   deviceType: deviceType,
                                   gnbBanners: gnbBanners,
                                   displayCategories: displayCategories
@@ -727,4 +766,4 @@ export {
   $$default as default,
   getServerSideProps ,
 }
-/* React Not a pure module */
+/* react Not a pure module */

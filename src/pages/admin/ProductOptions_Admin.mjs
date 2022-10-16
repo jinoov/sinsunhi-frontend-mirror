@@ -112,7 +112,7 @@ var Query = {
   retain: retain
 };
 
-function ProductOptions_Admin$Skeleton(props) {
+function ProductOptions_Admin$Skeleton(Props) {
   return React.createElement("div", {
               className: "max-w-gnb-panel overflow-auto overflow-x-scroll bg-div-shape-L1 min-h-gnb-admin"
             }, React.createElement("header", {
@@ -132,7 +132,7 @@ function isEmptyString(str) {
   return str !== "";
 }
 
-function ProductOptions_Admin$ProductOptions(props) {
+function ProductOptions_Admin$ProductOptions(Props) {
   var user = CustomHooks.Auth.use(undefined);
   var router = Router.useRouter();
   var match = Js_dict.get(router.query, "status");
@@ -238,12 +238,12 @@ var ProductOptions = {
   make: ProductOptions_Admin$ProductOptions
 };
 
-function ProductOptions_Admin(props) {
+function ProductOptions_Admin(Props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(RescriptReactErrorBoundary.make, {
                     children: React.createElement(React.Suspense, {
-                          children: Caml_option.some(React.createElement(ProductOptions_Admin$ProductOptions, {})),
-                          fallback: Caml_option.some(React.createElement(ProductOptions_Admin$Skeleton, {}))
+                          children: React.createElement(ProductOptions_Admin$ProductOptions, {}),
+                          fallback: React.createElement(ProductOptions_Admin$Skeleton, {})
                         }),
                     fallback: (function (param) {
                         return React.createElement("div", undefined, "에러 발생");

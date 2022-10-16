@@ -94,9 +94,10 @@ var Query = {
   retain: retain
 };
 
-function UpdateProduct_Admin$Detail(props) {
+function UpdateProduct_Admin$Detail(Props) {
+  var productId = Props.productId;
   var queryData = use({
-        productId: props.productId
+        productId: productId
       }, /* StoreAndNetwork */2, undefined, undefined, undefined);
   var node = queryData.node;
   if (node === undefined) {
@@ -117,16 +118,16 @@ var Detail = {
   make: UpdateProduct_Admin$Detail
 };
 
-function UpdateProduct_Admin(props) {
+function UpdateProduct_Admin(Props) {
   var router = Router.useRouter();
   var pid = Js_dict.get(router.query, "pid");
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(RescriptReactErrorBoundary.make, {
                     children: React.createElement(React.Suspense, {
-                          children: Caml_option.some(pid !== undefined ? React.createElement(UpdateProduct_Admin$Detail, {
-                                      productId: pid
-                                    }) : React.createElement("div", undefined, "상품 정보가 존재하지 않습니다.")),
-                          fallback: Caml_option.some(React.createElement("div", undefined, "로딩 중.."))
+                          children: pid !== undefined ? React.createElement(UpdateProduct_Admin$Detail, {
+                                  productId: pid
+                                }) : React.createElement("div", undefined, "상품 정보가 존재하지 않습니다."),
+                          fallback: React.createElement("div", undefined, "로딩 중..")
                         }),
                     fallback: (function (param) {
                         return React.createElement("div", undefined, "에러 발생");

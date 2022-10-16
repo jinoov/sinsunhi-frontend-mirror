@@ -12,8 +12,8 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd");
 }
 
-function Order_All_Admin$Item$Table(props) {
-  var order = props.order;
+function Order_All_Admin$Item$Table(Props) {
+  var order = Props.order;
   return React.createElement(React.Fragment, undefined, React.createElement("li", {
                   className: "grid grid-cols-9-admin-orders-all text-gray-700"
                 }, React.createElement("div", {
@@ -55,7 +55,7 @@ function Order_All_Admin$Item$Table(props) {
                         }, Belt_Option.getWithDefault(order.productOptionName, "")))));
 }
 
-function Order_All_Admin$Item$Table$Loading(props) {
+function Order_All_Admin$Item$Table$Loading(Props) {
   return React.createElement("li", {
               className: "grid grid-cols-10-gl-admin"
             }, React.createElement("div", {
@@ -108,9 +108,10 @@ var Item = {
   Table: Table
 };
 
-function Order_All_Admin(props) {
+function Order_All_Admin(Props) {
+  var order = Props.order;
   return React.createElement(Order_All_Admin$Item$Table, {
-              order: props.order
+              order: order
             });
 }
 

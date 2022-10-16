@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function Guide_Upload_Seller(props) {
+function Guide_Upload_Seller(Props) {
   return React.createElement("div", {
               className: "container max-w-lg mx-auto sm:mt-4 sm:shadow-gl mb-10 text-black-gl"
             }, React.createElement("div", {

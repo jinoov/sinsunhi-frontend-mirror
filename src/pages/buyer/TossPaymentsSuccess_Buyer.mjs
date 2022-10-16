@@ -75,8 +75,10 @@ var Mutation = {
   use: use
 };
 
-function TossPaymentsSuccess_Buyer$Dialog(props) {
-  var href = props.href;
+function TossPaymentsSuccess_Buyer$Dialog(Props) {
+  var children = Props.children;
+  var show = Props.show;
+  var href = Props.href;
   var router = Router.useRouter();
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
@@ -86,14 +88,14 @@ function TossPaymentsSuccess_Buyer$Dialog(props) {
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
                         className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
-                      }, props.children, React.createElement("button", {
+                      }, children, React.createElement("button", {
                             className: "flex w-full xl:w-1/2 h-13 mt-5 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1",
                             type: "button",
                             onClick: (function (param) {
                                 router.replace(href);
                               })
                           }, "확인"))),
-              _open: props.show
+              open: show
             });
 }
 
@@ -101,7 +103,7 @@ var Dialog = {
   make: TossPaymentsSuccess_Buyer$Dialog
 };
 
-function TossPaymentsSuccess_Buyer(props) {
+function TossPaymentsSuccess_Buyer(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return false;

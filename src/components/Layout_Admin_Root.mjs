@@ -6,10 +6,12 @@ import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
 import * as ReactAccordion from "@radix-ui/react-accordion";
 
-function Layout_Admin_Root(props) {
-  var setOpenedAdminMenu = props.setOpenedAdminMenu;
-  var openedAdminMenu = props.openedAdminMenu;
-  var accordianItemValue = props.accordianItemValue;
+function Layout_Admin_Root(Props) {
+  var accordianItemValue = Props.accordianItemValue;
+  var head = Props.head;
+  var children = Props.children;
+  var openedAdminMenu = Props.openedAdminMenu;
+  var setOpenedAdminMenu = Props.setOpenedAdminMenu;
   var onValueChange = function (arr) {
     Curry._1(setOpenedAdminMenu, Belt_Array.some(arr, (function (x) {
                 return x === accordianItemValue;
@@ -21,16 +23,16 @@ function Layout_Admin_Root(props) {
                     value: accordianItemValue
                   }, React.createElement(ReactAccordion.Header, {
                         children: React.createElement(ReactAccordion.Trigger, {
-                              children: props.head,
+                              children: head,
                               className: "flex flex-row items-center w-72 bg-white accordian-trigger hover:bg-div-border-L2 cursor-pointer"
                             })
                       }), React.createElement(ReactAccordion.Content, {
                         children: React.createElement("ul", {
                               className: "flex flex-col"
-                            }, props.children),
+                            }, children),
                         className: "accordian-content"
                       })),
-              _type: "multiple",
+              type: "multiple",
               className: "text-text-L1",
               value: openedAdminMenu,
               onValueChange: onValueChange

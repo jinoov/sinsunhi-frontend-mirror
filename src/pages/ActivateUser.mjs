@@ -5,11 +5,12 @@ import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ChannelTalk from "../bindings/ChannelTalk.mjs";
 import * as ActivateUser_ByEmail from "./ActivateUser_ByEmail.mjs";
 import * as ActivateUser_ByPhone from "./ActivateUser_ByPhone.mjs";
 
-function ActivateUser$HasNoMethod(props) {
+function ActivateUser$HasNoMethod(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "휴면계정 해제")
                 }), React.createElement("div", {
@@ -81,19 +82,34 @@ function $$default(props) {
   var role = Js_dict.get(props.query, "role");
   switch (match[0]) {
     case /* ByPhone */0 :
-        return React.createElement(ActivateUser_ByPhone.make, {
-                    skipEmail: match[1],
-                    phone: phone,
-                    uid: uid,
-                    role: role
-                  });
+        var tmp = {
+          skipEmail: match[1]
+        };
+        if (phone !== undefined) {
+          tmp.phone = Caml_option.valFromOption(phone);
+        }
+        if (uid !== undefined) {
+          tmp.uid = Caml_option.valFromOption(uid);
+        }
+        if (role !== undefined) {
+          tmp.role = Caml_option.valFromOption(role);
+        }
+        return React.createElement(ActivateUser_ByPhone.make, tmp);
     case /* ByEmail */1 :
-        return React.createElement(ActivateUser_ByEmail.make, {
-                    uid: uid,
-                    email: email,
-                    sentEmail: sentEmail,
-                    role: role
-                  });
+        var tmp$1 = {};
+        if (uid !== undefined) {
+          tmp$1.uid = Caml_option.valFromOption(uid);
+        }
+        if (email !== undefined) {
+          tmp$1.email = Caml_option.valFromOption(email);
+        }
+        if (sentEmail !== undefined) {
+          tmp$1.sentEmail = Caml_option.valFromOption(sentEmail);
+        }
+        if (role !== undefined) {
+          tmp$1.role = Caml_option.valFromOption(role);
+        }
+        return React.createElement(ActivateUser_ByEmail.make, tmp$1);
     case /* HasNoMethod */2 :
         return React.createElement(ActivateUser$HasNoMethod, {});
     

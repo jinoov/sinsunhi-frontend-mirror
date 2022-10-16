@@ -96,10 +96,10 @@ function makeInput(market, deliveryCompanyId, url, averageReviewScore, numberOfC
         };
 }
 
-function BulkSale_Producer_OnlineMarketInfo_Button_Update_Admin$Form(props) {
-  var market = props.market;
-  var selectedMarket = props.selectedMarket;
-  var connectionId = props.connectionId;
+function BulkSale_Producer_OnlineMarketInfo_Button_Update_Admin$Form(Props) {
+  var connectionId = Props.connectionId;
+  var selectedMarket = Props.selectedMarket;
+  var market = Props.market;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
@@ -180,7 +180,8 @@ function BulkSale_Producer_OnlineMarketInfo_Button_Update_Admin$Form(props) {
                           onChange: (function (param) {
                               return handleOnChange(setUrl, param);
                             }),
-                          size: /* Small */3
+                          size: /* Small */3,
+                          error: undefined
                         }))), React.createElement("section", {
                   className: "flex mt-5 px-5"
                 }, React.createElement("article", {
@@ -196,7 +197,8 @@ function BulkSale_Producer_OnlineMarketInfo_Button_Update_Admin$Form(props) {
                               onChange: (function (param) {
                                   return handleOnChange(setAverageReviewScore, param);
                                 }),
-                              size: /* Small */2
+                              size: /* Small */2,
+                              error: undefined
                             }))), React.createElement("article", {
                       className: "flex-1"
                     }, React.createElement("h3", undefined, "댓글 수"), React.createElement("div", {
@@ -210,7 +212,8 @@ function BulkSale_Producer_OnlineMarketInfo_Button_Update_Admin$Form(props) {
                               onChange: (function (param) {
                                   return handleOnChange(setNumberOfComments, param);
                                 }),
-                              size: /* Small */2
+                              size: /* Small */2,
+                              error: undefined
                             })))), React.createElement("article", {
                   className: "flex justify-center items-center mt-5"
                 }, React.createElement(ReactDialog.Close, {

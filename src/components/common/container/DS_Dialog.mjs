@@ -6,147 +6,210 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactDialog from "@radix-ui/react-dialog";
 
-function DS_Dialog$Popup$Root(props) {
-  return React.createElement(ReactDialog.Root, {
-              children: props.children,
-              defaultOpen: props.defaultOpen,
-              _open: props._open,
-              onOpenChange: props.onOpenChange,
-              className: props.className
-            });
+function DS_Dialog$Popup$Root(Props) {
+  var children = Props.children;
+  var defaultOpen = Props.defaultOpen;
+  var _open = Props.open;
+  var onOpenChange = Props.onOpenChange;
+  var className = Props.className;
+  var tmp = {
+    children: children
+  };
+  if (defaultOpen !== undefined) {
+    tmp.defaultOpen = defaultOpen;
+  }
+  if (_open !== undefined) {
+    tmp.open = _open;
+  }
+  if (onOpenChange !== undefined) {
+    tmp.onOpenChange = Caml_option.valFromOption(onOpenChange);
+  }
+  if (className !== undefined) {
+    tmp.className = className;
+  }
+  return React.createElement(ReactDialog.Root, tmp);
 }
 
 var Root = {
   make: DS_Dialog$Popup$Root
 };
 
-var make = React.forwardRef(function (props, ref) {
-      return React.createElement(ReactDialog.Trigger, {
-                  children: props.children,
-                  className: props.className,
-                  asChild: props.asChild,
-                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
-                          return prim;
-                        }))
-                });
+var make = React.forwardRef(function (Props, ref_) {
+      var children = Props.children;
+      var className = Props.className;
+      var asChild = Props.asChild;
+      var tmp = {
+        children: children
+      };
+      if (className !== undefined) {
+        tmp.className = className;
+      }
+      if (asChild !== undefined) {
+        tmp.asChild = asChild;
+      }
+      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+              return prim;
+            }));
+      if (tmp$1 !== undefined) {
+        tmp.ref = Caml_option.valFromOption(tmp$1);
+      }
+      return React.createElement(ReactDialog.Trigger, tmp);
     });
 
 var Trigger = {
   make: make
 };
 
-function DS_Dialog$Popup$Portal(props) {
-  return React.createElement(ReactDialog.Portal, {
-              children: props.children,
-              className: props.className
-            });
+function DS_Dialog$Popup$Portal(Props) {
+  var children = Props.children;
+  var className = Props.className;
+  var tmp = {
+    children: children
+  };
+  if (className !== undefined) {
+    tmp.className = className;
+  }
+  return React.createElement(ReactDialog.Portal, tmp);
 }
 
 var Portal = {
   make: DS_Dialog$Popup$Portal
 };
 
-var make$1 = React.forwardRef(function (props, ref) {
+var make$1 = React.forwardRef(function (Props, ref_) {
+      var className = Props.className;
       var defaultStyle = "dialog-overlay";
-      return React.createElement(ReactDialog.Overlay, {
-                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
-                          return Cx.cx([
-                                      defaultStyle,
-                                      className$p
-                                    ]);
-                        })),
-                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
-                          return prim;
-                        }))
-                });
+      var tmp = {
+        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+                return Cx.cx([
+                            defaultStyle,
+                            className$p
+                          ]);
+              }))
+      };
+      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+              return prim;
+            }));
+      if (tmp$1 !== undefined) {
+        tmp.ref = Caml_option.valFromOption(tmp$1);
+      }
+      return React.createElement(ReactDialog.Overlay, tmp);
     });
 
 var Overlay = {
   make: make$1
 };
 
-var make$2 = React.forwardRef(function (props, ref) {
+var make$2 = React.forwardRef(function (Props, ref_) {
+      var children = Props.children;
+      var className = Props.className;
       var defaultStyle = "dialog-content p-6 rounded-xl";
-      return React.createElement(ReactDialog.Content, {
-                  children: props.children,
-                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
-                          return Cx.cx([
-                                      defaultStyle,
-                                      className$p
-                                    ]);
-                        })),
-                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
-                          return prim;
-                        }))
-                });
+      var tmp = {
+        children: children,
+        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+                return Cx.cx([
+                            defaultStyle,
+                            className$p
+                          ]);
+              }))
+      };
+      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+              return prim;
+            }));
+      if (tmp$1 !== undefined) {
+        tmp.ref = Caml_option.valFromOption(tmp$1);
+      }
+      return React.createElement(ReactDialog.Content, tmp);
     });
 
 var Content = {
   make: make$2
 };
 
-var make$3 = React.forwardRef(function (props, ref) {
+var make$3 = React.forwardRef(function (Props, ref_) {
+      var children = Props.children;
+      var className = Props.className;
       var defaultStyle = "font-bold text-lg text-center mb-2";
-      return React.createElement(ReactDialog.Title, {
-                  children: props.children,
-                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
-                          return Cx.cx([
-                                      defaultStyle,
-                                      className$p
-                                    ]);
-                        })),
-                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
-                          return prim;
-                        }))
-                });
+      var tmp = {
+        children: children,
+        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+                return Cx.cx([
+                            defaultStyle,
+                            className$p
+                          ]);
+              }))
+      };
+      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+              return prim;
+            }));
+      if (tmp$1 !== undefined) {
+        tmp.ref = Caml_option.valFromOption(tmp$1);
+      }
+      return React.createElement(ReactDialog.Title, tmp);
     });
 
 var Title = {
   make: make$3
 };
 
-var make$4 = React.forwardRef(function (props, ref) {
+var make$4 = React.forwardRef(function (Props, ref_) {
+      var children = Props.children;
+      var className = Props.className;
       var defaultStyle = "text-center text-enabled-L2 font-normal";
-      return React.createElement(ReactDialog.Description, {
-                  children: props.children,
-                  className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
-                          return Cx.cx([
-                                      defaultStyle,
-                                      className$p
-                                    ]);
-                        })),
-                  ref: Belt_Option.map((ref == null) ? undefined : Caml_option.some(ref), (function (prim) {
-                          return prim;
-                        }))
-                });
+      var tmp = {
+        children: children,
+        className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
+                return Cx.cx([
+                            defaultStyle,
+                            className$p
+                          ]);
+              }))
+      };
+      var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
+              return prim;
+            }));
+      if (tmp$1 !== undefined) {
+        tmp.ref = Caml_option.valFromOption(tmp$1);
+      }
+      return React.createElement(ReactDialog.Description, tmp);
     });
 
 var Description = {
   make: make$4
 };
 
-function DS_Dialog$Popup$Buttons(props) {
+function DS_Dialog$Popup$Buttons(Props) {
+  var children = Props.children;
+  var className = Props.className;
   var defaultStyle = "flex justify-between mt-6 gap-[7px]";
   return React.createElement("div", {
-              className: Belt_Option.mapWithDefault(props.className, defaultStyle, (function (className$p) {
+              className: Belt_Option.mapWithDefault(className, defaultStyle, (function (className$p) {
                       return Cx.cx([
                                   defaultStyle,
                                   className$p
                                 ]);
                     }))
-            }, props.children);
+            }, children);
 }
 
 var Buttons = {
   make: DS_Dialog$Popup$Buttons
 };
 
-function DS_Dialog$Popup$Close(props) {
-  return React.createElement(ReactDialog.Close, {
-              children: props.children,
-              className: props.className,
-              asChild: props.asChild
-            });
+function DS_Dialog$Popup$Close(Props) {
+  var children = Props.children;
+  var className = Props.className;
+  var asChild = Props.asChild;
+  var tmp = {
+    children: children
+  };
+  if (className !== undefined) {
+    tmp.className = className;
+  }
+  if (asChild !== undefined) {
+    tmp.asChild = asChild;
+  }
+  return React.createElement(ReactDialog.Close, tmp);
 }
 
 var Close = {

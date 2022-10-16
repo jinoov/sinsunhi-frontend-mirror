@@ -109,9 +109,11 @@ function use$1(id) {
   }
 }
 
-function RfqCommon$CheckBuyerRequestStatus(props) {
+function RfqCommon$CheckBuyerRequestStatus(Props) {
+  var children = Props.children;
+  var requestId = Props.requestId;
   var router = Router.useRouter();
-  var result = use$1(props.requestId);
+  var result = use$1(requestId);
   React.useEffect((function () {
           if (result && result._0 === "DRAFT") {
             
@@ -120,7 +122,7 @@ function RfqCommon$CheckBuyerRequestStatus(props) {
           }
         }), []);
   if (result && result._0 === "DRAFT") {
-    return props.children;
+    return children;
   } else {
     return null;
   }

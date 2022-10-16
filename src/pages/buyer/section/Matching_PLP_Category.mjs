@@ -2,8 +2,7 @@
 
 import * as Cn from "rescript-classnames/src/Cn.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as Divider from "../../../components/common/Divider.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
@@ -31,7 +30,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(MatchingPLPCategoryQuery_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, MatchingPLPCategoryQuery_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -113,8 +112,8 @@ function fromQuery(query) {
         };
 }
 
-function Matching_PLP_Category$ListItem$PC$Skeleton(props) {
-  return React$1.createElement("div", {
+function Matching_PLP_Category$ListItem$PC$Skeleton(Props) {
+  return React.createElement("div", {
               className: "skeleton-base w-16 mt-2 mb-3 rounded h-6"
             });
 }
@@ -133,7 +132,8 @@ var ListItem = {
   PC: PC
 };
 
-function Matching_PLP_Category$PC$View(props) {
+function Matching_PLP_Category$PC$View(Props) {
+  var items = Props.items;
   var router = Router.useRouter();
   var subCategoryId = Js_dict.get(router.query, "sub-category-id");
   var categoryId = Js_dict.get(router.query, "category-id");
@@ -151,7 +151,7 @@ function Matching_PLP_Category$PC$View(props) {
         break;
     
   }
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           var windowWidth = window.innerWidth;
           var container = document.getElementById("horizontal-scroll-container");
           var target = document.getElementById("category-" + Belt_Option.getWithDefault(subCategoryId, "") + "");
@@ -165,17 +165,17 @@ function Matching_PLP_Category$PC$View(props) {
           }
           
         }), [subCategoryId]);
-  return React$1.createElement("div", {
+  return React.createElement("div", {
               className: Cn.make([
                     "w-full z-[5] bg-white left-0 cursor-pointer",
                     foldableStyle
                   ])
-            }, React$1.createElement("section", {
+            }, React.createElement("section", {
                   className: "w-[1280px] mx-auto bg-white border-b border-gray-50 "
-                }, React$1.createElement("ol", {
+                }, React.createElement("ol", {
                       className: "overflow-x-scroll scrollbar-hide flex items-center px-2 gap-4",
                       id: "horizontal-scroll-container"
-                    }, Belt_Array.map(props.items, (function (item) {
+                    }, Belt_Array.map(items, (function (item) {
                             var match = item.kind;
                             var selectedStyle = match ? (
                                 subCategoryId !== undefined && item.id === subCategoryId ? "border-gray-800 text-gray-800 font-bold" : "border-transparent text-gray-400"
@@ -184,13 +184,13 @@ function Matching_PLP_Category$PC$View(props) {
                               );
                             var match$1 = item.kind;
                             var query = match$1 ? "/matching/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "&sub-category-id=" + item.id + "" : "/matching/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "";
-                            return React$1.createElement("li", {
+                            return React.createElement("li", {
                                         key: item.id,
                                         id: "category-" + item.id + "",
                                         onClick: (function (param) {
                                             router.replace(query);
                                           })
-                                      }, React$1.createElement("div", {
+                                      }, React.createElement("div", {
                                             className: Cn.make([
                                                   selectedStyle,
                                                   "pt-2 pb-3 border-b-2 w-fit whitespace-nowrap"
@@ -203,14 +203,16 @@ var View = {
   make: Matching_PLP_Category$PC$View
 };
 
-function Matching_PLP_Category$PC$Skeleton(props) {
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+function Matching_PLP_Category$PC$Skeleton(Props) {
+  return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "h-11 px-5 scrollbar-hide"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "flex gap-4 h-full"
                     }, Belt_Array.map(Belt_Array.range(0, 3), (function (idx) {
-                            return React.createElementWithKey(Matching_PLP_Category$ListItem$PC$Skeleton, {}, String(idx));
-                          })))), React$1.createElement(Divider.make, {
+                            return React.createElement(Matching_PLP_Category$ListItem$PC$Skeleton, {
+                                        key: String(idx)
+                                      });
+                          })))), React.createElement(Divider.make, {
                   className: "mt-0 bg-gray-50"
                 }));
 }
@@ -219,8 +221,8 @@ var Skeleton$1 = {
   make: Matching_PLP_Category$PC$Skeleton
 };
 
-function Matching_PLP_Category$PC(props) {
-  var categoryName = props.categoryName;
+function Matching_PLP_Category$PC(Props) {
+  var categoryName = Props.categoryName;
   var router = Router.useRouter();
   var displayCategoryId = Js_dict.get(router.query, "category-id");
   var match = use({
@@ -233,11 +235,11 @@ function Matching_PLP_Category$PC(props) {
                             kind: /* All */0
                           }], Belt_Array.map(section$p.displayCategories, fromQuery));
             })), []);
-  return React$1.createElement(React$1.Suspense, {
-              children: Caml_option.some(React$1.createElement(Matching_PLP_Category$PC$View, {
-                        items: items
-                      })),
-              fallback: Caml_option.some(React$1.createElement(Matching_PLP_Category$PC$Skeleton, {}))
+  return React.createElement(React.Suspense, {
+              children: React.createElement(Matching_PLP_Category$PC$View, {
+                    items: items
+                  }),
+              fallback: React.createElement(Matching_PLP_Category$PC$Skeleton, {})
             });
 }
 
@@ -247,7 +249,8 @@ var PC$1 = {
   make: Matching_PLP_Category$PC
 };
 
-function Matching_PLP_Category$MO$View(props) {
+function Matching_PLP_Category$MO$View(Props) {
+  var items = Props.items;
   var router = Router.useRouter();
   var subCategoryId = Js_dict.get(router.query, "sub-category-id");
   var categoryId = Js_dict.get(router.query, "category-id");
@@ -265,7 +268,7 @@ function Matching_PLP_Category$MO$View(props) {
         break;
     
   }
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           var windowWidth = window.innerWidth;
           var container = document.getElementById("horizontal-scroll-container");
           var target = document.getElementById("category-" + Belt_Option.getWithDefault(subCategoryId, "") + "");
@@ -279,17 +282,17 @@ function Matching_PLP_Category$MO$View(props) {
           }
           
         }), [subCategoryId]);
-  return React$1.createElement("div", {
+  return React.createElement("div", {
               className: Cn.make([
                     "w-full z-[5] bg-white left-0",
                     foldableStyle
                   ])
-            }, React$1.createElement("section", {
+            }, React.createElement("section", {
                   className: "w-full max-w-3xl mx-auto bg-white border-b border-gray-50 "
-                }, React$1.createElement("ol", {
+                }, React.createElement("ol", {
                       className: "overflow-x-scroll scrollbar-hide flex items-center px-4 gap-4",
                       id: "horizontal-scroll-container"
-                    }, Belt_Array.map(props.items, (function (item) {
+                    }, Belt_Array.map(items, (function (item) {
                             var match = item.kind;
                             var selectedStyle = match ? (
                                 subCategoryId !== undefined && item.id === subCategoryId ? "border-gray-800 text-gray-800 font-bold" : "border-transparent text-gray-400"
@@ -298,13 +301,13 @@ function Matching_PLP_Category$MO$View(props) {
                               );
                             var match$1 = item.kind;
                             var query = match$1 ? "/matching/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "&sub-category-id=" + item.id + "" : "/matching/products?category-id=" + Belt_Option.getWithDefault(categoryId, "") + "";
-                            return React$1.createElement("li", {
+                            return React.createElement("li", {
                                         key: item.id,
                                         id: "category-" + item.id + "",
                                         onClick: (function (param) {
                                             router.replace(query);
                                           })
-                                      }, React$1.createElement("div", {
+                                      }, React.createElement("div", {
                                             className: selectedStyle + " " + "pt-2 pb-3 border-b-2 w-fit whitespace-nowrap"
                                           }, item.name));
                           })))));
@@ -314,17 +317,17 @@ var View$1 = {
   make: Matching_PLP_Category$MO$View
 };
 
-function Matching_PLP_Category$MO$Skeleton(props) {
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+function Matching_PLP_Category$MO$Skeleton(Props) {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "h-11 px-2 scrollbar-hide w-full overflow-x-scroll"
-                }, React$1.createElement("ol", {
+                }, React.createElement("ol", {
                       className: "w-fit flex items-center gap-2"
                     }, Belt_Array.map(Belt_Array.range(0, 8), (function (idx) {
-                            return React$1.createElement("div", {
+                            return React.createElement("div", {
                                         key: String(idx),
                                         className: "skeleton-base mt-2 mb-3 rounded h-6 w-16"
                                       });
-                          })))), React$1.createElement(Divider.make, {
+                          })))), React.createElement(Divider.make, {
                   className: "mt-0 bg-gray-50"
                 }));
 }
@@ -333,8 +336,8 @@ var Skeleton$2 = {
   make: Matching_PLP_Category$MO$Skeleton
 };
 
-function Matching_PLP_Category$MO(props) {
-  var categoryName = props.categoryName;
+function Matching_PLP_Category$MO(Props) {
+  var categoryName = Props.categoryName;
   var router = Router.useRouter();
   var displayCategoryId = Js_dict.get(router.query, "category-id");
   var match = use({
@@ -347,11 +350,11 @@ function Matching_PLP_Category$MO(props) {
                             kind: /* All */0
                           }], Belt_Array.map(section$p.displayCategories, fromQuery));
             })), []);
-  return React$1.createElement(React$1.Suspense, {
-              children: Caml_option.some(React$1.createElement(Matching_PLP_Category$MO$View, {
-                        items: items
-                      })),
-              fallback: Caml_option.some(React$1.createElement(Matching_PLP_Category$MO$Skeleton, {}))
+  return React.createElement(React.Suspense, {
+              children: React.createElement(Matching_PLP_Category$MO$View, {
+                    items: items
+                  }),
+              fallback: React.createElement(Matching_PLP_Category$MO$Skeleton, {})
             });
 }
 
@@ -367,4 +370,4 @@ export {
   PC$1 as PC,
   MO ,
 }
-/* React Not a pure module */
+/* react Not a pure module */

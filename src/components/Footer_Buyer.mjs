@@ -9,7 +9,7 @@ import KakaoSvg from "../../public/assets/kakao.svg";
 
 var kakaoIcon = KakaoSvg;
 
-function Footer_Buyer$PC(props) {
+function Footer_Buyer$PC(Props) {
   return React.createElement("footer", {
               className: "w-full h-[324px] bg-[#FBFBFB] text-gray-800"
             }, React.createElement("div", {
@@ -111,7 +111,7 @@ var PC = {
   make: Footer_Buyer$PC
 };
 
-function Footer_Buyer$MO(props) {
+function Footer_Buyer$MO(Props) {
   return React.createElement("div", {
               className: "w-full bg-[#FBFBFB]"
             }, React.createElement("footer", {

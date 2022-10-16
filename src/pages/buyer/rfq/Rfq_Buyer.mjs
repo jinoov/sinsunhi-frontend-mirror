@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Head from "next/head";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as RfqCreateRequestButton from "../../../components/RfqCreateRequestButton.mjs";
 import RfqCardPng from "../../../assets/rfq/rfq-card-1.png";
 import RfqCardPng$1 from "../../../assets/rfq/rfq-card-2.png";
@@ -46,7 +45,7 @@ var rfqBgImgM = RfqIndexBgMPng;
 
 var buttonStyle = "mt-4 lg:mt-[30px] text-lg lg:text-xl text-white tracking-tighter leading-6 px-6 lg:px-8 py-[14px] lg:py-5 bg-primary rounded-lg";
 
-function Rfq_Buyer$Container(props) {
+function Rfq_Buyer$Container(Props) {
   return React.createElement("section", {
               className: "relative w-full"
             }, React.createElement("article", {
@@ -192,11 +191,11 @@ var Container = {
   make: Rfq_Buyer$Container
 };
 
-function Rfq_Buyer(props) {
+function Rfq_Buyer(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "견적 요청 - 신선하이")
                 }), React.createElement(React.Suspense, {
-                  children: Caml_option.some(React.createElement(Rfq_Buyer$Container, {}))
+                  children: React.createElement(Rfq_Buyer$Container, {})
                 }));
 }
 

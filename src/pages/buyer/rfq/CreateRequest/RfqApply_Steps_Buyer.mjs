@@ -4,8 +4,7 @@ import * as Cx from "rescript-classnames/src/Cx.mjs";
 import * as Env from "../../../../constants/Env.mjs";
 import * as $$Intl from "../../../../bindings/intl.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as DS_Tab from "../../../../components/common/container/DS_Tab.mjs";
 import * as Global from "../../../../components/Global.mjs";
 import * as DS_Icon from "../../../../components/svgs/DS_Icon.mjs";
@@ -44,7 +43,7 @@ function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
 function useLoader(param) {
   var match = ReactRelay.useQueryLoader(RfqApplyStepsBuyer_BrandList_Query_graphql.node);
   var loadQueryFn = match[1];
-  var loadQuery = React$1.useMemo((function () {
+  var loadQuery = React.useMemo((function () {
           return function (param, param$1, param$2, param$3) {
             return Curry._2(loadQueryFn, RfqApplyStepsBuyer_BrandList_Query_graphql.Internal.convertVariables(param), {
                         fetchPolicy: param$1,
@@ -426,23 +425,25 @@ function numberToComma(n) {
               }));
 }
 
-function RfqApply_Steps_Buyer$FloatingButton(props) {
-  var buttonType = props.buttonType;
-  var disabled = props.disabled;
-  var disabled$1 = disabled !== undefined ? disabled : false;
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+function RfqApply_Steps_Buyer$FloatingButton(Props) {
+  var handleClickButton = Props.handleClickButton;
+  var buttonText = Props.buttonText;
+  var disabledOpt = Props.disabled;
+  var buttonType = Props.buttonType;
+  var disabled = disabledOpt !== undefined ? disabledOpt : false;
+  return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "fixed bottom-0 max-w-3xl w-full gradient-cta-t tab-highlight-color"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: buttonType ? "px-4 py-5" : ""
-                    }, React$1.createElement("button", {
+                    }, React.createElement("button", {
                           className: Cx.cx([
                                 buttonType ? "rounded-xl" : "",
                                 "w-full h-14 bg-primary text-white text-lg font-bold",
                                 "disabled:bg-disabled-L2 disabled:text-inverted disabled:text-opacity-50"
                               ]),
-                          disabled: disabled$1,
-                          onClick: props.handleClickButton
-                        }, props.buttonText))), React$1.createElement("div", {
+                          disabled: disabled,
+                          onClick: handleClickButton
+                        }, buttonText))), React.createElement("div", {
                   className: "h-24"
                 }));
 }
@@ -453,13 +454,14 @@ var FloatingButton = {
 
 var checkValidPackageMethod = Belt_Option.isSome;
 
-function RfqApply_Steps_Buyer$PackageMethod(props) {
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var isSkipGrade = props.isSkipGrade;
-  var updateItem = props.updateItem;
-  var dispatch = props.dispatch;
-  var packageMethod = props.packageMethod;
+function RfqApply_Steps_Buyer$PackageMethod(Props) {
+  var packageMethod = Props.packageMethod;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var isSkipGrade = Props.isSkipGrade;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
   var match = use$1(undefined);
   var match$1 = match.router;
   var toNextDouble = match$1.toNextDouble;
@@ -474,15 +476,15 @@ function RfqApply_Steps_Buyer$PackageMethod(props) {
             }));
   };
   var isValidItem = Belt_Option.isSome(packageMethod);
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "원하시는 포장상태를",
                             title2: "선택해주세요"
                           })
-                    }), React$1.createElement(DS_ListItem.Normal1.Root.make, {
-                      children: React$1.createElement(DS_ListItem.Normal1.Item.make, {
+                    }), React.createElement(DS_ListItem.Normal1.Root.make, {
+                      children: React.createElement(DS_ListItem.Normal1.Item.make, {
                             children: null,
                             onClick: (function (param) {
                                 Curry._1(dispatch, {
@@ -490,14 +492,14 @@ function RfqApply_Steps_Buyer$PackageMethod(props) {
                                       _0: Belt_Option.isNone(packageMethod) ? "RAW" : undefined
                                     });
                               })
-                          }, React$1.createElement(DS_ListItem.Normal1.TextGroup.make, {
+                          }, React.createElement(DS_ListItem.Normal1.TextGroup.make, {
                                 title1: "원료육(박스육)"
-                              }), React$1.createElement(DS_ListItem.Normal1.RightGroup.make, {
-                                children: Belt_Option.mapWithDefault(packageMethod, React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                              }), React.createElement(DS_ListItem.Normal1.RightGroup.make, {
+                                children: Belt_Option.mapWithDefault(packageMethod, React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
                                           height: "22",
                                           width: "22"
                                         }), (function (param) {
-                                        return React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                        return React.createElement(DS_Icon.Common.CheckedLarge1.make, {
                                                     height: "22",
                                                     width: "22",
                                                     fill: "#12B564"
@@ -505,12 +507,12 @@ function RfqApply_Steps_Buyer$PackageMethod(props) {
                                       }))
                               })),
                       className: "space-y-8 text-lg mt-9 tab-highlight-color"
-                    }), React$1.createElement("div", {
+                    }), React.createElement("div", {
                       className: "absolute w-full bottom-[108px] px-5 flex justify-between"
-                    }, React$1.createElement("div", {
+                    }, React.createElement("div", {
                           className: "leading-6 tracking-tight"
-                        }, React$1.createElement("h5", undefined, "세절/분쇄가 필요한 경우,"), React$1.createElement("h5", undefined, "담당자에게 문의 부탁드립니다.")), React$1.createElement(DataGtm.make, {
-                          children: React$1.createElement("button", {
+                        }, React.createElement("h5", undefined, "세절/분쇄가 필요한 경우,"), React.createElement("h5", undefined, "담당자에게 문의 부탁드립니다.")), React.createElement(DataGtm.make, {
+                          children: React.createElement("button", {
                                 className: "text-[15px] leading-6 tracking-tight font-bold rounded-lg px-3.5 py-3 border border-border-default-L1 bg-surface",
                                 onClick: (function (param) {
                                     if (Global.$$window !== undefined) {
@@ -521,7 +523,7 @@ function RfqApply_Steps_Buyer$PackageMethod(props) {
                                   })
                               }, "문의하기"),
                           dataGtm: "Contact_RFQ_Livestock_PackageMethod"
-                        }))), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                        }))), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       if (isModify) {
@@ -533,7 +535,7 @@ function RfqApply_Steps_Buyer$PackageMethod(props) {
                       }
                     }),
                   buttonText: isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }
@@ -545,40 +547,39 @@ var PackageMethod = {
 
 var checkValidGrade = Belt_Option.isSome;
 
-function RfqApply_Steps_Buyer$Grade$List(props) {
-  var grade = props.grade;
-  var handleOnChangeGrade = props.handleOnChangeGrade;
-  var madeIn = props.madeIn;
-  return React$1.createElement(React$1.Fragment, undefined, Belt_Array.map(Belt_Array.keep(props.edges, (function (x) {
+function RfqApply_Steps_Buyer$Grade$List(Props) {
+  var edges = Props.edges;
+  var madeIn = Props.madeIn;
+  var handleOnChangeGrade = Props.handleOnChangeGrade;
+  var grade = Props.grade;
+  return React.createElement(React.Fragment, undefined, Belt_Array.map(Belt_Array.keep(edges, (function (x) {
                         return x.node.madeIn === madeIn;
                       })), (function (x) {
                     var isSelected = Belt_Option.mapWithDefault(grade, false, (function (grade$p) {
                             return grade$p === x.node.id;
                           }));
-                    return React.createElementVariadicWithKey(DS_ListItem.Normal1.Item.make, {
+                    return React.createElement(DS_ListItem.Normal1.Item.make, {
                                 children: null,
                                 onClick: (function (param) {
                                     Curry._1(handleOnChangeGrade, {
                                           TAG: /* Grade */1,
                                           _0: x.node.id
                                         });
-                                  })
-                              }, [
-                                React$1.createElement(DS_ListItem.Normal1.TextGroup.make, {
-                                      title1: x.node.grade
-                                    }),
-                                React$1.createElement(DS_ListItem.Normal1.RightGroup.make, {
-                                      children: isSelected ? React$1.createElement(DS_Icon.Common.RadioOnLarge1.make, {
-                                              height: "24",
-                                              width: "24",
-                                              fill: "#12B564"
-                                            }) : React$1.createElement(DS_Icon.Common.RadioOffLarge1.make, {
-                                              height: "24",
-                                              width: "24",
-                                              fill: "#B2B2B2"
-                                            })
-                                    })
-                              ], x.node.id);
+                                  }),
+                                key: x.node.id
+                              }, React.createElement(DS_ListItem.Normal1.TextGroup.make, {
+                                    title1: x.node.grade
+                                  }), React.createElement(DS_ListItem.Normal1.RightGroup.make, {
+                                    children: isSelected ? React.createElement(DS_Icon.Common.RadioOnLarge1.make, {
+                                            height: "24",
+                                            width: "24",
+                                            fill: "#12B564"
+                                          }) : React.createElement(DS_Icon.Common.RadioOffLarge1.make, {
+                                            height: "24",
+                                            width: "24",
+                                            fill: "#B2B2B2"
+                                          })
+                                  }));
                   })));
 }
 
@@ -586,12 +587,14 @@ var List = {
   make: RfqApply_Steps_Buyer$Grade$List
 };
 
-function RfqApply_Steps_Buyer$Grade(props) {
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var updateItem = props.updateItem;
-  var node = props.node;
-  var grade = props.grade;
+function RfqApply_Steps_Buyer$Grade(Props) {
+  var grade = Props.grade;
+  var node = Props.node;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
   var match = use$1(undefined);
   var toNext = match.router.toNext;
   var isModify = match.isModify;
@@ -614,7 +617,7 @@ function RfqApply_Steps_Buyer$Grade(props) {
           return x.meatGrades.edges;
         }));
   var isValidItem = Belt_Option.isSome(grade);
-  var match$1 = React$1.useState(function () {
+  var match$1 = React.useState(function () {
         if (isDomestic) {
           return "KR";
         } else if (isBeef) {
@@ -625,18 +628,18 @@ function RfqApply_Steps_Buyer$Grade(props) {
       });
   var setMadeIn = match$1[1];
   var madeIn = match$1[0];
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "찾으시는 상품의",
                             title2: "등급을 선택해주세요"
                           })
-                    }), React$1.createElement("div", {
+                    }), React.createElement("div", {
                       className: "sticky top-[60px] px-5 mt-8"
-                    }, React$1.createElement(DS_Tab.LeftTab.Root.make, {
-                          children: isDomestic ? React$1.createElement(DS_Tab.LeftTab.Item.make, {
-                                  children: React$1.createElement(DS_Button.Chip.TextSmall1.make, {
+                    }, React.createElement(DS_Tab.LeftTab.Root.make, {
+                          children: isDomestic ? React.createElement(DS_Tab.LeftTab.Item.make, {
+                                  children: React.createElement(DS_Button.Chip.TextSmall1.make, {
                                         label: "국내산",
                                         selected: madeIn === "KR",
                                         className: "text-sm",
@@ -647,8 +650,8 @@ function RfqApply_Steps_Buyer$Grade(props) {
                                           })
                                       })
                                 }) : (
-                              isBeef ? React$1.createElement(React$1.Fragment, undefined, React$1.createElement(DS_Tab.LeftTab.Item.make, {
-                                          children: React$1.createElement(DS_Button.Chip.TextSmall1.make, {
+                              isBeef ? React.createElement(React.Fragment, undefined, React.createElement(DS_Tab.LeftTab.Item.make, {
+                                          children: React.createElement(DS_Button.Chip.TextSmall1.make, {
                                                 label: "미국산",
                                                 selected: madeIn === "US",
                                                 className: "text-sm",
@@ -658,8 +661,8 @@ function RfqApply_Steps_Buyer$Grade(props) {
                                                         });
                                                   })
                                               })
-                                        }), React$1.createElement(DS_Tab.LeftTab.Item.make, {
-                                          children: React$1.createElement(DS_Button.Chip.TextSmall1.make, {
+                                        }), React.createElement(DS_Tab.LeftTab.Item.make, {
+                                          children: React.createElement(DS_Button.Chip.TextSmall1.make, {
                                                 label: "호주산",
                                                 selected: madeIn === "AU",
                                                 className: "text-sm",
@@ -669,8 +672,8 @@ function RfqApply_Steps_Buyer$Grade(props) {
                                                         });
                                                   })
                                               })
-                                        }), React$1.createElement(DS_Tab.LeftTab.Item.make, {
-                                          children: React$1.createElement(DS_Button.Chip.TextSmall1.make, {
+                                        }), React.createElement(DS_Tab.LeftTab.Item.make, {
+                                          children: React.createElement(DS_Button.Chip.TextSmall1.make, {
                                                 label: "캐나다산",
                                                 selected: madeIn === "CA",
                                                 className: "text-sm",
@@ -680,8 +683,8 @@ function RfqApply_Steps_Buyer$Grade(props) {
                                                         });
                                                   })
                                               })
-                                        }), React$1.createElement(DS_Tab.LeftTab.Item.make, {
-                                          children: React$1.createElement(DS_Button.Chip.TextSmall1.make, {
+                                        }), React.createElement(DS_Tab.LeftTab.Item.make, {
+                                          children: React.createElement(DS_Button.Chip.TextSmall1.make, {
                                                 label: "뉴질랜드산",
                                                 selected: madeIn === "NZ",
                                                 className: "text-sm",
@@ -691,8 +694,8 @@ function RfqApply_Steps_Buyer$Grade(props) {
                                                         });
                                                   })
                                               })
-                                        })) : React$1.createElement(DS_Tab.LeftTab.Item.make, {
-                                      children: React$1.createElement(DS_Button.Chip.TextSmall1.make, {
+                                        })) : React.createElement(DS_Tab.LeftTab.Item.make, {
+                                      children: React.createElement(DS_Button.Chip.TextSmall1.make, {
                                             label: "수입산",
                                             selected: madeIn === "OTHER",
                                             className: "text-sm",
@@ -705,15 +708,15 @@ function RfqApply_Steps_Buyer$Grade(props) {
                                     })
                             ),
                           className: "space-x-0"
-                        })), React$1.createElement(DS_ListItem.Normal1.Root.make, {
-                      children: React$1.createElement(RfqApply_Steps_Buyer$Grade$List, {
+                        })), React.createElement(DS_ListItem.Normal1.Root.make, {
+                      children: React.createElement(RfqApply_Steps_Buyer$Grade$List, {
                             edges: edges,
                             madeIn: madeIn,
-                            handleOnChangeGrade: props.dispatch,
+                            handleOnChangeGrade: dispatch,
                             grade: grade
                           }),
                       className: "space-y-8 mt-11 tab-highlight-color"
-                    })), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                    })), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       if (isModify) {
@@ -723,7 +726,7 @@ function RfqApply_Steps_Buyer$Grade(props) {
                       }
                     }),
                   buttonText: isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }
@@ -740,12 +743,13 @@ function checkValidOrderAmount(weightKg) {
               }));
 }
 
-function RfqApply_Steps_Buyer$OrderAmount(props) {
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var updateItem = props.updateItem;
-  var dispatch = props.dispatch;
-  var weightKg = props.weightKg;
+function RfqApply_Steps_Buyer$OrderAmount(Props) {
+  var weightKg = Props.weightKg;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
   var match = use$1(undefined);
   var toNext = match.router.toNext;
   var isModify = match.isModify;
@@ -758,15 +762,15 @@ function RfqApply_Steps_Buyer$OrderAmount(props) {
               meat_weight_kg: weightKg
             }));
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "주문량을",
                             title2: "작성해주세요"
                           })
-                    }), React$1.createElement(DS_InputField.Line1.Root.make, {
-                      children: React$1.createElement(DS_InputField.Line1.Input.make, {
+                    }), React.createElement(DS_InputField.Line1.Root.make, {
+                      children: React.createElement(DS_InputField.Line1.Input.make, {
                             type_: "text",
                             placeholder: "납품 1회당 배송량",
                             value: Belt_Option.mapWithDefault(weightKg, "", (function (x) {
@@ -789,20 +793,20 @@ function RfqApply_Steps_Buyer$OrderAmount(props) {
                                     });
                               }),
                             unit: "kg",
-                            errorMessage: Caml_option.some(Belt_Option.mapWithDefault(weightKg, undefined, (function (x) {
-                                        return Belt_Option.mapWithDefault(Belt_Option.flatMap(Garter_Array.first(x.split(".")), Belt_Int.fromString), undefined, (function (x) {
-                                                      if (x < 50) {
-                                                        return "최소 주문량은 " + String(50) + "kg 입니다.";
-                                                      }
-                                                      
-                                                    }));
-                                      }))),
+                            errorMessage: Belt_Option.mapWithDefault(weightKg, undefined, (function (x) {
+                                    return Belt_Option.mapWithDefault(Belt_Option.flatMap(Garter_Array.first(x.split(".")), Belt_Int.fromString), undefined, (function (x) {
+                                                  if (x < 50) {
+                                                    return "최소 주문량은 " + String(50) + "kg 입니다.";
+                                                  }
+                                                  
+                                                }));
+                                  })),
                             underLabel: "최소 주문량 " + String(50) + "kg",
                             underLabelType: "ton",
                             maxLength: 6
                           }),
                       className: "mt-4"
-                    })), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                    })), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       if (isModify) {
@@ -812,7 +816,7 @@ function RfqApply_Steps_Buyer$OrderAmount(props) {
                       }
                     }),
                   buttonText: isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }
@@ -827,12 +831,14 @@ function checkValidUsage(usages) {
   return usages.length !== 0;
 }
 
-function RfqApply_Steps_Buyer$Usages(props) {
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var updateItem = props.updateItem;
-  var dispatch = props.dispatch;
-  var usages = props.usages;
+function RfqApply_Steps_Buyer$Usages(Props) {
+  var usages = Props.usages;
+  var edges = Props.edges;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
   var match = use$1(undefined);
   var toNext = match.router.toNext;
   var isModify = match.isModify;
@@ -846,24 +852,24 @@ function RfqApply_Steps_Buyer$Usages(props) {
               meatusage_skip: false
             }));
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "사용용도를 알려주세요"
                           })
-                    }), React$1.createElement("div", {
+                    }), React.createElement("div", {
                       className: "flex justify-end items-center px-5 mt-1.5"
-                    }, React$1.createElement("span", {
+                    }, React.createElement("span", {
                           className: "text-[13px] text-enabled-L2"
-                        }, "중복 선택 가능")), React$1.createElement(DS_ListItem.Normal1.Root.make, {
-                      children: Belt_Array.map(props.edges, (function (param) {
+                        }, "중복 선택 가능")), React.createElement(DS_ListItem.Normal1.Root.make, {
+                      children: Belt_Array.map(edges, (function (param) {
                               var match = param.node;
                               var id = match.id;
                               var isUnChecked = Garter_Array.isEmpty(Belt_Array.keep(usages, (function (x) {
                                           return x === id;
                                         })));
-                              return React.createElementVariadicWithKey(DS_ListItem.Normal1.Item.make, {
+                              return React.createElement(DS_ListItem.Normal1.Item.make, {
                                           children: null,
                                           onClick: (function (param) {
                                               Curry._1(dispatch, {
@@ -872,26 +878,24 @@ function RfqApply_Steps_Buyer$Usages(props) {
                                                               return x !== id;
                                                             }))
                                                   });
-                                            })
-                                        }, [
-                                          React$1.createElement(DS_ListItem.Normal1.TextGroup.make, {
-                                                title1: match.name,
-                                                titleStyle: "text-lg"
-                                              }),
-                                          React$1.createElement(DS_ListItem.Normal1.RightGroup.make, {
-                                                children: isUnChecked ? React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
-                                                        height: "22",
-                                                        width: "22"
-                                                      }) : React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
-                                                        height: "22",
-                                                        width: "22",
-                                                        fill: "#12B564"
-                                                      })
-                                              })
-                                        ], id);
+                                            }),
+                                          key: id
+                                        }, React.createElement(DS_ListItem.Normal1.TextGroup.make, {
+                                              title1: match.name,
+                                              titleStyle: "text-lg"
+                                            }), React.createElement(DS_ListItem.Normal1.RightGroup.make, {
+                                              children: isUnChecked ? React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                                      height: "22",
+                                                      width: "22"
+                                                    }) : React.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                                      height: "22",
+                                                      width: "22",
+                                                      fill: "#12B564"
+                                                    })
+                                            }));
                             })),
                       className: "mt-7 space-y-8 tab-highlight-color"
-                    })), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                    })), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       if (isModify) {
@@ -901,7 +905,7 @@ function RfqApply_Steps_Buyer$Usages(props) {
                       }
                     }),
                   buttonText: isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }
@@ -913,38 +917,37 @@ var Usages = {
 
 var checkValidStorageMethod = Belt_Option.isSome;
 
-function RfqApply_Steps_Buyer$StorageMethod$List(props) {
-  var storageMethod = props.storageMethod;
-  var handleOnChangeStorageMethod = props.handleOnChangeStorageMethod;
-  return Belt_Array.map(props.arr, (function (x) {
+function RfqApply_Steps_Buyer$StorageMethod$List(Props) {
+  var arr = Props.arr;
+  var handleOnChangeStorageMethod = Props.handleOnChangeStorageMethod;
+  var storageMethod = Props.storageMethod;
+  return Belt_Array.map(arr, (function (x) {
                 var value = x[1];
                 var isSelected = Belt_Option.mapWithDefault(storageMethod, false, (function (storageMethod$p) {
                         return storageMethod$p === value;
                       }));
-                return React.createElementVariadicWithKey(DS_ListItem.Normal1.Item.make, {
+                return React.createElement(DS_ListItem.Normal1.Item.make, {
                             children: null,
                             onClick: (function (param) {
                                 Curry._1(handleOnChangeStorageMethod, {
                                       TAG: /* StorageMethod */4,
                                       _0: value
                                     });
-                              })
-                          }, [
-                            React$1.createElement(DS_ListItem.Normal1.TextGroup.make, {
-                                  title1: x[0]
-                                }),
-                            React$1.createElement(DS_ListItem.Normal1.RightGroup.make, {
-                                  children: isSelected ? React$1.createElement(DS_Icon.Common.RadioOnLarge1.make, {
-                                          height: "24",
-                                          width: "24",
-                                          fill: "#12B564"
-                                        }) : React$1.createElement(DS_Icon.Common.RadioOffLarge1.make, {
-                                          height: "24",
-                                          width: "24",
-                                          fill: "#B2B2B2"
-                                        })
-                                })
-                          ], value);
+                              }),
+                            key: value
+                          }, React.createElement(DS_ListItem.Normal1.TextGroup.make, {
+                                title1: x[0]
+                              }), React.createElement(DS_ListItem.Normal1.RightGroup.make, {
+                                children: isSelected ? React.createElement(DS_Icon.Common.RadioOnLarge1.make, {
+                                        height: "24",
+                                        width: "24",
+                                        fill: "#12B564"
+                                      }) : React.createElement(DS_Icon.Common.RadioOffLarge1.make, {
+                                        height: "24",
+                                        width: "24",
+                                        fill: "#B2B2B2"
+                                      })
+                              }));
               }));
 }
 
@@ -952,11 +955,13 @@ var List$1 = {
   make: RfqApply_Steps_Buyer$StorageMethod$List
 };
 
-function RfqApply_Steps_Buyer$StorageMethod(props) {
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var updateItem = props.updateItem;
-  var storageMethod = props.storageMethod;
+function RfqApply_Steps_Buyer$StorageMethod(Props) {
+  var storageMethod = Props.storageMethod;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
   var match = use$1(undefined);
   var toNext = match.router.toNext;
   var isModify = match.isModify;
@@ -969,15 +974,15 @@ function RfqApply_Steps_Buyer$StorageMethod(props) {
               storage_method: storageMethod
             }));
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "원하시는 보관상태를",
                             title2: "선택해주세요"
                           })
-                    }), React$1.createElement(DS_ListItem.Normal1.Root.make, {
-                      children: React$1.createElement(RfqApply_Steps_Buyer$StorageMethod$List, {
+                    }), React.createElement(DS_ListItem.Normal1.Root.make, {
+                      children: React.createElement(RfqApply_Steps_Buyer$StorageMethod$List, {
                             arr: [
                               [
                                 "냉동",
@@ -992,11 +997,11 @@ function RfqApply_Steps_Buyer$StorageMethod(props) {
                                 "FREEZE_DRIED"
                               ]
                             ],
-                            handleOnChangeStorageMethod: props.dispatch,
+                            handleOnChangeStorageMethod: dispatch,
                             storageMethod: storageMethod
                           }),
                       className: "space-y-8 text-lg mt-11 tab-highlight-color"
-                    })), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                    })), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       if (isModify) {
@@ -1006,7 +1011,7 @@ function RfqApply_Steps_Buyer$StorageMethod(props) {
                       }
                     }),
                   buttonText: isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }
@@ -1023,13 +1028,14 @@ function checkValidSupplyPrice(prevTradePricePerKg) {
               }));
 }
 
-function RfqApply_Steps_Buyer$SupplyPrice(props) {
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var updateItem = props.updateItem;
-  var dispatch = props.dispatch;
-  var prevTradePricePerKg = props.prevTradePricePerKg;
-  var prevTradeSellerName = props.prevTradeSellerName;
+function RfqApply_Steps_Buyer$SupplyPrice(Props) {
+  var prevTradeSellerName = Props.prevTradeSellerName;
+  var prevTradePricePerKg = Props.prevTradePricePerKg;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
   var match = use$1(undefined);
   var toNext = match.router.toNext;
   var isModify = match.isModify;
@@ -1043,15 +1049,15 @@ function RfqApply_Steps_Buyer$SupplyPrice(props) {
               prev_trade_seller_name: prevTradeSellerName
             }));
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "기존 거래 단가를",
                             title2: "알려주세요"
                           })
-                    }), React$1.createElement(DS_InputField.Line1.Root.make, {
-                      children: React$1.createElement(DS_InputField.Line1.Input.make, {
+                    }), React.createElement(DS_InputField.Line1.Root.make, {
+                      children: React.createElement(DS_InputField.Line1.Input.make, {
                             type_: "text",
                             placeholder: "기존 거래 단가",
                             value: numberToComma(Belt_Option.getWithDefault(prevTradePricePerKg, "")),
@@ -1071,20 +1077,20 @@ function RfqApply_Steps_Buyer$SupplyPrice(props) {
                                     });
                               }),
                             unit: "원/kg",
-                            errorMessage: Caml_option.some(Belt_Option.mapWithDefault(prevTradePricePerKg, undefined, (function (x) {
-                                        return Belt_Option.mapWithDefault(Belt_Option.flatMap(Garter_Array.first(x.split(".")), Belt_Int.fromString), undefined, (function (x) {
-                                                      if (x < 100) {
-                                                        return "최소 거래 단가는 " + numberToComma(String(100)) + "원/kg 입니다.";
-                                                      }
-                                                      
-                                                    }));
-                                      }))),
+                            errorMessage: Belt_Option.mapWithDefault(prevTradePricePerKg, undefined, (function (x) {
+                                    return Belt_Option.mapWithDefault(Belt_Option.flatMap(Garter_Array.first(x.split(".")), Belt_Int.fromString), undefined, (function (x) {
+                                                  if (x < 100) {
+                                                    return "최소 거래 단가는 " + numberToComma(String(100)) + "원/kg 입니다.";
+                                                  }
+                                                  
+                                                }));
+                                  })),
                             underLabelType: "won",
                             maxLength: 7
                           }),
                       className: "mt-10"
-                    }), React$1.createElement(DS_InputField.Line1.Root.make, {
-                      children: React$1.createElement(DS_InputField.Line1.Input.make, {
+                    }), React.createElement(DS_InputField.Line1.Root.make, {
+                      children: React.createElement(DS_InputField.Line1.Input.make, {
                             type_: "text",
                             placeholder: "기존 거래처명",
                             value: Belt_Option.getWithDefault(prevTradeSellerName, ""),
@@ -1105,7 +1111,7 @@ function RfqApply_Steps_Buyer$SupplyPrice(props) {
                             maxLength: 30
                           }),
                       className: "mt-5"
-                    })), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                    })), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       if (isModify) {
@@ -1115,7 +1121,7 @@ function RfqApply_Steps_Buyer$SupplyPrice(props) {
                       }
                     }),
                   buttonText: isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }
@@ -1126,14 +1132,16 @@ var SupplyPrice = {
   make: RfqApply_Steps_Buyer$SupplyPrice
 };
 
-function RfqApply_Steps_Buyer$Brand(props) {
-  var node = props.node;
-  var grade = props.grade;
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var updateItem = props.updateItem;
-  var dispatch = props.dispatch;
-  var meatBrandIds = props.meatBrandIds;
+function RfqApply_Steps_Buyer$Brand(Props) {
+  var meatBrandIds = Props.meatBrandIds;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
+  var isNotExistGrades = Props.isNotExistGrades;
+  var grade = Props.grade;
+  var node = Props.node;
   var match = use$1(undefined);
   var toNext = match.router.toNext;
   var isModify = match.isModify;
@@ -1152,13 +1160,13 @@ function RfqApply_Steps_Buyer$Brand(props) {
   var speciesId = Belt_Option.mapWithDefault(node.species, "", (function (x) {
           return x.id;
         }));
-  var madeIns = props.isNotExistGrades ? undefined : [madeIn];
-  var match$1 = React$1.useState(function () {
+  var madeIns = isNotExistGrades ? undefined : [madeIn];
+  var match$1 = React.useState(function () {
         return meatBrandIds;
       });
   var setSelectedBrandIds = match$1[1];
   var selectedBrandIds = match$1[0];
-  var match$2 = React$1.useState(function () {
+  var match$2 = React.useState(function () {
         if (isModify) {
           return Garter_Array.isEmpty(meatBrandIds);
         } else {
@@ -1186,22 +1194,22 @@ function RfqApply_Steps_Buyer$Brand(props) {
     ) : (
       match$4 ? false : true
     );
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "브랜드를",
                             title2: "선택해주세요"
                           })
-                    }), React$1.createElement("div", {
+                    }), React.createElement("div", {
                       className: "flex justify-end items-center px-5 mt-1.5"
-                    }, React$1.createElement("span", {
+                    }, React.createElement("span", {
                           className: "text-[13px] text-enabled-L2"
-                        }, "중복 선택 가능")), React$1.createElement("form", undefined, React$1.createElement("ul", {
+                        }, "중복 선택 가능")), React.createElement("form", undefined, React.createElement("ul", {
                           className: "mt-5"
-                        }, React$1.createElement("li", undefined, React$1.createElement("label", undefined, React$1.createElement("div", {
+                        }, React.createElement("li", undefined, React.createElement("label", undefined, React.createElement("div", {
                                       className: "flex justify-between items-center px-5 h-14 cursor-pointer"
-                                    }, React$1.createElement("div", undefined, React$1.createElement("input", {
+                                    }, React.createElement("div", undefined, React.createElement("input", {
                                               className: "appearance-none",
                                               checked: isSelectedAnyBrand,
                                               type: "checkbox",
@@ -1217,11 +1225,11 @@ function RfqApply_Steps_Buyer$Brand(props) {
                                                         _0: []
                                                       });
                                                 })
-                                            }), "브랜드 무관"), React$1.createElement("div", undefined, isSelectedAnyBrand ? React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                            }), "브랜드 무관"), React.createElement("div", undefined, isSelectedAnyBrand ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
                                                 height: "22",
                                                 width: "22",
                                                 fill: "#12B564"
-                                              }) : React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                              }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
                                                 height: "22",
                                                 width: "22"
                                               }))))), Belt_Array.map(match$3.meatBrands.edges, (function (brand) {
@@ -1230,11 +1238,11 @@ function RfqApply_Steps_Buyer$Brand(props) {
                                 var isChecked = Belt_Array.some(selectedBrandIds, (function (x) {
                                         return x === id;
                                       }));
-                                return React$1.createElement("li", {
+                                return React.createElement("li", {
                                             key: id
-                                          }, React$1.createElement("label", undefined, React$1.createElement("div", {
+                                          }, React.createElement("label", undefined, React.createElement("div", {
                                                     className: "flex justify-between items-center px-5 h-14 cursor-pointer"
-                                                  }, React$1.createElement("div", undefined, React$1.createElement("input", {
+                                                  }, React.createElement("div", undefined, React.createElement("input", {
                                                             className: "appearance-none",
                                                             checked: isChecked,
                                                             type: "checkbox",
@@ -1253,15 +1261,15 @@ function RfqApply_Steps_Buyer$Brand(props) {
                                                                       return false;
                                                                     });
                                                               })
-                                                          }), match.name), React$1.createElement("div", undefined, isChecked ? React$1.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                                          }), match.name), React.createElement("div", undefined, isChecked ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
                                                               height: "22",
                                                               width: "22",
                                                               fill: "#12B564"
-                                                            }) : React$1.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                                            }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
                                                               height: "22",
                                                               width: "22"
                                                             })))));
-                              }))))), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                              }))))), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       if (isModify) {
@@ -1271,7 +1279,7 @@ function RfqApply_Steps_Buyer$Brand(props) {
                       }
                     }),
                   buttonText: isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }
@@ -1286,12 +1294,13 @@ function checkValidEtc(etc) {
               }));
 }
 
-function RfqApply_Steps_Buyer$Etc(props) {
-  var requestId = props.requestId;
-  var itemId = props.itemId;
-  var updateItem = props.updateItem;
-  var dispatch = props.dispatch;
-  var etc = props.etc;
+function RfqApply_Steps_Buyer$Etc(Props) {
+  var etc = Props.etc;
+  var dispatch = Props.dispatch;
+  var isMutating = Props.isMutating;
+  var updateItem = Props.updateItem;
+  var itemId = Props.itemId;
+  var requestId = Props.requestId;
   var match = use$1(undefined);
   var isValidItem = checkValidEtc(etc);
   var trackData = function (param) {
@@ -1303,16 +1312,16 @@ function RfqApply_Steps_Buyer$Etc(props) {
               otherrequirements_skip: false
             }));
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("section", {
+  return React.createElement(React.Fragment, undefined, React.createElement("section", {
                   className: "pt-7"
-                }, React$1.createElement(DS_Title.Normal1.Root.make, {
-                      children: React$1.createElement(DS_Title.Normal1.TextGroup.make, {
+                }, React.createElement(DS_Title.Normal1.Root.make, {
+                      children: React.createElement(DS_Title.Normal1.TextGroup.make, {
                             title1: "기타 요청사항을",
                             title2: "남겨주세요"
                           })
-                    }), React$1.createElement("div", {
+                    }), React.createElement("div", {
                       className: "px-5"
-                    }, React$1.createElement(DS_Input.InputText1.make, {
+                    }, React.createElement(DS_Input.InputText1.make, {
                           type_: "text",
                           className: "mt-7",
                           placeholder: "예: 무항생제 찾습니다",
@@ -1326,13 +1335,13 @@ function RfqApply_Steps_Buyer$Etc(props) {
                             }),
                           autoFocus: true,
                           maxLength: 300
-                        }))), React$1.createElement(RfqApply_Steps_Buyer$FloatingButton, {
+                        }))), React.createElement(RfqApply_Steps_Buyer$FloatingButton, {
                   handleClickButton: (function (param) {
                       trackData(undefined);
                       Curry._2(updateItem, undefined, undefined);
                     }),
                   buttonText: match.isModify ? "저장" : "다음",
-                  disabled: !isValidItem || props.isMutating,
+                  disabled: !isValidItem || isMutating,
                   buttonType: /* Normal */1
                 }));
 }

@@ -29,12 +29,16 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
 }
 
-function Order_Admin_Seller$Item$Table(props) {
-  var onClickPacking = props.onClickPacking;
-  var onSubmitInvoice = props.onSubmitInvoice;
-  var invoice = props.invoice;
-  var courierCode = props.courierCode;
-  var order = props.order;
+function Order_Admin_Seller$Item$Table(Props) {
+  var order = Props.order;
+  var courierCode = Props.courierCode;
+  var setCourier = Props.setCourier;
+  var invoice = Props.invoice;
+  var onChangeInvoice = Props.onChangeInvoice;
+  var onSubmitInvoice = Props.onSubmitInvoice;
+  var check = Props.check;
+  var onCheckOrder = Props.onCheckOrder;
+  var onClickPacking = Props.onClickPacking;
   var match = React.useState(function () {
         return /* Hide */1;
       });
@@ -91,7 +95,7 @@ function Order_Admin_Seller$Item$Table(props) {
         var match$3 = order.invoice;
         tmp = React.createElement(React.Fragment, undefined, React.createElement(Select_Courier.make, {
                   courierCode: courierCode,
-                  setCourier: props.setCourier
+                  setCourier: setCourier
                 }), React.createElement("div", {
                   className: "flex mt-1"
                 }, React.createElement("label", {
@@ -101,8 +105,9 @@ function Order_Admin_Seller$Item$Table(props) {
                           name: "invoice-number",
                           placeholder: "송장번호입력",
                           value: Belt_Option.getWithDefault(invoice, ""),
-                          onChange: props.onChangeInvoice,
-                          size: /* Small */2
+                          onChange: onChangeInvoice,
+                          size: /* Small */2,
+                          error: undefined
                         })), React.createElement("label", undefined, match$3 !== undefined ? React.createElement("button", {
                             className: "py-1 px-2 rounded-md bg-gray-300 text-white ml-1 whitespace-nowrap",
                             type: "button",
@@ -130,8 +135,8 @@ function Order_Admin_Seller$Item$Table(props) {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement(Checkbox.make, {
                           id: "checkbox-" + order.orderProductNo + "",
-                          checked: Curry._1(props.check, order.orderProductNo),
-                          onChange: Curry._1(props.onCheckOrder, order.orderProductNo),
+                          checked: Curry._1(check, order.orderProductNo),
+                          onChange: Curry._1(onCheckOrder, order.orderProductNo),
                           disabled: isDisabedCheckbox
                         })), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
@@ -216,7 +221,7 @@ var Table = {
   make: Order_Admin_Seller$Item$Table
 };
 
-function Order_Admin_Seller$Item$Loading(props) {
+function Order_Admin_Seller$Item$Loading(Props) {
   return React.createElement("li", {
               className: "grid grid-cols-12-gl-admin text-gray-700"
             }, React.createElement("div", {
@@ -273,8 +278,11 @@ var Item = {
   Loading: Loading
 };
 
-function Order_Admin_Seller(props) {
-  var order = props.order;
+function Order_Admin_Seller(Props) {
+  var order = Props.order;
+  var check = Props.check;
+  var onCheckOrder = Props.onCheckOrder;
+  var onClickPacking = Props.onClickPacking;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -329,9 +337,9 @@ function Order_Admin_Seller(props) {
                   invoice: invoice,
                   onChangeInvoice: match$2[1],
                   onSubmitInvoice: postCourierInvoiceNo,
-                  check: props.check,
-                  onCheckOrder: props.onCheckOrder,
-                  onClickPacking: props.onClickPacking
+                  check: check,
+                  onCheckOrder: onCheckOrder,
+                  onClickPacking: onClickPacking
                 }), React.createElement(Dialog.make, {
                   isShow: match$4[0],
                   children: React.createElement("p", {

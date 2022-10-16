@@ -40,8 +40,12 @@ function stringifyPackageUnit(s) {
   }
 }
 
-function Input_Select_BulkSale_ProductQuantity(props) {
-  var quantityUnit = props.quantityUnit;
+function Input_Select_BulkSale_ProductQuantity(Props) {
+  var quantityAmount = Props.quantityAmount;
+  var quantityUnit = Props.quantityUnit;
+  var onChangeAmount = Props.onChangeAmount;
+  var onChangeUnit = Props.onChangeUnit;
+  var error = Props.error;
   return React.createElement("div", {
               className: "flex-1 flex gap-2 mt-2"
             }, React.createElement(Input.make, {
@@ -49,10 +53,10 @@ function Input_Select_BulkSale_ProductQuantity(props) {
                   name: "product-package-amount",
                   placeholder: "0",
                   className: "flex-1 h-9",
-                  value: Belt_Option.getWithDefault(props.quantityAmount, ""),
-                  onChange: props.onChangeAmount,
+                  value: Belt_Option.getWithDefault(quantityAmount, ""),
+                  onChange: onChangeAmount,
                   size: /* Small */2,
-                  error: props.error,
+                  error: error,
                   textAlign: /* Right */2
                 }), React.createElement("label", {
                   className: "w-24 relative"
@@ -67,7 +71,7 @@ function Input_Select_BulkSale_ProductQuantity(props) {
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
                       value: stringifyPackageUnit(quantityUnit),
-                      onChange: props.onChangeUnit
+                      onChange: onChangeUnit
                     }, Belt_Array.map([
                           "KG",
                           "G",

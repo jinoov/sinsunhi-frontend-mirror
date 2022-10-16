@@ -143,9 +143,11 @@ var Form = {
   }
 };
 
-function Product_Detail_Basic_Admin$SelectProducerInput(props) {
-  var disabled = props.disabled;
-  var disabled$1 = disabled !== undefined ? disabled : false;
+function Product_Detail_Basic_Admin$SelectProducerInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabledOpt = Props.disabled;
+  var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -174,8 +176,8 @@ function Product_Detail_Basic_Admin$SelectProducerInput(props) {
                 }, React.createElement("div", {
                       className: "absolute w-full"
                     }, React.createElement(ReactHookForm$1.Controller, {
-                          name: props.name,
-                          control: Caml_option.some(match.control),
+                          name: name,
+                          control: match.control,
                           render: (function (param) {
                               var match = param.field;
                               var onChange = match.onChange;
@@ -192,7 +194,7 @@ function Product_Detail_Basic_Admin$SelectProducerInput(props) {
                                                   return "검색 결과가 없습니다.";
                                                 }),
                                               isClearable: true,
-                                              isDisabled: disabled$1,
+                                              isDisabled: disabled,
                                               styles: {
                                                 menu: (function (provide, param) {
                                                     return Object.assign(Object.assign({}, provide), {
@@ -206,11 +208,11 @@ function Product_Detail_Basic_Admin$SelectProducerInput(props) {
                                                               });
                                                   })
                                               },
-                                              ref: Caml_option.some(match.ref)
+                                              ref: match.ref
                                             }));
                             }),
-                          defaultValue: Caml_option.some(Belt_Option.mapWithDefault(props.defaultValue, null, ReactSelect.encoderRule)),
-                          rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
+                          defaultValue: Belt_Option.mapWithDefault(defaultValue, null, ReactSelect.encoderRule),
+                          rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                         }))), React.createElement(ErrorMessage.ErrorMessage, {
                   name: "producer-name",
                   errors: match.formState.errors,
@@ -231,9 +233,11 @@ var SelectProducerInput = {
   make: Product_Detail_Basic_Admin$SelectProducerInput
 };
 
-function Product_Detail_Basic_Admin$DisplayPriceInput(props) {
-  var disabled = props.disabled;
-  var disabled$1 = disabled !== undefined ? disabled : false;
+function Product_Detail_Basic_Admin$DisplayPriceInput(Props) {
+  var name = Props.name;
+  var defaultValue = Props.defaultValue;
+  var disabledOpt = Props.disabled;
+  var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -263,17 +267,17 @@ function Product_Detail_Basic_Admin$DisplayPriceInput(props) {
                     }, "전시매장 노출 기준가격"), React.createElement("span", {
                       className: "text-notice"
                     }, "*")), React.createElement(ReactHookForm$1.Controller, {
-                  name: props.name,
-                  control: Caml_option.some(match.control),
+                  name: name,
+                  control: match.control,
                   render: (function (param) {
                       var match = param.field;
                       var onChange = match.onChange;
                       var func = Locale.Float.show;
                       return React.createElement("input", {
                                   ref: match.ref,
-                                  className: getTextInputStyle(disabled$1),
+                                  className: getTextInputStyle(disabled),
                                   id: match.name,
-                                  disabled: disabled$1,
+                                  disabled: disabled,
                                   placeholder: "가격 입력(단위 원)",
                                   type: "text",
                                   value: Belt_Option.mapWithDefault(Js_json.decodeNumber(match.value), "", (function (eta) {
@@ -288,8 +292,8 @@ function Product_Detail_Basic_Admin$DisplayPriceInput(props) {
                                     })
                                 });
                     }),
-                  defaultValue: Caml_option.some(Belt_Option.mapWithDefault(props.defaultValue, "", valueEncode)),
-                  rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
+                  defaultValue: Belt_Option.mapWithDefault(defaultValue, "", valueEncode),
+                  rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                 }), React.createElement(ErrorMessage.ErrorMessage, {
                   name: "base-price",
                   errors: match.formState.errors,
@@ -310,8 +314,8 @@ var DisplayPriceInput = {
   make: Product_Detail_Basic_Admin$DisplayPriceInput
 };
 
-function Product_Detail_Basic_Admin$ReadOnlyProductId(props) {
-  var productId = props.productId;
+function Product_Detail_Basic_Admin$ReadOnlyProductId(Props) {
+  var productId = Props.productId;
   return React.createElement("div", {
               className: "flex flex-col gap-2"
             }, React.createElement("div", undefined, React.createElement("span", {
@@ -329,29 +333,38 @@ var ReadOnlyProductId = {
   make: Product_Detail_Basic_Admin$ReadOnlyProductId
 };
 
-function Product_Detail_Basic_Admin(props) {
-  var allFieldsDisabled = props.allFieldsDisabled;
-  var deliveryDisabled = props.deliveryDisabled;
-  var originDisabled = props.originDisabled;
-  var operationStatusDisalbed = props.operationStatusDisalbed;
-  var basePriceDisabled = props.basePriceDisabled;
-  var buyerProductNameDisabled = props.buyerProductNameDisabled;
-  var producerProductNameDisabled = props.producerProductNameDisabled;
-  var displayCategoriesDisabled = props.displayCategoriesDisabled;
-  var vatDisabled = props.vatDisabled;
-  var productCategoryDisabled = props.productCategoryDisabled;
-  var producerNameDisabled = props.producerNameDisabled;
-  var allFieldsDisabled$1 = allFieldsDisabled !== undefined ? allFieldsDisabled : false;
-  var deliveryDisabled$1 = deliveryDisabled !== undefined ? deliveryDisabled : false;
-  var originDisabled$1 = originDisabled !== undefined ? originDisabled : false;
-  var operationStatusDisalbed$1 = operationStatusDisalbed !== undefined ? operationStatusDisalbed : false;
-  var basePriceDisabled$1 = basePriceDisabled !== undefined ? basePriceDisabled : false;
-  var buyerProductNameDisabled$1 = buyerProductNameDisabled !== undefined ? buyerProductNameDisabled : false;
-  var producerProductNameDisabled$1 = producerProductNameDisabled !== undefined ? producerProductNameDisabled : false;
-  var displayCategoriesDisabled$1 = displayCategoriesDisabled !== undefined ? displayCategoriesDisabled : false;
-  var vatDisabled$1 = vatDisabled !== undefined ? vatDisabled : false;
-  var productCategoryDisabled$1 = productCategoryDisabled !== undefined ? productCategoryDisabled : false;
-  var producerNameDisabled$1 = producerNameDisabled !== undefined ? producerNameDisabled : false;
+function Product_Detail_Basic_Admin(Props) {
+  var productId = Props.productId;
+  var defaultProducer = Props.defaultProducer;
+  var defaultProducerName = Props.defaultProducerName;
+  var defaultBuyerName = Props.defaultBuyerName;
+  var defaultBasePrice = Props.defaultBasePrice;
+  var defaultOperationstatus = Props.defaultOperationstatus;
+  var defaultOrigin = Props.defaultOrigin;
+  var defaultDeliveryMethod = Props.defaultDeliveryMethod;
+  var defaultIsVat = Props.defaultIsVat;
+  var producerNameDisabledOpt = Props.producerNameDisabled;
+  var productCategoryDisabledOpt = Props.productCategoryDisabled;
+  var vatDisabledOpt = Props.vatDisabled;
+  var displayCategoriesDisabledOpt = Props.displayCategoriesDisabled;
+  var producerProductNameDisabledOpt = Props.producerProductNameDisabled;
+  var buyerProductNameDisabledOpt = Props.buyerProductNameDisabled;
+  var basePriceDisabledOpt = Props.basePriceDisabled;
+  var operationStatusDisalbedOpt = Props.operationStatusDisalbed;
+  var originDisabledOpt = Props.originDisabled;
+  var deliveryDisabledOpt = Props.deliveryDisabled;
+  var allFieldsDisabledOpt = Props.allFieldsDisabled;
+  var producerNameDisabled = producerNameDisabledOpt !== undefined ? producerNameDisabledOpt : false;
+  var productCategoryDisabled = productCategoryDisabledOpt !== undefined ? productCategoryDisabledOpt : false;
+  var vatDisabled = vatDisabledOpt !== undefined ? vatDisabledOpt : false;
+  var displayCategoriesDisabled = displayCategoriesDisabledOpt !== undefined ? displayCategoriesDisabledOpt : false;
+  var producerProductNameDisabled = producerProductNameDisabledOpt !== undefined ? producerProductNameDisabledOpt : false;
+  var buyerProductNameDisabled = buyerProductNameDisabledOpt !== undefined ? buyerProductNameDisabledOpt : false;
+  var basePriceDisabled = basePriceDisabledOpt !== undefined ? basePriceDisabledOpt : false;
+  var operationStatusDisalbed = operationStatusDisalbedOpt !== undefined ? operationStatusDisalbedOpt : false;
+  var originDisabled = originDisabledOpt !== undefined ? originDisabledOpt : false;
+  var deliveryDisabled = deliveryDisabledOpt !== undefined ? deliveryDisabledOpt : false;
+  var allFieldsDisabled = allFieldsDisabledOpt !== undefined ? allFieldsDisabledOpt : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
@@ -372,6 +385,120 @@ function Product_Detail_Basic_Admin(props) {
         maxLength: 100
       });
   var productOrigin = register("origin", undefined);
+  var tmp = {
+    name: "product-operation-status",
+    control: control,
+    render: (function (param) {
+        var match = param.field;
+        var onChange = match.onChange;
+        return React.createElement("div", undefined, React.createElement(Select_Product_Operation_Status.Base.make, {
+                        status: Belt_Result.mapWithDefault(Select_Product_Operation_Status.Base.status_decode(match.value), undefined, (function (status) {
+                                return status;
+                              })),
+                        onChange: (function (param) {
+                            if (param !== 2) {
+                              return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Operation_Status.Base.status_encode(param)));
+                            } else {
+                              return setShowProductOperationNoSale(function (param) {
+                                          return /* Show */0;
+                                        });
+                            }
+                          }),
+                        forwardRef: match.ref,
+                        disabled: allFieldsDisabled || operationStatusDisalbed
+                      }), React.createElement(ErrorMessage.ErrorMessage, {
+                        name: "product-operation-status",
+                        errors: errors,
+                        render: (function (param) {
+                            return React.createElement("span", {
+                                        className: "flex"
+                                      }, React.createElement(IconError.make, {
+                                            width: "20",
+                                            height: "20"
+                                          }), React.createElement("span", {
+                                            className: "text-sm text-notice ml-1"
+                                          }, "운영상태를 선택해주세요."));
+                          })
+                      }));
+      }),
+    rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+  };
+  var tmp$1 = Belt_Option.map(defaultOperationstatus, Select_Product_Operation_Status.Base.status_encode);
+  if (tmp$1 !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(tmp$1);
+  }
+  var tmp$2 = {
+    name: "product-tax",
+    control: control,
+    render: (function (param) {
+        var match = param.field;
+        var onChange = match.onChange;
+        return React.createElement("div", undefined, React.createElement(Select_Tax_Status.make, {
+                        status: Belt_Result.mapWithDefault(Select_Tax_Status.status_decode(match.value), undefined, (function (status) {
+                                return status;
+                              })),
+                        onChange: (function (e) {
+                            Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
+                          }),
+                        forwardRef: match.ref,
+                        disabled: allFieldsDisabled || vatDisabled
+                      }), React.createElement(ErrorMessage.ErrorMessage, {
+                        name: "product-tax",
+                        errors: errors,
+                        render: (function (param) {
+                            return React.createElement("span", {
+                                        className: "flex"
+                                      }, React.createElement(IconError.make, {
+                                            width: "20",
+                                            height: "20"
+                                          }), React.createElement("span", {
+                                            className: "text-sm text-notice ml-1"
+                                          }, "과면세여부를 선택해주세요."));
+                          })
+                      }));
+      }),
+    rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+  };
+  var tmp$3 = Belt_Option.map(defaultIsVat, Select_Tax_Status.status_encode);
+  if (tmp$3 !== undefined) {
+    tmp$2.defaultValue = Caml_option.valFromOption(tmp$3);
+  }
+  var tmp$4 = {
+    name: "product-delivery",
+    control: control,
+    render: (function (param) {
+        var match = param.field;
+        var onChange = match.onChange;
+        return React.createElement("div", undefined, React.createElement(Select_Delivery.make, {
+                        status: Belt_Result.mapWithDefault(Select_Delivery.status_decode(match.value), undefined, (function (status) {
+                                return status;
+                              })),
+                        onChange: (function (e) {
+                            Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
+                          }),
+                        forwardRef: match.ref,
+                        disabled: allFieldsDisabled || deliveryDisabled
+                      }), React.createElement(ErrorMessage.ErrorMessage, {
+                        name: "product-delivery",
+                        errors: errors,
+                        render: (function (param) {
+                            return React.createElement("span", {
+                                        className: "flex"
+                                      }, React.createElement(IconError.make, {
+                                            width: "20",
+                                            height: "20"
+                                          }), React.createElement("span", {
+                                            className: "text-sm text-notice ml-1"
+                                          }, "택배가능여부를 선택해주세요."));
+                          })
+                      }));
+      }),
+    rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+  };
+  var tmp$5 = Belt_Option.map(defaultDeliveryMethod, Select_Delivery.status_encode);
+  if (tmp$5 !== undefined) {
+    tmp$4.defaultValue = Caml_option.valFromOption(tmp$5);
+  }
   return React.createElement(React.Fragment, undefined, React.createElement("div", undefined, React.createElement("h2", {
                       className: "text-text-L1 text-lg font-bold"
                     }, "기본정보"), React.createElement("div", {
@@ -386,8 +513,8 @@ function Product_Detail_Basic_Admin(props) {
                                       className: "text-notice"
                                     }, "*"))), React.createElement(Product_Detail_Basic_Admin$SelectProducerInput, {
                               name: "producer-name",
-                              defaultValue: props.defaultProducer,
-                              disabled: allFieldsDisabled$1 || producerNameDisabled$1
+                              defaultValue: defaultProducer,
+                              disabled: allFieldsDisabled || producerNameDisabled
                             }), React.createElement("div", {
                               className: "flex flex-col gap-2"
                             }, React.createElement("div", undefined, React.createElement("span", {
@@ -397,7 +524,7 @@ function Product_Detail_Basic_Admin(props) {
                                     }, "*")), React.createElement(Select_Product_Categories.make, {
                                   control: control,
                                   name: "product-category",
-                                  disabled: allFieldsDisabled$1 || productCategoryDisabled$1
+                                  disabled: allFieldsDisabled || productCategoryDisabled
                                 })), React.createElement("div", {
                               className: "flex flex-col gap-2"
                             }, React.createElement("div", undefined, React.createElement("span", {
@@ -407,7 +534,7 @@ function Product_Detail_Basic_Admin(props) {
                                     }, "*")), React.createElement(Product_Detail_Display_Categories.make, {
                                   control: control,
                                   name: "display-categories",
-                                  disabled: allFieldsDisabled$1 || displayCategoriesDisabled$1
+                                  disabled: allFieldsDisabled || displayCategoriesDisabled
                                 }), React.createElement("div", undefined))), React.createElement("div", {
                           className: "py-6 flex flex-col space-y-6"
                         }, React.createElement("div", {
@@ -421,10 +548,10 @@ function Product_Detail_Basic_Admin(props) {
                                       className: "text-notice"
                                     }, "*")), React.createElement("div", undefined, React.createElement("input", {
                                       ref: producerProductName.ref,
-                                      defaultValue: Belt_Option.getWithDefault(props.defaultProducerName, ""),
-                                      className: getTextInputStyle(allFieldsDisabled$1 || producerProductNameDisabled$1),
+                                      defaultValue: Belt_Option.getWithDefault(defaultProducerName, ""),
+                                      className: getTextInputStyle(allFieldsDisabled || producerProductNameDisabled),
                                       id: producerProductName.name,
-                                      disabled: allFieldsDisabled$1 || producerProductNameDisabled$1,
+                                      disabled: allFieldsDisabled || producerProductNameDisabled,
                                       name: producerProductName.name,
                                       placeholder: "생산자용 상품명 입력(최대 100자)",
                                       onBlur: producerProductName.onBlur,
@@ -453,10 +580,10 @@ function Product_Detail_Basic_Admin(props) {
                                       className: "text-notice"
                                     }, "*")), React.createElement("input", {
                                   ref: buyerProductName.ref,
-                                  defaultValue: Belt_Option.getWithDefault(props.defaultBuyerName, ""),
-                                  className: getTextInputStyle(allFieldsDisabled$1 || buyerProductNameDisabled$1),
+                                  defaultValue: Belt_Option.getWithDefault(defaultBuyerName, ""),
+                                  className: getTextInputStyle(allFieldsDisabled || buyerProductNameDisabled),
                                   id: buyerProductName.name,
-                                  disabled: allFieldsDisabled$1 || buyerProductNameDisabled$1,
+                                  disabled: allFieldsDisabled || buyerProductNameDisabled,
                                   name: buyerProductName.name,
                                   placeholder: "바이어용 상품명 입력, 상품매장에 노출됨(최대 100자)",
                                   onBlur: buyerProductName.onBlur,
@@ -475,11 +602,11 @@ function Product_Detail_Basic_Admin(props) {
                                                     }, "바이어용 상품명을 입력해주세요.(최대100자)"));
                                     })
                                 })), React.createElement(Product_Detail_Basic_Admin$ReadOnlyProductId, {
-                              productId: props.productId
+                              productId: productId
                             }), React.createElement(Product_Detail_Basic_Admin$DisplayPriceInput, {
                               name: "base-price",
-                              defaultValue: props.defaultBasePrice,
-                              disabled: allFieldsDisabled$1 || basePriceDisabled$1
+                              defaultValue: defaultBasePrice,
+                              disabled: allFieldsDisabled || basePriceDisabled
                             })), React.createElement("div", {
                           className: "py-6 flex flex-col space-y-6"
                         }, React.createElement("div", {
@@ -490,45 +617,7 @@ function Product_Detail_Basic_Admin(props) {
                                           className: "font-bold"
                                         }, "운영상태"), React.createElement("span", {
                                           className: "text-notice"
-                                        }, "*")), React.createElement(ReactHookForm$1.Controller, {
-                                      name: "product-operation-status",
-                                      control: Caml_option.some(control),
-                                      render: (function (param) {
-                                          var match = param.field;
-                                          var onChange = match.onChange;
-                                          return React.createElement("div", undefined, React.createElement(Select_Product_Operation_Status.Base.make, {
-                                                          status: Belt_Result.mapWithDefault(Select_Product_Operation_Status.Base.status_decode(match.value), undefined, (function (status) {
-                                                                  return status;
-                                                                })),
-                                                          onChange: (function (param) {
-                                                              if (param !== 2) {
-                                                                return Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Select_Product_Operation_Status.Base.status_encode(param)));
-                                                              } else {
-                                                                return setShowProductOperationNoSale(function (param) {
-                                                                            return /* Show */0;
-                                                                          });
-                                                              }
-                                                            }),
-                                                          forwardRef: match.ref,
-                                                          disabled: allFieldsDisabled$1 || operationStatusDisalbed$1
-                                                        }), React.createElement(ErrorMessage.ErrorMessage, {
-                                                          name: "product-operation-status",
-                                                          errors: errors,
-                                                          render: (function (param) {
-                                                              return React.createElement("span", {
-                                                                          className: "flex"
-                                                                        }, React.createElement(IconError.make, {
-                                                                              width: "20",
-                                                                              height: "20"
-                                                                            }), React.createElement("span", {
-                                                                              className: "text-sm text-notice ml-1"
-                                                                            }, "운영상태를 선택해주세요."));
-                                                            })
-                                                        }));
-                                        }),
-                                      defaultValue: Belt_Option.map(props.defaultOperationstatus, Select_Product_Operation_Status.Base.status_encode),
-                                      rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
-                                    })), React.createElement("div", {
+                                        }, "*")), React.createElement(ReactHookForm$1.Controller, tmp)), React.createElement("div", {
                                   className: "flex flex-col gap-2 max-w-md w-1/3"
                                 }, React.createElement("label", {
                                       className: "block",
@@ -537,10 +626,10 @@ function Product_Detail_Basic_Admin(props) {
                                           className: "font-bold"
                                         }, "원산지")), React.createElement("input", {
                                       ref: productOrigin.ref,
-                                      defaultValue: Belt_Option.getWithDefault(props.defaultOrigin, ""),
-                                      className: getTextInputStyle(allFieldsDisabled$1 || originDisabled$1),
+                                      defaultValue: Belt_Option.getWithDefault(defaultOrigin, ""),
+                                      className: getTextInputStyle(allFieldsDisabled || originDisabled),
                                       id: productOrigin.name,
-                                      disabled: allFieldsDisabled$1 || originDisabled$1,
+                                      disabled: allFieldsDisabled || originDisabled,
                                       name: productOrigin.name,
                                       placeholder: "원산지 입력(선택사항)",
                                       onBlur: productOrigin.onBlur,
@@ -555,77 +644,13 @@ function Product_Detail_Basic_Admin(props) {
                                               className: "font-bold"
                                             }, "과세여부"), React.createElement("span", {
                                               className: "text-notice"
-                                            }, "*")), React.createElement(ReactHookForm$1.Controller, {
-                                          name: "product-tax",
-                                          control: Caml_option.some(control),
-                                          render: (function (param) {
-                                              var match = param.field;
-                                              var onChange = match.onChange;
-                                              return React.createElement("div", undefined, React.createElement(Select_Tax_Status.make, {
-                                                              status: Belt_Result.mapWithDefault(Select_Tax_Status.status_decode(match.value), undefined, (function (status) {
-                                                                      return status;
-                                                                    })),
-                                                              onChange: (function (e) {
-                                                                  Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
-                                                                }),
-                                                              forwardRef: Caml_option.some(match.ref),
-                                                              disabled: allFieldsDisabled$1 || vatDisabled$1
-                                                            }), React.createElement(ErrorMessage.ErrorMessage, {
-                                                              name: "product-tax",
-                                                              errors: errors,
-                                                              render: (function (param) {
-                                                                  return React.createElement("span", {
-                                                                              className: "flex"
-                                                                            }, React.createElement(IconError.make, {
-                                                                                  width: "20",
-                                                                                  height: "20"
-                                                                                }), React.createElement("span", {
-                                                                                  className: "text-sm text-notice ml-1"
-                                                                                }, "과면세여부를 선택해주세요."));
-                                                                })
-                                                            }));
-                                            }),
-                                          defaultValue: Belt_Option.map(props.defaultIsVat, Select_Tax_Status.status_encode),
-                                          rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
-                                        })), React.createElement("div", {
+                                            }, "*")), React.createElement(ReactHookForm$1.Controller, tmp$2)), React.createElement("div", {
                                       className: "flex flex-col gap-2 max-w-md w-1/3"
                                     }, React.createElement("div", undefined, React.createElement("span", {
                                               className: "font-bold"
                                             }, "택배가능여부"), React.createElement("span", {
                                               className: "text-notice"
-                                            }, "*")), React.createElement(ReactHookForm$1.Controller, {
-                                          name: "product-delivery",
-                                          control: Caml_option.some(control),
-                                          render: (function (param) {
-                                              var match = param.field;
-                                              var onChange = match.onChange;
-                                              return React.createElement("div", undefined, React.createElement(Select_Delivery.make, {
-                                                              status: Belt_Result.mapWithDefault(Select_Delivery.status_decode(match.value), undefined, (function (status) {
-                                                                      return status;
-                                                                    })),
-                                                              onChange: (function (e) {
-                                                                  Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.$$event, e));
-                                                                }),
-                                                              forwardRef: match.ref,
-                                                              disabled: allFieldsDisabled$1 || deliveryDisabled$1
-                                                            }), React.createElement(ErrorMessage.ErrorMessage, {
-                                                              name: "product-delivery",
-                                                              errors: errors,
-                                                              render: (function (param) {
-                                                                  return React.createElement("span", {
-                                                                              className: "flex"
-                                                                            }, React.createElement(IconError.make, {
-                                                                                  width: "20",
-                                                                                  height: "20"
-                                                                                }), React.createElement("span", {
-                                                                                  className: "text-sm text-notice ml-1"
-                                                                                }, "택배가능여부를 선택해주세요."));
-                                                                })
-                                                            }));
-                                            }),
-                                          defaultValue: Belt_Option.map(props.defaultDeliveryMethod, Select_Delivery.status_encode),
-                                          rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined))
-                                        }))))))), React.createElement(Dialog.make, {
+                                            }, "*")), React.createElement(ReactHookForm$1.Controller, tmp$4))))))), React.createElement(Dialog.make, {
                   isShow: match$1[0],
                   children: React.createElement("p", undefined, "영구판매중지 상태를 선택 후 저장하시면", React.createElement("br", undefined), "추후 해당 상품을 수정할 수 없습니다.", React.createElement("br", undefined), React.createElement("br", undefined), "영구판매중지 상태로 변경할까요?"),
                   onCancel: (function (param) {

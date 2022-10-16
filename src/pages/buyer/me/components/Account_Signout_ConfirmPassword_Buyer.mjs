@@ -21,10 +21,11 @@ function checkPasswordRequest(successFn, failedFn, password) {
         }));
 }
 
-function Account_Signout_ConfirmPassword_Buyer$PC(props) {
-  var setPassword = props.setPassword;
-  var password = props.password;
-  var nextStep = props.nextStep;
+function Account_Signout_ConfirmPassword_Buyer$PC(Props) {
+  var email = Props.email;
+  var nextStep = Props.nextStep;
+  var password = Props.password;
+  var setPassword = Props.setPassword;
   var match = React.useState(function () {
         return false;
       });
@@ -74,7 +75,7 @@ function Account_Signout_ConfirmPassword_Buyer$PC(props) {
                               className: "font-bold"
                             }, "이메일")), React.createElement("div", {
                           className: "border border-border-default-L1 bg-disabled-L3 rounded-xl p-3"
-                        }, props.email)), React.createElement("form", {
+                        }, email)), React.createElement("form", {
                       onSubmit: handleNext
                     }, React.createElement("div", {
                           className: "flex flex-col mb-10"
@@ -116,10 +117,11 @@ var PC = {
   make: Account_Signout_ConfirmPassword_Buyer$PC
 };
 
-function Account_Signout_ConfirmPassword_Buyer$Mobile(props) {
-  var setPassword = props.setPassword;
-  var password = props.password;
-  var nextStep = props.nextStep;
+function Account_Signout_ConfirmPassword_Buyer$Mobile(Props) {
+  var email = Props.email;
+  var nextStep = Props.nextStep;
+  var password = Props.password;
+  var setPassword = Props.setPassword;
   var match = React.useState(function () {
         return false;
       });
@@ -173,7 +175,7 @@ function Account_Signout_ConfirmPassword_Buyer$Mobile(props) {
                                   className: "font-bold"
                                 }, "이메일")), React.createElement("div", {
                               className: "border border-border-default-L1 bg-disabled-L3 rounded-xl p-3"
-                            }, props.email)), React.createElement("div", {
+                            }, email)), React.createElement("div", {
                           className: "flex flex-col mb-10"
                         }, React.createElement("div", {
                               className: "mb-2"

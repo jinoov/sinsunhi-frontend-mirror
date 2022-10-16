@@ -330,13 +330,16 @@ function getRouterQuery(router) {
         ];
 }
 
-function BulkSale_Producers_Admin$List(props) {
+function BulkSale_Producers_Admin$List(Props) {
+  var query = Props.query;
+  var refetchSummary = Props.refetchSummary;
+  var statistics = Props.statistics;
   return React.createElement("div", {
               className: "p-7 m-4 shadow-gl overflow-auto overflow-x-scroll bg-white rounded"
             }, React.createElement(BulkSale_Producers_List_Admin.make, {
-                  query: props.query,
-                  refetchSummary: props.refetchSummary,
-                  statistics: props.statistics
+                  query: query,
+                  refetchSummary: refetchSummary,
+                  statistics: statistics
                 }));
 }
 
@@ -344,8 +347,8 @@ var List = {
   make: BulkSale_Producers_Admin$List
 };
 
-function BulkSale_Producers_Admin$SummaryAndList(props) {
-  var query = props.query;
+function BulkSale_Producers_Admin$SummaryAndList(Props) {
+  var query = Props.query;
   var router = Router.useRouter();
   var match = useRefetchable(query);
   var refetchTotal = match[1];
@@ -392,7 +395,7 @@ var SummaryAndList = {
   make: BulkSale_Producers_Admin$SummaryAndList
 };
 
-function BulkSale_Producers_Admin$Skeleton(props) {
+function BulkSale_Producers_Admin$Skeleton(Props) {
   return React.createElement("div", {
               className: "max-w-gnb-panel overflow-auto overflow-x-scroll bg-div-shape-L1 min-h-gnb-admin"
             }, React.createElement("header", {
@@ -408,7 +411,7 @@ var Skeleton = {
   make: BulkSale_Producers_Admin$Skeleton
 };
 
-function BulkSale_Producers_Admin$Producers(props) {
+function BulkSale_Producers_Admin$Producers(Props) {
   var router = Router.useRouter();
   var match = getRouterQuery(router);
   var searchInput_applicantNameMatch = match[1];
@@ -450,14 +453,14 @@ var Producers = {
   make: BulkSale_Producers_Admin$Producers
 };
 
-function BulkSale_Producers_Admin(props) {
+function BulkSale_Producers_Admin(Props) {
   return React.createElement(Authorization.Admin.make, {
               children: React.createElement(RescriptRelay.Context.Provider.make, {
                     environment: RelayEnv.envFMBridge,
                     children: React.createElement(RescriptReactErrorBoundary.make, {
                           children: React.createElement(React.Suspense, {
-                                children: Caml_option.some(React.createElement(BulkSale_Producers_Admin$Producers, {})),
-                                fallback: Caml_option.some(React.createElement(BulkSale_Producers_Admin$Skeleton, {}))
+                                children: React.createElement(BulkSale_Producers_Admin$Producers, {}),
+                                fallback: React.createElement(BulkSale_Producers_Admin$Skeleton, {})
                               }),
                           fallback: (function (param) {
                               return React.createElement("div", undefined, "에러 발생");

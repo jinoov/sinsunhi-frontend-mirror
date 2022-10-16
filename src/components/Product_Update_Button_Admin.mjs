@@ -37,8 +37,8 @@ var checkboxUncheckedIcon = CheckboxUncheckedSvg;
 
 var editIcon = EditSvg;
 
-function Product_Update_Button_Admin$CutOffAndMemo(props) {
-  var product = props.product;
+function Product_Update_Button_Admin$CutOffAndMemo(Props) {
+  var product = Props.product;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -154,7 +154,8 @@ function Product_Update_Button_Admin$CutOffAndMemo(props) {
                                     value: Belt_Option.getWithDefault(cutOffTime, ""),
                                     onChange: (function (param) {
                                         return handleOnChange(setCutOffTime, param);
-                                      })
+                                      }),
+                                    error: undefined
                                   }))), React.createElement("section", {
                             className: "mt-5"
                           }, React.createElement("h3", undefined, "메모"), React.createElement("div", {
@@ -167,6 +168,7 @@ function Product_Update_Button_Admin$CutOffAndMemo(props) {
                                     onChange: (function (param) {
                                         return handleOnChange(setMemo, param);
                                       }),
+                                    error: undefined,
                                     rows: 4,
                                     maxLength: 200
                                   }))), React.createElement("section", {
@@ -204,8 +206,8 @@ var CutOffAndMemo = {
   make: Product_Update_Button_Admin$CutOffAndMemo
 };
 
-function Product_Update_Button_Admin$Crop(props) {
-  var product = props.product;
+function Product_Update_Button_Admin$Crop(Props) {
+  var product = Props.product;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
@@ -328,8 +330,8 @@ var Crop = {
   make: Product_Update_Button_Admin$Crop
 };
 
-function Product_Update_Button_Admin$Detail(props) {
-  var product = props.product;
+function Product_Update_Button_Admin$Detail(Props) {
+  var product = Props.product;
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;

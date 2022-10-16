@@ -3,8 +3,7 @@
 import * as V from "../utils/V.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Input from "./common/Input.mjs";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as IconCheck from "./svgs/IconCheck.mjs";
 import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
@@ -56,7 +55,7 @@ function use(param) {
   var match = ReactRelay.useMutation(BulkSaleProductSaleLedgersButtonCreateAdminMutation_graphql.node);
   var mutate = match[0];
   return [
-          React$1.useMemo((function () {
+          React.useMemo((function () {
                   return function (param, param$1, param$2, param$3, param$4, param$5, param$6, param$7, param$8) {
                     return Curry._1(mutate, {
                                 onError: param,
@@ -91,8 +90,9 @@ var MutationCreate = {
   use: use
 };
 
-function BulkSale_ProductSaleLedgers_Button_Create_Admin$LedgerFile(props) {
-  var status = CustomHooks.BulkSaleLedger.use(props.path);
+function BulkSale_ProductSaleLedgers_Button_Create_Admin$LedgerFile(Props) {
+  var path = Props.path;
+  var status = CustomHooks.BulkSaleLedger.use(path);
   var match;
   if (typeof status === "number") {
     match = [
@@ -119,17 +119,17 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin$LedgerFile(props) {
       "에러 발생"
     ];
   }
-  return React$1.createElement("span", {
+  return React.createElement("span", {
               className: "w-full inline-flex justify-center items-center border border-border-default-L1 rounded-lg p-2 mt-2 text-sm text-text-L1 bg-white"
-            }, React$1.createElement("a", {
+            }, React.createElement("a", {
                   className: "mr-1",
                   download: "",
                   href: Belt_Option.getWithDefault(match[0], "#")
-                }, React$1.createElement(IconDownloadCenter.make, {
+                }, React.createElement(IconDownloadCenter.make, {
                       width: "20",
                       height: "20",
                       fill: "#262626"
-                    })), React$1.createElement("span", {
+                    })), React.createElement("span", {
                   className: "truncate"
                 }, match[1]));
 }
@@ -160,40 +160,40 @@ function makeEntryInputCreate(grade, price, amount, unit, volume) {
         };
 }
 
-function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
-  var applicationId = props.applicationId;
-  var farmmorningUserId = props.farmmorningUserId;
-  var connectionId = props.connectionId;
+function BulkSale_ProductSaleLedgers_Button_Create_Admin(Props) {
+  var connectionId = Props.connectionId;
+  var farmmorningUserId = Props.farmmorningUserId;
+  var applicationId = Props.applicationId;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
   var isMutating = match$1[1];
   var mutate = match$1[0];
-  var match$2 = React$1.useState(function () {
+  var match$2 = React.useState(function () {
         
       });
   var setFiles = match$2[1];
-  var match$3 = React$1.useState(function () {
+  var match$3 = React.useState(function () {
         
       });
   var setPath = match$3[1];
   var path = match$3[0];
   var file = Belt_Option.flatMap(match$2[0], Garter_Array.first);
-  var match$4 = React$1.useState(function () {
+  var match$4 = React.useState(function () {
         return Format(new Date(), "yyyy-MM-dd");
       });
   var setDate = match$4[1];
   var date = match$4[0];
-  var match$5 = React$1.useState(function () {
+  var match$5 = React.useState(function () {
         
       });
   var setWholesalerMarketId = match$5[1];
-  var match$6 = React$1.useState(function () {
+  var match$6 = React.useState(function () {
         
       });
   var setWholesalerId = match$6[1];
   var wholesalerId = match$6[0];
-  var match$7 = React$1.useState(function () {
+  var match$7 = React.useState(function () {
         return Belt_MapString.set(undefined, String(GetTime(new Date())), {
                     id: String(GetTime(new Date())),
                     grade: "",
@@ -207,12 +207,12 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
       });
   var setNewEntries = match$7[1];
   var newEntries = match$7[0];
-  var match$8 = React$1.useState(function () {
+  var match$8 = React.useState(function () {
         return [];
       });
   var setFormErrors = match$8[1];
   var formErrors = match$8[0];
-  var match$9 = React$1.useState(function () {
+  var match$9 = React.useState(function () {
         return false;
       });
   var setShowFileRequired = match$9[1];
@@ -243,42 +243,42 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
                 return value;
               });
   };
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("article", {
+  return React.createElement(React.Fragment, undefined, React.createElement("article", {
                   className: "mb-5"
-                }, path !== undefined ? React$1.createElement(React$1.Fragment, undefined, React$1.createElement("label", {
+                }, path !== undefined ? React.createElement(React.Fragment, undefined, React.createElement("label", {
                             className: "block text-text-L1"
-                          }, "업로드 파일"), React$1.createElement(BulkSale_ProductSaleLedgers_Button_Create_Admin$LedgerFile, {
+                          }, "업로드 파일"), React.createElement(BulkSale_ProductSaleLedgers_Button_Create_Admin$LedgerFile, {
                             path: path
-                          })) : null), React$1.createElement("article", undefined, React$1.createElement("h3", {
+                          })) : null), React.createElement("article", undefined, React.createElement("h3", {
                       className: "text-sm"
-                    }, "판매원표 업로드"), React$1.createElement("div", {
+                    }, "판매원표 업로드"), React.createElement("div", {
                       className: "flex gap-2 mt-2"
-                    }, React$1.createElement("div", {
+                    }, React.createElement("div", {
                           className: file !== undefined ? "p-2 relative w-full flex items-center rounded-xl border border-gray-200 text-gray-400" : "p-2 relative w-full flex items-center rounded-xl border border-gray-200 text-gray-400 bg-gray-100"
-                        }, React$1.createElement("span", undefined, Belt_Option.getWithDefault(Belt_Option.map(file, (function (file$p) {
+                        }, React.createElement("span", undefined, Belt_Option.getWithDefault(Belt_Option.map(file, (function (file$p) {
                                         return file$p.name;
                                       })), "파일명.jpg")), Belt_Option.getWithDefault(Belt_Option.map(file, (function (param) {
-                                    return React$1.createElement("span", {
+                                    return React.createElement("span", {
                                                 className: "absolute p-2 right-0",
                                                 onClick: (function (param) {
                                                     handleResetFile(undefined);
                                                   })
-                                              }, React$1.createElement(IconCloseInput.make, {
+                                              }, React.createElement(IconCloseInput.make, {
                                                     height: "28",
                                                     width: "28",
                                                     fill: "#B2B2B2"
                                                   }));
-                                  })), null)), React$1.createElement("label", {
+                                  })), null)), React.createElement("label", {
                           className: "relative"
-                        }, React$1.createElement("span", {
+                        }, React.createElement("span", {
                               className: "inline-block text-center text-text-L1 p-3 w-28 bg-div-shape-L1 rounded-xl focus:outline-none hover:text-white hover:bg-primary whitespace-nowrap hover:cursor-pointer"
-                            }, "파일 선택"), React$1.createElement("input", {
+                            }, "파일 선택"), React.createElement("input", {
                               className: "sr-only",
                               id: "input-file",
                               accept: ".pdf,.png,.jpg,.gif",
                               type: "file",
                               onChange: handleOnChangeFiles
-                            })), React$1.createElement("button", {
+                            })), React.createElement("button", {
                           className: Belt_Option.isSome(file) ? "text-white font-bold p-3 w-28 bg-green-gl rounded-xl focus:outline-none hover:bg-green-gl-dark" : "text-white font-bold p-3 w-28 bg-gray-300 rounded-xl focus:outline-none",
                           disabled: Belt_Option.isNone(file),
                           onClick: (function (param) {
@@ -305,21 +305,21 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
                                 }
                                 
                               }))), null, (function (msg) {
-                        return React$1.createElement("span", {
+                        return React.createElement("span", {
                                     className: "flex mt-2"
-                                  }, React$1.createElement(IconError.make, {
+                                  }, React.createElement(IconError.make, {
                                         width: "20",
                                         height: "20"
-                                      }), React$1.createElement("span", {
+                                      }), React.createElement("span", {
                                         className: "text-sm text-notice ml-1"
                                       }, msg));
-                      }))), React$1.createElement("section", {
+                      }))), React.createElement("section", {
                   className: "flex gap-2 mt-4"
-                }, React$1.createElement("article", {
+                }, React.createElement("article", {
                       className: "w-1/3"
-                    }, React$1.createElement("h3", {
+                    }, React.createElement("h3", {
                           className: "text-sm"
-                        }, "판매일자"), React$1.createElement(Input.make, {
+                        }, "판매일자"), React.createElement(Input.make, {
                           type_: "date",
                           name: "ledger-date",
                           className: "mt-2",
@@ -334,7 +334,7 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
                                       
                                     }))),
                           min: "2021-01-01"
-                        })), React$1.createElement(Select_WholesalerMarket.make, {
+                        })), React.createElement(Select_WholesalerMarket.make, {
                       label: "출하 시장",
                       wholesalerMarketId: match$5[0],
                       wholesalerId: wholesalerId,
@@ -351,23 +351,24 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
                                   }
                                   
                                 })))
-                    })), React$1.createElement("div", {
+                    })), React.createElement("div", {
                   className: "bg-surface rounded-xl"
-                }, React$1.createElement("section", {
+                }, React.createElement("section", {
                       className: "px-4 my-4 divide-y"
                     }, Belt_Array.map(Belt_MapString.toArray(newEntries), (function (param) {
                             var id = param[0];
-                            return React.createElementWithKey(BulkSale_ProductSaleLedgers_Button_FormEntry_Admin.make, {
+                            return React.createElement(BulkSale_ProductSaleLedgers_Button_FormEntry_Admin.make, {
                                         id: id,
                                         entries: newEntries,
                                         setEntries: setNewEntries,
-                                        formErrors: formErrors
-                                      }, id);
-                          }))), React$1.createElement("section", {
+                                        formErrors: formErrors,
+                                        key: id
+                                      });
+                          }))), React.createElement("section", {
                       className: "flex justify-center items-center py-2"
-                    }, React$1.createElement("span", {
+                    }, React.createElement("span", {
                           className: "w-[75px]"
-                        }, React$1.createElement("button", {
+                        }, React.createElement("button", {
                               className: "btn-level2-line-gray py-2 text-sm",
                               onClick: (function (param) {
                                   var entries = Belt_MapString.set(newEntries, String(GetTime(new Date())), {
@@ -384,17 +385,17 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
                                         return entries;
                                       });
                                 })
-                            }, "등급추가")))), React$1.createElement("section", undefined, React$1.createElement("article", {
+                            }, "등급추가")))), React.createElement("section", undefined, React.createElement("article", {
                       className: "flex justify-center items-center mt-5"
-                    }, React$1.createElement(ReactDialog.Close, {
-                          children: React$1.createElement("span", {
+                    }, React.createElement(ReactDialog.Close, {
+                          children: React.createElement("span", {
                                 className: "btn-level6 py-3 px-5",
                                 id: "btn-close"
                               }, "닫기"),
                           className: "flex mr-2"
-                        }), React$1.createElement("span", {
+                        }), React.createElement("span", {
                           className: "flex mr-2"
-                        }, React$1.createElement("button", {
+                        }, React.createElement("button", {
                               className: isMutating ? "btn-level1-disabled py-3 px-5" : "btn-level1 py-3 px-5",
                               disabled: isMutating,
                               onClick: (function (param) {
@@ -446,9 +447,9 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
                                     Curry.app(mutate, [
                                           (function (err) {
                                               console.log(err);
-                                              addToast(React$1.createElement("div", {
+                                              addToast(React.createElement("div", {
                                                         className: "flex items-center"
-                                                      }, React$1.createElement(IconError.make, {
+                                                      }, React.createElement(IconError.make, {
                                                             width: "24",
                                                             height: "24",
                                                             className: "mr-2"
@@ -457,9 +458,9 @@ function BulkSale_ProductSaleLedgers_Button_Create_Admin(props) {
                                                   });
                                             }),
                                           (function (param, param$1) {
-                                              addToast(React$1.createElement("div", {
+                                              addToast(React.createElement("div", {
                                                         className: "flex items-center"
-                                                      }, React$1.createElement(IconCheck.make, {
+                                                      }, React.createElement(IconCheck.make, {
                                                             height: "24",
                                                             width: "24",
                                                             fill: "#12B564",

@@ -48,9 +48,9 @@ function stringifySettlementCycle(settlementCycle) {
   }
 }
 
-function Summary_Settlement_Admin(props) {
-  var onQuery = props.onQuery;
-  var onReset = props.onReset;
+function Summary_Settlement_Admin(Props) {
+  var onReset = Props.onReset;
+  var onQuery = Props.onQuery;
   var router = Router.useRouter();
   var match = React.useState(function () {
         return /* Week */0;
@@ -218,6 +218,7 @@ function Summary_Settlement_Admin(props) {
                                           onChange: (function (param) {
                                               return ReForm__Helpers.handleChange(partial_arg, param);
                                             }),
+                                          error: undefined,
                                           tabIndex: 1
                                         })), React.createElement("div", {
                                       className: "min-w-1/2 flex items-center"
@@ -303,7 +304,7 @@ function Summary_Settlement_Admin(props) {
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* From */0, param);
                                     }),
-                                  date: Caml_option.some(query.from),
+                                  date: query.from,
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   firstDayOfWeek: 0
                                 }), React.createElement("span", {
@@ -313,7 +314,7 @@ function Summary_Settlement_Admin(props) {
                                   onChange: (function (param) {
                                       return handleOnChangeDate(/* To */1, param);
                                     }),
-                                  date: Caml_option.some(query.to_),
+                                  date: query.to_,
                                   maxDate: Format(new Date(), "yyyy-MM-dd"),
                                   minDate: Format(query.from, "yyyy-MM-dd"),
                                   firstDayOfWeek: 0

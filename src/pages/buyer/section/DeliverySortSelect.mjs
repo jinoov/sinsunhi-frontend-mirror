@@ -3,7 +3,6 @@
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -54,7 +53,7 @@ function makeSortLabel(sort) {
   }
 }
 
-function DeliverySortSelect(props) {
+function DeliverySortSelect(Props) {
   var router = Router.useRouter();
   var label = Belt_Option.mapWithDefault(Belt_Option.flatMap(Js_dict.get(router.query, "sort"), decodeSort), "최신순", makeSortLabel);
   var match = React.useState(function () {
@@ -82,7 +81,7 @@ function DeliverySortSelect(props) {
                   className: "text-gray-600 text-sm"
                 }, "정렬기준: "), React.createElement(ReactDropdownMenu.Root, {
                   children: null,
-                  _open: match[0],
+                  open: match[0],
                   onOpenChange: (function (to_) {
                       setOpen(function (param) {
                             return to_;
@@ -102,17 +101,17 @@ function DeliverySortSelect(props) {
                       align: "start",
                       className: "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: Caml_option.some(makeSortLabel("UPDATED_DESC")),
+                          children: makeSortLabel("UPDATED_DESC"),
                           className: "w-[120px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg cursor-pointer",
                           onSelect: makeOnSelect("UPDATED_DESC")
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: Caml_option.some(makeSortLabel("PRICE_ASC")),
+                          children: makeSortLabel("PRICE_ASC"),
                           className: "w-[120px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg",
                           onSelect: makeOnSelect("PRICE_ASC")
                         }))));
 }
 
-function DeliverySortSelect$MO(props) {
+function DeliverySortSelect$MO(Props) {
   var router = Router.useRouter();
   var label = Belt_Option.mapWithDefault(Belt_Option.flatMap(Js_dict.get(router.query, "sort"), decodeSort), "최신순", makeSortLabel);
   var match = React.useState(function () {
@@ -138,7 +137,7 @@ function DeliverySortSelect$MO(props) {
               className: "flex items-center"
             }, React.createElement(ReactDropdownMenu.Root, {
                   children: null,
-                  _open: match[0],
+                  open: match[0],
                   onOpenChange: (function (to_) {
                       setOpen(function (param) {
                             return to_;
@@ -158,11 +157,11 @@ function DeliverySortSelect$MO(props) {
                       align: "start",
                       className: "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
                     }, React.createElement(ReactDropdownMenu.Item, {
-                          children: Caml_option.some(makeSortLabel("UPDATED_DESC")),
+                          children: makeSortLabel("UPDATED_DESC"),
                           className: "w-[120px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg cursor-pointer",
                           onSelect: makeOnSelect("UPDATED_DESC")
                         }), React.createElement(ReactDropdownMenu.Item, {
-                          children: Caml_option.some(makeSortLabel("PRICE_ASC")),
+                          children: makeSortLabel("PRICE_ASC"),
                           className: "w-[120px] p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg",
                           onSelect: makeOnSelect("PRICE_ASC")
                         }))));

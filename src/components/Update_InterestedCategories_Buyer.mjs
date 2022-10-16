@@ -7,12 +7,13 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as ReactDialog from "@radix-ui/react-dialog";
 import * as BuyerInformation_Buyer from "./BuyerInformation_Buyer.mjs";
 
-function Update_InterestedCategories_Buyer(props) {
-  var onClose = props.onClose;
+function Update_InterestedCategories_Buyer(Props) {
+  var isOpen = Props.isOpen;
+  var onClose = Props.onClose;
   var queryData = BuyerInformation_Buyer.Query.use(undefined, undefined, undefined, undefined, undefined);
   return React.createElement(ReactDialog.Root, {
               children: null,
-              _open: props.isOpen
+              open: isOpen
             }, React.createElement(ReactDialog.Overlay, {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {

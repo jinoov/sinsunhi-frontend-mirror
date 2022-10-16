@@ -171,9 +171,9 @@ function displayStatus(s) {
   }
 }
 
-function Select_BulkSale_Application_Status(props) {
-  var refetchSummary = props.refetchSummary;
-  var application = props.application;
+function Select_BulkSale_Application_Status(Props) {
+  var application = Props.application;
+  var refetchSummary = Props.refetchSummary;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = use(undefined);
@@ -271,7 +271,7 @@ function Select_BulkSale_Application_Status(props) {
                   }) : null, React.createElement(BulkSale_Producer_Application_Rejected_Button.make, {
                   application: application,
                   isShow: match$2[0],
-                  _open: (function (param) {
+                  open: (function (param) {
                       setShowRejectedDialog(function (param) {
                             return true;
                           });

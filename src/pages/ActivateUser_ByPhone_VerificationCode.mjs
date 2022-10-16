@@ -13,7 +13,6 @@ import * as ReactUtil from "../utils/ReactUtil.mjs";
 import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as FetchHelper from "../utils/FetchHelper.mjs";
 import * as Router from "next/router";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
@@ -43,11 +42,11 @@ var initialStateVerificationCode = {
   verificationCode: ""
 };
 
-function ActivateUser_ByPhone_VerificationCode(props) {
-  var role = props.role;
-  var uid = props.uid;
-  var skipEmail = props.skipEmail;
-  var phone = props.phone;
+function ActivateUser_ByPhone_VerificationCode(Props) {
+  var phone = Props.phone;
+  var skipEmail = Props.skipEmail;
+  var uid = Props.uid;
+  var role = Props.role;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var limitToTry = React.useRef(3);
@@ -159,7 +158,7 @@ function ActivateUser_ByPhone_VerificationCode(props) {
                                         _0: /* VerificationCode */0
                                       }),
                                   disabled: isDisabledVerifyCodeForm,
-                                  inputRef: Caml_option.some(inputVerificationCodeRef)
+                                  inputRef: inputVerificationCodeRef
                                 }), verificationCode !== 2 ? React.createElement(Timer.make, {
                                     status: timerStatus,
                                     onChangeStatus: onChangeStatus,

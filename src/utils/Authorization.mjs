@@ -12,15 +12,18 @@ function getFallback(fallback) {
 }
 
 function Layout(UserHook) {
-  var Authorization$Layout = function (props) {
-    var ssrFallback = props.ssrFallback;
-    var ssrFallback$1 = ssrFallback !== undefined ? Caml_option.valFromOption(ssrFallback) : null;
+  var Authorization$Layout = function (Props) {
+    var children = Props.children;
+    var title = Props.title;
+    var fallback = Props.fallback;
+    var ssrFallbackOpt = Props.ssrFallback;
+    var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
     var user = Curry._1(UserHook.use, undefined);
     return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                    children: React.createElement("title", undefined, "" + props.title + " - 신선하이")
+                    children: React.createElement("title", undefined, "" + title + " - 신선하이")
                   }), typeof user === "number" ? (
-                  user !== 0 ? getFallback(props.fallback) : ssrFallback$1
-                ) : props.children);
+                  user !== 0 ? getFallback(fallback) : ssrFallback
+                ) : children);
   };
   return {
           make: Authorization$Layout
@@ -29,15 +32,18 @@ function Layout(UserHook) {
 
 var UserHook = CustomHooks.User.Admin;
 
-function Authorization$Layout(props) {
-  var ssrFallback = props.ssrFallback;
-  var ssrFallback$1 = ssrFallback !== undefined ? Caml_option.valFromOption(ssrFallback) : null;
+function Authorization$Layout(Props) {
+  var children = Props.children;
+  var title = Props.title;
+  var fallback = Props.fallback;
+  var ssrFallbackOpt = Props.ssrFallback;
+  var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "" + props.title + " - 신선하이")
+                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
                 }), typeof user === "number" ? (
-                user !== 0 ? getFallback(props.fallback) : ssrFallback$1
-              ) : props.children);
+                user !== 0 ? getFallback(fallback) : ssrFallback
+              ) : children);
 }
 
 var Admin = {
@@ -46,15 +52,18 @@ var Admin = {
 
 var UserHook$1 = CustomHooks.User.Buyer;
 
-function Authorization$Layout$1(props) {
-  var ssrFallback = props.ssrFallback;
-  var ssrFallback$1 = ssrFallback !== undefined ? Caml_option.valFromOption(ssrFallback) : null;
+function Authorization$Layout$1(Props) {
+  var children = Props.children;
+  var title = Props.title;
+  var fallback = Props.fallback;
+  var ssrFallbackOpt = Props.ssrFallback;
+  var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook$1.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "" + props.title + " - 신선하이")
+                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
                 }), typeof user === "number" ? (
-                user !== 0 ? getFallback(props.fallback) : ssrFallback$1
-              ) : props.children);
+                user !== 0 ? getFallback(fallback) : ssrFallback
+              ) : children);
 }
 
 var Buyer = {
@@ -63,15 +72,18 @@ var Buyer = {
 
 var UserHook$2 = CustomHooks.User.Seller;
 
-function Authorization$Layout$2(props) {
-  var ssrFallback = props.ssrFallback;
-  var ssrFallback$1 = ssrFallback !== undefined ? Caml_option.valFromOption(ssrFallback) : null;
+function Authorization$Layout$2(Props) {
+  var children = Props.children;
+  var title = Props.title;
+  var fallback = Props.fallback;
+  var ssrFallbackOpt = Props.ssrFallback;
+  var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook$2.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "" + props.title + " - 신선하이")
+                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
                 }), typeof user === "number" ? (
-                user !== 0 ? getFallback(props.fallback) : ssrFallback$1
-              ) : props.children);
+                user !== 0 ? getFallback(fallback) : ssrFallback
+              ) : children);
 }
 
 var Seller = {

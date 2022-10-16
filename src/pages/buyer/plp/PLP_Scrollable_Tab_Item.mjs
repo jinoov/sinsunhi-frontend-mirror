@@ -16,7 +16,7 @@ var Data = {
   make: make
 };
 
-function PLP_Scrollable_Tab_Item$PC$Skeleton(props) {
+function PLP_Scrollable_Tab_Item$PC$Skeleton(Props) {
   return React.createElement("div", {
               className: "skeleton-base w-20 mt-2 mb-3 rounded h-6"
             });
@@ -26,10 +26,11 @@ var Skeleton = {
   make: PLP_Scrollable_Tab_Item$PC$Skeleton
 };
 
-function PLP_Scrollable_Tab_Item$PC(props) {
-  var item = props.item;
+function PLP_Scrollable_Tab_Item$PC(Props) {
+  var selected = Props.selected;
+  var item = Props.item;
   var router = Router.useRouter();
-  var selectedStyle = props.selected ? "border-gray-800 text-gray-800 font-bold" : "border-transparent text-gray-400";
+  var selectedStyle = selected ? "border-gray-800 text-gray-800 font-bold" : "border-transparent text-gray-400";
   return React.createElement("li", {
               key: item.id,
               id: "category-" + item.id + "",
@@ -49,7 +50,7 @@ var PC = {
   make: PLP_Scrollable_Tab_Item$PC
 };
 
-function PLP_Scrollable_Tab_Item$MO$Skeleton(props) {
+function PLP_Scrollable_Tab_Item$MO$Skeleton(Props) {
   return React.createElement("div", {
               className: "skeleton-base w-20 mt-2 mb-3 rounded h-6"
             });
@@ -59,10 +60,11 @@ var Skeleton$1 = {
   make: PLP_Scrollable_Tab_Item$MO$Skeleton
 };
 
-function PLP_Scrollable_Tab_Item$MO(props) {
-  var item = props.item;
+function PLP_Scrollable_Tab_Item$MO(Props) {
+  var selected = Props.selected;
+  var item = Props.item;
   var router = Router.useRouter();
-  var selectedStyle = props.selected ? "border-gray-800 text-gray-800 font-bold" : "border-transparent text-gray-400";
+  var selectedStyle = selected ? "border-gray-800 text-gray-800 font-bold" : "border-transparent text-gray-400";
   return React.createElement("li", {
               key: item.id,
               id: "category-" + item.id + "",

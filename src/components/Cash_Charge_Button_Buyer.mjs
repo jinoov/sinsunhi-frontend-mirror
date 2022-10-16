@@ -188,7 +188,10 @@ var MutationCreateCharge = {
   use: use
 };
 
-function Cash_Charge_Button_Buyer(props) {
+function Cash_Charge_Button_Buyer(Props) {
+  var hasRequireTerms = Props.hasRequireTerms;
+  var buttonClassName = Props.buttonClassName;
+  var buttonText = Props.buttonText;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = ReactHookForm$1.useForm({
@@ -332,8 +335,8 @@ function Cash_Charge_Button_Buyer(props) {
   return React.createElement(ReactDialog.Root, {
               children: null
             }, React.createElement(ReactDialog.Trigger, {
-                  children: React.createElement("span", undefined, props.buttonText),
-                  className: props.buttonClassName
+                  children: React.createElement("span", undefined, buttonText),
+                  className: buttonClassName
                 }), React.createElement(ReactDialog.Portal, {
                   children: null
                 }, React.createElement(ReactDialog.Overlay, {
@@ -375,7 +378,7 @@ function Cash_Charge_Button_Buyer(props) {
                                   className: "font-bold mr-1"
                                 }, "충전금액"), React.createElement("span", undefined, "* 최소금액 1,000원")), React.createElement(ReactHookForm$1.Controller, {
                               name: "amount",
-                              control: Caml_option.some(control),
+                              control: control,
                               render: (function (param) {
                                   var match = param.field;
                                   var value = match.value;
@@ -394,7 +397,7 @@ function Cash_Charge_Button_Buyer(props) {
                                                   adornment: React.createElement("span", undefined, "원"),
                                                   placeholder: "금액을 입력해주세요",
                                                   errored: Belt_Option.isSome(param.fieldState.error),
-                                                  errorElement: Caml_option.some(errorElement),
+                                                  errorElement: errorElement,
                                                   className: "mt-3 h-13"
                                                 }), React.createElement("div", {
                                                   className: "w-full mt-2 mb-3 text-sm"
@@ -424,26 +427,26 @@ function Cash_Charge_Button_Buyer(props) {
                                                       }))));
                                 }),
                               defaultValue: "",
-                              rules: Caml_option.some(ReactHookForm.Rules.make(undefined, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([
-                                                [
-                                                  "required",
-                                                  ReactHookForm.Validation.sync(function (value) {
-                                                        return value !== "";
-                                                      })
-                                                ],
-                                                [
-                                                  "over1000",
-                                                  ReactHookForm.Validation.sync(function (v) {
-                                                        return v >= 1000;
-                                                      })
-                                                ]
-                                              ])), undefined, undefined, undefined)),
+                              rules: ReactHookForm.Rules.make(undefined, undefined, undefined, undefined, undefined, undefined, Caml_option.some(Js_dict.fromArray([
+                                            [
+                                              "required",
+                                              ReactHookForm.Validation.sync(function (value) {
+                                                    return value !== "";
+                                                  })
+                                            ],
+                                            [
+                                              "over1000",
+                                              ReactHookForm.Validation.sync(function (v) {
+                                                    return v >= 1000;
+                                                  })
+                                            ]
+                                          ])), undefined, undefined, undefined),
                               shouldUnregister: true
                             }), React.createElement("h3", {
                               className: "mt-7 mb-3 font-bold text-sm"
                             }, "결제수단"), React.createElement(ReactHookForm$1.Controller, {
                               name: "payment-method",
-                              control: Caml_option.some(control),
+                              control: control,
                               render: (function (param) {
                                   var match = param.field;
                                   var value = match.value;
@@ -477,7 +480,7 @@ function Cash_Charge_Button_Buyer(props) {
                                 }),
                               defaultValue: "card",
                               shouldUnregister: true
-                            }), props.hasRequireTerms ? React.createElement("div", {
+                            }), hasRequireTerms ? React.createElement("div", {
                                 className: "flex justify-between"
                               }, React.createElement("button", {
                                     className: "flex items-center cursor-pointer",

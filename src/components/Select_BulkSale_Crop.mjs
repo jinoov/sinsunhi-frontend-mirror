@@ -134,7 +134,11 @@ function style(error, disabled) {
   }
 }
 
-function Select_BulkSale_Crop(props) {
+function Select_BulkSale_Crop(Props) {
+  var cropId = Props.cropId;
+  var onChange = Props.onChange;
+  var disabled = Props.disabled;
+  var error = Props.error;
   var handleLoadOptions = function (inputValue) {
     return Js_promise.then_((function (result) {
                   var result$p = Garter_Array.map(result.crops.edges, (function (edge) {
@@ -157,17 +161,17 @@ function Select_BulkSale_Crop(props) {
             }, React.createElement("h3", {
                   className: "mb-2"
                 }, "품목"), React.createElement(Async, {
-                  value: props.cropId,
+                  value: cropId,
                   cacheOptions: false,
                   defaultOptions: true,
                   loadOptions: Helper.Debounce.make1(handleLoadOptions, 500),
-                  onChange: props.onChange,
+                  onChange: onChange,
                   placeholder: "품목 검색",
                   noOptionsMessage: (function (param) {
                       return "검색 결과가 없습니다.";
                     }),
                   isClearable: true,
-                  isDisabled: Belt_Option.getWithDefault(props.disabled, false),
+                  isDisabled: Belt_Option.getWithDefault(disabled, false),
                   styles: {
                     menu: (function (provide, param) {
                         return Object.assign(Object.assign({}, provide), {
@@ -175,7 +179,7 @@ function Select_BulkSale_Crop(props) {
                                   });
                       })
                   }
-                }), React.createElement("div", undefined, Belt_Option.mapWithDefault(props.error, null, (function (msg) {
+                }), React.createElement("div", undefined, Belt_Option.mapWithDefault(error, null, (function (msg) {
                         return React.createElement("span", {
                                     className: "flex mt-2"
                                   }, React.createElement(IconError.make, {

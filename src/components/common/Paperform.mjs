@@ -35,13 +35,14 @@ function getPaperformBtn(paperFormId) {
   return Belt_Option.flatMap(Caml_option.nullable_to_opt(document.getElementById(paperFormId)), Webapi__Dom__Element.asHtmlElement);
 }
 
-function Paperform(props) {
-  var paperFormId = props.paperFormId;
+function Paperform(Props) {
+  var paperFormId = Props.paperFormId;
+  var prefill = Props.prefill;
   var attrs = {
     id: paperFormId,
     "data-paperform-id": paperFormId,
     className: "hidden",
-    prefill: props.prefill,
+    prefill: prefill,
     "data-popup-button": "1",
     spinner: "1"
   };

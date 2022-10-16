@@ -31,7 +31,7 @@ function stringifyProductIdentifier(productIdentifier) {
   }
 }
 
-function Summary_Cost_Admin(props) {
+function Summary_Cost_Admin(Props) {
   var router = Router.useRouter();
   var match = React.useState(function () {
         return /* ProductIds */0;
@@ -132,6 +132,7 @@ function Summary_Cost_Admin(props) {
                                           onChange: (function (param) {
                                               return ReForm__Helpers.handleChange(partial_arg, param);
                                             }),
+                                          error: undefined,
                                           tabIndex: 1
                                         })), React.createElement("div", {
                                       className: "flex w-64 items-center"
@@ -146,6 +147,7 @@ function Summary_Cost_Admin(props) {
                                           onChange: (function (param) {
                                               return ReForm__Helpers.handleChange(partial_arg$1, param);
                                             }),
+                                          error: undefined,
                                           tabIndex: 2
                                         }))), React.createElement("div", {
                                   className: "flex mt-3"

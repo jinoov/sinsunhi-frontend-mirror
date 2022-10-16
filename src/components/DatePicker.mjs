@@ -53,62 +53,87 @@ var Styles = {
   wrapper: wrapper
 };
 
-function DatePicker(props) {
-  var align = props.align;
+function DatePicker(Props) {
+  var id = Props.id;
+  var onChange = Props.onChange;
+  var date = Props.date;
+  var maxDate = Props.maxDate;
+  var minDate = Props.minDate;
+  var firstDayOfWeek = Props.firstDayOfWeek;
+  var align = Props.align;
+  var isDateDisabled = Props.isDateDisabled;
+  var onFocus = Props.onFocus;
+  var disabled = Props.disabled;
   var dateRe = /^(\d{4})\-(\d{1,2})\-(\d{1,2})$/;
+  var tmp = {
+    identifier: id,
+    dateAdapter: {
+      parse: (function (value, createDate) {
+          return Belt_Option.flatMap(Caml_option.null_to_opt(dateRe.exec(value)), (function (result) {
+                        var match = Belt_Option.flatMap(Belt_Array.get(result, 1), (function (prim) {
+                                if (prim == null) {
+                                  return ;
+                                } else {
+                                  return Caml_option.some(prim);
+                                }
+                              }));
+                        var match$1 = Belt_Option.flatMap(Belt_Array.get(result, 2), (function (prim) {
+                                if (prim == null) {
+                                  return ;
+                                } else {
+                                  return Caml_option.some(prim);
+                                }
+                              }));
+                        var match$2 = Belt_Option.flatMap(Belt_Array.get(result, 3), (function (prim) {
+                                if (prim == null) {
+                                  return ;
+                                } else {
+                                  return Caml_option.some(prim);
+                                }
+                              }));
+                        if (match !== undefined && match$1 !== undefined && match$2 !== undefined) {
+                          return Belt_Option.map(Belt_Int.fromString(match$1), (function (month) {
+                                        return Curry._3(createDate, match, String(month + 1 | 0), match$2);
+                                      }));
+                        }
+                        
+                      }));
+        }),
+      format: (function (date) {
+          return Format(date, "yyyy-MM-dd");
+        })
+    },
+    localization: DuetDatePicker.krLocalization,
+    onChange: onChange,
+    direction: align !== undefined && !align ? "left" : "right"
+  };
+  var tmp$1 = Belt_Option.map(date, (function (date$p) {
+          return Format(date$p, "yyyy-MM-dd");
+        }));
+  if (tmp$1 !== undefined) {
+    tmp.value = tmp$1;
+  }
+  if (onFocus !== undefined) {
+    tmp.onFocus = Caml_option.valFromOption(onFocus);
+  }
+  if (maxDate !== undefined) {
+    tmp.max = maxDate;
+  }
+  if (minDate !== undefined) {
+    tmp.min = minDate;
+  }
+  if (firstDayOfWeek !== undefined) {
+    tmp.firstDayOfWeek = firstDayOfWeek;
+  }
+  if (isDateDisabled !== undefined) {
+    tmp.isDateDisabled = Caml_option.valFromOption(isDateDisabled);
+  }
+  if (disabled !== undefined) {
+    tmp.disabled = disabled;
+  }
   return React.createElement("label", {
               className: wrapper
-            }, React.createElement(DuetDatePicker.make, {
-                  identifier: props.id,
-                  value: Belt_Option.map(props.date, (function (date$p) {
-                          return Format(date$p, "yyyy-MM-dd");
-                        })),
-                  dateAdapter: {
-                    parse: (function (value, createDate) {
-                        return Belt_Option.flatMap(Caml_option.null_to_opt(dateRe.exec(value)), (function (result) {
-                                      var match = Belt_Option.flatMap(Belt_Array.get(result, 1), (function (prim) {
-                                              if (prim == null) {
-                                                return ;
-                                              } else {
-                                                return Caml_option.some(prim);
-                                              }
-                                            }));
-                                      var match$1 = Belt_Option.flatMap(Belt_Array.get(result, 2), (function (prim) {
-                                              if (prim == null) {
-                                                return ;
-                                              } else {
-                                                return Caml_option.some(prim);
-                                              }
-                                            }));
-                                      var match$2 = Belt_Option.flatMap(Belt_Array.get(result, 3), (function (prim) {
-                                              if (prim == null) {
-                                                return ;
-                                              } else {
-                                                return Caml_option.some(prim);
-                                              }
-                                            }));
-                                      if (match !== undefined && match$1 !== undefined && match$2 !== undefined) {
-                                        return Belt_Option.map(Belt_Int.fromString(match$1), (function (month) {
-                                                      return Curry._3(createDate, match, String(month + 1 | 0), match$2);
-                                                    }));
-                                      }
-                                      
-                                    }));
-                      }),
-                    format: (function (date) {
-                        return Format(date, "yyyy-MM-dd");
-                      })
-                  },
-                  localization: DuetDatePicker.krLocalization,
-                  onChange: props.onChange,
-                  onFocus: props.onFocus,
-                  max: props.maxDate,
-                  min: props.minDate,
-                  firstDayOfWeek: props.firstDayOfWeek,
-                  direction: align !== undefined && !align ? "left" : "right",
-                  isDateDisabled: props.isDateDisabled,
-                  disabled: props.disabled
-                }), React.createElement("img", {
+            }, React.createElement(DuetDatePicker.make, tmp), React.createElement("img", {
                   className: "absolute top-2 right-3",
                   src: calendarIcon
                 }));

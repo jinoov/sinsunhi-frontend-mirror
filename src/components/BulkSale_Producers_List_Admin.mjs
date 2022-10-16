@@ -3,8 +3,7 @@
 import * as Env from "../constants/Env.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as Fetch from "bs-fetch/src/Fetch.mjs";
-import * as React from "@rescript/react/src/React.mjs";
-import * as React$1 from "react";
+import * as React from "react";
 import * as Helper from "../utils/Helper.mjs";
 import * as Js_exn from "rescript/lib/es6/js_exn.js";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
@@ -50,7 +49,7 @@ function useRefetchable(fRef) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(BulkSaleProducersListAdminFragment_graphql.Internal.convertFragment, match[0]);
   return [
           data,
-          React$1.useMemo((function () {
+          React.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return Curry._2(refetchFn, RescriptRelay_Internal.internal_removeUndefinedAndConvertNullsRaw(BulkSaleProducersListAdminRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -80,14 +79,14 @@ function usePagination(fr) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(BulkSaleProducersListAdminFragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
-          loadNext: React$1.useMemo((function () {
+          loadNext: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadNext(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
                               });
                   };
                 }), [p.loadNext]),
-          loadPrevious: React$1.useMemo((function () {
+          loadPrevious: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadPrevious(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
@@ -98,7 +97,7 @@ function usePagination(fr) {
           hasPrevious: p.hasPrevious,
           isLoadingNext: p.isLoadingNext,
           isLoadingPrevious: p.isLoadingPrevious,
-          refetch: React$1.useMemo((function () {
+          refetch: React.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return p.refetch(RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BulkSaleProducersListAdminRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -111,14 +110,14 @@ function useBlockingPagination(fRef) {
   var data = RescriptRelay_Internal.internal_useConvertedValue(BulkSaleProducersListAdminFragment_graphql.Internal.convertFragment, p.data);
   return {
           data: data,
-          loadNext: React$1.useMemo((function () {
+          loadNext: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadNext(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
                               });
                   };
                 }), [p.loadNext]),
-          loadPrevious: React$1.useMemo((function () {
+          loadPrevious: React.useMemo((function () {
                   return function (param, param$1, param$2) {
                     return p.loadPrevious(param, {
                                 onComplete: RescriptRelay_Internal.internal_nullableToOptionalExnHandler(param$1)
@@ -127,7 +126,7 @@ function useBlockingPagination(fRef) {
                 }), [p.loadPrevious]),
           hasNext: p.hasNext,
           hasPrevious: p.hasPrevious,
-          refetch: React$1.useMemo((function () {
+          refetch: React.useMemo((function () {
                   return function (param, param$1, param$2, param$3) {
                     return p.refetch(RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(BulkSaleProducersListAdminRefetchQuery_graphql.Internal.convertVariables(param)), internal_makeRefetchableFnOpts(param$1, param$2, undefined));
                   };
@@ -152,54 +151,54 @@ var Fragment = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-function BulkSale_Producers_List_Admin$Header(props) {
-  return React$1.createElement("div", {
+function BulkSale_Producers_List_Admin$Header(Props) {
+  return React.createElement("div", {
               className: "grid grid-cols-11-admin-bulk-sale-producers bg-gray-50 text-gray-500 h-12 divide-y divide-gray-100"
-            }, React$1.createElement("div", {
+            }, React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "신청일자"), React$1.createElement("div", {
+                }, "신청일자"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "상태"), React$1.createElement("div", {
+                }, "상태"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "담당자"), React$1.createElement("div", {
+                }, "담당자"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "작물"), React$1.createElement("div", {
+                }, "작물"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "예상판매가"), React$1.createElement("div", {
+                }, "예상판매가"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "연평균 판매량"), React$1.createElement("div", {
+                }, "연평균 판매량"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "택배 가능 여부"), React$1.createElement("div", {
+                }, "택배 가능 여부"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "포장 무게 단위"), React$1.createElement("div", {
+                }, "포장 무게 단위"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "하루 수확 생산량"), React$1.createElement("div", {
+                }, "하루 수확 생산량"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "수확 주기"), React$1.createElement("div", {
+                }, "수확 주기"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "예상 출하 시점"), React$1.createElement("div", {
+                }, "예상 출하 시점"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "톤백, 콘티 거래 가능 여부"), React$1.createElement("div", {
+                }, "톤백, 콘티 거래 가능 여부"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "재배 시설"), React$1.createElement("div", {
+                }, "재배 시설"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "농산물 관련 인증"), React$1.createElement("div", {
+                }, "농산물 관련 인증"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "농산물 등급"), React$1.createElement("div", {
+                }, "농산물 등급"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "출하시장 정보"), React$1.createElement("div", {
+                }, "출하시장 정보"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "온라인판매 여부"), React$1.createElement("div", {
+                }, "온라인판매 여부"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "생산 작물 사진"), React$1.createElement("div", {
+                }, "생산 작물 사진"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "생산자정보"), React$1.createElement("div", {
+                }, "생산자정보"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "직접 농사 여부"), React$1.createElement("div", {
+                }, "직접 농사 여부"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "농사 경력"), React$1.createElement("div", {
+                }, "농사 경력"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
-                }, "생산자만의 특별함"), React$1.createElement("div", {
+                }, "생산자만의 특별함"), React.createElement("div", {
                   className: "h-full px-4 flex items-center whitespace-nowrap"
                 }, "메모"));
 }
@@ -208,15 +207,15 @@ var Header = {
   make: BulkSale_Producers_List_Admin$Header
 };
 
-function BulkSale_Producers_List_Admin$Loading(props) {
-  return React$1.createElement("div", {
+function BulkSale_Producers_List_Admin$Loading(Props) {
+  return React.createElement("div", {
               className: "w-full overflow-x-scroll"
-            }, React$1.createElement("div", {
+            }, React.createElement("div", {
                   className: "min-w-max text-sm"
-                }, React$1.createElement(BulkSale_Producers_List_Admin$Header, {}), React$1.createElement("ol", {
+                }, React.createElement(BulkSale_Producers_List_Admin$Header, {}), React.createElement("ol", {
                       className: "divide-y divide-gray-100 lg:list-height-admin-bulk-sale lg:overflow-y-scroll"
                     }, Garter_Array.map(Garter_Array.make(5, 0), (function (param) {
-                            return React$1.createElement(Order_Admin.Item.Table.Loading.make, {});
+                            return React.createElement(Order_Admin.Item.Table.Loading.make, {});
                           })))));
 }
 
@@ -224,22 +223,22 @@ var Loading = {
   make: BulkSale_Producers_List_Admin$Loading
 };
 
-function BulkSale_Producers_List_Admin$Skeleton(props) {
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+function BulkSale_Producers_List_Admin$Skeleton(Props) {
+  return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "md:flex md:justify-between pb-4"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "flex flex-auto items-center justify-between h-8"
-                    }, React$1.createElement("h3", {
+                    }, React.createElement("h3", {
                           className: "text-lg font-bold"
-                        }, "내역"), React$1.createElement(Skeleton.Box.make, {
+                        }, "내역"), React.createElement(Skeleton.Box.make, {
                           className: "w-32"
-                        }))), React$1.createElement("div", {
+                        }))), React.createElement("div", {
                   className: "w-full overflow-x-scroll"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "min-w-max text-sm"
-                    }, React$1.createElement("div", {
+                    }, React.createElement("div", {
                           className: "bg-gray-50 h-12 divide-y divide-gray-100"
-                        }), React$1.createElement("span", {
+                        }), React.createElement("span", {
                           className: "w-full h-[500px] flex items-center justify-center"
                         }, "로딩중.."))));
 }
@@ -248,9 +247,10 @@ var Skeleton$1 = {
   make: BulkSale_Producers_List_Admin$Skeleton
 };
 
-function BulkSale_Producers_List_Admin$List(props) {
-  var statistics = props.statistics;
-  var refetchSummary = props.refetchSummary;
+function BulkSale_Producers_List_Admin$List(Props) {
+  var query = Props.query;
+  var refetchSummary = Props.refetchSummary;
+  var statistics = Props.statistics;
   var router = Router.useRouter();
   var queried = Belt_Option.flatMap(Js_dict.get(router.query, "status"), (function (status) {
           var status$p = Status_BulkSale_Producer.status_decode(status);
@@ -291,13 +291,13 @@ function BulkSale_Producers_List_Admin$List(props) {
   } else {
     count = statistics.count;
   }
-  var listContainerRef = React$1.useRef(null);
-  var loadMoreRef = React$1.useRef(null);
-  var match = usePagination(props.query);
+  var listContainerRef = React.useRef(null);
+  var loadMoreRef = React.useRef(null);
+  var match = usePagination(query);
   var hasNext = match.hasNext;
   var loadNext = match.loadNext;
   var isIntersecting = CustomHooks.$$IntersectionObserver.use(listContainerRef, loadMoreRef, 0.1, "50px", undefined);
-  React$1.useEffect((function () {
+  React.useEffect((function () {
           if (hasNext && isIntersecting) {
             Curry._3(loadNext, 5, undefined, undefined);
           }
@@ -306,17 +306,17 @@ function BulkSale_Producers_List_Admin$List(props) {
         hasNext,
         isIntersecting
       ]);
-  return React$1.createElement(React$1.Fragment, undefined, React$1.createElement("div", {
+  return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "md:flex md:justify-between pb-4"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "flex flex-auto justify-between"
-                    }, React$1.createElement("h3", {
+                    }, React.createElement("h3", {
                           className: "text-lg font-bold"
-                        }, "내역", React$1.createElement("span", {
+                        }, "내역", React.createElement("span", {
                               className: "text-base ml-1 text-green-gl font-normal"
-                            }, "" + String(count) + "건")), React$1.createElement("div", {
+                            }, "" + String(count) + "건")), React.createElement("div", {
                           className: "flex"
-                        }, React$1.createElement("button", {
+                        }, React.createElement("button", {
                               className: "btn-level6-small px-3 py-1 flex justify-center items-center text-[15px]",
                               onClick: (function (param) {
                                   var progress = Belt_Option.mapWithDefault(Js_dict.get(router.query, "status"), "ALL", (function (status) {
@@ -351,24 +351,25 @@ function BulkSale_Producers_List_Admin$List(props) {
                                           console.log(err);
                                         }));
                                 })
-                            }, React$1.createElement(IconDownloadCenter.make, {
+                            }, React.createElement(IconDownloadCenter.make, {
                                   width: "20",
                                   height: "20",
                                   fill: "#262626",
                                   className: "mr-1"
-                                }), "엑셀 다운로드")))), React$1.createElement("div", {
+                                }), "엑셀 다운로드")))), React.createElement("div", {
                   className: "w-full overflow-x-scroll"
-                }, React$1.createElement("div", {
+                }, React.createElement("div", {
                       className: "min-w-max text-sm"
-                    }, React$1.createElement(BulkSale_Producers_List_Admin$Header, {}), React$1.createElement("ol", {
+                    }, React.createElement(BulkSale_Producers_List_Admin$Header, {}), React.createElement("ol", {
                           ref: listContainerRef,
                           className: "divide-y divide-gray-100 lg:list-height-admin-bulk-sale lg:overflow-y-scroll"
                         }, Belt_Array.map(match.data.bulkSaleApplications.edges, (function (edge) {
-                                return React.createElementWithKey(BulkSale_Producer_Admin.make, {
+                                return React.createElement(BulkSale_Producer_Admin.make, {
                                             node: edge.node,
-                                            refetchSummary: refetchSummary
-                                          }, edge.cursor);
-                              })), match.isLoadingNext ? React$1.createElement("div", undefined, "로딩중...") : null, React$1.createElement("div", {
+                                            refetchSummary: refetchSummary,
+                                            key: edge.cursor
+                                          });
+                              })), match.isLoadingNext ? React.createElement("div", undefined, "로딩중...") : null, React.createElement("div", {
                               ref: loadMoreRef,
                               className: "h-5"
                             })))));
@@ -378,11 +379,14 @@ var List = {
   make: BulkSale_Producers_List_Admin$List
 };
 
-function BulkSale_Producers_List_Admin(props) {
-  return React$1.createElement(BulkSale_Producers_List_Admin$List, {
-              query: props.query,
-              refetchSummary: props.refetchSummary,
-              statistics: props.statistics
+function BulkSale_Producers_List_Admin(Props) {
+  var query = Props.query;
+  var refetchSummary = Props.refetchSummary;
+  var statistics = Props.statistics;
+  return React.createElement(BulkSale_Producers_List_Admin$List, {
+              query: query,
+              refetchSummary: refetchSummary,
+              statistics: statistics
             });
 }
 

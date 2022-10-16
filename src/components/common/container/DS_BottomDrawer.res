@@ -31,7 +31,7 @@ module BottomDrawerContext = {
 
     @react.component
     let make = (~value, ~children) => {
-      React.createElement(provider, {value, children})
+      React.createElement(provider, {"value": value, "children": children})
     }
   }
 }
@@ -91,7 +91,8 @@ module Root = {
             %twc(
               "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
             ),
-          ])->showStyle}>
+          ])->showStyle}
+        >
           children
         </div>
       </BottomDrawerContext.Provider>

@@ -82,22 +82,27 @@ var p = CssJs.style([
       CssJs.whiteSpace("nowrap")
     ]);
 
-function ReactToastNotifications$Custom$ToastContainer(props) {
+function ReactToastNotifications$Custom$ToastContainer(Props) {
+  var children = Props.children;
+  var placement = Props.placement;
   return React.createElement("div", {
-              className: container(props.placement)
-            }, props.children);
+              className: container(placement)
+            }, children);
 }
 
 var ToastContainer = {
   make: ReactToastNotifications$Custom$ToastContainer
 };
 
-function ReactToastNotifications$Custom$Toast(props) {
+function ReactToastNotifications$Custom$Toast(Props) {
+  var children = Props.children;
+  var transitionDuration = Props.transitionDuration;
+  var transitionState = Props.transitionState;
   return React.createElement("div", {
-              className: toast(props.transitionDuration, props.transitionState)
+              className: toast(transitionDuration, transitionState)
             }, React.createElement("p", {
                   className: p
-                }, props.children));
+                }, children));
 }
 
 var Toast = {
@@ -106,9 +111,12 @@ var Toast = {
 
 var Component = {};
 
-function ReactToastNotifications$ToastProvider(props) {
-  var placement = props.placement;
-  var placement$1 = placement !== undefined ? placement : "top-center";
+function ReactToastNotifications$ToastProvider(Props) {
+  var placementOpt = Props.placement;
+  var portalTargetSelector = Props.portalTargetSelector;
+  var transitionDuration = Props.transitionDuration;
+  var children = Props.children;
+  var placement = placementOpt !== undefined ? placementOpt : "top-center";
   return React.createElement(ReactToastNotifications.ToastProvider, {
               autoDismissTimeout: 2000,
               autoDismiss: true,
@@ -127,10 +135,10 @@ function ReactToastNotifications$ToastProvider(props) {
                               });
                   })
               },
-              placement: placement$1,
-              portalTargetSelector: props.portalTargetSelector,
-              transitionDuration: props.transitionDuration,
-              children: props.children
+              placement: placement,
+              portalTargetSelector: portalTargetSelector,
+              transitionDuration: transitionDuration,
+              children: children
             });
 }
 

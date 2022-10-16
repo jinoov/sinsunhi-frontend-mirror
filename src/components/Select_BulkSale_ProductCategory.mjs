@@ -128,8 +128,12 @@ function style(error, disabled) {
   }
 }
 
-function Select_BulkSale_ProductCategory(props) {
-  var cropId = props.cropId;
+function Select_BulkSale_ProductCategory(Props) {
+  var cropId = Props.cropId;
+  var productCategoryId = Props.productCategoryId;
+  var onChange = Props.onChange;
+  var error = Props.error;
+  var disabled = Props.disabled;
   var handleLoadOptions = function (inputValue) {
     if (cropId) {
       return Js_promise.then_((function (result) {
@@ -157,17 +161,17 @@ function Select_BulkSale_ProductCategory(props) {
             }, React.createElement("h3", {
                   className: "mb-2"
                 }, "품종"), React.createElement(Async, {
-                  value: props.productCategoryId,
+                  value: productCategoryId,
                   cacheOptions: false,
                   defaultOptions: true,
                   loadOptions: Helper.Debounce.make1(handleLoadOptions, 500),
-                  onChange: props.onChange,
+                  onChange: onChange,
                   placeholder: "품종 검색",
                   noOptionsMessage: (function (param) {
                       return "검색 결과가 없습니다.";
                     }),
                   isClearable: true,
-                  isDisabled: Belt_Option.getWithDefault(props.disabled, false),
+                  isDisabled: Belt_Option.getWithDefault(disabled, false),
                   styles: {
                     menu: (function (provide, param) {
                         return Object.assign(Object.assign({}, provide), {
@@ -175,7 +179,7 @@ function Select_BulkSale_ProductCategory(props) {
                                   });
                       })
                   }
-                }), React.createElement("div", undefined, Belt_Option.mapWithDefault(props.error, null, (function (msg) {
+                }), React.createElement("div", undefined, Belt_Option.mapWithDefault(error, null, (function (msg) {
                         return React.createElement("span", {
                                     className: "flex mt-2"
                                   }, React.createElement(IconError.make, {

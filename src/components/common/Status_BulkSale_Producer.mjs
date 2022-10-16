@@ -199,7 +199,7 @@ function displayCount(status, data) {
   }
 }
 
-function Status_BulkSale_Producer$Total$Skeleton(props) {
+function Status_BulkSale_Producer$Total$Skeleton(Props) {
   var router = Router.useRouter();
   return React.createElement("li", {
               className: queriedStyle(router, undefined, undefined)
@@ -212,9 +212,10 @@ var Skeleton$1 = {
   make: Status_BulkSale_Producer$Total$Skeleton
 };
 
-function Status_BulkSale_Producer$Total(props) {
+function Status_BulkSale_Producer$Total(Props) {
+  var data = Props.data;
   var router = Router.useRouter();
-  var totalCount = "" + String(props.data.count) + "건";
+  var totalCount = "" + String(data.count) + "건";
   return React.createElement("li", {
               className: queriedStyle(router, undefined, undefined),
               onClick: handleOnClickStatus(router, undefined, undefined)
@@ -230,8 +231,8 @@ var Total = {
   make: Status_BulkSale_Producer$Total
 };
 
-function Status_BulkSale_Producer$Item$Skeleton(props) {
-  var kind = props.kind;
+function Status_BulkSale_Producer$Item$Skeleton(Props) {
+  var kind = Props.kind;
   var router = Router.useRouter();
   return React.createElement("li", {
               className: queriedStyle(router, kind, undefined)
@@ -244,8 +245,9 @@ var Skeleton$2 = {
   make: Status_BulkSale_Producer$Item$Skeleton
 };
 
-function Status_BulkSale_Producer$Item(props) {
-  var kind = props.kind;
+function Status_BulkSale_Producer$Item(Props) {
+  var kind = Props.kind;
+  var data = Props.data;
   var router = Router.useRouter();
   return React.createElement("li", {
               className: queriedStyle(router, kind, undefined),
@@ -254,7 +256,7 @@ function Status_BulkSale_Producer$Item(props) {
                   className: "flex justify-center items-center pb-1 text-sm"
                 }, displayStatus(kind)), React.createElement("span", {
                   className: "block font-bold sm:text-center"
-                }, displayCount(kind, props.data)));
+                }, displayCount(kind, data)));
 }
 
 var Item = {

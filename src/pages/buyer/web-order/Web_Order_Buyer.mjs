@@ -313,8 +313,10 @@ function makeMutationVariable(formData, tempOrderId) {
         };
 }
 
-function Web_Order_Buyer$Dialog(props) {
-  var confirmFn = props.confirmFn;
+function Web_Order_Buyer$Dialog(Props) {
+  var show = Props.show;
+  var confirmFn = Props.confirmFn;
+  var cancel = Props.cancel;
   return React.createElement(ReactDialog.Root, {
               children: React.createElement(ReactDialog.Portal, {
                     children: null
@@ -329,7 +331,7 @@ function Web_Order_Buyer$Dialog(props) {
                             className: "flex w-full justify-center items-center gap-2"
                           }, React.createElement("button", {
                                 className: "w-1/2 rounded-xl h-13 bg-enabled-L5",
-                                onClick: props.cancel
+                                onClick: cancel
                               }, "취소"), React.createElement("button", {
                                 className: "w-1/2 rounded-xl h-13 bg-primary text-inverted font-bold",
                                 onClick: (function (param) {
@@ -338,7 +340,7 @@ function Web_Order_Buyer$Dialog(props) {
                                                 }), param);
                                   })
                               }, "결제")))),
-              _open: props.show
+              open: show
             });
 }
 
@@ -346,9 +348,9 @@ var Dialog = {
   make: Web_Order_Buyer$Dialog
 };
 
-function Web_Order_Buyer$Container(props) {
-  var deviceType = props.deviceType;
-  var tempOrderId = props.tempOrderId;
+function Web_Order_Buyer$Container(Props) {
+  var tempOrderId = Props.tempOrderId;
+  var deviceType = Props.deviceType;
   var match = use({
         tempWosOrderId: tempOrderId
       }, undefined, undefined, undefined, undefined);
@@ -620,21 +622,21 @@ function $$default(props) {
   return React.createElement(Authorization.Buyer.make, {
               children: null,
               title: "주문하기",
-              fallback: Caml_option.some(React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
-                        deviceType: deviceType
-                      }))
+              fallback: React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                    deviceType: deviceType
+                  })
             }, React.createElement(Script, {
                   src: "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
                 }), React.createElement(React.Suspense, {
-                  children: Caml_option.some(tid !== undefined ? React.createElement(Web_Order_Buyer$Container, {
-                              tempOrderId: tid,
-                              deviceType: deviceType
-                            }) : React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
-                              deviceType: deviceType
-                            })),
-                  fallback: Caml_option.some(React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
-                            deviceType: deviceType
-                          }))
+                  children: tid !== undefined ? React.createElement(Web_Order_Buyer$Container, {
+                          tempOrderId: tid,
+                          deviceType: deviceType
+                        }) : React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                          deviceType: deviceType
+                        }),
+                  fallback: React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                        deviceType: deviceType
+                      })
                 }));
 }
 

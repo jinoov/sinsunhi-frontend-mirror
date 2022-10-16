@@ -55,17 +55,18 @@ function decodeSizeUnit(str) {
   }
 }
 
-function Select_Product_Update_Admin$Weight(props) {
-  var disabled = props.disabled;
-  var unit = props.unit;
-  var disabled$1 = disabled !== undefined ? disabled : false;
+function Select_Product_Update_Admin$Weight(Props) {
+  var unit = Props.unit;
+  var onChange = Props.onChange;
+  var disabledOpt = Props.disabled;
+  var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var displayUnit = encodeWeightUnit(unit);
   return React.createElement("span", undefined, React.createElement("label", {
                   className: "block relative"
                 }, React.createElement("span", {
                       className: Cx.cx([
                             "md:w-20 flex items-center border border-border-default-L1 rounded-md px-3 text-enabled-L1 h-9",
-                            disabled$1 ? "bg-disabled-L3" : "bg-white"
+                            disabled ? "bg-disabled-L3" : "bg-white"
                           ])
                     }, displayUnit), React.createElement("span", {
                       className: "absolute top-1.5 right-2"
@@ -75,9 +76,9 @@ function Select_Product_Update_Admin$Weight(props) {
                           fill: "#121212"
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
-                      disabled: disabled$1,
+                      disabled: disabled,
                       value: encodeWeightUnit(unit),
-                      onChange: props.onChange
+                      onChange: onChange
                     }, Garter_Array.map([
                           /* G */0,
                           /* Kg */1,
@@ -94,17 +95,18 @@ var Weight = {
   make: Select_Product_Update_Admin$Weight
 };
 
-function Select_Product_Update_Admin$Size(props) {
-  var disabled = props.disabled;
-  var unit = props.unit;
-  var disabled$1 = disabled !== undefined ? disabled : false;
+function Select_Product_Update_Admin$Size(Props) {
+  var unit = Props.unit;
+  var onChange = Props.onChange;
+  var disabledOpt = Props.disabled;
+  var disabled = disabledOpt !== undefined ? disabledOpt : false;
   var displayUnit = encodeSizeUnit(unit);
   return React.createElement("span", undefined, React.createElement("label", {
                   className: "block relative"
                 }, React.createElement("span", {
                       className: Cx.cx([
                             "md:w-20 flex items-center border border-border-default-L1 rounded-md h-9 px-3 text-enabled-L1",
-                            disabled$1 ? "bg-disabled-L3" : "bg-white"
+                            disabled ? "bg-disabled-L3" : "bg-white"
                           ])
                     }, displayUnit), React.createElement("span", {
                       className: "absolute top-1.5 right-2"
@@ -114,9 +116,9 @@ function Select_Product_Update_Admin$Size(props) {
                           fill: "#121212"
                         })), React.createElement("select", {
                       className: "block w-full h-full absolute top-0 opacity-0",
-                      disabled: disabled$1,
+                      disabled: disabled,
                       value: encodeSizeUnit(unit),
-                      onChange: props.onChange
+                      onChange: onChange
                     }, Garter_Array.map([
                           /* Mm */0,
                           /* Cm */1,

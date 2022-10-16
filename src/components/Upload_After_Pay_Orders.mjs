@@ -12,10 +12,10 @@ import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as IconCloseInput from "./svgs/IconCloseInput.mjs";
 import * as UploadFileToS3PresignedUrl from "../utils/UploadFileToS3PresignedUrl.mjs";
 
-function Upload_After_Pay_Orders(props) {
-  var startIndex = props.startIndex;
-  var onFailure = props.onFailure;
-  var onSuccess = props.onSuccess;
+function Upload_After_Pay_Orders(Props) {
+  var onSuccess = Props.onSuccess;
+  var onFailure = Props.onFailure;
+  var startIndex = Props.startIndex;
   var agreements = CustomHooks.AfterPayAgreement.use(undefined);
   var canUpload;
   canUpload = typeof agreements === "number" || agreements.TAG !== /* Loaded */0 ? false : agreements._0.terms.length !== 0;

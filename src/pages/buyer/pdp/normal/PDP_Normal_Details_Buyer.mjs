@@ -41,22 +41,26 @@ var Fragment = {
   useOpt: useOpt
 };
 
-function PDP_Normal_Details_Buyer$PC$Column(props) {
+function PDP_Normal_Details_Buyer$PC$Column(Props) {
+  var className = Props.className;
+  var label = Props.label;
+  var value = Props.value;
   return React.createElement("div", {
-              className: "flex items-start justify-between " + props.className
+              className: "flex items-start justify-between " + className
             }, React.createElement("h1", {
                   className: "min-w-[100px] w-[100px] text-gray-500 mr-7"
-                }, props.label), React.createElement("span", {
+                }, label), React.createElement("span", {
                   className: "text-gray-800 break-all text-right"
-                }, props.value));
+                }, value));
 }
 
 var Column = {
   make: PDP_Normal_Details_Buyer$PC$Column
 };
 
-function PDP_Normal_Details_Buyer$PC(props) {
-  var match = use(props.query);
+function PDP_Normal_Details_Buyer$PC(Props) {
+  var query = Props.query;
+  var match = use(query);
   var productOptions = match.productOptions;
   var category = match.category;
   var categoryLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeCategoryLabel, category.item, category.kind);
@@ -106,22 +110,26 @@ var PC = {
   make: PDP_Normal_Details_Buyer$PC
 };
 
-function PDP_Normal_Details_Buyer$MO$Column(props) {
+function PDP_Normal_Details_Buyer$MO$Column(Props) {
+  var className = Props.className;
+  var label = Props.label;
+  var value = Props.value;
   return React.createElement("div", {
-              className: "flex items-start justify-between " + props.className
+              className: "flex items-start justify-between " + className
             }, React.createElement("span", {
                   className: "min-w-[100px] w-[100px] mr-7 text-text-L2"
-                }, props.label), React.createElement("span", {
+                }, label), React.createElement("span", {
                   className: "text-text-L1 break-all text-right"
-                }, props.value));
+                }, value));
 }
 
 var Column$1 = {
   make: PDP_Normal_Details_Buyer$MO$Column
 };
 
-function PDP_Normal_Details_Buyer$MO(props) {
-  var match = use(props.query);
+function PDP_Normal_Details_Buyer$MO(Props) {
+  var query = Props.query;
+  var match = use(query);
   var productOptions = match.productOptions;
   var category = match.category;
   var categoryLabel = Curry._2(PDP_Parser_Buyer.Product.Normal.makeCategoryLabel, category.item, category.kind);

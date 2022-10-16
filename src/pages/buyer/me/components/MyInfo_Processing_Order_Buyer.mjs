@@ -88,8 +88,9 @@ function useStatus(query) {
               }));
 }
 
-function MyInfo_Processing_Order_Buyer$PC(props) {
-  var status = useStatus(props.query);
+function MyInfo_Processing_Order_Buyer$PC(Props) {
+  var query = Props.query;
+  var status = useStatus(query);
   return React.createElement("div", {
               className: "flex flex-col p-6"
             }, React.createElement("div", {
@@ -141,8 +142,9 @@ var PC = {
   make: MyInfo_Processing_Order_Buyer$PC
 };
 
-function MyInfo_Processing_Order_Buyer$Mobile(props) {
-  var status = useStatus(props.query);
+function MyInfo_Processing_Order_Buyer$Mobile(Props) {
+  var query = Props.query;
+  var status = useStatus(query);
   return React.createElement("div", undefined, React.createElement("div", {
                   className: "mb-4 flex items-center justify-between"
                 }, React.createElement("div", undefined, React.createElement("span", {

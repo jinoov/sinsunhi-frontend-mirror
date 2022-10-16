@@ -8,7 +8,6 @@ import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
-import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactSelect from "./common/ReactSelect.mjs";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import ReactSelect$1 from "react-select";
@@ -254,16 +253,16 @@ var categoryTypeOptions = [
   }
 ];
 
-function Search_Display_Category$Select_CategoryType(props) {
-  var name = props.name;
-  var control = props.control;
+function Search_Display_Category$Select_CategoryType(Props) {
+  var control = Props.control;
+  var name = Props.name;
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "relative w-48"
                 }, React.createElement("div", {
                       className: "absolute w-full"
                     }, React.createElement(ReactHookForm$1.Controller, {
                           name: "" + name + ".categoryType",
-                          control: Caml_option.some(control),
+                          control: control,
                           render: (function (param) {
                               var match = param.field;
                               var onChange = match.onChange;
@@ -285,10 +284,10 @@ function Search_Display_Category$Select_CategoryType(props) {
                                                           });
                                               })
                                           },
-                                          ref: Caml_option.some(match.ref)
+                                          ref: match.ref
                                         });
                             }),
-                          rules: Caml_option.some(ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)),
+                          rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined),
                           shouldUnregister: true
                         }))), React.createElement(Select_Display_Category.make, {
                   control: control,
@@ -303,15 +302,17 @@ var Select_CategoryType = {
   make: Search_Display_Category$Select_CategoryType
 };
 
-function Search_Display_Category(props) {
+function Search_Display_Category(Props) {
+  var control = Props.control;
+  var name = Props.name;
   return React.createElement(React.Suspense, {
-              children: Caml_option.some(React.createElement("div", {
-                        className: "flex gap-2 h-9"
-                      }, React.createElement(Search_Display_Category$Select_CategoryType, {
-                            control: props.control,
-                            name: props.name
-                          }))),
-              fallback: Caml_option.some(React.createElement("div", undefined))
+              children: React.createElement("div", {
+                    className: "flex gap-2 h-9"
+                  }, React.createElement(Search_Display_Category$Select_CategoryType, {
+                        control: control,
+                        name: name
+                      })),
+              fallback: React.createElement("div", undefined)
             });
 }
 
