@@ -296,7 +296,7 @@ function submit_decode(v) {
                                       return {
                                               TAG: /* Error */1,
                                               _0: {
-                                                path: ".sales-type" + e.path,
+                                                path: "." + ("sales-type" + e.path),
                                                 message: e.message,
                                                 value: e.value
                                               }
@@ -306,7 +306,7 @@ function submit_decode(v) {
                                     return {
                                             TAG: /* Error */1,
                                             _0: {
-                                              path: ".notation-information-type" + e$1.path,
+                                              path: "." + ("notation-information-type" + e$1.path),
                                               message: e$1.message,
                                               value: e$1.value
                                             }
@@ -316,7 +316,7 @@ function submit_decode(v) {
                                   return {
                                           TAG: /* Error */1,
                                           _0: {
-                                            path: ".description-html" + e$2.path,
+                                            path: "." + ("description-html" + e$2.path),
                                             message: e$2.message,
                                             value: e$2.value
                                           }
@@ -326,7 +326,7 @@ function submit_decode(v) {
                                 return {
                                         TAG: /* Error */1,
                                         _0: {
-                                          path: ".document-url" + e$3.path,
+                                          path: "." + ("document-url" + e$3.path),
                                           message: e$3.message,
                                           value: e$3.value
                                         }
@@ -336,7 +336,7 @@ function submit_decode(v) {
                               return {
                                       TAG: /* Error */1,
                                       _0: {
-                                        path: ".thumbnail" + e$4.path,
+                                        path: "." + ("thumbnail" + e$4.path),
                                         message: e$4.message,
                                         value: e$4.value
                                       }
@@ -346,7 +346,7 @@ function submit_decode(v) {
                             return {
                                     TAG: /* Error */1,
                                     _0: {
-                                      path: ".notice-date-to" + e$5.path,
+                                      path: "." + ("notice-date-to" + e$5.path),
                                       message: e$5.message,
                                       value: e$5.value
                                     }
@@ -356,7 +356,7 @@ function submit_decode(v) {
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: ".notice-date-from" + e$6.path,
+                                    path: "." + ("notice-date-from" + e$6.path),
                                     message: e$6.message,
                                     value: e$6.value
                                   }
@@ -366,7 +366,7 @@ function submit_decode(v) {
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: ".notice" + e$7.path,
+                                  path: "." + ("notice" + e$7.path),
                                   message: e$7.message,
                                   value: e$7.value
                                 }
@@ -376,7 +376,7 @@ function submit_decode(v) {
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: ".product-quotable" + e$8.path,
+                                path: "." + ("product-quotable" + e$8.path),
                                 message: e$8.message,
                                 value: e$8.value
                               }
@@ -386,7 +386,7 @@ function submit_decode(v) {
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: ".product-delivery" + e$9.path,
+                              path: "." + ("product-delivery" + e$9.path),
                               message: e$9.message,
                               value: e$9.value
                             }
@@ -396,7 +396,7 @@ function submit_decode(v) {
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".product-tax" + e$10.path,
+                            path: "." + ("product-tax" + e$10.path),
                             message: e$10.message,
                             value: e$10.value
                           }
@@ -406,7 +406,7 @@ function submit_decode(v) {
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".product-operation-status" + e$11.path,
+                          path: "." + ("product-operation-status" + e$11.path),
                           message: e$11.message,
                           value: e$11.value
                         }
@@ -416,7 +416,7 @@ function submit_decode(v) {
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".display-categories" + e$12.path,
+                        path: "." + ("display-categories" + e$12.path),
                         message: e$12.message,
                         value: e$12.value
                       }
@@ -426,7 +426,7 @@ function submit_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".product-category" + e$13.path,
+                      path: "." + ("product-category" + e$13.path),
                       message: e$13.message,
                       value: e$13.value
                     }
@@ -436,7 +436,7 @@ function submit_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".origin" + e$14.path,
+                    path: "." + ("origin" + e$14.path),
                     message: e$14.message,
                     value: e$14.value
                   }
@@ -446,7 +446,7 @@ function submit_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".base-price" + e$15.path,
+                  path: "." + ("base-price" + e$15.path),
                   message: e$15.message,
                   value: e$15.value
                 }
@@ -456,7 +456,7 @@ function submit_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".buyer-product-name" + e$16.path,
+                path: "." + ("buyer-product-name" + e$16.path),
                 message: e$16.message,
                 value: e$16.value
               }
@@ -466,7 +466,7 @@ function submit_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".producer-product-name" + e$17.path,
+              path: "." + ("producer-product-name" + e$17.path),
               message: e$17.message,
               value: e$17.value
             }
@@ -476,7 +476,7 @@ function submit_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".producer-name" + e$18.path,
+            path: "." + ("producer-name" + e$18.path),
             message: e$18.message,
             value: e$18.value
           }
@@ -1563,12 +1563,12 @@ function makeNormalProductVariables(form) {
     displayName: form.buyerProductName,
     image: {
       original: form.thumbnail.original,
-      thumb1000x1000: form.thumbnail.thumb1000x1000,
       thumb100x100: form.thumbnail.thumb100x100,
-      thumb1920x1920: form.thumbnail.thumb1920x1920,
       thumb400x400: form.thumbnail.thumb400x400,
       thumb800x800: form.thumbnail.thumb800x800,
-      thumb800xall: form.thumbnail.thumb800xall
+      thumb800xall: form.thumbnail.thumb800xall,
+      thumb1000x1000: form.thumbnail.thumb1000x1000,
+      thumb1920x1920: form.thumbnail.thumb1920x1920
     },
     isCourierAvailable: Select_Delivery.toBool(form.delivery),
     isVat: Select_Tax_Status.toBool(form.tax),

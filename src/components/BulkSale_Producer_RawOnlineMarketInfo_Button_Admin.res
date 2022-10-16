@@ -1,8 +1,6 @@
 open RadixUI
 
-let displayRawMarket = (
-  rm: BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Types.enum_OnlineMarket,
-) =>
+let displayRawMarket = (rm: RelaySchemaAssets_graphql.enum_OnlineMarket) =>
   switch rm {
   | #NAVER => `네이버`
   | #COUPANG => `쿠팡`

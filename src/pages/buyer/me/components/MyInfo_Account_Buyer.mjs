@@ -159,13 +159,11 @@ function MyInfo_Account_Buyer$PC(Props) {
         setOpenModal(function (param) {
               
             });
-      })
+      }),
+    key: Belt_Option.getWithDefault(manager, "")
   };
   if (manager !== undefined) {
     tmp$2.defaultValue = Caml_option.valFromOption(manager);
-  }
-  if (manager !== undefined) {
-    tmp$2.key = manager;
   }
   return React.createElement(React.Fragment, undefined, React.createElement(MyInfo_Layout_Buyer.make, {
                   query: query,
@@ -505,13 +503,11 @@ function MyInfo_Account_Buyer$Mobile(Props) {
     isOpen: Caml_obj.equal(openModal, /* Manager */2),
     onClose: (function (param) {
         router.back();
-      })
+      }),
+    key: Belt_Option.getWithDefault(manager, "")
   };
   if (manager !== undefined) {
     tmp$2.defaultValue = Caml_option.valFromOption(manager);
-  }
-  if (manager !== undefined) {
-    tmp$2.key = manager;
   }
   return React.createElement("div", {
               className: "block w-full bg-white absolute top-0 pt-14 min-h-screen"

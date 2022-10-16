@@ -276,7 +276,7 @@ function submit_decode(v) {
                             return {
                                     TAG: /* Error */1,
                                     _0: {
-                                      path: ".description-html" + e.path,
+                                      path: "." + ("description-html" + e.path),
                                       message: e.message,
                                       value: e.value
                                     }
@@ -286,7 +286,7 @@ function submit_decode(v) {
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: ".document-url" + e$1.path,
+                                    path: "." + ("document-url" + e$1.path),
                                     message: e$1.message,
                                     value: e$1.value
                                   }
@@ -296,7 +296,7 @@ function submit_decode(v) {
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: ".thumbnail" + e$2.path,
+                                  path: "." + ("thumbnail" + e$2.path),
                                   message: e$2.message,
                                   value: e$2.value
                                 }
@@ -306,7 +306,7 @@ function submit_decode(v) {
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: ".notice-date-to" + e$3.path,
+                                path: "." + ("notice-date-to" + e$3.path),
                                 message: e$3.message,
                                 value: e$3.value
                               }
@@ -316,7 +316,7 @@ function submit_decode(v) {
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: ".notice-date-from" + e$4.path,
+                              path: "." + ("notice-date-from" + e$4.path),
                               message: e$4.message,
                               value: e$4.value
                             }
@@ -326,7 +326,7 @@ function submit_decode(v) {
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".notice" + e$5.path,
+                            path: "." + ("notice" + e$5.path),
                             message: e$5.message,
                             value: e$5.value
                           }
@@ -336,7 +336,7 @@ function submit_decode(v) {
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".shipment-to" + e$6.path,
+                          path: "." + ("shipment-to" + e$6.path),
                           message: e$6.message,
                           value: e$6.value
                         }
@@ -346,7 +346,7 @@ function submit_decode(v) {
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".shipment-from" + e$7.path,
+                        path: "." + ("shipment-from" + e$7.path),
                         message: e$7.message,
                         value: e$7.value
                       }
@@ -356,7 +356,7 @@ function submit_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".product-operation-status" + e$8.path,
+                      path: "." + ("product-operation-status" + e$8.path),
                       message: e$8.message,
                       value: e$8.value
                     }
@@ -366,7 +366,7 @@ function submit_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".display-categories" + e$9.path,
+                    path: "." + ("display-categories" + e$9.path),
                     message: e$9.message,
                     value: e$9.value
                   }
@@ -376,7 +376,7 @@ function submit_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".product-category" + e$10.path,
+                  path: "." + ("product-category" + e$10.path),
                   message: e$10.message,
                   value: e$10.value
                 }
@@ -386,7 +386,7 @@ function submit_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".origin" + e$11.path,
+                path: "." + ("origin" + e$11.path),
                 message: e$11.message,
                 value: e$11.value
               }
@@ -396,7 +396,7 @@ function submit_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".buyer-product-name" + e$12.path,
+              path: "." + ("buyer-product-name" + e$12.path),
               message: e$12.message,
               value: e$12.value
             }
@@ -406,7 +406,7 @@ function submit_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".producer-product-name" + e$13.path,
+            path: "." + ("producer-product-name" + e$13.path),
             message: e$13.message,
             value: e$13.value
           }
@@ -1088,12 +1088,12 @@ function makeMatchingProductVariables(form) {
     displayName: form.buyerProductName,
     image: {
       original: form.thumbnail.original,
-      thumb1000x1000: form.thumbnail.thumb1000x1000,
       thumb100x100: form.thumbnail.thumb100x100,
-      thumb1920x1920: form.thumbnail.thumb1920x1920,
       thumb400x400: form.thumbnail.thumb400x400,
       thumb800x800: form.thumbnail.thumb800x800,
-      thumb800xall: form.thumbnail.thumb800xall
+      thumb800xall: form.thumbnail.thumb800xall,
+      thumb1000x1000: form.thumbnail.thumb1000x1000,
+      thumb1920x1920: form.thumbnail.thumb1920x1920
     },
     name: form.producerProductName,
     origin: form.origin,

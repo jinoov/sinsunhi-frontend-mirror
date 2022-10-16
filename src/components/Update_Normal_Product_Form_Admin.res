@@ -1174,9 +1174,9 @@ let decodeNotationInformationType = (v): option<
   }
 }
 
-let decodeSalesType = (
-  s: UpdateNormalProductFormAdminFragment_graphql.Types.enum_ProductSalesType,
-): option<Select_Product_QuotationType_Admin.QuotationType.t> => {
+let decodeSalesType = (s: RelaySchemaAssets_graphql.enum_ProductSalesType): option<
+  Select_Product_QuotationType_Admin.QuotationType.t,
+> => {
   switch s {
   | #RFQ_LIVESTOCK => RFQ_LIVESTOCK->Some
   | #TRADEMATCH_AQUATIC => TRADEMATCH_AQUATIC->Some

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import * as ReactUtil from "../../utils/ReactUtil.mjs";
+import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import EmptyGraySquareLgXPng from "../../../public/images/empty-gray-square-lg-3x.png";
 import EmptyGraySquareSmXPng from "../../../public/images/empty-gray-square-sm-3x.png";
@@ -84,7 +85,9 @@ function $$Image(Props) {
   var loading = Props.loading;
   var alt = Props.alt;
   var className = Props.className;
-  var tmp = {};
+  var tmp = {
+    key: Belt_Option.getWithDefault(src, "")
+  };
   if (src !== undefined) {
     tmp.src = Caml_option.valFromOption(src);
   }
@@ -99,9 +102,6 @@ function $$Image(Props) {
   }
   if (className !== undefined) {
     tmp.className = Caml_option.valFromOption(className);
-  }
-  if (src !== undefined) {
-    tmp.key = src;
   }
   return React.createElement(Image$MakeImage, tmp);
 }

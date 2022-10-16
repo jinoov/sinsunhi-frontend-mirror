@@ -328,11 +328,11 @@ var TradematchDemands_tradematchPackageQuantityUnit_decode = TradematchBuyFarmPr
 var TradematchDemands_tradematchPackageQuantityUnit_fromString = TradematchBuyFarmProductApplyBuyer_TradematchDemands_Fragment_graphql.Utils.tradematchPackageQuantityUnit_fromString;
 
 var TradematchDemands$1 = {
+  getConnectionNodes: getConnectionNodes,
   tradematchDemandStatus_decode: TradematchDemands_tradematchDemandStatus_decode$1,
   tradematchDemandStatus_fromString: TradematchDemands_tradematchDemandStatus_fromString$1,
   tradematchPackageQuantityUnit_decode: TradematchDemands_tradematchPackageQuantityUnit_decode,
   tradematchPackageQuantityUnit_fromString: TradematchDemands_tradematchPackageQuantityUnit_fromString,
-  getConnectionNodes: getConnectionNodes,
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,

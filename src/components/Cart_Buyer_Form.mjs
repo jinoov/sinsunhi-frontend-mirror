@@ -165,7 +165,7 @@ function productOption_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".updated-at" + e$2.path,
+                      path: "." + ("updated-at" + e$2.path),
                       message: e$2.message,
                       value: e$2.value
                     }
@@ -175,7 +175,7 @@ function productOption_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".option-status" + e$3.path,
+                    path: "." + ("option-status" + e$3.path),
                     message: e$3.message,
                     value: e$3.value
                   }
@@ -185,7 +185,7 @@ function productOption_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".product-option-name" + e$4.path,
+                  path: "." + ("product-option-name" + e$4.path),
                   message: e$4.message,
                   value: e$4.value
                 }
@@ -195,7 +195,7 @@ function productOption_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".product-option-id" + e$5.path,
+                path: "." + ("product-option-id" + e$5.path),
                 message: e$5.message,
                 value: e$5.value
               }
@@ -205,7 +205,7 @@ function productOption_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".cart-id" + e$6.path,
+              path: "." + ("cart-id" + e$6.path),
               message: e$6.message,
               value: e$6.value
             }
@@ -317,7 +317,7 @@ function cartItem_decode(v) {
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".product-options" + e.path,
+                            path: "." + ("product-options" + e.path),
                             message: e.message,
                             value: e.value
                           }
@@ -327,7 +327,7 @@ function cartItem_decode(v) {
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".product-status" + e$1.path,
+                          path: "." + ("product-status" + e$1.path),
                           message: e$1.message,
                           value: e$1.value
                         }
@@ -337,7 +337,7 @@ function cartItem_decode(v) {
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".updated-at" + e$2.path,
+                        path: "." + ("updated-at" + e$2.path),
                         message: e$2.message,
                         value: e$2.value
                       }
@@ -347,7 +347,7 @@ function cartItem_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".total-price" + e$3.path,
+                      path: "." + ("total-price" + e$3.path),
                       message: e$3.message,
                       value: e$3.value
                     }
@@ -357,7 +357,7 @@ function cartItem_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".product-name" + e$4.path,
+                    path: "." + ("product-name" + e$4.path),
                     message: e$4.message,
                     value: e$4.value
                   }
@@ -367,7 +367,7 @@ function cartItem_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".image-url" + e$5.path,
+                  path: "." + ("image-url" + e$5.path),
                   message: e$5.message,
                   value: e$5.value
                 }
@@ -377,7 +377,7 @@ function cartItem_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".product-id" + e$6.path,
+                path: "." + ("product-id" + e$6.path),
                 message: e$6.message,
                 value: e$6.value
               }
@@ -387,7 +387,7 @@ function cartItem_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".checked-number" + e$7.path,
+              path: "." + ("checked-number" + e$7.path),
               message: e$7.message,
               value: e$7.value
             }
@@ -478,7 +478,7 @@ function cart_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".cart-items" + e.path,
+              path: "." + ("cart-items" + e.path),
               message: e.message,
               value: e.value
             }
@@ -540,7 +540,7 @@ function cartContainer_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".un-courier-available-item" + e.path,
+                path: "." + ("un-courier-available-item" + e.path),
                 message: e.message,
                 value: e.value
               }
@@ -550,7 +550,7 @@ function cartContainer_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".courier-available-item" + e$1.path,
+              path: "." + ("courier-available-item" + e$1.path),
               message: e$1.message,
               value: e$1.value
             }
@@ -560,7 +560,7 @@ function cartContainer_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".order-type" + e$2.path,
+            path: "." + ("order-type" + e$2.path),
             message: e$2.message,
             value: e$2.value
           }

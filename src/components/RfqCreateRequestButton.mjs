@@ -216,9 +216,9 @@ var Fragment_rfqRequestStatus_decode = RfqCreateRequestButton_RfqRequests_Fragme
 var Fragment_rfqRequestStatus_fromString = RfqCreateRequestButton_RfqRequests_Fragment_graphql.Utils.rfqRequestStatus_fromString;
 
 var Fragment = {
+  getConnectionNodes: getConnectionNodes,
   rfqRequestStatus_decode: Fragment_rfqRequestStatus_decode,
   rfqRequestStatus_fromString: Fragment_rfqRequestStatus_fromString,
-  getConnectionNodes: getConnectionNodes,
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,

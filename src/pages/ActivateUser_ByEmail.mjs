@@ -48,6 +48,18 @@ function ActivateUser_ByEmail$SentEmail(Props) {
   var role = Props.role;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
+  var onSuccess = function (param) {
+    addToast(React.createElement("div", {
+              className: "flex items-center"
+            }, React.createElement(IconCheck.make, {
+                  height: "24",
+                  width: "24",
+                  fill: "#12B564",
+                  className: "mr-2"
+                }), "이메일을 다시 전송하였습니다"), {
+          appearance: "success"
+        });
+  };
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "이메일로 휴면계정 해제")
                 }), React.createElement("div", {
@@ -63,18 +75,7 @@ function ActivateUser_ByEmail$SentEmail(Props) {
                             }, React.createElement("button", {
                                   className: "w-full flex justify-between items-center",
                                   onClick: (function (param) {
-                                      submitEmail(uid, role, (function (param) {
-                                              addToast(React.createElement("div", {
-                                                        className: "flex items-center"
-                                                      }, React.createElement(IconCheck.make, {
-                                                            height: "24",
-                                                            width: "24",
-                                                            fill: "#12B564",
-                                                            className: "mr-2"
-                                                          }), "이메일을 다시 전송하였습니다"), {
-                                                    appearance: "success"
-                                                  });
-                                            }), addToast);
+                                      submitEmail(uid, role, onSuccess, addToast);
                                     })
                                 }, React.createElement("span", {
                                       className: "flex items-center"

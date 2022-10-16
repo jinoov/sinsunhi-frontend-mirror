@@ -92,7 +92,7 @@ function cost_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".buyer-price" + e.path,
+                    path: "." + ("buyer-price" + e.path),
                     message: e.message,
                     value: e.value
                   }
@@ -102,7 +102,7 @@ function cost_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".cost-type" + e$1.path,
+                  path: "." + ("cost-type" + e$1.path),
                   message: e$1.message,
                   value: e$1.value
                 }
@@ -112,7 +112,7 @@ function cost_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".delivery-cost" + e$2.path,
+                path: "." + ("delivery-cost" + e$2.path),
                 message: e$2.message,
                 value: e$2.value
               }
@@ -122,7 +122,7 @@ function cost_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".working-cost" + e$3.path,
+              path: "." + ("working-cost" + e$3.path),
               message: e$3.message,
               value: e$3.value
             }
@@ -132,7 +132,7 @@ function cost_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".raw-cost" + e$4.path,
+            path: "." + ("raw-cost" + e$4.path),
             message: e$4.message,
             value: e$4.value
           }
@@ -254,7 +254,7 @@ function submit_decode(v) {
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: ".shipping-unit-quantity" + e.path,
+                                    path: "." + ("shipping-unit-quantity" + e.path),
                                     message: e.message,
                                     value: e.value
                                   }
@@ -264,7 +264,7 @@ function submit_decode(v) {
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: ".is-free-shipping" + e$1.path,
+                                  path: "." + ("is-free-shipping" + e$1.path),
                                   message: e$1.message,
                                   value: e$1.value
                                 }
@@ -274,7 +274,7 @@ function submit_decode(v) {
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: ".show-each" + e$2.path,
+                                path: "." + ("show-each" + e$2.path),
                                 message: e$2.message,
                                 value: e$2.value
                               }
@@ -284,7 +284,7 @@ function submit_decode(v) {
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: ".memo" + e$3.path,
+                              path: "." + ("memo" + e$3.path),
                               message: e$3.message,
                               value: e$3.value
                             }
@@ -294,7 +294,7 @@ function submit_decode(v) {
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: ".cut-off-time" + e$4.path,
+                            path: "." + ("cut-off-time" + e$4.path),
                             message: e$4.message,
                             value: e$4.value
                           }
@@ -314,7 +314,7 @@ function submit_decode(v) {
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".operation-status" + e$6.path,
+                        path: "." + ("operation-status" + e$6.path),
                         message: e$6.message,
                         value: e$6.value
                       }
@@ -324,7 +324,7 @@ function submit_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".amount-unit" + e$7.path,
+                      path: "." + ("amount-unit" + e$7.path),
                       message: e$7.message,
                       value: e$7.value
                     }

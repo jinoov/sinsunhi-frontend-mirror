@@ -3,7 +3,7 @@ module Fragment = RfqBasket_Buyer.Fragment
 module Fragment_type = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Types
 module Mutation = RfqBasket_Buyer.Mutation
 
-let displayStorageMethod = (v: Fragment_type.enum_RfqMeatStorageMethod) =>
+let displayStorageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatStorageMethod) =>
   switch v {
   | #ANY => `모두`
   | #CHILLED => `냉장`
@@ -13,7 +13,7 @@ let displayStorageMethod = (v: Fragment_type.enum_RfqMeatStorageMethod) =>
   | _ => ``
   }
 
-let displayPackageMethod = (v: Fragment_type.enum_RfqMeatPackageMethod) =>
+let displayPackageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatPackageMethod) =>
   switch v {
   | #ANY => `모두`
   | #CUT => `세절`

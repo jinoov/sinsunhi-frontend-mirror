@@ -293,7 +293,9 @@ module ReadOnlyProductId = {
   @react.component
   let make = (~productId: string) => {
     <div className=%twc("flex flex-col gap-2")>
-      <div> <span className=%twc("font-bold")> {`상품번호`->React.string} </span> </div>
+      <div>
+        <span className=%twc("font-bold")> {`상품번호`->React.string} </span>
+      </div>
       <div
         className=%twc(
           "px-3 py-2 border border-border-default-L1 bg-disabled-L3 text-disabled-L1 rounded-lg h-9 max-w-md w-1/3"
@@ -757,7 +759,9 @@ module EditorInput = {
             </span>}
         />
       </div>
-      <div> <Product_Detail_Editor control name defaultValue disabled /> </div>
+      <div>
+        <Product_Detail_Editor control name defaultValue disabled />
+      </div>
     </div>
   }
 }
@@ -844,9 +848,9 @@ let toImage: UpdateMatchingProductFormAdminFragment_graphql.Types.fragment_image
   thumb800xall: image.thumb800xall->Option.getWithDefault(image.thumb1920x1920),
 }
 
-let decodeStatus = (
-  s: UpdateMatchingProductFormAdminFragment_graphql.Types.enum_ProductStatus,
-): option<Select_Product_Operation_Status.Base.status> => {
+let decodeStatus = (s: RelaySchemaAssets_graphql.enum_ProductStatus): option<
+  Select_Product_Operation_Status.Base.status,
+> => {
   switch s {
   | #SALE => SALE->Some
   | #SOLDOUT => SOLDOUT->Some
@@ -1053,7 +1057,8 @@ let make = (~query) => {
             className=%twc("px-3 py-2 bg-disabled-L2 text-white rounded-lg focus:outline-none")>
             {`상품을 수정할 수 없습니다.`->React.string}
           </button>
-        | _ => <>
+        | _ =>
+          <>
             <button
               type_="reset"
               className=%twc("px-3 py-2 bg-div-shape-L1 rounded-lg focus:outline-none")

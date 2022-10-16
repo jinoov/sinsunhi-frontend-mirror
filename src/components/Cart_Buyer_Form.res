@@ -112,7 +112,7 @@ let soldable = (s: productStatus) =>
   | _ => false
   }
 
-let toVariant: CartBuyerItemFragment_graphql.Types.enum_ProductStatus => productStatus = s =>
+let toVariant: RelaySchemaAssets_graphql.enum_ProductStatus => productStatus = s =>
   switch s {
   | #SALE => #SALE
   | #SOLDOUT => #SOLDOUT

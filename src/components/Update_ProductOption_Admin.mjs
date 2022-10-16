@@ -320,7 +320,7 @@ function submit_decode(v) {
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".shipping-unit-quantity" + e.path,
+                          path: "." + ("shipping-unit-quantity" + e.path),
                           message: e.message,
                           value: e.value
                         }
@@ -330,7 +330,7 @@ function submit_decode(v) {
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".is-free-shipping" + e$1.path,
+                        path: "." + ("is-free-shipping" + e$1.path),
                         message: e$1.message,
                         value: e$1.value
                       }
@@ -340,7 +340,7 @@ function submit_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: ".auto-generated-name" + e$2.path,
+                      path: "." + ("auto-generated-name" + e$2.path),
                       message: e$2.message,
                       value: e$2.value
                     }
@@ -350,7 +350,7 @@ function submit_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".memo" + e$3.path,
+                    path: "." + ("memo" + e$3.path),
                     message: e$3.message,
                     value: e$3.value
                   }
@@ -360,7 +360,7 @@ function submit_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".cut-off-time" + e$4.path,
+                  path: "." + ("cut-off-time" + e$4.path),
                   message: e$4.message,
                   value: e$4.value
                 }
@@ -370,7 +370,7 @@ function submit_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".operation-status" + e$5.path,
+                path: "." + ("operation-status" + e$5.path),
                 message: e$5.message,
                 value: e$5.value
               }
@@ -1071,22 +1071,6 @@ function Update_ProductOption_Admin(Props) {
   React.useLayoutEffect((function () {
           trigger(inputNames.id);
         }), []);
-  var tmp = {
-    inputName: inputNames.cutOffTime,
-    disabled: disabled,
-    defaultValue: productOption.cutOffTime
-  };
-  if (productOption.cutOffTime !== undefined) {
-    tmp.key = productOption.cutOffTime;
-  }
-  var tmp$1 = {
-    inputName: inputNames.memo,
-    disabled: disabled,
-    defaultValue: productOption.memo
-  };
-  if (productOption.memo !== undefined) {
-    tmp$1.key = productOption.memo;
-  }
   var match$1 = productOption.status !== "RETIRE";
   return React.createElement(ReactCollapsible.Root, {
               children: React.createElement("div", {
@@ -1177,7 +1161,17 @@ function Update_ProductOption_Admin(Props) {
                                           defaultValue: productOption.shippingUnitQuantity
                                         }))), React.createElement("div", {
                                   className: "flex flex-col gap-6 py-6 w-full"
-                                }, React.createElement(Update_ProductOption_Admin$EditCutOffTime, tmp), React.createElement(Update_ProductOption_Admin$EditMemo, tmp$1), index !== 0 || !match$1 ? null : React.createElement("div", {
+                                }, React.createElement(Update_ProductOption_Admin$EditCutOffTime, {
+                                      inputName: inputNames.cutOffTime,
+                                      disabled: disabled,
+                                      defaultValue: productOption.cutOffTime,
+                                      key: Belt_Option.getWithDefault(productOption.cutOffTime, "")
+                                    }), React.createElement(Update_ProductOption_Admin$EditMemo, {
+                                      inputName: inputNames.memo,
+                                      disabled: disabled,
+                                      defaultValue: productOption.memo,
+                                      key: Belt_Option.getWithDefault(productOption.memo, "")
+                                    }), index !== 0 || !match$1 ? null : React.createElement("div", {
                                         className: "flex gap-2 items-center"
                                       }, React.createElement("button", {
                                             onClick: onClickApplyAll

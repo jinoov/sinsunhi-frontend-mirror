@@ -132,9 +132,7 @@ let displayExperiencedYearRange = (s: int) =>
   | _ => ``
   }
 
-let displayAnnualProductSalesInfo = (
-  s: BulkSaleProducerAdminFragment_bulkSaleApplication_graphql.Types.enum_AverageAnnualSalesRange,
-) =>
+let displayAnnualProductSalesInfo = (s: RelaySchemaAssets_graphql.enum_AverageAnnualSalesRange) =>
   switch s {
   | #FROM_0_TO_30M => `3천만원 미만`
   | #FROM_30M_TO_100M => `3,000만원~1억원 미만`
@@ -144,9 +142,7 @@ let displayAnnualProductSalesInfo = (
 
   | _ => `-`
   }
-let displayBusinessType = (
-  s: BulkSaleProducerAdminFragment_bulkSaleApplication_graphql.Types.enum_IndividualOrCompany,
-) =>
+let displayBusinessType = (s: RelaySchemaAssets_graphql.enum_IndividualOrCompany) =>
   switch s {
   | #INDIVIDUAL => `개인`
   | #COMPANY => `법인`
@@ -162,9 +158,7 @@ let displayFacilityType = facilityType =>
   | _ => ""
   }
 
-let displayCertificate = (
-  certificate: BulkSaleProducerAdminFragment_bulkSaleApplication_graphql.Types.enum_ProductionCertificate,
-) =>
+let displayCertificate = (certificate: RelaySchemaAssets_graphql.enum_ProductionCertificate) =>
   switch certificate {
   | #ECO_FRIENDLY => `친환경`
   | #GAP => "GAP"

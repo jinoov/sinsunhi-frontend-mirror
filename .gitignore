@@ -31,3 +31,5 @@ styles/.tailwind.dev.css
 
 .env.local
 .env.development
+
+.mjs

@@ -385,6 +385,8 @@ function useBlockingPagination(fRef) {
 
 var makeRefetchVariables = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_Query_graphql.Types.makeRefetchVariables;
 
+var RequestItemsMeat_getConnectionNodes = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.getConnectionNodes;
+
 var RequestItemsMeat_countryCode_decode = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.countryCode_decode;
 
 var RequestItemsMeat_countryCode_fromString = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.countryCode_fromString;
@@ -401,9 +403,8 @@ var RequestItemsMeat_rfqRequestItemStatus_decode = RfqBasketBuyer_RfqRequestItem
 
 var RequestItemsMeat_rfqRequestItemStatus_fromString = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.rfqRequestItemStatus_fromString;
 
-var RequestItemsMeat_getConnectionNodes = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.getConnectionNodes;
-
 var RequestItemsMeat = {
+  getConnectionNodes: RequestItemsMeat_getConnectionNodes,
   countryCode_decode: RequestItemsMeat_countryCode_decode,
   countryCode_fromString: RequestItemsMeat_countryCode_fromString,
   rfqMeatPackageMethod_decode: RequestItemsMeat_rfqMeatPackageMethod_decode,
@@ -412,7 +413,6 @@ var RequestItemsMeat = {
   rfqMeatStorageMethod_fromString: RequestItemsMeat_rfqMeatStorageMethod_fromString,
   rfqRequestItemStatus_decode: RequestItemsMeat_rfqRequestItemStatus_decode,
   rfqRequestItemStatus_fromString: RequestItemsMeat_rfqRequestItemStatus_fromString,
-  getConnectionNodes: RequestItemsMeat_getConnectionNodes,
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,

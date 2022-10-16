@@ -285,7 +285,7 @@ module PC = {
       <Update_Manager_Buyer
         isOpen={openModal == Some(Manager)}
         onClose={_ => setOpenModal(._ => None)}
-        key=?manager
+        key={manager->Option.getWithDefault("")}
         defaultValue=?manager
       />
       <Update_PhoneNumber_Buyer
@@ -568,7 +568,7 @@ module Mobile = {
         <Update_Manager_Buyer
           isOpen={openModal == Some(Manager)}
           onClose={_ => router->Next.Router.back}
-          key=?{manager}
+          key={manager->Option.getWithDefault("")}
           defaultValue=?{manager}
         />
         <Update_PhoneNumber_Buyer

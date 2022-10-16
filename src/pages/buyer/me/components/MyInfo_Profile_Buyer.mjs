@@ -210,13 +210,11 @@ function MyInfo_Profile_Buyer$Mobile(Props) {
     isOpen: Caml_obj.equal(openModal, /* Manager */3),
     onClose: (function (param) {
         router.back();
-      })
+      }),
+    key: Belt_Option.getWithDefault(manager, "")
   };
   if (manager !== undefined) {
     tmp.defaultValue = Caml_option.valFromOption(manager);
-  }
-  if (manager !== undefined) {
-    tmp.key = manager;
   }
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "block w-full bg-white absolute top-0 pt-14 min-h-screen"
