@@ -2,7 +2,7 @@
 external submitFormData: Webapi.Dom.Element.t => unit = "submit"
 
 @react.component
-let make = (~order: CustomHooks.OrdersAdmin.order) => {
+let make = (~order: CustomHooks.Orders.order) => {
   let status = CustomHooks.SweetTracker.use()
 
   let openPopupPostFormData = (

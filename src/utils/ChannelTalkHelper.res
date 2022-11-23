@@ -109,18 +109,7 @@ module Hook = {
     }, [user])
   }
 
-  let use = (~viewMode=PcAndMobile, ~trackData: option<trackData<'eventProperty>>=?, ()) => {
-    React.useEffect0(_ => {
-      switch (viewMode, DeviceDetect.detectDevice()) {
-      | (PcAndMobile, _) => showChannelButton()
-      | (PcOnly, PC) => showChannelButton()
-      | (MobileOnly, Mobile) => showChannelButton()
-      | _ => ()
-      }
-
-      Some(hideChannelButton)
-    })
-
+  let use = (~trackData: option<trackData<'eventProperty>>=?, ()) => {
     React.useEffect1(_ => {
       switch trackData {
       | Some(data) => ChannelTalk.track(. "track", data.eventName, data.eventProperty)

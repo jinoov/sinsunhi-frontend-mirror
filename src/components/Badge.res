@@ -12,7 +12,8 @@ let make = (~status) => {
   | COMPLETE
   | CANCEL
   | ERROR
-  | REFUND =>
+  | REFUND
+  | DEPOSIT_PENDING =>
     %twc("max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap")
   }
 

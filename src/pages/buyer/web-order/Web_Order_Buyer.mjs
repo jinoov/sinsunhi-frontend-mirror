@@ -2,9 +2,11 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as Dialog from "../../../components/common/Dialog.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Payments from "../../../bindings/Payments.mjs";
+import * as Garter_Fn from "@greenlabs/garter/src/Garter_Fn.mjs";
 import * as IconError from "../../../components/svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
@@ -20,13 +22,10 @@ import * as Authorization from "../../../utils/Authorization.mjs";
 import * as ReactHookForm from "../../../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
-import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
-import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
 import * as ReactHookForm$1 from "react-hook-form";
 import * as Web_Order_Buyer_Form from "../../../components/Web_Order_Buyer_Form.mjs";
 import * as Web_Order_Item_Buyer from "../../../components/Web_Order_Item_Buyer.mjs";
 import * as ToggleOrderAndPayment from "../../../utils/ToggleOrderAndPayment.mjs";
-import * as ReactDialog from "@radix-ui/react-dialog";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactToastNotifications from "react-toast-notifications";
 import * as WebOrderBuyer_TempWosOrder_Query_graphql from "../../../__generated__/WebOrderBuyer_TempWosOrder_Query_graphql.mjs";
@@ -100,7 +99,13 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
+var Query_wosOrderStatus_decode = WebOrderBuyer_TempWosOrder_Query_graphql.Utils.wosOrderStatus_decode;
+
+var Query_wosOrderStatus_fromString = WebOrderBuyer_TempWosOrder_Query_graphql.Utils.wosOrderStatus_fromString;
+
 var Query = {
+  wosOrderStatus_decode: Query_wosOrderStatus_decode,
+  wosOrderStatus_fromString: Query_wosOrderStatus_fromString,
   Operation: undefined,
   Types: undefined,
   use: use,
@@ -313,39 +318,45 @@ function makeMutationVariable(formData, tempOrderId) {
         };
 }
 
-function Web_Order_Buyer$Dialog(Props) {
-  var show = Props.show;
+function Web_Order_Buyer$FreightComfirmDialog(Props) {
+  var isShow = Props.isShow;
   var confirmFn = Props.confirmFn;
   var cancel = Props.cancel;
-  return React.createElement(ReactDialog.Root, {
-              children: React.createElement(ReactDialog.Portal, {
-                    children: null
-                  }, React.createElement(ReactDialog.Overlay, {
-                        className: "dialog-overlay"
-                      }), React.createElement(ReactDialog.Content, {
-                        children: null,
-                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
-                      }, React.createElement("span", {
-                            className: "whitespace-pre text-center text-text-L1 pt-3"
-                          }, "화물배송의 경우 배송지에 따라\n추가배송비(화물비)가 후청구 됩니다.\n담당MD가 화물비를 알려드리기 위해\n별도로 연락을 드릴 예정입니다.\n위 사항이 확인되셨다면\n결제를 눌러 다음 단계를 진행해 주세요."), React.createElement("div", {
-                            className: "flex w-full justify-center items-center gap-2"
-                          }, React.createElement("button", {
-                                className: "w-1/2 rounded-xl h-13 bg-enabled-L5",
-                                onClick: cancel
-                              }, "취소"), React.createElement("button", {
-                                className: "w-1/2 rounded-xl h-13 bg-primary text-inverted font-bold",
-                                onClick: (function (param) {
-                                    return ReactEvents.interceptingHandler((function (param) {
-                                                  Curry._1(confirmFn, undefined);
-                                                }), param);
-                                  })
-                              }, "결제")))),
-              open: show
+  return React.createElement(Dialog.make, {
+              isShow: isShow,
+              children: React.createElement("span", {
+                    className: "flex justify-center text-center whitespace-pre text-text-L1 pt-3"
+                  }, "화물배송의 경우 배송지에 따라\n추가배송비(화물비)가 후청구 됩니다.\n담당MD가 화물비를 알려드리기 위해\n별도로 연락을 드릴 예정입니다.\n위 사항이 확인되셨다면\n결제를 눌러 다음 단계를 진행해 주세요."),
+              onCancel: cancel,
+              onConfirm: (function (param) {
+                  Curry._1(confirmFn, undefined);
+                }),
+              textOnConfirm: "결제"
             });
 }
 
-var Dialog = {
-  make: Web_Order_Buyer$Dialog
+var FreightComfirmDialog = {
+  make: Web_Order_Buyer$FreightComfirmDialog
+};
+
+function Web_Order_Buyer$CompletedOrderDialog(Props) {
+  var order = Props.order;
+  var router = Router.useRouter();
+  var match = order.status;
+  var isShow = match === "SUCCESS" || match === "DEPOSIT_PENDING" || match === "COMPLETE" ? /* Show */0 : /* Hide */1;
+  return React.createElement(Dialog.make, {
+              isShow: isShow,
+              children: React.createElement("span", {
+                    className: "flex justify-center"
+                  }, "이미 주문·결제가 완료된 주문서 입니다."),
+              onConfirm: (function (param) {
+                  router.replace("/");
+                })
+            });
+}
+
+var CompletedOrderDialog = {
+  make: Web_Order_Buyer$CompletedOrderDialog
 };
 
 function Web_Order_Buyer$Container(Props) {
@@ -355,45 +366,12 @@ function Web_Order_Buyer$Container(Props) {
         tempWosOrderId: tempOrderId
       }, undefined, undefined, undefined, undefined);
   var tempWosOrder = match.tempWosOrder;
-  var skuNos = Belt_SetString.fromArray(Belt_Option.getWithDefault(Belt_Option.flatMap(tempWosOrder, (function (t) {
-                  return Belt_Option.map(t.data, (function (data$p) {
-                                return Belt_Array.keepMap(data$p.productOptions, (function (option) {
-                                              return Belt_Option.map(option, (function (option$p) {
-                                                            return option$p.stockSku;
-                                                          }));
-                                            }));
-                              }));
-                })), []));
-  var productNos = Belt_Option.flatMap(tempWosOrder, (function (t) {
-          return Belt_Option.map(t.data, (function (data$p) {
-                        return Belt_Array.keepMap(data$p.productOptions, (function (a) {
-                                      return Belt_Option.flatMap(a, (function (a$p) {
-                                                    return a$p.productId;
-                                                  }));
-                                    }));
-                      }));
-        }));
-  var skuMap = Belt_MapString.fromArray(Belt_Option.getWithDefault(Belt_Option.flatMap(tempWosOrder, (function (t) {
-                  return Belt_Option.map(t.data, (function (data$p) {
-                                return Belt_Array.keepMap(data$p.productOptions, (function (a) {
-                                              return Belt_Option.map(a, (function (a$p) {
-                                                            return [
-                                                                    a$p.stockSku,
-                                                                    [
-                                                                      a$p.quantity,
-                                                                      a$p.cartUpdatedAt
-                                                                    ]
-                                                                  ];
-                                                          }));
-                                            }));
-                              }));
-                })), []));
   var match$1 = use$1(undefined);
   var updateTempWosOrderMutate = match$1[0];
   var match$2 = use$2(undefined);
   var requestPaymentMutate = match$2[0];
   var match$3 = React.useState(function () {
-        return false;
+        return /* Hide */1;
       });
   var setFreightDialogShow = match$3[1];
   var match$4 = React.useState(function () {
@@ -408,7 +386,7 @@ function Web_Order_Buyer$Container(Props) {
   var handleOnCancel = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
                   setFreightDialogShow(function (param) {
-                        return false;
+                        return /* Hide */1;
                       });
                   setConfirmFn(function (param) {
                         return function (prim) {
@@ -437,174 +415,177 @@ function Web_Order_Buyer$Container(Props) {
         mode: "onSubmit",
         defaultValues: Js_dict.fromArray([[
                 Web_Order_Buyer_Form.name,
-                Js_dict.fromArray([
-                      [
+                Js_dict.fromArray([[
                         "payment-method",
-                        "card"
-                      ],
-                      Web_Order_Buyer_Form.defaultValue(false)
-                    ])
+                        "virtual"
+                      ]])
               ]])
       }, undefined);
   var onSubmit = function (data, param) {
-    if (availableButton) {
-      var msg = Web_Order_Buyer_Form.submit_decode(data);
-      if (msg.TAG === /* Ok */0) {
-        var data$p = msg._0.webOrder;
-        var confirm = function (param) {
-          var productInfos = data$p.productInfos;
-          setFreightDialogShow(function (param) {
-                return false;
-              });
-          Curry.app(updateTempWosOrderMutate, [
-                (function (err) {
-                    handleError(err.message, undefined);
-                  }),
-                (function (param, param$1) {
-                    var updateTempWosOrder = param.updateTempWosOrder;
-                    if (updateTempWosOrder === undefined) {
-                      return handleError("주문 생성 요청 실패", undefined);
+    var msg = Web_Order_Buyer_Form.submit_decode(data);
+    if (msg.TAG === /* Ok */0) {
+      var data$p = msg._0.webOrder;
+      var confirm = function (param) {
+        var productInfos = data$p.productInfos;
+        setFreightDialogShow(function (param) {
+              return /* Hide */1;
+            });
+        Curry.app(updateTempWosOrderMutate, [
+              (function (err) {
+                  handleError(err.message, undefined);
+                }),
+              (function (param, param$1) {
+                  var updateTempWosOrder = param.updateTempWosOrder;
+                  if (updateTempWosOrder === undefined) {
+                    return handleError("주문 생성 요청 실패", undefined);
+                  }
+                  if (typeof updateTempWosOrder !== "object") {
+                    return handleError("주문 생성 에러", undefined);
+                  }
+                  var variant = updateTempWosOrder.NAME;
+                  if (variant === "WosError") {
+                    var code = updateTempWosOrder.VAL.code;
+                    if (code === "INVALID_DELIVERY") {
+                      return handleError("유효하지 않은 배송 정보입니다.", undefined);
+                    } else if (code === "ADHOC_STOCK_SOLD_OUT") {
+                      return handleError("잔여 수량이 부족합니다.", undefined);
+                    } else if (code === "INVALID_PAYMENT_PURPOSE") {
+                      return handleError("유효하지 않은 결제 목적입니다.", undefined);
+                    } else if (code === "INVALID_ORDER") {
+                      return handleError("유효하지 않은 주문 정보입니다.", undefined);
+                    } else if (code === "INVALID_PRODUCT") {
+                      return handleError("유효하지 않은 상품 정보입니다.", undefined);
+                    } else {
+                      return handleError(undefined, undefined);
                     }
-                    if (typeof updateTempWosOrder !== "object") {
-                      return handleError("주문 생성 에러", undefined);
-                    }
-                    var variant = updateTempWosOrder.NAME;
-                    if (variant === "WosError") {
-                      var code = updateTempWosOrder.VAL.code;
-                      if (code === "INVALID_DELIVERY") {
-                        return handleError("유효하지 않은 배송 정보입니다.", undefined);
-                      } else if (code === "INVALID_PAYMENT_PURPOSE") {
-                        return handleError("유효하지 않은 결제 목적입니다.", undefined);
-                      } else if (code === "INVALID_ORDER") {
-                        return handleError("유효하지 않은 주문 정보입니다.", undefined);
-                      } else if (code === "INVALID_PRODUCT") {
-                        return handleError("유효하지 않은 상품 정보입니다.", undefined);
-                      } else {
-                        return handleError(undefined, undefined);
-                      }
-                    }
-                    if (variant !== "CreateWosOrderResult") {
-                      return handleError("주문 생성 에러", undefined);
-                    }
-                    var match = updateTempWosOrder.VAL;
-                    var tempOrderId = match.tempOrderId;
-                    var orderNo = match.orderNo;
-                    var taxFreeAmount = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
-                                if (info.isTaxFree) {
-                                  return info.totalPrice;
-                                } else {
-                                  return 0;
-                                }
-                              })));
-                    var totalOrderPrice = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
+                  }
+                  if (variant !== "CreateWosOrderResult") {
+                    return handleError("주문 생성 에러", undefined);
+                  }
+                  var match = updateTempWosOrder.VAL;
+                  var tempOrderId = match.tempOrderId;
+                  var orderNo = match.orderNo;
+                  var taxFreeAmount = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
+                              if (info.isTaxFree) {
                                 return info.totalPrice;
-                              })));
-                    Curry.app(requestPaymentMutate, [
-                          (function (err) {
-                              handleError(err.message, undefined);
-                            }),
-                          (function (param, param$1) {
-                              var requestPayment = param.requestPayment;
-                              if (requestPayment === undefined) {
-                                return handleError("주문 생성에 실패하였습니다.", undefined);
-                              }
-                              if (typeof requestPayment !== "object") {
-                                return handleError("주문 생성에 실패하였습니다.", undefined);
-                              }
-                              var variant = requestPayment.NAME;
-                              if (variant === "Error") {
-                                var err = requestPayment.VAL;
-                                Belt_Option.forEach(err.message, (function (message) {
-                                        handleError(message, undefined);
-                                      }));
-                                console.log(err);
-                                return ;
-                              }
-                              if (variant !== "RequestPaymentTossPaymentsResult") {
-                                return handleError("주문 생성에 실패하였습니다.", undefined);
-                              }
-                              var tossPaymentResult = requestPayment.VAL;
-                              var productOptions = Belt_Array.concatMany(Belt_Array.map(productInfos, (function (info) {
-                                          return info.productOptions;
-                                        })));
-                              var productOption = Belt_Array.get(productOptions, 0);
-                              var orderName;
-                              if (productOption !== undefined) {
-                                var num = productOptions.length;
-                                orderName = productOption.productOptionName + (
-                                  num > 1 ? " 외 " + String(num - 1 | 0) + "건" : ""
-                                );
                               } else {
-                                orderName = "신선하이";
+                                return 0;
                               }
-                              window.tossPayments.requestPayment(Payments.methodToTossValue(data$p.paymentMethod), {
-                                    amount: totalOrderPrice,
-                                    orderId: orderNo,
-                                    orderName: orderName,
-                                    taxFreeAmount: taxFreeAmount,
-                                    customerName: tossPaymentResult.customerName,
-                                    successUrl: "" + window.location.origin + "/buyer/toss-payments/success?payment-id=" + String(tossPaymentResult.paymentId) + "&temp-order-id=" + String(tempOrderId) + "",
-                                    failUrl: "" + window.location.origin + "/buyer/toss-payments/fail?temp-order-id=" + String(tempOrderId) + "",
-                                    validHours: Payments.tossPaymentsValidHours(data$p.paymentMethod),
-                                    cashReceipt: Payments.tossPaymentsCashReceipt(data$p.paymentMethod),
-                                    appScheme: Belt_Option.map(Caml_option.nullable_to_opt(window.ReactNativeWebView), (function (param) {
-                                            return encodeURIComponent("sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?payment-id=" + String(tossPaymentResult.paymentId) + "&temp-order-id=" + String(tempOrderId) + "");
-                                          }))
-                                  });
-                            }),
-                          undefined,
-                          undefined,
-                          undefined,
-                          undefined,
-                          {
-                            amount: totalOrderPrice,
-                            paymentMethod: data$p.paymentMethod,
-                            purpose: "ORDER"
-                          },
-                          undefined,
-                          undefined
-                        ]);
-                  }),
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                makeMutationVariable(data$p, tempOrderId),
-                undefined,
-                undefined
-              ]);
-        };
-        var match = data$p.deliveryType;
-        if (match === "FREIGHT") {
-          setConfirmFn(function (param) {
-                return confirm;
-              });
-          return setFreightDialogShow(function (param) {
-                      return true;
-                    });
-        } else {
-          return confirm(undefined);
-        }
+                            })));
+                  var totalOrderPrice = Garter_Math.sum_int(Belt_Array.map(productInfos, (function (info) {
+                              return info.totalPrice;
+                            })));
+                  Curry.app(requestPaymentMutate, [
+                        (function (err) {
+                            handleError(err.message, undefined);
+                          }),
+                        (function (param, param$1) {
+                            var requestPayment = param.requestPayment;
+                            if (requestPayment === undefined) {
+                              return handleError("주문 생성에 실패하였습니다.", undefined);
+                            }
+                            if (typeof requestPayment !== "object") {
+                              return handleError("주문 생성에 실패하였습니다.", undefined);
+                            }
+                            var variant = requestPayment.NAME;
+                            if (variant === "Error") {
+                              var err = requestPayment.VAL;
+                              Belt_Option.forEach(err.message, (function (message) {
+                                      handleError(message, undefined);
+                                    }));
+                              console.log(err);
+                              return ;
+                            }
+                            if (variant !== "RequestPaymentTossPaymentsResult") {
+                              return handleError("주문 생성에 실패하였습니다.", undefined);
+                            }
+                            var tossPaymentResult = requestPayment.VAL;
+                            var productOptions = Belt_Array.concatMany(Belt_Array.map(productInfos, (function (info) {
+                                        return info.productOptions;
+                                      })));
+                            var productOption = Belt_Array.get(productOptions, 0);
+                            var orderName;
+                            if (productOption !== undefined) {
+                              var num = productOptions.length;
+                              orderName = productOption.productOptionName + (
+                                num > 1 ? " 외 " + String(num - 1 | 0) + "건" : ""
+                              );
+                            } else {
+                              orderName = "신선하이";
+                            }
+                            window.tossPayments.requestPayment(Payments.methodToTossValue(data$p.paymentMethod), {
+                                  amount: totalOrderPrice,
+                                  orderId: "order-" + String(tossPaymentResult.paymentId),
+                                  orderName: orderName,
+                                  taxFreeAmount: taxFreeAmount,
+                                  customerName: tossPaymentResult.customerName,
+                                  successUrl: "" + window.location.origin + "/buyer/toss-payments/success?order-no=" + orderNo + "&payment-id=" + String(tossPaymentResult.paymentId) + "&temp-order-id=" + String(tempOrderId) + "",
+                                  failUrl: "" + window.location.origin + "/buyer/toss-payments/fail?temp-order-id=" + String(tempOrderId) + "",
+                                  validHours: Payments.tossPaymentsValidHours(data$p.paymentMethod),
+                                  cashReceipt: Payments.tossPaymentsCashReceipt(data$p.paymentMethod),
+                                  appScheme: Belt_Option.map(Caml_option.nullable_to_opt(window.ReactNativeWebView), (function (param) {
+                                          return encodeURIComponent("sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?order-no=" + orderNo + "&payment-id=" + String(tossPaymentResult.paymentId) + "&temp-order-id=" + String(tempOrderId) + "");
+                                        }))
+                                });
+                          }),
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                        {
+                          amount: totalOrderPrice,
+                          paymentMethod: data$p.paymentMethod,
+                          purpose: "ORDER"
+                        },
+                        undefined,
+                        undefined
+                      ]);
+                }),
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              makeMutationVariable(data$p, tempOrderId),
+              undefined,
+              undefined
+            ]);
+      };
+      var match = data$p.paymentMethod;
+      if (!availableButton && match === "VIRTUAL_ACCOUNT") {
+        window.alert("서비스 점검으로 인해 가상계좌 주문 기능을 이용할 수 없습니다.");
+        return ;
       }
-      var msg$1 = msg._0;
-      console.log(msg$1);
-      return handleError(msg$1.message, undefined);
+      var match$1 = data$p.deliveryType;
+      if (match$1 === "FREIGHT") {
+        setConfirmFn(function (param) {
+              return confirm;
+            });
+        return setFreightDialogShow(function (param) {
+                    return /* Show */0;
+                  });
+      } else {
+        return confirm(undefined);
+      }
     }
-    window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
+    var msg$1 = msg._0;
+    console.log(msg$1);
+    handleError(msg$1.message, undefined);
   };
-  return React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Buyer$Dialog, {
-                  show: match$3[0],
-                  confirmFn: match$4[0],
-                  cancel: handleOnCancel
-                }), React.createElement(ReactHookForm.Provider.make, {
+  return React.createElement(React.Fragment, undefined, React.createElement(ReactHookForm.Provider.make, {
                   children: React.createElement("form", {
                         onSubmit: methods.handleSubmit(onSubmit)
-                      }, productNos !== undefined ? React.createElement(Web_Order_Item_Buyer.make, {
-                              productNos: productNos,
-                              skuNos: skuNos,
-                              skuMap: skuMap,
-                              deviceType: deviceType
-                            }) : React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
+                      }, tempWosOrder !== undefined ? React.createElement(React.Fragment, undefined, React.createElement(Web_Order_Item_Buyer.make, {
+                                  deviceType: deviceType,
+                                  productOptions: Belt_Option.mapWithDefault(tempWosOrder.data, [], (function (d) {
+                                          return Belt_Array.keepMap(d.productOptions, Garter_Fn.identity);
+                                        }))
+                                }), React.createElement(Web_Order_Buyer$FreightComfirmDialog, {
+                                  isShow: match$3[0],
+                                  confirmFn: match$4[0],
+                                  cancel: handleOnCancel
+                                }), React.createElement(Web_Order_Buyer$CompletedOrderDialog, {
+                                  order: tempWosOrder.order
+                                })) : React.createElement(Web_Order_Item_Buyer.PlaceHolder.make, {
                               deviceType: deviceType
                             })),
                   methods: methods
@@ -659,7 +640,8 @@ export {
   Form ,
   PlaceHolder ,
   makeMutationVariable ,
-  Dialog ,
+  FreightComfirmDialog ,
+  CompletedOrderDialog ,
   Container ,
   $$default ,
   $$default as default,

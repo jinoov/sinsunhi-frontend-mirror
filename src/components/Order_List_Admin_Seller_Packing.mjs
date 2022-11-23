@@ -68,7 +68,7 @@ function Order_List_Admin_Seller_Packing(Props) {
                 renderOnRetry: React.createElement(Order_List_Admin_Seller_Packing$Loading, {})
               });
   }
-  var orders$p = CustomHooks.OrdersAdmin.orders_decode(status._0);
+  var orders$p = CustomHooks.Orders.orders_decode(status._0);
   var tmp;
   if (orders$p.TAG === /* Ok */0) {
     var orders$p$1 = orders$p._0;
@@ -88,7 +88,7 @@ function Order_List_Admin_Seller_Packing(Props) {
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     tmp$1 = null;
   } else {
-    var orders$p$2 = CustomHooks.OrdersAdmin.orders_decode(status._0);
+    var orders$p$2 = CustomHooks.Orders.orders_decode(status._0);
     if (orders$p$2.TAG === /* Ok */0) {
       var orders$p$3 = orders$p$2._0;
       tmp$1 = React.createElement("div", {

@@ -281,6 +281,9 @@ function PDP_Normal_Modals_Buyer$Confirm$PC(Props) {
                         className: "dialog-content-base bg-white rounded-xl w-[calc(100vw-40px)] max-w-[calc(768px-40px)]",
                         onPointerDownOutside: (function (param) {
                             Curry._1(closeFn, undefined);
+                          }),
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
                           })
                       })),
               open: _open

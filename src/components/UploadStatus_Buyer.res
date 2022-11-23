@@ -31,6 +31,7 @@ let displayError = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
   | Some(OrdererId(_)) => `주문서 양식 에러`->React.string
   | Some(Etc(_)) => `주문서 양식 에러`->React.string
   | Some(AfterPay(_)) => `나중결제 한도 부족`->React.string
+  | Some(NotEnoughAdhocStock(_)) => `남은 수량 부족`->React.string
   | None => React.null
   }
 let textOnConfirmButton = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
@@ -46,9 +47,11 @@ let textOnConfirmButton = (errorCode: option<CustomHooks.UploadStatus.errorCode>
   | Some(OrdererId(_)) => `발주 메뉴얼 보기`
   | Some(Etc(_)) => `발주 메뉴얼 보기`
   | Some(AfterPay(_)) => ``
+  | Some(NotEnoughAdhocStock(_)) => ``
   | None => ``
   }
-let errorMessage = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
+
+let errorMessage = (errorCode: option<CustomHooks.UploadStatus.errorCode>, detailedErrorMessage) =>
   switch errorCode {
   | Some(S3GetObject(_))
   | Some(RequiredColumns(_))
@@ -79,8 +82,11 @@ let errorMessage = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
 주문 금액을 조정하여 다시 재업로드해주세요.
 `->React.string}
     </>
+  | Some(NotEnoughAdhocStock(s)) =>
+    <> {`${s}\n\n ${detailedErrorMessage->Option.getWithDefault("")}`->React.string} </>
   | None => React.null
   }
+
 let linkOfGuide = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
   switch errorCode {
   | Some(Deposit(_)) => "/buyer/transactions"
@@ -94,10 +100,12 @@ let linkOfGuide = (errorCode: option<CustomHooks.UploadStatus.errorCode>) =>
   | Some(OrdererId(_))
   | Some(Etc(_))
   | Some(AfterPay(_))
+  | Some(NotEnoughAdhocStock(_))
   | None => Env.buyerUploadGuideUri
   }
 
 type errorDetail = {
+  detailedErrorMessage: option<string>,
   errorCode: option<CustomHooks.UploadStatus.errorCode>,
   isShow: Dialog.isShow,
 }
@@ -120,6 +128,7 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
   let (errorDetail, setErrorDetail) = React.Uncurried.useState(_ => {
     isShow: Dialog.Hide,
     errorCode: None,
+    detailedErrorMessage: None,
   })
 
   let status = CustomHooks.UploadStatus.use(~kind, ~uploadType)
@@ -158,6 +167,7 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
       | Loaded(data) =>
         switch data->CustomHooks.UploadStatus.response_decode {
         | Ok(data') =>
+          data'->Js.log
           <>
             {if data'.data->Garter.Array.isEmpty {
               <div> {j`업로드 한 내역이 없습니다.`->React.string} </div>
@@ -191,7 +201,11 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
                           <span
                             className=%twc("whitespace-nowrap ml-1 text-gray-400 underline")
                             onClick={_ =>
-                              setErrorDetail(._ => {isShow: Dialog.Show, errorCode: d.errorCode})}>
+                              setErrorDetail(._ => {
+                                isShow: Dialog.Show,
+                                errorCode: d.errorCode,
+                                detailedErrorMessage: d.errorMessage,
+                              })}>
                             {switch (uploadType, d.status, d.errorCode) {
                             | (OrderAfterPay, SUCCESS, None)
                             | (_, _, Some(_)) =>
@@ -219,13 +233,14 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
       textOnConfirm={textOnConfirmButton(errorDetail.errorCode)}
       textOnCancel={`닫기`}
       onConfirm={_ => {
-        setErrorDetail(._ => {isShow: Dialog.Hide, errorCode: None})
+        setErrorDetail(._ => {isShow: Dialog.Hide, errorCode: None, detailedErrorMessage: None})
         switch errorDetail.errorCode {
         | Some(_) => openInNewTab("link-of-guide")
         | None => ()
         }
       }}
-      onCancel={_ => setErrorDetail(._ => {isShow: Dialog.Hide, errorCode: None})}>
+      onCancel={_ =>
+        setErrorDetail(._ => {isShow: Dialog.Hide, errorCode: None, detailedErrorMessage: None})}>
       <a
         id="link-of-guide"
         href={linkOfGuide(errorDetail.errorCode)}
@@ -233,7 +248,7 @@ let make = (~kind, ~onChangeLatestUpload, ~uploadType) => {
         className=%twc("hidden")
       />
       <p className=%twc("whitespace-pre-wrap text-text-L1 text-center")>
-        {errorMessage(errorDetail.errorCode)}
+        {errorMessage(errorDetail.errorCode, errorDetail.detailedErrorMessage)}
       </p>
       {switch errorDetail.errorCode {
       | Some(S3GetObject(_))

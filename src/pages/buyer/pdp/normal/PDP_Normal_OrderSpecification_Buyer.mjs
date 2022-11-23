@@ -2,6 +2,7 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as Global from "../../../../components/Global.mjs";
 import * as DataGtm from "../../../../utils/DataGtm.mjs";
 import * as IconCheck from "../../../../components/svgs/IconCheck.mjs";
 import * as IconError from "../../../../components/svgs/IconError.mjs";
@@ -132,6 +133,7 @@ function make(product, selectedOptions) {
 }
 
 function makeOrderBranchGtm(selectedItems, orderType) {
+  var eventName = orderType ? "click_purchase_now_btn" : "click_upload_order_btn";
   var makeItems = function (nonEmptyItems) {
     return Belt_Array.map(nonEmptyItems, (function (param) {
                   var categories = param.categories;
@@ -154,7 +156,7 @@ function makeOrderBranchGtm(selectedItems, orderType) {
   };
   return Belt_Option.map(filterEmptyArr(selectedItems), (function (nonEmptyItems) {
                 return {
-                        event: "click_purchase",
+                        event: eventName,
                         ecommerce: {
                           items: makeItems(nonEmptyItems)
                         }
@@ -374,7 +376,19 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
+var CartQuery_productOptionStatus_decode = PDPNormalOrderSpecificationBuyerCartQuery_graphql.Utils.productOptionStatus_decode;
+
+var CartQuery_productOptionStatus_fromString = PDPNormalOrderSpecificationBuyerCartQuery_graphql.Utils.productOptionStatus_fromString;
+
+var CartQuery_productStatus_decode = PDPNormalOrderSpecificationBuyerCartQuery_graphql.Utils.productStatus_decode;
+
+var CartQuery_productStatus_fromString = PDPNormalOrderSpecificationBuyerCartQuery_graphql.Utils.productStatus_fromString;
+
 var CartQuery = {
+  productOptionStatus_decode: CartQuery_productOptionStatus_decode,
+  productOptionStatus_fromString: CartQuery_productOptionStatus_fromString,
+  productStatus_decode: CartQuery_productStatus_decode,
+  productStatus_fromString: CartQuery_productStatus_fromString,
   Operation: undefined,
   Types: undefined,
   use: use$2,
@@ -387,7 +401,7 @@ var CartQuery = {
 
 function makeMutationItem(param) {
   return {
-          optionId: param.optionId,
+          productOptionId: param.optionId,
           quantity: param.quantity
         };
 }
@@ -404,8 +418,6 @@ function PDP_Normal_OrderSpecification_Buyer$CartBtn(Props) {
   var match$1 = use$1(undefined);
   var isAddingCartItems = match$1[1];
   var addCartItems = match$1[0];
-  var match$2 = useLoader(undefined);
-  var refreshCount = match$2[1];
   var showToast = function (message, toastType) {
     addToast(React.createElement("div", {
               className: "flex items-center"
@@ -422,51 +434,82 @@ function PDP_Normal_OrderSpecification_Buyer$CartBtn(Props) {
           appearance: "success"
         });
   };
-  var onClick = function (param) {
-    Belt_Option.map(makeAddToCartGtm(selectedItems), (function ($$event) {
-            DataGtm.push({
-                  ecommerce: null
-                });
-            DataGtm.push(DataGtm.mergeUserIdUnsafe($$event));
-          }));
-    if (isAddingCartItems) {
-      return ;
-    }
-    if (selectedItems.length === 0) {
-      return ;
-    }
-    var variables = {
-      items: Belt_Array.map(selectedItems, makeMutationItem)
-    };
-    Curry.app(addCartItems, [
-          (function (err) {
-              console.log(err);
-            }),
-          (function (param, param$1) {
-              if (param.addCartItemList.result) {
-                Curry._4(refreshCount, undefined, /* StoreAndNetwork */2, undefined, undefined);
-                Curry._1(closeFn, undefined);
-                setSelectedOptions(function (param) {
-                      return Belt_MapString.fromArray([]);
-                    });
-                return showToast("장바구니에 상품이 담겼습니다.", /* Success */0);
-              } else {
-                return showToast("요청에 실패하였습니다.", /* Failure */1);
-              }
-            }),
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          variables,
-          undefined,
-          undefined
-        ]);
+  var environment = RescriptRelay.useEnvironmentFromContext(undefined);
+  var fetchCartItems = function (environment) {
+    return Js_promise.then_((function (param) {
+                  var cartItems = param.cartItems;
+                  var totalPrice = Belt_Array.reduce(cartItems, 0, (function (totalPrice, param) {
+                          return totalPrice + param.productOptionSnapshot.price | 0;
+                        }));
+                  var unfold = function (param) {
+                    var productSnapshot = param.productSnapshot;
+                    var productOptionSnapshot = param.productOptionSnapshot;
+                    return {
+                            cartId: param.number,
+                            optionId: param.productOption.number,
+                            optionName: productOptionSnapshot.optionName,
+                            optionStatus: productOptionSnapshot.status,
+                            price: productOptionSnapshot.price,
+                            productId: param.product.number,
+                            productName: productSnapshot.displayName,
+                            productStatus: productSnapshot.status,
+                            quantity: param.quantity
+                          };
+                  };
+                  var airbridgePayload = {
+                    products: Belt_Array.map(cartItems, unfold),
+                    currency: "KRW",
+                    total: totalPrice
+                  };
+                  Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "ADD_TO_CART", Caml_option.some(airbridgePayload), undefined);
+                  return Promise.resolve(undefined);
+                }), fetchPromised(environment, undefined, undefined, /* NetworkOnly */0, undefined));
   };
   return React.createElement("button", {
               className: "h-16 rounded-xl bg-white border border-primary text-primary text-base font-bold flex flex-1 items-center justify-center",
               disabled: isAddingCartItems,
-              onClick: onClick
+              onClick: (function (param) {
+                  Belt_Option.map(makeAddToCartGtm(selectedItems), (function ($$event) {
+                          DataGtm.push({
+                                ecommerce: null
+                              });
+                          DataGtm.push(DataGtm.mergeUserIdUnsafe($$event));
+                        }));
+                  if (isAddingCartItems) {
+                    return ;
+                  }
+                  if (selectedItems.length === 0) {
+                    return ;
+                  }
+                  var variables = {
+                    items: Belt_Array.map(selectedItems, makeMutationItem)
+                  };
+                  Curry.app(addCartItems, [
+                        (function (err) {
+                            console.log(err);
+                          }),
+                        (function (param, param$1) {
+                            var createCartItems = param.createCartItems;
+                            if (typeof createCartItems === "object" && createCartItems.NAME === "CreateCartItemsSuccess") {
+                              fetchCartItems(environment);
+                              Curry._1(closeFn, undefined);
+                              setSelectedOptions(function (param) {
+                                    return Belt_MapString.fromArray([]);
+                                  });
+                              return showToast("장바구니에 상품이 담겼습니다.", /* Success */0);
+                            } else {
+                              return showToast("요청에 실패하였습니다.", /* Failure */1);
+                            }
+                          }),
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                        variables,
+                        undefined,
+                        undefined
+                      ]);
+                })
             }, "장바구니 담기");
 }
 

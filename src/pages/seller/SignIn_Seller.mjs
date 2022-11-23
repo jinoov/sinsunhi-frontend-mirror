@@ -88,7 +88,7 @@ function info_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("activation-method" + e$1.path),
+              path: ".activation-method" + e$1.path,
               message: e$1.message,
               value: e$1.value
             }
@@ -213,7 +213,7 @@ function $$default(param) {
   };
   React.useEffect((function () {
           var phoneNumber = Curry._1(LocalStorageHooks.PhoneNumber.get, undefined);
-          if (phoneNumber !== "") {
+          if (phoneNumber !== undefined) {
             setCheckedSavePhone(function (param) {
                   return true;
                 });
@@ -285,7 +285,7 @@ function $$default(param) {
           }
           
         }), [router.query]);
-  ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
+  ChannelTalkHelper.Hook.use(undefined, undefined);
   var partial_arg = Curry._1(form.handleChange, /* Password */1);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "생산자 로그인 - 신선하이")

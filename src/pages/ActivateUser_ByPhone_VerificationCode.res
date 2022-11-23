@@ -150,6 +150,7 @@ let make = (~phone, ~skipEmail, ~uid, ~role) => {
         setVerificationCode(._ => FailureToVerifyCode)
         setTimeover(._ => true)
       }
+
     | _ => ()
     }
   }
@@ -178,7 +179,9 @@ let make = (~phone, ~skipEmail, ~uid, ~role) => {
   })
 
   <>
-    <Next.Head> <title> {j`휴대폰으로 휴면계정 해제`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {j`휴대폰으로 휴면계정 해제`->React.string} </title>
+    </Next.Head>
     <div
       className=%twc(
         "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"
@@ -197,7 +200,7 @@ let make = (~phone, ~skipEmail, ~uid, ~role) => {
               type_="number"
               name="verify-number"
               size=Input.Large
-              placeholder=`6자리 숫자를 입력해주세요`
+              placeholder={`6자리 숫자를 입력해주세요`}
               value={verificationCodeForm.values->VerificationCodeFormFields.get(
                 VerificationCodeFormFields.VerificationCode,
               )}
@@ -251,7 +254,7 @@ let make = (~phone, ~skipEmail, ~uid, ~role) => {
         setShowVerifyError(._ => Dialog.Hide)
         let _ = Js.Global.setTimeout(_ => ReactUtil.focusElementByRef(inputVerificationCodeRef), 0)
       }}
-      textOnConfirm=`확인`>
+      textOnConfirm={`확인`}>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
         {`인증번호가 일치하지 않습니다.`->React.string}
       </p>
@@ -273,7 +276,7 @@ let make = (~phone, ~skipEmail, ~uid, ~role) => {
           router->Next.Router.push(`/${role}/activate-user?mode=email`)
         }
       }}
-      textOnConfirm=`확인`>
+      textOnConfirm={`확인`}>
       <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
         {`휴대폰 번호를 10회 이상 틀렸어요\n이메일 인증을 하시겠어요?`->React.string}
       </p>

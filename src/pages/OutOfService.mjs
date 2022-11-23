@@ -7,9 +7,9 @@ import * as ChannelTalkHelper from "../utils/ChannelTalkHelper.mjs";
 import * as ReactSeparator from "@radix-ui/react-separator";
 
 function OutOfService(Props) {
-  ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
+  ChannelTalkHelper.Hook.use(undefined, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "서비스 점검 - 신선하이")
+                  children: React.createElement("title", undefined, "신선하이 | 서비스 점검")
                 }), React.createElement("section", {
                   className: "min-h-screen flex flex-col justify-center items-center"
                 }, React.createElement("p", {

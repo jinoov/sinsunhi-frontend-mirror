@@ -205,6 +205,9 @@ let makeCreateOption: (
   ->Option.keep(_ => option.showEach)
   ->Option.map(each => each.amountUnit->amountUnitEncode),
   shippingUnitQuantity: option.shippingUnitQuantity,
+  adhocStockIsLimited: option.adhocStockIsLimited,
+  adhocStockIsNumRemainingVisible: option.adhocStockIsNumRemainingVisible,
+  adhocStockNumLimit: option.adhocStockNumLimit,
 }
 
 module Presenter = {

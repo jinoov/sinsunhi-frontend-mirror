@@ -60,7 +60,10 @@ function ShopDialog_Buyer$Mo(Props) {
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
                         className: "dialog-content-base bg-white rounded-xl w-[calc(100vw-40px)] max-w-[calc(768px-40px)]",
-                        onPointerDownOutside: onCancel
+                        onPointerDownOutside: onCancel,
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, Belt_Option.getWithDefault(children, null), React.createElement(ShopDialog_Buyer$BtnSection, tmp))),
               open: _open
             });
@@ -96,7 +99,10 @@ function ShopDialog_Buyer(Props) {
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
                         className: "dialog-content-base bg-white rounded-xl w-[480px]",
-                        onPointerDownOutside: onCancel
+                        onPointerDownOutside: onCancel,
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, Belt_Option.getWithDefault(children, null), React.createElement(ShopDialog_Buyer$BtnSection, tmp))),
               open: _open
             });

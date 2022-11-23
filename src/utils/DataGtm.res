@@ -23,5 +23,6 @@ let mergeUserIdUnsafe = data => {
 
   data->Js.Obj.assign({
     "user_id": userIdOrNull,
+    "crm_id": userIdOrNull,
   })
 }

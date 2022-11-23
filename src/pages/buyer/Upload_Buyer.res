@@ -1,45 +1,128 @@
 module UploadFile = Upload_Orders
 
+@module("../../../public/assets/common-notice.svg")
+external commonNoticeIcon: string = "default"
 module UserDeposit = {
+  module MO = {
+    @react.component
+    let make = () => {
+      let router = Next.Router.useRouter()
+      let status = CustomHooks.UserDeposit.use(
+        router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
+      )
+
+      <div className=%twc("container max-w-lg px-5 sm:p-7 pt-4 sm:shadow-gl mx-auto")>
+        <Next.Link href="/buyer/transactions" passHref=true>
+          <a
+            className=%twc(
+              "w-full h-auto flex items-center p-5 sm:p-0 shadow-gl sm:shadow-none rounded-lg"
+            )>
+            <div>
+              <span className=%twc("block text-sm")>
+                {j`총 주문 가능 금액`->React.string}
+              </span>
+              <span className=%twc("block text-primary text-lg font-bold")>
+                {switch status {
+                | Error(error) =>
+                  error->Js.Console.log
+                  <Skeleton.Box className=%twc("w-40") />
+                | Loading => <Skeleton.Box className=%twc("w-40") />
+                | Loaded(deposit) =>
+                  switch deposit->CustomHooks.UserDeposit.response_decode {
+                  | Ok(deposit') =>
+                    `${deposit'.data.deposit->Locale.Float.show(~digits=0)}원`->React.string
+                  | Error(_) => <Skeleton.Box className=%twc("w-40") />
+                  }
+                }}
+              </span>
+            </div>
+            <IconArrow height="24" width="24" stroke="#262626" className="ml-auto" />
+          </a>
+        </Next.Link>
+      </div>
+    }
+  }
+  module PC = {
+    @react.component
+    let make = () => {
+      let router = Next.Router.useRouter()
+      let status = CustomHooks.UserDeposit.use(
+        router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
+      )
+      let oldUI =
+        <div className=%twc("container max-w-lg mx-auto px-5 sm:p-7 sm:shadow-gl")>
+          <Next.Link href="/buyer/transactions" passHref=true>
+            <a
+              className=%twc(
+                "w-full h-auto flex items-center p-5 sm:p-0 shadow-gl sm:shadow-none rounded-lg"
+              )>
+              <div>
+                <span className=%twc("block text-sm")>
+                  {j`총 주문 가능 금액`->React.string}
+                </span>
+                <span className=%twc("block text-primary text-lg font-bold")>
+                  {switch status {
+                  | Error(error) =>
+                    error->Js.Console.log
+                    <Skeleton.Box className=%twc("w-40") />
+                  | Loading => <Skeleton.Box className=%twc("w-40") />
+                  | Loaded(deposit) =>
+                    switch deposit->CustomHooks.UserDeposit.response_decode {
+                    | Ok(deposit') =>
+                      `${deposit'.data.deposit->Locale.Float.show(~digits=0)}원`->React.string
+                    | Error(_) => <Skeleton.Box className=%twc("w-40") />
+                    }
+                  }}
+                </span>
+              </div>
+              <IconArrow height="24" width="24" stroke="#262626" className="ml-auto" />
+            </a>
+          </Next.Link>
+        </div>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <div className=%twc("container w-full mx-auto py-[30px]")>
+          <Next.Link href="/buyer/transactions" passHref=true>
+            <a className=%twc("w-full h-auto flex items-center py-5 sm:p-0 rounded-lg")>
+              <div className=%twc("flex flex-row items-center")>
+                <span className=%twc("block text-[15px] mr-5")>
+                  {j`총 주문 가능 금액`->React.string}
+                </span>
+                <span className=%twc("block text-primary text-lg font-bold")>
+                  {switch status {
+                  | Error(error) =>
+                    error->Js.Console.log
+                    <Skeleton.Box className=%twc("w-40") />
+                  | Loading => <Skeleton.Box className=%twc("w-40") />
+                  | Loaded(deposit) =>
+                    switch deposit->CustomHooks.UserDeposit.response_decode {
+                    | Ok(deposit') =>
+                      `${deposit'.data.deposit->Locale.Float.show(~digits=0)}원`->React.string
+                    | Error(_) => <Skeleton.Box className=%twc("w-40") />
+                    }
+                  }}
+                </span>
+              </div>
+              <IconArrow height="24" width="24" stroke="#262626" className="ml-auto" />
+            </a>
+          </Next.Link>
+        </div>
+      </FeatureFlagWrapper>
+    }
+  }
+
   @react.component
   let make = () => {
-    let router = Next.Router.useRouter()
-    let status = CustomHooks.UserDeposit.use(
-      router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
-    )
+    let deviceDetect = DeviceDetect.detectDevice()
 
-    <div className=%twc("container max-w-lg mx-auto px-5 sm:p-7 sm:shadow-gl")>
-      <Next.Link href="/buyer/transactions" passHref=true>
-        <a
-          className=%twc(
-            "w-full h-auto flex items-center p-5 sm:p-0 shadow-gl sm:shadow-none rounded-lg"
-          )>
-          <div>
-            <span className=%twc("block text-sm")>
-              {j`총 주문 가능 금액`->React.string}
-            </span>
-            <span className=%twc("block text-primary text-lg font-bold")>
-              {switch status {
-              | Error(error) =>
-                error->Js.Console.log
-                <Skeleton.Box className=%twc("w-40") />
-              | Loading => <Skeleton.Box className=%twc("w-40") />
-              | Loaded(deposit) =>
-                switch deposit->CustomHooks.UserDeposit.response_decode {
-                | Ok(deposit') =>
-                  `${deposit'.data.deposit->Locale.Float.show(~digits=0)}원`->React.string
-                | Error(_) => <Skeleton.Box className=%twc("w-40") />
-                }
-              }}
-            </span>
-          </div>
-          <IconArrow height="24" width="24" stroke="#262626" className="ml-auto" />
-        </a>
-      </Next.Link>
-    </div>
+    switch deviceDetect {
+    | DeviceDetect.PC => <PC />
+    | DeviceDetect.Unknown
+    | DeviceDetect.Mobile =>
+      <MO />
+    }
   }
 }
-
 module Tab = {
   module Selected = {
     @react.component
@@ -50,18 +133,31 @@ module Tab = {
   module Unselected = {
     @react.component
     let make = (~href, ~children) =>
-      <div className=%twc("pb-4 text-gray-600")> <Next.Link href> children </Next.Link> </div>
+      <div className=%twc("pb-4 text-gray-600")>
+        <Next.Link href> children </Next.Link>
+      </div>
   }
 
   module Container = {
     @react.component
-    let make = (~children) =>
-      <div
-        className=%twc(
-          "container max-w-lg mx-auto p-7 pb-0 sm:shadow-gl sm:mt-4 border-b flex gap-5 text-lg font-bold"
-        )>
-        children
-      </div>
+    let make = (~children) => {
+      let oldUI =
+        <div
+          className=%twc(
+            "container max-w-lg mx-auto p-7 pb-0 sm:shadow-gl sm:mt-4 border-b flex gap-5 text-lg font-bold"
+          )>
+          children
+        </div>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <div
+          className=%twc(
+            "container w-[1280px] mx-auto p-7 pb-0 sm:shadow-gl sm:mt-4 border-b flex gap-5 text-lg font-bold"
+          )>
+          children
+        </div>
+      </FeatureFlagWrapper>
+    }
   }
 
   module Prepaid = {
@@ -107,129 +203,273 @@ let make = () => {
       el'->Dom.Element.scrollIntoViewWithOptions({"behavior": "smooth", "block": "start"})
     )
   }
+  let deviceDetect = DeviceDetect.detectDevice()
 
   ChannelTalkHelper.Hook.use()
 
-  <Authorization.Buyer title=j`주문서 업로드`>
-    <Tab.Prepaid />
-    <UserDeposit />
-    <div
-      className=%twc("max-w-lg mt-4 mx-5 sm:mx-auto sm:shadow-gl rounded-lg border border-red-150")>
-      <div className=%twc("py-4 px-5 bg-red-gl rounded-lg text-red-500")>
-        <span className=%twc("block font-bold")> {j`[필독사항]`->React.string} </span>
-        <div className=%twc("flex gap-1.5")>
-          <span> {`1.`->React.string} </span>
-          <div>
-            {j`가이드를 참고하여 주문서를 작성해주셔야 합니다.`->React.string}
-            <a id="link-of-upload-guide" href=Env.buyerUploadGuideUri target="_blank">
-              <p className=%twc("inline mx-1 min-w-max cursor-pointer hover:underline")>
-                {`[가이드]`->React.string}
-              </p>
-            </a>
-            <span className=%twc("block sm:whitespace-pre-wrap")>
-              {`잘못 작성된 주문서를 등록하시면 주문이 실패됩니다.\n※ 현금영수증 관련 내용(P열~Q열)이 자주 누락됩니다.\n꼭 확인해 주세요!`->React.string}
-            </span>
+  let oldUI =
+    <Authorization.Buyer title={j`주문서 업로드`}>
+      <Tab.Prepaid />
+      <UserDeposit />
+      <div
+        className=%twc(
+          "max-w-lg bg-white mt-4 mx-5 sm:mx-auto sm:shadow-gl rounded-lg border border-red-150"
+        )>
+        <div className=%twc("py-4 px-5 bg-red-gl rounded-lg text-red-500")>
+          <span className=%twc("block font-bold")> {j`[필독사항]`->React.string} </span>
+          <div className=%twc("flex gap-1.5")>
+            <span> {`1.`->React.string} </span>
+            <div>
+              {j`가이드를 참고하여 주문서를 작성해주셔야 합니다.`->React.string}
+              <a id="link-of-upload-guide" href=Env.buyerUploadGuideUri target="_blank">
+                <p className=%twc("inline mx-1 min-w-max cursor-pointer hover:underline")>
+                  {`[가이드]`->React.string}
+                </p>
+              </a>
+              <span className=%twc("block sm:whitespace-pre-wrap")>
+                {`잘못 작성된 주문서를 등록하시면 주문이 실패됩니다.\n※ 현금영수증 관련 내용(P열~Q열)이 자주 누락됩니다.\n꼭 확인해 주세요!`->React.string}
+              </span>
+            </div>
           </div>
-        </div>
-        <div className=%twc("flex gap-1")>
-          <span> {`2.`->React.string} </span>
-          <div>
-            <span className=%twc("sm:whitespace-pre-wrap")>
-              {`먼저 주문가능금액(신선캐시) 충전이 필요합니다.\n주문가능금액이 발주할 총 금액보다 많아야 하니 부족할 경우\n`->React.string}
-            </span>
-            <a id="link-of-upload-guide" href="/buyer/transactions" target="_blank">
-              <p className=%twc("inline mr-0.5 min-w-max cursor-pointer hover:underline")>
-                {`[결제내역]`->React.string}
-              </p>
-            </a>
-            {j`탭에서 신선캐시를 충전해주세요.`->React.string}
+          <div className=%twc("flex gap-1")>
+            <span> {`2.`->React.string} </span>
+            <div>
+              <span className=%twc("sm:whitespace-pre-wrap")>
+                {`먼저 주문가능금액(신선캐시) 충전이 필요합니다.\n주문가능금액이 발주할 총 금액보다 많아야 하니 부족할 경우\n`->React.string}
+              </span>
+              <a id="link-of-upload-guide" href="/buyer/transactions" target="_blank">
+                <p className=%twc("inline mr-0.5 min-w-max cursor-pointer hover:underline")>
+                  {`[결제내역]`->React.string}
+                </p>
+              </a>
+              {j`탭에서 신선캐시를 충전해주세요.`->React.string}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div className=%twc("container max-w-lg mx-auto p-7 sm:shadow-gl sm:mt-4")>
-      <h3 className=%twc("font-bold text-lg w-full sm:w-9/12")>
-        {j`주문서 양식에 맞는 주문서를 선택하신 후 업로드를 진행해보세요.`->React.string}
-      </h3>
-      <div className=%twc("divide-y")>
-        <UploadFile
-          onSuccess={_ => {
-            setShowSuccess(._ => Dialog.Show)
-            mutate(.
-              ~url=`${Env.restApiUrl}/order/recent-uploads?upload-type=order&pay-type=PAID`,
-              ~data=None,
-              ~revalidation=None,
-            )
-            scrollIntoView("upload-status")
-            Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
-              ~kind=#CUSTOM_EVENT,
-              ~payload={"action": "order_uploaded"},
-              (),
-            )
-          }}
-          onFailure={_ => setShowError(._ => Dialog.Show)}
-          startIndex=1
-        />
+      <div className=%twc("container max-w-lg mx-auto p-7 sm:shadow-gl sm:mt-4")>
+        <h3 className=%twc("font-bold text-lg w-full sm:w-9/12")>
+          {j`주문서 양식에 맞는 주문서를 선택하신 후 업로드를 진행해보세요.`->React.string}
+        </h3>
+        <div className=%twc("divide-y")>
+          <UploadFile
+            onSuccess={_ => {
+              setShowSuccess(._ => Dialog.Show)
+              mutate(.
+                ~url=`${Env.restApiUrl}/order/recent-uploads?upload-type=order&pay-type=PAID`,
+                ~data=None,
+                ~revalidation=None,
+              )
+              scrollIntoView("upload-status")
+              Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
+                ~kind=#CUSTOM_EVENT,
+                ~payload={"action": "order_uploaded"},
+                (),
+              )
+            }}
+            onFailure={_ => setShowError(._ => Dialog.Show)}
+            startIndex=1
+          />
+          <section className=%twc("py-5")>
+            <div className=%twc("flex justify-between")>
+              <h4 className=%twc("font-semibold")>
+                {j`주문서 양식`->React.string}
+                <span className=%twc("block text-gray-400 text-sm")>
+                  {j`*이 양식으로 작성된 주문서만 업로드 가능`->React.string}
+                </span>
+              </h4>
+              <a href=Env.buyerOrderExcelFormUri>
+                <span
+                  className=%twc(
+                    "inline-block text-center text-green-gl font-bold py-2 w-28 border border-green-gl rounded-xl focus:outline-none hover:text-green-gl-dark hover:border-green-gl-dark"
+                  )
+                  onClick={_ =>
+                    Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
+                      ~kind=#CUSTOM_EVENT,
+                      ~payload={"action": "order_templete_download"},
+                      (),
+                    )}>
+                  {j`양식 다운로드`->React.string}
+                </span>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div id="upload-status" className=%twc("container max-w-lg mx-auto p-7 sm:shadow-gl sm:mt-4")>
         <section className=%twc("py-5")>
-          <div className=%twc("flex justify-between")>
-            <h4 className=%twc("font-semibold")>
-              {j`주문서 양식`->React.string}
-              <span className=%twc("block text-gray-400 text-sm")>
-                {j`*이 양식으로 작성된 주문서만 업로드 가능`->React.string}
-              </span>
-            </h4>
-            <a href=Env.buyerOrderExcelFormUri>
-              <span
-                className=%twc(
-                  "inline-block text-center text-green-gl font-bold py-2 w-28 border border-green-gl rounded-xl focus:outline-none hover:text-green-gl-dark hover:border-green-gl-dark"
-                )
-                onClick={_ =>
-                  Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
-                    ~kind=#CUSTOM_EVENT,
-                    ~payload={"action": "order_templete_download"},
-                    (),
-                  )}>
-                {j`양식 다운로드`->React.string}
-              </span>
-            </a>
-          </div>
+          <h4 className=%twc("font-semibold")> {j`주문서 업로드 결과`->React.string} </h4>
+          <p className=%twc("mt-1 text-gray-400 text-sm")>
+            {j`*가장 최근 요청한 3가지 등록건만 노출됩니다.`->React.string}
+          </p>
         </section>
-      </div>
-    </div>
-    <div id="upload-status" className=%twc("container max-w-lg mx-auto p-7 sm:shadow-gl sm:mt-4")>
-      <section className=%twc("py-5")>
-        <h4 className=%twc("font-semibold")> {j`주문서 업로드 결과`->React.string} </h4>
-        <p className=%twc("mt-1 text-gray-400 text-sm")>
-          {j`*가장 최근 요청한 3가지 등록건만 노출됩니다.`->React.string}
+        <UploadStatus_Buyer
+          kind=CustomHooks.UploadStatus.Buyer
+          uploadType=CustomHooks.UploadStatus.Order
+          onChangeLatestUpload={_ =>
+            mutate(.
+              ~url=`${Env.restApiUrl}/user/deposit?${router.query
+                ->Webapi.Url.URLSearchParams.makeWithDict
+                ->Webapi.Url.URLSearchParams.toString}`,
+              ~data=None,
+              ~revalidation=Some(true),
+            )}
+        />
+        <p className=%twc("mt-5 text-sm text-gray-400")>
+          {j`주의: 주문서 업로드가 완료되기 전까지 일부 기능을 사용하실 수 없습니다. 주문서에 기재하신 내용에 따라 정상적으로 처리되지 않을 수 있습니다. 처리 결과를 반드시 확인해 주시기 바랍니다. 주문서 업로드는 상황에 따라 5분까지 소요될 수 있습니다.`->React.string}
         </p>
-      </section>
-      <UploadStatus_Buyer
-        kind=CustomHooks.UploadStatus.Buyer
-        uploadType=CustomHooks.UploadStatus.Order
-        onChangeLatestUpload={_ =>
-          mutate(.
-            ~url=`${Env.restApiUrl}/user/deposit?${router.query
-              ->Webapi.Url.URLSearchParams.makeWithDict
-              ->Webapi.Url.URLSearchParams.toString}`,
-            ~data=None,
-            ~revalidation=Some(true),
-          )}
-      />
-      <p className=%twc("mt-5 text-sm text-gray-400")>
-        {j`주의: 주문서 업로드가 완료되기 전까지 일부 기능을 사용하실 수 없습니다. 주문서에 기재하신 내용에 따라 정상적으로 처리되지 않을 수 있습니다. 처리 결과를 반드시 확인해 주시기 바랍니다. 주문서 업로드는 상황에 따라 5분까지 소요될 수 있습니다.`->React.string}
-      </p>
+      </div>
+      <Guide_Upload_Buyer />
+      // 다이얼로그
+      <Dialog
+        isShow=isShowSuccess
+        onConfirm={_ => {
+          setShowSuccess(._ => Dialog.Hide)
+          // Braze Push Notification Request
+          Braze.PushNotificationRequestDialog.trigger()
+        }}>
+        <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+          {`주문서 업로드가 실행되었습니다. 성공여부를 꼭 주문서 업로드 결과에서 확인해주세요.`->React.string}
+        </p>
+      </Dialog>
+      <Dialog isShow=isShowError onConfirm={_ => setShowError(._ => Dialog.Hide)}>
+        <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+          {`파일 업로드에 실패하였습니다.`->React.string}
+        </p>
+      </Dialog>
+    </Authorization.Buyer>
+
+  let newUI =
+    <div className=%twc("flex bg-[#FAFBFC] pc-content")>
+      <PC_MyInfo_Sidebar />
+      <Authorization.Buyer title={j`주문서 업로드`}>
+        <div className=%twc("flex flex-col mx-16")>
+          <div
+            className=%twc(
+              "flex flex-col rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] min-w-[872px] max-w-[1280px] w-full mt-10 pt-10 px-[50px]"
+            )>
+            <Formula.Text.Headline weight=#bold size=#lg className=%twc("mb-10")>
+              {"주문서 업로드"->React.string}
+            </Formula.Text.Headline>
+            <div
+              className=%twc(
+                "border-[#FFDACE] border-[1px] bg-[#FFF6F2] flex px-5 py-4 text-[#FF2B35] rounded"
+              )>
+              <img src=commonNoticeIcon className=%twc("w-6 h-6") />
+              {"신규 주문일 경우에만 주문 취소가 가능합니다."->React.string}
+            </div>
+            <Tab.Prepaid />
+            <UserDeposit />
+            <div
+              className=%twc(
+                "max-w-lg mt-4 mx-5 sm:mx-auto sm:shadow-gl rounded-lg border border-red-150"
+              )
+            />
+            <div className=%twc("container  mx-auto ")>
+              <div className=%twc("divide-y")>
+                <UploadFile
+                  onSuccess={_ => {
+                    setShowSuccess(._ => Dialog.Show)
+                    mutate(.
+                      ~url=`${Env.restApiUrl}/order/recent-uploads?upload-type=order&pay-type=PAID`,
+                      ~data=None,
+                      ~revalidation=None,
+                    )
+                    scrollIntoView("upload-status")
+                    Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
+                      ~kind=#CUSTOM_EVENT,
+                      ~payload={"action": "order_uploaded"},
+                      (),
+                    )
+                  }}
+                  onFailure={_ => setShowError(._ => Dialog.Show)}
+                  startIndex=1
+                />
+                <section className=%twc("py-5")>
+                  <div className=%twc("flex justify-between")>
+                    <h4 className=%twc("font-semibold")>
+                      {j`주문서 양식`->React.string}
+                      <span className=%twc("block text-gray-400 text-sm")>
+                        {j`*이 양식으로 작성된 주문서만 업로드 가능`->React.string}
+                      </span>
+                    </h4>
+                    <a href=Env.buyerOrderExcelFormUri>
+                      <span
+                        className=%twc(
+                          "inline-block text-center text-green-gl font-bold py-2 w-28 border border-green-gl rounded-xl focus:outline-none hover:text-green-gl-dark hover:border-green-gl-dark"
+                        )
+                        onClick={_ =>
+                          Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
+                            ~kind=#CUSTOM_EVENT,
+                            ~payload={"action": "order_templete_download"},
+                            (),
+                          )}>
+                        {j`양식 다운로드`->React.string}
+                      </span>
+                    </a>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div
+            className=%twc(
+              "flex flex-col rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] min-w-[872px] max-w-[1280px] w-full mt-4 pt-10 px-[50px]"
+            )>
+            <div id="upload-status" className=%twc("container")>
+              <section className=%twc("py-5")>
+                <h4 className=%twc("font-semibold")>
+                  {j`주문서 업로드 결과`->React.string}
+                </h4>
+                <p className=%twc("mt-1 text-gray-400 text-sm")>
+                  {j`*가장 최근 요청한 3가지 등록건만 노출됩니다.`->React.string}
+                </p>
+              </section>
+              <UploadStatus_Buyer
+                kind=CustomHooks.UploadStatus.Buyer
+                uploadType=CustomHooks.UploadStatus.Order
+                onChangeLatestUpload={_ =>
+                  mutate(.
+                    ~url=`${Env.restApiUrl}/user/deposit?${router.query
+                      ->Webapi.Url.URLSearchParams.makeWithDict
+                      ->Webapi.Url.URLSearchParams.toString}`,
+                    ~data=None,
+                    ~revalidation=Some(true),
+                  )}
+              />
+              <p className=%twc("mt-5 text-sm mb-10 text-gray-400")>
+                {j`주의: 주문서 업로드가 완료되기 전까지 일부 기능을 사용하실 수 없습니다. 주문서에 기재하신 내용에 따라 정상적으로 처리되지 않을 수 있습니다. 처리 결과를 반드시 확인해 주시기 바랍니다. 주문서 업로드는 상황에 따라 5분까지 소요될 수 있습니다.`->React.string}
+              </p>
+            </div>
+          </div>
+          <Guide_Upload_Buyer.NewUI />
+          // 다이얼로그
+          <Dialog
+            isShow=isShowSuccess
+            onConfirm={_ => {
+              setShowSuccess(._ => Dialog.Hide)
+              // Braze Push Notification Request
+              Braze.PushNotificationRequestDialog.trigger()
+            }}>
+            <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+              {`주문서 업로드가 실행되었습니다. 성공여부를 꼭 주문서 업로드 결과에서 확인해주세요.`->React.string}
+            </p>
+          </Dialog>
+          <Dialog isShow=isShowError onConfirm={_ => setShowError(._ => Dialog.Hide)}>
+            <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+              {`파일 업로드에 실패하였습니다.`->React.string}
+            </p>
+          </Dialog>
+        </div>
+      </Authorization.Buyer>
     </div>
-    <Guide_Upload_Buyer />
-    // 다이얼로그
-    <Dialog isShow=isShowSuccess onConfirm={_ => setShowSuccess(._ => Dialog.Hide)}>
-      <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
-        {`주문서 업로드가 실행되었습니다. 성공여부를 꼭 주문서 업로드 결과에서 확인해주세요.`->React.string}
-      </p>
-    </Dialog>
-    <Dialog isShow=isShowError onConfirm={_ => setShowError(._ => Dialog.Hide)}>
-      <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
-        {`파일 업로드에 실패하였습니다.`->React.string}
-      </p>
-    </Dialog>
-  </Authorization.Buyer>
+
+  <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+    {switch deviceDetect {
+    | DeviceDetect.PC => newUI
+    | DeviceDetect.Unknown
+    | DeviceDetect.Mobile =>
+      <div className=%twc("bg-white")> {oldUI} </div>
+    }}
+  </FeatureFlagWrapper>
 }

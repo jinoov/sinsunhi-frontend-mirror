@@ -1,4 +1,4 @@
-import { make as SignUpBuyer } from "src/pages/buyer/SignUp_Buyer.mjs";
+import { make as SignUpBuyer } from "src/pages/buyer/signup/SignUp_Buyer.mjs";
 
 // Note:
 // We need to wrap the make call with

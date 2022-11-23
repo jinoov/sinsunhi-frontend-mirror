@@ -3,6 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import * as Router from "next/router";
+import * as PC_MyInfo_Sidebar from "../../pc/me/PC_MyInfo_Sidebar.mjs";
+import * as FeatureFlagWrapper from "../../pc/FeatureFlagWrapper.mjs";
 import * as MyInfo_ProfileSummary_Buyer from "./MyInfo_ProfileSummary_Buyer.mjs";
 
 function MyInfo_Layout_Buyer(Props) {
@@ -11,87 +13,126 @@ function MyInfo_Layout_Buyer(Props) {
   var router = Router.useRouter();
   var str = router.asPath;
   var str$1 = router.asPath;
-  return React.createElement("section", {
-              className: "flex-col bg-surface"
-            }, React.createElement("div", {
-                  className: "mx-auto py-20 max-w-7xl w-3/4"
-                }, React.createElement("h2", {
-                      className: "font-bold ml-5 text-[32px]"
-                    }, React.createElement(Link, {
-                          href: "/buyer/me",
-                          children: React.createElement("a", undefined, "마이페이지")
-                        })), React.createElement("div", {
-                      className: "mt-8 flex"
-                    }, React.createElement("div", {
-                          className: "py-10 flex flex-col bg-white min-w-[260px] w-[460px] min-h-[640px]"
-                        }, React.createElement("div", {
-                              className: "px-7 mb-9"
-                            }, React.createElement(MyInfo_ProfileSummary_Buyer.PC.make, {
-                                  query: query
-                                })), React.createElement("div", {
-                              className: "border-b border-gray-100 mb-[3px]"
-                            }), React.createElement("div", {
-                              className: "flex flex-col"
-                            }, React.createElement(Link, {
-                                  href: "/buyer/me/profile",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, React.createElement("div", {
-                                            className: "w-fit"
-                                          }, str.includes("/buyer/me/profile") ? React.createElement(React.Fragment, undefined, React.createElement("span", {
-                                                      className: "font-bold"
-                                                    }, "프로필 정보"), React.createElement("div", {
-                                                      className: "border-b-2 border-[#1F2024]"
-                                                    })) : React.createElement("span", undefined, "프로필정보")))
-                                }), React.createElement(Link, {
-                                  href: "/buyer/me/account",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, React.createElement("div", {
-                                            className: "w-fit"
-                                          }, str$1.includes("/buyer/me/account") ? React.createElement(React.Fragment, undefined, React.createElement("span", {
-                                                      className: "font-bold"
-                                                    }, "계정정보"), React.createElement("div", {
-                                                      className: "border-b-2 border-[#1F2024]"
-                                                    })) : React.createElement("span", undefined, "계정정보")))
-                                }), React.createElement(Link, {
-                                  href: "/buyer/upload",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, "주문서 업로드")
-                                }), React.createElement(Link, {
-                                  href: "/buyer/orders",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, "주문 내역")
-                                }), React.createElement(Link, {
-                                  href: "/buyer/transactions",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, "결제 내역")
-                                }), React.createElement(Link, {
-                                  href: "/products/advanced-search",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, "단품 확인")
-                                }), React.createElement(Link, {
-                                  href: "/buyer/download-center",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, "다운로드 센터")
-                                }), React.createElement(Link, {
-                                  href: "https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7",
-                                        rel: "noopener",
-                                        target: "_blank"
-                                      }, "판매자료 다운로드")
-                                }), React.createElement(Link, {
-                                  href: "https://shinsunmarket.co.kr/532",
-                                  children: React.createElement("a", {
-                                        className: "py-[18px] text-left px-7"
-                                      }, "공지사항")
-                                }))), children)));
+  var match = router.asPath;
+  var tmp = match === "/buyer/me/like" ? React.createElement(React.Fragment, undefined, React.createElement("span", {
+              className: "font-bold"
+            }, "찜한 상품"), React.createElement("div", {
+              className: "border-b-2 border-[#1F2024]"
+            })) : React.createElement("span", undefined, "찜한 상품");
+  var match$1 = router.asPath;
+  var tmp$1 = match$1 === "/buyer/me/recent-view" ? React.createElement(React.Fragment, undefined, React.createElement("span", {
+              className: "font-bold"
+            }, "최근 본 상품"), React.createElement("div", {
+              className: "border-b-2 border-[#1F2024]"
+            })) : React.createElement("span", undefined, "최근 본 상품");
+  var oldUI = React.createElement("section", {
+        className: "flex-col bg-surface"
+      }, React.createElement("div", {
+            className: "mx-auto py-20 max-w-7xl w-3/4"
+          }, React.createElement("h2", {
+                className: "font-bold ml-5 text-[32px]"
+              }, React.createElement(Link, {
+                    href: "/buyer/me",
+                    children: React.createElement("a", undefined, "마이페이지")
+                  })), React.createElement("div", {
+                className: "mt-8 flex"
+              }, React.createElement("div", {
+                    className: "py-10 flex flex-col bg-white min-w-[260px] w-[460px] min-h-[760px] shadow-pane rounded"
+                  }, React.createElement("div", {
+                        className: "px-7 mb-9"
+                      }, React.createElement(MyInfo_ProfileSummary_Buyer.PC.make, {
+                            query: query
+                          })), React.createElement("div", {
+                        className: "border-b border-gray-100 mb-[3px]"
+                      }), React.createElement("div", {
+                        className: "flex flex-col"
+                      }, React.createElement(Link, {
+                            href: "/buyer/me/profile",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, React.createElement("div", {
+                                      className: "w-fit"
+                                    }, str.includes("/buyer/me/profile") ? React.createElement(React.Fragment, undefined, React.createElement("span", {
+                                                className: "font-bold"
+                                              }, "프로필 정보"), React.createElement("div", {
+                                                className: "border-b-2 border-[#1F2024]"
+                                              })) : React.createElement("span", undefined, "프로필정보")))
+                          }), React.createElement(Link, {
+                            href: "/buyer/me/account",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, React.createElement("div", {
+                                      className: "w-fit"
+                                    }, str$1.includes("/buyer/me/account") ? React.createElement(React.Fragment, undefined, React.createElement("span", {
+                                                className: "font-bold"
+                                              }, "계정정보"), React.createElement("div", {
+                                                className: "border-b-2 border-[#1F2024]"
+                                              })) : React.createElement("span", undefined, "계정정보")))
+                          }), React.createElement(Link, {
+                            href: "/buyer/upload",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, "주문서 업로드")
+                          }), React.createElement(Link, {
+                            href: "/buyer/orders",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, "주문 내역")
+                          }), React.createElement(Link, {
+                            href: "/buyer/transactions",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, "결제 내역")
+                          }), React.createElement(Link, {
+                            href: "/products/advanced-search",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, "단품 확인")
+                          }), React.createElement(Link, {
+                            href: "/buyer/me/like",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, React.createElement("div", {
+                                      className: "w-fit"
+                                    }, tmp))
+                          }), React.createElement(Link, {
+                            href: "/buyer/me/recent-view",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, React.createElement("div", {
+                                      className: "w-fit"
+                                    }, tmp$1))
+                          }), React.createElement(Link, {
+                            href: "/buyer/download-center",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, "다운로드 센터")
+                          }), React.createElement(Link, {
+                            href: "https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7",
+                                  rel: "noopener",
+                                  target: "_blank"
+                                }, "판매자료 다운로드")
+                          }), React.createElement(Link, {
+                            href: "https://shinsunmarket.co.kr/532",
+                            children: React.createElement("a", {
+                                  className: "py-[18px] text-left px-7"
+                                }, "공지사항")
+                          }))), children)));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("section", {
+                    className: "flex-col bg-[#F0F2F5]"
+                  }, React.createElement("div", {
+                        className: "w-full max-w-[1920px] mx-auto bg-[#FAFBFC]"
+                      }, React.createElement("div", {
+                            className: "flex "
+                          }, React.createElement(PC_MyInfo_Sidebar.make, {}), React.createElement("div", {
+                                className: "flex flex-col flex-1 max-w-[1280px] mx-16 mt-10 mb-[60px]"
+                              }, children)))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var make = MyInfo_Layout_Buyer;

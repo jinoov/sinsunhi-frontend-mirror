@@ -36,13 +36,18 @@ let make = (~children) => {
   | ["buyer", "products", "[pid]"]
   | ["buyer", "products", "all"]
   | ["buyer", "products"]
+  | ["buyer", "saved-products"]
   | ["buyer", "cart"]
   | ["buyer", "web-order", _]
   | ["buyer", "web-order", "complete", _]
   | ["products", "[pid]"]
+  | ["auction-price"]
   | ["products", "all"]
   | ["products"] => children
-  | _ =>
+  | ["buyer", "signup"]
+  | ["buyer", "signin"]
+  | ["buyer", "signin", _] =>
+    //로그인 페이지와 회원가입 페이지는 기존 배경색을 이용
     <div className=%twc("w-full min-h-screen")>
       // PC Header
       <div className=%twc("hidden xl:flex")>
@@ -64,5 +69,53 @@ let make = (~children) => {
         <Footer_Buyer.MO />
       </div>
     </div>
+
+  | _ =>
+    let oldUI =
+      <div className=%twc("w-full min-h-screen")>
+        // PC Header
+        <div className=%twc("hidden xl:flex")>
+          <Header_Buyer.PC_Old key=router.asPath />
+        </div>
+        // Mobile Header
+        <div className=%twc("block xl:hidden")>
+          <Header_Buyer.Mobile key=router.asPath />
+        </div>
+        //------Content------
+        children
+        //-------------------
+        // PC Footer
+        <div className=%twc("hidden xl:flex")>
+          <Footer_Buyer.PC />
+        </div>
+        // Mobile Footer
+        <div className=%twc("block xl:hidden")>
+          <Footer_Buyer.MO />
+        </div>
+      </div>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      <div className=%twc("w-full min-h-screen bg-[#F0F2F5]")>
+        // PC Header
+        <div className=%twc("hidden xl:block xl:top-0 xl:sticky z-10")>
+          <Header_Buyer.PC_Old key=router.asPath />
+        </div>
+        // Mobile Header
+        <div className=%twc("block xl:hidden")>
+          <Header_Buyer.Mobile key=router.asPath />
+        </div>
+        //------Content------
+        children
+        //-------------------
+        // PC Footer
+        <div className=%twc("hidden xl:flex")>
+          <Footer_Buyer.PC />
+        </div>
+        // Mobile Footer
+        <div className=%twc("block xl:hidden")>
+          <Footer_Buyer.MO />
+        </div>
+      </div>
+    </FeatureFlagWrapper>
   }
 }

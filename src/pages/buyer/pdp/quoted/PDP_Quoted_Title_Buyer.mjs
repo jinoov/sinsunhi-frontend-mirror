@@ -18,7 +18,7 @@ var PC = {
 function PDP_Quoted_Title_Buyer$MO(Props) {
   var displayName = Props.displayName;
   return React.createElement("section", undefined, React.createElement("h1", {
-                  className: "text-lg text-gray-800"
+                  className: "text-lg text-gray-800 break-all"
                 }, displayName), React.createElement("h1", {
                   className: "mt-2 font-bold text-blue-500 text-lg"
                 }, "최저가 견적받기"));

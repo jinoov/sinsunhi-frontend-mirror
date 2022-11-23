@@ -159,7 +159,7 @@ function AddTrackingNumbers_Admin$Orders(Props) {
   var router = Router.useRouter();
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
-  var status = CustomHooks.OrdersAdmin.use(new URLSearchParams(router.query).toString());
+  var status = CustomHooks.Orders.use(new URLSearchParams(router.query).toString());
   var match$1 = React.useState(function () {
         return {
                 from: SubDays(new Date(), 7),

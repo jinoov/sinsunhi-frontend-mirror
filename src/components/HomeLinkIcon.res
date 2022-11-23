@@ -6,6 +6,6 @@ let make = () => {
   let router = Next.Router.useRouter()
   <button
     type_="button" className=%twc("w-6 h-[30px]") onClick={_ => router->Next.Router.push("/")}>
-    <img src=homeIcon />
+    <img src=homeIcon alt={`홈으로 바로가기`} />
   </button>
 }

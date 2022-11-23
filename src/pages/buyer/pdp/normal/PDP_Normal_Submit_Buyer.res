@@ -13,6 +13,7 @@ module Fragment = %relay(`
   
     ...PDPNormalSubmitBuyer_fragment
     ...PDPNormalRfqBtnBuyer_fragment
+    ...PDPLikeButton_Fragment
   }
 `)
 
@@ -138,24 +139,17 @@ module PC = {
   module ActionBtn = {
     @react.component
     let make = (~query, ~className, ~selectedOptions, ~setShowModal, ~children) => {
-      let availableButton = ToggleOrderAndPayment.use()
       let product = query->ButtonFragment.use
 
       let onClick = _ => {
-        switch availableButton {
-        | true =>
-          product
-          ->ClickPurchaseGtm.make(~selectedOptions)
-          ->Option.map(event' => {
-            {"ecommerce": Js.Nullable.null}->DataGtm.push
-            event'->DataGtm.mergeUserIdUnsafe->DataGtm.push
-          })
-          ->ignore
-          setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
-
-        | false =>
-          Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
-        }
+        product
+        ->ClickPurchaseGtm.make(~selectedOptions)
+        ->Option.map(event' => {
+          {"ecommerce": Js.Nullable.null}->DataGtm.push
+          event'->DataGtm.mergeUserIdUnsafe->DataGtm.push
+        })
+        ->ignore
+        setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
       }
 
       <button className onClick> children </button>
@@ -229,7 +223,15 @@ module PC = {
     let {status, __typename, fragmentRefs} = query->Fragment.use
 
     <section className=%twc("w-full")>
-      <OrderBtn query=fragmentRefs status selectedOptions setShowModal />
+      <div className=%twc("flex items-center box-border")>
+        <span className=%twc("w-16 mr-2")>
+          <PDP_Like_Button query=fragmentRefs />
+        </span>
+        <span className=%twc("w-16 mr-2")>
+          <PDP_CsChat_Button />
+        </span>
+        <OrderBtn query=fragmentRefs status selectedOptions setShowModal />
+      </div>
       {switch __typename->Product_Parser.Type.decode {
       | Some(Quotable) => <PDP_Normal_RfqBtn_Buyer.PC query=fragmentRefs setShowModal />
       | _ => React.null
@@ -243,25 +245,17 @@ module MO = {
     module ActionBtn = {
       @react.component
       let make = (~query, ~className, ~selectedOptions, ~setShowModal, ~children) => {
-        let availableButton = ToggleOrderAndPayment.use()
         let product = query->ButtonFragment.use
 
         let onClick = _ => {
-          switch availableButton {
-          | true => {
-              product
-              ->ClickPurchaseGtm.make(~selectedOptions)
-              ->Option.map(event' => {
-                {"ecommerce": Js.Nullable.null}->DataGtm.push
-                event'->DataGtm.mergeUserIdUnsafe->DataGtm.push
-              })
-              ->ignore
-              setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
-            }
-
-          | false =>
-            Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
-          }
+          product
+          ->ClickPurchaseGtm.make(~selectedOptions)
+          ->Option.map(event' => {
+            {"ecommerce": Js.Nullable.null}->DataGtm.push
+            event'->DataGtm.mergeUserIdUnsafe->DataGtm.push
+          })
+          ->ignore
+          setShowModal(._ => PDP_Normal_Modals_Buyer.Show(Confirm))
         }
 
         <button className onClick> children </button>
@@ -333,12 +327,11 @@ module MO = {
   let make = (~query, ~selectedOptions, ~setShowModal) => {
     let {__typename, status, fragmentRefs} = query->Fragment.use
 
-    <PDP_CTA_Container_Buyer>
+    <PDP_CTA_Container_Buyer query=fragmentRefs>
       {switch __typename->Product_Parser.Type.decode {
       | Some(Quotable) =>
         <>
           <PDP_Normal_RfqBtn_Buyer.MO query=fragmentRefs setShowModal />
-          <div className=%twc("w-2") />
         </>
       | _ => React.null
       }}

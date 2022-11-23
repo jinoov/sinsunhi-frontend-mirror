@@ -29,7 +29,7 @@ module Orders = {
     let user = CustomHooks.Auth.use()
     let {mutate} = Swr.useSwrConfig()
 
-    let status = CustomHooks.OrdersAdmin.use(
+    let status = CustomHooks.Orders.use(
       router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
     )
 
@@ -61,7 +61,7 @@ module Orders = {
 
     let count = switch status {
     | Loaded(orders) =>
-      switch orders->CustomHooks.OrdersAdmin.orders_decode {
+      switch orders->CustomHooks.Orders.orders_decode {
       | Ok(orders') => orders'.count->Int.toString
       | Error(_) => `-`
       }
@@ -87,7 +87,7 @@ module Orders = {
       if checked {
         switch status {
         | Loaded(orders) =>
-          let allOrderProductNo = switch orders->CustomHooks.OrdersAdmin.orders_decode {
+          let allOrderProductNo = switch orders->CustomHooks.Orders.orders_decode {
           | Ok(orders') =>
             orders'.data
             ->Garter.Array.keep(Order_Admin.isCheckableOrder)
@@ -244,11 +244,11 @@ module Orders = {
                 <Select_CountPerPage className=%twc("mr-2") />
                 <Select_Sorted className=%twc("mr-2") />
                 {
-                  open CustomHooks.OrdersAdmin
+                  open CustomHooks.Orders
                   switch router.query
                   ->Js.Dict.get("status")
                   ->Option.flatMap(status' =>
-                    switch status'->Js.Json.string->CustomHooks.OrdersAdmin.status_decode {
+                    switch status'->Js.Json.string->CustomHooks.Orders.status_decode {
                     | Ok(status'') => Some(status'')
                     | Error(_) => None
                     }
@@ -308,6 +308,7 @@ module Orders = {
                   | Some(DELIVERING)
                   | Some(CANCEL)
                   | Some(REFUND)
+                  | Some(DEPOSIT_PENDING)
                   | None => React.null
                   }
                 }

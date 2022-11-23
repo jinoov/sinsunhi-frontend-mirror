@@ -19,6 +19,11 @@ type env = {
   "NEXT_PUBLIC_BRAZE_WEB_API_KEY": string,
   "NEXT_PUBLIC_TOGGLE_ORDER_BUTTON": string,
   "NEXT_PUBLIC_ORDER_ADMINS": string,
+  "NEXT_PUBLIC_TERMS": string,
+  "NEXT_PUBLIC_PRIVACY_AGREE": string,
+  "NEXT_PUBLIC_PRIVACY_POLICY": string,
+  "NEXT_PUBLIC_PRIVACY_MARKETING": string,
+  "NEXT_PUBLIC_COPYRIGHT": string,
 }
 
 @val external env: env = "process.env"
@@ -85,3 +90,14 @@ let toggleOrderButton = env["NEXT_PUBLIC_TOGGLE_ORDER_BUTTON"]
 // e.g. ON 또는 OFF
 let orderAdmins = env["NEXT_PUBLIC_ORDER_ADMINS"]
 // e.g. abc@greenlabs.co.kr, abc.abc@example.com
+
+/** 이용약관 */
+let termsUrl = env["NEXT_PUBLIC_TERMS"]
+/** 개인정보 이용동의 */
+let privacyAgreeUrl = env["NEXT_PUBLIC_PRIVACY_AGREE"]
+/** 개인정보 처리방침 */
+let privacyPolicyUrl = env["NEXT_PUBLIC_PRIVACY_POLICY"]
+/** 마케팅 이용동의 */
+let privacyMarketing = env["NEXT_PUBLIC_PRIVACY_MARKETING"]
+/** 저작권 보호 */
+let copyrightUrl = env["NEXT_PUBLIC_COPYRIGHT"]

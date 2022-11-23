@@ -20,3 +20,9 @@ let setValueElementByRef = (ref: React.ref<Js.Nullable.t<'a>>, value) => {
 
   htmlInputElement->Option.forEach(el => el->HtmlInputElement.setValue(value))
 }
+
+module Component = {
+  @react.component
+  let make = (~as_, ~props=Js.Obj.empty(), ~children=?) =>
+    React.createElement(as_, Js.Obj.assign({"children": children}, props))
+}

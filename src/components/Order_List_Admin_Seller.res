@@ -61,7 +61,7 @@ module Loading = {
 
 @react.component
 let make = (
-  ~status: CustomHooks.OrdersAdmin.result,
+  ~status: CustomHooks.Orders.result,
   ~check,
   ~onCheckOrder,
   ~countOfChecked,
@@ -96,7 +96,7 @@ let make = (
       <div className=%twc("w-full overflow-x-scroll")>
         <div className=%twc("min-w-max text-sm divide-y divide-gray-100")>
           <Header checked=isCheckAll onChange=onCheckAll disabled=isDisabledCheckAll />
-          {switch orders->CustomHooks.OrdersAdmin.orders_decode {
+          {switch orders->CustomHooks.Orders.orders_decode {
           | Ok(orders') =>
             <ol
               className=%twc(
@@ -120,7 +120,7 @@ let make = (
       </div>
       {switch status {
       | Loaded(orders) =>
-        switch orders->CustomHooks.OrdersAdmin.orders_decode {
+        switch orders->CustomHooks.Orders.orders_decode {
         | Ok(orders') =>
           <div className=%twc("flex justify-center pt-5")>
             <Pagination

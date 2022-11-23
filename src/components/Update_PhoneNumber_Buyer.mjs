@@ -450,7 +450,10 @@ function Update_PhoneNumber_Buyer(Props) {
                                                   className: "absolute top-3 right-4 text-red-gl"
                                                 })
                                         ) : null)), tmp$1))),
-                  className: "dialog-content-plain bottom-0 left-0 xl:bottom-auto xl:left-auto xl:rounded-2xl xl:state-open:top-1/2 xl:state-open:left-1/2 xl:state-open:-translate-x-1/2 xl:state-open:-translate-y-1/2"
+                  className: "dialog-content-plain bottom-0 left-0 xl:bottom-auto xl:left-auto xl:rounded-2xl xl:state-open:top-1/2 xl:state-open:left-1/2 xl:state-open:-translate-x-1/2 xl:state-open:-translate-y-1/2",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

@@ -208,7 +208,8 @@ let make = (~isOpen, ~onClose) => {
     <Dialog.Content
       className=%twc(
         "dialog-content-plain bottom-0 left-0 xl:bottom-auto xl:left-auto xl:rounded-2xl xl:state-open:top-1/2 xl:state-open:left-1/2 xl:state-open:-translate-x-1/2 xl:state-open:-translate-y-1/2"
-      )>
+      )
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <div
         className=%twc(
           "fixed top-0 left-0 h-full xl:static bg-white w-full max-w-3xl xl:min-h-fit xl:min-w-min xl:w-[90vh] xl:max-w-[480px] xl:max-h-[85vh] "

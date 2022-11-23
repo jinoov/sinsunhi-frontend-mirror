@@ -1,71 +1,124 @@
 module PC = {
   @react.component
   let make = () => {
-    <section className=%twc("flex-col bg-surface")>
-      <div className=%twc("mx-auto py-20 max-w-7xl w-3/4")>
-        <h2 className=%twc("font-bold ml-5 text-[32px]")>
-          <Next.Link href="/buyer/me">
-            <a> {`마이페이지`->React.string} </a>
-          </Next.Link>
-        </h2>
-        <div className=%twc("mt-8 flex")>
-          <div className=%twc("py-10 flex flex-col bg-white min-w-[260px] w-[460px] h-[640px]")>
-            <div className=%twc("px-7 mb-9")>
-              <div>
-                <div className=%twc("pb-5 flex items-center justify-between")>
-                  <div className=%twc("flex")>
-                    <div
-                      className=%twc(
-                        "bg-gray-50 rounded-full flex items-center justify-center w-[72px] h-[72px]"
-                      )
-                    />
-                    <div className=%twc("ml-3")>
-                      <Skeleton.Box className=%twc("w-full") />
+    let oldUI =
+      <section className=%twc("flex-col bg-surface")>
+        <div className=%twc("mx-auto py-20 max-w-7xl w-3/4")>
+          <h2 className=%twc("font-bold ml-5 text-[32px]")>
+            <Next.Link href="/buyer/me">
+              <a> {`마이페이지`->React.string} </a>
+            </Next.Link>
+          </h2>
+          <div className=%twc("mt-8 flex")>
+            <div className=%twc("py-10 flex flex-col bg-white min-w-[260px] w-[460px] h-[760px]")>
+              <div className=%twc("px-7 mb-9")>
+                <div>
+                  <div className=%twc("pb-5 flex items-center justify-between")>
+                    <div className=%twc("flex")>
+                      <div
+                        className=%twc(
+                          "bg-gray-50 rounded-full flex items-center justify-center w-[72px] h-[72px]"
+                        )
+                      />
+                      <div className=%twc("ml-3")>
+                        <Skeleton.Box className=%twc("w-full") />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <div className=%twc("border-b border-gray-100 mb-[3px]") />
+              <div className=%twc("flex flex-col")>
+                <Next.Link href="/buyer/me/profile">
+                  <a className=%twc("py-[18px] text-left px-7")>
+                    <div className=%twc("w-fit")> {`프로필정보`->React.string} </div>
+                  </a>
+                </Next.Link>
+                <Next.Link href="/buyer/me/account">
+                  <a className=%twc("py-[18px] text-left px-7")>
+                    <div className=%twc("w-fit")> {`계정정보`->React.string} </div>
+                  </a>
+                </Next.Link>
+                <Next.Link href="/buyer/upload">
+                  <a className=%twc("py-[18px] text-left px-7")>
+                    {`주문서 업로드`->React.string}
+                  </a>
+                </Next.Link>
+                <Next.Link href="/products/advanced-search">
+                  <a className=%twc("py-[18px] text-left px-7")>
+                    {`단품 확인`->React.string}
+                  </a>
+                </Next.Link>
+                <Next.Link href="/buyer/me/like">
+                  <a className=%twc("py-[18px] text-left px-7")>
+                    {`찜한 상품`->React.string}
+                  </a>
+                </Next.Link>
+                <Next.Link href="/buyer/me/recent-view">
+                  <a className=%twc("py-[18px] text-left px-7")>
+                    {`최근 본 상품`->React.string}
+                  </a>
+                </Next.Link>
+                <Next.Link href="/buyer/download-center">
+                  <a className=%twc("py-[18px] text-left px-7")>
+                    {`다운로드 센터`->React.string}
+                  </a>
+                </Next.Link>
+                <Next.Link
+                  href="https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN">
+                  <a className=%twc("py-[18px] text-left px-7") target="_blank" rel="noopener">
+                    {`판매자료 다운로드`->React.string}
+                  </a>
+                </Next.Link>
+                <Next.Link href="https://shinsunmarket.co.kr/532">
+                  <a className=%twc("py-[18px] text-left px-7")> {`공지사항`->React.string} </a>
+                </Next.Link>
+              </div>
             </div>
-            <div className=%twc("border-b border-gray-100 mb-[3px]") />
-            <div className=%twc("flex flex-col")>
-              <Next.Link href="/buyer/me/profile">
-                <a className=%twc("py-[18px] text-left px-7")>
-                  <div className=%twc("w-fit")> {`프로필정보`->React.string} </div>
-                </a>
-              </Next.Link>
-              <Next.Link href="/buyer/me/account">
-                <a className=%twc("py-[18px] text-left px-7")>
-                  <div className=%twc("w-fit")> {`계정정보`->React.string} </div>
-                </a>
-              </Next.Link>
-              <Next.Link href="/buyer/upload">
-                <a className=%twc("py-[18px] text-left px-7")>
-                  {`주문서 업로드`->React.string}
-                </a>
-              </Next.Link>
-              <Next.Link href="/products/advanced-search">
-                <a className=%twc("py-[18px] text-left px-7")> {`단품 확인`->React.string} </a>
-              </Next.Link>
-              <Next.Link href="/buyer/download-center">
-                <a className=%twc("py-[18px] text-left px-7")>
-                  {`다운로드 센터`->React.string}
-                </a>
-              </Next.Link>
-              <Next.Link
-                href="https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN">
-                <a className=%twc("py-[18px] text-left px-7") target="_blank" rel="noopener">
-                  {`판매자료 다운로드`->React.string}
-                </a>
-              </Next.Link>
-              <Next.Link href="https://shinsunmarket.co.kr/532">
-                <a className=%twc("py-[18px] text-left px-7")> {`공지사항`->React.string} </a>
-              </Next.Link>
+            <div className=%twc("w-full h-[640px] bg-white ml-4") />
+          </div>
+        </div>
+      </section>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      <section className=%twc("flex-col bg-[#F0F2F5]")>
+        <div className=%twc("w-full max-w-[1920px] mx-auto bg-[#FAFBFC]")>
+          <div className=%twc("flex ")>
+            <PC_MyInfo_Sidebar />
+            <div className=%twc("flex flex-col flex-1 max-w-[1280px]")>
+              <div className=%twc("mt-10 ml-[80px] flex flex-col w-full mb-5")>
+                <div
+                  className=%twc(
+                    "w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-4 px-[50px] pt-10 pb-5 h-[205px]"
+                  )
+                />
+              </div>
+              <div className=%twc("mt-10 ml-[80px] flex flex-col w-full mb-4")>
+                <div
+                  className=%twc(
+                    "w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-4 px-[50px] pt-10 pb-5 h-[90px]"
+                  )
+                />
+              </div>
+              <div className=%twc("mt-10 ml-[80px] flex flex-col w-full mb-4")>
+                <div
+                  className=%twc(
+                    "w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-4 px-[50px] pt-10 pb-5 h-[164px]"
+                  )
+                />
+              </div>
+              <div className=%twc("mt-10 ml-[80px] flex flex-col w-full mb-4")>
+                <div
+                  className=%twc(
+                    "w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-4 px-[50px] pt-10 pb-5 h-[306px]"
+                  )
+                />
+              </div>
             </div>
           </div>
-          <div className=%twc("w-full h-[640px] bg-white ml-4") />
         </div>
-      </div>
-    </section>
+      </section>
+    </FeatureFlagWrapper>
   }
 }
 

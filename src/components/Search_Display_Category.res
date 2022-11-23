@@ -121,7 +121,7 @@ module Select_CategoryType = {
                 options={categoryTypeOptions}
                 ref
                 onChange={handleOnChange(onChange)}
-                placeholder=`부류선택`
+                placeholder={`부류선택`}
                 noOptionsMessage={_ => `검색 결과가 없습니다.`}
                 styles={ReactSelect.stylesOptions(~control=(provide, _) => {
                   Js.Obj.assign(Js.Obj.empty(), provide)->Js.Obj.assign({
@@ -142,6 +142,8 @@ module Select_CategoryType = {
 @react.component
 let make = (~control, ~name) => {
   <React.Suspense fallback={<div />}>
-    <div className=%twc("flex gap-2 h-9")> <Select_CategoryType control name /> </div>
+    <div className=%twc("flex gap-2 h-9")>
+      <Select_CategoryType control name />
+    </div>
   </React.Suspense>
 }

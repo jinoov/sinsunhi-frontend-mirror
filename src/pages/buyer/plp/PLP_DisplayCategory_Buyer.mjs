@@ -4,6 +4,7 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Global from "../../../components/Global.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
@@ -15,11 +16,15 @@ import * as Footer_Buyer from "../../../components/Footer_Buyer.mjs";
 import * as Header_Buyer from "../../../components/Header_Buyer.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
+import * as PC_PLP_Sidebar from "../pc/plp/PC_PLP_Sidebar.mjs";
 import * as PLP_SortSelect from "./PLP_SortSelect.mjs";
-import * as PLP_FilterOption from "./PLP_FilterOption.mjs";
+import * as PC_PLP_ChipList from "../pc/plp/PC_PLP_ChipList.mjs";
+import * as OpenGraph_Header from "../../../components/OpenGraph_Header.mjs";
 import * as PLP_Header_Buyer from "./PLP_Header_Buyer.mjs";
 import * as ChannelTalkHelper from "../../../utils/ChannelTalkHelper.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
+import * as FeatureFlagWrapper from "../pc/FeatureFlagWrapper.mjs";
+import * as Product_FilterOption from "../Product_FilterOption.mjs";
 import * as PLP_Scrollable_Header from "./PLP_Scrollable_Header.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PLP_SectionCheckBoxGroup from "./PLP_SectionCheckBoxGroup.mjs";
@@ -100,15 +105,27 @@ var Query_displayCategoryProductsSort_decode = PLPDisplayCategoryBuyerQuery_grap
 
 var Query_displayCategoryProductsSort_fromString = PLPDisplayCategoryBuyerQuery_graphql.Utils.displayCategoryProductsSort_fromString;
 
+var Query_orderByDirection_decode = PLPDisplayCategoryBuyerQuery_graphql.Utils.orderByDirection_decode;
+
+var Query_orderByDirection_fromString = PLPDisplayCategoryBuyerQuery_graphql.Utils.orderByDirection_fromString;
+
 var Query_productType_decode = PLPDisplayCategoryBuyerQuery_graphql.Utils.productType_decode;
 
 var Query_productType_fromString = PLPDisplayCategoryBuyerQuery_graphql.Utils.productType_fromString;
 
+var Query_productsOrderField_decode = PLPDisplayCategoryBuyerQuery_graphql.Utils.productsOrderField_decode;
+
+var Query_productsOrderField_fromString = PLPDisplayCategoryBuyerQuery_graphql.Utils.productsOrderField_fromString;
+
 var Query = {
   displayCategoryProductsSort_decode: Query_displayCategoryProductsSort_decode,
   displayCategoryProductsSort_fromString: Query_displayCategoryProductsSort_fromString,
+  orderByDirection_decode: Query_orderByDirection_decode,
+  orderByDirection_fromString: Query_orderByDirection_fromString,
   productType_decode: Query_productType_decode,
   productType_fromString: Query_productType_fromString,
+  productsOrderField_decode: Query_productsOrderField_decode,
+  productsOrderField_fromString: Query_productsOrderField_fromString,
   Operation: undefined,
   Types: undefined,
   use: use,
@@ -225,16 +242,16 @@ function useBlockingPagination(fRef) {
 
 var makeRefetchVariables = PLPDisplayCategoryBuyerRefetchQuery_graphql.Types.makeRefetchVariables;
 
-var Fragment_getConnectionNodes = PLPDisplayCategoryBuyerFragment_graphql.Utils.getConnectionNodes;
-
 var Fragment_displayCategoryType_decode = PLPDisplayCategoryBuyerFragment_graphql.Utils.displayCategoryType_decode;
 
 var Fragment_displayCategoryType_fromString = PLPDisplayCategoryBuyerFragment_graphql.Utils.displayCategoryType_fromString;
 
+var Fragment_getConnectionNodes = PLPDisplayCategoryBuyerFragment_graphql.Utils.getConnectionNodes;
+
 var Fragment = {
-  getConnectionNodes: Fragment_getConnectionNodes,
   displayCategoryType_decode: Fragment_displayCategoryType_decode,
   displayCategoryType_fromString: Fragment_displayCategoryType_fromString,
+  getConnectionNodes: Fragment_getConnectionNodes,
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,
@@ -246,11 +263,106 @@ var Fragment = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-function PLP_DisplayCategory_Buyer$PC(Props) {
+function toOrderBy(sort) {
+  if (sort === "PRICE_DESC") {
+    return [
+            {
+              direction: "ASC",
+              field: "STATUS_PRIORITY"
+            },
+            {
+              direction: "DESC_NULLS_LAST",
+              field: "PRICE"
+            },
+            {
+              direction: "DESC",
+              field: "UPDATED_AT"
+            }
+          ];
+  } else if (sort === "RELEVANCE_DESC" || sort === "POPULARITY_DESC") {
+    return [
+            {
+              direction: "ASC",
+              field: "STATUS_PRIORITY"
+            },
+            {
+              direction: "DESC",
+              field: "POPULARITY"
+            }
+          ];
+  } else if (sort === "PRICE_ASC") {
+    return [
+            {
+              direction: "ASC",
+              field: "STATUS_PRIORITY"
+            },
+            {
+              direction: "ASC_NULLS_LAST",
+              field: "PRICE"
+            },
+            {
+              direction: "DESC",
+              field: "UPDATED_AT"
+            }
+          ];
+  } else if (sort === "UPDATED_ASC") {
+    return [
+            {
+              direction: "ASC",
+              field: "STATUS_PRIORITY"
+            },
+            {
+              direction: "ASC",
+              field: "UPDATED_AT"
+            }
+          ];
+  } else if (sort === "PRICE_PER_KG_ASC") {
+    return [
+            {
+              direction: "ASC",
+              field: "STATUS_PRIORITY"
+            },
+            {
+              direction: "ASC_NULLS_LAST",
+              field: "PRICE_PER_KG"
+            },
+            {
+              direction: "DESC",
+              field: "UPDATED_AT"
+            }
+          ];
+  } else if (sort === "PRICE_PER_KG_DESC") {
+    return [
+            {
+              direction: "ASC",
+              field: "STATUS_PRIORITY"
+            },
+            {
+              direction: "DESC_NULLS_LAST",
+              field: "PRICE_PER_KG"
+            },
+            {
+              direction: "DESC",
+              field: "UPDATED_AT"
+            }
+          ];
+  } else {
+    return [
+            {
+              direction: "ASC",
+              field: "STATUS_PRIORITY"
+            },
+            {
+              direction: "DESC",
+              field: "UPDATED_AT"
+            }
+          ];
+  }
+}
+
+function PLP_DisplayCategory_Buyer$NewPC(Props) {
   var query = Props.query;
   var displayCategoryId = Props.displayCategoryId;
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   var match = usePagination(query);
   var hasNext = match.hasNext;
@@ -259,9 +371,92 @@ function PLP_DisplayCategory_Buyer$PC(Props) {
   var name = match$1.name;
   var loadMoreRef = React.useRef(null);
   var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
-  var isNoneSectionType = Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "section-type"), (function (sectionType) {
-              return sectionType === "none";
-            })), false);
+  var isNoneSectionType = Belt_Option.isNone(Js_dict.get(router.query, "section"));
+  React.useEffect((function () {
+          if (hasNext && isIntersecting) {
+            Curry._3(loadNext, 20, undefined, undefined);
+          }
+          
+        }), [
+        hasNext,
+        isIntersecting
+      ]);
+  React.useEffect((function () {
+          Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "VIEW_PRODUCT_LIST", {
+                listID: displayCategoryId,
+                action: name
+              }, undefined);
+        }), []);
+  var match$2 = match$1.products.edges;
+  var tmp;
+  var exit = 0;
+  if (isNoneSectionType || match$2.length === 0) {
+    exit = 1;
+  } else {
+    tmp = React.createElement("div", {
+          className: "flex pc-content bg-[#FAFBFC]"
+        }, React.createElement(PC_PLP_Sidebar.make, {}), React.createElement("div", {
+              className: "max-w-[1280px] min-w-[872px] w-full mt-10 pt-10 px-[50px] pb-16 mx-16 min-h-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-14"
+            }, React.createElement(PC_PLP_ChipList.make, {
+                  parentId: displayCategoryId
+                }), React.createElement("div", {
+                  className: "mt-[64px]"
+                }, match$1.type_ === "NORMAL" ? React.createElement("div", {
+                        className: "mb-12 w-full flex items-center justify-between"
+                      }, React.createElement(PLP_SectionCheckBoxGroup.make, {}), React.createElement(PLP_SortSelect.PC.make, {})) : null, React.createElement("ol", {
+                      className: "grid plp-max:grid-cols-5 grid-cols-4 gap-x-10 gap-y-16"
+                    }, Belt_Array.map(match$2, (function (param) {
+                            return React.createElement(ShopProductListItem_Buyer.PC.make, {
+                                        query: param.node.fragmentRefs,
+                                        key: param.cursor
+                                      });
+                          }))), React.createElement("div", {
+                      ref: loadMoreRef,
+                      className: "h-20 w-full"
+                    }))));
+  }
+  if (exit === 1) {
+    tmp = React.createElement("div", {
+          className: "flex pc-content bg-[#FAFBFC]"
+        }, React.createElement(PC_PLP_Sidebar.make, {}), React.createElement("div", {
+              className: "max-w-[1280px] min-w-[872px] w-full mt-10 pt-10 px-[50px] pb-16 mx-16 mr-auto min-h-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-14"
+            }, React.createElement(PC_PLP_ChipList.make, {
+                  parentId: displayCategoryId
+                }), React.createElement("div", {
+                  className: "mt-[64px]"
+                }, React.createElement("div", {
+                      className: "mb-12 w-full flex items-center justify-between"
+                    }, React.createElement(PLP_SectionCheckBoxGroup.make, {}))), React.createElement("div", {
+                  className: "pt-20 flex flex-col items-center justify-center text-gray-800"
+                }, React.createElement("h1", {
+                      className: "text-3xl"
+                    }, "상품이 존재하지 않습니다"), React.createElement("span", {
+                      className: "mt-7"
+                    }, "해당 카테고리에 상품이 존재하지 않습니다."), React.createElement("span", undefined, "다른 카테고리를 선택해 주세요."))));
+  }
+  return React.createElement("div", {
+              className: "w-full min-h-screen bg-[#F0F2F5]"
+            }, React.createElement(Header_Buyer.PC.make, {
+                  key: router.asPath
+                }), tmp, React.createElement(Footer_Buyer.PC.make, {}));
+}
+
+var NewPC = {
+  make: PLP_DisplayCategory_Buyer$NewPC
+};
+
+function PLP_DisplayCategory_Buyer$PC(Props) {
+  var query = Props.query;
+  var displayCategoryId = Props.displayCategoryId;
+  var router = Router.useRouter();
+  var match = usePagination(query);
+  var hasNext = match.hasNext;
+  var loadNext = match.loadNext;
+  var match$1 = match.data;
+  var name = match$1.name;
+  var loadMoreRef = React.useRef(null);
+  var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
+  var isNoneSectionType = Belt_Option.isNone(Js_dict.get(router.query, "section"));
   React.useEffect((function () {
           if (hasNext && isIntersecting) {
             Curry._3(loadNext, 20, undefined, undefined);
@@ -291,7 +486,7 @@ function PLP_DisplayCategory_Buyer$PC(Props) {
               className: "mt-[64px]"
             }, match$1.type_ === "NORMAL" ? React.createElement("div", {
                     className: "mb-12 w-full flex items-center justify-between"
-                  }, React.createElement(PLP_SectionCheckBoxGroup.PC.make, {}), React.createElement(PLP_SortSelect.PC.make, {})) : null, React.createElement("ol", {
+                  }, React.createElement(PLP_SectionCheckBoxGroup.make, {}), React.createElement(PLP_SortSelect.PC.make, {})) : null, React.createElement("ol", {
                   className: "grid grid-cols-4 gap-x-10 gap-y-16"
                 }, Belt_Array.map(match$2, (function (param) {
                         return React.createElement(ShopProductListItem_Buyer.PC.make, {
@@ -312,7 +507,7 @@ function PLP_DisplayCategory_Buyer$PC(Props) {
                   className: "mt-[64px]"
                 }, React.createElement("div", {
                       className: "mb-12 w-full flex items-center justify-between"
-                    }, React.createElement(PLP_SectionCheckBoxGroup.PC.make, {}))), React.createElement("div", {
+                    }, React.createElement(PLP_SectionCheckBoxGroup.make, {}))), React.createElement("div", {
                   className: "pt-20 flex flex-col items-center justify-center text-gray-800"
                 }, React.createElement("h1", {
                       className: "text-3xl"
@@ -323,8 +518,6 @@ function PLP_DisplayCategory_Buyer$PC(Props) {
   return React.createElement("div", {
               className: "w-full min-w-[1280px] min-h-screen"
             }, React.createElement(Header_Buyer.PC.make, {
-                  gnbBanners: gnbBanners,
-                  displayCategories: displayCategories,
                   key: router.asPath
                 }), tmp, React.createElement(Footer_Buyer.PC.make, {}));
 }
@@ -344,9 +537,7 @@ function PLP_DisplayCategory_Buyer$MO(Props) {
   var name = match$1.name;
   var loadMoreRef = React.useRef(null);
   var isIntersecting = CustomHooks.$$IntersectionObserver.use(undefined, loadMoreRef, 0.1, "50px", undefined);
-  var isNoneSectionType = Belt_Option.getWithDefault(Belt_Option.map(Js_dict.get(router.query, "section-type"), (function (sectionType) {
-              return sectionType === "none";
-            })), false);
+  var isNoneSectionType = Belt_Option.isNone(Js_dict.get(router.query, "section"));
   React.useEffect((function () {
           if (hasNext && isIntersecting) {
             Curry._3(loadNext, 20, undefined, undefined);
@@ -372,7 +563,7 @@ function PLP_DisplayCategory_Buyer$MO(Props) {
           className: "w-full pt-[18px] px-5"
         }, match$1.type_ === "NORMAL" ? React.createElement("div", {
                 className: "mb-4 w-full flex items-center justify-between"
-              }, React.createElement(PLP_SectionCheckBoxGroup.MO.make, {}), React.createElement(PLP_SortSelect.MO.make, {})) : null, React.createElement("ol", {
+              }, React.createElement(PLP_SectionCheckBoxGroup.make, {}), React.createElement(PLP_SortSelect.MO.make, {})) : null, React.createElement("ol", {
               className: "grid grid-cols-2 gap-x-4 gap-y-8"
             }, Belt_Array.map(match$2, (function (param) {
                     return React.createElement(ShopProductListItem_Buyer.MO.make, {
@@ -389,7 +580,7 @@ function PLP_DisplayCategory_Buyer$MO(Props) {
           className: "w-full pt-[18px] px-5"
         }, React.createElement("div", {
               className: "mb-4 w-full flex items-center justify-between"
-            }, React.createElement(PLP_SectionCheckBoxGroup.MO.make, {})), React.createElement("div", {
+            }, React.createElement(PLP_SectionCheckBoxGroup.make, {})), React.createElement("div", {
               className: "py-[126px] flex flex-col items-center justify-center text-gray-800 px-5"
             }, React.createElement("h1", {
                   className: "text-xl"
@@ -416,30 +607,47 @@ var MO = {
 
 function PLP_DisplayCategory_Buyer$Placeholder(Props) {
   var deviceType = Props.deviceType;
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React.createElement("div", {
-                    className: "w-full min-w-[1280px] min-h-screen"
-                  }, React.createElement(Header_Buyer.PC.make, {
-                        gnbBanners: gnbBanners,
-                        displayCategories: displayCategories,
-                        key: router.asPath
-                      }), React.createElement("div", {
-                        className: "w-[1280px] pt-[92px] px-5 pb-16 mx-auto"
-                      }, React.createElement(PLP_Scrollable_Header.PC.Skeleton.make, {}), React.createElement("section", {
-                            className: "w-full mt-[64px]"
-                          }, React.createElement("ol", {
-                                className: "grid grid-cols-4 gap-x-10 gap-y-16"
-                              }, Belt_Array.map(Belt_Array.range(1, 300), (function (number) {
-                                      return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
-                                                  key: "box-" + String(number) + ""
-                                                });
-                                    }))))), React.createElement(Footer_Buyer.PC.make, {}));
+        var oldUI = React.createElement("div", {
+              className: "w-full min-w-[1280px] min-h-screen"
+            }, React.createElement(Header_Buyer.PC.make, {
+                  key: router.asPath
+                }), React.createElement("div", {
+                  className: "w-[1280px] pt-[92px] px-5 pb-16 mx-auto"
+                }, React.createElement(PLP_Scrollable_Header.PC.Skeleton.make, {}), React.createElement("section", {
+                      className: "w-full mt-[64px]"
+                    }, React.createElement("ol", {
+                          className: "grid grid-cols-4 gap-x-10 gap-y-16"
+                        }, Belt_Array.map(Belt_Array.range(1, 300), (function (number) {
+                                return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
+                                            key: "box-" + String(number) + ""
+                                          });
+                              }))))), React.createElement(Footer_Buyer.PC.make, {}));
+        return React.createElement(FeatureFlagWrapper.make, {
+                    children: React.createElement("div", {
+                          className: "w-full min-w-[1280px] min-h-screen bg-[#FAFBFC]"
+                        }, React.createElement(Header_Buyer.PC.make, {
+                              key: router.asPath
+                            }), React.createElement("div", {
+                              className: "flex pc-content"
+                            }, React.createElement(PC_PLP_Sidebar.Skeleton.make, {}), React.createElement("div", {
+                                  className: "w-[1280px] mt-10 pt-10 px-[50px] pb-16 ml-16 mr-auto min-h-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-14"
+                                }, React.createElement(PC_PLP_ChipList.Skeleton.make, {}), React.createElement("section", {
+                                      className: "w-full mt-[64px]"
+                                    }, React.createElement("ol", {
+                                          className: "grid plp-max:grid-cols-5 grid-cols-4 gap-x-10 gap-y-16"
+                                        }, Belt_Array.map(Belt_Array.range(1, 300), (function (number) {
+                                                return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
+                                                            key: "box-" + String(number) + ""
+                                                          });
+                                              })))))), React.createElement(Footer_Buyer.PC.make, {})),
+                    fallback: oldUI,
+                    featureFlag: "HOME_UI_UX"
+                  });
     case /* Mobile */2 :
         return React.createElement("div", {
                     className: "w-full min-h-screen bg-white"
@@ -470,8 +678,6 @@ var Placeholder = {
 
 function PLP_DisplayCategory_Buyer$NotFound(Props) {
   var deviceType = Props.deviceType;
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   switch (deviceType) {
     case /* Unknown */0 :
@@ -480,11 +686,9 @@ function PLP_DisplayCategory_Buyer$NotFound(Props) {
         return React.createElement("div", {
                     className: "w-full min-w-[1280px] min-h-screen"
                   }, React.createElement(Header_Buyer.PC.make, {
-                        gnbBanners: gnbBanners,
-                        displayCategories: displayCategories,
                         key: router.asPath
                       }), React.createElement("div", {
-                        className: "pt-20 flex flex-col items-center justify-center text-gray-800"
+                        className: "pt-20 flex flex-col items-center justify-center text-gray-800 h-[800px]"
                       }, React.createElement("h1", {
                             className: "text-3xl"
                           }, "카테고리를 찾을 수 없습니다"), React.createElement("span", {
@@ -518,17 +722,20 @@ function PLP_DisplayCategory_Buyer$Presenter(Props) {
   var deviceType = Props.deviceType;
   var query = Props.query;
   var displayCategoryId = Props.displayCategoryId;
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React.createElement(PLP_DisplayCategory_Buyer$PC, {
-                    query: query,
-                    displayCategoryId: displayCategoryId,
-                    gnbBanners: gnbBanners,
-                    displayCategories: displayCategories
+        return React.createElement(FeatureFlagWrapper.make, {
+                    children: React.createElement(PLP_DisplayCategory_Buyer$NewPC, {
+                          query: query,
+                          displayCategoryId: displayCategoryId
+                        }),
+                    fallback: React.createElement(PLP_DisplayCategory_Buyer$PC, {
+                          query: query,
+                          displayCategoryId: displayCategoryId
+                        }),
+                    featureFlag: "HOME_UI_UX"
                   });
     case /* Mobile */2 :
         return React.createElement(PLP_DisplayCategory_Buyer$MO, {
@@ -547,38 +754,37 @@ function PLP_DisplayCategory_Buyer$Container(Props) {
   var deviceType = Props.deviceType;
   var displayCategoryId = Props.displayCategoryId;
   var sort = Props.sort;
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
-  ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
+  ChannelTalkHelper.Hook.use(undefined, undefined);
   var router = Router.useRouter();
-  var productType = PLP_FilterOption.Section.toQueryParam(PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type")));
-  var tmp = {
+  var sectionType = Belt_Option.map(Product_FilterOption.Section.fromUrlParameter(Js_dict.get(router.query, "section")), Product_FilterOption.Section.toQueryParam);
+  var variables = {
     count: 20,
     displayCategoryId: displayCategoryId,
     onlyBuyable: true,
-    productType: productType
+    orderBy: toOrderBy(sort),
+    productType: Belt_Option.getWithDefault(sectionType, [])
   };
-  if (sort !== undefined) {
-    tmp.sort = Caml_option.valFromOption(sort);
-  }
-  var variables = tmp;
   var match = use(variables, /* StoreOrNetwork */1, undefined, undefined, undefined);
   var node = match.node;
-  if (node !== undefined) {
-    return React.createElement(PLP_DisplayCategory_Buyer$Presenter, {
-                deviceType: deviceType,
-                query: node.fragmentRefs,
-                displayCategoryId: displayCategoryId,
-                gnbBanners: gnbBanners,
-                displayCategories: displayCategories
-              });
-  } else {
+  if (node === undefined) {
     return React.createElement(PLP_DisplayCategory_Buyer$NotFound, {
-                deviceType: deviceType,
-                gnbBanners: gnbBanners,
-                displayCategories: displayCategories
+                deviceType: deviceType
               });
   }
+  var name = node.name;
+  return React.createElement(React.Fragment, undefined, React.createElement(Head, {
+                  children: null
+                }, React.createElement("title", undefined, "신선하이 | " + name + ""), React.createElement("meta", {
+                      content: "농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요.",
+                      name: "description"
+                    })), React.createElement(OpenGraph_Header.make, {
+                  title: "신선하이 | " + name + "",
+                  description: "" + name + " 상품입니다."
+                }), React.createElement(PLP_DisplayCategory_Buyer$Presenter, {
+                  deviceType: deviceType,
+                  query: node.fragmentRefs,
+                  displayCategoryId: displayCategoryId
+                }));
 }
 
 var Container = {
@@ -588,33 +794,25 @@ var Container = {
 function PLP_DisplayCategory_Buyer(Props) {
   var deviceType = Props.deviceType;
   var displayCategoryId = Props.displayCategoryId;
-  var gnbBanners = Props.gnbBanners;
-  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
-  var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type"));
-  var sort = Belt_Option.map(Js_dict.get(router.query, "sort"), (function (sort) {
-          return PLP_FilterOption.Sort.decodeSort(sectionType, sort);
-        }));
+  var sectionType = Product_FilterOption.Section.fromUrlParameter(Js_dict.get(router.query, "section"));
+  var sort = Belt_Option.getWithDefault(Belt_Option.flatMap(sectionType, (function (sectionType$p) {
+              return Product_FilterOption.Sort.make(sectionType$p, Js_dict.get(router.query, "sort"));
+            })), Product_FilterOption.Sort.defaultValue);
   return React.createElement(RescriptReactErrorBoundary.make, {
               children: React.createElement(React.Suspense, {
                     children: React.createElement(PLP_DisplayCategory_Buyer$Container, {
                           deviceType: deviceType,
                           displayCategoryId: displayCategoryId,
-                          sort: sort,
-                          gnbBanners: gnbBanners,
-                          displayCategories: displayCategories
+                          sort: sort
                         }),
                     fallback: React.createElement(PLP_DisplayCategory_Buyer$Placeholder, {
-                          deviceType: deviceType,
-                          gnbBanners: gnbBanners,
-                          displayCategories: displayCategories
+                          deviceType: deviceType
                         })
                   }),
               fallback: (function (param) {
                   return React.createElement(PLP_DisplayCategory_Buyer$Placeholder, {
-                              deviceType: deviceType,
-                              gnbBanners: gnbBanners,
-                              displayCategories: displayCategories
+                              deviceType: deviceType
                             });
                 })
             });
@@ -625,6 +823,8 @@ var make = PLP_DisplayCategory_Buyer;
 export {
   Query ,
   Fragment ,
+  toOrderBy ,
+  NewPC ,
   PC ,
   MO ,
   Placeholder ,

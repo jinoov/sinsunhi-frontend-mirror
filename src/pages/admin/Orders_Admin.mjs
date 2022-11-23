@@ -63,7 +63,7 @@ function data_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("update-count" + e.path),
+              path: ".update-count" + e.path,
               message: e.message,
               value: e.value
             }
@@ -73,7 +73,7 @@ function data_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("total-count" + e$1.path),
+            path: ".total-count" + e$1.path,
             message: e$1.message,
             value: e$1.value
           }
@@ -180,7 +180,7 @@ function Orders_Admin$Orders(Props) {
   var user = CustomHooks.Auth.use(undefined);
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
-  var status = CustomHooks.OrdersAdmin.use(new URLSearchParams(router.query).toString());
+  var status = CustomHooks.Orders.use(new URLSearchParams(router.query).toString());
   var match$1 = React.useState(function () {
         
       });
@@ -248,7 +248,7 @@ function Orders_Admin$Orders(Props) {
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     count = "-";
   } else {
-    var orders$p = CustomHooks.OrdersAdmin.orders_decode(status._0);
+    var orders$p = CustomHooks.Orders.orders_decode(status._0);
     count = orders$p.TAG === /* Ok */0 ? String(orders$p._0.count) : "-";
   }
   var handleOnCheckOrder = function (orderProductNo, e) {
@@ -280,7 +280,7 @@ function Orders_Admin$Orders(Props) {
     if (status.TAG !== /* Loaded */0) {
       return ;
     }
-    var orders$p = CustomHooks.OrdersAdmin.orders_decode(status._0);
+    var orders$p = CustomHooks.Orders.orders_decode(status._0);
     var allOrderProductNo;
     allOrderProductNo = orders$p.TAG === /* Ok */0 ? Belt_SetString.fromArray(Garter_Array.map(Garter_Array.keep(orders$p._0.data, Order_Admin.isCheckableOrder), (function (order) {
                   return order.orderProductNo;
@@ -311,7 +311,7 @@ function Orders_Admin$Orders(Props) {
     mutate("" + Env.restApiUrl + "/order/summary?" + Period.currentPeriod(router) + "", undefined, undefined);
   };
   var match$15 = Belt_Option.flatMap(Js_dict.get(router.query, "status"), (function (status$p) {
-          var status$p$p = CustomHooks.OrdersAdmin.status_decode(status$p);
+          var status$p$p = CustomHooks.Orders.status_decode(status$p);
           if (status$p$p.TAG === /* Ok */0) {
             return status$p$p._0;
           }
@@ -343,11 +343,6 @@ function Orders_Admin$Orders(Props) {
       case /* ERROR */6 :
           exit = 1;
           break;
-      case /* DELIVERING */3 :
-      case /* CANCEL */5 :
-      case /* REFUND */7 :
-          tmp = null;
-          break;
       case /* NEGOTIATING */8 :
           tmp = React.createElement(React.Fragment, undefined, React.createElement("button", {
                     className: "h-9 px-3 text-primary bg-primary-light rounded-lg flex items-center mr-2 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-light focus:ring-opacity-100",
@@ -376,6 +371,12 @@ function Orders_Admin$Orders(Props) {
                         }
                       })
                   }, "선택 항목 주문 취소"));
+          break;
+      case /* DELIVERING */3 :
+      case /* CANCEL */5 :
+      case /* REFUND */7 :
+      case /* DEPOSIT_PENDING */9 :
+          tmp = null;
           break;
       
     }

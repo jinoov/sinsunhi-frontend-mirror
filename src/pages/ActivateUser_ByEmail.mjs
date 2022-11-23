@@ -48,18 +48,6 @@ function ActivateUser_ByEmail$SentEmail(Props) {
   var role = Props.role;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
-  var onSuccess = function (param) {
-    addToast(React.createElement("div", {
-              className: "flex items-center"
-            }, React.createElement(IconCheck.make, {
-                  height: "24",
-                  width: "24",
-                  fill: "#12B564",
-                  className: "mr-2"
-                }), "이메일을 다시 전송하였습니다"), {
-          appearance: "success"
-        });
-  };
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "이메일로 휴면계정 해제")
                 }), React.createElement("div", {
@@ -75,7 +63,18 @@ function ActivateUser_ByEmail$SentEmail(Props) {
                             }, React.createElement("button", {
                                   className: "w-full flex justify-between items-center",
                                   onClick: (function (param) {
-                                      submitEmail(uid, role, onSuccess, addToast);
+                                      submitEmail(uid, role, (function (param) {
+                                              addToast(React.createElement("div", {
+                                                        className: "flex items-center"
+                                                      }, React.createElement(IconCheck.make, {
+                                                            height: "24",
+                                                            width: "24",
+                                                            fill: "#12B564",
+                                                            className: "mr-2"
+                                                          }), "이메일을 다시 전송하였습니다"), {
+                                                    appearance: "success"
+                                                  });
+                                            }), addToast);
                                     })
                                 }, React.createElement("span", {
                                       className: "flex items-center"
@@ -120,6 +119,9 @@ function ActivateUser_ByEmail$SendEmail(Props) {
   var router = Router.useRouter();
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
                   children: React.createElement("title", undefined, "이메일로 휴면계정 해제")
+                }), React.createElement("meta", {
+                  content: "농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요.",
+                  name: "description"
                 }), React.createElement("div", {
                   className: "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"
                 }, React.createElement("div", {

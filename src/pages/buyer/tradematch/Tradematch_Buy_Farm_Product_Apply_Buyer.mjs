@@ -6,7 +6,6 @@ import * as DS_Toast from "../../../components/common/container/DS_Toast.mjs";
 import * as Skeleton from "../../../components/Skeleton.mjs";
 import * as DS_Button from "../../../components/common/element/DS_Button.mjs";
 import * as DS_Dialog from "../../../components/common/container/DS_Dialog.mjs";
-import * as IconArrow from "../../../components/svgs/IconArrow.mjs";
 import * as IconError from "../../../components/svgs/IconError.mjs";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
@@ -19,6 +18,7 @@ import * as RelayRuntime from "relay-runtime";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactToastNotifications from "react-toast-notifications";
+import * as FormulaComponents from "@greenlabs/formula-components";
 import * as Tradematch_Buy_Farm_Apply_Steps_Buyer from "../../../components/Tradematch_Buy_Farm_Apply_Steps_Buyer.mjs";
 import * as TradematchBuyFarmProductApplyBuyerRefetchQuery_graphql from "../../../__generated__/TradematchBuyFarmProductApplyBuyerRefetchQuery_graphql.mjs";
 import * as TradematchBuyFarmProductApplyBuyer_MatchingProduct_Query_graphql from "../../../__generated__/TradematchBuyFarmProductApplyBuyer_MatchingProduct_Query_graphql.mjs";
@@ -328,11 +328,11 @@ var TradematchDemands_tradematchPackageQuantityUnit_decode = TradematchBuyFarmPr
 var TradematchDemands_tradematchPackageQuantityUnit_fromString = TradematchBuyFarmProductApplyBuyer_TradematchDemands_Fragment_graphql.Utils.tradematchPackageQuantityUnit_fromString;
 
 var TradematchDemands$1 = {
-  getConnectionNodes: getConnectionNodes,
   tradematchDemandStatus_decode: TradematchDemands_tradematchDemandStatus_decode$1,
   tradematchDemandStatus_fromString: TradematchDemands_tradematchDemandStatus_fromString$1,
   tradematchPackageQuantityUnit_decode: TradematchDemands_tradematchPackageQuantityUnit_decode,
   tradematchPackageQuantityUnit_fromString: TradematchDemands_tradematchPackageQuantityUnit_fromString,
+  getConnectionNodes: getConnectionNodes,
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,
@@ -439,10 +439,8 @@ function Tradematch_Buy_Farm_Product_Apply_Buyer$Header(Props) {
                               onClick: (function (param) {
                                   Curry._1(handleClickLeftButton, undefined);
                                 })
-                            }, React.createElement(IconArrow.make, {
-                                  height: "24",
-                                  width: "24",
-                                  className: "rotate-180"
+                            }, React.createElement(FormulaComponents.ArrowLeftLineRegular, {
+                                  size: "xl"
                                 })), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-base"
                                 }, Belt_Option.mapWithDefault(title, "", (function (x) {

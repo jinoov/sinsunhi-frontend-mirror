@@ -20,7 +20,7 @@ module Fragments = {
     fragment ShopProductListItemBuyerNormalFragment on Product {
       productId: number
       image {
-        thumb800x800
+        thumb400x400
       }
       status
       displayName
@@ -37,7 +37,7 @@ module Fragments = {
     fragment ShopProductListItemBuyerQuotedFragment on QuotedProduct {
       productId: number
       image {
-        thumb800x800
+        thumb400x400
       }
       displayName
       status
@@ -48,7 +48,7 @@ module Fragments = {
     fragment ShopProductListItemBuyerMatchingFragment on MatchingProduct {
       productId: number
       image {
-        thumb800x800
+        thumb400x400
       }
       displayName
       status
@@ -93,46 +93,87 @@ module Normal = {
         )
       }
 
-      <div
-        className=%twc("w-[280px] h-[376px] cursor-pointer")
-        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
-        <div className=%twc("w-[280px] aspect-square rounded-xl overflow-hidden relative")>
-          <Image
-            src=image.thumb800x800
-            className=%twc("w-full h-full object-cover")
-            placeholder=Image.Placeholder.Sm
-            alt={`product-${productId->Int.toString}`}
-            loading=Image.Loading.Lazy
-          />
-          <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl") />
-          {switch status {
-          | #SOLDOUT => <StatusLabel text={`품절`} />
-          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
-          | #NOSALE => <StatusLabel text={`숨김`} />
-          | _ => React.null
-          }}
+      let oldUI =
+        <div
+          className=%twc("w-[280px] h-[376px] cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("w-[280px] aspect-square rounded-xl overflow-hidden relative")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl") />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-4")>
+            <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
+            {switch user {
+            | Unknown => <Skeleton.Box />
+
+            | NotLoggedIn =>
+              <span className=%twc("mt-2 font-bold text-lg text-green-500")>
+                {`공급가 회원공개`->React.string}
+              </span>
+
+            | LoggedIn(_) =>
+              let textColor = switch status {
+              | #SOLDOUT | #HIDDEN_SALE => %twc(" text-gray-400")
+              | _ => %twc(" text-text-L1")
+              }
+              <span className={%twc("mt-2 font-bold text-lg") ++ textColor}>
+                {priceLabel->React.string}
+              </span>
+            }}
+          </div>
         </div>
-        <div className=%twc("flex flex-col mt-4")>
-          <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
-          {switch user {
-          | Unknown => <Skeleton.Box />
 
-          | NotLoggedIn =>
-            <span className=%twc("mt-2 font-bold text-lg text-green-500")>
-              {`공급가 회원공개`->React.string}
-            </span>
-
-          | LoggedIn(_) =>
-            let textColor = switch status {
-            | #SOLDOUT | #HIDDEN_SALE => %twc(" text-gray-400")
-            | _ => %twc(" text-text-L1")
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <div
+          className=%twc("max-w-[220px] min-w-[178px] w-full h-[316px] cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div
+            className=%twc(
+              "max-w-[220px] min-w-[178px] w-full aspect-square rounded-[10px] overflow-hidden relative"
+            )>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div
+              className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]")
+            />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-4")>
+            <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
+            {
+              let textColor = switch status {
+              | #SOLDOUT | #HIDDEN_SALE => %twc(" text-gray-400")
+              | _ => %twc(" text-text-L1")
+              }
+              <span className={%twc("mt-2 font-bold text-xl") ++ textColor}>
+                {priceLabel->React.string}
+              </span>
             }
-            <span className={%twc("mt-2 font-bold text-lg") ++ textColor}>
-              {priceLabel->React.string}
-            </span>
-          }}
+          </div>
         </div>
-      </div>
+      </FeatureFlagWrapper>
     }
   }
 
@@ -152,43 +193,78 @@ module Normal = {
         )
       }
 
-      <div
-        className=%twc("cursor-pointer")
-        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
-        <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
-          <Image
-            src=image.thumb800x800
-            className=%twc("w-full h-full object-cover")
-            placeholder=Image.Placeholder.Sm
-            alt={`product-${productId->Int.toString}`}
-            loading=Image.Loading.Lazy
-          />
-          <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
-          {switch status {
-          | #SOLDOUT => <StatusLabel text={`품절`} />
-          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
-          | #NOSALE => <StatusLabel text={`숨김`} />
-          | _ => React.null
-          }}
-        </div>
-        <div className=%twc("flex flex-col mt-3")>
-          <span className=%twc("text-gray-800 line-clamp-2 text-sm")>
-            {displayName->React.string}
-          </span>
-          {switch user {
-          | LoggedIn(_) =>
-            let textColor = isSoldout ? %twc(" text-gray-400") : %twc(" text-text-L1")
-            <span className={%twc("mt-1 font-bold") ++ textColor}>
-              {priceLabel->React.string}
+      let oldUI =
+        <li
+          className=%twc("cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-3")>
+            <span className=%twc("text-gray-800 line-clamp-2 text-sm")>
+              {displayName->React.string}
             </span>
-          | NotLoggedIn =>
-            <span className=%twc("mt-1 font-bold text-green-500")>
-              {`공급가 회원공개`->React.string}
+            {switch user {
+            | LoggedIn(_) =>
+              let textColor = isSoldout ? %twc(" text-gray-400") : %twc(" text-text-L1")
+              <span className={%twc("mt-1 font-bold") ++ textColor}>
+                {priceLabel->React.string}
+              </span>
+            | NotLoggedIn =>
+              <span className=%twc("mt-1 font-bold text-green-500")>
+                {`공급가 회원공개`->React.string}
+              </span>
+            | Unknown => <Skeleton.Box />
+            }}
+          </div>
+        </li>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <li
+          className=%twc("cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("rounded-[10px] overflow-hidden relative aspect-square")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-3")>
+            <span className=%twc("text-gray-800 line-clamp-2 text-sm")>
+              {displayName->React.string}
             </span>
-          | Unknown => <Skeleton.Box />
-          }}
-        </div>
-      </div>
+            {
+              let textColor = isSoldout ? %twc(" text-gray-400") : %twc(" text-text-L1")
+              <span className={%twc("mt-1 font-bold") ++ textColor}>
+                {priceLabel->React.string}
+              </span>
+            }
+          </div>
+        </li>
+      </FeatureFlagWrapper>
     }
   }
 }
@@ -202,32 +278,69 @@ module Quoted = {
 
       let {productId, image, displayName, status} = query->Fragments.Quoted.use
 
-      <div
-        className=%twc("w-[280px] h-[376px] cursor-pointer")
-        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
-        <div className=%twc("w-[280px] aspect-square rounded-xl overflow-hidden relative")>
-          <Image
-            src=image.thumb800x800
-            className=%twc("w-full h-full object-cover")
-            placeholder=Image.Placeholder.Sm
-            alt={`product-${productId->Int.toString}`}
-            loading=Image.Loading.Lazy
-          />
-          <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl") />
-          {switch status {
-          | #SOLDOUT => <StatusLabel text={`품절`} />
-          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
-          | #NOSALE => <StatusLabel text={`숨김`} />
-          | _ => React.null
-          }}
-        </div>
-        <div className=%twc("flex flex-col mt-4")>
-          <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
-          <span className=%twc("mt-2 font-bold text-lg text-blue-500")>
-            {`최저가 견적받기`->React.string}
-          </span>
-        </div>
-      </div>
+      let oldUI =
+        <li
+          className=%twc("w-[280px] h-[376px] cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("w-[280px] aspect-square rounded-[10px] overflow-hidden relative")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div
+              className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]")
+            />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-4")>
+            <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
+            <span className=%twc("mt-2 font-bold text-xl text-blue-500")>
+              {`최저가 견적받기`->React.string}
+            </span>
+          </div>
+        </li>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <li
+          className=%twc("max-w-[220px] min-w-[178px] w-full h-[316px] cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div
+            className=%twc(
+              "max-w-[220px] min-w-[178px] w-full aspect-square rounded-[10px] overflow-hidden relative"
+            )>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div
+              className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]")
+            />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-4")>
+            <span className=%twc("text-gray-800 line-clamp-2")> {displayName->React.string} </span>
+            <span className=%twc("mt-2 font-bold text-xl text-blue-500")>
+              {`최저가 견적받기`->React.string}
+            </span>
+          </div>
+        </li>
+      </FeatureFlagWrapper>
     }
   }
 
@@ -239,34 +352,66 @@ module Quoted = {
 
       let {productId, image, displayName, status} = query->Fragments.Quoted.use
 
-      <div
-        className=%twc("cursor-pointer")
-        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
-        <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
-          <Image
-            src=image.thumb800x800
-            className=%twc("w-full h-full object-cover")
-            placeholder=Image.Placeholder.Sm
-            alt={`product-${productId->Int.toString}`}
-            loading=Image.Loading.Lazy
-          />
-          <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
-          {switch status {
-          | #SOLDOUT => <StatusLabel text={`품절`} />
-          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
-          | #NOSALE => <StatusLabel text={`숨김`} />
-          | _ => React.null
-          }}
-        </div>
-        <div className=%twc("flex flex-col mt-3")>
-          <span className=%twc("text-text-L1 line-clamp-2 text-sm")>
-            {displayName->React.string}
-          </span>
-          <span className=%twc("mt-1 font-bold text-blue-500")>
-            {`최저가 견적받기`->React.string}
-          </span>
-        </div>
-      </div>
+      let oldUI =
+        <li
+          className=%twc("cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-3")>
+            <span className=%twc("text-text-L1 line-clamp-2 text-sm")>
+              {displayName->React.string}
+            </span>
+            <span className=%twc("mt-1 font-bold text-blue-500")>
+              {`최저가 견적받기`->React.string}
+            </span>
+          </div>
+        </li>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <li
+          className=%twc("cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("rounded-[10px] overflow-hidden relative aspect-square")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-3")>
+            <span className=%twc("text-text-L1 line-clamp-2 text-sm")>
+              {displayName->React.string}
+            </span>
+            <span className=%twc("mt-1 font-bold text-blue-500")>
+              {`최저가 견적받기`->React.string}
+            </span>
+          </div>
+        </li>
+      </FeatureFlagWrapper>
     }
   }
 }
@@ -300,7 +445,7 @@ module Matching = {
         <div className={%twc("inline-flex flex-col")}>
           <span
             className={Cn.make([
-              %twc("mt-1 font-bold text-lg"),
+              %twc("mt-1 font-bold text-xl"),
               isSoldout ? %twc("text-text-L3") : %twc("text-text-L1"),
             ])}>
             {`${price->Locale.Float.show(~digits=0)}원`->React.string}
@@ -340,49 +485,103 @@ module Matching = {
       let {productId, image, displayName, status, price, pricePerKg, representativeWeight} =
         query->Fragments.Matching.use
 
-      <div
-        className=%twc("w-[280px] h-[376px] cursor-pointer")
-        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
-        <div className=%twc("w-[280px] aspect-square rounded-xl overflow-hidden relative")>
-          <Image
-            src=image.thumb800x800
-            className=%twc("w-full h-full object-cover")
-            placeholder=Image.Placeholder.Sm
-            alt={`product-${productId->Int.toString}`}
-            loading=Image.Loading.Lazy
-          />
-          <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl") />
-          {switch status {
-          | #SOLDOUT => <StatusLabel text={`품절`} />
-          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
-          | #NOSALE => <StatusLabel text={`숨김`} />
-          | _ => React.null
-          }}
-        </div>
-        <div className=%twc("flex flex-col mt-4")>
-          <ProductName.PC productName={displayName} representativeWeight={representativeWeight} />
-          {switch (price, pricePerKg, user) {
-          | (Some(price), Some(pricePerKg), LoggedIn(_)) =>
-            let isSoldout = status == #SOLDOUT
-            <PriceText.PC
-              price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+      let oldUI =
+        <li
+          className=%twc("w-[280px] h-[376px] cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("w-[280px] aspect-square rounded-[10px] overflow-hidden relative")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
             />
-
-          | (None, Some(pricePerKg), LoggedIn(_)) =>
-            let isSoldout = status == #SOLDOUT
-            <PriceText.PC
-              price={pricePerKg->Int.toFloat *. representativeWeight}
-              pricePerKg={pricePerKg->Int.toFloat}
-              isSoldout
+            <div
+              className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]")
             />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-4")>
+            <ProductName.PC productName={displayName} representativeWeight={representativeWeight} />
+            {switch (price, pricePerKg, user) {
+            | (Some(price), Some(pricePerKg), LoggedIn(_)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.PC
+                price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+              />
 
-          | _ =>
-            <span className=%twc("mt-2 font-bold text-lg text-green-500")>
-              {`예상가 회원공개`->React.string}
-            </span>
-          }}
-        </div>
-      </div>
+            | (None, Some(pricePerKg), LoggedIn(_)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.PC
+                price={pricePerKg->Int.toFloat *. representativeWeight}
+                pricePerKg={pricePerKg->Int.toFloat}
+                isSoldout
+              />
+
+            | _ =>
+              <span className=%twc("mt-2 font-bold text-lg text-green-500")>
+                {`예상가 회원공개`->React.string}
+              </span>
+            }}
+          </div>
+        </li>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <li
+          className=%twc("max-w-[220px] min-w-[178px] w-full h-[316px] cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div
+            className=%twc(
+              "max-w-[220px] min-w-[178px] w-full aspect-square rounded-[10px] overflow-hidden relative"
+            )>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
+            />
+            <div
+              className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]")
+            />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-4")>
+            <ProductName.PC productName={displayName} representativeWeight={representativeWeight} />
+            {switch (price, pricePerKg) {
+            | (Some(price), Some(pricePerKg)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.PC
+                price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+              />
+
+            | (None, Some(pricePerKg)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.PC
+                price={pricePerKg->Int.toFloat *. representativeWeight}
+                pricePerKg={pricePerKg->Int.toFloat}
+                isSoldout
+              />
+
+            | _ =>
+              <span className=%twc("mt-2 font-bold text-lg text-green-500")>
+                {`예상가 회원공개`->React.string}
+              </span>
+            }}
+          </div>
+        </li>
+      </FeatureFlagWrapper>
     }
   }
 
@@ -396,49 +595,96 @@ module Matching = {
       let {productId, image, displayName, status, price, pricePerKg, representativeWeight} =
         query->Fragments.Matching.use
 
-      <div
-        className=%twc("cursor-pointer")
-        onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
-        <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
-          <Image
-            src=image.thumb800x800
-            className=%twc("w-full h-full object-cover")
-            placeholder=Image.Placeholder.Sm
-            alt={`product-${productId->Int.toString}`}
-            loading=Image.Loading.Lazy
-          />
-          <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
-          {switch status {
-          | #SOLDOUT => <StatusLabel text={`품절`} />
-          | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
-          | #NOSALE => <StatusLabel text={`숨김`} />
-          | _ => React.null
-          }}
-        </div>
-        <div className=%twc("flex flex-col mt-3")>
-          <ProductName.MO productName={displayName} representativeWeight={representativeWeight} />
-          {switch (price, pricePerKg, user) {
-          | (Some(price), Some(pricePerKg), LoggedIn(_)) =>
-            let isSoldout = status == #SOLDOUT
-            <PriceText.MO
-              price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+      let oldUI =
+        <li
+          className=%twc("cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("rounded-xl overflow-hidden relative aspect-square")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
             />
+            <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-3")>
+            <ProductName.MO productName={displayName} representativeWeight={representativeWeight} />
+            {switch (price, pricePerKg, user) {
+            | (Some(price), Some(pricePerKg), LoggedIn(_)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.MO
+                price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+              />
 
-          | (None, Some(pricePerKg), LoggedIn(_)) =>
-            let isSoldout = status == #SOLDOUT
-            <PriceText.MO
-              price={pricePerKg->Int.toFloat *. representativeWeight}
-              pricePerKg={pricePerKg->Int.toFloat}
-              isSoldout
+            | (None, Some(pricePerKg), LoggedIn(_)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.MO
+                price={pricePerKg->Int.toFloat *. representativeWeight}
+                pricePerKg={pricePerKg->Int.toFloat}
+                isSoldout
+              />
+
+            | _ =>
+              <span className=%twc("mt-2 font-bold text-lg text-green-500")>
+                {`예상가 회원공개`->React.string}
+              </span>
+            }}
+          </div>
+        </li>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <li
+          className=%twc("cursor-pointer")
+          onClick={_ => router->push(`/products/${productId->Int.toString}`)}>
+          <div className=%twc("rounded-[10px] overflow-hidden relative aspect-square")>
+            <Image
+              src=image.thumb400x400
+              className=%twc("w-full h-full object-cover")
+              placeholder=Image.Placeholder.Sm
+              alt={displayName}
+              loading=Image.Loading.Lazy
             />
+            <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl") />
+            {switch status {
+            | #SOLDOUT => <StatusLabel text={`품절`} />
+            | #HIDDEN_SALE => <StatusLabel text={`비공개 판매`} />
+            | #NOSALE => <StatusLabel text={`숨김`} />
+            | _ => React.null
+            }}
+          </div>
+          <div className=%twc("flex flex-col mt-3")>
+            <ProductName.MO productName={displayName} representativeWeight={representativeWeight} />
+            {switch (price, pricePerKg) {
+            | (Some(price), Some(pricePerKg)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.MO
+                price={price->Int.toFloat} pricePerKg={pricePerKg->Int.toFloat} isSoldout
+              />
 
-          | _ =>
-            <span className=%twc("mt-2 font-bold text-lg text-green-500")>
-              {`예상가 회원공개`->React.string}
-            </span>
-          }}
-        </div>
-      </div>
+            | (None, Some(pricePerKg)) =>
+              let isSoldout = status == #SOLDOUT
+              <PriceText.MO
+                price={pricePerKg->Int.toFloat *. representativeWeight}
+                pricePerKg={pricePerKg->Int.toFloat}
+                isSoldout
+              />
+
+            | _ =>
+              <span className=%twc("mt-2 font-bold text-lg text-green-500")>
+                {`예상가 회원공개`->React.string}
+              </span>
+            }}
+          </div>
+        </li>
+      </FeatureFlagWrapper>
     }
   }
 }
@@ -447,11 +693,28 @@ module PC = {
   module Placeholder = {
     @react.component
     let make = () => {
-      <div className=%twc("w-[280px] h-[376px]")>
-        <div className=%twc("w-[280px] h-[280px] animate-pulse rounded-xl bg-gray-100") />
-        <div className=%twc("mt-3 w-[244px] h-[24px] animate-pulse rounded-sm bg-gray-100") />
-        <div className=%twc("mt-2 w-[88px] h-[24px] animate-pulse rounded-sm bg-gray-100") />
-      </div>
+      let oldUI =
+        <div className=%twc("w-[280px] h-[376px]")>
+          <div className=%twc("w-[280px] h-[280px] animate-pulse rounded-xl bg-gray-100") />
+          <div className=%twc("mt-3 w-[244px] h-[24px] animate-pulse rounded-sm bg-gray-100") />
+          <div className=%twc("mt-2 w-[88px] h-[24px] animate-pulse rounded-sm bg-gray-100") />
+        </div>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        <div className=%twc("max-w-[220px] min-w-[178px] w-full h-[316px]")>
+          <div
+            className=%twc(
+              "max-w-[220px] min-w-[178px] w-full aspect-square animate-pulse rounded-xl bg-gray-100"
+            )
+          />
+          <div
+            className=%twc(
+              "mt-3 max-w-[200px] min-w-[178px] w-full h-[24px] animate-pulse rounded-sm bg-gray-100"
+            )
+          />
+          <div className=%twc("mt-2 w-[88px] h-[24px] animate-pulse rounded-sm bg-gray-100") />
+        </div>
+      </FeatureFlagWrapper>
     }
   }
 
@@ -472,11 +735,11 @@ module MO = {
   module Placeholder = {
     @react.component
     let make = () => {
-      <div>
+      <li>
         <div className=%twc("w-full aspect-square animate-pulse rounded-xl bg-gray-100") />
         <div className=%twc("mt-3 w-[132px] h-5 animate-pulse rounded-sm bg-gray-100") />
         <div className=%twc("mt-1 w-[68px] h-[22px] animate-pulse rounded-sm bg-gray-100") />
-      </div>
+      </li>
     }
   }
 

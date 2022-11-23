@@ -75,6 +75,7 @@ function Excel_Download_Request_Button(Props) {
                     })
                 }, React.createElement("img", {
                       className: "relative mr-1",
+                      alt: "",
                       src: downloadIcon
                     }), Belt_Option.getWithDefault(buttonText, "엑셀 다운로드 요청")), React.createElement(Dialog.make, {
                   isShow: match$1[0],

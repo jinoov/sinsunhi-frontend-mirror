@@ -24,6 +24,8 @@ function Status(T) {
           return "환불처리";
       case /* NEGOTIATING */8 :
           return "협의중";
+      case /* DEPOSIT_PENDING */9 :
+          return "입금대기";
       
     }
   };

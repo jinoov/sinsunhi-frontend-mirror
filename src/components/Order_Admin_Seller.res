@@ -4,7 +4,7 @@ module Item = {
   module Table = {
     @react.component
     let make = (
-      ~order: CustomHooks.OrdersAdmin.order,
+      ~order: CustomHooks.Orders.order,
       ~courierCode: option<string>,
       ~setCourier,
       ~invoice,
@@ -53,14 +53,21 @@ module Item = {
             />
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
-            <span className=%twc("block mb-1")> {order.farmerName->React.string} </span>
             <span className=%twc("block mb-1")>
-              {`(${order.farmerPhone
-                ->Helper.PhoneNumber.parse
-                ->Option.flatMap(Helper.PhoneNumber.format)
-                ->Option.getWithDefault(order.farmerPhone)})`->React.string}
+              {order.farmerName->Option.getWithDefault("-")->React.string}
             </span>
-            <span className=%twc("block mb-1")> {order.buyerName->React.string} </span>
+            <span className=%twc("block mb-1")>
+              {`(${order.farmerPhone->Option.mapWithDefault("-", farmerPhone' =>
+                  farmerPhone'
+                  ->Helper.PhoneNumber.parse
+                  ->Option.flatMap(Helper.PhoneNumber.format)
+                  ->Option.getWithDefault(farmerPhone')
+                )}
+              )`->React.string}
+            </span>
+            <span className=%twc("block mb-1")>
+              {order.buyerName->Option.getWithDefault("-")->React.string}
+            </span>
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
             <span className=%twc("block")> {order.orderDate->formatDate->React.string} </span>
@@ -89,7 +96,9 @@ module Item = {
             | DELIVERING
             | ERROR
             | REFUND
-            | NEGOTIATING => <>
+            | NEGOTIATING
+            | DEPOSIT_PENDING =>
+              <>
                 <Select_Courier courierCode setCourier />
                 <div className=%twc("flex mt-1")>
                   <label className=%twc("block flex-auto")>
@@ -97,7 +106,7 @@ module Item = {
                       type_="text"
                       name="invoice-number"
                       size=Input.Small
-                      placeholder=`송장번호입력`
+                      placeholder={`송장번호입력`}
                       value={invoice->Option.getWithDefault("")}
                       onChange=onChangeInvoice
                       error=None
@@ -132,7 +141,8 @@ module Item = {
                 </div>
               </>
             | COMPLETE
-            | CANCEL => <>
+            | CANCEL =>
+              <>
                 <span className=%twc("block")> {courierName->React.string} </span>
                 <span className=%twc("block text-gray-500")>
                   {order.invoice->Option.getWithDefault(`-`)->React.string}
@@ -190,9 +200,9 @@ module Item = {
         // 다이얼로그
         <Dialog
           isShow=isShowPackingConfirm
-          textOnCancel=`취소`
+          textOnCancel={`취소`}
           onCancel={_ => setShowPackingConfirm(._ => Dialog.Hide)}
-          textOnConfirm=`확인`
+          textOnConfirm={`확인`}
           onConfirm={_ => {
             setShowPackingConfirm(._ => Dialog.Hide)
             onClickPacking([order.orderProductNo])
@@ -211,39 +221,59 @@ module Item = {
     @react.component
     let make = () => {
       <li className=%twc("grid grid-cols-12-gl-admin text-gray-700")>
-        <div className=%twc("h-full flex flex-col px-4 py-2")> <Checkbox /> </div>
         <div className=%twc("h-full flex flex-col px-4 py-2")>
-          <Box className=%twc("w-2/3") /> <Box /> <Box className=%twc("w-2/3") />
+          <Checkbox />
         </div>
-        <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> </div>
-        <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> <Box /> </div>
+        <div className=%twc("h-full flex flex-col px-4 py-2")>
+          <Box className=%twc("w-2/3") />
+          <Box />
+          <Box className=%twc("w-2/3") />
+        </div>
+        <div className=%twc("h-full flex flex-col px-4 py-2")>
+          <Box />
+        </div>
+        <div className=%twc("h-full flex flex-col px-4 py-2")>
+          <Box />
+          <Box />
+        </div>
         <div className=%twc("h-full flex flex-col px-4 py-2")>
           <Box className=%twc("w-2/3") />
         </div>
         <div className=%twc("h-full flex flex-col px-4 py-2")>
-          <Box className=%twc("w-2/3") /> <Box /> <Box className=%twc("w-1/2") />
+          <Box className=%twc("w-2/3") />
+          <Box />
+          <Box className=%twc("w-1/2") />
         </div>
         <div className=%twc("h-full flex flex-col px-4 py-2")>
-          <Box /> <Box className=%twc("w-2/3") /> <Box className=%twc("w-8") />
+          <Box />
+          <Box className=%twc("w-2/3") />
+          <Box className=%twc("w-8") />
         </div>
         <div className=%twc("h-full flex flex-col px-4 py-2")>
-          <Box className=%twc("w-2/3") /> <Box />
-        </div>
-        <div className=%twc("h-full flex flex-col px-4 py-2 whitespace-nowrap")> <Box /> </div>
-        <div className=%twc("h-full flex flex-col px-4 py-2 whitespace-nowrap")>
-          <Box /> <Box className=%twc("w-1/2") />
+          <Box className=%twc("w-2/3") />
+          <Box />
         </div>
         <div className=%twc("h-full flex flex-col px-4 py-2 whitespace-nowrap")>
-          <Box /> <Box />
+          <Box />
         </div>
-        <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> </div>
+        <div className=%twc("h-full flex flex-col px-4 py-2 whitespace-nowrap")>
+          <Box />
+          <Box className=%twc("w-1/2") />
+        </div>
+        <div className=%twc("h-full flex flex-col px-4 py-2 whitespace-nowrap")>
+          <Box />
+          <Box />
+        </div>
+        <div className=%twc("h-full flex flex-col px-4 py-2")>
+          <Box />
+        </div>
       </li>
     }
   }
 }
 
 @react.component
-let make = (~order: CustomHooks.OrdersAdmin.order, ~check, ~onCheckOrder, ~onClickPacking) => {
+let make = (~order: CustomHooks.Orders.order, ~check, ~onCheckOrder, ~onClickPacking) => {
   let router = Next.Router.useRouter()
   let {mutate} = Swr.useSwrConfig()
   let {addToast} = ReactToastNotifications.useToasts()
@@ -298,7 +328,7 @@ let make = (~order: CustomHooks.OrdersAdmin.order, ~check, ~onCheckOrder, ~onCli
                 )
               }
             },
-            ~onFailure={_ => setShowErrorPostCourierInvoiceNo(._ => Dialog.Show)},
+            ~onFailure={_ => setShowErrorPostCourierInvoiceNo(. _ => Dialog.Show)},
           )
         })
       })->ignore

@@ -37,15 +37,15 @@ module PC = {
   }
 
   @react.component
-  let make = (
-    ~subBanners: array<ShopMainSubBannerBuyerQuery_graphql.Types.response_subBanners>,
-  ) => {
+  let make = () => {
+    let {subBanners} = Query.use(~variables=(), ())
+
     <div className=%twc("w-full flex flex-col gap-3")>
       {subBanners
       ->Array.map(({id, imageUrlPc, isNewTabPc, landingUrl}) => {
         let key = `sub-banner-${id}`
         let target = isNewTabPc ? "_blank" : "_self"
-        <div key className=%twc("flex flex-1 aspect-[300/124] rounded-xl overflow-hidden")>
+        <div key className=%twc("flex flex-1 aspect-[300/124] rounded-xl overflow-hidden interactable")>
           <Next.Link href=landingUrl>
             <a target className=%twc("w-full h-full")>
               <img src=imageUrlPc className=%twc("w-full h-full object-cover") alt=key />
@@ -76,15 +76,15 @@ module MO = {
   }
 
   @react.component
-  let make = (
-    ~subBanners: array<ShopMainSubBannerBuyerQuery_graphql.Types.response_subBanners>,
-  ) => {
+  let make = () => {
+    let {subBanners} = Query.use(~variables=(), ())
+
     <div className=%twc("w-full flex items-center gap-[10px]")>
       {subBanners
       ->Array.map(({id, imageUrlMobile, isNewTabMobile, landingUrl}) => {
         let key = `sub-banner-${id}`
         let target = isNewTabMobile ? "_blank" : "_self"
-        <div key className=%twc("flex flex-1 aspect-[228/168] rounded-xl overflow-hidden")>
+        <div key className=%twc("flex flex-1 aspect-[228/168] rounded-xl overflow-hidden interactable")>
           <Next.Link href=landingUrl>
             <a target className=%twc("w-full h-full")>
               <img src=imageUrlMobile className=%twc("w-full h-full object-cover") alt=key />

@@ -7,11 +7,18 @@ module Query = %relay(`
       orderNo
       totalDeliveryCost
       totalOrderPrice
-      paymentMethod
+      status
+      payment {
+        paymentMethod: method
+      }
       orderProducts {
         productName
-        productId
-        stockSku
+        product {
+          number
+        }
+        productOption {
+          stockSku
+        }
         productOptionName
         quantity
         price
@@ -43,15 +50,15 @@ type ecommerce = {
 let toItems = (
   index,
   {
-    productId,
+    product: {number},
     productName,
-    stockSku,
+    productOption: {stockSku},
     price,
     quantity,
   }: WebOrderCompleteBuyerQuery_graphql.Types.response_wosOrder_orderProducts,
 ) =>
   {
-    itemId: productId->Int.toString,
+    itemId: number->Int.toString,
     itemName: productName,
     currency: "KRW",
     itemVariant: stockSku,
@@ -132,8 +139,8 @@ module Placeholder = {
 
 module PC = {
   @react.component
-  let make = (~query, ~numberOfProductOptions, ~deviceType) => {
-    <main className=%twc("flex flex-col gap-5 px-[16%] py-20 bg-surface min-w-[375px]")>
+  let make = (~query, ~numberOfProductOptions, ~isDepositPending, ~deviceType) => {
+    <main className=%twc("min-w-[1280px] flex flex-col gap-5 px-[16%] py-20 bg-surface")>
       <label className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
         {`주문 완료`->React.string}
       </label>
@@ -142,7 +149,11 @@ module PC = {
           <section className=%twc("flex justify-center bg-white rounded-sm p-0")>
             <span
               className=%twc("w-full text-center text-xl p-6 font-bold text-text-L1 shadow-none")>
-              {`총 ${numberOfProductOptions->Int.toString}건의 상품 주문이 완료되었습니다 📦`->React.string}
+              {switch isDepositPending {
+              | true => "주문이 신청되었습니다. 입금 완료 후 주문이 진행됩니다."
+              | false =>
+                `총 ${numberOfProductOptions->Int.toString}건의 상품 주문이 완료되었습니다 📦`
+              }->React.string}
             </span>
           </section>
           <section className=%twc("flex flex-col p-7 gap-7 bg-white rounded-sm min-w-max")>
@@ -181,16 +192,20 @@ module PC = {
 
 module MO = {
   @react.component
-  let make = (~query, ~numberOfProductOptions, ~deviceType) => {
+  let make = (~query, ~numberOfProductOptions, ~isDepositPending, ~deviceType) => {
     <main className=%twc("flex flex-col gap-5 bg-surface min-w-[375px]")>
       <div className=%twc("flex flex-col gap-4")>
         <article className=%twc("w-full flex flex-col gap-5")>
           <section className=%twc("flex justify-center bg-white rounded-sm p-7 min-w-[375px]")>
             <span
               className=%twc(
-                "w-full text-center text-base p-6 font-bold text-text-L1 shadow-card-box"
+                "w-full text-center text-base p-6 font-bold text-text-L1 shadow-card-box whitespace-pre-line"
               )>
-              {`총 ${numberOfProductOptions->Int.toString}건의 상품 주문이 완료되었습니다 📦`->React.string}
+              {switch isDepositPending {
+              | true => "주문이 신청되었습니다.\n입금 완료 후 주문이 진행됩니다."
+              | false =>
+                `총 ${numberOfProductOptions->Int.toString}건의 상품 주문이 완료되었습니다 📦`
+              }->React.string}
             </span>
           </section>
           <section className=%twc("flex flex-col p-7 gap-7 bg-white rounded-sm min-w-max")>
@@ -239,6 +254,9 @@ module Container = {
     )
 
     React.useEffect0(_ => {
+      // Braze Push Notification Request
+      Braze.PushNotificationRequestDialog.trigger()
+
       wosOrder->Option.forEach(wosOrder' => {
         {"ecommerce": Js.Nullable.null}->DataGtm.push
         {
@@ -253,7 +271,7 @@ module Container = {
               deliveryType->Web_Order_Complete_Delivery_Info_Buyer.deliveryTypetoString
             | _ => ``
             },
-            "payment_method": switch wosOrder'.paymentMethod {
+            "payment_method": switch wosOrder'.payment->Option.flatMap(p => p.paymentMethod) {
             | Some(#CREDIT_CARD) => `신용카드`
             | Some(#VIRTUAL_ACCOUNT) => `가상계좌`
             | Some(#TRANSFER) => `계좌이체`
@@ -281,12 +299,23 @@ module Container = {
           ~kind=#PURCHASE,
           ~payload={
             "transactionID": wosOrder.orderNo,
-            "price": wosOrder.totalOrderPrice,
-            "currency": "KRW",
-            "items": wosOrder.orderProducts
-            ->Array.keepMap(Garter.Fn.identity)
-            ->Array.mapWithIndex(toItems),
+            "products": wosOrder.orderProducts
+            ->Garter.Array.keepSome
+            ->Array.mapWithIndex(
+              (i, product) =>
+                {
+                  "ID": product.product.number->Int.toString,
+                  "name": product.productName,
+                  "price": product.price,
+                  "currency": "KRW",
+                  "position": i,
+                  "quantity": product.quantity,
+                },
+            ),
             "quantity": wosOrder.orderProducts->Array.length,
+            "isInAppPurchase": true,
+            "currency": "KRW",
+            "total": wosOrder.totalOrderPrice,
           },
           (),
         )
@@ -295,10 +324,11 @@ module Container = {
       None
     })
 
-    let numberOfProductOptions =
-      wosOrder->Option.mapWithDefault(0, w =>
-        w.orderProducts->Array.keepMap(Garter_Fn.identity)->Array.length
-      )
+    let (numberOfProductOptions, isDepositPending) =
+      wosOrder->Option.mapWithDefault((0, false), w => (
+        w.orderProducts->Array.keepMap(Garter_Fn.identity)->Array.length,
+        w.status == #DEPOSIT_PENDING,
+      ))
 
     {
       switch deviceType {
@@ -306,13 +336,13 @@ module Container = {
       | DeviceDetect.PC =>
         <>
           <Header_Buyer.PC_Old key=router.asPath />
-          <PC query=fragmentRefs numberOfProductOptions deviceType />
+          <PC query=fragmentRefs numberOfProductOptions isDepositPending deviceType />
           <Footer_Buyer.PC />
         </>
       | DeviceDetect.Mobile =>
         <>
           <Header_Buyer.Mobile />
-          <MO query=fragmentRefs numberOfProductOptions deviceType />
+          <MO query=fragmentRefs numberOfProductOptions isDepositPending deviceType />
           <Footer_Buyer.MO />
         </>
       }
@@ -342,7 +372,7 @@ let default = (~props) => {
 
   <>
     <Next.Head>
-      <title> {`주문완료 - 신선하이`->React.string} </title>
+      <title> {`신선하이 | 주문완료`->React.string} </title>
     </Next.Head>
     <RescriptReactErrorBoundary fallback={_ => <NotFound />}>
       <React.Suspense fallback={<Placeholder deviceType />}>

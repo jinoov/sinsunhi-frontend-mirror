@@ -40,7 +40,8 @@ module Dialog = {
         <RadixUI.Dialog.Content
           className=%twc(
             "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
-          )>
+          )
+          onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
           children
           <button
             type_="button"
@@ -93,14 +94,17 @@ let make = () => {
     // 우리가 생성해서 보내는 쿼리 파라미터
     let paymentId = params->get("payment-id")->Option.flatMap(Int.fromString)
     let tempOrderId = params->get("temp-order-id")->Option.flatMap(Int.fromString)
+    let orderNo = params->get("order-no")
 
-    switch (orderId, paymentKey, amount, paymentId, isMutating) {
-    | (Some(orderId'), Some(paymentKey'), Some(amount'), Some(paymentId'), false) =>
+    // 웹주문서 가상계좌인 경우에만 order-{paymentId} 를 토스 결제 모듈로 쏴서 그것을 orderId로 받아 approval mutation에 쏜다.
+
+    switch (orderId, orderNo, paymentKey, amount, paymentId, isMutating) {
+    | (Some(orderId'), Some(orderNo'), Some(paymentKey'), Some(amount'), Some(paymentId'), false) =>
       {
         switch tempOrderId {
         | Some(tempOrderId') =>
           setRedirectUrl(._ => {
-            successUrl: `/buyer/web-order/complete/${orderId'}`,
+            successUrl: `/buyer/web-order/complete/${orderNo'}`,
             failUrl: `/buyer/web-order/${tempOrderId'->Int.toString}`,
           })
         | None =>
@@ -109,7 +113,6 @@ let make = () => {
             failUrl: `/buyer/transactions`,
           })
         }
-
         mutate(
           ~variables={
             paymentId: paymentId',
@@ -158,8 +161,8 @@ let make = () => {
     </Dialog>
     <Dialog show=showSuccessDialog href=successUrl>
       {<>
-        <span> {`결제 요청이 성공했습니다.`->React.string} </span>
-        <span> {`결제완료 페이지로 이동합니다.`->React.string} </span>
+        <span> {`주문 요청이 성공했습니다.`->React.string} </span>
+        <span> {`주문완료 페이지로 이동합니다.`->React.string} </span>
       </>}
     </Dialog>
   </main>

@@ -1,7 +1,7 @@
 open RadixUI
 
 @module("../../public/assets/edit.svg")
-external editIcon:string = "default"
+external editIcon: string = "default"
 
 module Mutation = %relay(`
   mutation BulkSaleProducerMemoUpdateButtonMutation(
@@ -82,7 +82,9 @@ let make = (~applicationId, ~memoData) => {
     <Dialog.Trigger className=%twc("inline-flex")>
       <img src=editIcon className=%twc("mr-1") />
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content-memo overflow-y-auto rounded-xl")>
+    <Dialog.Content
+      className=%twc("dialog-content-memo overflow-y-auto rounded-xl")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5")>
         <article className=%twc("flex justify-between")>
           <h2 className=%twc("text-xl font-bold")> {`메모작성`->React.string} </h2>
@@ -98,10 +100,10 @@ let make = (~applicationId, ~memoData) => {
               name="online-sale-urls"
               className=%twc("flex-1 mr-1 h-full")
               size=Textarea.XLarge
-              placeholder=`유저에게 노출되지 않는 메모입니다. (최대 200자)
+              placeholder={`유저에게 노출되지 않는 메모입니다. (최대 200자)
 * test건의 경우, “#TEST”로 작성하여 표시합니다.
 * 표에서 125자(작성기준 2줄)까지 노출됩니다.
-* 전체 내용은 작성버튼을 누르거나 엑셀 파일을 다룬로드하여 확인할 수 있습니다.`
+* 전체 내용은 작성버튼을 누르거나 엑셀 파일을 다룬로드하여 확인할 수 있습니다.`}
               value={memo->Option.getWithDefault("")}
               onChange={handleOnChange(setMemo)}
               error=None

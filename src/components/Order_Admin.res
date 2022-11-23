@@ -1,6 +1,6 @@
 let formatDate = d => d->Js.Date.fromString->Locale.DateTime.formatFromUTC("yyyy/MM/dd HH:mm")
 
-let isCheckableOrder = (order: CustomHooks.OrdersAdmin.order) =>
+let isCheckableOrder = (order: CustomHooks.Orders.order) =>
   switch order.status {
   | CREATE
   | PACKING
@@ -10,11 +10,12 @@ let isCheckableOrder = (order: CustomHooks.OrdersAdmin.order) =>
   | COMPLETE => true
   | DELIVERING
   | CANCEL
-  | REFUND => false
+  | REFUND
+  | DEPOSIT_PENDING => false
   }
 
 let payTypeToText = payType => {
-  open CustomHooks.OrdersAdmin
+  open CustomHooks.Orders
   switch payType {
   | PAID => `신선캐시`
   | AFTER_PAY => `나중결제`
@@ -24,7 +25,7 @@ let payTypeToText = payType => {
 module Item = {
   module Table = {
     @react.component
-    let make = (~order: CustomHooks.OrdersAdmin.order, ~check, ~onCheckOrder, ~onClickCancel) => {
+    let make = (~order: CustomHooks.Orders.order, ~check, ~onCheckOrder, ~onClickCancel) => {
       let (isShowCancelConfirm, setShowCancelConfirm) = React.Uncurried.useState(_ => Dialog.Hide)
 
       let status = CustomHooks.Courier.use()
@@ -70,8 +71,12 @@ module Item = {
             <Badge_Admin status=order.status ?refundReason />
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
-            <span className=%twc("block mb-1")> {order.buyerName->React.string} </span>
-            <span className=%twc("block mb-1")> {order.farmerName->React.string} </span>
+            <span className=%twc("block mb-1")>
+              {order.buyerName->Option.getWithDefault("-")->React.string}
+            </span>
+            <span className=%twc("block mb-1")>
+              {order.farmerName->Option.getWithDefault("-")->React.string}
+            </span>
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
             <span className=%twc("block text-gray-400")>
@@ -113,7 +118,8 @@ module Item = {
             | CANCEL
             | ERROR
             | REFUND
-            | NEGOTIATING =>
+            | NEGOTIATING
+            | DEPOSIT_PENDING =>
               <>
                 <span className=%twc("block")> {courierName->React.string} </span>
                 <span className=%twc("block text-gray-500")>
@@ -174,22 +180,45 @@ module Item = {
       @react.component
       let make = () => {
         <li className=%twc("grid grid-cols-10-gl-admin")>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Checkbox /> </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> 
-            <Box className=%twc("w-20") /> <Box /> <Box className=%twc("w-12") /> 
-          </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> <Box /> </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
-            <Box /> <Box className=%twc("w-2/3") /> <Box className=%twc("w-8") />
+            <Checkbox />
           </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> <Box /> </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
-            <Box /> <Box className=%twc("w-2/3") /> <Box className=%twc("w-1/3") />
+            <Box className=%twc("w-20") />
+            <Box />
+            <Box className=%twc("w-12") />
           </div>
-          <div className=%twc("p-2 pr-4 align-top")> <Box className=%twc("w-1/2") /> <Box /> </div>
-          <div className=%twc("h-full flex flex-col px-4 py-2")> <Box /> </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+            <Box className=%twc("w-2/3") />
+            <Box className=%twc("w-8") />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+            <Box className=%twc("w-2/3") />
+            <Box className=%twc("w-1/3") />
+          </div>
+          <div className=%twc("p-2 pr-4 align-top")>
+            <Box className=%twc("w-1/2") />
+            <Box />
+          </div>
+          <div className=%twc("h-full flex flex-col px-4 py-2")>
+            <Box />
+          </div>
         </li>
       }
     }
@@ -197,6 +226,6 @@ module Item = {
 }
 
 @react.component
-let make = (~order: CustomHooks.OrdersAdmin.order, ~check, ~onCheckOrder, ~onClickCancel) => {
+let make = (~order: CustomHooks.Orders.order, ~check, ~onCheckOrder, ~onClickCancel) => {
   <Item.Table order check onCheckOrder onClickCancel />
 }

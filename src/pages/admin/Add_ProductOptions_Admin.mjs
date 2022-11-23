@@ -195,9 +195,9 @@ var Mutation_errorCode_decode = AddProductOptionsAdminMutation_graphql.Utils.err
 
 var Mutation_errorCode_fromString = AddProductOptionsAdminMutation_graphql.Utils.errorCode_fromString;
 
-var Mutation_productOptionContractType_decode = AddProductOptionsAdminMutation_graphql.Utils.productOptionContractType_decode;
+var Mutation_productOptionCostContractType_decode = AddProductOptionsAdminMutation_graphql.Utils.productOptionCostContractType_decode;
 
-var Mutation_productOptionContractType_fromString = AddProductOptionsAdminMutation_graphql.Utils.productOptionContractType_fromString;
+var Mutation_productOptionCostContractType_fromString = AddProductOptionsAdminMutation_graphql.Utils.productOptionCostContractType_fromString;
 
 var Mutation_productOptionStatus_decode = AddProductOptionsAdminMutation_graphql.Utils.productOptionStatus_decode;
 
@@ -212,8 +212,8 @@ var Mutation = {
   amountUnit_fromString: Mutation_amountUnit_fromString,
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
-  productOptionContractType_decode: Mutation_productOptionContractType_decode,
-  productOptionContractType_fromString: Mutation_productOptionContractType_fromString,
+  productOptionCostContractType_decode: Mutation_productOptionCostContractType_decode,
+  productOptionCostContractType_fromString: Mutation_productOptionCostContractType_fromString,
   productOptionStatus_decode: Mutation_productOptionStatus_decode,
   productOptionStatus_fromString: Mutation_productOptionStatus_fromString,
   sizeUnit_decode: Mutation_sizeUnit_decode,
@@ -370,6 +370,9 @@ function makeCreateOption(productNodeId, option) {
               })), Belt_Option.map(match$1[5], Select_Product_Option_Unit.Size.toString), option.showEach, undefined);
   }
   return {
+          adhocStockIsLimited: option.adhocStockIsLimited,
+          adhocStockIsNumRemainingVisible: option.adhocStockIsNumRemainingVisible,
+          adhocStockNumLimit: option.adhocStockNumLimit,
           amount: option.amount,
           amountUnit: amountUnitEncode(option.amountUnit),
           countPerPackageMax: Belt_Option.map(Belt_Option.keep(option.each, (function (param) {

@@ -97,10 +97,10 @@ function Products_List_Admin(Props) {
                             }, "택배여부")), React.createElement("ol", {
                           className: "divide-y divide-gray-100 lg:list-height-admin-buyer lg:overflow-y-scroll"
                         }, Belt_Array.map(products.edges, (function (param) {
-                                var product = param.node;
+                                var match = param.node;
                                 return React.createElement(Product_Admin.make, {
-                                            query: product.fragmentRefs,
-                                            key: product.id
+                                            query: match.fragmentRefs,
+                                            key: match.id
                                           });
                               }))))), React.createElement("div", {
                   className: "flex justify-center pt-5"

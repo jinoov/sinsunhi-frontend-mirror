@@ -1,0 +1,11 @@
+diff --git a/postinstall.js b/postinstall.js
+index df04f788631f1df4c919285a5ab2395ef3ed10a2..6f557373cd39ca00f6bf6d94003a24e51ddd8e69 100644
+--- a/postinstall.js
++++ b/postinstall.js
+@@ -14,5 +14,5 @@ if (platform === "win32") {
+   fs.chmodSync("ppx.exe", 0o744);
+ }
+ 
+-fs.renameSync(platform, "ppx");
++fs.copyFileSync(platform, "ppx");
+ fs.chmodSync("ppx", 0o744);

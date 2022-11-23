@@ -1,116 +1,3 @@
-module Query = %relay(`
-    query WebOrderItemBuyer_Query($productNos: [Int!]) {
-      products(productNos: $productNos, sort: UPDATED_ASC) {
-        edges {
-          node {
-            ... on NormalProduct {
-              image {
-                thumb100x100
-              }
-              displayName
-              isCourierAvailable
-              number
-              isVat
-              productOptions {
-                edges {
-                  node {
-                    grade
-                    optionName
-                    stockSku
-                    price
-                    isFreeShipping
-                    productOptionCost {
-                      deliveryCost
-                    }
-                  }
-                }
-              }
-            }
-            ... on QuotableProduct {
-              image {
-                thumb100x100
-              }
-              displayName
-              isCourierAvailable
-              number
-              isVat
-              productOptions {
-                edges {
-                  node {
-                    grade
-                    optionName
-                    stockSku
-                    price
-                    isFreeShipping
-                    productOptionCost {
-                      deliveryCost
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-`)
-
-// HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-// 22.08.25 작성되었습니다.
-// 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-module TempQuery = %relay(`
-  query WebOrderItemBuyer_Temp_Query($number: Int!) {
-    product(number: $number) {
-      ... on NormalProduct {
-        image {
-          thumb100x100
-        }
-        displayName
-        isCourierAvailable
-        number
-        isVat
-        productOptions {
-          edges {
-            node {
-              grade
-              optionName
-              stockSku
-              price
-              isFreeShipping
-              productOptionCost {
-                deliveryCost
-              }
-            }
-          }
-        }
-      }
-      ... on QuotableProduct {
-        image {
-          thumb100x100
-        }
-        displayName
-        isCourierAvailable
-        number
-        isVat
-        productOptions {
-          edges {
-            node {
-              grade
-              optionName
-              stockSku
-              price
-              isFreeShipping
-              productOptionCost {
-                deliveryCost
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`)
-
 open ReactHookForm
 open Web_Order_Util_Component
 module Form = Web_Order_Buyer_Form
@@ -136,7 +23,9 @@ module PlaceHolder = {
               </div>
               <Web_Order_Delivery_Method_Selection_Buyer.PlaceHoder.PC />
             </article>
-            <aside className=%twc("w-2/5")> <Web_Order_Payment_Info_Buyer.PlaceHolder.PC /> </aside>
+            <aside className=%twc("w-2/5")>
+              <Web_Order_Payment_Info_Buyer.PlaceHolder.PC />
+            </aside>
           </div>
         </main>
         <Footer_Buyer.PC />
@@ -189,7 +78,7 @@ module PC = {
     ~watchValue,
     ~deviceType,
   ) => {
-    <main className=%twc("flex flex-col gap-5 px-[16%] py-20 bg-surface")>
+    <main className=%twc("min-w-[1280px] flex flex-col gap-5 px-[16%] py-20 bg-surface")>
       <h1 className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
         {`주문·결제`->React.string}
       </h1>
@@ -266,90 +155,18 @@ module MO = {
 }
 
 @react.component
-let make = (~productNos, ~skuNos, ~skuMap, ~deviceType) => {
+let make = (~deviceType, ~productOptions) => {
   let {setValue} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
   let router = Next.Router.useRouter()
   let formNames = Form.names(Form.name)
 
-  // HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-  // 22.08.25 작성되었습니다.
-  // 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-  // let {products} = Query.use(
-  //   ~variables={
-  //     productNos: Some(productNos),
-  //   },
-  //   ~fetchPolicy=RescriptRelay.StoreAndNetwork,
-  //   (),
-  // )
-
-  let temp =
-    productNos
-    ->Set.Int.fromArray
-    ->Set.Int.toArray
-    ->Array.map(a =>
-      TempQuery.use(
-        ~variables={
-          number: a,
-        },
-        ~fetchPolicy=RescriptRelay.StoreAndNetwork,
-        (),
-      )
-    )
-
   let productInfos =
-    temp
-    ->Array.map(({product}) =>
-      switch product {
-      | Some(#NormalProduct(product)) =>
-        product.productOptions.edges
-        ->Array.keep(option => skuNos->Set.String.has(option.node.stockSku))
-        ->Array.keepMap(option =>
-          skuMap
-          ->Map.String.get(option.node.stockSku)
-          ->Option.map(Form.normalProductToFixedDataTemp(product, option))
-        )
-      | Some(#QuotableProduct(product)) =>
-        product.productOptions.edges
-        ->Array.keep(option => skuNos->Set.String.has(option.node.stockSku))
-        ->Array.keepMap(option =>
-          skuMap
-          ->Map.String.get(option.node.stockSku)
-          ->Option.map(Form.quotableProductToFixedDataTemp(product, option))
-        )
-      | _ => []
-      }
-    )
-    ->Array.keepMap(Form.concat)
+    productOptions
+    ->Array.keepMap(Form.toFixedData)
+    ->Garter_Array.groupBy(a => a.productId, ~id=module(Garter.Id.IntComparable))
+    ->Map.toArray
+    ->Array.keepMap(((_, fixedData)) => fixedData->Form.concat)
     ->Form.productInfoSort
-
-  // HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-  // 22.08.25 작성되었습니다.
-  // 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-  // let productInfos =
-  //   products.edges
-  //   ->Array.map(({node}) =>
-  //     switch node {
-  //     | #NormalProduct(product) =>
-  //       product.productOptions.edges
-  //       ->Array.keep(option => skuNos->Set.String.has(option.node.stockSku))
-  //       ->Array.keepMap(option =>
-  //         skuMap
-  //         ->Map.String.get(option.node.stockSku)
-  //         ->Option.map(Form.normalProductToFixedData(product, option))
-  //       )
-  //     | #QuotableProduct(product) =>
-  //       product.productOptions.edges
-  //       ->Array.keep(option => skuNos->Set.String.has(option.node.stockSku))
-  //       ->Array.keepMap(option =>
-  //         skuMap
-  //         ->Map.String.get(option.node.stockSku)
-  //         ->Option.map(Form.quotableProductToFixedData(product, option))
-  //       )
-  //     | _ => []
-  //     }
-  //   )
-  //   ->Array.keepMap(Form.concat)
-  //   ->Form.productInfoSort
 
   let firstIsCourierAvailable =
     productInfos->Array.get(0)->Option.map(first => first.isCourierAvailable)
@@ -357,15 +174,6 @@ let make = (~productNos, ~skuNos, ~skuMap, ~deviceType) => {
     firstIsCourierAvailable->Option.map(first' =>
       productInfos->Array.map(t => t.isCourierAvailable)->Array.every(c => c == first')
     )
-
-  let defaultDeliveryType = switch firstIsCourierAvailable {
-  | Some(first) =>
-    switch isSameCourierAvailable {
-    | Some(same) => first && same ? "parcel" : "freight"
-    | None => "freight"
-    }
-  | None => "freight"
-  }
 
   let watchValue = Hooks.WatchValues.use(
     Hooks.WatchValues.Text,
@@ -376,14 +184,14 @@ let make = (~productNos, ~skuNos, ~skuMap, ~deviceType) => {
   React.useEffect0(_ => {
     productInfos->Form.gtmDataPush
     setValue(. formNames.productInfos, productInfos->Form.productInfos_encode)
-    setValue(. formNames.deliveryType, defaultDeliveryType->Js.Json.string)
     None
   })
 
   {
     switch deviceType {
     | DeviceDetect.Unknown => React.null
-    | DeviceDetect.PC => <>
+    | DeviceDetect.PC =>
+      <>
         <Header_Buyer.PC_Old key=router.asPath />
         <PC
           productInfos
@@ -395,7 +203,8 @@ let make = (~productNos, ~skuNos, ~skuMap, ~deviceType) => {
         />
         <Footer_Buyer.PC />
       </>
-    | DeviceDetect.Mobile => <>
+    | DeviceDetect.Mobile =>
+      <>
         <Header_Buyer.Mobile key=router.asPath />
         <MO
           productInfos

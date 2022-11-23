@@ -6,8 +6,10 @@ import * as Dialog from "./common/Dialog.mjs";
 import * as DataGtm from "../utils/DataGtm.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as DeviceDetect from "../bindings/DeviceDetect.mjs";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as IconCloseInput from "./svgs/IconCloseInput.mjs";
+import * as FeatureFlagWrapper from "../pages/buyer/pc/FeatureFlagWrapper.mjs";
 import * as UploadFileToS3PresignedUrl from "../utils/UploadFileToS3PresignedUrl.mjs";
 
 function Upload_Orders(Props) {
@@ -23,10 +25,13 @@ function Upload_Orders(Props) {
         return /* Hide */1;
       });
   var setShowDelete = match$1[1];
+  var isShowDelete = match$1[0];
+  var deviceDetect = DeviceDetect.detectDevice(undefined);
   var match$2 = React.useState(function () {
         return /* Hide */1;
       });
   var setShowFileRequired = match$2[1];
+  var isShowFileRequired = match$2[0];
   var handleOnChangeFiles = function (e) {
     var values = e.target.files;
     setFiles(function (param) {
@@ -42,97 +47,186 @@ function Upload_Orders(Props) {
           
         });
   };
-  return React.createElement(React.Fragment, undefined, React.createElement("section", {
-                  className: "py-5"
-                }, React.createElement("div", {
-                      className: "flex justify-between"
-                    }, React.createElement("h4", {
-                          className: "font-semibold"
-                        }, "" + String(startIndex) + ". 주문서 선택", React.createElement("span", {
-                              className: "block text-gray-400 text-sm"
-                            }, "*.xls, xlsx 확장자만 업로드 가능")), React.createElement("label", {
-                          className: "p-3 w-28 text-white text-center whitespace-nowrap font-bold bg-green-gl rounded-xl cursor-pointer focus:outline-none hover:bg-green-gl-dark focus-within:bg-green-gl-dark focus-within:outline-none"
-                        }, React.createElement("span", undefined, "파일 선택"), React.createElement("input", {
-                              className: "sr-only",
-                              id: "input-file",
-                              accept: ".xls,.xlsx",
-                              type: "file",
-                              onChange: handleOnChangeFiles
-                            }))), React.createElement("div", {
-                      className: file !== undefined ? "p-3 relative w-full flex items-center rounded-xl mt-4 border border-gray-200 text-gray-400" : "p-3 relative w-full flex items-center rounded-xl mt-4 border border-gray-200 text-gray-400 bg-gray-100"
-                    }, React.createElement("span", undefined, Belt_Option.getWithDefault(Belt_Option.map(file, (function (file$p) {
-                                    return file$p.name;
-                                  })), "파일명.xlsx")), Belt_Option.getWithDefault(Belt_Option.map(file, (function (param) {
-                                return React.createElement("span", {
-                                            className: "absolute p-2 right-0",
-                                            onClick: (function (param) {
-                                                setShowDelete(function (param) {
-                                                      return /* Show */0;
-                                                    });
-                                              })
-                                          }, React.createElement(IconCloseInput.make, {
-                                                height: "28",
-                                                width: "28",
-                                                fill: "#B2B2B2"
-                                              }));
-                              })), null))), React.createElement("section", {
-                  className: "py-5"
-                }, React.createElement("div", {
-                      className: "flex justify-between items-center"
-                    }, React.createElement("div", {
-                          className: "flex-1 flex justify-between"
-                        }, React.createElement("h4", {
-                              className: "font-semibold"
-                            }, "" + String(startIndex + 1 | 0) + ". 주문서 업로드"), React.createElement(DataGtm.make, {
-                              children: React.createElement("button", {
-                                    className: Belt_Option.isSome(file) ? "text-white font-bold p-3 w-28 bg-green-gl rounded-xl focus:outline-none hover:bg-green-gl-dark" : "text-white font-bold p-3 w-28 bg-gray-300 rounded-xl focus:outline-none",
-                                    disabled: Belt_Option.isNone(file),
-                                    onClick: (function (param) {
-                                        if (file !== undefined) {
-                                          UploadFileToS3PresignedUrl.upload(undefined, /* Buyer */1, Caml_option.valFromOption(file), (function (param) {
-                                                  handleResetFile(undefined);
-                                                  return Curry._1(onSuccess, undefined);
-                                                }), (function (param) {
-                                                  return Curry._1(onFailure, undefined);
-                                                }), undefined);
-                                          return ;
-                                        } else {
-                                          return setShowFileRequired(function (param) {
-                                                      return /* Show */0;
-                                                    });
-                                        }
-                                      })
-                                  }, "업로드"),
-                              dataGtm: "click_upload_btn"
-                            })))), React.createElement(Dialog.make, {
-                  isShow: match$2[0],
-                  children: React.createElement("p", {
-                        className: "text-gray-500 text-center whitespace-pre-wrap"
-                      }, "파일을 선택해주세요."),
-                  onConfirm: (function (param) {
-                      setShowFileRequired(function (param) {
-                            return /* Hide */1;
-                          });
-                    })
-                }), React.createElement(Dialog.make, {
-                  isShow: match$1[0],
-                  children: React.createElement("p", {
-                        className: "text-gray-500 text-center whitespace-pre-wrap"
-                      }, "파일을 삭제하시겠어요?"),
-                  onCancel: (function (param) {
-                      setShowDelete(function (param) {
-                            return /* Hide */1;
-                          });
-                    }),
-                  onConfirm: (function (param) {
-                      handleResetFile(undefined);
-                      setShowDelete(function (param) {
-                            return /* Hide */1;
-                          });
-                    }),
-                  textOnCancel: "닫기",
-                  textOnConfirm: "삭제"
-                }));
+  var handleDeleteFiles = function (param) {
+    handleResetFile(undefined);
+    setShowDelete(function (param) {
+          return /* Hide */1;
+        });
+  };
+  var handleUpload = function (param) {
+    if (file !== undefined) {
+      UploadFileToS3PresignedUrl.upload(undefined, /* Buyer */1, Caml_option.valFromOption(file), (function (param) {
+              handleResetFile(undefined);
+              return Curry._1(onSuccess, undefined);
+            }), (function (param) {
+              return Curry._1(onFailure, undefined);
+            }), undefined);
+      return ;
+    } else {
+      return setShowFileRequired(function (param) {
+                  return /* Show */0;
+                });
+    }
+  };
+  var oldUI = React.createElement(React.Fragment, undefined, React.createElement("section", {
+            className: "py-5"
+          }, React.createElement("div", {
+                className: "flex justify-between"
+              }, React.createElement("h4", {
+                    className: "font-semibold"
+                  }, "" + String(startIndex) + ". 주문서 선택", React.createElement("span", {
+                        className: "block text-gray-400 text-sm"
+                      }, "*.xls, xlsx 확장자만 업로드 가능")), React.createElement("label", {
+                    className: "p-3 w-28 text-white text-center whitespace-nowrap font-bold bg-green-gl rounded-xl cursor-pointer focus:outline-none hover:bg-green-gl-dark focus-within:bg-green-gl-dark focus-within:outline-none"
+                  }, React.createElement("span", undefined, "파일 선택"), React.createElement("input", {
+                        className: "sr-only",
+                        id: "input-file",
+                        accept: ".xls,.xlsx",
+                        type: "file",
+                        onChange: handleOnChangeFiles
+                      }))), React.createElement("div", {
+                className: file !== undefined ? "p-3 relative w-full flex items-center rounded-xl mt-4 border border-gray-200 text-gray-400" : "p-3 relative w-full flex items-center rounded-xl mt-4 border border-gray-200 text-gray-400 bg-gray-100"
+              }, React.createElement("span", undefined, Belt_Option.getWithDefault(Belt_Option.map(file, (function (file$p) {
+                              return file$p.name;
+                            })), "파일명.xlsx")), Belt_Option.getWithDefault(Belt_Option.map(file, (function (param) {
+                          return React.createElement("span", {
+                                      className: "absolute p-2 right-0",
+                                      onClick: (function (param) {
+                                          setShowDelete(function (param) {
+                                                return /* Show */0;
+                                              });
+                                        })
+                                    }, React.createElement(IconCloseInput.make, {
+                                          height: "28",
+                                          width: "28",
+                                          fill: "#B2B2B2"
+                                        }));
+                        })), null))), React.createElement("section", {
+            className: "py-5"
+          }, React.createElement("div", {
+                className: "flex justify-between items-center"
+              }, React.createElement("div", {
+                    className: "flex-1 flex justify-between"
+                  }, React.createElement("h4", {
+                        className: "font-semibold"
+                      }, "" + String(startIndex + 1 | 0) + ". 주문서 업로드"), React.createElement(DataGtm.make, {
+                        children: React.createElement("button", {
+                              className: Belt_Option.isSome(file) ? "text-white font-bold p-3 w-28 bg-green-gl rounded-xl focus:outline-none hover:bg-green-gl-dark" : "text-white font-bold p-3 w-28 bg-gray-300 rounded-xl focus:outline-none",
+                              disabled: Belt_Option.isNone(file),
+                              onClick: (function (param) {
+                                  handleUpload(undefined);
+                                })
+                            }, "업로드"),
+                        dataGtm: "click_upload_btn"
+                      })))), React.createElement(Dialog.make, {
+            isShow: isShowFileRequired,
+            children: React.createElement("p", {
+                  className: "text-gray-500 text-center whitespace-pre-wrap"
+                }, "파일을 선택해주세요."),
+            onConfirm: (function (param) {
+                setShowFileRequired(function (param) {
+                      return /* Hide */1;
+                    });
+              })
+          }), React.createElement(Dialog.make, {
+            isShow: isShowDelete,
+            children: React.createElement("p", {
+                  className: "text-gray-500 text-center whitespace-pre-wrap"
+                }, "파일을 삭제하시겠어요?"),
+            onCancel: (function (param) {
+                setShowDelete(function (param) {
+                      return /* Hide */1;
+                    });
+              }),
+            onConfirm: (function (param) {
+                handleDeleteFiles(undefined);
+              }),
+            textOnCancel: "닫기",
+            textOnConfirm: "삭제"
+          }));
+  var newUI = React.createElement(React.Fragment, undefined, React.createElement("section", {
+            className: "py-5"
+          }, React.createElement("div", {
+                className: "flex justify-between"
+              }, React.createElement("h4", {
+                    className: "font-semibold"
+                  }, "" + String(startIndex) + ". 주문서 선택", React.createElement("span", {
+                        className: "block text-gray-400 text-sm"
+                      }, "*.xls, xlsx 확장자만 업로드 가능")), React.createElement("div", {
+                    className: "inline-flex"
+                  }, React.createElement("div", {
+                        className: file !== undefined ? "p-3 relative flex items-center rounded-xl border border-gray-200 text-gray-400 w-[420px] mr-2" : "p-3 relative  flex items-center rounded-xl border border-gray-200 text-gray-400 bg-gray-100 w-[420px] mr-2"
+                      }, React.createElement("span", undefined, Belt_Option.getWithDefault(Belt_Option.map(file, (function (file$p) {
+                                      return file$p.name;
+                                    })), "파일명.xlsx")), Belt_Option.getWithDefault(Belt_Option.map(file, (function (param) {
+                                  return React.createElement("span", {
+                                              className: "absolute p-2 right-0",
+                                              onClick: (function (param) {
+                                                  setShowDelete(function (param) {
+                                                        return /* Show */0;
+                                                      });
+                                                })
+                                            }, React.createElement(IconCloseInput.make, {
+                                                  height: "28",
+                                                  width: "28",
+                                                  fill: "#B2B2B2"
+                                                }));
+                                })), null)), React.createElement("label", {
+                        className: "p-3 w-28 text-white text-center whitespace-nowrap font-bold bg-green-gl rounded-xl cursor-pointer focus:outline-none hover:bg-green-gl-dark focus-within:bg-green-gl-dark focus-within:outline-none"
+                      }, React.createElement("span", undefined, "파일 선택"), React.createElement("input", {
+                            className: "sr-only w-[420px]",
+                            id: "input-file",
+                            accept: ".xls,.xlsx",
+                            type: "file",
+                            onChange: handleOnChangeFiles
+                          }))))), React.createElement("section", {
+            className: "py-5"
+          }, React.createElement("div", {
+                className: "flex justify-between items-center"
+              }, React.createElement("div", {
+                    className: "flex-1 flex justify-between"
+                  }, React.createElement("h4", {
+                        className: "font-semibold"
+                      }, "" + String(startIndex + 1 | 0) + ". 주문서 업로드"), React.createElement(DataGtm.make, {
+                        children: React.createElement("button", {
+                              className: Belt_Option.isSome(file) ? "text-white font-bold p-3 w-28 bg-green-gl rounded-xl focus:outline-none hover:bg-green-gl-dark" : "text-white font-bold p-3 w-28 bg-gray-300 rounded-xl focus:outline-none",
+                              disabled: Belt_Option.isNone(file),
+                              onClick: (function (param) {
+                                  handleUpload(undefined);
+                                })
+                            }, "업로드"),
+                        dataGtm: "click_upload_btn"
+                      })))), React.createElement(Dialog.make, {
+            isShow: isShowFileRequired,
+            children: React.createElement("p", {
+                  className: "text-gray-500 text-center whitespace-pre-wrap"
+                }, "파일을 선택해주세요."),
+            onConfirm: (function (param) {
+                setShowFileRequired(function (param) {
+                      return /* Hide */1;
+                    });
+              })
+          }), React.createElement(Dialog.make, {
+            isShow: isShowDelete,
+            children: React.createElement("p", {
+                  className: "text-gray-500 text-center whitespace-pre-wrap"
+                }, "파일을 삭제하시겠어요?"),
+            onCancel: (function (param) {
+                setShowDelete(function (param) {
+                      return /* Hide */1;
+                    });
+              }),
+            onConfirm: (function (param) {
+                handleDeleteFiles(undefined);
+              }),
+            textOnCancel: "닫기",
+            textOnConfirm: "삭제"
+          }));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: deviceDetect !== 1 ? oldUI : newUI,
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var make = Upload_Orders;

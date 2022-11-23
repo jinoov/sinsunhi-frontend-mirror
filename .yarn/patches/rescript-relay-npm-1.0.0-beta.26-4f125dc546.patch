@@ -1,0 +1,10 @@
+diff --git a/postinstall.js b/postinstall.js
+index 78e757cbf22fd599e99307531fd1163c35da0528..0ab08f8fe28e06d908d745c725b9b8202531b67e 100644
+--- a/postinstall.js
++++ b/postinstall.js
+@@ -157,4 +157,4 @@ switch (platform) {
+     process.exit(1);
+ }
+ 
+-removeInitialBinaries();
++// removeInitialBinaries();

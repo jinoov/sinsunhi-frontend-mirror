@@ -159,7 +159,8 @@ let put = (~url, ~body, ~onSuccess, ~onFailure) => {
 }
 
 let putWithToken = (url, body) => {
-  let accessToken = LocalStorageHooks.AccessToken.get()
+  //TODO:// accessToken이 없을 경우에 대한 처리
+  let accessToken = LocalStorageHooks.AccessToken.get()->Option.getWithDefault("")
   Fetch.fetchWithInit(
     url,
     Fetch.RequestInit.make(
@@ -287,7 +288,8 @@ let putWithFileAsAttachment = (url, file) => {
 
 // swr fetcher
 let fetcher = url => {
-  let accessToken = LocalStorageHooks.AccessToken.get()
+  //TODO:// accessToken이 없을 경우에 대한 처리
+  let accessToken = LocalStorageHooks.AccessToken.get()->Option.getWithDefault("")
   Fetch.fetchWithInit(
     url,
     Fetch.RequestInit.make(
@@ -323,7 +325,8 @@ let fetcher = url => {
 }
 
 let getWithToken = (url, _body) => {
-  let accessToken = LocalStorageHooks.AccessToken.get()
+  //TODO:// accessToken이 없을 경우에 대한 처리
+  let accessToken = LocalStorageHooks.AccessToken.get()->Option.getWithDefault("")
   Fetch.fetchWithInit(
     url,
     Fetch.RequestInit.make(
@@ -357,7 +360,8 @@ let getWithToken = (url, _body) => {
 }
 
 let getWithTokenForExcel = (url, _body) => {
-  let accessToken = LocalStorageHooks.AccessToken.get()
+  //TODO:// accessToken이 없을 경우에 대한 처리
+  let accessToken = LocalStorageHooks.AccessToken.get()->Option.getWithDefault("")
   Fetch.fetchWithInit(
     url,
     Fetch.RequestInit.make(
@@ -404,13 +408,13 @@ let getProcessedImage = (url, _body) => {
 
 let postWithToken = (url, body) => {
   let headers = switch LocalStorageHooks.AccessToken.get() {
-  | "" =>
+  | None =>
     Fetch.HeadersInit.make({
       "Content-Type": "application/json",
       "Accept": "application/json",
     })
 
-  | accessToken =>
+  | Some(accessToken) =>
     Fetch.HeadersInit.make({
       "Content-Type": "application/json",
       "Accept": "application/json",
@@ -448,7 +452,8 @@ let postWithToken = (url, body) => {
 }
 
 let postWithTokenForExcel = (url, body) => {
-  let accessToken = LocalStorageHooks.AccessToken.get()
+  //TODO:// accessToken이 없을 경우에 대한 처리
+  let accessToken = LocalStorageHooks.AccessToken.get()->Option.getWithDefault("")
   Fetch.fetchWithInit(
     url,
     Fetch.RequestInit.make(
@@ -483,13 +488,13 @@ let postWithTokenForExcel = (url, body) => {
 }
 let patchWithToken = (url, body) => {
   let headers = switch LocalStorageHooks.AccessToken.get() {
-  | "" =>
+  | None =>
     Fetch.HeadersInit.make({
       "Content-Type": "application/json",
       "Accept": "application/json",
     })
 
-  | accessToken =>
+  | Some(accessToken) =>
     Fetch.HeadersInit.make({
       "Content-Type": "application/json",
       "Accept": "application/json",
@@ -533,7 +538,8 @@ type responseToken = {
 }
 
 let refreshToken = () => {
-  let rt = LocalStorageHooks.RefreshToken.get()
+  //TODO:// refreshToken이 없을 경우에 대한 처리
+  let rt = LocalStorageHooks.RefreshToken.get()->Option.getWithDefault("")
   let {makeWithArray, toString} = module(Webapi.Url.URLSearchParams)
   let urlSearchParams =
     [("grant-type", "refresh-token"), ("refresh-token", rt)]->makeWithArray->toString

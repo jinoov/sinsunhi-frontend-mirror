@@ -196,11 +196,20 @@ body {
     .grid-cols-8-seller {
       grid-template-columns: 120px 160px 2fr 2fr 2fr 1fr 2fr 3fr;
     }
-    .grid-cols-7-buyer-product {
-      grid-template-columns: 120px 150px 1fr 120px 150px 250px 52px;
+    .grid-cols-8-buyer-product {
+      grid-template-columns: 120px 150px 1fr 120px 120px 150px 250px 52px;
     }
     .grid-cols-7-admin-bulk-sale-product {
       grid-template-columns: 200px 200px 1fr 300px 150px 100px 200px;
+    }
+    .grid-cols-8-admin-rfq-web-order {
+      grid-template-columns: 130px 130px 130px 400px 150px 150px 150px 210px;
+    }
+    .grid-cols-6-admin-rfq-transaction {
+      grid-template-columns: 200px 150px 180px 150px 150px 1fr;
+    }
+    .grid-cods-8-admin-rfq-factoring {
+      grid-template-columns: 200px 150px 150px 150px 150px 150px 150px 50px
     }
     .grid-cols-8-admin-product {
       grid-template-columns: 150px 350px 120px 250px 400px 1fr 150px 150px;
@@ -775,7 +784,7 @@ body {
   display: none;
 }
 
-.drawer-tarnsition {
+.drawer-transition {
   transition: bottom ease-out 0.3s;
 }
 
@@ -836,4 +845,180 @@ body {
 
 #ch-plugin {
   pointer-events: auto;
+}
+
+@keyframes pdp-liking {
+  0% {
+    transform: scale(1);
+    transition-timing-function: ease-in-out;
+    transition-duration: 100ms;
+    fill: transparent;
+    stroke: #8b8d94;
+  }
+  41.6% {
+    transform: scale(1.25);
+    fill: #ed394b;
+    stroke: #ed394b;
+  }
+  58.3% {
+    transform: scale(1.25);
+    fill: #ed394b;
+    stroke: #ed394b;
+  }
+  100% {
+    transform: scale(1);
+    transition-timing-function: ease-in-out;
+    transition-duration: 100ms;
+    fill: #ed394b;
+    stroke: #ed394b;
+  }
+}
+
+@keyframes pdp-disliking {
+  0% {
+    fill: #ed394b;
+    stroke: #ed394b;
+  }
+  100% {
+    fill: transparent;
+    stroke: #8b8d94;
+  }
+}
+
+.pdp-like-action {
+  transform-origin: center center;
+  animation: pdp-liking 240ms linear forwards;
+}
+.pdp-liked {
+  fill: #ed394b;
+  stroke: #ed394b;
+}
+
+.pdp-dislike-action {
+  animation: pdp-disliking 240ms ease-in-out forwards;
+}
+.pdp-disliked {
+  fill: transparent;
+  stroke: #8b8d94;
+}
+
+.tab-bottom[data-state="active"] {
+  border-bottom: solid 2px #1F2024
+}
+
+
+.pc-swiper .swiper-pagination-horizontal.swiper-pagination-bullets {
+  margin-bottom:20px;
+  text-align:left;
+  padding-left:52px;
+}
+
+
+.swiper-pagination-bullet {
+  --swiper-pagination-bullet-inactive-color: #ffff;
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+  --swiper-pagination-color: #ffff;
+}
+
+.review-swiper .swiper-slide {
+  width: 312px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.02), 0px 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+}
+.review-swiper.swiper{
+  padding: 16px 0px;
+}
+
+.pc-review-swiper .swiper-slide {
+  width: 432px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.02), 0px 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+}
+
+.pc-review-swiper.swiper{
+  padding: 16px 0px;
+}
+
+.light-level-1{
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.03), 0px 2px 8px 2px rgba(0, 0, 0, 0.06);
+}
+.interactable{
+  position:relative;
+}
+
+.interactable::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: rgb(36, 42, 48);
+  border-radius: inherit;
+  opacity: 0;
+  transition: all 0.15s ease 0s;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+@media(hover:hover){
+  .interactable:hover::before {
+    transition: opacity 0s ease 0s;
+    opacity: 0.04;
+    transform: none;
+  }
+}
+
+.interactable:active::before {
+  transition: opacity 0s ease 0s;
+  opacity: 0.08;
+  transform: none;
+}
+
+/* 디자인 시스템이 나오기 전가지 임시로 사용할 hover, pressed 상태의 스타일입니다. */
+
+.interactable{
+  position:relative;
+}
+
+.interactable::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: rgb(36, 42, 48);
+  border-radius: inherit;
+  opacity: 0;
+  transition: all 0.15s ease 0s;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+@media(hover:hover){
+  .interactable:hover::before {
+    transition: opacity 0s ease 0s;
+    opacity: 0.04;
+    transform: none;
+  }
+}
+
+.interactable:active::before {
+  transition: opacity 0s ease 0s;
+  opacity: 0.08;
+  transform: none;
+}
+
+@media (min-width:768px){
+  .pc-content {
+    max-width: 1920px;
+    min-width: 1280px;
+    margin: 0px auto;
+  }
+}
+
+.swiper-button-disabled{
+  opacity:0;
+  cursor:default
 }

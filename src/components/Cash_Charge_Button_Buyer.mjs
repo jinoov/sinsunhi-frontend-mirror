@@ -93,7 +93,7 @@ function form_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("payment-method" + e$1.path),
+            path: ".payment-method" + e$1.path,
             message: e$1.message,
             value: e$1.value
           }
@@ -217,6 +217,7 @@ function Cash_Charge_Button_Buyer(Props) {
     reset(undefined);
   };
   var errorElement = React.createElement(React.Fragment, undefined, React.createElement("img", {
+            alt: "notice-icon",
             src: noticeIcon
           }), React.createElement("div", {
             className: "ml-1.5 text-sm"
@@ -247,85 +248,90 @@ function Cash_Charge_Button_Buyer(Props) {
                 }));
   };
   var handleConfirm = function (data, param) {
-    if (availableButton) {
-      var data$p = form_decode(data);
-      if (data$p.TAG === /* Ok */0) {
-        var data$p$1 = data$p._0;
-        setValueToHtmlInputElement("good_mny", String(data$p$1.amount));
-        setValueToHtmlInputElement("pay_method", Payments.methodToKCPValue(data$p$1.paymentMethod));
-        Curry.app(mutate, [
-              (function (err) {
-                  handleError(err.message, undefined);
-                }),
-              (function (param, param$1) {
-                  var requestPayment = param.requestPayment;
-                  if (requestPayment === undefined) {
-                    return handleError("주문 생성 요청 실패", undefined);
-                  }
-                  if (typeof requestPayment !== "object") {
-                    return handleError("주문 생성 에러", undefined);
-                  }
-                  var variant = requestPayment.NAME;
-                  if (variant === "Error") {
-                    return handleError("주문 생성 에러", undefined);
-                  }
-                  if (variant === "RequestPaymentTossPaymentsResult") {
-                    var requestPaymentTossPaymentsResult = requestPayment.VAL;
-                    return window.tossPayments.requestPayment(Payments.methodToTossValue(data$p$1.paymentMethod), {
-                                amount: requestPaymentTossPaymentsResult.amount,
-                                orderId: requestPaymentTossPaymentsResult.orderId,
-                                orderName: "신선하이 " + String(requestPaymentTossPaymentsResult.amount) + "",
-                                taxFreeAmount: undefined,
-                                customerName: requestPaymentTossPaymentsResult.customerName,
-                                successUrl: "" + window.location.origin + "/buyer/toss-payments/success?payment-id=" + String(requestPaymentTossPaymentsResult.paymentId) + "",
-                                failUrl: "" + window.location.origin + "/buyer/toss-payments/fail?from=/transactions",
-                                validHours: Payments.tossPaymentsValidHours(data$p$1.paymentMethod),
-                                cashReceipt: Payments.tossPaymentsCashReceipt(data$p$1.paymentMethod),
-                                appScheme: Belt_Option.map(Caml_option.nullable_to_opt(window.ReactNativeWebView), (function (param) {
-                                        return encodeURIComponent("sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?payment-id=" + String(requestPaymentTossPaymentsResult.paymentId) + "");
-                                      }))
-                              });
-                  }
-                  if (variant !== "RequestPaymentKCPResult") {
-                    return handleError("주문 생성 에러", undefined);
-                  }
-                  var requestPaymnetKCPResult = requestPayment.VAL;
-                  close(undefined);
-                  setValueToHtmlInputElement("site_cd", requestPaymnetKCPResult.siteCd);
-                  setValueToHtmlInputElement("site_name", requestPaymnetKCPResult.siteName);
-                  setValueToHtmlInputElement("site_key", requestPaymnetKCPResult.siteKey);
-                  setValueToHtmlInputElement("ordr_idxx", requestPaymnetKCPResult.ordrIdxx);
-                  setValueToHtmlInputElement("currency", requestPaymnetKCPResult.currency);
-                  setValueToHtmlInputElement("shop_user_id", requestPaymnetKCPResult.shopUserId);
-                  setValueToHtmlInputElement("buyr_name", requestPaymnetKCPResult.buyrName);
-                  var orderInfo = document.getElementById("order_info");
-                  if (orderInfo == null) {
-                    return handleError("폼 데이터를 찾을 수가 없습니다.", undefined);
-                  } else {
-                    window.jsf__pay(orderInfo);
-                    return ;
-                  }
-                }),
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              {
-                amount: data$p$1.amount,
-                device: detectIsMobile(undefined) ? "MOBILE" : "PC",
-                paymentMethod: data$p$1.paymentMethod,
-                purpose: "SINSUN_CASH"
-              },
-              undefined,
-              undefined
-            ]);
+    var data$p = form_decode(data);
+    if (data$p.TAG === /* Ok */0) {
+      var data$p$1 = data$p._0;
+      setValueToHtmlInputElement("good_mny", String(data$p$1.amount));
+      setValueToHtmlInputElement("pay_method", Payments.methodToKCPValue(data$p$1.paymentMethod));
+      var match = data$p$1.paymentMethod;
+      if (!availableButton && match === "VIRTUAL_ACCOUNT") {
+        window.alert("서비스 점검으로 가상계좌 결제 기능을 이용할 수 없습니다.");
         return ;
       }
-      var msg = data$p._0;
-      console.log(msg);
-      return handleError(msg.message, undefined);
+      Curry.app(mutate, [
+            (function (err) {
+                handleError(err.message, undefined);
+              }),
+            (function (param, param$1) {
+                var requestPayment = param.requestPayment;
+                if (requestPayment === undefined) {
+                  return handleError("주문 생성 요청 실패", undefined);
+                }
+                if (typeof requestPayment !== "object") {
+                  return handleError("주문 생성 에러", undefined);
+                }
+                var variant = requestPayment.NAME;
+                if (variant === "Error") {
+                  return handleError("주문 생성 에러", undefined);
+                }
+                if (variant === "RequestPaymentTossPaymentsResult") {
+                  var match = requestPayment.VAL;
+                  var paymentId = match.paymentId;
+                  var orderId = match.orderId;
+                  var amount = match.amount;
+                  return window.tossPayments.requestPayment(Payments.methodToTossValue(data$p$1.paymentMethod), {
+                              amount: amount,
+                              orderId: orderId,
+                              orderName: "신선하이 " + String(amount) + "",
+                              taxFreeAmount: undefined,
+                              customerName: match.customerName,
+                              successUrl: "" + window.location.origin + "/buyer/toss-payments/success?order-no=" + orderId + "&payment-id=" + String(paymentId) + "",
+                              failUrl: "" + window.location.origin + "/buyer/toss-payments/fail?from=/transactions",
+                              validHours: Payments.tossPaymentsValidHours(data$p$1.paymentMethod),
+                              cashReceipt: Payments.tossPaymentsCashReceipt(data$p$1.paymentMethod),
+                              appScheme: Belt_Option.map(Caml_option.nullable_to_opt(window.ReactNativeWebView), (function (param) {
+                                      return encodeURIComponent("sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?order-no=" + orderId + "&payment-id=" + String(paymentId) + "");
+                                    }))
+                            });
+                }
+                if (variant !== "RequestPaymentKCPResult") {
+                  return handleError("주문 생성 에러", undefined);
+                }
+                var requestPaymnetKCPResult = requestPayment.VAL;
+                close(undefined);
+                setValueToHtmlInputElement("site_cd", requestPaymnetKCPResult.siteCd);
+                setValueToHtmlInputElement("site_name", requestPaymnetKCPResult.siteName);
+                setValueToHtmlInputElement("site_key", requestPaymnetKCPResult.siteKey);
+                setValueToHtmlInputElement("ordr_idxx", requestPaymnetKCPResult.ordrIdxx);
+                setValueToHtmlInputElement("currency", requestPaymnetKCPResult.currency);
+                setValueToHtmlInputElement("shop_user_id", requestPaymnetKCPResult.shopUserId);
+                setValueToHtmlInputElement("buyr_name", requestPaymnetKCPResult.buyrName);
+                var orderInfo = document.getElementById("order_info");
+                if (orderInfo == null) {
+                  return handleError("폼 데이터를 찾을 수가 없습니다.", undefined);
+                } else {
+                  window.jsf__pay(orderInfo);
+                  return ;
+                }
+              }),
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              amount: data$p$1.amount,
+              device: detectIsMobile(undefined) ? "MOBILE" : "PC",
+              paymentMethod: data$p$1.paymentMethod,
+              purpose: "SINSUN_CASH"
+            },
+            undefined,
+            undefined
+          ]);
+      return ;
     }
-    window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
+    var msg = data$p._0;
+    console.log(msg);
+    handleError(msg.message, undefined);
   };
   var changeToFormattedFloat = function (j) {
     return Belt_Option.mapWithDefault(Js_json.decodeNumber(j), "", (function (f) {
@@ -343,7 +349,10 @@ function Cash_Charge_Button_Buyer(Props) {
                       className: "dialog-overlay"
                     }), React.createElement(ReactDialog.Content, {
                       children: null,
-                      className: "dialog-content p-5 overflow-y-auto text-text-L1 rounded-2xl"
+                      className: "dialog-content p-5 overflow-y-auto text-text-L1 rounded-2xl",
+                      onOpenAutoFocus: (function (prim) {
+                          prim.preventDefault();
+                        })
                     }, React.createElement(ReactDialog.Close, {
                           children: "",
                           className: "hidden",
@@ -474,6 +483,7 @@ function Cash_Charge_Button_Buyer(Props) {
                                                                     Curry._1(onChange, Curry._1(ReactHookForm.Controller.OnChangeArg.value, v));
                                                                   })
                                                               }, React.createElement("img", {
+                                                                    alt: "",
                                                                     src: Caml_obj.equal(value, v) ? radioFilledIcon : radioDefaultIcon
                                                                   }), name);
                                                   })));
@@ -490,6 +500,7 @@ function Cash_Charge_Button_Buyer(Props) {
                                             });
                                       })
                                   }, React.createElement("img", {
+                                        alt: "",
                                         src: match$3[0] ? checkboxCheckedIcon : checkboxUncheckedIcon
                                       }), React.createElement("span", {
                                         className: "ml-2 text-sm"

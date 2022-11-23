@@ -104,7 +104,9 @@ module CutOffAndMemo = {
       <Dialog.Trigger className=%twc("block text-left mb-1 underline focus:outline-none")>
         <img src=editIcon />
       </Dialog.Trigger>
-      <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+      <Dialog.Content
+        className=%twc("dialog-content overflow-y-auto")
+        onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         <div className=%twc("p-5")>
           <section className=%twc("flex")>
             <h2 className=%twc("text-xl font-bold")>
@@ -122,7 +124,7 @@ module CutOffAndMemo = {
                 name="cut-off-time"
                 value={cutOffTime->Option.getWithDefault("")}
                 onChange={handleOnChange(setCutOffTime)}
-                placeholder=`출고기준시간 입력(ex. 09시 발주까지 당일 출고)`
+                placeholder={`출고기준시간 입력(ex. 09시 발주까지 당일 출고)`}
                 error=None
               />
             </div>
@@ -135,8 +137,8 @@ module CutOffAndMemo = {
                 name="cut-off-time"
                 value={memo->Option.getWithDefault("")}
                 onChange={handleOnChange(setMemo)}
-                placeholder=`상품에 대한 메모를 작성할 수 있습니다 (최대 200자)
-*바이어 센터에서는 최대 2줄까지 노출되며 그 이상은 말줄임 처리되어 엑셀 다운로드시 모든 내용을 확인할 수 있습니다.`
+                placeholder={`상품에 대한 메모를 작성할 수 있습니다 (최대 200자)
+*바이어 센터에서는 최대 2줄까지 노출되며 그 이상은 말줄임 처리되어 엑셀 다운로드시 모든 내용을 확인할 수 있습니다.`}
                 error=None
                 rows=4
                 maxLength=200
@@ -262,7 +264,9 @@ module Crop = {
       <Dialog.Trigger className=%twc("block text-left mb-1 underline focus:outline-none")>
         <img src=editIcon />
       </Dialog.Trigger>
-      <Dialog.Content className=%twc("dialog-content overflow-y-auto text-sm")>
+      <Dialog.Content
+        className=%twc("dialog-content overflow-y-auto text-sm")
+        onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         <div className=%twc("p-5")>
           <section className=%twc("flex")>
             <h2 className=%twc("text-xl font-bold")> {j`상품 작물 수정`->React.string} </h2>
@@ -475,7 +479,9 @@ module Detail = {
       <Dialog.Trigger className=%twc("block text-left mb-1 underline focus:outline-none")>
         <img src=editIcon />
       </Dialog.Trigger>
-      <Dialog.Content className=%twc("dialog-content overflow-y-auto text-sm")>
+      <Dialog.Content
+        className=%twc("dialog-content overflow-y-auto text-sm")
+        onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         <div className=%twc("p-5")>
           <section className=%twc("flex")>
             <h2 className=%twc("text-xl font-bold")>
@@ -497,7 +503,7 @@ module Detail = {
                       name="weight"
                       value={form.values->FormFields.get(FormFields.Weight)}
                       onChange={FormFields.Weight->form.handleChange->ReForm.Helpers.handleChange}
-                      placeholder=`중량을 입력해주세요`
+                      placeholder={`중량을 입력해주세요`}
                       error={FormFields.Weight->Form.ReSchema.Field->form.getFieldError}
                     />
                   </span>
@@ -524,7 +530,7 @@ module Detail = {
                     onChange={FormFields.CntPerPackage
                     ->form.handleChange
                     ->ReForm.Helpers.handleChange}
-                    placeholder=`1박스 당 입수를 입력해주세요  (ex. 4,10)`
+                    placeholder={`1박스 당 입수를 입력해주세요  (ex. 4,10)`}
                     error={FormFields.CntPerPackage->Form.ReSchema.Field->form.getFieldError}
                   />
                 </div>
@@ -539,7 +545,7 @@ module Detail = {
                     onChange={FormFields.UnitWeightMin
                     ->form.handleChange
                     ->ReForm.Helpers.handleChange}
-                    placeholder=`최소`
+                    placeholder={`최소`}
                     error={FormFields.UnitWeightMin->Form.ReSchema.Field->form.getFieldError}
                   />
                   <span className=%twc("mx-2")> {j`~`->React.string} </span>
@@ -551,7 +557,7 @@ module Detail = {
                     onChange={FormFields.UnitWeightMax
                     ->form.handleChange
                     ->ReForm.Helpers.handleChange}
-                    placeholder=`최대`
+                    placeholder={`최대`}
                     error={FormFields.UnitWeightMax->Form.ReSchema.Field->form.getFieldError}
                   />
                   <span className=%twc("ml-2")>
@@ -578,7 +584,7 @@ module Detail = {
                     onChange={FormFields.UnitSizeMin
                     ->form.handleChange
                     ->ReForm.Helpers.handleChange}
-                    placeholder=`최소`
+                    placeholder={`최소`}
                     error={FormFields.UnitSizeMin->Form.ReSchema.Field->form.getFieldError}
                   />
                   <span className=%twc("mx-2")> {j`~`->React.string} </span>
@@ -590,7 +596,7 @@ module Detail = {
                     onChange={FormFields.UnitSizeMax
                     ->form.handleChange
                     ->ReForm.Helpers.handleChange}
-                    placeholder=`최대`
+                    placeholder={`최대`}
                     error={FormFields.UnitSizeMax->Form.ReSchema.Field->form.getFieldError}
                   />
                   <span className=%twc("ml-2")>
@@ -615,7 +621,7 @@ module Detail = {
                       name="grade"
                       value={form.values->FormFields.get(FormFields.Grade)}
                       onChange={FormFields.Grade->form.handleChange->ReForm.Helpers.handleChange}
-                      placeholder=`(ex. 특, 상)`
+                      placeholder={`(ex. 특, 상)`}
                       error={FormFields.Grade->Form.ReSchema.Field->form.getFieldError}
                     />
                   </div>
@@ -630,7 +636,7 @@ module Detail = {
                       onChange={FormFields.PackageType
                       ->form.handleChange
                       ->ReForm.Helpers.handleChange}
-                      placeholder=`(ex. 플라스틱 등)`
+                      placeholder={`(ex. 플라스틱 등)`}
                       error={FormFields.PackageType->Form.ReSchema.Field->form.getFieldError}
                     />
                   </div>

@@ -59,7 +59,7 @@ function data_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("update-count" + e.path),
+              path: ".update-count" + e.path,
               message: e.message,
               value: e.value
             }
@@ -69,7 +69,7 @@ function data_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("total-count" + e$1.path),
+            path: ".total-count" + e$1.path,
             message: e$1.message,
             value: e$1.value
           }
@@ -136,7 +136,7 @@ function TrackingNumbers_Admin$Orders(Props) {
   var user = CustomHooks.Auth.use(undefined);
   var match = Swr.useSWRConfig();
   var mutate = match.mutate;
-  var status = CustomHooks.OrdersAdmin.use(new URLSearchParams(router.query).toString());
+  var status = CustomHooks.Orders.use(new URLSearchParams(router.query).toString());
   var match$1 = React.useState(function () {
         
       });
@@ -171,7 +171,7 @@ function TrackingNumbers_Admin$Orders(Props) {
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     count = "-";
   } else {
-    var orders$p = CustomHooks.OrdersAdmin.orders_decode(status._0);
+    var orders$p = CustomHooks.Orders.orders_decode(status._0);
     count = orders$p.TAG === /* Ok */0 ? String(orders$p._0.count) : "-";
   }
   var handleOnCheckOrder = function (orderProductNo, e) {

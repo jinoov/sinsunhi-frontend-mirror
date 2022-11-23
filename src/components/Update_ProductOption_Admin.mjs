@@ -6,6 +6,7 @@ import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Checkbox from "./common/Checkbox.mjs";
 import * as IconArrow from "./svgs/IconArrow.mjs";
 import * as IconError from "./svgs/IconError.mjs";
@@ -273,6 +274,18 @@ function submit_encode(v) {
               [
                 "shipping-unit-quantity",
                 Spice.intToJson(v.shippingUnitQuantity)
+              ],
+              [
+                "adhoc-stock-is-limited",
+                Spice.boolToJson(v.adhocStockIsLimited)
+              ],
+              [
+                "adhoc-stock-num-limit",
+                Spice.optionToJson(Spice.intToJson, v.adhocStockNumLimit)
+              ],
+              [
+                "adhoc-stock-is-num-remaining-visible",
+                Spice.boolToJson(v.adhocStockIsNumRemainingVisible)
               ]
             ]);
 }
@@ -302,97 +315,136 @@ function submit_decode(v) {
               if (isFreeShipping.TAG === /* Ok */0) {
                 var shippingUnitQuantity = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "shipping-unit-quantity"), null));
                 if (shippingUnitQuantity.TAG === /* Ok */0) {
+                  var adhocStockIsLimited = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-is-limited"), null));
+                  if (adhocStockIsLimited.TAG === /* Ok */0) {
+                    var adhocStockNumLimit = Spice.optionFromJson(Spice.intFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-num-limit"), null));
+                    if (adhocStockNumLimit.TAG === /* Ok */0) {
+                      var adhocStockIsNumRemainingVisible = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-is-num-remaining-visible"), null));
+                      if (adhocStockIsNumRemainingVisible.TAG === /* Ok */0) {
+                        return {
+                                TAG: /* Ok */0,
+                                _0: {
+                                  id: id._0,
+                                  name: name._0,
+                                  operationStatus: operationStatus._0,
+                                  cutOffTime: cutOffTime._0,
+                                  memo: memo._0,
+                                  autoGenName: autoGenName._0,
+                                  isFreeShipping: isFreeShipping._0,
+                                  shippingUnitQuantity: shippingUnitQuantity._0,
+                                  adhocStockIsLimited: adhocStockIsLimited._0,
+                                  adhocStockNumLimit: adhocStockNumLimit._0,
+                                  adhocStockIsNumRemainingVisible: adhocStockIsNumRemainingVisible._0
+                                }
+                              };
+                      }
+                      var e = adhocStockIsNumRemainingVisible._0;
+                      return {
+                              TAG: /* Error */1,
+                              _0: {
+                                path: ".adhoc-stock-is-num-remaining-visible" + e.path,
+                                message: e.message,
+                                value: e.value
+                              }
+                            };
+                    }
+                    var e$1 = adhocStockNumLimit._0;
+                    return {
+                            TAG: /* Error */1,
+                            _0: {
+                              path: ".adhoc-stock-num-limit" + e$1.path,
+                              message: e$1.message,
+                              value: e$1.value
+                            }
+                          };
+                  }
+                  var e$2 = adhocStockIsLimited._0;
                   return {
-                          TAG: /* Ok */0,
+                          TAG: /* Error */1,
                           _0: {
-                            id: id._0,
-                            name: name._0,
-                            operationStatus: operationStatus._0,
-                            cutOffTime: cutOffTime._0,
-                            memo: memo._0,
-                            autoGenName: autoGenName._0,
-                            isFreeShipping: isFreeShipping._0,
-                            shippingUnitQuantity: shippingUnitQuantity._0
+                            path: ".adhoc-stock-is-limited" + e$2.path,
+                            message: e$2.message,
+                            value: e$2.value
                           }
                         };
                 }
-                var e = shippingUnitQuantity._0;
+                var e$3 = shippingUnitQuantity._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: "." + ("shipping-unit-quantity" + e.path),
-                          message: e.message,
-                          value: e.value
+                          path: ".shipping-unit-quantity" + e$3.path,
+                          message: e$3.message,
+                          value: e$3.value
                         }
                       };
               }
-              var e$1 = isFreeShipping._0;
+              var e$4 = isFreeShipping._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: "." + ("is-free-shipping" + e$1.path),
-                        message: e$1.message,
-                        value: e$1.value
+                        path: ".is-free-shipping" + e$4.path,
+                        message: e$4.message,
+                        value: e$4.value
                       }
                     };
             }
-            var e$2 = autoGenName._0;
+            var e$5 = autoGenName._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: "." + ("auto-generated-name" + e$2.path),
-                      message: e$2.message,
-                      value: e$2.value
+                      path: ".auto-generated-name" + e$5.path,
+                      message: e$5.message,
+                      value: e$5.value
                     }
                   };
           }
-          var e$3 = memo._0;
+          var e$6 = memo._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: "." + ("memo" + e$3.path),
-                    message: e$3.message,
-                    value: e$3.value
+                    path: ".memo" + e$6.path,
+                    message: e$6.message,
+                    value: e$6.value
                   }
                 };
         }
-        var e$4 = cutOffTime._0;
+        var e$7 = cutOffTime._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: "." + ("cut-off-time" + e$4.path),
-                  message: e$4.message,
-                  value: e$4.value
+                  path: ".cut-off-time" + e$7.path,
+                  message: e$7.message,
+                  value: e$7.value
                 }
               };
       }
-      var e$5 = operationStatus._0;
+      var e$8 = operationStatus._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("operation-status" + e$5.path),
-                message: e$5.message,
-                value: e$5.value
+                path: ".operation-status" + e$8.path,
+                message: e$8.message,
+                value: e$8.value
               }
             };
     }
-    var e$6 = name._0;
+    var e$9 = name._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".name" + e$6.path,
-              message: e$6.message,
-              value: e$6.value
+              path: ".name" + e$9.path,
+              message: e$9.message,
+              value: e$9.value
             }
           };
   }
-  var e$7 = id._0;
+  var e$10 = id._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".id" + e$7.path,
-            message: e$7.message,
-            value: e$7.value
+            path: ".id" + e$10.path,
+            message: e$10.message,
+            value: e$10.value
           }
         };
 }
@@ -406,7 +458,10 @@ function makeInputNames(prefix) {
           memo: "" + prefix + ".memo",
           autoGenName: "" + prefix + ".auto-generated-name",
           isFreeShipping: "" + prefix + ".is-free-shipping",
-          shippingUnitQuantity: "" + prefix + ".shipping-unit-quantity"
+          shippingUnitQuantity: "" + prefix + ".shipping-unit-quantity",
+          adhocStockIsLimited: "" + prefix + ".adhoc-stock-is-limited",
+          adhocStockNumLimit: "" + prefix + ".adhoc-stock-num-limit",
+          adhocStockIsNumRemainingVisible: "" + prefix + ".adhoc-stock-is-num-remaining-visible"
         };
 }
 
@@ -489,6 +544,20 @@ function makeAddProductOptionDefaultValue(values, grade, packageType, countPerPa
       Belt_Option.mapWithDefault(values.memo, null, (function (prim) {
               return prim;
             }))
+    ],
+    [
+      names.adhocStockIsLimited,
+      values.adhocStockIsLimited
+    ],
+    [
+      names.adhocStockNumLimit,
+      Belt_Option.mapWithDefault(values.adhocStockNumLimit, null, (function (x) {
+              return x;
+            }))
+    ],
+    [
+      names.adhocStockIsNumRemainingVisible,
+      values.adhocStockIsNumRemainingVisible
     ]
   ];
   var each;
@@ -975,6 +1044,225 @@ var EditCutOffTime = {
   make: Update_ProductOption_Admin$EditCutOffTime
 };
 
+function Update_ProductOption_Admin$AdhocStockIsLimitedCheckbox(Props) {
+  var inputName = Props.inputName;
+  var defaultValue = Props.defaultValue;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var match$1 = match.register(inputName, undefined);
+  var name = match$1.name;
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 h-[125px] mr-10"
+            }, React.createElement("div", {
+                  className: "block"
+                }, React.createElement("span", {
+                      className: "font-bold"
+                    }, "공급 수량 설정")), React.createElement("div", {
+                  className: "flex gap-2 items-center"
+                }, React.createElement(Checkbox.Uncontrolled.make, {
+                      id: name,
+                      name: name,
+                      defaultChecked: defaultValue,
+                      onBlur: match$1.onBlur,
+                      onChange: match$1.onChange,
+                      inputRef: match$1.ref
+                    }), React.createElement("label", {
+                      className: "cursor-pointer",
+                      htmlFor: name
+                    }, "공급 수량 설정하기")));
+}
+
+var AdhocStockIsLimitedCheckbox = {
+  make: Update_ProductOption_Admin$AdhocStockIsLimitedCheckbox
+};
+
+function Update_ProductOption_Admin$AdhocStockNumLimit(Props) {
+  var inputName = Props.inputName;
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var defaultValue = Props.defaultValue;
+  var defaultDisabled = Props.defaultDisabled;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var setValue = match.setValue;
+  var quotableCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName,
+        defaultValue: defaultDisabled
+      });
+  var isDisabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
+  React.useEffect((function () {
+          if (isDisabled) {
+            setValue(inputName, String(Belt_Option.getWithDefault(defaultValue, 0)));
+          }
+          
+        }), [isDisabled]);
+  var match$1 = match.register(inputName, {
+        required: !isDisabled,
+        valueAsNumber: true
+      });
+  var name = match$1.name;
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "공급 수량"), React.createElement("span", {
+                      className: "text-red-500"
+                    }, "*")), React.createElement("input", {
+                  ref: match$1.ref,
+                  defaultValue: String(Belt_Option.getWithDefault(defaultValue, 0)),
+                  className: "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg",
+                  id: name,
+                  disabled: isDisabled,
+                  name: name,
+                  placeholder: "공급 수량 입력",
+                  readOnly: isDisabled,
+                  type: "number",
+                  onBlur: match$1.onBlur,
+                  onChange: match$1.onChange
+                }), React.createElement(ErrorMessage.ErrorMessage, {
+                  name: name,
+                  errors: match.formState.errors,
+                  render: (function (param) {
+                      return React.createElement("span", {
+                                  className: "flex"
+                                }, React.createElement(IconError.make, {
+                                      width: "20",
+                                      height: "20"
+                                    }), React.createElement("span", {
+                                      className: "text-sm text-notice ml-1"
+                                    }, "올바른 공급수량을 입력해주세요."));
+                    })
+                }));
+}
+
+var AdhocStockNumLimit = {
+  make: Update_ProductOption_Admin$AdhocStockNumLimit
+};
+
+function Update_ProductOption_Admin$AdhocStockNumSold(Props) {
+  var defaultValue = Props.defaultValue;
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var defaultDisabled = Props.defaultDisabled;
+  var quotableCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName,
+        defaultValue: defaultDisabled
+      });
+  var isDisabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "whitespace-nowrap block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "판매된 수량"), React.createElement("span", {
+                      className: isDisabled ? "text-gray-400" : "text-gray-600"
+                    }, " *자동계산")), React.createElement("div", {
+                  className: "mt-2 h-9 w-full px-3 py-2 border border-gray-300 rounded-lg"
+                }, defaultValue !== undefined ? String(defaultValue) : "-"));
+}
+
+var AdhocStockNumSold = {
+  make: Update_ProductOption_Admin$AdhocStockNumSold
+};
+
+function Update_ProductOption_Admin$AdhocStockNumRemaining(Props) {
+  var adhocStockNumLimitName = Props.adhocStockNumLimitName;
+  var defaultAdhocStockNumLimit = Props.defaultAdhocStockNumLimit;
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var defaultValue = Props.defaultValue;
+  var defaultDisabled = Props.defaultDisabled;
+  var quotableCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName,
+        defaultValue: defaultDisabled
+      });
+  var isDisabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
+  var adhocStockNumLimitValue = ReactHookForm$1.useWatch({
+        name: adhocStockNumLimitName,
+        defaultValue: Belt_Option.mapWithDefault(defaultAdhocStockNumLimit, 0.0, (function (prim) {
+                return prim;
+              }))
+      });
+  var currenInputNumLimitValue = Belt_Option.getWithDefault(Belt_Option.flatMap(adhocStockNumLimitValue, Belt_Int.fromString), 0);
+  var prevNumLimitValue = Belt_Option.getWithDefault(defaultAdhocStockNumLimit, 0);
+  var remainingValue = Belt_Option.getWithDefault(defaultValue, 0);
+  var calculatedDisplayRemainingValue = (remainingValue + currenInputNumLimitValue | 0) - prevNumLimitValue | 0;
+  var isShowWarningMessage = 0 > calculatedDisplayRemainingValue;
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "whitespace-nowrap block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "판매 가능 수량"), React.createElement("span", {
+                      className: isDisabled ? "text-gray-400" : "text-gray-600"
+                    }, " *자동계산")), React.createElement("div", {
+                  className: "mt-2 h-9 w-full px-3 py-2 border border-gray-300 rounded-lg"
+                }, String(calculatedDisplayRemainingValue)), isShowWarningMessage ? React.createElement("span", {
+                    className: "flex"
+                  }, React.createElement(IconError.make, {
+                        width: "20",
+                        height: "20"
+                      }), React.createElement("span", {
+                        className: "text-sm text-notice ml-1"
+                      }, "주문 취소가 필요합니다")) : null);
+}
+
+var AdhocStockNumRemaining = {
+  make: Update_ProductOption_Admin$AdhocStockNumRemaining
+};
+
+function Update_ProductOption_Admin$AdhocStockIsNumRemainingVisibleCheckbox(Props) {
+  var inputName = Props.inputName;
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var defaultValue = Props.defaultValue;
+  var defaultDisabled = Props.defaultDisabled;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var setValue = match.setValue;
+  var adhocStockIsLimitedCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName,
+        defaultValue: defaultDisabled
+      });
+  var isDisabled = adhocStockIsLimitedCheckboxValue !== undefined && adhocStockIsLimitedCheckboxValue ? false : true;
+  React.useEffect((function () {
+          if (isDisabled) {
+            setValue(inputName, defaultValue);
+          }
+          
+        }), [isDisabled]);
+  var match$1 = match.register(inputName, undefined);
+  var name = match$1.name;
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 h-16"
+            }, React.createElement("div", {
+                  className: "block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "판매 가능 수량 노출 설정")), React.createElement("div", {
+                  className: "flex gap-2 items-center"
+                }, React.createElement(Checkbox.Uncontrolled.make, {
+                      id: name,
+                      name: name,
+                      defaultChecked: defaultValue,
+                      onBlur: match$1.onBlur,
+                      onChange: match$1.onChange,
+                      disabled: isDisabled,
+                      readOnly: isDisabled,
+                      inputRef: match$1.ref
+                    }), React.createElement("label", {
+                      className: isDisabled ? "text-gray-400" : "cursor-pointer",
+                      htmlFor: name
+                    }, "판매 가능 수량 노출하기")));
+}
+
+var AdhocStockIsNumRemainingVisibleCheckbox = {
+  make: Update_ProductOption_Admin$AdhocStockIsNumRemainingVisibleCheckbox
+};
+
 function Update_ProductOption_Admin$EditMemo(Props) {
   var inputName = Props.inputName;
   var disabled = Props.disabled;
@@ -1071,6 +1359,22 @@ function Update_ProductOption_Admin(Props) {
   React.useLayoutEffect((function () {
           trigger(inputNames.id);
         }), []);
+  var tmp = {
+    inputName: inputNames.cutOffTime,
+    disabled: disabled,
+    defaultValue: productOption.cutOffTime
+  };
+  if (productOption.cutOffTime !== undefined) {
+    tmp.key = productOption.cutOffTime;
+  }
+  var tmp$1 = {
+    inputName: inputNames.memo,
+    disabled: disabled,
+    defaultValue: productOption.memo
+  };
+  if (productOption.memo !== undefined) {
+    tmp$1.key = productOption.memo;
+  }
   var match$1 = productOption.status !== "RETIRE";
   return React.createElement(ReactCollapsible.Root, {
               children: React.createElement("div", {
@@ -1161,17 +1465,34 @@ function Update_ProductOption_Admin(Props) {
                                           defaultValue: productOption.shippingUnitQuantity
                                         }))), React.createElement("div", {
                                   className: "flex flex-col gap-6 py-6 w-full"
-                                }, React.createElement(Update_ProductOption_Admin$EditCutOffTime, {
-                                      inputName: inputNames.cutOffTime,
-                                      disabled: disabled,
-                                      defaultValue: productOption.cutOffTime,
-                                      key: Belt_Option.getWithDefault(productOption.cutOffTime, "")
-                                    }), React.createElement(Update_ProductOption_Admin$EditMemo, {
-                                      inputName: inputNames.memo,
-                                      disabled: disabled,
-                                      defaultValue: productOption.memo,
-                                      key: Belt_Option.getWithDefault(productOption.memo, "")
-                                    }), index !== 0 || !match$1 ? null : React.createElement("div", {
+                                }, React.createElement("div", {
+                                      className: "flex gap-4 items-center justify-start"
+                                    }, React.createElement(Update_ProductOption_Admin$AdhocStockIsLimitedCheckbox, {
+                                          inputName: inputNames.adhocStockIsLimited,
+                                          defaultValue: productOption.adhocStockIsLimited
+                                        }), React.createElement(Update_ProductOption_Admin$AdhocStockNumLimit, {
+                                          inputName: inputNames.adhocStockNumLimit,
+                                          adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited,
+                                          defaultValue: productOption.adhocStockNumLimit,
+                                          defaultDisabled: productOption.adhocStockIsLimited
+                                        }), React.createElement(Update_ProductOption_Admin$AdhocStockNumSold, {
+                                          defaultValue: productOption.adhocStockNumSold,
+                                          adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited,
+                                          defaultDisabled: productOption.adhocStockIsLimited
+                                        }), React.createElement(Update_ProductOption_Admin$AdhocStockNumRemaining, {
+                                          adhocStockNumLimitName: inputNames.adhocStockNumLimit,
+                                          defaultAdhocStockNumLimit: productOption.adhocStockNumLimit,
+                                          adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited,
+                                          defaultValue: productOption.adhocStockNumRemaining,
+                                          defaultDisabled: productOption.adhocStockIsLimited
+                                        }), React.createElement(Update_ProductOption_Admin$AdhocStockIsNumRemainingVisibleCheckbox, {
+                                          inputName: inputNames.adhocStockIsNumRemainingVisible,
+                                          adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited,
+                                          defaultValue: productOption.adhocStockIsNumRemainingVisible,
+                                          defaultDisabled: productOption.adhocStockIsLimited
+                                        }))), React.createElement("div", {
+                                  className: "flex flex-col gap-6 py-6 w-full"
+                                }, React.createElement(Update_ProductOption_Admin$EditCutOffTime, tmp), React.createElement(Update_ProductOption_Admin$EditMemo, tmp$1), index !== 0 || !match$1 ? null : React.createElement("div", {
                                         className: "flex gap-2 items-center"
                                       }, React.createElement("button", {
                                             onClick: onClickApplyAll
@@ -1207,6 +1528,11 @@ export {
   EditIsFreeShipping ,
   EditShippingUnitQuantity ,
   EditCutOffTime ,
+  AdhocStockIsLimitedCheckbox ,
+  AdhocStockNumLimit ,
+  AdhocStockNumSold ,
+  AdhocStockNumRemaining ,
+  AdhocStockIsNumRemainingVisibleCheckbox ,
   EditMemo ,
   make ,
 }

@@ -74,7 +74,10 @@ function BulkSale_MarketSalesInfo_Button_Admin(Props) {
                                                   className: "text-text-L2"
                                                 }, edge.node.name);
                                     }))))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

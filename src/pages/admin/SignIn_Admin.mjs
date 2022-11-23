@@ -93,7 +93,7 @@ function SignIn_Admin(Props) {
           setCheckedSaveEmail(function (param) {
                 return true;
               });
-          Curry._4(form.setFieldValue, /* Email */0, email, true, undefined);
+          Curry._4(form.setFieldValue, /* Email */0, Belt_Option.getWithDefault(email, ""), true, undefined);
         }), []);
   var partial_arg = Curry._1(form.handleChange, /* Email */0);
   var partial_arg$1 = Curry._1(form.handleChange, /* Password */1);

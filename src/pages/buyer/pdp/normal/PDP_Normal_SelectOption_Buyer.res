@@ -72,6 +72,9 @@ module Fragments = {
     productOptionCost {
       deliveryCost
     }
+    adhocStockIsLimited
+    adhocStockIsNumRemainingVisible
+    adhocStockNumRemaining
   }  
   `)
 }
@@ -99,8 +102,23 @@ module PC = {
   module Item = {
     @react.component
     let make = (~query, ~setSelectedOptions) => {
-      let {id, optionName, price, status, isFreeShipping, productOptionCost: {deliveryCost}} =
+      let {
+        id,
+        optionName,
+        price,
+        status,
+        isFreeShipping,
+        productOptionCost: {deliveryCost},
+        adhocStockIsLimited,
+        adhocStockIsNumRemainingVisible,
+        adhocStockNumRemaining,
+      } =
         query->Fragments.Item.use
+
+      let isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(
+        ~adhocStockIsLimited,
+        ~adhocStockIsNumRemainingVisible,
+      )
 
       let optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(
         ~price,
@@ -117,7 +135,6 @@ module PC = {
       open RadixUI
       switch status {
       | #SOLDOUT =>
-        // 품절
         <div className=%twc("w-full rounded-lg py-3 px-2 text-gray-400")>
           <span>
             {optionName->React.string}
@@ -125,7 +142,7 @@ module PC = {
           </span>
           <span>
             <span className=%twc("ml-1 font-bold")> {optionPriceLabel->React.string} </span>
-            <span className=%twc("font-bold")> {` - 품절`->React.string} </span>
+            <span> {` - 품절`->React.string} </span>
           </span>
         </div>
 
@@ -141,13 +158,25 @@ module PC = {
                 }
               })}
             className=%twc("rounded-lg py-3 px-2 hover:bg-gray-100")>
-            <span className=%twc("text-gray-800")>
-              <span>
-                {optionName->React.string}
-                {`/`->React.string}
-              </span>
-              <span className=%twc("ml-1 font-bold")> {optionPriceLabel->React.string} </span>
-            </span>
+            <Formula.Text.Body size=#md>
+              {optionName->React.string}
+              {`/`->React.string}
+            </Formula.Text.Body>
+            <Formula.Text.Body weight=#bold size=#md className=%twc("ml-1")>
+              {optionPriceLabel->React.string}
+            </Formula.Text.Body>
+            {switch (isShowRemaining, adhocStockNumRemaining) {
+            | (true, Some(remaining)) =>
+              <>
+                <Formula.Text.Body> {` - `->React.string} </Formula.Text.Body>
+                <Formula.Text.Body size=#md color=#"gray-70">
+                  {`${remaining
+                    ->Int.toFloat
+                    ->Locale.Float.show(~digits=0)}개 남음`->React.string}
+                </Formula.Text.Body>
+              </>
+            | _ => React.null
+            }}
           </div>
         </DropDown.Item>
       }
@@ -246,8 +275,23 @@ module MO = {
   module Item = {
     @react.component
     let make = (~query, ~checked, ~onChange) => {
-      let {id, optionName, price, status, isFreeShipping, productOptionCost: {deliveryCost}} =
+      let {
+        id,
+        optionName,
+        price,
+        status,
+        isFreeShipping,
+        productOptionCost: {deliveryCost},
+        adhocStockIsLimited,
+        adhocStockIsNumRemainingVisible,
+        adhocStockNumRemaining,
+      } =
         query->Fragments.Item.use
+
+      let isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(
+        ~adhocStockIsLimited,
+        ~adhocStockIsNumRemainingVisible,
+      )
 
       let optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(
         ~price,
@@ -280,13 +324,26 @@ module MO = {
       // 구매 가능
       | _ =>
         <div className=%twc("py-4 flex justify-between items-center")>
-          <label htmlFor=id className=%twc("w-full flex items-start mr-3")>
-            <span className=%twc("text-gray-800")>
+          <label htmlFor=id className=%twc("w-full mr-3")>
+            <Formula.Text.Body size=#md>
               {optionName->React.string}
-              <span className=%twc("ml-2 whitespace-nowrap")>
-                {optionPriceLabel->React.string}
-              </span>
-            </span>
+              {`/`->React.string}
+            </Formula.Text.Body>
+            <Formula.Text.Body weight=#bold size=#md className=%twc("ml-1")>
+              {optionPriceLabel->React.string}
+            </Formula.Text.Body>
+            {switch (isShowRemaining, adhocStockNumRemaining) {
+            | (true, Some(remaining)) =>
+              <>
+                <Formula.Text.Body> {` - `->React.string} </Formula.Text.Body>
+                <Formula.Text.Body size=#md color=#"gray-70">
+                  {`${remaining
+                    ->Int.toFloat
+                    ->Locale.Float.show(~digits=0)}개 남음`->React.string}
+                </Formula.Text.Body>
+              </>
+            | _ => React.null
+            }}
           </label>
           <Checkbox id checked onChange />
         </div>

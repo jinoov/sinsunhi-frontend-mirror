@@ -6,7 +6,12 @@ const withImages = require("next-images");
 
 const transpileModules = ["rescript"]
   .concat(bsconfig["bs-dependencies"])
-  .concat(["echarts", "zrender"]);
+  .concat([
+    "echarts",
+    "zrender",
+    "@greenlabs/formula-components",
+    "@greenlabs/rescript-formula-components",
+  ]);
 const withTM = require("next-transpile-modules")(transpileModules);
 
 const config = {
@@ -74,6 +79,9 @@ const config = {
       "staging-public.freshmarket-farmmorning.co.kr",
       "prod-public.freshmarket-farmmorning.co.kr",
       "stg-public.freshmarket-farmmorning.co.kr",
+      "public-staging.sinsunhi.com",
+      "public.sinsunhi.com",
+      "public.sinsunhi.dev"
     ],
   },
   experimental: {
@@ -81,6 +89,9 @@ const config = {
     scrollRestoration: true,
     images: { layoutRaw: true },
   },
+  // react-beautiful-dnd 개발시에 false로 변경해야함
+  reactStrictMode: true,
+  concurrentFeatures: true,
   async redirects() {
     return [
       {

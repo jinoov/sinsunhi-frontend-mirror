@@ -269,9 +269,9 @@ module Auth = {
 
   let getUser = () => {
     let accessToken = LocalStorageHooks.AccessToken.get()
-    switch accessToken->decodeJwt->user_decode {
-    | Ok(user) => Some(user)
-    | Error(_) => None
+    switch accessToken->Option.map(accessToken' => accessToken'->decodeJwt->user_decode) {
+    | Some(Ok(user)) => Some(user)
+    | _ => None
     }
   }
 
@@ -280,13 +280,13 @@ module Auth = {
 
     React.useEffect0(() => {
       let accessToken = LocalStorageHooks.AccessToken.get()
-      if accessToken == "" {
-        setToken(._ => NotLoggedIn)
-      } else {
+      switch accessToken {
+      | Some(accessToken) =>
         switch accessToken->decodeJwt->user_decode {
         | Ok(user) => setToken(._ => LoggedIn(user))
         | Error(_) => setToken(._ => NotLoggedIn)
         }
+      | None => setToken(._ => NotLoggedIn)
       }
 
       None
@@ -456,12 +456,16 @@ module Orders = {
   // PROCESSING = 파일 업로드 대기 & 파일 처리중
   // SUCCESS = 파일 파싱, 주문생성 성공
   // FAIL = 엑셀파일 오류
+  // COMPLETE = 웹주문서 주문완료
+  // DEPOSIT_PENDING = 웹주문서 가상계좌 입금대기
+
   @spice
   type orderStatus =
     | @spice.as("PROCESSING") PROCESSING
     | @spice.as("SUCCESS") SUCCESS
     | @spice.as("FAIL") FAIL
     | @spice.as("COMPLETE") COMPLETE
+    | @spice.as("DEPOSIT_PENDING") DEPOSIT_PENDING
 
   // - CREATE — 신규 주문 → 바이어가 아임웹에서 결제하고 신선하이 서비스에 발주서 엑셀을 업로드함
   // - PACKING — 상품준비중 → 농민이 주문 들어온거 확인하고 상품 준비중으로 변경함
@@ -470,6 +474,10 @@ module Orders = {
   // - COMPLETE — 배송완료 → 배송추적API를 통해 송장번호 배송완료 연동됨
   // - CANCEL — 주문취소 → 바이어/어드민이 취소함
   // - ERROR — 송장번호에러 → 송장번호 입력했을때 배송추적API 호출하는데, 여기서 송장번호 유효성검사 실패한 경우
+  // - REFUND - 환불 -
+  // - NEGOTIATING - 협의중 → 직접배송이나 화물배송의 경우 MD가 연락을 따로 하는 협의 과정을 거침
+  // - DEPOSIT_PENDING - 입금대기 → 웹주문서 가상계좌 결제에서 아직 입금이 되지 않은 상태 (Seller에겐 노출 안됨)
+
   @spice
   type status =
     | @spice.as("CREATE") CREATE
@@ -481,123 +489,7 @@ module Orders = {
     | @spice.as("ERROR") ERROR
     | @spice.as("REFUND") REFUND
     | @spice.as("NEGOTIATING") NEGOTIATING
-
-  @spice
-  type payType =
-    | @spice.as("PAID") PAID
-    | @spice.as("AFTER_PAY") AFTER_PAY
-
-  @spice
-  type deliveryType =
-    | @spice.as("SELF") SELF
-    | @spice.as("FREIGHT") FREIGHT
-    | @spice.as("PARCEL") PARCEL
-
-  @spice
-  type order = {
-    @spice.key("courier-code") courierCode: option<string>,
-    @spice.key("delivery-date") deliveryDate: option<string>,
-    @spice.key("delivery-message") deliveryMessage: option<string>,
-    @spice.key("delivery-type") deliveryType: option<deliveryType>,
-    @spice.key("error-code") errorCode: option<string>,
-    @spice.key("error-message") errorMessage: option<string>,
-    invoice: option<string>,
-    @spice.key("order-date") orderDate: string,
-    @spice.key("order-no") orderNo: string,
-    @spice.key("order-product-no") orderProductNo: string,
-    @spice.key("order-status") orderStatus: orderStatus,
-    @spice.key("product-id") productId: int,
-    @spice.key("product-sku") productSku: string,
-    @spice.key("product-name") productName: string,
-    @spice.key("product-option-name") productOptionName: option<string>,
-    @spice.key("product-price") productPrice: float,
-    quantity: int,
-    @spice.key("orderer-name") ordererName: option<string>,
-    @spice.key("orderer-phone") ordererPhone: option<string>,
-    @spice.key("receiver-address") receiverAddress: option<string>,
-    @spice.key("receiver-name") receiverName: option<string>,
-    @spice.key("receiver-phone") receiverPhone: option<string>,
-    @spice.key("receiver-zipcode") receiverZipcode: option<string>,
-    status: status,
-    // showcase 용, 나중에 지우기
-    // 기사정보: courier_name
-    // 기사연락처: courier_phone
-    // 출고여부 (t/f): is_shipped
-    // 배송여부 (t/f): is_delivered
-    // ----
-    // 검수담당자: inspector_name
-    // 검수여부 (t/f): is_inspected
-    // 검수의견: inspection_opinion
-    @spice.key("courier-name") driverName: option<string>,
-    @spice.key("courier-phone") driverPhone: option<string>,
-    @spice.key("is-shipped") isShipped: bool,
-    @spice.key("is-delivered") isDelivered: bool,
-    @spice.key("inspector-name") inspectorName: option<string>,
-    @spice.key("is-inspected") isInspected: bool,
-    @spice.key("inspection-opinion") inspectionOpinion: option<string>,
-    // showcase 용 END
-    @spice.key("pay-type") payType: payType,
-  }
-
-  @spice
-  type orders = {
-    data: array<order>,
-    count: int,
-    offset: int,
-    limit: int,
-  }
-
-  let use = queryParams => {
-    let fetcherOptions = Swr.fetcherOptions(~onErrorRetry, ())
-
-    let {data, error} = Swr.useSwr(
-      `${Env.restApiUrl}/order?${queryParams}`,
-      FetchHelper.fetcher,
-      fetcherOptions,
-    )
-
-    let result = switch (error, data) {
-    | (None, None) => Loading
-    | (None, Some(data')) => Loaded(data')
-    | (Some(error'), _) => Error(error')
-    }
-
-    result
-  }
-}
-
-// TODO: Orders 모듈과 합치기
-module OrdersAdmin = {
-  type result = Loading | Loaded(Js.Json.t) | Error(FetchHelper.customError)
-
-  // PROCESSING = 파일 업로드 대기 & 파일 처리중
-  // SUCCESS = 파일 파싱, 주문생성 성공
-  // FAIL = 엑셀파일 오류
-  @spice
-  type orderStatus =
-    | @spice.as("PROCESSING") PROCESSING
-    | @spice.as("SUCCESS") SUCCESS
-    | @spice.as("FAIL") FAIL
-    | @spice.as("COMPLETE") COMPLETE
-
-  // CREATE — 신규 주문 → 바이어가 아임웹에서 결제하고 신선하이 서비스에 발주서 엑셀을 업로드함
-  // PACKING — 상품준비중 → 농민이 주문 들어온거 확인하고 상품 준비중으로 변경함
-  // DEPARTURE — 집하중 → 농민이 택배 보내고 송장번호를 입력함
-  // DELIVERING — 배송중 → 배송추적API를 통해 송장번호 배송상태 연동됨
-  // COMPLETE — 배송완료 → 배송추적API를 통해 송장번호 배송완료 연동됨
-  // CANCEL — 주문취소 → 바이어/어드민이 취소함
-  // ERROR — 송장번호에러 → 송장번호 입력했을때 배송추적API 호출하는데, 여기서 송장번호 유효성검사 실패한 경우
-  @spice
-  type status =
-    | @spice.as("CREATE") CREATE
-    | @spice.as("PACKING") PACKING
-    | @spice.as("DEPARTURE") DEPARTURE
-    | @spice.as("DELIVERING") DELIVERING
-    | @spice.as("COMPLETE") COMPLETE
-    | @spice.as("CANCEL") CANCEL
-    | @spice.as("ERROR") ERROR
-    | @spice.as("REFUND") REFUND
-    | @spice.as("NEGOTIATING") NEGOTIATING
+    | @spice.as("DEPOSIT_PENDING") DEPOSIT_PENDING
 
   @spice
   type payType =
@@ -619,20 +511,25 @@ module OrdersAdmin = {
 
   @spice
   type order = {
+    // OrdersAdmin 과 합치면서 가져옴 (start)
     @spice.key("admin-memo") adminMemo: option<string>,
-    @spice.key("buyer-email") buyerEmail: string,
-    @spice.key("buyer-name") buyerName: string,
-    @spice.key("buyer-phone") buyerPhone: string,
+    @spice.key("buyer-email") buyerEmail: option<string>,
+    @spice.key("buyer-name") buyerName: option<string>,
+    @spice.key("buyer-phone") buyerPhone: option<string>,
+    @spice.key("farmer-email") farmerEmail: option<string>,
+    @spice.key("farmer-name") farmerName: option<string>,
+    @spice.key("farmer-phone") farmerPhone: option<string>,
+    @spice.key("desired-delivery-date") desiredDeliveryDate: option<string>,
+    @spice.key("refund-requestor-id") refundRequestorId: option<int>,
+    @spice.key("refund-requestor-name") refundRequestorName: option<string>,
+    @spice.key("refund-reason") refundReason: option<string>,
+    // OrdersAdmin 과 합치면서 가져옴 (end)
     @spice.key("courier-code") courierCode: option<string>,
     @spice.key("delivery-date") deliveryDate: option<string>,
     @spice.key("delivery-message") deliveryMessage: option<string>,
     @spice.key("delivery-type") deliveryType: option<deliveryType>,
-    @spice.key("desired-delivery-date") desiredDeliveryDate: option<string>,
     @spice.key("error-code") errorCode: option<string>,
     @spice.key("error-message") errorMessage: option<string>,
-    @spice.key("farmer-email") farmerEmail: option<string>,
-    @spice.key("farmer-name") farmerName: string,
-    @spice.key("farmer-phone") farmerPhone: string,
     invoice: option<string>,
     @spice.key("order-date") orderDate: string,
     @spice.key("order-no") orderNo: string,
@@ -651,9 +548,6 @@ module OrdersAdmin = {
     @spice.key("receiver-phone") receiverPhone: option<string>,
     @spice.key("receiver-zipcode") receiverZipcode: option<string>,
     status: status,
-    @spice.key("refund-requestor-id") refundRequestorId: option<int>,
-    @spice.key("refund-requestor-name") refundRequestorName: option<string>,
-    @spice.key("refund-reason") refundReason: option<string>,
     // showcase 용, 나중에 지우기
     // 기사정보: courier_name
     // 기사연락처: courier_phone
@@ -856,6 +750,7 @@ module OrdersSummary = {
     | @spice.as("ERROR") ERROR
     | @spice.as("REFUND") REFUND
     | @spice.as("NEGOTIATING") NEGOTIATING
+    | @spice.as("DEPOSIT_PENDING") DEPOSIT_PENDING
 
   @spice
   type order = {
@@ -1097,16 +992,17 @@ module UploadStatus = {
     | @spice.as("SUCCESS") SUCCESS
     | @spice.as("FAIL") FAIL
 
-  // error-code : 1. s3-getobject       (S3 객체 조회실패 | 잘못된 파일을 올린 경우)
-  //            2. required-columns   (엑셀파일 필수컬럼 부재 | 잘못된 파일을 올린 경우)
-  //            3. excel-cell         (엑셀 cell 파싱실패 | 잘못된 파일을 올린 경우)
-  //            4. encrypted-document (암호가 걸린 엑셀 | 잘못된 파일을 올린 경우)
-  //            5. deposit            (잔액 부족 | 현재 유효성검사하지 않음)
-  //            6. product-id         (유효하지 않은 product-id)
-  //            7. sku                (유효하지 않은 sku)
-  //            8. order-product-no   (imweb order-no 부재)
-  //            9. orderer-id         (주문자 아이디 부재)
-  //            10. etc               (기타)
+  // error-code : 1. s3-getobject           (S3 객체 조회실패 | 잘못된 파일을 올린 경우)
+  //            2. required-columns         (엑셀파일 필수컬럼 부재 | 잘못된 파일을 올린 경우)
+  //            3. excel-cell               (엑셀 cell 파싱실패 | 잘못된 파일을 올린 경우)
+  //            4. encrypted-document       (암호가 걸린 엑셀 | 잘못된 파일을 올린 경우)
+  //            5. deposit                  (잔액 부족 | 현재 유효성검사하지 않음)
+  //            6. product-id               (유효하지 않은 product-id)
+  //            7. sku                      (유효하지 않은 sku)
+  //            8. order-product-no         (imweb order-no 부재)
+  //            9. orderer-id               (주문자 아이디 부재)
+  //            10. not-enough-adhoc-stock  (구매 가능 수량 부족)
+  //            11. etc                     (기타)
   // success-count: option<int>
   // fail-count: option<int>
   @spice
@@ -1122,6 +1018,7 @@ module UploadStatus = {
     | OrdererId(string)
     | Etc(string)
     | AfterPay(string)
+    | NotEnoughAdhocStock(string)
 
   let encoderErrorCode = v =>
     switch v {
@@ -1136,6 +1033,7 @@ module UploadStatus = {
     | OrdererId(s) => s
     | Etc(s) => s
     | AfterPay(s) => s
+    | NotEnoughAdhocStock(s) => s
     }->Js.Json.string
 
   let decoderErrorCode = json => {
@@ -1156,6 +1054,10 @@ module UploadStatus = {
       | "orderer-id" => OrdererId(`주문자 아이디를 찾을 수가 없습니다.`)->Ok
       | "etc" => Etc(`알 수 없는 오류가 발생하였습니다.`)->Ok
       | "after-pay" => AfterPay(`한도가 부족합니다.`)->Ok
+      | "not-enough-adhoc-stock" =>
+        NotEnoughAdhocStock(
+          "잔여 수량이 부족하여 결제 요청을 실패했습니다.",
+        )->Ok
       | _ => Error({Spice.path: "", message: "Expected JSONString", value: json})
       }
     | _ => Error({Spice.path: "", message: "Expected JSONString", value: json})
@@ -1215,6 +1117,7 @@ module UploadStatus = {
     @spice.key("success-count") successCount: option<int>,
     @spice.key("fail-count") failCount: option<int>,
     @spice.key("fail-data-json") failDataJson: option<array<failDataJson>>,
+    @spice.key("error-message") errorMessage: option<string>,
   }
   @spice
   type response = {
@@ -1430,6 +1333,9 @@ module Products = {
     @spice.key("per-size-unit") unitSizeUnit: sizeUnit,
     @spice.key("item") crop: option<string>,
     @spice.key("kind") cultivar: option<string>,
+    @spice.key("adhoc-stock-is-limited") adhocStockIsLimited: bool,
+    @spice.key("adhoc-stock-is-num-remaining-visible") adhocStockIsNumRemainingVisible: bool,
+    @spice.key("adhoc-stock-num-remaining") adhocStockNumRemaining: option<int>,
   }
 
   @spice
@@ -2146,15 +2052,9 @@ let useSmoothScroll = () => {
   React.useEffect0(_ => {
     open Webapi
     let htmlElement = Dom.document->Dom.Document.documentElement
-    htmlElement->Dom.Element.setClassName("scroll-smooth")
+    htmlElement->Dom.Element.classList->Webapi.Dom.DomTokenList.add("scroll-smooth")
 
-    Some(
-      () => {
-        let currentClassName = htmlElement->Dom.Element.className
-        let nextClassName = currentClassName->Js.String2.replace("scroll-smooth", "")
-        htmlElement->Dom.Element.setClassName(nextClassName)
-      },
-    )
+    Some(_ => htmlElement->Dom.Element.classList->Webapi.Dom.DomTokenList.remove("scroll-smooth"))
   })
 }
 

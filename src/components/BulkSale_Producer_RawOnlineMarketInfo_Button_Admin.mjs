@@ -118,7 +118,10 @@ function BulkSale_Producer_RawOnlineMarketInfo_Button_Admin(Props) {
                                               url: bulkSaleRawOnlineSale.url
                                             }));
                             }))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

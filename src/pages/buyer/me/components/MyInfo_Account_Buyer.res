@@ -83,228 +83,455 @@ module PC = {
         "$1-$2-$3",
       )
 
-    <>
-      <MyInfo_Layout_Buyer query>
-        <div className=%twc("p-7 bg-white ml-4 w-full")>
-          <div className=%twc("font-bold text-2xl")> {`계정정보`->React.string} </div>
-          <div className=%twc("py-7 flex flex-col")>
-            <div className=%twc("mb-2")>
-              <div className=%twc("flex py-5")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`이메일`->React.string}
-                </div>
-                {email->React.string}
-              </div>
-              <div className=%twc("flex pt-3 pb-5 border-b border-gray-100 items-center")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`비밀번호`->React.string}
-                </div>
-                <button
-                  className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
-                  onClick={_ => setOpenModal(._ => Some(Password))}>
-                  {`비밀번호 재설정`->React.string}
-                </button>
-              </div>
-            </div>
-            <div className=%twc("mb-2")>
-              <div className=%twc("flex py-5")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`회사명`->React.string}
-                </div>
-                <div className=%twc("flex items-center")>
-                  {company->React.string}
-                  <button onClick={_ => setOpenModal(._ => Some(Company))}>
-                    <img
-                      src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
-                    />
-                  </button>
-                </div>
-              </div>
-              <div className=%twc("flex py-5")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`담당자명`->React.string}
-                </div>
-                <div className=%twc("flex items-center")>
-                  {manager->Option.getWithDefault("")->React.string}
-                  <button onClick={_ => setOpenModal(._ => Some(Manager))}>
-                    <img
-                      src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
-                    />
-                  </button>
-                </div>
-              </div>
-              <div className=%twc("flex py-5")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`휴대전화번호`->React.string}
-                </div>
-                <div className=%twc("flex items-center")>
-                  {displayPhone->React.string}
-                  <button onClick={_ => setOpenModal(._ => Some(Phone))}>
-                    <img
-                      src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
-                    />
-                  </button>
-                  {switch verifications->Option.map(({phoneVerificationStatus: status}) => status) {
-                  | Some(#VERIFIED) => React.null
-                  | Some(#UNVERIFIED)
-                  | Some(_)
-                  | None =>
-                    <span className=%twc("text-notice ml-2")>
-                      {`인증 필요`->React.string}
-                    </span>
-                  }}
-                </div>
-              </div>
-              <div className=%twc("flex py-5")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`사업자 등록번호`->React.string}
-                </div>
-                <div className=%twc("flex items-center")>
-                  {displayBizNumber->React.string}
-                  <button onClick={_ => setOpenModal(._ => Some(BizNumber))}>
-                    <img
-                      src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
-                    />
-                  </button>
-                  {switch verifications->Option.map(({
-                    isValidBusinessRegistrationNumberByViewer: valid,
-                  }) => valid) {
-                  | None
-                  | Some(false) =>
-                    <span className=%twc("text-notice ml-2")>
-                      {`유효하지 않음`->React.string}
-                    </span>
-                  | Some(true) => React.null
-                  }}
-                </div>
-              </div>
-              <div className=%twc("flex pt-3 pb-5 border-b border-gray-100")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`소재지`->React.string}
-                </div>
-                <div className=%twc("flex items-center")>
-                  <p
-                    style={ReactDOM.Style.make(~wordBreak="keep-all", ())}
-                    className=%twc("text-left")>
-                    {address->Option.getWithDefault("")->React.string}
-                  </p>
-                  <button onClick={_ => setOpenModal(._ => Some(Location))}>
-                    <img
-                      src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
-                    />
-                  </button>
-                  {switch address->Option.getWithDefault("") {
-                  | str if str == "" =>
-                    <span className=%twc("text-notice ml-2")>
-                      {`입력 필요`->React.string}
-                    </span>
-                  | _ => React.null
-                  }}
-                </div>
-              </div>
-            </div>
-            <div className=%twc("mb-2")>
-              <div className=%twc("flex py-5")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`서비스 이용동의`->React.string}
-                </div>
-                <div className=%twc("w-full")>
-                  <div className=%twc("py-3")>
-                    <Next.Link
-                      href="https://sinsun-policy.oopy.io/a9f5ca47-9dda-4a34-929c-60e1ce1dfbe5">
-                      <a className=%twc("contents") target="_blank" rel="noopener">
-                        <span className=%twc("font-bold")> {`필수약관1`->React.string} </span>
-                        <span className=%twc("ml-2 text-sm text-text-L3 ")>
-                          {`자세히 보기`->React.string}
-                        </span>
-                      </a>
-                    </Next.Link>
+    let oldUI =
+      <>
+        <MyInfo_Layout_Buyer query>
+          <div className=%twc("p-7 bg-white ml-4 w-full")>
+            <div className=%twc("font-bold text-2xl")> {`계정정보`->React.string} </div>
+            <div className=%twc("py-7 flex flex-col")>
+              <div className=%twc("mb-2")>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`이메일`->React.string}
                   </div>
-                  <div className=%twc("py-3")>
-                    <Next.Link
-                      href="https://sinsun-policy.oopy.io/3335fdb0-c235-4e17-8ecc-1c4977c506f9">
-                      <a className=%twc("contents") target="_blank" rel="noopener">
-                        <span className=%twc("font-bold")> {`필수약관2`->React.string} </span>
-                        <span className=%twc("ml-2 text-sm text-text-L3 ")>
-                          {`자세히 보기`->React.string}
-                        </span>
-                      </a>
-                    </Next.Link>
+                  {email->React.string}
+                </div>
+                <div className=%twc("flex pt-3 pb-5 border-b border-gray-100 items-center")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`비밀번호`->React.string}
                   </div>
-                  <div className=%twc("py-3 flex items-center justify-between w-full")>
-                    <Next.Link
-                      href="https://sinsun-policy.oopy.io/4f08bfe5-9ba7-4d1d-ba34-04281414ee00">
-                      <a className=%twc("inline") target="_blank" rel="noopener">
-                        <span className=%twc("font-bold")>
-                          {`마케팅 이용동의(선택)`->React.string}
-                        </span>
-                        <span className=%twc("ml-2 text-sm text-text-L3 ")>
-                          {`자세히 보기`->React.string}
-                        </span>
-                      </a>
-                    </Next.Link>
-                    <MyInfo_MarketingTerm_Switcher_Buyer query={fragmentRefs} />
+                  <button
+                    className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
+                    onClick={_ => setOpenModal(._ => Some(Password))}>
+                    {`비밀번호 재설정`->React.string}
+                  </button>
+                </div>
+              </div>
+              <div className=%twc("mb-2")>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`회사명`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {company->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(Company))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`담당자명`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {manager->Option.getWithDefault("")->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(Manager))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`휴대전화번호`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {displayPhone->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(Phone))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                    {switch verifications->Option.map(({phoneVerificationStatus: status}) =>
+                      status
+                    ) {
+                    | Some(#VERIFIED) => React.null
+                    | Some(#UNVERIFIED)
+                    | Some(_)
+                    | None =>
+                      <span className=%twc("text-notice ml-2")>
+                        {`인증 필요`->React.string}
+                      </span>
+                    }}
+                  </div>
+                </div>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`사업자 등록번호`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {displayBizNumber->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(BizNumber))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                    {switch verifications->Option.map(({
+                      isValidBusinessRegistrationNumberByViewer: valid,
+                    }) => valid) {
+                    | None
+                    | Some(false) =>
+                      <span className=%twc("text-notice ml-2")>
+                        {`유효하지 않음`->React.string}
+                      </span>
+                    | Some(true) => React.null
+                    }}
+                  </div>
+                </div>
+                <div className=%twc("flex pt-3 pb-5 border-b border-gray-100")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`소재지`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    <p
+                      style={ReactDOM.Style.make(~wordBreak="keep-all", ())}
+                      className=%twc("text-left")>
+                      {address->Option.getWithDefault("")->React.string}
+                    </p>
+                    <button onClick={_ => setOpenModal(._ => Some(Location))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                    {switch address->Option.getWithDefault("") {
+                    | str if str == "" =>
+                      <span className=%twc("text-notice ml-2")>
+                        {`입력 필요`->React.string}
+                      </span>
+                    | _ => React.null
+                    }}
                   </div>
                 </div>
               </div>
-              <div className=%twc("flex py-5 items-center")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`로그아웃`->React.string}
+              <div className=%twc("mb-2")>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`서비스 이용동의`->React.string}
+                  </div>
+                  <div className=%twc("flex-1")>
+                    <div className=%twc("py-3")>
+                      <Next.Link href=Env.termsUrl>
+                        <a className=%twc("contents") target="_blank" rel="noopener">
+                          <span className=%twc("font-bold")> {`필수약관1`->React.string} </span>
+                          <span className=%twc("ml-2 text-sm text-text-L3 ")>
+                            {`자세히 보기`->React.string}
+                          </span>
+                        </a>
+                      </Next.Link>
+                    </div>
+                    <div className=%twc("py-3")>
+                      <Next.Link href=Env.privacyPolicyUrl>
+                        <a className=%twc("contents") target="_blank" rel="noopener">
+                          <span className=%twc("font-bold")> {`필수약관2`->React.string} </span>
+                          <span className=%twc("ml-2 text-sm text-text-L3 ")>
+                            {`자세히 보기`->React.string}
+                          </span>
+                        </a>
+                      </Next.Link>
+                    </div>
+                    <div className=%twc("py-3 flex items-center justify-between w-full")>
+                      <Next.Link href=Env.privacyMarketing>
+                        <a className=%twc("inline") target="_blank" rel="noopener">
+                          <span className=%twc("font-bold")>
+                            {`마케팅 이용동의(선택)`->React.string}
+                          </span>
+                          <span className=%twc("ml-2 text-sm text-text-L3 ")>
+                            {`자세히 보기`->React.string}
+                          </span>
+                        </a>
+                      </Next.Link>
+                      <MyInfo_MarketingTerm_Switcher_Buyer query={fragmentRefs} />
+                    </div>
+                  </div>
                 </div>
-                <button
-                  className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
-                  onClick={_ => setOpenModal(._ => Some(Logout))}>
-                  {`로그아웃`->React.string}
-                </button>
-              </div>
-              <div className=%twc("flex py-5 items-center")>
-                <div className=%twc("min-w-[168px] w-1/6 font-bold")>
-                  {`회원탈퇴`->React.string}
+                <div className=%twc("flex py-5 items-center")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`로그아웃`->React.string}
+                  </div>
+                  <button
+                    className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
+                    onClick={_ => setOpenModal(._ => Some(Logout))}>
+                    {`로그아웃`->React.string}
+                  </button>
                 </div>
-                <button
-                  className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
-                  onClick={_ => router->Next.Router.push("/buyer/me/account/leave")}>
-                  {`회원탈퇴`->React.string}
-                </button>
+                <div className=%twc("flex py-5 items-center")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`회원탈퇴`->React.string}
+                  </div>
+                  <button
+                    className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
+                    onClick={_ => router->Next.Router.push("/buyer/me/account/leave")}>
+                    {`회원탈퇴`->React.string}
+                  </button>
+                </div>
               </div>
+              <div />
+              <div />
             </div>
-            <div />
-            <div />
           </div>
-        </div>
-      </MyInfo_Layout_Buyer>
-      <Update_Password_Buyer
-        isOpen={openModal == Some(Password)} onClose={_ => setOpenModal(._ => None)} email
-      />
-      <Update_CompanyName_Buyer
-        isOpen={openModal == Some(Company)}
-        onClose={_ => setOpenModal(._ => None)}
-        key=company
-        defaultValue=company
-      />
-      <Update_Manager_Buyer
-        isOpen={openModal == Some(Manager)}
-        onClose={_ => setOpenModal(._ => None)}
-        key={manager->Option.getWithDefault("")}
-        defaultValue=?manager
-      />
-      <Update_PhoneNumber_Buyer
-        isOpen={openModal == Some(Phone)} onClose={_ => setOpenModal(._ => None)}
-      />
-      <Update_BusinessNumber_Buyer
-        isOpen={openModal == Some(BizNumber)}
-        onClose={_ => setOpenModal(._ => None)}
-        key=displayBizNumber
-        defaultValue=displayBizNumber
-      />
-      <Update_Address_Buyer
-        isOpen={openModal == Some(Location)} onClose={_ => setOpenModal(._ => None)} popup=true
-      />
-      <LogoutDialog
-        isOpen={openModal == Some(Logout) ? Dialog.Show : Dialog.Hide}
-        onCancel={_ => setOpenModal(._ => None)}
-      />
-    </>
+        </MyInfo_Layout_Buyer>
+        <Update_Password_Buyer
+          isOpen={openModal == Some(Password)} onClose={_ => setOpenModal(._ => None)} email
+        />
+        <Update_CompanyName_Buyer
+          isOpen={openModal == Some(Company)}
+          onClose={_ => setOpenModal(._ => None)}
+          key=company
+          defaultValue=company
+        />
+        <Update_Manager_Buyer
+          isOpen={openModal == Some(Manager)}
+          onClose={_ => setOpenModal(._ => None)}
+          key=?manager
+          defaultValue=?manager
+        />
+        <Update_PhoneNumber_Buyer
+          isOpen={openModal == Some(Phone)} onClose={_ => setOpenModal(._ => None)}
+        />
+        <Update_BusinessNumber_Buyer
+          isOpen={openModal == Some(BizNumber)}
+          onClose={_ => setOpenModal(._ => None)}
+          key=displayBizNumber
+          defaultValue=displayBizNumber
+        />
+        <Update_Address_Buyer
+          isOpen={openModal == Some(Location)} onClose={_ => setOpenModal(._ => None)} popup=true
+        />
+        <LogoutDialog
+          isOpen={openModal == Some(Logout) ? Dialog.Show : Dialog.Hide}
+          onCancel={_ => setOpenModal(._ => None)}
+        />
+      </>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      {<>
+        <MyInfo_Layout_Buyer query>
+          <div
+            className=%twc(
+              "pt-10 px-[50px] w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)]"
+            )>
+            <div className=%twc("font-bold text-2xl")> {`계정정보`->React.string} </div>
+            <div className=%twc("py-7 flex flex-col")>
+              <div className=%twc("mb-2")>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`이메일`->React.string}
+                  </div>
+                  {email->React.string}
+                </div>
+                <div className=%twc("flex pt-3 pb-5 border-b border-gray-100 items-center")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`비밀번호`->React.string}
+                  </div>
+                  <button
+                    className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
+                    onClick={_ => setOpenModal(._ => Some(Password))}>
+                    {`비밀번호 재설정`->React.string}
+                  </button>
+                </div>
+              </div>
+              <div className=%twc("mb-2")>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`회사명`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {company->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(Company))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`담당자명`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {manager->Option.getWithDefault("")->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(Manager))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`휴대전화번호`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {displayPhone->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(Phone))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                    {switch verifications->Option.map(({phoneVerificationStatus: status}) =>
+                      status
+                    ) {
+                    | Some(#VERIFIED) => React.null
+                    | Some(#UNVERIFIED)
+                    | Some(_)
+                    | None =>
+                      <span className=%twc("text-notice ml-2")>
+                        {`인증 필요`->React.string}
+                      </span>
+                    }}
+                  </div>
+                </div>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`사업자 등록번호`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    {displayBizNumber->React.string}
+                    <button onClick={_ => setOpenModal(._ => Some(BizNumber))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                    {switch verifications->Option.map(({
+                      isValidBusinessRegistrationNumberByViewer: valid,
+                    }) => valid) {
+                    | None
+                    | Some(false) =>
+                      <span className=%twc("text-notice ml-2")>
+                        {`유효하지 않음`->React.string}
+                      </span>
+                    | Some(true) => React.null
+                    }}
+                  </div>
+                </div>
+                <div className=%twc("flex pt-3 pb-5 border-b border-gray-100")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`소재지`->React.string}
+                  </div>
+                  <div className=%twc("flex items-center")>
+                    <p
+                      style={ReactDOM.Style.make(~wordBreak="keep-all", ())}
+                      className=%twc("text-left")>
+                      {address->Option.getWithDefault("")->React.string}
+                    </p>
+                    <button onClick={_ => setOpenModal(._ => Some(Location))}>
+                      <img
+                        src="/assets/write.svg" className=%twc("ml-2") width="16px" height="16px"
+                      />
+                    </button>
+                    {switch address->Option.getWithDefault("") {
+                    | str if str == "" =>
+                      <span className=%twc("text-notice ml-2")>
+                        {`입력 필요`->React.string}
+                      </span>
+                    | _ => React.null
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div className=%twc("mb-2")>
+                <div className=%twc("flex py-5")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`서비스 이용동의`->React.string}
+                  </div>
+                  <div className=%twc("flex-1")>
+                    <div className=%twc("py-3")>
+                      <Next.Link href=Env.termsUrl>
+                        <a className=%twc("contents") target="_blank" rel="noopener">
+                          <span className=%twc("font-bold")> {`필수약관1`->React.string} </span>
+                          <span className=%twc("ml-2 text-sm text-text-L3 ")>
+                            {`자세히 보기`->React.string}
+                          </span>
+                        </a>
+                      </Next.Link>
+                    </div>
+                    <div className=%twc("py-3")>
+                      <Next.Link href=Env.privacyPolicyUrl>
+                        <a className=%twc("contents") target="_blank" rel="noopener">
+                          <span className=%twc("font-bold")> {`필수약관2`->React.string} </span>
+                          <span className=%twc("ml-2 text-sm text-text-L3 ")>
+                            {`자세히 보기`->React.string}
+                          </span>
+                        </a>
+                      </Next.Link>
+                    </div>
+                    <div className=%twc("py-3 flex items-center justify-between w-full")>
+                      <Next.Link href=Env.privacyMarketing>
+                        <a className=%twc("inline") target="_blank" rel="noopener">
+                          <span className=%twc("font-bold")>
+                            {`마케팅 이용동의(선택)`->React.string}
+                          </span>
+                          <span className=%twc("ml-2 text-sm text-text-L3 ")>
+                            {`자세히 보기`->React.string}
+                          </span>
+                        </a>
+                      </Next.Link>
+                      <MyInfo_MarketingTerm_Switcher_Buyer query={fragmentRefs} />
+                    </div>
+                  </div>
+                </div>
+                <div className=%twc("flex py-5 items-center")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`로그아웃`->React.string}
+                  </div>
+                  <button
+                    className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
+                    onClick={_ => setOpenModal(._ => Some(Logout))}>
+                    {`로그아웃`->React.string}
+                  </button>
+                </div>
+                <div className=%twc("flex py-5 items-center")>
+                  <div className=%twc("min-w-[168px] w-1/6 font-bold")>
+                    {`회원탈퇴`->React.string}
+                  </div>
+                  <button
+                    className=%twc("py-2 px-3 bg-gray-150 rounded-lg")
+                    onClick={_ => router->Next.Router.push("/buyer/me/account/leave")}>
+                    {`회원탈퇴`->React.string}
+                  </button>
+                </div>
+              </div>
+              <div />
+              <div />
+            </div>
+          </div>
+        </MyInfo_Layout_Buyer>
+        <Update_Password_Buyer
+          isOpen={openModal == Some(Password)} onClose={_ => setOpenModal(._ => None)} email
+        />
+        <Update_CompanyName_Buyer
+          isOpen={openModal == Some(Company)}
+          onClose={_ => setOpenModal(._ => None)}
+          key=company
+          defaultValue=company
+        />
+        <Update_Manager_Buyer
+          isOpen={openModal == Some(Manager)}
+          onClose={_ => setOpenModal(._ => None)}
+          key=?manager
+          defaultValue=?manager
+        />
+        <Update_PhoneNumber_Buyer
+          isOpen={openModal == Some(Phone)} onClose={_ => setOpenModal(._ => None)}
+        />
+        <Update_BusinessNumber_Buyer
+          isOpen={openModal == Some(BizNumber)}
+          onClose={_ => setOpenModal(._ => None)}
+          key=displayBizNumber
+          defaultValue=displayBizNumber
+        />
+        <Update_Address_Buyer
+          isOpen={openModal == Some(Location)} onClose={_ => setOpenModal(._ => None)} popup=true
+        />
+        <LogoutDialog
+          isOpen={openModal == Some(Logout) ? Dialog.Show : Dialog.Hide}
+          onCancel={_ => setOpenModal(._ => None)}
+        />
+      </>}
+    </FeatureFlagWrapper>
   }
 }
 
@@ -568,7 +795,7 @@ module Mobile = {
         <Update_Manager_Buyer
           isOpen={openModal == Some(Manager)}
           onClose={_ => router->Next.Router.back}
-          key={manager->Option.getWithDefault("")}
+          key=?{manager}
           defaultValue=?{manager}
         />
         <Update_PhoneNumber_Buyer

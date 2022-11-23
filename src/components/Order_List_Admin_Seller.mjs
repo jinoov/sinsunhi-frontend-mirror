@@ -108,7 +108,7 @@ function Order_List_Admin_Seller(Props) {
               return order.status === /* CREATE */0;
             })).length === 0 : true;
   }
-  var orders$p$2 = CustomHooks.OrdersAdmin.orders_decode(orders);
+  var orders$p$2 = CustomHooks.Orders.orders_decode(orders);
   var tmp;
   if (orders$p$2.TAG === /* Ok */0) {
     var orders$p$3 = orders$p$2._0;
@@ -131,7 +131,7 @@ function Order_List_Admin_Seller(Props) {
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     tmp$1 = null;
   } else {
-    var orders$p$4 = CustomHooks.OrdersAdmin.orders_decode(status._0);
+    var orders$p$4 = CustomHooks.Orders.orders_decode(status._0);
     if (orders$p$4.TAG === /* Ok */0) {
       var orders$p$5 = orders$p$4._0;
       tmp$1 = React.createElement("div", {

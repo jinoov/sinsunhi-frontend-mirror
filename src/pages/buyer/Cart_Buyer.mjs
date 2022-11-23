@@ -20,7 +20,7 @@ import * as Cart_Buyer_Form from "../../components/Cart_Buyer_Form.mjs";
 import * as Cart_Buyer_Item from "../../components/Cart_Buyer_Item.mjs";
 import * as Cart_Buyer_Util from "../../components/Cart_Buyer_Util.mjs";
 import * as ReactHookForm$1 from "react-hook-form";
-import * as ToggleOrderAndPayment from "../../utils/ToggleOrderAndPayment.mjs";
+import * as FeatureFlagWrapper from "./pc/FeatureFlagWrapper.mjs";
 import * as CartBuyerQuery_graphql from "../../__generated__/CartBuyerQuery_graphql.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as CartBuyerMutation_graphql from "../../__generated__/CartBuyerMutation_graphql.mjs";
@@ -167,11 +167,11 @@ function Cart_Buyer$Container(Props) {
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var router = Router.useRouter();
-  var availableButton = ToggleOrderAndPayment.use(undefined);
   var methods = ReactHookForm$1.useForm({
         mode: "all",
         shouldUnregister: true
       }, undefined);
+  var handleSubmit = methods.handleSubmit;
   var match$1 = React.useState(function () {
         return false;
       });
@@ -205,64 +205,60 @@ function Cart_Buyer$Container(Props) {
                     })));
   };
   var onSubmit = function (data, param) {
-    if (availableButton) {
-      var err = Cart_Buyer_Form.submit_decode(data);
-      if (err.TAG === /* Ok */0) {
-        var cart = err._0.cart;
-        var match = cart.orderType;
-        var match$1 = match === "UnCourierAvailable" ? [
-            extractCartIds(cart.unCourierAvailableItem),
-            Belt_Option.getWithDefault(cart.unCourierAvailableItem.cartItems, [])
-          ] : [
-            extractCartIds(cart.courierAvailableItem),
-            Belt_Option.getWithDefault(cart.courierAvailableItem.cartItems, [])
-          ];
-        var cartItems = match$1[1];
-        var cartIds = match$1[0];
-        Curry.app(mutate, [
-              (function (err) {
-                  handleError(err.message, undefined);
-                }),
-              (function (param, param$1) {
-                  var createTempWosOrder = param.createTempWosOrder;
-                  if (createTempWosOrder !== undefined) {
-                    if (typeof createTempWosOrder !== "object") {
+    var err = Cart_Buyer_Form.submit_decode(data);
+    if (err.TAG === /* Ok */0) {
+      var cart = err._0.cart;
+      var match = cart.orderType;
+      var match$1 = match === "UnCourierAvailable" ? [
+          extractCartIds(cart.unCourierAvailableItem),
+          Belt_Option.getWithDefault(cart.unCourierAvailableItem.cartItems, [])
+        ] : [
+          extractCartIds(cart.courierAvailableItem),
+          Belt_Option.getWithDefault(cart.courierAvailableItem.cartItems, [])
+        ];
+      var cartItems = match$1[1];
+      var cartIds = match$1[0];
+      Curry.app(mutate, [
+            (function (err) {
+                handleError(err.message, undefined);
+              }),
+            (function (param, param$1) {
+                var createTempWosOrder = param.createTempWosOrder;
+                if (createTempWosOrder !== undefined) {
+                  if (typeof createTempWosOrder !== "object") {
+                    return handleError(undefined, undefined);
+                  }
+                  var variant = createTempWosOrder.NAME;
+                  if (variant === "CartError") {
+                    return handleError(Belt_Option.getWithDefault(createTempWosOrder.VAL.message, ""), undefined);
+                  }
+                  if (variant !== "TempWosOrder") {
+                    if (variant === "Error") {
+                      return handleError(Belt_Option.getWithDefault(createTempWosOrder.VAL.message, ""), undefined);
+                    } else {
                       return handleError(undefined, undefined);
                     }
-                    var variant = createTempWosOrder.NAME;
-                    if (variant === "CartError") {
-                      return handleError(Belt_Option.getWithDefault(createTempWosOrder.VAL.message, ""), undefined);
-                    }
-                    if (variant !== "TempWosOrder") {
-                      if (variant === "Error") {
-                        return handleError(Belt_Option.getWithDefault(createTempWosOrder.VAL.message, ""), undefined);
-                      } else {
-                        return handleError(undefined, undefined);
-                      }
-                    }
-                    Cart_Buyer_Form.cartGtmPush(cartItems, cartIds, "begin_checkout");
-                    var prim1 = "/buyer/web-order/" + String(createTempWosOrder.VAL.tempOrderId) + "";
-                    router.push(prim1);
-                    return ;
                   }
-                  console.log("fail to mutation");
-                }),
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              {
-                cartItems: cartIds
-              },
-              undefined,
-              undefined
-            ]);
-        return ;
-      }
-      console.log(err._0);
+                  Cart_Buyer_Form.cartGtmPush(cartItems, cartIds, "begin_checkout");
+                  var prim1 = "/buyer/web-order/" + String(createTempWosOrder.VAL.tempOrderId) + "";
+                  router.push(prim1);
+                  return ;
+                }
+                console.log("fail to mutation");
+              }),
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              cartItems: cartIds
+            },
+            undefined,
+            undefined
+          ]);
       return ;
     }
-    window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
+    console.log(err._0);
   };
   var tmp;
   switch (deviceType) {
@@ -270,27 +266,51 @@ function Cart_Buyer$Container(Props) {
         tmp = null;
         break;
     case /* PC */1 :
-        tmp = React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.PC_Old.make, {
+        var oldUI = React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.PC_Old.make, {
                   key: router.asPath
-                }), React.createElement(Cart_Buyer_Item.make, {
-                  query: query.fragmentRefs,
-                  deviceType: deviceType
+                }), React.createElement(ReactHookForm.Provider.make, {
+                  children: React.createElement("form", {
+                        onSubmit: handleSubmit(onSubmit)
+                      }, React.createElement(Cart_Buyer_Item.make, {
+                            query: query.fragmentRefs,
+                            deviceType: deviceType
+                          })),
+                  methods: methods
                 }), React.createElement(Footer_Buyer.PC.make, {}));
+        tmp = React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "w-full min-h-screen bg-[#F0F2F5] flex flex-col"
+                  }, React.createElement(Header_Buyer.PC_Old.make, {
+                        key: router.asPath
+                      }), React.createElement("section", {
+                        className: "w-[1920px] mx-auto bg-[#FAFBFC] flex-1"
+                      }, React.createElement(ReactHookForm.Provider.make, {
+                            children: React.createElement("form", {
+                                  onSubmit: handleSubmit(onSubmit)
+                                }, React.createElement(Cart_Buyer_Item.make, {
+                                      query: query.fragmentRefs,
+                                      deviceType: deviceType
+                                    })),
+                            methods: methods
+                          })), React.createElement(Footer_Buyer.PC.make, {})),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
         break;
     case /* Mobile */2 :
-        tmp = React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.Mobile.make, {}), React.createElement(Cart_Buyer_Item.make, {
-                  query: query.fragmentRefs,
-                  deviceType: deviceType
+        tmp = React.createElement(React.Fragment, undefined, React.createElement(Header_Buyer.Mobile.make, {}), React.createElement(ReactHookForm.Provider.make, {
+                  children: React.createElement("form", {
+                        onSubmit: handleSubmit(onSubmit)
+                      }, React.createElement(Cart_Buyer_Item.make, {
+                            query: query.fragmentRefs,
+                            deviceType: deviceType
+                          })),
+                  methods: methods
                 }));
         break;
     
   }
-  return React.createElement(React.Fragment, undefined, React.createElement(ReactHookForm.Provider.make, {
-                  children: React.createElement("form", {
-                        onSubmit: methods.handleSubmit(onSubmit)
-                      }, tmp),
-                  methods: methods
-                }), React.createElement(Cart_Buyer_Util.SubmitDialog.make, {
+  return React.createElement(React.Fragment, undefined, tmp, React.createElement(Cart_Buyer_Util.SubmitDialog.make, {
                   open: match$1[0],
                   setOpen: match$1[1]
                 }));

@@ -93,7 +93,10 @@ function Buyer_Cash_Refund_Button_Admin(Props) {
                       className: "mb-1 underline focus:outline-none"
                     })), React.createElement(ReactDialog.Content, {
                   children: null,
-                  className: "dialog-content overflow-y-auto text-text-L1"
+                  className: "dialog-content overflow-y-auto text-text-L1",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }, React.createElement("div", {
                       className: "flex p-5"
                     }, React.createElement(ReactDialog.Close, {

@@ -34,7 +34,11 @@ module PC = {
     <li
       key={item.id}
       id={`category-${item.id}`}
-      onClick={_ => Next.Router.replace(router, `/categories/${item.id}`)}>
+      onClick={_ =>
+        Next.Router.replace(
+          router,
+          `/categories/${item.id}?${Product_FilterOption.defaultFilterOptionUrlParam}`,
+        )}>
       <div className={Cn.make([selectedStyle, baseStyle])}> {item.name->React.string} </div>
     </li>
   }
@@ -55,10 +59,13 @@ module MO = {
       : %twc("border-transparent text-gray-400")
     let baseStyle = %twc("pt-2 pb-3 border-b-2 w-fit whitespace-nowrap")
 
+    let queryparam =
+      router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString
+
     <li
       key={item.id}
       id={`category-${item.id}`}
-      onClick={_ => Next.Router.replace(router, `/categories/${item.id}`)}>
+      onClick={_ => Next.Router.replace(router, `/categories/${item.id}?${queryparam}`)}>
       <div className={Cn.make([selectedStyle, baseStyle])}> {item.name->React.string} </div>
     </li>
   }

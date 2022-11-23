@@ -139,7 +139,10 @@ function Buyer_Interested_Item_Category_Button_Admin(Props) {
                     className: "text-base focus:outline-none bg-disabled-L3 text-disabled-L2 rounded-lg py-1 px-5 inline-block"
                   }, "조회하기"), React.createElement(ReactDialog.Content, {
                   children: null,
-                  className: "dialog-content-detail overflow-y-auto rounded-2xl"
+                  className: "dialog-content-detail overflow-y-auto rounded-2xl",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }, React.createElement("section", {
                       className: "flex p-5"
                     }, React.createElement("h3", {

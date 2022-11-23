@@ -132,7 +132,8 @@ module List = {
     | Loading => <Transaction_Admin.Item.Table.Loading />
     | Loaded(transactions) =>
       switch transactions->CustomHooks.Transaction.response_decode {
-      | Ok(transactions') => <>
+      | Ok(transactions') =>
+        <>
           <ol
             className=%twc("divide-y divide-gray-100 overflow-y-scroll")
             style={ReactDOMStyle.make(~maxHeight="50vh", ())}>
@@ -174,7 +175,9 @@ let make = (~buyerId, ~buyerName) => {
       )>
       {j`조회하기`->React.string}
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content-detail overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content-detail overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <div className=%twc("flex p-5")>
         <h3 className=%twc("text-lg font-bold")> {j`${buyerName} 거래내역`->React.string} </h3>
         <Dialog.Close className=%twc("focus:outline-none ml-auto")>

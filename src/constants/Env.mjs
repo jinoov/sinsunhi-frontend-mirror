@@ -42,6 +42,16 @@ var toggleOrderButton = process.env.NEXT_PUBLIC_TOGGLE_ORDER_BUTTON;
 
 var orderAdmins = process.env.NEXT_PUBLIC_ORDER_ADMINS;
 
+var termsUrl = process.env.NEXT_PUBLIC_TERMS;
+
+var privacyAgreeUrl = process.env.NEXT_PUBLIC_PRIVACY_AGREE;
+
+var privacyPolicyUrl = process.env.NEXT_PUBLIC_PRIVACY_POLICY;
+
+var privacyMarketing = process.env.NEXT_PUBLIC_PRIVACY_MARKETING;
+
+var copyrightUrl = process.env.NEXT_PUBLIC_COPYRIGHT;
+
 var restApiUrl = apiUrl;
 
 var originProd = "https://app.sinsunhi.com";
@@ -86,5 +96,10 @@ export {
   brazeWebApiKey ,
   toggleOrderButton ,
   orderAdmins ,
+  termsUrl ,
+  privacyAgreeUrl ,
+  privacyPolicyUrl ,
+  privacyMarketing ,
+  copyrightUrl ,
 }
 /* vercelEnv Not a pure module */

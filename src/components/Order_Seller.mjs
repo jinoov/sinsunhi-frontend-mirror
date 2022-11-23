@@ -89,6 +89,7 @@ function Order_Seller$Item$Table(Props) {
     case /* CANCEL */5 :
     case /* REFUND */7 :
     case /* NEGOTIATING */8 :
+    case /* DEPOSIT_PENDING */9 :
         exit = 2;
         break;
     

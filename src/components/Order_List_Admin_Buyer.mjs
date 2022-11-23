@@ -63,8 +63,10 @@ function Order_List_Admin_Buyer$Loading(Props) {
                   className: "min-w-max text-sm divide-y divide-gray-100"
                 }, React.createElement(Order_List_Admin_Buyer$Header, {}), React.createElement("ol", {
                       className: "divide-y divide-gray-100 lg:list-height-admin-buyer lg:overflow-y-scroll"
-                    }, Garter_Array.map(Garter_Array.make(5, 0), (function (param) {
-                            return React.createElement(Order_Admin.Item.Table.Loading.make, {});
+                    }, Garter_Array.mapWithIndex(Garter_Array.make(5, 0), (function (idx, param) {
+                            return React.createElement(Order_Admin.Item.Table.Loading.make, {
+                                        key: "" + String(idx) + "-table-loading"
+                                      });
                           })))));
 }
 
@@ -89,7 +91,7 @@ function Order_List_Admin_Buyer(Props) {
               });
   }
   var orders = status._0;
-  var orders$p = CustomHooks.OrdersAdmin.orders_decode(orders);
+  var orders$p = CustomHooks.Orders.orders_decode(orders);
   var countOfOrdersToCheck;
   countOfOrdersToCheck = orders$p.TAG === /* Ok */0 ? Garter_Array.keep(orders$p._0.data, Order_Admin.isCheckableOrder).length : 0;
   var isCheckAll = countOfOrdersToCheck !== 0 && countOfOrdersToCheck === countOfChecked;
@@ -97,10 +99,10 @@ function Order_List_Admin_Buyer(Props) {
   if (typeof status === "number" || status.TAG !== /* Loaded */0) {
     isDisabledCheckAll = true;
   } else {
-    var orders$p$1 = CustomHooks.OrdersAdmin.orders_decode(status._0);
+    var orders$p$1 = CustomHooks.Orders.orders_decode(status._0);
     isDisabledCheckAll = orders$p$1.TAG === /* Ok */0 ? Garter_Array.keep(orders$p$1._0.data, Order_Admin.isCheckableOrder).length === 0 : true;
   }
-  var orders$p$2 = CustomHooks.OrdersAdmin.orders_decode(orders);
+  var orders$p$2 = CustomHooks.Orders.orders_decode(orders);
   var tmp;
   if (orders$p$2.TAG === /* Ok */0) {
     var orders$p$3 = orders$p$2._0;

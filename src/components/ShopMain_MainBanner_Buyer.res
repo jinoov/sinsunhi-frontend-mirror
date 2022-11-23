@@ -29,7 +29,7 @@ module PC = {
       let handleClick = _ => onClick->Option.map(onClick' => onClick'())->ignore
       <button
         onClick={handleClick} className=%twc("absolute z-[5] left-3 top-1/2 translate-y-[-50%]")>
-        <img src=arrowWhiteLeftIcon />
+        <img src=arrowWhiteLeftIcon alt="이전" className=%twc("w-10 h-14") />
       </button>
     }
   }
@@ -41,7 +41,7 @@ module PC = {
       <button
         onClick={handleClick}
         className=%twc("absolute rotate-180 z-[5] right-3 top-1/2 translate-y-[-50%]")>
-        <img src=arrowWhiteLeftIcon />
+        <img src=arrowWhiteLeftIcon alt="다음" className=%twc("w-10 h-14") />
       </button>
     }
   }
@@ -85,15 +85,15 @@ module PC = {
   }
 
   @react.component
-  let make = (
-    ~mainBanners: array<ShopMainMainBannerBuyerQuery_graphql.Types.response_mainBanners>,
-  ) => {
+  let make = () => {
+    let {mainBanners} = Query.use(~variables=(), ())
+
     let total = mainBanners->Array.length
 
     let (current, setCurrent) = React.Uncurried.useState(_ => 0)
     let afterChange = changedTo => setCurrent(._ => changedTo)
 
-    <div className=%twc("relative")>
+    <div className=%twc("relative w-[920px]")>
       <SlickSlider
         infinite=true
         slidesToShow=1
@@ -172,9 +172,8 @@ module MO = {
   }
 
   @react.component
-  let make = (
-    ~mainBanners: array<ShopMainMainBannerBuyerQuery_graphql.Types.response_mainBanners>,
-  ) => {
+  let make = () => {
+    let {mainBanners} = Query.use(~variables=(), ())
     let total = mainBanners->Array.length
 
     let (current, setCurrent) = React.Uncurried.useState(_ => 0)

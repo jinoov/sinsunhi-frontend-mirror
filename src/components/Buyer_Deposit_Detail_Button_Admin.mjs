@@ -28,7 +28,6 @@ function Buyer_Deposit_Detail_Button_Admin$Summary$Amount(Props) {
     var response$p = CustomHooks.TransactionSummary.response_decode(status._0);
     if (response$p.TAG === /* Ok */0) {
       var response$p$1 = response$p._0;
-      console.log(response$p$1);
       var tmp = {};
       if (className !== undefined) {
         tmp.className = Caml_option.valFromOption(className);
@@ -145,7 +144,10 @@ function Buyer_Deposit_Detail_Button_Admin(Props) {
                   className: "focus:outline-none"
                 }), React.createElement(ReactDialog.Content, {
                   children: null,
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }, React.createElement("h3", {
                       className: "p-5 font-bold text-center"
                     }, "주문가능 잔액 상세"), React.createElement(Buyer_Deposit_Detail_Button_Admin$Summary, {}), React.createElement(ReactDialog.Close, {

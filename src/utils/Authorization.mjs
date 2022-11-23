@@ -6,6 +6,7 @@ import Head from "next/head";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "./CustomHooks.mjs";
+import * as OpenGraph_Header from "../components/OpenGraph_Header.mjs";
 
 function getFallback(fallback) {
   return Belt_Option.getWithDefault(fallback, React.createElement("div", undefined, "인증 확인 중 입니다."));
@@ -20,7 +21,13 @@ function Layout(UserHook) {
     var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
     var user = Curry._1(UserHook.use, undefined);
     return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                    children: React.createElement("title", undefined, "" + title + " - 신선하이")
+                    children: React.createElement("title", undefined, "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                                return "| " + t + "";
+                              })) + "")
+                  }), React.createElement(OpenGraph_Header.make, {
+                    title: "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                            return "| " + t + "";
+                          })) + ""
                   }), typeof user === "number" ? (
                   user !== 0 ? getFallback(fallback) : ssrFallback
                 ) : children);
@@ -40,7 +47,13 @@ function Authorization$Layout(Props) {
   var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
+                  children: React.createElement("title", undefined, "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                              return "| " + t + "";
+                            })) + "")
+                }), React.createElement(OpenGraph_Header.make, {
+                  title: "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                          return "| " + t + "";
+                        })) + ""
                 }), typeof user === "number" ? (
                 user !== 0 ? getFallback(fallback) : ssrFallback
               ) : children);
@@ -60,7 +73,13 @@ function Authorization$Layout$1(Props) {
   var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook$1.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
+                  children: React.createElement("title", undefined, "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                              return "| " + t + "";
+                            })) + "")
+                }), React.createElement(OpenGraph_Header.make, {
+                  title: "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                          return "| " + t + "";
+                        })) + ""
                 }), typeof user === "number" ? (
                 user !== 0 ? getFallback(fallback) : ssrFallback
               ) : children);
@@ -80,7 +99,13 @@ function Authorization$Layout$2(Props) {
   var ssrFallback = ssrFallbackOpt !== undefined ? Caml_option.valFromOption(ssrFallbackOpt) : null;
   var user = Curry._1(UserHook$2.use, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "" + title + " - 신선하이")
+                  children: React.createElement("title", undefined, "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                              return "| " + t + "";
+                            })) + "")
+                }), React.createElement(OpenGraph_Header.make, {
+                  title: "신선하이 " + Belt_Option.mapWithDefault(title, "", (function (t) {
+                          return "| " + t + "";
+                        })) + ""
                 }), typeof user === "number" ? (
                 user !== 0 ? getFallback(fallback) : ssrFallback
               ) : children);

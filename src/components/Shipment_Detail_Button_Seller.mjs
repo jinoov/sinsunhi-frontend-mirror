@@ -297,7 +297,10 @@ function Shipment_Detail_Button_Seller(Props) {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {
                   children: null,
-                  className: "dialog-content text-text-L1 text-xs p-5 tracking-tight min-w-max overflow-y-auto"
+                  className: "dialog-content text-text-L1 text-xs p-5 tracking-tight min-w-max overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }, React.createElement(ReactDialog.Title, {
                       children: null,
                       className: "flex justify-between"

@@ -74,7 +74,10 @@ function TossPaymentsFail_Buyer$ErrorDialog(Props) {
                         className: "dialog-overlay"
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
-                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
+                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center",
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, children, React.createElement("button", {
                             className: "flex w-full xl:w-1/2 h-13 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1",
                             type: "button",

@@ -7,7 +7,11 @@ let make = (~pid: string) => {
    */
   let productType = router.query->Js.Dict.get("type")
 
-  Js.log(router)
+  React.useEffect0(_ => {
+    // Braze Push Notification Request
+    Braze.PushNotificationRequestDialog.trigger()
+    None
+  })
 
   <Authorization.Buyer title={j`신청 완료`}>
     <div className=%twc("bg-gray-100")>

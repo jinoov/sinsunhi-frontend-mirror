@@ -1,0 +1,28 @@
+module Form = SignUp_Buyer_Form.Form
+module Inputs = SignUp_Buyer_Form.Inputs
+
+@react.component
+let make = (~form) => {
+  let error = form->Inputs.Name.error
+
+  // innerRef를 사용해야 하기 때문에 register를 사용
+  let {onChange, onBlur, name, ref} = form->Inputs.Name.register()
+
+  <div className=%twc("mt-10")>
+    <span className=%twc("text-base font-bold")>
+      {`회사명`->React.string}
+      <span className=%twc("ml-0.5 text-notice")> {"*"->React.string} </span>
+    </span>
+    <Input
+      className=%twc("mt-2")
+      name
+      type_="text"
+      size=Input.Large
+      placeholder={`회사명 입력`}
+      onChange
+      onBlur
+      inputRef={ref}
+      error={error->Option.map(({message}) => message)}
+    />
+  </div>
+}

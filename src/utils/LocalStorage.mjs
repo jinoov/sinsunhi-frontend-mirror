@@ -17,20 +17,31 @@ function setToLS(k, v) {
         }));
 }
 
-function Make(Config) {
+function Make(funarg) {
+  var get = function (param) {
+    return Belt_Option.map(getFromLS(funarg.key), funarg.fromString);
+  };
+  var set = function (value) {
+    setToLS(funarg.key, Curry._1(funarg.toString, value));
+  };
+  var remove = function (param) {
+    var k = funarg.key;
+    Belt_Option.map(Caml_option.undefined_to_opt(typeof window === "undefined" ? undefined : window), (function (param) {
+            localStorage.removeItem(k);
+          }));
+  };
   var useLocalStorage = function (param) {
-    var key = Config.key;
     var match = React.useState(function () {
           
         });
     var setState = match[1];
     React.useEffect((function () {
             setState(function (param) {
-                  return Caml_option.some(Curry._1(Config.fromString, getFromLS(key)));
+                  return Belt_Option.map(getFromLS(funarg.key), funarg.fromString);
                 });
           }), []);
     var setValue = function (value) {
-      setToLS(key, Curry._1(Config.toString, value));
+      setToLS(funarg.key, Curry._1(funarg.toString, value));
       setState(function (param) {
             return Caml_option.some(value);
           });
@@ -39,18 +50,6 @@ function Make(Config) {
             match[0],
             setValue
           ];
-  };
-  var get = function (param) {
-    return Curry._1(Config.fromString, getFromLS(Config.key));
-  };
-  var set = function (value) {
-    setToLS(Config.key, Curry._1(Config.toString, value));
-  };
-  var remove = function (param) {
-    var k = Config.key;
-    Belt_Option.map(Caml_option.undefined_to_opt(typeof window === "undefined" ? undefined : window), (function (param) {
-            localStorage.removeItem(k);
-          }));
   };
   return {
           useLocalStorage: useLocalStorage,

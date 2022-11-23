@@ -108,11 +108,6 @@ let names = prefix => {
   receiverDetailAddress: `${prefix}.receiver-detail-address`,
 }
 
-let defaultValue = isCourierAvailable => (
-  "delivery-type",
-  Js.Json.string(isCourierAvailable ? "parcel" : "freight"),
-)
-
 let strDateToFloat = s => {
   s->Option.mapWithDefault(0., s' => s'->Js.Date.fromString->Js.Date.getTime)
 }
@@ -137,9 +132,9 @@ let productInfoSort = (data: array<productInfo>) => {
 
 let concat = (data: array<fixedData>) => {
   let sorted = data->fixedDataSort
-  let first = sorted->Array.get(0)
-
-  first->Option.map(first' => {
+  sorted
+  ->Array.get(0)
+  ->Option.map(first' => {
     imageUrl: first'.imageUrl,
     isCourierAvailable: first'.isCourierAvailable,
     productName: first'.productName,
@@ -150,86 +145,28 @@ let concat = (data: array<fixedData>) => {
   })
 }
 
-let normalProductToFixedData = (
-  p: WebOrderItemBuyer_Query_graphql.Types.response_products_edges_node_NormalProduct,
-  o: WebOrderItemBuyer_Query_graphql.Types.response_products_edges_node_NormalProduct_productOptions_edges,
-  (quantity, updatedAt),
+let toFixedData = (
+  {
+    product,
+    productOption: {stockSku, optionName, price, productOptionCost, isFreeShipping},
+    quantity,
+    updatedAt,
+  }: WebOrderBuyer_TempWosOrder_Query_graphql.Types.response_tempWosOrder_data_productOptions,
 ) => {
-  deliveryCost: o.node.productOptionCost.deliveryCost,
-  isTaxFree: !p.isVat,
-  price: o.node.price->Option.getWithDefault(0),
-  productId: p.number,
-  productName: p.displayName,
-  imageUrl: p.image.thumb100x100,
-  isCourierAvailable: p.isCourierAvailable,
-  productOptionName: o.node.optionName,
-  quantity,
-  stockSku: o.node.stockSku,
-  isFreeShipping: o.node.isFreeShipping,
-  updatedAt,
-}
-
-// HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-// 22.08.25 작성되었습니다.
-// 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-let normalProductToFixedDataTemp = (
-  p: WebOrderItemBuyer_Temp_Query_graphql.Types.response_product_NormalProduct,
-  o: WebOrderItemBuyer_Temp_Query_graphql.Types.response_product_NormalProduct_productOptions_edges,
-  (quantity, updatedAt),
-) => {
-  deliveryCost: o.node.productOptionCost.deliveryCost,
-  isTaxFree: !p.isVat,
-  price: o.node.price->Option.getWithDefault(0),
-  productId: p.number,
-  productName: p.displayName,
-  imageUrl: p.image.thumb100x100,
-  isCourierAvailable: p.isCourierAvailable,
-  productOptionName: o.node.optionName,
-  quantity,
-  stockSku: o.node.stockSku,
-  isFreeShipping: o.node.isFreeShipping,
-  updatedAt,
-}
-
-let quotableProductToFixedData = (
-  p: WebOrderItemBuyer_Query_graphql.Types.response_products_edges_node_QuotableProduct,
-  o: WebOrderItemBuyer_Query_graphql.Types.response_products_edges_node_QuotableProduct_productOptions_edges,
-  (quantity, updatedAt),
-) => {
-  deliveryCost: o.node.productOptionCost.deliveryCost,
-  isTaxFree: !p.isVat,
-  price: o.node.price->Option.getWithDefault(0),
-  productId: p.number,
-  productName: p.displayName,
-  imageUrl: p.image.thumb100x100,
-  isCourierAvailable: p.isCourierAvailable,
-  productOptionName: o.node.optionName,
-  quantity,
-  stockSku: o.node.stockSku,
-  isFreeShipping: o.node.isFreeShipping,
-  updatedAt,
-}
-
-// HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-// 22.08.25 작성되었습니다.
-// 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-let quotableProductToFixedDataTemp = (
-  p: WebOrderItemBuyer_Temp_Query_graphql.Types.response_product_QuotableProduct,
-  o: WebOrderItemBuyer_Temp_Query_graphql.Types.response_product_QuotableProduct_productOptions_edges,
-  (quantity, updatedAt),
-) => {
-  deliveryCost: o.node.productOptionCost.deliveryCost,
-  isTaxFree: !p.isVat,
-  price: o.node.price->Option.getWithDefault(0),
-  productId: p.number,
-  productName: p.displayName,
-  imageUrl: p.image.thumb100x100,
-  isCourierAvailable: p.isCourierAvailable,
-  productOptionName: o.node.optionName,
-  quantity,
-  stockSku: o.node.stockSku,
-  isFreeShipping: o.node.isFreeShipping,
-  updatedAt,
+  product->Option.map(({number, displayName, isCourierAvailable, image, isVat}) => {
+    deliveryCost: productOptionCost.deliveryCost,
+    isTaxFree: !(isVat->Option.getWithDefault(false)),
+    price: price->Option.getWithDefault(0),
+    productId: number,
+    productName: displayName,
+    imageUrl: image.thumb100x100,
+    isCourierAvailable: isCourierAvailable->Option.getWithDefault(false),
+    productOptionName: optionName,
+    quantity,
+    stockSku,
+    isFreeShipping,
+    updatedAt,
+  })
 }
 
 // ---- START GTM ----

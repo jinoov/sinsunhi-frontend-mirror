@@ -17,6 +17,7 @@ module.exports = {
       lg: "1024px",
       xl: "1280px",
       "2xl": "1536px",
+      "plp-max": "1612px",
       "h-lg": { raw: "(min-height: 900px)" },
     },
     extend: {},
@@ -194,6 +195,7 @@ module.exports = {
       boxShadow: {
         tooltip: "0 4px 4px rgba(59, 189, 90, 0.08)",
         "card-box": "0 4px 16px rgba(0,0,0,0.05)",
+        pane:"0px 10px 40px 10px rgba(0,0,0,0.03)"
       },
       width: {
         18: "4.5rem",
@@ -226,6 +228,7 @@ module.exports = {
       addVariant("children", "& > *");
       addVariant("state-checked", '&[data-state="checked"]');
       addVariant("state-open", '&[data-state="open"]');
+      addVariant("state-active", '&[data-state="active"]');
     },
   ],
 };

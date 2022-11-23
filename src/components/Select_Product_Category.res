@@ -30,7 +30,8 @@ module rec Skeleton: Skeleton = {
   let make = (~placeholders) => {
     let placeholder' = placeholders->Garter.Array.first
     switch (placeholder', placeholders) {
-    | (Some(placeholder'), _) => <>
+    | (Some(placeholder'), _) =>
+      <>
         <div className=%twc("relative w-48")>
           <div className=%twc("absolute w-full")>
             <ReactSelect.Plain
@@ -167,13 +168,13 @@ and Selection: Selection = {
 
     switch categories {
     | [] => React.null
-    | _ => <>
+    | _ =>
+      <>
         <div className=%twc("relative w-48")>
           <div className=%twc("absolute w-full")>
             <Controller
               name={`${name}.${prefix}`}
               control
-              shouldUnregister=true
               defaultValue={ReactSelect.NotSelected->ReactSelect.encoderRule}
               rules={Rules.make(~required, ())}
               render={({field: {onChange, value, ref}}) => {

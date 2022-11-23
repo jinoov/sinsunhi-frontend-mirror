@@ -15,6 +15,7 @@ function HomeLinkIcon(Props) {
                   router.push("/");
                 })
             }, React.createElement("img", {
+                  alt: "홈으로 바로가기",
                   src: homeIcon
                 }));
 }

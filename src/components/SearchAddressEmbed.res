@@ -1,5 +1,5 @@
 @react.component
-let make = (~onComplete, ~isShow) => {
+let make = (~onComplete, ~isShow, ~height=?, ~width=?) => {
   React.useLayoutEffect1(_ => {
     if isShow {
       open DaumPostCode
@@ -15,8 +15,8 @@ let make = (~onComplete, ~isShow) => {
           )
           let option = makeOption(
             ~oncomplete=onComplete,
-            ~width=w->Float.fromInt,
-            ~height=h->Float.fromInt,
+            ~width=width->Option.getWithDefault(w->Float.fromInt),
+            ~height=height->Option.getWithDefault(h->Float.fromInt),
             ~submitMode=false,
             (),
           )

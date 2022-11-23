@@ -1,16 +1,19 @@
+module Req = {
+  type t = {"headers": {"user-agent": string}}
+
+  @set external setRelayEnv: (t, RescriptRelay.Environment.t) => unit = "relayEnv"
+  @get external getRelayEnv: t => RescriptRelay.Environment.t = "relayEnv"
+}
+
+module Res = {
+  type t
+
+  @send external setHeader: (t, string, string) => unit = "setHeader"
+  @send external write: (t, string) => unit = "write"
+  @send external end: t => unit = "end"
+}
+
 module GetServerSideProps = {
-  module Req = {
-    type t = {"headers": {"user-agent": string}}
-  }
-
-  module Res = {
-    type t
-
-    @send external setHeader: (t, string, string) => unit = "setHeader"
-    @send external write: (t, string) => unit = "write"
-    @send external end: t => unit = "end"
-  }
-
   // See: https://github.com/zeit/next.js/blob/canary/packages/next/types/index.d.ts
   type context<'props, 'params, 'previewData> = {
     params: 'params,
@@ -55,15 +58,38 @@ module GetStaticPaths = {
   type t<'params> = unit => Js.Promise.t<return<'params>>
 }
 
+module App = {
+  type props<'pageProps> = {
+    @as("Component")
+    component: React.component<'pageProps>,
+    mutable pageProps: 'pageProps,
+  }
+
+  type ctx = {
+    query: Js.Dict.t<string>,
+    req: option<Req.t>,
+    res: option<Res.t>,
+  }
+
+  type context<'pageProps> = {ctx: ctx}
+
+  // The definition of a _app.getInitialProps function
+  type t<'pageProps> = context<'pageProps> => Js.Promise.t<props<'pageProps>>
+
+  @module("next/app") @scope("default")
+  external getInitialProps: t<'pageProps> = "getInitialProps"
+}
+
 module Link = {
   @module("next/link") @react.component
   external make: (
     ~href: string,
     ~_as: string=?,
     ~prefetch: bool=?,
-    ~replace: bool=?,
-    ~shallow: bool=?,
-    ~passHref: bool=?,
+    ~replace: option<bool>=?,
+    ~scroll: option<bool>=?,
+    ~shallow: option<bool>=?,
+    ~passHref: option<bool>=?,
     ~children: React.element,
   ) => React.element = "default"
 }
@@ -109,12 +135,15 @@ module Router = {
 
   type pathObj = {
     pathname: string,
-    query: Js.Dict.t<string>,
+    query?: Js.Dict.t<string>,
+    hash?: string,
   }
 
   @send external push: (router, string) => unit = "push"
   @send external pushObj: (router, pathObj) => unit = "push"
   @send external pushAs: (router, string, string) => unit = "push"
+  @send
+  external pushWithOption: (router, pathObj, option<string>, ~options: {..}) => unit = "push"
   @send external reload: (router, string) => unit = "reload"
 
   @send external back: router => unit = "back"
@@ -123,6 +152,15 @@ module Router = {
 
   @send external replace: (router, string) => unit = "replace"
   @send external replaceObj: (router, pathObj) => unit = "replace"
+  @send
+  external replaceWithOption: (router, pathObj, option<string>, ~options: {..}) => unit = "replace"
+
+  let replaceShallow = (router, pathObj) => {
+    replaceWithOption(router, pathObj, None, ~options={"shallow": true})
+  }
+  let pushShallow = (router, pathObj) => {
+    pushWithOption(router, pathObj, None, ~options={"shallow": true})
+  }
 }
 
 module Head = {
@@ -153,6 +191,10 @@ module Dynamic = {
 module Image = {
   type placeholder = [#blur | #empty]
 
+  type layout = [#intrinsic | #fixed | #responsive | #fill]
+
+  type objectFit = [#fill | #contain | #cover | #none]
+
   @module("next/image") @react.component
   external make: (
     ~src: string,
@@ -163,6 +205,9 @@ module Image = {
     ~height: int=?,
     ~loader: (~src: string, ~width: int, ~height: int) => string=?,
     ~className: string=?,
+    ~layout: layout=?,
+    ~objectFit: objectFit=?,
+    ~priority: bool=?,
   ) => React.element = "default"
 }
 

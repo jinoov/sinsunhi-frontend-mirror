@@ -33,7 +33,7 @@ function Upload_Seller$Upload(Props) {
         return /* Hide */1;
       });
   var setShowError = match$4[1];
-  ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
+  ChannelTalkHelper.Hook.use(undefined, undefined);
   var payload = Belt_Option.map(CustomHooks.Auth.toOption(CustomHooks.Auth.use(undefined)), (function (user$p) {
           return {
                   "farmer-id": user$p.uid,

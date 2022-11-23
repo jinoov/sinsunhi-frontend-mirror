@@ -4,6 +4,7 @@ import * as React from "react";
 import * as Locale from "../utils/Locale.mjs";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Cart_Buyer_Form from "./Cart_Buyer_Form.mjs";
 import * as Cart_Buyer_Util from "./Cart_Buyer_Util.mjs";
 import * as ReactHookForm from "react-hook-form";
@@ -33,7 +34,7 @@ function Cart_Card_Buyer$SoldOut(Props) {
                           src: checkboxDisableIcon
                         }), React.createElement("span", {
                           className: "pr-5 text-sm text-gray-600"
-                        }, Belt_Option.getWithDefault(productOption.productOptionName, ""))), React.createElement(ReactHookForm.Controller, {
+                        }, productOption.productOptionName)), React.createElement(ReactHookForm.Controller, {
                       name: formNames.checked,
                       control: match.control,
                       render: (function (param) {
@@ -65,6 +66,14 @@ function Cart_Card_Buyer$Container(Props) {
   var watchQuantity = Belt_Option.getWithDefault(Belt_Option.flatMap(ReactHookForm.useWatch({
                 name: formNames.quantity
               }), Belt_Int.fromString), quantity);
+  var tmp = {
+    prefix: prefix,
+    quantity: quantity,
+    cartId: productOption.cartId
+  };
+  if (productOption.adhocStockNumRemaining !== undefined) {
+    tmp.max = Caml_option.valFromOption(productOption.adhocStockNumRemaining);
+  }
   return React.createElement("div", {
               className: "w-full p-3 flex flex-col gap-1 bg-gray-50 rounded-md"
             }, React.createElement("div", {
@@ -77,16 +86,12 @@ function Cart_Card_Buyer$Container(Props) {
                           status: productOption.optionStatus
                         }), React.createElement("span", {
                           className: "pr-5 text-sm text-gray-800"
-                        }, Belt_Option.getWithDefault(productOption.productOptionName, ""))), React.createElement(Cart_Delete_Button.make, {
+                        }, productOption.productOptionName)), React.createElement(Cart_Delete_Button.make, {
                       productOptions: [productOption],
                       refetchCart: refetchCart
                     })), React.createElement("div", {
                   className: "flex justify-between items-center pl-8 mt-1"
-                }, React.createElement(Cart_QuantitySelector.make, {
-                      prefix: prefix,
-                      quantity: quantity,
-                      cartId: productOption.cartId
-                    }), React.createElement("span", {
+                }, React.createElement(Cart_QuantitySelector.make, tmp), React.createElement("span", {
                       className: "text-text-L1 font-bold text-sm"
                     }, "" + Locale.Int.show(undefined, Math.imul(watchQuantity, productOption.price)) + " 원")));
 }
@@ -100,8 +105,8 @@ function Cart_Card_Buyer(Props) {
   var refetchCart = Props.refetchCart;
   var prefix = Props.prefix;
   var productStatus = Props.productStatus;
-  var match = Cart_Buyer_Form.soldable(productOption.optionStatus);
-  var match$1 = Cart_Buyer_Form.soldable(productStatus);
+  var match = Cart_Buyer_Form.soldable(productStatus);
+  var match$1 = Cart_Buyer_Form.soldable(productOption.optionStatus);
   if (match && match$1) {
     return React.createElement(Cart_Card_Buyer$Container, {
                 productOption: productOption,

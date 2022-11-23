@@ -14,11 +14,14 @@ type productOption = {
   checked: bool,
   @spice.key("cart-id") cartId: int,
   @spice.key("product-option-id") productOptionId: int,
-  @spice.key("product-option-name") productOptionName: option<string>,
+  @spice.key("product-option-name") productOptionName: string,
   @spice.key("option-status") optionStatus: productStatus,
-  @spice.key("updated-at") updatedAt: option<string>,
+  @spice.key("updated-at") updatedAt: string,
   price: int,
   quantity: int,
+  @spice.key("adhoc-stock-is-limited") adhocStockIsLimited: bool,
+  @spice.key("adhoc-stock-is-num-remaining-visible") adhocStockIsNumRemainingVisible: bool,
+  @spice.key("adhoc-stock-num-remaining") adhocStockNumRemaining: option<int>,
 }
 
 @spice
@@ -27,12 +30,13 @@ type productOptions = array<productOption>
 @spice
 type cartItem = {
   checked: bool,
+  @spcie.key("is-courier-available") isCourierAvailable: option<bool>,
   @spice.key("checked-number") checkedNumber: int,
   @spice.key("product-id") productId: int,
-  @spice.key("image-url") imageUrl: option<string>,
-  @spice.key("product-name") productName: option<string>,
+  @spice.key("image-url") imageUrl: string,
+  @spice.key("product-name") productName: string,
   @spice.key("total-price") totalPrice: option<int>,
-  @spice.key("updated-at") updatedAt: option<string>,
+  @spice.key("updated-at") updatedAt: string,
   @spice.key("product-status") productStatus: productStatus,
   @spice.key("product-options") productOptions: productOptions,
 }
@@ -80,6 +84,9 @@ type inputNames = {
   checkedNumber: string,
   imageUrl: string,
   updatedAt: string,
+  adhocStockIsLimited: string,
+  adhocStockIsNumRemainingVisible: string,
+  adhocStockNumRemaining: string,
 }
 
 let names = prefix => {
@@ -103,6 +110,9 @@ let names = prefix => {
   optionStatus: `${prefix}.option-status`,
   checkedNumber: `${prefix}.checked-number`,
   updatedAt: `${prefix}.updated-at`,
+  adhocStockIsLimited: `${prefix}.adhoc-stock-is-limited`,
+  adhocStockIsNumRemainingVisible: `${prefix}.adhoc-stock-is-num-remaining-visible`,
+  adhocStockNumRemaining: `${prefix}.adhoc-stock-num-remaining`,
 }
 
 let soldable = (s: productStatus) =>
@@ -112,7 +122,7 @@ let soldable = (s: productStatus) =>
   | _ => false
   }
 
-let toVariant: RelaySchemaAssets_graphql.enum_ProductStatus => productStatus = s =>
+let productStatusToVariant: CartBuyerItemFragment_graphql.Types.enum_ProductStatus => productStatus = s =>
   switch s {
   | #SALE => #SALE
   | #SOLDOUT => #SOLDOUT
@@ -122,13 +132,20 @@ let toVariant: RelaySchemaAssets_graphql.enum_ProductStatus => productStatus = s
   | _ => #SALE
   }
 
-let strDateToFloat = s => {
-  s->Option.mapWithDefault(0., s' => s'->Js.Date.fromString->Js.Date.getTime)
-}
+let optionStatusToVariant: CartBuyerItemFragment_graphql.Types.enum_ProductOptionStatus => productStatus = s =>
+  switch s {
+  | #SALE => #SALE
+  | #SOLDOUT => #SOLDOUT
+  | #NOSALE => #NOSALE
+  | #RETIRE => #RETIRE
+  | _ => #SALE
+  }
+
+let strDateToFloat = s => s->Js.Date.fromString->Js.Date.getTime
 
 let groupBy = (arrayOfCartItem: array<CartBuyerItemFragment_graphql.Types.fragment_cartItems>) =>
   arrayOfCartItem
-  ->Garter_Array.groupBy(a => a.productId, ~id=module(Garter.Id.IntComparable))
+  ->Garter_Array.groupBy(a => a.product.number, ~id=module(Garter.Id.IntComparable))
   ->Map.valuesToArray
 
 let dateCompare = (str1, str2) => {
@@ -139,7 +156,7 @@ let compare = (
   item1: CartBuyerItemFragment_graphql.Types.fragment_cartItems,
   item2: CartBuyerItemFragment_graphql.Types.fragment_cartItems,
 ) => {
-  switch (item1.optionStatus, item2.optionStatus) {
+  switch (item1.productOption.status, item2.productOption.status) {
   | (#SOLDOUT, #SOLDOUT) => dateCompare(item1.updatedAt, item2.updatedAt)
   | (#SOLDOUT, _) => 1
   | (_, #SOLDOUT) => -1
@@ -167,21 +184,25 @@ let map: array<CartBuyerItemFragment_graphql.Types.fragment_cartItems> => option
     {
       checked: true,
       checkedNumber: ordered->Array.length,
-      productId: item.productId,
-      productName: item.productName,
+      productId: item.product.number,
+      isCourierAvailable: item.product.isCourierAvailable,
+      productName: item.productSnapshot.displayName,
       totalPrice: Some(0),
-      productStatus: item.productStatus->toVariant,
-      imageUrl: item.image->Option.map(image' => image'.thumb100x100),
+      productStatus: item.product.status->productStatusToVariant,
+      imageUrl: item.product.image.thumb100x100,
       updatedAt: item.updatedAt,
       productOptions: ordered->Array.map(item' => {
         checked: true,
-        cartId: item'.cartId,
-        productOptionId: item'.optionId,
-        productOptionName: item'.optionName,
-        optionStatus: item'.optionStatus->toVariant,
-        price: item'.price,
+        cartId: item'.number,
+        productOptionId: item'.productOption.number,
+        productOptionName: item'.productOptionSnapshot.optionName,
+        optionStatus: item'.productOption.status->optionStatusToVariant,
+        price: item'.productOptionSnapshot.price,
         quantity: item'.quantity,
         updatedAt: item'.updatedAt,
+        adhocStockIsLimited: item'.productOption.adhocStockIsLimited,
+        adhocStockIsNumRemainingVisible: item'.productOption.adhocStockIsNumRemainingVisible,
+        adhocStockNumRemaining: item'.productOption.adhocStockNumRemaining,
       }),
     }
   })
@@ -209,7 +230,7 @@ let makeGtmData = (data: array<cartItem>, cartIds: array<int>, eventType: string
         item.productOptions->Array.map(option => {
           {
             "item_id": item.productId->Int.toString,
-            "item_name": item.productName->Option.getWithDefault(""),
+            "item_name": item.productName,
             "price": option.price->Int.toString,
             "quantity": option.quantity,
             "item_variant": option.productOptionName,

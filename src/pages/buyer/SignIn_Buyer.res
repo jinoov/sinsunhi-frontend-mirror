@@ -5,7 +5,7 @@ module SetPassword = SignIn_Buyer_Set_Password
 
 let {useSetPassword} = module(CustomHooks)
 
-type props = {query: Js.Dict.t<string>}
+type props = {query: Js.Dict.t<string>, deviceType: DeviceDetect.deviceType}
 type params
 type previewData
 
@@ -156,16 +156,14 @@ let default = (~props) => {
   React.useEffect1(_ => {
     // 쿼리 파라미터로 uid가 있다면 그 값을 prefill
     // 없는 경우 로컬 스토리지에 저장된 값이 있다면 prefill
-    let email = switch uid {
-    | Some(uid') => uid'
+    switch uid {
+    | Some(uid') => Some(uid')
     | None => LocalStorageHooks.BuyerEmail.get()
-    }
-    if email != "" {
-      setCheckedSaveEmail(._ => true)
-      FormFields.Email->form.setFieldValue(email, ~shouldValidate=true, ())
-
+    }->Option.mapWithDefault((), email' => {
+      setCheckedSaveEmail(. _ => true)
+      FormFields.Email->form.setFieldValue(email', ~shouldValidate=true, ())
       ReactUtil.focusElementByRef(inputPasswordRef)
-    }
+    })
 
     None
   }, [uid])
@@ -242,11 +240,15 @@ let default = (~props) => {
 
   <>
     <Next.Head>
-      <title> {j`바이어 로그인 - 신선하이`->React.string} </title>
+      <title> {j`신선하이 | 바이어 로그인`->React.string} </title>
+      <meta
+        name="description"
+        content="농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요."
+      />
     </Next.Head>
     <div
       className=%twc(
-        "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"
+        "container bg-white mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20 xl:bg-inherit"
       )>
       <div className=%twc("flex-auto flex flex-col xl:justify-center items-center")>
         <div className=%twc("w-full px-5 xl:py-12 sm:px-20")>
@@ -314,15 +316,29 @@ let default = (~props) => {
           </form>
           <RadixUI.Separator.Root className=%twc("h-px bg-div-border-L2 my-7") />
           <div>
-            <button
-              className={%twc(
-                "w-full h-14 flex justify-center items-center rounded-xl border-[1px] border-green-500"
-              )}
-              onClick={_ => router->push("/buyer/signup")}>
-              <span className=%twc("text-green-500 font-bold")>
-                {`바이어 회원가입`->React.string}
-              </span>
-            </button>
+            {
+              let {makeWithDict, toString} = module(Webapi.Url.URLSearchParams)
+              let redirectUrl =
+                router.query
+                ->Js.Dict.get("redirect")
+                ->Option.map(redirect =>
+                  [("redirect", redirect)]->Js.Dict.fromArray->makeWithDict->toString
+                )
+              let signUpUrlWithRedirect = switch redirectUrl {
+              | Some(redirectUrl) => "/buyer/signup?" ++ redirectUrl
+              | None => "/buyer/signup"
+              }
+
+              <button
+                className={%twc(
+                  "w-full h-14 flex justify-center items-center rounded-xl border-[1px] border-green-500"
+                )}
+                onClick={_ => router->push(signUpUrlWithRedirect)}>
+                <span className=%twc("text-green-500 font-bold")>
+                  {`사업자 회원가입`->React.string}
+                </span>
+              </button>
+            }
           </div>
         </div>
       </div>
@@ -354,9 +370,12 @@ let default = (~props) => {
         {`신선하이를 이용하시려면 비밀번호 재설정이 필요합니다. 이메일로 재설정 메일을 보내드렸습니다. 메일함을 확인해주세요.`->React.string}
       </p>
     </Dialog>
+    <Bottom_Navbar deviceType=props.deviceType />
   </>
 }
 
-let getServerSideProps = ({query}: Next.GetServerSideProps.context<props, params, previewData>) => {
-  Js.Promise.resolve({"props": {"query": query}})
+let getServerSideProps = (ctx: Next.GetServerSideProps.context<props, params, previewData>) => {
+  let deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req)
+
+  Js.Promise.resolve({"props": {"query": ctx.query, "deviceType": deviceType}})
 }

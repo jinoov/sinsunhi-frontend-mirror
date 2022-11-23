@@ -118,14 +118,11 @@ function useBlockingPagination(fRef) {
 
 var makeRefetchVariables = BulkSaleProducerOnlineMarketInfoAdminRefetchQuery_graphql.Types.makeRefetchVariables;
 
-var Fragment_getConnectionNodes = BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Utils.getConnectionNodes;
-
 var Fragment_onlineMarket_decode = BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Utils.onlineMarket_decode;
 
 var Fragment_onlineMarket_fromString = BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Utils.onlineMarket_fromString;
 
 var Fragment = {
-  getConnectionNodes: Fragment_getConnectionNodes,
   onlineMarket_decode: Fragment_onlineMarket_decode,
   onlineMarket_fromString: Fragment_onlineMarket_fromString,
   Types: undefined,

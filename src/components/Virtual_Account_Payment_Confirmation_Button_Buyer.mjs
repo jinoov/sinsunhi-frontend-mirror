@@ -297,7 +297,10 @@ function Virtual_Account_Payment_Confirmation_Button_Buyer(Props) {
                   className: "px-3 h-9 rounded-lg text-enabled-L1 bg-div-shape-L1 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-150 focus:ring-offset-1"
                 }), React.createElement(ReactDialog.Content, {
                   children: null,
-                  className: "dialog-content-fix p-5 overflow-y-auto text-sm text-text-L1 rounded-2xl min-w-max"
+                  className: "dialog-content-fix p-5 overflow-y-auto text-sm text-text-L1 rounded-2xl min-w-max",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }, React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$TitleAndCloseButton, {
                       close: close
                     }), React.createElement(Virtual_Account_Payment_Confirmation_Button_Buyer$TableHead, {}), React.createElement(RescriptReactErrorBoundary.make, {

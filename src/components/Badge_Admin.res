@@ -1,6 +1,6 @@
 @react.component
 let make = (~status, ~refundReason=?) => {
-  open CustomHooks.OrdersAdmin
+  open CustomHooks.Orders
 
   let displayStyle = switch status {
   | CREATE
@@ -12,12 +12,13 @@ let make = (~status, ~refundReason=?) => {
   | COMPLETE
   | CANCEL
   | ERROR
-  | REFUND =>
+  | REFUND
+  | DEPOSIT_PENDING =>
      %twc("max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap")
   }
 
-  module ConverterStatus = Converter.Status(CustomHooks.OrdersAdmin)
-  module ConverterRefund = Converter.RefundReason(CustomHooks.OrdersAdmin)
+  module ConverterStatus = Converter.Status(CustomHooks.Orders)
+  module ConverterRefund = Converter.RefundReason(CustomHooks.Orders)
   let displayText = status->ConverterStatus.displayStatus
 
   <span className=displayStyle>
@@ -26,7 +27,7 @@ let make = (~status, ~refundReason=?) => {
     | (REFUND, Some(refundReason')) =>
       `(${refundReason'
         ->Js.Json.string
-        ->CustomHooks.OrdersAdmin.refundReason_decode
+        ->CustomHooks.Orders.refundReason_decode
         ->Result.mapWithDefault("-", ConverterRefund.displayRefundReason)})`->React.string
     | _ => React.null
     }}

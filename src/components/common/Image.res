@@ -61,14 +61,12 @@ module MakeImage = {
       (),
     )
 
-    <ReactUtil.SpreadProps props>
-      <img />
-    </ReactUtil.SpreadProps>
+    <ReactUtil.SpreadProps props> <img /> </ReactUtil.SpreadProps>
   }
 }
 
 // src가 갱신되었을 때 반응하도록 하기 위해 한번 감싸서 key=src 적용
 @react.component
 let make = (~src=?, ~placeholder=?, ~loading=?, ~alt=?, ~className=?) => {
-  <MakeImage key={src->Option.getWithDefault("")} ?src ?placeholder ?className ?alt ?loading />
+  <MakeImage key=?src ?src ?placeholder ?className ?alt ?loading />
 }

@@ -70,11 +70,13 @@ function Order_Admin_Seller_Packing$Item$Table(Props) {
                   className: "h-full flex flex-col px-4 py-2"
                 }, React.createElement("span", {
                       className: "block mb-1"
-                    }, order.farmerName), React.createElement("span", {
+                    }, Belt_Option.getWithDefault(order.farmerName, "-")), React.createElement("span", {
                       className: "block mb-1"
-                    }, "(" + Belt_Option.getWithDefault(Belt_Option.flatMap(Helper.PhoneNumber.parse(order.farmerPhone), Helper.PhoneNumber.format), order.farmerPhone) + ")"), React.createElement("span", {
+                    }, "(" + Belt_Option.mapWithDefault(order.farmerPhone, "-", (function (farmerPhone$p) {
+                            return Belt_Option.getWithDefault(Belt_Option.flatMap(Helper.PhoneNumber.parse(farmerPhone$p), Helper.PhoneNumber.format), farmerPhone$p);
+                          })) + "\n              )"), React.createElement("span", {
                       className: "block mb-1"
-                    }, order.buyerName)), React.createElement("div", {
+                    }, Belt_Option.getWithDefault(order.buyerName, "-"))), React.createElement("div", {
                   className: "h-full flex flex-col px-4 py-2"
                 }, React.createElement("span", {
                       className: "block"

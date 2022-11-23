@@ -24,11 +24,10 @@ import * as Authorization from "../../../utils/Authorization.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as Belt_SetString from "rescript/lib/es6/belt_SetString.js";
+import * as ServerSideHelper from "../../../utils/ServerSideHelper.mjs";
 import * as ChannelTalkHelper from "../../../utils/ChannelTalkHelper.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as GnbBannerList_Buyer from "../../../components/GnbBannerList_Buyer.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
-import * as ShopCategorySelect_Buyer from "../../../components/ShopCategorySelect_Buyer.mjs";
 import * as ReactToastNotifications from "react-toast-notifications";
 import * as Account_Signout_Term_Buyer from "./components/Account_Signout_Term_Buyer.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
@@ -338,8 +337,6 @@ function $$default(param) {
             }, React.createElement("div", {
                   className: "flex"
                 }, React.createElement(Header_Buyer.PC.make, {
-                      gnbBanners: param.gnbBanners,
-                      displayCategories: param.displayCategories,
                       key: router.asPath
                     })), React.createElement(Authorization.Buyer.make, {
                   children: React.createElement(RescriptReactErrorBoundary.make, {
@@ -352,50 +349,26 @@ function $$default(param) {
                         fallback: (function (param) {
                             return React.createElement("div", undefined, "계정정보를 가져오는데 실패했습니다");
                           })
-                      }),
-                  title: "신선하이"
+                      })
                 }), React.createElement(Footer_Buyer.PC.make, {}));
 }
 
 function getServerSideProps(ctx) {
-  var deviceType = DeviceDetect.detectDeviceFromCtx(ctx);
-  var gnb = function (param) {
-    return GnbBannerList_Buyer.Query.fetchPromised(RelayEnv.envSinsunMarket, undefined, undefined, undefined, undefined);
-  };
-  var displayCategories = function (param) {
-    return ShopCategorySelect_Buyer.Query.fetchPromised(RelayEnv.envSinsunMarket, {
-                onlyDisplayable: true,
-                parentId: undefined,
-                types: ["NORMAL"]
-              }, undefined, undefined, undefined);
-  };
+  var environment = RelayEnv.environment({
+        TAG: /* SinsunMarket */0,
+        _0: Env.graphqlApiUrl
+      });
+  var gnbAndCategoryQuery = ServerSideHelper.gnbAndCategory(environment);
+  var deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req);
   if (deviceType !== 1) {
     return Promise.resolve({
                 redirect: {
                   permanent: true,
                   destination: "/buyer/me/account"
-                },
-                props: {}
+                }
               });
   } else {
-    return Js_promise.$$catch((function (param) {
-                  return Promise.resolve({
-                              props: {
-                                gnbBanners: [],
-                                displayCategories: []
-                              }
-                            });
-                }), Js_promise.then_((function (param) {
-                      return Promise.resolve({
-                                  props: {
-                                    gnbBanners: param[0].gnbBanners,
-                                    displayCategories: param[1].displayCategories
-                                  }
-                                });
-                    }), Promise.all([
-                        gnb(undefined),
-                        displayCategories(undefined)
-                      ])));
+    return ServerSideHelper.makeResultWithQuery(gnbAndCategoryQuery, environment, {});
   }
 }
 

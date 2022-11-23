@@ -3,6 +3,7 @@
 import * as Cn from "rescript-classnames/src/Cn.mjs";
 import * as React from "react";
 import * as Router from "next/router";
+import * as Product_FilterOption from "../Product_FilterOption.mjs";
 
 function make(id, name, kind) {
   return {
@@ -35,7 +36,7 @@ function PLP_Scrollable_Tab_Item$PC(Props) {
               key: item.id,
               id: "category-" + item.id + "",
               onClick: (function (param) {
-                  router.replace("/categories/" + item.id + "");
+                  router.replace("/categories/" + item.id + "?" + Product_FilterOption.defaultFilterOptionUrlParam + "");
                 })
             }, React.createElement("div", {
                   className: Cn.make([
@@ -65,11 +66,12 @@ function PLP_Scrollable_Tab_Item$MO(Props) {
   var item = Props.item;
   var router = Router.useRouter();
   var selectedStyle = selected ? "border-gray-800 text-gray-800 font-bold" : "border-transparent text-gray-400";
+  var queryparam = new URLSearchParams(router.query).toString();
   return React.createElement("li", {
               key: item.id,
               id: "category-" + item.id + "",
               onClick: (function (param) {
-                  router.replace("/categories/" + item.id + "");
+                  router.replace("/categories/" + item.id + "?" + queryparam + "");
                 })
             }, React.createElement("div", {
                   className: Cn.make([

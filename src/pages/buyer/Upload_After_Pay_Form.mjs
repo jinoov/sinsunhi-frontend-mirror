@@ -25,7 +25,7 @@ function Upload_After_Pay_Form$UploadForm(Props) {
         return /* Hide */1;
       });
   var setShowError = match$2[1];
-  ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
+  ChannelTalkHelper.Hook.use(undefined, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "container max-w-lg mx-auto p-7 pt-0 sm:shadow-gl"
                 }, React.createElement("div", {

@@ -1,6 +1,8 @@
 open RadixUI
 
-let displayRawMarket = (rm: RelaySchemaAssets_graphql.enum_OnlineMarket) =>
+let displayRawMarket = (
+  rm: BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Types.enum_OnlineMarket,
+) =>
   switch rm {
   | #NAVER => `네이버`
   | #COUPANG => `쿠팡`
@@ -79,7 +81,9 @@ let make = (
       </Dialog.Trigger>
     | None => <span> {j`아니오`->React.string} </span>
     }}
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5 text-text-L1")>
         <article className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`온라인판매 정보`->React.string} </h2>

@@ -98,7 +98,7 @@ function FindIdPassword_Buyer$FindId(Props) {
                       onClick: (function (param) {
                           router.push("/buyer/signup");
                         })
-                    }, "회원가입")), React.createElement("div", {
+                    }, "사업자 회원가입")), React.createElement("div", {
                   className: "flex h-13 mt-4"
                 }, React.createElement("button", {
                       className: "w-full text-enabled-L1 bg-surface rounded-xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1",
@@ -312,7 +312,10 @@ function $$default(props) {
           
         }), [user]);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "바이어 아이디 찾기 비밀번호 찾기 - 신선하이")
+                  children: React.createElement("title", undefined, "신선하이 | 바이어 아이디 찾기 비밀번호 찾기", React.createElement("meta", {
+                            content: "농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요.",
+                            name: "description"
+                          }))
                 }), React.createElement("div", {
                   className: "container mx-auto max-w-lg min-h-buyer relative flex flex-col xl:justify-center items-center"
                 }, React.createElement("div", {

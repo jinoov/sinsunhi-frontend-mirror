@@ -13,6 +13,7 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as FetchHelper from "../utils/FetchHelper.mjs";
 import Format from "date-fns/format";
+import * as FeatureFlagWrapper from "../pages/buyer/pc/FeatureFlagWrapper.mjs";
 import * as Select_CountPerPage from "./Select_CountPerPage.mjs";
 import * as Webapi__Dom__Element from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__Element.mjs";
 import * as Webapi__Dom__Document from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__Document.mjs";
@@ -85,6 +86,7 @@ function Download_Center_Table$DownloadTableRow(Props) {
                   className: "flex flex-row items-center"
                 }, React.createElement("span", undefined, "생성완료"), React.createElement("img", {
                       className: "ml-5 cursor-pointer",
+                      alt: "다운로드",
                       src: naviDownloadIcon,
                       onClick: (function (param) {
                           var requestId = String(id);
@@ -158,35 +160,67 @@ var DownloadTableRow = {
 
 function Download_Center_Table(Props) {
   var downloads$p = Props["downloads'"];
+  var limit = downloads$p.limit;
   var count = downloads$p.count;
-  return React.createElement("div", {
-              className: "mt-5 p-5 bg-white rounded w-full min-h-[50vh] sm:min-h-[75vh] sm:p-7 sm:shadow-gl"
-            }, React.createElement("p", {
-                  className: "flex items-center mb-3"
-                }, React.createElement("h3", {
-                      className: "font-bold"
-                    }, "다운로드 요청내역"), React.createElement("span", {
-                      className: "ml-2 text-primary"
-                    }, "" + String(count) + "건")), React.createElement("div", {
-                  className: "flex flex-col sm:flex-row sm:justify-between sm:items-center"
-                }, React.createElement("span", {
-                      className: "sm:text-sm"
-                    }, "생성완료 후 7일간 다운로드 가능합니다."), count !== 0 ? React.createElement(Select_CountPerPage.make, {
-                        className: "my-5 sm:my-0 w-fit"
-                      }) : null), count !== 0 ? React.createElement(React.Fragment, undefined, React.createElement(Download_Center_Table$DownloadTableHead, {}), React.createElement("main", undefined, Belt_Array.map(downloads$p.data, (function (data) {
-                              return React.createElement(Download_Center_Table$DownloadTableRow, {
-                                          data: data,
-                                          key: data.filename + data.requestAt
-                                        });
-                            })), React.createElement("div", {
-                            className: "flex flex-row items-center my-7 w-full justify-center"
-                          }, React.createElement(Pagination.make, {
-                                pageDisplySize: Constants.pageDisplySize,
-                                itemPerPage: downloads$p.limit,
-                                total: count
-                              })))) : React.createElement("main", {
-                    className: "flex flex-row justify-center items-center w-full min-h-screen text-sm text-text-L2"
-                  }, "요청하신 다운로드가 없습니다."));
+  var data = downloads$p.data;
+  var oldUI = React.createElement("div", {
+        className: "mt-5 p-5 bg-white rounded w-full min-h-[50vh] sm:min-h-[75vh] sm:p-7 sm:shadow-gl"
+      }, React.createElement("p", {
+            className: "flex items-center mb-3"
+          }, React.createElement("h3", {
+                className: "font-bold"
+              }, "다운로드 요청내역"), React.createElement("span", {
+                className: "ml-2 text-primary"
+              }, "" + String(count) + "건")), React.createElement("div", {
+            className: "flex flex-col sm:flex-row sm:justify-between sm:items-center"
+          }, React.createElement("span", {
+                className: "sm:text-sm"
+              }, "생성완료 후 7일간 다운로드 가능합니다."), count !== 0 ? React.createElement(Select_CountPerPage.make, {
+                  className: "my-5 sm:my-0 w-fit"
+                }) : null), count !== 0 ? React.createElement(React.Fragment, undefined, React.createElement(Download_Center_Table$DownloadTableHead, {}), React.createElement("main", undefined, Belt_Array.map(data, (function (data) {
+                        return React.createElement(Download_Center_Table$DownloadTableRow, {
+                                    data: data,
+                                    key: data.filename + data.requestAt
+                                  });
+                      })), React.createElement("div", {
+                      className: "flex flex-row items-center my-7 w-full justify-center"
+                    }, React.createElement(Pagination.make, {
+                          pageDisplySize: Constants.pageDisplySize,
+                          itemPerPage: limit,
+                          total: count
+                        })))) : React.createElement("main", {
+              className: "flex flex-row justify-center items-center w-full min-h-screen text-sm text-text-L2"
+            }, "요청하신 다운로드가 없습니다."));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "mt-5 lg:mt-0 px-[50px] py-10 bg-white rounded min-h-[50vh] sm:min-h-[75vh] sm:shadow-gl"
+                  }, React.createElement("p", {
+                        className: "flex items-center mb-[38px]"
+                      }, React.createElement("h3", {
+                            className: "font-bold text-[26px]"
+                          }, "다운로드 요청내역")), React.createElement("div", {
+                        className: "flex flex-col sm:flex-row sm:justify-between sm:items-center"
+                      }, React.createElement("span", {
+                            className: "mb-[15px] text-[#8B8D94]"
+                          }, "생성완료 후 7일간 다운로드 가능합니다."), count !== 0 ? React.createElement(Select_CountPerPage.make, {
+                              className: "my-5 sm:my-0 w-fit"
+                            }) : null), count !== 0 ? React.createElement(React.Fragment, undefined, React.createElement(Download_Center_Table$DownloadTableHead, {}), React.createElement("main", undefined, Belt_Array.map(data, (function (data) {
+                                    return React.createElement(Download_Center_Table$DownloadTableRow, {
+                                                data: data,
+                                                key: data.filename + data.requestAt
+                                              });
+                                  })), React.createElement("div", {
+                                  className: "flex flex-row items-center my-7 w-full justify-center"
+                                }, React.createElement(Pagination.make, {
+                                      pageDisplySize: Constants.pageDisplySize,
+                                      itemPerPage: limit,
+                                      total: count
+                                    })))) : React.createElement("main", {
+                          className: "flex flex-row justify-center items-center w-full min-h-[720px] text-sm text-text-L2"
+                        }, "요청하신 다운로드가 없습니다.")),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var make = Download_Center_Table;

@@ -34,11 +34,9 @@ let stringifyPackageUnit = s =>
 
 // FIXME: [> #KG | #G | #MG] vs. [#KG | #G | #MG]
 // 응답 받은 enum 타입과 muation으로 전달해야하는 타입이 다르다. 왜??
-let convertPackageUnit = (s: RelaySchemaAssets_graphql.enum_ProductPackageMassUnit): [
-  | #G
-  | #KG
-  | #MG
-] =>
+let convertPackageUnit = (
+  s: BulkSaleProductAdminFragment_bulkSaleCampaign_graphql.Types.enum_ProductPackageMassUnit,
+): [#G | #KG | #MG] =>
   switch s {
   | #KG => #KG
   | #G => #G
@@ -86,7 +84,6 @@ let make = (~product: BulkSaleProductAdminFragment_bulkSaleCampaign_graphql.Type
     value: product.productCategory.id,
     label: product.productCategory.name,
   }))
-  ("asf", productCategoryId, product.productCategory.name)->Js.log
 
   let (preferredGrade, setPreferredGrade) = React.Uncurried.useState(_ => Some(
     product.preferredGrade,
@@ -243,7 +240,9 @@ let make = (~product: BulkSaleProductAdminFragment_bulkSaleCampaign_graphql.Type
       className=%twc("h-8 px-5 py-1 text-primary bg-primary-light rounded-lg focus:outline-none")>
       {j`수정하기`->React.string}
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5")>
         <article className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`상품 수정`->React.string} </h2>

@@ -187,25 +187,29 @@ module BasketListItems = {
     <ul className=%twc("my-4") ariaMultiselectable=true>
       {query.meatParts.edges
       ->Array.map(({node}) => {
-        let {name, id} = node
+        let {name, id, isAvailable} = node
         let isSelected = selectedPartIds->Js.Array2.includes(id)
 
-        <li
-          key={id}
-          className=%twc("flex items-center min-h-[48px] mx-5 cursor-pointer tab-highlight-color")
-          onClick={_ => handleClickListitem(id)}
-          ariaSelected=isSelected>
-          <div className=%twc("flex flex-col justify-between truncate")>
-            <span className=%twc("block text-base truncate text-text-L1")>
-              {j`$name`->React.string}
-            </span>
-          </div>
-          <div className=%twc("ml-auto pl-2")>
-            {isSelected
-              ? <DS_Icon.Common.CheckedLarge1 height="24" width="24" fill="#12B564" />
-              : <DS_Icon.Common.UncheckedLarge1 height="24" width="24" fill="#12B564" />}
-          </div>
-        </li>
+        switch isAvailable {
+        | true =>
+          <li
+            key={id}
+            className=%twc("flex items-center min-h-[48px] mx-5 cursor-pointer tab-highlight-color")
+            onClick={_ => handleClickListitem(id)}
+            ariaSelected=isSelected>
+            <div className=%twc("flex flex-col justify-between truncate")>
+              <span className=%twc("block text-base truncate text-text-L1")>
+                {name->React.string}
+              </span>
+            </div>
+            <div className=%twc("ml-auto pl-2")>
+              {isSelected
+                ? <DS_Icon.Common.CheckedLarge1 height="24" width="24" fill="#12B564" />
+                : <DS_Icon.Common.UncheckedLarge1 height="24" width="24" fill="#12B564" />}
+            </div>
+          </li>
+        | false => React.null
+        }
       })
       ->React.array}
     </ul>

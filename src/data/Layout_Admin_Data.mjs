@@ -159,6 +159,51 @@ var items = [
   },
   {
     TAG: /* Root */0,
+    title: "매칭 관리",
+    anchor: {
+      url: "/admin/matching/purchases",
+      target: "_self"
+    },
+    icon: React.createElement("img", {
+          className: "w-5 h-5",
+          src: naviOrderIcon
+        }),
+    role: [/* Admin */2],
+    children: [
+      {
+        TAG: /* Sub */1,
+        title: "구매 신청 조회",
+        anchor: {
+          url: "/admin/matching/purchases",
+          target: "_self"
+        },
+        slug: undefined,
+        role: [/* Admin */2]
+      },
+      {
+        TAG: /* Sub */1,
+        title: "매칭 주문관리",
+        anchor: {
+          url: "/admin/rfq/web-order",
+          target: "_self"
+        },
+        slug: undefined,
+        role: [/* Admin */2]
+      },
+      {
+        TAG: /* Sub */1,
+        title: "매칭 결제관리",
+        anchor: {
+          url: "/admin/rfq/transactions",
+          target: "_self"
+        },
+        slug: undefined,
+        role: [/* Admin */2]
+      }
+    ]
+  },
+  {
+    TAG: /* Root */0,
     title: "정산",
     anchor: {
       url: "/admin/cost-management",

@@ -54,8 +54,11 @@ var ReactNativeWebView = {
   PostMessage: PostMessage
 };
 
+var Appboy = {};
+
 var $$Window = {
-  ReactNativeWebView: ReactNativeWebView
+  ReactNativeWebView: ReactNativeWebView,
+  Appboy: Appboy
 };
 
 var $$window$2 = $$window === undefined ? undefined : Caml_option.some($$window);

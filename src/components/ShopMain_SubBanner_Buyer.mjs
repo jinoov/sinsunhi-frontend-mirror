@@ -110,15 +110,15 @@ var Placeholder = {
 };
 
 function ShopMain_SubBanner_Buyer$PC(Props) {
-  var subBanners = Props.subBanners;
+  var match = use(undefined, undefined, undefined, undefined, undefined);
   return React.createElement("div", {
               className: "w-full flex flex-col gap-3"
-            }, Belt_Array.map(subBanners, (function (param) {
+            }, Belt_Array.map(match.subBanners, (function (param) {
                     var key = "sub-banner-" + param.id + "";
                     var target = param.isNewTabPc ? "_blank" : "_self";
                     return React.createElement("div", {
                                 key: key,
-                                className: "flex flex-1 aspect-[300/124] rounded-xl overflow-hidden"
+                                className: "flex flex-1 aspect-[300/124] rounded-xl overflow-hidden interactable"
                               }, React.createElement(Link, {
                                     href: param.landingUrl,
                                     children: React.createElement("a", {
@@ -158,15 +158,15 @@ var Placeholder$1 = {
 };
 
 function ShopMain_SubBanner_Buyer$MO(Props) {
-  var subBanners = Props.subBanners;
+  var match = use(undefined, undefined, undefined, undefined, undefined);
   return React.createElement("div", {
               className: "w-full flex items-center gap-[10px]"
-            }, Belt_Array.map(subBanners, (function (param) {
+            }, Belt_Array.map(match.subBanners, (function (param) {
                     var key = "sub-banner-" + param.id + "";
                     var target = param.isNewTabMobile ? "_blank" : "_self";
                     return React.createElement("div", {
                                 key: key,
-                                className: "flex flex-1 aspect-[228/168] rounded-xl overflow-hidden"
+                                className: "flex flex-1 aspect-[228/168] rounded-xl overflow-hidden interactable"
                               }, React.createElement(Link, {
                                     href: param.landingUrl,
                                     children: React.createElement("a", {

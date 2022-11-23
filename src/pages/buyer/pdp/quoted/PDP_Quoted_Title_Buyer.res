@@ -22,7 +22,7 @@ module MO = {
   @react.component
   let make = (~displayName) => {
     <section>
-      <h1 className=%twc("text-lg text-gray-800")> {displayName->React.string} </h1>
+      <h1 className=%twc("text-lg text-gray-800 break-all")> {displayName->React.string} </h1>
       <h1 className=%twc("mt-2 font-bold text-blue-500 text-lg")>
         {`최저가 견적받기`->React.string}
       </h1>

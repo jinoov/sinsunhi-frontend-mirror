@@ -1,6 +1,21 @@
 @module("../../../../../public/assets/demeter-chart-placeholder.svg")
 external placeholderIcon: string = "default"
 
+let echart = Next.Dynamic.dynamic(() => {
+  Next.Dynamic.import_("../../../../bindings/Echarts.mjs") |> Js.Promise.then_(mod => mod["make"])
+}, Next.Dynamic.options(~ssr=false, ()))
+
+module Component = {
+  type props = {
+    id: string,
+    option: Echarts.Instance.option,
+    className: string,
+  }
+
+  @react.component
+  let make = (~as_, ~id, ~option, ~className) => React.createElement(as_, {id, option, className})
+}
+
 module Fragment = %relay(`
   fragment PDPMatchingDemeterBuyer_fragment on MatchingProduct {
     number
@@ -83,7 +98,8 @@ module ChartHook = {
 
 @react.component
 let make = (~query, ~selectedGroup) => {
-  let router = Next.Router.useRouter()
+  let {useRouter, push} = module(Next.Router)
+  let router = useRouter()
   let chartGroup = ChartHook.Data.use(~query)
   let {number} = query->Fragment.use
   let selectedChart = {
@@ -95,7 +111,7 @@ let make = (~query, ~selectedGroup) => {
     }
   }
 
-  switch selectedChart->ChartHook.Status.use {
+  let oldUI = switch selectedChart->ChartHook.Status.use {
   | Unknown =>
     <div className=%twc("w-full pt-[113%] relative")>
       <img
@@ -115,13 +131,13 @@ let make = (~query, ~selectedGroup) => {
         <div className=%twc("text-center mb-4")>
           {`회원 로그인 후\n전국 도매시장 주간 시세를 확인해보세요`->ReactNl2br.nl2br}
         </div>
-        <Next.Link href={`/buyer/signin?redirect=${router.asPath}`}>
-          <a>
-            <span className=%twc("mt-2 px-3 py-2 rounded-xl border border-primary text-primary")>
-              {`로그인하고 시세 확인하기`->React.string}
-            </span>
-          </a>
-        </Next.Link>
+        <button
+          onClick={_ => router->push(`/buyer/signin?redirect=${router.asPath}`)}
+          className=%twc(
+            "mt-2 px-3 py-2 rounded-xl border border-primary text-primary whitespace-nowrap"
+          )>
+          {`로그인하고 시세 확인하기`->React.string}
+        </button>
       </div>
     </div>
 
@@ -141,7 +157,9 @@ let make = (~query, ~selectedGroup) => {
     let tableData = data->Chart.Table.make
 
     <>
-      <Echarts key=chartId id=chartId className=%twc("w-full h-[400px] px-3") option=graphOption />
+      <Component
+        key=chartId as_=echart id=chartId option=graphOption className=%twc("w-full h-[400px] px-3")
+      />
       <div>
         <div className=%twc("px-5 grid grid-rows-4 grid-flow-col mb-2")>
           <div className=%twc("grid grid-cols-4 grid-flow-row pb-1 border-b")>
@@ -150,7 +168,7 @@ let make = (~query, ~selectedGroup) => {
           </div>
           <div className=%twc("grid grid-cols-4 grid-flow-row py-2")>
             <div className=%twc("text-left inline-flex items-center")>
-              <div className=%twc("w-2 h-2 rounded-full bg-orange-500 mr-1") />
+              <div className=%twc("w-2 h-2 rounded-full bg-[#ffddbd] mr-1") />
               {`최대가`->React.string}
             </div>
             <div className=%twc("col-start-3 text-right")>
@@ -182,7 +200,7 @@ let make = (~query, ~selectedGroup) => {
           </div>
           <div className=%twc("grid grid-cols-4 grid-flow-row py-2")>
             <div className=%twc("text-left inline-flex items-center")>
-              <div className=%twc("w-2 h-2 rounded-full bg-blue-500 mr-1") />
+              <div className=%twc("w-2 h-2 rounded-full bg-[#dcdfe3] mr-1") />
               {`최소가`->React.string}
             </div>
             <div className=%twc("col-start-3 text-right")>
@@ -203,4 +221,97 @@ let make = (~query, ~selectedGroup) => {
       </div>
     </>
   }
+
+  <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback={oldUI}>
+    {switch selectedChart {
+    | Some(data) => {
+        open Product_Parser.Matching
+
+        let chartId = `pdp-demeter-chart-${number->Int.toString}-${selectedGroup}`
+        let graphOption = data->Chart.Graph.make
+        let tableData = data->Chart.Table.make
+
+        <>
+          <Component
+            key=chartId
+            as_=echart
+            id=chartId
+            option=graphOption
+            className=%twc("w-full h-[400px] px-3")
+          />
+          <div>
+            <div className=%twc("px-5 grid grid-rows-4 grid-flow-col mb-2")>
+              <div className=%twc("grid grid-cols-4 grid-flow-row pb-1 border-b")>
+                <div className=%twc("col-start-3 text-right")>
+                  {`주간 최고`->React.string}
+                </div>
+                <div className=%twc("col-start-4 text-right")>
+                  {`주간 최저`->React.string}
+                </div>
+              </div>
+              <div className=%twc("grid grid-cols-4 grid-flow-row py-2")>
+                <div className=%twc("text-left inline-flex items-center")>
+                  <div className=%twc("w-2 h-2 rounded-full bg-[#ffddbd] mr-1") />
+                  {`최대가`->React.string}
+                </div>
+                <div className=%twc("col-start-3 text-right")>
+                  <span className=%twc("font-bold")>
+                    {`${tableData.higherMax->Locale.Float.show(~digits=0)}원`->React.string}
+                  </span>
+                </div>
+                <div className=%twc("col-start-4 text-right")>
+                  <span className=%twc("font-bold")>
+                    {`${tableData.higherMin->Locale.Float.show(~digits=0)}원`->React.string}
+                  </span>
+                </div>
+              </div>
+              <div className=%twc("grid grid-cols-4 grid-flow-row py-2")>
+                <div className=%twc("text-left inline-flex items-center")>
+                  <div className=%twc("w-2 h-2 rounded-full bg-green-500 mr-1") />
+                  {`평균가`->React.string}
+                </div>
+                <div className=%twc("col-start-3 text-right")>
+                  <span className=%twc("font-bold")>
+                    {`${tableData.meanMax->Locale.Float.show(~digits=0)}원`->React.string}
+                  </span>
+                </div>
+                <div className=%twc("col-start-4 text-right")>
+                  <span className=%twc("font-bold")>
+                    {`${tableData.meanMin->Locale.Float.show(~digits=0)}원`->React.string}
+                  </span>
+                </div>
+              </div>
+              <div className=%twc("grid grid-cols-4 grid-flow-row py-2")>
+                <div className=%twc("text-left inline-flex items-center")>
+                  <div className=%twc("w-2 h-2 rounded-full bg-[#dcdfe3] mr-1") />
+                  {`최소가`->React.string}
+                </div>
+                <div className=%twc("col-start-3 text-right")>
+                  <span className=%twc("font-bold")>
+                    {`${tableData.lowerMax->Locale.Float.show(~digits=0)}원`->React.string}
+                  </span>
+                </div>
+                <div className=%twc("col-start-4 text-right")>
+                  <span className=%twc("font-bold")>
+                    {`${tableData.lowerMin->Locale.Float.show(~digits=0)}원`->React.string}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className=%twc("text-right text-xs text-gray-500 px-5")>
+              {`농림수산부식품교육문화정보원\n전국 도매시장 평균 거래가`->ReactNl2br.nl2br}
+            </div>
+          </div>
+        </>
+      }
+
+    | None =>
+      <div className=%twc("w-full h-[112px] flex flex-col items-center justify-center")>
+        <img className=%twc("w-6 h-6 object-contain") src=placeholderIcon />
+        <span className=%twc("mt-3 text-gray-600 text-[13px]")>
+          {`아직 시세 정보가 없습니다.`->React.string}
+        </span>
+      </div>
+    }}
+  </FeatureFlagWrapper>
 }

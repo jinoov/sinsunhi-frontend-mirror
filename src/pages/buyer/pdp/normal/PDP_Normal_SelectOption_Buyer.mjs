@@ -17,7 +17,9 @@ import * as PDP_Parser_Buyer from "../../../../utils/PDP_Parser_Buyer.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactScrollArea from "@radix-ui/react-scroll-area";
+import * as FormulaComponents from "@greenlabs/formula-components";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as AdhocStock_Parser_Buyer_Admin from "../../../../utils/AdhocStock_Parser_Buyer_Admin.mjs";
 import * as PDPNormalSelectOptionBuyerFragment_graphql from "../../../../__generated__/PDPNormalSelectOptionBuyerFragment_graphql.mjs";
 import * as PDPNormalSelectOptionBuyerItemFragment_graphql from "../../../../__generated__/PDPNormalSelectOptionBuyerItemFragment_graphql.mjs";
 
@@ -109,6 +111,8 @@ function PDP_Normal_SelectOption_Buyer$PC$Item(Props) {
   var match = use$1(query);
   var optionName = match.optionName;
   var id = match.id;
+  var adhocStockNumRemaining = match.adhocStockNumRemaining;
+  var isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(match.adhocStockIsLimited, match.adhocStockIsNumRemainingVisible);
   var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match.productOptionCost.deliveryCost, match.isFreeShipping);
   var optionPriceLabel = Belt_Option.mapWithDefault(optionPrice, "", (function (optionPrice$p) {
           return "" + Locale.Float.show(undefined, optionPrice$p, 0) + "원";
@@ -118,9 +122,7 @@ function PDP_Normal_SelectOption_Buyer$PC$Item(Props) {
                 className: "w-full rounded-lg py-3 px-2 text-gray-400"
               }, React.createElement("span", undefined, optionName, "/"), React.createElement("span", undefined, React.createElement("span", {
                         className: "ml-1 font-bold"
-                      }, optionPriceLabel), React.createElement("span", {
-                        className: "font-bold"
-                      }, " - 품절")));
+                      }, optionPriceLabel), React.createElement("span", undefined, " - 품절")));
   } else {
     return React.createElement(ReactDropdownMenu.Item, {
                 children: React.createElement("div", {
@@ -134,11 +136,21 @@ function PDP_Normal_SelectOption_Buyer$PC$Item(Props) {
                                 }
                               });
                         })
-                    }, React.createElement("span", {
-                          className: "text-gray-800"
-                        }, React.createElement("span", undefined, optionName, "/"), React.createElement("span", {
-                              className: "ml-1 font-bold"
-                            }, optionPriceLabel))),
+                    }, React.createElement(FormulaComponents.TextBody, {
+                          size: "md",
+                          children: null
+                        }, optionName, "/"), React.createElement(FormulaComponents.TextBody, {
+                          className: "ml-1",
+                          size: "md",
+                          weight: "bold",
+                          children: optionPriceLabel
+                        }), isShowRemaining && adhocStockNumRemaining !== undefined ? React.createElement(React.Fragment, undefined, React.createElement(FormulaComponents.TextBody, {
+                                children: " - "
+                              }), React.createElement(FormulaComponents.TextBody, {
+                                size: "md",
+                                color: "gray-70",
+                                children: "" + Locale.Float.show(undefined, adhocStockNumRemaining, 0) + "개 남음"
+                              })) : null),
                 className: "focus:outline-none"
               });
   }
@@ -260,6 +272,8 @@ function PDP_Normal_SelectOption_Buyer$MO$Item(Props) {
   var match = use$1(query);
   var optionName = match.optionName;
   var id = match.id;
+  var adhocStockNumRemaining = match.adhocStockNumRemaining;
+  var isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(match.adhocStockIsLimited, match.adhocStockIsNumRemainingVisible);
   var optionPrice = PDP_Parser_Buyer.ProductOption.makeOptionPrice(match.price, match.productOptionCost.deliveryCost, match.isFreeShipping);
   var optionPriceLabel = Belt_Option.mapWithDefault(optionPrice, "", (function (optionPrice$p) {
           return "" + Locale.Float.show(undefined, optionPrice$p, 0) + "원";
@@ -284,13 +298,23 @@ function PDP_Normal_SelectOption_Buyer$MO$Item(Props) {
     return React.createElement("div", {
                 className: "py-4 flex justify-between items-center"
               }, React.createElement("label", {
-                    className: "w-full flex items-start mr-3",
+                    className: "w-full mr-3",
                     htmlFor: id
-                  }, React.createElement("span", {
-                        className: "text-gray-800"
-                      }, optionName, React.createElement("span", {
-                            className: "ml-2 whitespace-nowrap"
-                          }, optionPriceLabel))), React.createElement(Checkbox.make, {
+                  }, React.createElement(FormulaComponents.TextBody, {
+                        size: "md",
+                        children: null
+                      }, optionName, "/"), React.createElement(FormulaComponents.TextBody, {
+                        className: "ml-1",
+                        size: "md",
+                        weight: "bold",
+                        children: optionPriceLabel
+                      }), isShowRemaining && adhocStockNumRemaining !== undefined ? React.createElement(React.Fragment, undefined, React.createElement(FormulaComponents.TextBody, {
+                              children: " - "
+                            }), React.createElement(FormulaComponents.TextBody, {
+                              size: "md",
+                              color: "gray-70",
+                              children: "" + Locale.Float.show(undefined, adhocStockNumRemaining, 0) + "개 남음"
+                            })) : null), React.createElement(Checkbox.make, {
                     id: id,
                     checked: checked,
                     onChange: onChange

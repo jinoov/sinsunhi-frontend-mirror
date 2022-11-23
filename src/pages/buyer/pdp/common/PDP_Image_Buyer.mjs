@@ -5,12 +5,13 @@ import * as React from "react";
 
 function PDP_Image_Buyer$PC(Props) {
   var src = Props.src;
+  var alt = Props.alt;
   return React.createElement("div", {
               className: "relative w-[664px] pt-[100%] rounded-2xl overflow-hidden"
             }, React.createElement($$Image.make, {
                   src: src,
                   placeholder: /* Lg */1,
-                  alt: "product-detail-thumbnail",
+                  alt: alt,
                   className: "absolute left-0 top-0 w-full h-full object-cover"
                 }), React.createElement("div", {
                   className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl"
@@ -23,12 +24,13 @@ var PC = {
 
 function PDP_Image_Buyer$MO(Props) {
   var src = Props.src;
+  var alt = Props.alt;
   return React.createElement("div", {
               className: "w-full pt-[100%] relative overflow-hidden"
             }, React.createElement($$Image.make, {
                   src: src,
                   placeholder: /* Lg */1,
-                  alt: "product-detail-thumbnail",
+                  alt: alt,
                   className: "absolute top-0 left-0 w-full h-full object-cover"
                 }), React.createElement("div", {
                   className: "w-full h-full absolute top-0 left-0 bg-black/[.03]"

@@ -1,6 +1,13 @@
 @react.component
 let make = () => {
   let router = Next.Router.useRouter()
+
+  React.useEffect0(_ => {
+    // Braze Push Notification Request
+    Braze.PushNotificationRequestDialog.trigger()
+    None
+  })
+
   <>
     <Tradematch_Buy_Farm_Apply_Steps_Buyer.Common.Title
       text={`24시간 안으로 담당자가\n연락을 드릴예정입니다`}

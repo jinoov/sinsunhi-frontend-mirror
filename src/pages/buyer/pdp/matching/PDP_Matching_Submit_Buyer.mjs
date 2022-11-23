@@ -72,8 +72,8 @@ function PDP_Matching_Submit_Buyer$MO(Props) {
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;
-  var btnStyle = "h-14 w-full rounded-xl bg-primary text-white text-lg font-bold";
-  var disabledStyle = "h-14 w-full rounded-xl bg-disabled-L2 text-white text-lg font-bold";
+  var btnStyle = "h-14 flex-1 rounded-xl bg-primary text-white text-lg font-bold";
+  var disabledStyle = "h-14 flex-1 rounded-xl bg-disabled-L2 text-white text-lg font-bold";
   var tmp;
   if (typeof user === "number") {
     tmp = user !== 0 ? React.createElement("button", {
@@ -100,10 +100,10 @@ function PDP_Matching_Submit_Buyer$MO(Props) {
     var onClick = function (param) {
       DataGtm.push(DataGtm.mergeUserIdUnsafe(make(displayName, productId, category)));
       var prim1_pathname = "/buyer/tradematch/buy/products/" + String(productId) + "/apply";
-      var prim1_query = Js_dict.fromArray([[
-              "grade",
-              selectedGroup
-            ]]);
+      var prim1_query = Caml_option.some(Js_dict.fromArray([[
+                  "grade",
+                  selectedGroup
+                ]]));
       var prim1 = {
         pathname: prim1_pathname,
         query: prim1_query
@@ -116,6 +116,7 @@ function PDP_Matching_Submit_Buyer$MO(Props) {
         }, buttonText);
   }
   return React.createElement(PDP_CTA_Container_Buyer.make, {
+              query: match.fragmentRefs,
               children: tmp
             });
 }

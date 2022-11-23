@@ -160,7 +160,7 @@ module Header = {
         <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
           <div className=%twc("px-5 py-4 flex justify-between")>
             <button onClick={_ => handleClickLeftButton()}>
-              <IconArrow height="24" width="24" className=%twc("rotate-180") />
+              <Formula.Icon.ArrowLeftLineRegular size=#xl />
             </button>
             <div>
               <span className=%twc("font-bold text-base")>
@@ -193,7 +193,9 @@ module Skeleton = {
   @react.component
   let make = () => {
     <>
-      <div className=%twc("px-5 py-9")> <Skeleton.Box className=%twc("h-18") /> </div>
+      <div className=%twc("px-5 py-9")>
+        <Skeleton.Box className=%twc("h-18") />
+      </div>
       <div className=%twc("space-y-8")>
         <div className=%twc("px-5 space-y-1")>
           <Skeleton.Box className=%twc("h-7 w-1/5") />
@@ -349,7 +351,11 @@ module StatusChecker = {
 
     <>
       {switch isOpenCheckDraftDemand {
-      | true => <> <Header /> <Skeleton /> </>
+      | true =>
+        <>
+          <Header />
+          <Skeleton />
+        </>
       | false => children
       }}
       <DS_Dialog.Popup.Root _open=isOpenCheckDraftDemand>
@@ -447,7 +453,12 @@ let make = (~pNumber: int) => {
     switch product {
     | Some(#MatchingProduct(matchingProduct)) => <Content matchingProduct />
     | Some(#UnselectedUnionMember(_))
-    | None => <> <Header /> <Skeleton /> <NotFoundProductOrDemand /> </>
+    | None =>
+      <>
+        <Header />
+        <Skeleton />
+        <NotFoundProductOrDemand />
+      </>
     }
   }
 }

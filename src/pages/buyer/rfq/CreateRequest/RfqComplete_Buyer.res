@@ -3,6 +3,12 @@ module Complete = {
   let make = () => {
     let router = Next.Router.useRouter()
 
+    React.useEffect0(_ => {
+      // Braze Push Notification Request
+      Braze.PushNotificationRequestDialog.trigger()
+      None
+    })
+
     <div className=%twc("relative container max-w-3xl mx-auto min-h-screen sm:shadow-gl pt-11")>
       <DS_TopNavigation.Detail.Root>
         <DS_TopNavigation.Detail.Left>

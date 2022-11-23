@@ -5,33 +5,55 @@ import * as React from "react";
 import * as Locale from "../../../../utils/Locale.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
+import * as FeatureFlagWrapper from "../../pc/FeatureFlagWrapper.mjs";
 
 function PDP_Normal_Title_Buyer$PC(Props) {
   var displayName = Props.displayName;
   var price = Props.price;
   var isSoldout = Props.isSoldout;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var priceLabel = Belt_Option.mapWithDefault(price, "", (function (price$p) {
-          return Locale.Float.show(undefined, price$p, 0);
-        }));
+  var priceToDisplay = function (p) {
+    return Locale.Float.show(undefined, p, 0);
+  };
+  var priceLabel = Belt_Option.map(price, priceToDisplay);
   var tmp;
   if (typeof user === "number") {
     tmp = user !== 0 ? React.createElement("h1", {
             className: "mt-4 text-[28px] text-green-500 font-bold"
-          }, "공급가 회원공개") : null;
+          }, "공급가 회원공개") : React.createElement("div", {
+            className: "mt-4"
+          });
   } else {
     var textColor = isSoldout ? "text-gray-600" : "text-gray-800";
     tmp = React.createElement("h1", {
           className: "mt-4 text-[32px] leading-[38px] font-bold " + textColor
-        }, priceLabel, React.createElement("span", {
-              className: "text-[28px]"
-            }, "원"));
+        }, priceLabel !== undefined ? React.createElement(React.Fragment, undefined, priceLabel, React.createElement("span", {
+                    className: "text-[28px]"
+                  }, "원")) : null);
   }
-  return React.createElement("section", undefined, React.createElement("h1", {
-                  className: "text-[32px] leading-[44px] text-gray-800"
-                }, displayName), tmp, React.createElement("span", {
-                  className: "mt-4 text-red-500 text-[15px]"
-                }, "시세에 따라 가격이 변동될 수 있습니다"));
+  var oldUI = React.createElement("section", undefined, React.createElement("h1", {
+            className: "text-[32px] leading-[44px] text-gray-800"
+          }, displayName), React.createElement("div", {
+            className: "h-10"
+          }, tmp), React.createElement("span", {
+            className: "mt-4 text-red-500 text-[15px]"
+          }, "시세에 따라 가격이 변동될 수 있습니다"));
+  var textColor$1 = isSoldout ? "text-gray-600" : "text-gray-800";
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("section", undefined, React.createElement("h1", {
+                        className: "text-[32px] leading-[44px] text-gray-800"
+                      }, displayName), React.createElement("div", {
+                        className: "h-10"
+                      }, React.createElement("h1", {
+                            className: "mt-4 text-[32px] leading-[38px] font-bold " + textColor$1
+                          }, priceLabel !== undefined ? React.createElement(React.Fragment, undefined, priceLabel, React.createElement("span", {
+                                      className: "text-[28px]"
+                                    }, "원")) : null)), React.createElement("span", {
+                        className: "mt-4 text-red-500 text-[15px]"
+                      }, "시세에 따라 가격이 변동될 수 있습니다")),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var PC = {
@@ -43,9 +65,10 @@ function PDP_Normal_Title_Buyer$MO(Props) {
   var price = Props.price;
   var isSoldout = Props.isSoldout;
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  var priceLabel = Belt_Option.mapWithDefault(price, "", (function (price$p) {
-          return Locale.Float.show(undefined, price$p, 0);
-        }));
+  var priceToDisplay = function (p) {
+    return Locale.Float.show(undefined, p, 0);
+  };
+  var priceLabel = Belt_Option.map(price, priceToDisplay);
   var tmp;
   if (typeof user === "number") {
     tmp = user !== 0 ? React.createElement("h1", {
@@ -55,15 +78,33 @@ function PDP_Normal_Title_Buyer$MO(Props) {
     var textColor = isSoldout ? "text-gray-600" : "text-gray-800";
     tmp = React.createElement("h1", {
           className: "text-[22px] font-bold " + textColor
-        }, priceLabel, React.createElement("span", {
-              className: "text-lg"
-            }, "원"));
+        }, priceLabel !== undefined ? React.createElement(React.Fragment, undefined, priceLabel, React.createElement("span", {
+                    className: "text-lg"
+                  }, "원")) : null);
   }
-  return React.createElement("section", undefined, React.createElement("h1", {
-                  className: "text-lg text-gray-800"
-                }, displayName), tmp, React.createElement("span", {
-                  className: "mt-4 text-red-500 text-[13px]"
-                }, "시세에 따라 가격이 변동될 수 있습니다"));
+  var oldUI = React.createElement("section", undefined, React.createElement("h1", {
+            className: "text-lg text-gray-800 break-all"
+          }, displayName), React.createElement("div", {
+            className: "h-[33px]"
+          }, tmp), React.createElement("span", {
+            className: "mt-4 text-red-500 text-[13px]"
+          }, "시세에 따라 가격이 변동될 수 있습니다"));
+  var textColor$1 = isSoldout ? "text-gray-600" : "text-gray-800";
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("section", undefined, React.createElement("h1", {
+                        className: "text-lg text-gray-800 break-all"
+                      }, displayName), React.createElement("div", {
+                        className: "h-[33px]"
+                      }, React.createElement("h1", {
+                            className: "text-[22px] font-bold " + textColor$1
+                          }, priceLabel !== undefined ? React.createElement(React.Fragment, undefined, priceLabel, React.createElement("span", {
+                                      className: "text-lg"
+                                    }, "원")) : null)), React.createElement("span", {
+                        className: "mt-4 text-red-500 text-[13px]"
+                      }, "시세에 따라 가격이 변동될 수 있습니다")),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var MO = {

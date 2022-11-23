@@ -56,12 +56,11 @@ module PC = {
         | Some(container') => {
             let currentScrollLeft = container'->Dom.Element.scrollLeft
 
-
             setShowLeftArrow(._ => currentScrollLeft > 0.0)
             // 스크롤 위치 (currentScrollLeft)의 값이 float 값으로, 0 < currentScrollLeft < 1 사이의 값인 경우 버튼이 없어지지 않을 수 있어서, 높임(ceil)을 합니다.
             setShowRightArrow(._ =>
-              currentScrollLeft->Js.Math.ceil_float->Float.toInt + container'->Dom.Element.clientWidth <
-                container'->Dom.Element.scrollWidth
+              currentScrollLeft->Js.Math.ceil_float->Float.toInt +
+                container'->Dom.Element.clientWidth < container'->Dom.Element.scrollWidth
             )
           }
 
@@ -159,6 +158,7 @@ module PC = {
           | true =>
             <div className=%twc("w-[88px] h-11 inline-flex gradient-tab-l mr-auto")>
               <button
+                ariaLabel="이전 카테고리 목록"
                 onClick={handleClickLeftArrow}
                 className=%twc(
                   "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto rotate-180"
@@ -175,6 +175,7 @@ module PC = {
                 "w-[88px] h-11 float-left inline-flex gradient-tab-r justify-end self-end ml-auto"
               )>
               <button
+                ariaLabel="다음 카테고리 목록"
                 onClick={handleClickRightArrow}
                 className=%twc(
                   "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto"
@@ -379,64 +380,88 @@ module MO = {
   let make = (~parentId) => {
     let {node} = Query.use(~variables=Query.makeVariables(~parentId), ())
 
-    let (firstItem, restItem) = switch node->Option.mapWithDefault([], node => node.children) {
-    | [] => {
-        let parentNode = node->Option.flatMap(node' => node'.parent)
-        let id = parentNode->Option.mapWithDefault("", parentNode' => parentNode'.id)
-        let name = parentNode->Option.mapWithDefault("", parentNode' => parentNode'.name)
+    switch node {
+    | Some(node') => {
+        let (firstNodeId, restItem, title, showScrollableTab) = switch (
+          node'.type_,
+          node'.children,
+        ) {
+        | (#NORMAL, []) => {
+            let parentNode = node'.parent
+            let id = parentNode->Option.mapWithDefault("", parentNode' => parentNode'.id)
+            let name = parentNode->Option.mapWithDefault("", parentNode' => parentNode'.name)
 
+            let restItem =
+              parentNode
+              ->Option.mapWithDefault([], parentNode' => parentNode'.children)
+              ->Array.map(item =>
+                PLP_Scrollable_Tab_Item.Data.make(
+                  ~id=item.id,
+                  ~name=item.name,
+                  ~kind=PLP_Scrollable_Tab_Item.Data.Specific,
+                )
+              )
+            (id, restItem, name, true)
+          }
+
+        | (#SHOWCASE, []) => {
+            let parentNode = node'.parent
+            let id = parentNode->Option.mapWithDefault("", parentNode' => parentNode'.id)
+            let name = node'.name
+
+            let restItem =
+              parentNode
+              ->Option.mapWithDefault([], parentNode' => parentNode'.children)
+              ->Array.map(item =>
+                PLP_Scrollable_Tab_Item.Data.make(
+                  ~id=item.id,
+                  ~name=item.name,
+                  ~kind=PLP_Scrollable_Tab_Item.Data.Specific,
+                )
+              )
+            (id, restItem, name, false)
+          }
+
+        | (_, children) => {
+            let id = node'.id
+            let name = node'.name
+
+            let restItem =
+              children->Array.map(item =>
+                PLP_Scrollable_Tab_Item.Data.make(
+                  ~id=item.id,
+                  ~name=item.name,
+                  ~kind=PLP_Scrollable_Tab_Item.Data.Specific,
+                )
+              )
+            (id, restItem, name, true)
+          }
+        }
         let firstItem = PLP_Scrollable_Tab_Item.Data.make(
-          ~id,
-          ~name=`${name} 전체`,
+          ~id=firstNodeId,
+          ~name=`${title} 전체`,
           ~kind=PLP_Scrollable_Tab_Item.Data.All,
         )
-        let restItem =
-          parentNode
-          ->Option.mapWithDefault([], node => node.children)
-          ->Array.map(item =>
-            PLP_Scrollable_Tab_Item.Data.make(
-              ~id=item.id,
-              ~name=item.name,
-              ~kind=PLP_Scrollable_Tab_Item.Data.Specific,
-            )
+
+        let items =
+          [firstItem]->Array.concat(
+            restItem->Array.map(item =>
+              PLP_Scrollable_Tab_Item.Data.make(
+                ~id=item.id,
+                ~name=item.name,
+                ~kind=PLP_Scrollable_Tab_Item.Data.Specific,
+              )
+            ),
           )
-        (firstItem, restItem)
+        <React.Suspense fallback={<Skeleton />}>
+          {switch showScrollableTab {
+          | true => <View items />
+          | false => React.null
+          }}
+        </React.Suspense>
       }
 
-    | children => {
-        let id = node->Option.mapWithDefault("", node' => node'.id)
-        let name = node->Option.mapWithDefault("", node' => node'.name)
-
-        let firstItem = PLP_Scrollable_Tab_Item.Data.make(
-          ~id,
-          ~name=`${name} 전체`,
-          ~kind=PLP_Scrollable_Tab_Item.Data.All,
-        )
-        let restItem =
-          children->Array.map(item =>
-            PLP_Scrollable_Tab_Item.Data.make(
-              ~id=item.id,
-              ~name=item.name,
-              ~kind=PLP_Scrollable_Tab_Item.Data.Specific,
-            )
-          )
-        (firstItem, restItem)
-      }
+    | None => <Skeleton />
     }
-
-    let items =
-      [firstItem]->Array.concat(
-        restItem->Array.map(item =>
-          PLP_Scrollable_Tab_Item.Data.make(
-            ~id=item.id,
-            ~name=item.name,
-            ~kind=PLP_Scrollable_Tab_Item.Data.Specific,
-          )
-        ),
-      )
-
-    <React.Suspense fallback={<Skeleton />}>
-      <View items />
-    </React.Suspense>
   }
 }

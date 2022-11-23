@@ -116,9 +116,9 @@ let make = () => {
       } else if k === "sku" {
         FormFields.Sku->form.setFieldValue(v, ~shouldValidate=true, ())
       } else if k === "from" {
-        setQuery(.prev => {...prev, from: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
+        setQuery(. prev => {...prev, from: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
       } else if k === "to" {
-        setQuery(.prev => {...prev, to_: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
+        setQuery(. prev => {...prev, to_: v->DateFns.parse("yyyyMMdd", Js.Date.make())})
       }
     })
 
@@ -165,7 +165,7 @@ let make = () => {
                 <Input
                   type_="text"
                   name="farmer-name"
-                  placeholder=`생산자명 입력`
+                  placeholder={`생산자명 입력`}
                   value={form.values->FormFields.get(FormFields.FarmerName)}
                   onChange={FormFields.FarmerName->form.handleChange->ReForm.Helpers.handleChange}
                   error={FormFields.FarmerName->Form.ReSchema.Field->form.getFieldError}
@@ -179,7 +179,7 @@ let make = () => {
                 <Input
                   type_="text"
                   name="orderer-name"
-                  placeholder=`주문자명 입력`
+                  placeholder={`주문자명 입력`}
                   value={form.values->FormFields.get(FormFields.OrdererName)}
                   onChange={FormFields.OrdererName->form.handleChange->ReForm.Helpers.handleChange}
                   error={FormFields.OrdererName->Form.ReSchema.Field->form.getFieldError}
@@ -193,7 +193,7 @@ let make = () => {
                 <Input
                   type_="text"
                   name="receiver-name"
-                  placeholder=`수취인명 입력`
+                  placeholder={`수취인명 입력`}
                   value={form.values->FormFields.get(FormFields.ReceiverName)}
                   onChange={FormFields.ReceiverName->form.handleChange->ReForm.Helpers.handleChange}
                   error={FormFields.ReceiverName->Form.ReSchema.Field->form.getFieldError}
@@ -209,7 +209,7 @@ let make = () => {
                 <Input
                   type_="text"
                   name="order-product-no"
-                  placeholder=`주문번호 입력`
+                  placeholder={`주문번호 입력`}
                   value={form.values->FormFields.get(FormFields.OrderProductNo)}
                   onChange={FormFields.OrderProductNo
                   ->form.handleChange
@@ -225,7 +225,7 @@ let make = () => {
                 <Input
                   type_="text"
                   name="product-id"
-                  placeholder=`상품번호 입력`
+                  placeholder={`상품번호 입력`}
                   value={form.values->FormFields.get(FormFields.ProductId)}
                   onChange={FormFields.ProductId->form.handleChange->ReForm.Helpers.handleChange}
                   error={FormFields.ProductId->Form.ReSchema.Field->form.getFieldError}
@@ -239,7 +239,7 @@ let make = () => {
                 <Input
                   type_="text"
                   name="sku"
-                  placeholder=`단품번호 입력`
+                  placeholder={`단품번호 입력`}
                   value={form.values->FormFields.get(FormFields.Sku)}
                   onChange={FormFields.Sku->form.handleChange->ReForm.Helpers.handleChange}
                   error={FormFields.Sku->Form.ReSchema.Field->form.getFieldError}
@@ -282,7 +282,7 @@ let make = () => {
           className=%twc(
             "w-20 py-2 bg-gray-button-gl text-black-gl rounded-xl ml-2 hover:bg-gray-button-gl focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-gl focus:ring-opacity-100"
           )
-          value=`초기화`
+          value={`초기화`}
           onClick={handleOnReset}
           tabIndex=7
         />
@@ -291,7 +291,7 @@ let make = () => {
           className=%twc(
             "w-20 py-2 bg-green-gl text-white font-bold rounded-xl ml-2 hover:bg-green-gl-dark focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-gl focus:ring-opacity-100"
           )
-          value=`검색`
+          value={`검색`}
           tabIndex=6
         />
       </div>

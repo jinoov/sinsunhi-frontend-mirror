@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../utils/ReactEvents.mjs";
 import * as Router from "next/router";
 import * as ReactDropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -70,7 +71,7 @@ function ShopProductsSortSelect_Buyer(Props) {
                     newQuery["sort"] = encodeSort(sort);
                     router.push({
                           pathname: router.pathname,
-                          query: newQuery
+                          query: Caml_option.some(newQuery)
                         });
                   }), param);
     };
@@ -93,6 +94,7 @@ function ShopProductsSortSelect_Buyer(Props) {
                           }, React.createElement("span", {
                                 className: "text-sm mr-1 text-gray-800"
                               }, label), React.createElement("img", {
+                                alt: "",
                                 src: arrowUpDownIcon
                               })),
                       className: "focus:outline-none"
@@ -128,7 +130,7 @@ function ShopProductsSortSelect_Buyer$MO(Props) {
                     newQuery["sort"] = encodeSort(sort);
                     router.push({
                           pathname: router.pathname,
-                          query: newQuery
+                          query: Caml_option.some(newQuery)
                         });
                   }), param);
     };
@@ -149,6 +151,7 @@ function ShopProductsSortSelect_Buyer$MO(Props) {
                           }, React.createElement("span", {
                                 className: "text-sm mr-1 text-gray-800"
                               }, label), React.createElement("img", {
+                                alt: "",
                                 src: arrowUpDownIcon
                               })),
                       className: "focus:outline-none"

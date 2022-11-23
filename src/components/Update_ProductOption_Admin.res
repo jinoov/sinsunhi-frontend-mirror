@@ -34,6 +34,11 @@ module Fragment = %relay(`
     stockSku
     isFreeShipping
     shippingUnitQuantity
+    adhocStockIsLimited
+    adhocStockIsNumRemainingVisible
+    adhocStockNumLimit
+    adhocStockNumRemaining
+    adhocStockNumSold
     ...UpdateProductOptionAdminAutoGenNameFragment
   }
 `)
@@ -223,6 +228,9 @@ module Form = {
     @spice.key("auto-generated-name") autoGenName: string,
     @spice.key("is-free-shipping") isFreeShipping: Select_Product_Shipping_Type.status,
     @spice.key("shipping-unit-quantity") shippingUnitQuantity: int,
+    @spice.key("adhoc-stock-is-limited") adhocStockIsLimited: bool,
+    @spice.key("adhoc-stock-num-limit") adhocStockNumLimit: option<int>,
+    @spice.key("adhoc-stock-is-num-remaining-visible") adhocStockIsNumRemainingVisible: bool,
   }
 
   type inputNames = {
@@ -234,6 +242,9 @@ module Form = {
     autoGenName: string,
     isFreeShipping: string,
     shippingUnitQuantity: string,
+    adhocStockIsLimited: string,
+    adhocStockNumLimit: string,
+    adhocStockIsNumRemainingVisible: string,
   }
 
   let makeInputNames = prefix => {
@@ -245,6 +256,9 @@ module Form = {
     autoGenName: `${prefix}.auto-generated-name`,
     isFreeShipping: `${prefix}.is-free-shipping`,
     shippingUnitQuantity: `${prefix}.shipping-unit-quantity`,
+    adhocStockIsLimited: `${prefix}.adhoc-stock-is-limited`,
+    adhocStockNumLimit: `${prefix}.adhoc-stock-num-limit`,
+    adhocStockIsNumRemainingVisible: `${prefix}.adhoc-stock-is-num-remaining-visible`,
   }
 
   // 단품 수정 폼 정보를 이용하여 단품 생성 폼을 만든다
@@ -292,6 +306,17 @@ module Form = {
       ),
       (names.cutOffTime, values.cutOffTime->Option.mapWithDefault(Js.Json.null, Js.Json.string)),
       (names.memo, values.memo->Option.mapWithDefault(Js.Json.null, Js.Json.string)),
+      (names.adhocStockIsLimited, values.adhocStockIsLimited->Js.Json.boolean),
+      (
+        names.adhocStockNumLimit,
+        values.adhocStockNumLimit->Option.mapWithDefault(Js.Json.null, x =>
+          x->Int.toFloat->Js.Json.number
+        ),
+      ),
+      (
+        names.adhocStockIsNumRemainingVisible,
+        values.adhocStockIsNumRemainingVisible->Js.Json.boolean,
+      ),
     ]
 
     let each = switch DecodeProductOption.hasEach(
@@ -737,6 +762,271 @@ module EditCutOffTime = {
   }
 }
 
+module AdhocStockIsLimitedCheckbox = {
+  @react.component
+  let make = (~inputName, ~defaultValue) => {
+    let {register} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
+
+    let {name, onChange, onBlur, ref} = register(. inputName, None)
+
+    <div className=%twc("flex flex-col gap-2 h-[125px] mr-10")>
+      <div className=%twc("block")>
+        <span className=%twc("font-bold")> {`공급 수량 설정`->React.string} </span>
+      </div>
+      <div className=%twc("flex gap-2 items-center")>
+        <Checkbox.Uncontrolled
+          defaultChecked={defaultValue} id=name name onChange onBlur inputRef=ref
+        />
+        <label htmlFor=name className=%twc("cursor-pointer")>
+          {`공급 수량 설정하기`->React.string}
+        </label>
+      </div>
+    </div>
+  }
+}
+
+module AdhocStockNumLimit = {
+  @react.component
+  let make = (~inputName, ~adhocStockIsLimitedCheckboxName, ~defaultValue, ~defaultDisabled) => {
+    let {register, formState: {errors}, setValue} = Hooks.Context.use(.
+      ~config=Hooks.Form.config(~mode=#onChange, ()),
+      (),
+    )
+
+    let quotableCheckboxValue = Hooks.WatchValues.use(
+      Hooks.WatchValues.Checkbox,
+      ~config=Hooks.WatchValues.config(
+        ~name=adhocStockIsLimitedCheckboxName,
+        ~defaultValue=defaultDisabled->Js.Json.boolean,
+        (),
+      ),
+      (),
+    )
+
+    let isDisabled = switch quotableCheckboxValue {
+    | Some(true) => false
+    | _ => true
+    }
+
+    React.useEffect1(() => {
+      switch isDisabled {
+      | true =>
+        setValue(. inputName, defaultValue->Option.getWithDefault(0)->Int.toString->Js.Json.string)
+      | false => ()
+      }
+
+      None
+    }, [isDisabled])
+
+    let {ref, name, onChange, onBlur} = register(.
+      inputName,
+      Some(Hooks.Register.config(~required=!isDisabled, ~valueAsNumber=true, ())),
+    )
+
+    <div className=%twc("flex flex-col w-[158px] min-w-[158px]")>
+      <label className=%twc("block")>
+        <span className={isDisabled ? %twc("font-bold text-gray-400") : %twc("font-bold")}>
+          {`공급 수량`->React.string}
+        </span>
+        <span className=%twc("text-red-500")> {`*`->React.string} </span>
+      </label>
+      <input
+        id=name
+        ref
+        type_="number"
+        name
+        onChange
+        onBlur
+        disabled={isDisabled}
+        readOnly={isDisabled}
+        className=%twc("mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg")
+        placeholder={`공급 수량 입력`}
+        defaultValue={defaultValue->Option.getWithDefault(0)->Int.toString}
+      />
+      <ErrorMessage
+        errors
+        name
+        render={_ =>
+          <span className=%twc("flex")>
+            <IconError width="20" height="20" />
+            <span className=%twc("text-sm text-notice ml-1")>
+              {`올바른 공급수량을 입력해주세요.`->React.string}
+            </span>
+          </span>}
+      />
+    </div>
+  }
+}
+
+module AdhocStockNumSold = {
+  @react.component
+  let make = (~defaultValue, ~adhocStockIsLimitedCheckboxName, ~defaultDisabled) => {
+    let quotableCheckboxValue = Hooks.WatchValues.use(
+      Hooks.WatchValues.Checkbox,
+      ~config=Hooks.WatchValues.config(
+        ~name=adhocStockIsLimitedCheckboxName,
+        ~defaultValue=defaultDisabled->Js.Json.boolean,
+        (),
+      ),
+      (),
+    )
+
+    let isDisabled = switch quotableCheckboxValue {
+    | Some(true) => false
+    | _ => true
+    }
+
+    <div className=%twc("flex flex-col w-[158px] min-w-[158px]")>
+      <label className=%twc("whitespace-nowrap block")>
+        <span className={isDisabled ? %twc("font-bold text-gray-400") : %twc("font-bold")}>
+          {`판매된 수량`->React.string}
+        </span>
+        <span className={isDisabled ? %twc("text-gray-400") : %twc("text-gray-600")}>
+          {` *자동계산`->React.string}
+        </span>
+      </label>
+      <div className=%twc("mt-2 h-9 w-full px-3 py-2 border border-gray-300 rounded-lg")>
+        {switch defaultValue {
+        | Some(v) => v->Int.toString->React.string
+        | None => "-"->React.string
+        }}
+      </div>
+    </div>
+  }
+}
+
+module AdhocStockNumRemaining = {
+  @react.component
+  let make = (
+    ~adhocStockNumLimitName,
+    ~defaultAdhocStockNumLimit,
+    ~adhocStockIsLimitedCheckboxName,
+    ~defaultValue,
+    ~defaultDisabled,
+  ) => {
+    let quotableCheckboxValue = Hooks.WatchValues.use(
+      Hooks.WatchValues.Checkbox,
+      ~config=Hooks.WatchValues.config(
+        ~name=adhocStockIsLimitedCheckboxName,
+        ~defaultValue=defaultDisabled->Js.Json.boolean,
+        (),
+      ),
+      (),
+    )
+
+    let isDisabled = switch quotableCheckboxValue {
+    | Some(true) => false
+    | _ => true
+    }
+
+    let adhocStockNumLimitValue = Hooks.WatchValues.use(
+      Hooks.WatchValues.Text,
+      ~config=Hooks.WatchValues.config(
+        ~name=adhocStockNumLimitName,
+        ~defaultValue=defaultAdhocStockNumLimit
+        ->Option.mapWithDefault(0.0, Int.toFloat)
+        ->Js.Json.number,
+        (),
+      ),
+      (),
+    )
+
+    let currenInputNumLimitValue =
+      adhocStockNumLimitValue->Option.flatMap(Int.fromString)->Option.getWithDefault(0)
+    let prevNumLimitValue = defaultAdhocStockNumLimit->Option.getWithDefault(0)
+    let remainingValue = defaultValue->Option.getWithDefault(0)
+
+    let calculatedDisplayRemainingValue =
+      remainingValue + currenInputNumLimitValue - prevNumLimitValue
+
+    let isShowWarningMessage = 0 > calculatedDisplayRemainingValue
+
+    <div className=%twc("flex flex-col w-[158px] min-w-[158px]")>
+      <label className=%twc("whitespace-nowrap block")>
+        <span className={isDisabled ? %twc("font-bold text-gray-400") : %twc("font-bold")}>
+          {`판매 가능 수량`->React.string}
+        </span>
+        <span className={isDisabled ? %twc("text-gray-400") : %twc("text-gray-600")}>
+          {` *자동계산`->React.string}
+        </span>
+      </label>
+      <div className=%twc("mt-2 h-9 w-full px-3 py-2 border border-gray-300 rounded-lg")>
+        {calculatedDisplayRemainingValue->Int.toString->React.string}
+      </div>
+      // Error Message를 보여주더라도 submit이 가능해야하여,
+      // Hook form의 ErrorMessage를 사용하지 않고 별도로 처리합니다.
+      {switch isShowWarningMessage {
+      | true =>
+        <span className=%twc("flex")>
+          <IconError width="20" height="20" />
+          <span className=%twc("text-sm text-notice ml-1")>
+            {"주문 취소가 필요합니다"->React.string}
+          </span>
+        </span>
+      | false => React.null
+      }}
+    </div>
+  }
+}
+
+module AdhocStockIsNumRemainingVisibleCheckbox = {
+  @react.component
+  let make = (~inputName, ~adhocStockIsLimitedCheckboxName, ~defaultValue, ~defaultDisabled) => {
+    let {register, setValue} = Hooks.Context.use(.
+      ~config=Hooks.Form.config(~mode=#onChange, ()),
+      (),
+    )
+
+    let adhocStockIsLimitedCheckboxValue = Hooks.WatchValues.use(
+      Hooks.WatchValues.Checkbox,
+      ~config=Hooks.WatchValues.config(
+        ~name=adhocStockIsLimitedCheckboxName,
+        ~defaultValue=defaultDisabled->Js.Json.boolean,
+        (),
+      ),
+      (),
+    )
+
+    let isDisabled = switch adhocStockIsLimitedCheckboxValue {
+    | Some(true) => false
+    | _ => true
+    }
+
+    React.useEffect1(() => {
+      switch isDisabled {
+      | true => setValue(. inputName, defaultValue->Js.Json.boolean)
+      | false => ()
+      }
+      None
+    }, [isDisabled])
+
+    let {name, onChange, onBlur, ref} = register(. inputName, None)
+
+    <div className=%twc("flex flex-col gap-2 h-16")>
+      <div className=%twc("block")>
+        <span className={isDisabled ? %twc("font-bold text-gray-400") : %twc("font-bold")}>
+          {`판매 가능 수량 노출 설정`->React.string}
+        </span>
+      </div>
+      <div className=%twc("flex gap-2 items-center")>
+        <Checkbox.Uncontrolled
+          defaultChecked={defaultValue}
+          id=name
+          name
+          onChange
+          onBlur
+          inputRef=ref
+          disabled={isDisabled}
+          readOnly={isDisabled}
+        />
+        <label htmlFor=name className={isDisabled ? %twc("text-gray-400") : %twc("cursor-pointer")}>
+          {`판매 가능 수량 노출하기`->React.string}
+        </label>
+      </div>
+    </div>
+  }
+}
+
 module EditMemo = {
   @react.component
   let make = (~inputName, ~disabled, ~defaultValue) => {
@@ -955,14 +1245,46 @@ let make = (
             </div>
           </div>
           <div className=%twc("flex flex-col gap-6 py-6 w-full")>
+            <div className=%twc("flex gap-4 items-center justify-start")>
+              <AdhocStockIsLimitedCheckbox
+                inputName=inputNames.adhocStockIsLimited
+                defaultValue=productOption.adhocStockIsLimited
+              />
+              <AdhocStockNumLimit
+                inputName=inputNames.adhocStockNumLimit
+                adhocStockIsLimitedCheckboxName=inputNames.adhocStockIsLimited
+                defaultValue=productOption.adhocStockNumLimit
+                defaultDisabled=productOption.adhocStockIsLimited
+              />
+              <AdhocStockNumSold
+                defaultValue=productOption.adhocStockNumSold
+                adhocStockIsLimitedCheckboxName=inputNames.adhocStockIsLimited
+                defaultDisabled=productOption.adhocStockIsLimited
+              />
+              <AdhocStockNumRemaining
+                adhocStockIsLimitedCheckboxName=inputNames.adhocStockIsLimited
+                adhocStockNumLimitName=inputNames.adhocStockNumLimit
+                defaultAdhocStockNumLimit=productOption.adhocStockNumLimit
+                defaultValue={productOption.adhocStockNumRemaining}
+                defaultDisabled=productOption.adhocStockIsLimited
+              />
+              <AdhocStockIsNumRemainingVisibleCheckbox
+                inputName=inputNames.adhocStockIsNumRemainingVisible
+                adhocStockIsLimitedCheckboxName=inputNames.adhocStockIsLimited
+                defaultValue={productOption.adhocStockIsNumRemainingVisible}
+                defaultDisabled=productOption.adhocStockIsLimited
+              />
+            </div>
+          </div>
+          <div className=%twc("flex flex-col gap-6 py-6 w-full")>
             <EditCutOffTime
-              key={productOption.cutOffTime->Option.getWithDefault("")}
+              key=?productOption.cutOffTime
               inputName=inputNames.cutOffTime
               defaultValue=productOption.cutOffTime
               disabled
             />
             <EditMemo
-              key={productOption.memo->Option.getWithDefault("")}
+              key=?productOption.memo
               inputName=inputNames.memo
               defaultValue=productOption.memo
               disabled

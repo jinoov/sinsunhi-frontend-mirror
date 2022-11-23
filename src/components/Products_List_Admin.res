@@ -68,7 +68,7 @@ module Skeleton = {
 @react.component
 let make = (~query) => {
   let router = Next.Router.useRouter()
-  let {products} = Fragment.use(query)
+  let {products} = query->Fragment.use
 
   let limit =
     router.query->Js.Dict.get("limit")->Option.flatMap(Int.fromString)->Option.getWithDefault(25)
@@ -78,31 +78,31 @@ let make = (~query) => {
       <div className=%twc("min-w-max text-sm divide-y divide-gray-100")>
         <div className=%twc("grid grid-cols-9-admin-product bg-gray-100 text-gray-500 h-12")>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`판매상태`->React.string}
+            {`판매상태`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`상품 유형`->React.string}
+            {`상품 유형`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`상품명·상품번호`->React.string}
+            {`상품명·상품번호`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`단품정보`->React.string}
+            {`단품정보`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`생산자·생산자번호`->React.string}
+            {`생산자·생산자번호`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`표준카테고리`->React.string}
+            {`표준카테고리`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`전시카테고리`->React.string}
+            {`전시카테고리`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`바이어판매가`->React.string}
+            {`바이어판매가`->React.string}
           </div>
           <div className=%twc("h-full px-4 flex items-center whitespace-nowrap")>
-            {j`택배여부`->React.string}
+            {`택배여부`->React.string}
           </div>
         </div>
         <ol
@@ -110,9 +110,7 @@ let make = (~query) => {
             "divide-y divide-gray-100 lg:list-height-admin-buyer lg:overflow-y-scroll"
           )>
           {products.edges
-          ->Array.map(({node: product}) =>
-            <Product_Admin query={product.fragmentRefs} key={product.id} />
-          )
+          ->Array.map(({node: {id, fragmentRefs}}) => <Product_Admin key=id query=fragmentRefs />)
           ->React.array}
         </ol>
       </div>

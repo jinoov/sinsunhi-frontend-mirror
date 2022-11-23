@@ -1,9 +1,9 @@
 let formatDate = d => d->Js.Date.fromString->Locale.DateTime.formatFromUTC("yyyy/MM/dd HH:mm")
 
-module Converter = Converter.Status(CustomHooks.OrdersAdmin)
+module Converter = Converter.Status(CustomHooks.Orders)
 
 @react.component
-let make = (~order: CustomHooks.OrdersAdmin.order) => {
+let make = (~order: CustomHooks.Orders.order) => {
   let router = Next.Router.useRouter()
   let {mutate} = Swr.useSwrConfig()
   let {addToast} = ReactToastNotifications.useToasts()
@@ -95,7 +95,9 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
     <RadixUI.Dialog.Trigger className=%twc("block text-left mb-1 underline focus:outline-none")>
       {order.orderProductNo->React.string}
     </RadixUI.Dialog.Trigger>
-    <RadixUI.Dialog.Content className=%twc("dialog-content-detail overflow-y-auto")>
+    <RadixUI.Dialog.Content
+      className=%twc("dialog-content-detail overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <div className=%twc("p-5")>
         <div className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`주문상세조회`->React.string} </h2>
@@ -120,12 +122,31 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
                   ->Locale.Float.show(~digits=0)}원`->React.string}
             </div>
           </div>
-          <div className=%twc("grid grid-cols-4-detail")>
-            <div className=%twc("p-3 bg-div-shape-L2")> {j`바이어`->React.string} </div>
-            <div className=%twc("p-3")> {order.buyerName->React.string} </div>
-            <div className=%twc("p-3 bg-div-shape-L2")> {j`주문상태`->React.string} </div>
-            <div className=%twc("p-3")> {order.status->Converter.displayStatus->React.string} </div>
-          </div>
+          {switch order.status {
+          | DEPOSIT_PENDING =>
+            <>
+              <div className=%twc("grid grid-cols-2-detail")>
+                <div className=%twc("p-3 bg-div-shape-L2")> {"바이어"->React.string} </div>
+                <div className=%twc("p-3")>
+                  {order.buyerName->Option.getWithDefault("-")->React.string}
+                </div>
+              </div>
+              <React.Suspense fallback={<Order_Detail_Deposit_Pending_Table.PlaceHolder />}>
+                <Order_Detail_Deposit_Pending_Table order />
+              </React.Suspense>
+            </>
+          | _ =>
+            <div className=%twc("grid grid-cols-4-detail")>
+              <div className=%twc("p-3 bg-div-shape-L2")> {j`바이어`->React.string} </div>
+              <div className=%twc("p-3")>
+                {order.buyerName->Option.getWithDefault("-")->React.string}
+              </div>
+              <div className=%twc("p-3 bg-div-shape-L2")> {j`주문상태`->React.string} </div>
+              <div className=%twc("p-3")>
+                {order.status->Converter.displayStatus->React.string}
+              </div>
+            </div>
+          }}
           <div className=%twc("grid grid-cols-4-detail")>
             <div className=%twc("p-3 bg-div-shape-L2")> {j`주문자`->React.string} </div>
             <div className=%twc("p-3")>
@@ -157,7 +178,9 @@ let make = (~order: CustomHooks.OrdersAdmin.order) => {
           </div>
           <div className=%twc("grid grid-cols-2-detail")>
             <div className=%twc("p-3 bg-div-shape-L2")> {j`생산자명`->React.string} </div>
-            <div className=%twc("p-3")> {order.farmerName->React.string} </div>
+            <div className=%twc("p-3")>
+              {order.farmerName->Option.getWithDefault("-")->React.string}
+            </div>
           </div>
           <div className=%twc("grid grid-cols-4-detail")>
             <div className=%twc("p-3 bg-div-shape-L2")> {j`수량`->React.string} </div>

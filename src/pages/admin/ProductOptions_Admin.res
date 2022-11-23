@@ -134,10 +134,7 @@ module ProductOptions = {
               {switch user {
               | LoggedIn({role}) =>
                 switch role {
-                | Admin =>
-                  <Excel_Download_Request_Button
-                    userType=Admin requestUrl="/product/request-excel"
-                  />
+                | Admin => <ExcelRequest_Button_ProductOptions_Admin />
                 | _ => React.null
                 }
               | _ => React.null

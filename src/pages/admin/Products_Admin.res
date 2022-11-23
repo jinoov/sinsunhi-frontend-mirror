@@ -107,7 +107,7 @@ module List = {
 
     {
       limit: query->Js.Dict.get("limit")->Option.flatMap(Int.fromString)->Option.getWithDefault(25),
-      name: query->Js.Dict.get("name")->Option.keep(str => str !== ""),
+      name: query->Js.Dict.get("product-name")->Option.keep(str => str !== ""),
       producerName: query->Js.Dict.get("producer-name")->Option.keep(str => str !== ""),
       offset: query->Js.Dict.get("offset")->Option.flatMap(Int.fromString),
       displayCategoryId: query->Js.Dict.get("display-category-id")->Option.getWithDefault(""),
@@ -159,14 +159,18 @@ module List = {
     let user = CustomHooks.Auth.use()
     let searchInput = useSearchInput()
 
-    let queryData = Query.use(~variables=searchInput, ~fetchPolicy=RescriptRelay.NetworkOnly, ())
+    let {products, fragmentRefs} = Query.use(
+      ~variables=searchInput,
+      ~fetchPolicy=RescriptRelay.NetworkOnly,
+      (),
+    )
     <>
       <div className=%twc("md:flex md:justify-between pb-4")>
         <div className=%twc("flex flex-auto justify-between")>
           <h3 className=%twc("font-bold")>
-            {j`내역`->React.string}
+            {`내역`->React.string}
             <span className=%twc("ml-1 text-green-gl font-normal")>
-              {j`${queryData.products.totalCount->Int.toString}건`->React.string}
+              {`${products.totalCount->Int.toString}건`->React.string}
             </span>
           </h3>
           <div className=%twc("flex")>
@@ -174,8 +178,7 @@ module List = {
             {switch user {
             | LoggedIn({role}) =>
               switch role {
-              | Admin =>
-                <Excel_Download_Request_Button userType=Admin requestUrl="/product/request-excel" />
+              | Admin => <ExcelRequest_Button_Products_Admin />
               | _ => React.null
               }
             | _ => React.null
@@ -183,7 +186,7 @@ module List = {
           </div>
         </div>
       </div>
-      <Products_List_Admin query={queryData.fragmentRefs} />
+      <Products_List_Admin query=fragmentRefs />
     </>
   }
 }

@@ -54,7 +54,9 @@ module Item = {
             <span className=%twc("block text-gray-400 mb-1")>
               {order.orderDate->formatDateTime->React.string}
             </span>
-            <span className=%twc("block")> <Badge status=order.status /> </span>
+            <span className=%twc("block")>
+              <Badge status=order.status />
+            </span>
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
             <span className=%twc("block text-gray-400")>
@@ -89,14 +91,17 @@ module Item = {
                   {j`주문취소`->React.string}
                 </button>
               </div>
-            | PACKING => `미등록`->React.string
+            | DEPOSIT_PENDING
+            | PACKING =>
+              `미등록`->React.string
             | DEPARTURE
             | DELIVERING
             | COMPLETE
             | CANCEL
             | ERROR
             | REFUND
-            | NEGOTIATING => <>
+            | NEGOTIATING =>
+              <>
                 <span className=%twc("block")> {courierName->React.string} </span>
                 <span className=%twc("block text-gray-500")>
                   {order.invoice->Option.getWithDefault(`-`)->React.string}
@@ -112,8 +117,12 @@ module Item = {
             </div>
           | _ =>
             <div className=%twc("h-full flex flex-col px-4 py-2")>
-              <span className=%twc("block")> {order.receiverName->Option.getWithDefault(`-`)->React.string} </span>
-              <span className=%twc("block")> {order.receiverPhone->Option.getWithDefault(`-`)->React.string} </span>
+              <span className=%twc("block")>
+                {order.receiverName->Option.getWithDefault(`-`)->React.string}
+              </span>
+              <span className=%twc("block")>
+                {order.receiverPhone->Option.getWithDefault(`-`)->React.string}
+              </span>
               <span className=%twc("block text-gray-500")>
                 {order.receiverAddress->Option.getWithDefault(`-`)->React.string}
               </span>
@@ -142,9 +151,9 @@ module Item = {
         // 다이얼로그
         <Dialog
           isShow=isShowCancelConfirm
-          textOnCancel=`취소`
+          textOnCancel={`취소`}
           onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-          textOnConfirm=`확인`
+          textOnConfirm={`확인`}
           onConfirm={_ => {
             setShowCancelConfirm(._ => Dialog.Hide)
             onClickCancel([order.orderProductNo])
@@ -186,7 +195,9 @@ module Item = {
             <div>
               <div className=%twc("flex")>
                 <span className=%twc("w-20 text-gray-gl")> {j`주문번호`->React.string} </span>
-                <span className=%twc("ml-2")> <Order_Detail_Button_Buyer_Seller order /> </span>
+                <span className=%twc("ml-2")>
+                  <Order_Detail_Button_Buyer_Seller order />
+                </span>
               </div>
               <div className=%twc("flex mt-2")>
                 <span className=%twc("w-20 text-gray-gl")> {j`일자`->React.string} </span>
@@ -245,14 +256,17 @@ module Item = {
                       </button>
                     </div>
                   </div>
-                | PACKING => `미등록`->React.string
+                | DEPOSIT_PENDING
+                | PACKING =>
+                  `미등록`->React.string
                 | DEPARTURE
                 | DELIVERING
                 | COMPLETE
                 | CANCEL
                 | ERROR
                 | REFUND
-                | NEGOTIATING => <>
+                | NEGOTIATING =>
+                  <>
                     <div className=%twc("flex")>
                       <span className=%twc("w-20 text-gray-gl")>
                         {j`운송장번호`->React.string}
@@ -276,7 +290,8 @@ module Item = {
                   {switch order.deliveryType {
                   | Some(SELF) =>
                     <span className=%twc("block")> {j`직접수령`->React.string} </span>
-                  | _ => <>
+                  | _ =>
+                    <>
                       <span className=%twc("block")>
                         {j`${order.receiverName->Option.getWithDefault(`-`)} ${order.receiverPhone->Option.getWithDefault(`-`)}`->React.string}
                       </span>
@@ -323,9 +338,9 @@ module Item = {
         // 다이얼로그
         <Dialog
           isShow=isShowCancelConfirm
-          textOnCancel=`취소`
+          textOnCancel={`취소`}
           onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-          textOnConfirm=`확인`
+          textOnConfirm={`확인`}
           onConfirm={_ => {
             setShowCancelConfirm(._ => Dialog.Hide)
             onClickCancel([order.orderProductNo])

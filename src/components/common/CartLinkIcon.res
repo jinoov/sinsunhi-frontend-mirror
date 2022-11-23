@@ -12,7 +12,11 @@ module PlaceHolder = {
   let make = () =>
     <Next.Link href="/buyer/cart">
       <a>
-        <img src=cartIcon alt={`cart-icon`} className=%twc("w-6 h-6 min-w-[24px] min-h-[24px] place-self-center") />
+        <img
+          src=cartIcon
+          alt={`cart-icon`}
+          className=%twc("w-6 h-6 min-w-[32px] min-h-[32px] place-self-center")
+        />
       </a>
     </Next.Link>
 }
@@ -38,7 +42,8 @@ module NotLoggedIn = {
           <RadixUI.Dialog.Content
             className=%twc(
               "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
-            )>
+            )
+            onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
             <span className=%twc("whitespace-pre text-center text-text-L1 pt-3")>
               {`로그인 후에
 확인하실 수 있습니다`->React.string}
@@ -69,7 +74,7 @@ module NotLoggedIn = {
         </RadixUI.Dialog.Portal>
       </RadixUI.Dialog.Root>
       <button type_="button" onClick={_ => setShowLogin(._ => true)}>
-        <img src=cartIcon alt={`cart-icon`} className=%twc("w-6 h-6 min-w-[24px] min-h-[24px]") />
+        <img src=cartIcon alt={`cart-icon`} className=%twc("w-6 h-6 min-w-[32px] min-h-[32px]") />
       </button>
     </>
   }
@@ -83,52 +88,56 @@ module Container = {
     // '현재 장바구니에 몇개 남겨있는지 or 담겨있는지 아닌지' 상태를 조회하여 표시
     // 적용 되어야하는 페이지 (메인, PLP, 전용관-신선배송만, 기획전(못찾음), PDP)
 
-    <React.Suspense fallback={<PlaceHolder />}>
-      <DataGtm dataGtm="click_cart">
-        <button
-          type_="button"
-          className=%twc("relative w-6 h-6 min-w-[24px] min-h-[24px] place-self-center")
-          onClick={_ => router->Next.Router.push("/buyer/cart")}>
-          {switch queryData.cartItemCount {
-          | 0 => React.null
-          | count =>
-            <div
-              className={cx([
-                %twc(
-                  "flex justify-center items-center rounded-[10px] bg-emphasis h-4 text-white text-xs absolute font-bold -top-1 leading-[14.4px]"
-                ),
-                switch count >= 10 {
-                | true => %twc("-right-2 w-[23px]")
-                | false => %twc("-right-1 w-4")
-                },
-              ])}>
-              {count->Int.toString->React.string}
-            </div>
-          }}
-          <img
-            src=cartIcon
-            alt={`cart-icon`}
-            className=%twc("w-6 h-6 min-w-[24px] min-h-[24px] place-self-center")
-          />
-        </button>
-      </DataGtm>
-    </React.Suspense>
+    <DataGtm dataGtm="click_cart">
+      <button
+        type_="button"
+        className=%twc("relative w-6 h-6 min-w-[32px] min-h-[32px] place-self-center")
+        onClick={_ => router->Next.Router.push("/buyer/cart")}>
+        {switch queryData.cartItemCount {
+        | 0 => React.null
+        | count =>
+          <div
+            className={cx([
+              %twc(
+                "flex justify-center items-center rounded-[10px] bg-emphasis h-4 text-white text-xs absolute font-bold -top-1 leading-[14.4px]"
+              ),
+              switch count >= 10 {
+              | true => %twc("-right-2 w-[23px]")
+              | false => %twc("-right-1 w-4")
+              },
+            ])}>
+            {count->Int.toString->React.string}
+          </div>
+        }}
+        <img
+          src=cartIcon
+          alt={`cart-icon`}
+          className=%twc("w-6 h-6 min-w-[32px] min-h-[32px] place-self-center")
+        />
+      </button>
+    </DataGtm>
   }
 }
 
 @react.component
 let make = () => {
-  let isLoggedIn = switch CustomHooks.Auth.use() {
-  | LoggedIn(user) =>
-    switch user.role {
-    | Buyer => true
-    | _ => false
-    }
-  | _ => false
+  let user = CustomHooks.Auth.use()
+
+  let isLoggedIn = switch user {
+  | LoggedIn(user') if user'.role == Buyer => Some(true)
+  | LoggedIn(_)
+  | NotLoggedIn =>
+    Some(false)
+  | Unknown => None
   }
 
   switch isLoggedIn {
-  | true => <Container />
-  | false => <NotLoggedIn />
+  | Some(true) =>
+    <React.Suspense fallback={<PlaceHolder />}>
+      <Container />
+    </React.Suspense>
+
+  | Some(false) => <NotLoggedIn />
+  | None => <PlaceHolder />
   }
 }

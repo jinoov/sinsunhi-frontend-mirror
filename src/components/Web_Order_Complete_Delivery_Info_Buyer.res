@@ -40,22 +40,28 @@ module Placeholder = {
       }}
       <ul className=%twc("flex flex-col")>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
       </ul>
     </section>
@@ -148,7 +154,7 @@ let make = (~query, ~deviceType) => {
           <li className=%twc("flex")>
             <span className=%twc("w-23 font-bold")> {`배송 요청사항`->React.string} </span>
             <span className=%twc("xl:w-64 w-56 whitespace-pre-wrap")>
-              {deliveryMessage'->React.string}
+              {(deliveryMessage'->Js.String2.trim == "" ? "-" : deliveryMessage')->React.string}
             </span>
           </li>
         | None => React.null

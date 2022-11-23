@@ -7,7 +7,7 @@ import * as CustomHooks from "../utils/CustomHooks.mjs";
 
 function Badge(Props) {
   var status = Props.status;
-  var displayStyle = status > 7 || status < 4 ? "max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap" : "max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap";
+  var displayStyle = status !== 8 && status >= 4 ? "max-w-min bg-gray-gl py-0.5 px-2 text-gray-gl rounded mr-2 whitespace-nowrap" : "max-w-min bg-green-gl-light py-0.5 px-2 text-green-gl rounded mr-2 whitespace-nowrap";
   var Converter$1 = Converter.Status({});
   var displayText = Curry._1(Converter$1.displayStatus, status);
   return React.createElement("span", {

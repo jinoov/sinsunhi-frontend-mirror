@@ -51,8 +51,6 @@ function PDP_Normal_DeliveryGuide_Buyer$PC(Props) {
                 }, "・"), React.createElement("div", {
                   className: "flex flex-col text-gray-800"
                 }, React.createElement("span", undefined, React.createElement("span", {
-                          className: "font-bold"
-                        }, "위탁 판매(택배) 상품"), "입니다."), React.createElement("span", undefined, React.createElement("span", {
                           className: "text-green-500"
                         }, "원물, 대량구매는 1:1 채팅"), "을 이용해주세요"))), React.createElement("div", {
               className: "flex mt-2"
@@ -112,8 +110,6 @@ function PDP_Normal_DeliveryGuide_Buyer$MO(Props) {
                 }, "・"), React.createElement("div", {
                   className: "flex flex-col text-text-L1"
                 }, React.createElement("span", undefined, React.createElement("span", {
-                          className: "font-bold"
-                        }, "위탁 판매(택배) 상품"), "입니다."), React.createElement("span", undefined, React.createElement("span", {
                           className: "text-primary"
                         }, "원물, 대량구매는 1:1 채팅"), "을 이용해주세요"))), React.createElement("div", {
               className: "flex"

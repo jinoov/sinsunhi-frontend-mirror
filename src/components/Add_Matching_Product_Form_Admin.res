@@ -16,6 +16,7 @@ module Mutation = %relay(`
     $status: ProductStatus!
     $releaseEndMonth: Int!
     $releaseStartMonth: Int!
+    $isAutoStatus: Boolean!
   ) {
     createMatchingProduct(
       input: {
@@ -33,6 +34,7 @@ module Mutation = %relay(`
         status: $status
         releaseEndMonth: $releaseEndMonth
         releaseStartMonth: $releaseStartMonth
+        isAutoStatus: $isAutoStatus
       }
     ) {
       ... on CreateMatchingProductResult {
@@ -66,6 +68,7 @@ module Form = {
     thumbnail: string,
     documentURL: string,
     editor: string,
+    isAutoStatus: string,
   }
 
   let formName = {
@@ -83,6 +86,7 @@ module Form = {
     thumbnail: "thumbnail",
     documentURL: "document-url",
     editor: "description-html",
+    isAutoStatus: "auto-status",
   }
 
   let encoderShipment = ship => ship->Js.Json.number
@@ -117,6 +121,7 @@ module Form = {
     @spice.key(formName.thumbnail) thumbnail: Upload_Thumbnail_Admin.Form.image,
     @spice.key(formName.documentURL) documentURL: option<string>,
     @spice.key(formName.editor) editor: string,
+    @spice.key(formName.isAutoStatus) isAutoStatus: bool,
   }
 }
 
@@ -160,7 +165,7 @@ module ProductNameInputs = {
             onBlur=producerProductNameInput.onBlur
             ref=producerProductNameInput.ref
             className={getTextInputStyle(~disabled=false)}
-            placeholder=`생산자용 상품명 입력(최대 100자)`
+            placeholder={`생산자용 상품명 입력(최대 100자)`}
           />
           <ErrorMessage
             name=producerProductNameInput.name
@@ -188,7 +193,7 @@ module ProductNameInputs = {
           onBlur=buyerProductNameInput.onBlur
           ref=buyerProductNameInput.ref
           className={getTextInputStyle(~disabled=false)}
-          placeholder=`바이어용 상품명 입력, 상품매장에 노출됨(최대 100자)`
+          placeholder={`바이어용 상품명 입력, 상품매장에 노출됨(최대 100자)`}
         />
         <ErrorMessage
           name=buyerProductNameInput.name
@@ -244,7 +249,9 @@ module ReadOnlyProductId = {
   @react.component
   let make = () => {
     <div className=%twc("flex flex-col gap-2")>
-      <div> <span className=%twc("font-bold")> {`상품번호`->React.string} </span> </div>
+      <div>
+        <span className=%twc("font-bold")> {`상품번호`->React.string} </span>
+      </div>
       <div
         className=%twc(
           "px-3 py-2 border border-border-default-L1 bg-disabled-L3 text-disabled-L1 rounded-lg h-9 max-w-md w-1/3"
@@ -319,8 +326,8 @@ module OperationStatusInput = {
       </div>
       <Dialog
         isShow=isShowProductOperationNoSale
-        textOnConfirm=`확인`
-        textOnCancel=`닫기`
+        textOnConfirm={`확인`}
+        textOnCancel={`닫기`}
         boxStyle=%twc("rounded-2xl text-center")
         kindOfConfirm=Dialog.Negative
         onConfirm={_ => {
@@ -364,7 +371,7 @@ module OriginInput = {
         onBlur=productOrigin.onBlur
         ref=productOrigin.ref
         className={getTextInputStyle(~disabled=false)}
-        placeholder=`원산지 입력(선택사항)`
+        placeholder={`원산지 입력(선택사항)`}
       />
       <ErrorMessage
         errors
@@ -439,7 +446,7 @@ module ShipMonthInput = {
           onBlur=from.onBlur
           ref=from.ref
           className={getTextInputStyle(~disabled=false)}
-          placeholder=`시작 월`
+          placeholder={`시작 월`}
         />
         <span> {`월`->React.string} </span>
         <span> {"~"->React.string} </span>
@@ -450,7 +457,7 @@ module ShipMonthInput = {
           onBlur=to.onBlur
           ref=to.ref
           className={getTextInputStyle(~disabled=false)}
-          placeholder=`종료 월`
+          placeholder={`종료 월`}
         />
         <span> {`월`->React.string} </span>
       </div>
@@ -541,7 +548,7 @@ module NoticeAndDateInput = {
           className=%twc(
             "px-3 py-2 border border-border-default-L1 rounded-lg h-24 focus:outline-none min-w-1/2 max-w-2xl"
           )
-          placeholder=`공지사항 또는 메모 입력(최대 1000자)`
+          placeholder={`공지사항 또는 메모 입력(최대 1000자)`}
         />
         <ErrorMessage
           errors
@@ -682,7 +689,37 @@ module EditorInput = {
             </span>}
         />
       </div>
-      <div> <Product_Detail_Editor control name /> </div>
+      <div>
+        <Product_Detail_Editor control name />
+      </div>
+    </div>
+  }
+}
+
+// 자동관리대상 적용
+module AutoStatusCheckbox = {
+  @react.component
+  let make = (~name) => {
+    let {register} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
+    let autoStatus = register(. name, None)
+
+    <div className=%twc("flex flex-col gap-2 max-w-md w-1/3")>
+      <div className=%twc("block")>
+        <span className=%twc("font-bold")> {`매칭 상품 자동관리`->React.string} </span>
+      </div>
+      <div className=%twc("flex gap-2 items-center")>
+        <Checkbox.Uncontrolled
+          inputRef=autoStatus.ref
+          defaultChecked=true
+          id=autoStatus.name
+          name=autoStatus.name
+          onChange=autoStatus.onChange
+          onBlur=autoStatus.onBlur
+        />
+        <label htmlFor=autoStatus.name className=%twc("cursor-pointer")>
+          {`자동 관리 설정`->React.string}
+        </label>
+      </div>
     </div>
   }
 }
@@ -695,7 +732,7 @@ module MatchingSuccessDialog = {
     <Dialog
       boxStyle=%twc("text-center rounded-2xl")
       isShow
-      textOnCancel=`확인`
+      textOnCancel={`확인`}
       kindOfConfirm=Dialog.Positive
       onCancel={_ => router->Next.Router.push("/admin/products")}>
       <div className=%twc("flex flex-col")>
@@ -735,6 +772,7 @@ let makeMatchingProductVariables = (form: Form.submit) =>
     },
     ~releaseEndMonth=form.shipmentTo->Float.toInt,
     ~releaseStartMonth=form.shipmentFrom->Float.toInt,
+    ~isAutoStatus=form.isAutoStatus,
     (),
   )
 
@@ -785,6 +823,7 @@ let make = () => {
     thumbnail,
     documentURL,
     editor,
+    isAutoStatus,
   } = Form.formName
 
   let onSubmit = (data: Js.Json.t, _) => {
@@ -824,16 +863,20 @@ let make = () => {
         <h2 className=%twc("text-text-L1 text-lg font-bold")> {j`기본정보`->React.string} </h2>
         <div className=%twc("divide-y text-sm")>
           <div className=%twc("flex flex-col space-y-6 py-6")>
-            <Category name=productCategory /> <DisplayCategory name=displayCategories />
+            <Category name=productCategory />
+            <DisplayCategory name=displayCategories />
           </div>
           <div className=%twc("flex flex-col space-y-6 py-6")>
-            <ProductNameInputs producerProductName buyerProductName /> <ReadOnlyProductId />
+            <ProductNameInputs producerProductName buyerProductName />
+            <ReadOnlyProductId />
           </div>
           <div className=%twc("py-6 flex flex-col space-y-6")>
             <div className=%twc("flex gap-2")>
-              <OperationStatusInput name=operationStatus /> <OriginInput name=origin />
+              <OperationStatusInput name=operationStatus />
+              <OriginInput name=origin />
             </div>
             <ShipMonthInput fromName=shipmentFrom toName=shipmentTo />
+            <AutoStatusCheckbox name=isAutoStatus />
           </div>
         </div>
       </section>
@@ -873,8 +916,8 @@ let make = () => {
       <Dialog
         boxStyle=%twc("text-center rounded-2xl")
         isShow={isShowReset}
-        textOnCancel=`닫기`
-        textOnConfirm=`초기화`
+        textOnCancel={`닫기`}
+        textOnConfirm={`초기화`}
         kindOfConfirm=Dialog.Negative
         onConfirm={_ => {
           reset(. None)
@@ -889,7 +932,7 @@ let make = () => {
         <Dialog
           boxStyle=%twc("text-center rounded-2xl")
           isShow={isShowErr}
-          textOnCancel=`확인`
+          textOnCancel={`확인`}
           kindOfConfirm=Dialog.Negative
           onCancel={_ => setErrStatus(._ => (Dialog.Hide, None))}>
           <div>

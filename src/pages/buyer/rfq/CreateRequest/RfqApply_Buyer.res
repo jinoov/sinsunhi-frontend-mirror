@@ -108,7 +108,7 @@ module Mutation = %relay(`
     }
   `)
 
-let toStringStorageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatStorageMethod) =>
+let toStringStorageMethod = (v: RfqApplyBuyer_Query_graphql.Types.enum_RfqMeatStorageMethod) =>
   switch v {
   | #ANY => `ANY`
   | #CHILLED => `CHILLED`
@@ -118,7 +118,7 @@ let toStringStorageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatStorageMet
   | _ => ``
   }
 
-let toStringPackageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatPackageMethod) =>
+let toStringPackageMethod = (v: RfqApplyBuyer_Query_graphql.Types.enum_RfqMeatPackageMethod) =>
   switch v {
   | #ANY => `ANY`
   | #CUT => `CUT`

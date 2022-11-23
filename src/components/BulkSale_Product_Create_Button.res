@@ -27,15 +27,15 @@ let makeInput = (
   estimatedPurchasePriceMax,
   isOpen,
 ): BulkSaleProductCreateButtonMutation_graphql.Types.bulkSaleCampaignCreateInput => {
-  productCategoryId: productCategoryId,
-  preferredGrade: preferredGrade,
+  productCategoryId,
+  preferredGrade,
   preferredQuantity: {
     amount: preferredQuantityAmount,
     unit: preferredQuantityUnit,
   },
-  estimatedSellerEarningRate: estimatedSellerEarningRate,
-  estimatedPurchasePriceMin: estimatedPurchasePriceMin,
-  estimatedPurchasePriceMax: estimatedPurchasePriceMax,
+  estimatedSellerEarningRate,
+  estimatedPurchasePriceMin,
+  estimatedPurchasePriceMax,
   isOpen: Some(isOpen),
   displayOrder: None,
 }
@@ -174,7 +174,9 @@ let make = (~connectionId, ~refetchSummary) => {
       )>
       {j`신규 상품 등록`->React.string}
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5")>
         <article className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`신규 상품 등록`->React.string} </h2>

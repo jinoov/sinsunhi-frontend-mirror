@@ -30,7 +30,8 @@ function mergeUserIdUnsafe(data) {
           return user.id;
         }));
   return Object.assign(data, {
-              user_id: userIdOrNull
+              user_id: userIdOrNull,
+              crm_id: userIdOrNull
             });
 }
 

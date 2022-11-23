@@ -2,8 +2,8 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
-import * as IconArrow from "../../../components/svgs/IconArrow.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as FormulaComponents from "@greenlabs/formula-components";
 
 function Tradematch_Header_Buyer(Props) {
   var title = Props.title;
@@ -21,10 +21,8 @@ function Tradematch_Header_Buyer(Props) {
                               onClick: (function (param) {
                                   Curry._1(handleClickLeftButton, undefined);
                                 })
-                            }, React.createElement(IconArrow.make, {
-                                  height: "24",
-                                  width: "24",
-                                  className: "rotate-180"
+                            }, React.createElement(FormulaComponents.ArrowLeftLineRegular, {
+                                  size: "xl"
                                 })), React.createElement("div", undefined, React.createElement("span", {
                                   className: "font-bold text-base"
                                 }, Belt_Option.mapWithDefault(title, "", (function (x) {

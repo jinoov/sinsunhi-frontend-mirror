@@ -12,6 +12,7 @@ import * as ReactRelay from "react-relay";
 import * as DS_BottomDrawer from "../../../../components/common/container/DS_BottomDrawer.mjs";
 import * as IconArrowSelect from "../../../../components/svgs/IconArrowSelect.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
+import * as FeatureFlagWrapper from "../../pc/FeatureFlagWrapper.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ReactRadioGroup from "@radix-ui/react-radio-group";
 import * as PDPMatchingSelectGradeBuyer_fragment_graphql from "../../../../__generated__/PDPMatchingSelectGradeBuyer_fragment_graphql.mjs";
@@ -203,6 +204,7 @@ function PDP_Matching_SelectGrade_Buyer(Props) {
         return false;
       });
   var setShowBottomSheet = match[1];
+  var showBottmSheet = match[0];
   var match$1 = use(query);
   var matchingProductId = match$1.matchingProductId;
   var tmp;
@@ -258,7 +260,7 @@ function PDP_Matching_SelectGrade_Buyer(Props) {
                   width: "24",
                   fill: "#262626"
                 })), React.createElement(PDP_Matching_SelectGrade_Buyer$BottomSheet, {
-              show: match[0],
+              show: showBottmSheet,
               onClose: (function (param) {
                   setShowBottomSheet(function (param) {
                         return false;
@@ -270,7 +272,49 @@ function PDP_Matching_SelectGrade_Buyer(Props) {
               setSelectedGroup: setSelectedGroup
             }));
   }
-  return React.createElement(React.Fragment, undefined, tmp);
+  var oldUI = React.createElement(React.Fragment, undefined, tmp);
+  var label$1;
+  switch (selectedGroup) {
+    case "high" :
+        label$1 = "가격 상위 그룹";
+        break;
+    case "low" :
+        label$1 = "가격 하위 그룹";
+        break;
+    case "medium" :
+        label$1 = "가격 중위 그룹";
+        break;
+    default:
+      label$1 = "";
+  }
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement(React.Fragment, undefined, React.createElement(React.Fragment, undefined, React.createElement("button", {
+                            className: "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black",
+                            onClick: (function (param) {
+                                DataGtm.push(DataGtm.mergeUserIdUnsafe(make(matchingProductId)));
+                                setShowBottomSheet(function (param) {
+                                      return true;
+                                    });
+                              })
+                          }, label$1, React.createElement(IconArrowSelect.make, {
+                                height: "24",
+                                width: "24",
+                                fill: "#262626"
+                              })), React.createElement(PDP_Matching_SelectGrade_Buyer$BottomSheet, {
+                            show: showBottmSheet,
+                            onClose: (function (param) {
+                                setShowBottomSheet(function (param) {
+                                      return false;
+                                    });
+                              }),
+                            setShowModal: setShowModal,
+                            query: query,
+                            selectedGroup: selectedGroup,
+                            setSelectedGroup: setSelectedGroup
+                          }))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var make$1 = PDP_Matching_SelectGrade_Buyer;

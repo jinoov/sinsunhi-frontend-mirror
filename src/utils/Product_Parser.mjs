@@ -161,10 +161,10 @@ function make$3(chartData) {
               data: chartData.highers,
               connectNulls: true,
               itemStyle: {
-                color: "#ff5735"
+                color: "#ffddbd"
               },
               lineStyle: {
-                color: "#ff5735"
+                color: "#ffddbd"
               }
             },
             {
@@ -173,10 +173,10 @@ function make$3(chartData) {
               data: chartData.means,
               connectNulls: true,
               itemStyle: {
-                color: "#12b564"
+                color: "#0bb25f"
               },
               lineStyle: {
-                color: "#12b564"
+                color: "#0bb25f"
               }
             },
             {
@@ -185,10 +185,10 @@ function make$3(chartData) {
               data: chartData.lowers,
               connectNulls: true,
               itemStyle: {
-                color: "#2751c4"
+                color: "#dcdfe3"
               },
               lineStyle: {
-                color: "#2751c4"
+                color: "#dcdfe3"
               }
             }
           ]

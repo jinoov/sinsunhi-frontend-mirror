@@ -192,22 +192,19 @@ module Content = {
   }
 }
 
-type props = {
-  gnbBanners: array<GnbBannerListBuyerQuery_graphql.Types.response_gnbBanners>,
-  displayCategories: array<ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories>,
-}
+type props
 type params
 type previewData
 
-let default = ({gnbBanners, displayCategories}) => {
+let default = () => {
   let router = Next.Router.useRouter()
   let queryData = Query.use(~variables=(), ())
 
   <div className=%twc("w-full min-h-screen flex flex-col")>
     <div className=%twc("flex")>
-      <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
+      <Header_Buyer.PC key=router.asPath />
     </div>
-    <Authorization.Buyer title={`신선하이`}>
+    <Authorization.Buyer>
       <RescriptReactErrorBoundary
         fallback={_ =>
           <div> {`계정정보를 가져오는데 실패했습니다`->React.string} </div>}>
@@ -227,46 +224,16 @@ let default = ({gnbBanners, displayCategories}) => {
 @unboxed
 type rec result = Result(Js.Promise.t<{..}>): result
 
-let getServerSideProps = ctx => {
-  let deviceType = DeviceDetect.detectDeviceFromCtx(ctx)
+let getServerSideProps = (ctx: Next.GetServerSideProps.context<props, params, previewData>) => {
+  open ServerSideHelper
+  let environment = SinsunMarket(Env.graphqlApiUrl)->RelayEnv.environment
+  let gnbAndCategoryQuery = environment->gnbAndCategory
 
-  let gnb = () =>
-    GnbBannerList_Buyer.Query.fetchPromised(
-      ~environment=RelayEnv.envSinsunMarket,
-      ~variables=(),
-      (),
-    )
-  let displayCategories = () =>
-    ShopCategorySelect_Buyer.Query.fetchPromised(
-      ~environment=RelayEnv.envSinsunMarket,
-      ~variables={onlyDisplayable: Some(true), types: Some([#NORMAL]), parentId: None},
-      (),
-    )
+  let deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req)
 
   switch deviceType {
   | DeviceDetect.PC =>
-    Result(
-      Js.Promise.all2((gnb(), displayCategories()))
-      |> Js.Promise.then_(((
-        gnb: GnbBannerListBuyerQuery_graphql.Types.response,
-        displayCategories: ShopCategorySelectBuyerQuery_graphql.Types.response,
-      )) => {
-        Js.Promise.resolve({
-          "props": {
-            "gnbBanners": gnb.gnbBanners,
-            "displayCategories": displayCategories.displayCategories,
-          },
-        })
-      })
-      |> Js.Promise.catch(_ => {
-        Js.Promise.resolve({
-          "props": {
-            "gnbBanners": [],
-            "displayCategories": [],
-          },
-        })
-      }),
-    )
+    Result(gnbAndCategoryQuery->makeResultWithQuery(~environment, ~extraProps=Js.Obj.empty()))
   | DeviceDetect.Mobile
   | DeviceDetect.Unknown =>
     Result(
@@ -275,7 +242,6 @@ let getServerSideProps = ctx => {
           "permanent": true,
           "destination": "/buyer/me/account",
         },
-        "props": Js.Obj.empty(),
       }),
     )
   }

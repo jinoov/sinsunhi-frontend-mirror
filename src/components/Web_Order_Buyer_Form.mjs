@@ -577,7 +577,7 @@ function formData_decode(v) {
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: "." + ("product-infos" + e.path),
+                                    path: ".product-infos" + e.path,
                                     message: e.message,
                                     value: e.value
                                   }
@@ -587,7 +587,7 @@ function formData_decode(v) {
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: "." + ("payment-method" + e$1.path),
+                                  path: ".payment-method" + e$1.path,
                                   message: e$1.message,
                                   value: e$1.value
                                 }
@@ -597,7 +597,7 @@ function formData_decode(v) {
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: "." + ("receiver-detail-address" + e$2.path),
+                                path: ".receiver-detail-address" + e$2.path,
                                 message: e$2.message,
                                 value: e$2.value
                               }
@@ -607,7 +607,7 @@ function formData_decode(v) {
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: "." + ("receiver-zipcode" + e$3.path),
+                              path: ".receiver-zipcode" + e$3.path,
                               message: e$3.message,
                               value: e$3.value
                             }
@@ -617,7 +617,7 @@ function formData_decode(v) {
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: "." + ("receiver-phone" + e$4.path),
+                            path: ".receiver-phone" + e$4.path,
                             message: e$4.message,
                             value: e$4.value
                           }
@@ -627,7 +627,7 @@ function formData_decode(v) {
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: "." + ("receiver-name" + e$5.path),
+                          path: ".receiver-name" + e$5.path,
                           message: e$5.message,
                           value: e$5.value
                         }
@@ -637,7 +637,7 @@ function formData_decode(v) {
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: "." + ("receiver-address" + e$6.path),
+                        path: ".receiver-address" + e$6.path,
                         message: e$6.message,
                         value: e$6.value
                       }
@@ -647,7 +647,7 @@ function formData_decode(v) {
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: "." + ("orderer-phone" + e$7.path),
+                      path: ".orderer-phone" + e$7.path,
                       message: e$7.message,
                       value: e$7.value
                     }
@@ -657,7 +657,7 @@ function formData_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: "." + ("orderer-name" + e$8.path),
+                    path: ".orderer-name" + e$8.path,
                     message: e$8.message,
                     value: e$8.value
                   }
@@ -667,7 +667,7 @@ function formData_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: "." + ("order-user-id" + e$9.path),
+                  path: ".order-user-id" + e$9.path,
                   message: e$9.message,
                   value: e$9.value
                 }
@@ -677,7 +677,7 @@ function formData_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("delivery-type" + e$10.path),
+                path: ".delivery-type" + e$10.path,
                 message: e$10.message,
                 value: e$10.value
               }
@@ -687,7 +687,7 @@ function formData_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("delivery-message" + e$11.path),
+              path: ".delivery-message" + e$11.path,
               message: e$11.message,
               value: e$11.value
             }
@@ -697,7 +697,7 @@ function formData_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("delivery-desired-date" + e$12.path),
+            path: ".delivery-desired-date" + e$12.path,
             message: e$12.message,
             value: e$12.value
           }
@@ -763,7 +763,7 @@ function webOrder_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: "." + ("payment-method" + e.path),
+                    path: ".payment-method" + e.path,
                     message: e.message,
                     value: e.value
                   }
@@ -773,7 +773,7 @@ function webOrder_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: "." + ("total-order-price" + e$1.path),
+                  path: ".total-order-price" + e$1.path,
                   message: e$1.message,
                   value: e$1.value
                 }
@@ -783,7 +783,7 @@ function webOrder_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("total-delivery-cost" + e$2.path),
+                path: ".total-delivery-cost" + e$2.path,
                 message: e$2.message,
                 value: e$2.value
               }
@@ -793,7 +793,7 @@ function webOrder_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("payment-purpose" + e$3.path),
+              path: ".payment-purpose" + e$3.path,
               message: e$3.message,
               value: e$3.value
             }
@@ -803,7 +803,7 @@ function webOrder_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("order-user-id" + e$4.path),
+            path: ".order-user-id" + e$4.path,
             message: e$4.message,
             value: e$4.value
           }
@@ -838,7 +838,7 @@ function submit_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("web-order" + e.path),
+            path: ".web-order" + e.path,
             message: e.message,
             value: e.value
           }
@@ -863,13 +863,6 @@ function names(prefix) {
           receiverZipCode: "" + prefix + ".receiver-zipcode",
           receiverDetailAddress: "" + prefix + ".receiver-detail-address"
         };
-}
-
-function defaultValue(isCourierAvailable) {
-  return [
-          "delivery-type",
-          isCourierAvailable ? "parcel" : "freight"
-        ];
 }
 
 function strDateToFloat(s) {
@@ -900,8 +893,7 @@ function productInfoSort(data) {
 
 function concat(data) {
   var sorted = fixedDataSort(data);
-  var first = Belt_Array.get(sorted, 0);
-  return Belt_Option.map(first, (function (first$p) {
+  return Belt_Option.map(Belt_Array.get(sorted, 0), (function (first$p) {
                 return {
                         imageUrl: first$p.imageUrl,
                         isCourierAvailable: first$p.isCourierAvailable,
@@ -916,72 +908,31 @@ function concat(data) {
               }));
 }
 
-function normalProductToFixedData(p, o, param) {
-  return {
-          deliveryCost: o.node.productOptionCost.deliveryCost,
-          isTaxFree: !p.isVat,
-          price: Belt_Option.getWithDefault(o.node.price, 0),
-          productId: p.number,
-          productName: p.displayName,
-          imageUrl: p.image.thumb100x100,
-          isCourierAvailable: p.isCourierAvailable,
-          productOptionName: o.node.optionName,
-          quantity: param[0],
-          stockSku: o.node.stockSku,
-          isFreeShipping: o.node.isFreeShipping,
-          updatedAt: param[1]
-        };
-}
-
-function normalProductToFixedDataTemp(p, o, param) {
-  return {
-          deliveryCost: o.node.productOptionCost.deliveryCost,
-          isTaxFree: !p.isVat,
-          price: Belt_Option.getWithDefault(o.node.price, 0),
-          productId: p.number,
-          productName: p.displayName,
-          imageUrl: p.image.thumb100x100,
-          isCourierAvailable: p.isCourierAvailable,
-          productOptionName: o.node.optionName,
-          quantity: param[0],
-          stockSku: o.node.stockSku,
-          isFreeShipping: o.node.isFreeShipping,
-          updatedAt: param[1]
-        };
-}
-
-function quotableProductToFixedData(p, o, param) {
-  return {
-          deliveryCost: o.node.productOptionCost.deliveryCost,
-          isTaxFree: !p.isVat,
-          price: Belt_Option.getWithDefault(o.node.price, 0),
-          productId: p.number,
-          productName: p.displayName,
-          imageUrl: p.image.thumb100x100,
-          isCourierAvailable: p.isCourierAvailable,
-          productOptionName: o.node.optionName,
-          quantity: param[0],
-          stockSku: o.node.stockSku,
-          isFreeShipping: o.node.isFreeShipping,
-          updatedAt: param[1]
-        };
-}
-
-function quotableProductToFixedDataTemp(p, o, param) {
-  return {
-          deliveryCost: o.node.productOptionCost.deliveryCost,
-          isTaxFree: !p.isVat,
-          price: Belt_Option.getWithDefault(o.node.price, 0),
-          productId: p.number,
-          productName: p.displayName,
-          imageUrl: p.image.thumb100x100,
-          isCourierAvailable: p.isCourierAvailable,
-          productOptionName: o.node.optionName,
-          quantity: param[0],
-          stockSku: o.node.stockSku,
-          isFreeShipping: o.node.isFreeShipping,
-          updatedAt: param[1]
-        };
+function toFixedData(param) {
+  var updatedAt = param.updatedAt;
+  var quantity = param.quantity;
+  var match = param.productOption;
+  var stockSku = match.stockSku;
+  var productOptionCost = match.productOptionCost;
+  var price = match.price;
+  var optionName = match.optionName;
+  var isFreeShipping = match.isFreeShipping;
+  return Belt_Option.map(param.product, (function (param) {
+                return {
+                        deliveryCost: productOptionCost.deliveryCost,
+                        isTaxFree: !Belt_Option.getWithDefault(param.isVat, false),
+                        price: Belt_Option.getWithDefault(price, 0),
+                        productId: param.number,
+                        productName: param.displayName,
+                        imageUrl: param.image.thumb100x100,
+                        isCourierAvailable: Belt_Option.getWithDefault(param.isCourierAvailable, false),
+                        productOptionName: optionName,
+                        quantity: quantity,
+                        stockSku: stockSku,
+                        isFreeShipping: isFreeShipping,
+                        updatedAt: updatedAt
+                      };
+              }));
 }
 
 function gtmDataPush(data) {
@@ -1033,16 +984,12 @@ export {
   submit_encode ,
   submit_decode ,
   names ,
-  defaultValue ,
   strDateToFloat ,
   dateCompare ,
   fixedDataSort ,
   productInfoSort ,
   concat ,
-  normalProductToFixedData ,
-  normalProductToFixedDataTemp ,
-  quotableProductToFixedData ,
-  quotableProductToFixedDataTemp ,
+  toFixedData ,
   gtmDataPush ,
 }
 /* DataGtm Not a pure module */

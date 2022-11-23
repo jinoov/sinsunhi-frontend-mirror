@@ -12,6 +12,7 @@ import * as ReactRelay from "react-relay";
 import ReactSlick from "react-slick";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
+import * as FeatureFlagWrapper from "../../pc/FeatureFlagWrapper.mjs";
 import * as Update_Manager_Buyer from "../../../../components/Update_Manager_Buyer.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as Update_SectorAndSale_Buyer from "../../../../components/Update_SectorAndSale_Buyer.mjs";
@@ -107,55 +108,100 @@ function MyInfo_Profile_Complete_Buyer$PC(Props) {
               });
         }));
   var cmpNum = 5 - items.length | 0;
-  if (Garter_Array.isEmpty(items)) {
-    return null;
-  } else {
-    return React.createElement("div", {
-                className: "w-full mt-4 bg-white h-full"
-              }, React.createElement("div", {
-                    className: "pt-8 p-7"
-                  }, React.createElement("div", {
-                        className: "mb-5"
-                      }, React.createElement("span", {
-                            className: "font-bold text-2xl"
-                          }, "프로필 완성하기"), React.createElement("span", {
-                            className: "ml-1 text-sm text-primary"
-                          }, "" + String(cmpNum) + "/5")), React.createElement("div", {
-                        className: "mb-4 grid grid-cols-2 gap-2"
-                      }, Belt_Array.map(items, (function (i) {
-                              return React.createElement("div", {
-                                          key: Uniqid("profile")
-                                        }, i);
-                            })))), React.createElement(Update_SectorAndSale_Buyer.make, {
-                    isOpen: Caml_obj.equal(openModal, /* SectorAndSale */0),
-                    onClose: (function (param) {
-                        setOpenModal(function (param) {
-                              
-                            });
-                      })
-                  }), React.createElement(Update_InterestedCategories_Buyer.make, {
-                    isOpen: Caml_obj.equal(openModal, /* Categories */1),
-                    onClose: (function (param) {
-                        setOpenModal(function (param) {
-                              
-                            });
-                      })
-                  }), React.createElement(Update_BusinessNumber_Buyer.make, {
-                    isOpen: Caml_obj.equal(openModal, /* BizNumber */2),
-                    onClose: (function (param) {
-                        setOpenModal(function (param) {
-                              
-                            });
-                      })
-                  }), React.createElement(Update_Manager_Buyer.make, {
-                    isOpen: Caml_obj.equal(openModal, /* Manager */3),
-                    onClose: (function (param) {
-                        setOpenModal(function (param) {
-                              
-                            });
-                      })
-                  }));
-  }
+  var oldUI = Garter_Array.isEmpty(items) ? null : React.createElement("div", {
+          className: "w-full mt-4 bg-white h-full"
+        }, React.createElement("div", {
+              className: "pt-8 p-7"
+            }, React.createElement("div", {
+                  className: "mb-5"
+                }, React.createElement("span", {
+                      className: "font-bold text-2xl"
+                    }, "프로필 완성하기"), React.createElement("span", {
+                      className: "ml-1 text-sm text-primary"
+                    }, "" + String(cmpNum) + "/5")), React.createElement("div", {
+                  className: "mb-4 grid grid-cols-2 gap-2"
+                }, Belt_Array.map(items, (function (i) {
+                        return React.createElement("div", {
+                                    key: Uniqid("profile")
+                                  }, i);
+                      })))), React.createElement(Update_SectorAndSale_Buyer.make, {
+              isOpen: Caml_obj.equal(openModal, /* SectorAndSale */0),
+              onClose: (function (param) {
+                  setOpenModal(function (param) {
+                        
+                      });
+                })
+            }), React.createElement(Update_InterestedCategories_Buyer.make, {
+              isOpen: Caml_obj.equal(openModal, /* Categories */1),
+              onClose: (function (param) {
+                  setOpenModal(function (param) {
+                        
+                      });
+                })
+            }), React.createElement(Update_BusinessNumber_Buyer.make, {
+              isOpen: Caml_obj.equal(openModal, /* BizNumber */2),
+              onClose: (function (param) {
+                  setOpenModal(function (param) {
+                        
+                      });
+                })
+            }), React.createElement(Update_Manager_Buyer.make, {
+              isOpen: Caml_obj.equal(openModal, /* Manager */3),
+              onClose: (function (param) {
+                  setOpenModal(function (param) {
+                        
+                      });
+                })
+            }));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: Garter_Array.isEmpty(items) ? null : React.createElement("div", {
+                      className: "w-full bg-white h-full rounded-sm shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)]"
+                    }, React.createElement("div", {
+                          className: "py-10 px-[50px]"
+                        }, React.createElement("div", {
+                              className: "mb-10"
+                            }, React.createElement("span", {
+                                  className: "font-bold text-2xl"
+                                }, "프로필 완성하기"), React.createElement("span", {
+                                  className: "ml-1 text-sm text-primary"
+                                }, "" + String(cmpNum) + "/5")), React.createElement("div", {
+                              className: "mb-4 grid grid-cols-2 gap-2"
+                            }, Belt_Array.map(items, (function (i) {
+                                    return React.createElement("div", {
+                                                key: Uniqid("profile")
+                                              }, i);
+                                  })))), React.createElement(Update_SectorAndSale_Buyer.make, {
+                          isOpen: Caml_obj.equal(openModal, /* SectorAndSale */0),
+                          onClose: (function (param) {
+                              setOpenModal(function (param) {
+                                    
+                                  });
+                            })
+                        }), React.createElement(Update_InterestedCategories_Buyer.make, {
+                          isOpen: Caml_obj.equal(openModal, /* Categories */1),
+                          onClose: (function (param) {
+                              setOpenModal(function (param) {
+                                    
+                                  });
+                            })
+                        }), React.createElement(Update_BusinessNumber_Buyer.make, {
+                          isOpen: Caml_obj.equal(openModal, /* BizNumber */2),
+                          onClose: (function (param) {
+                              setOpenModal(function (param) {
+                                    
+                                  });
+                            })
+                        }), React.createElement(Update_Manager_Buyer.make, {
+                          isOpen: Caml_obj.equal(openModal, /* Manager */3),
+                          onClose: (function (param) {
+                              setOpenModal(function (param) {
+                                    
+                                  });
+                            })
+                        })),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var PC = {

@@ -87,7 +87,10 @@ function TossPaymentsSuccess_Buyer$Dialog(Props) {
                         className: "dialog-overlay"
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
-                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
+                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center",
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, children, React.createElement("button", {
                             className: "flex w-full xl:w-1/2 h-13 mt-5 bg-surface rounded-lg justify-center items-center text-lg cursor-pointer text-enabled-L1",
                             type: "button",
@@ -139,16 +142,17 @@ function TossPaymentsSuccess_Buyer(Props) {
   React.useEffect((function () {
           var params = new URLSearchParams(router.query);
           var orderId = params.get("orderId");
-          var orderId$1 = (orderId == null) ? undefined : Caml_option.some(orderId);
           var amount = Belt_Option.flatMap(Caml_option.nullable_to_opt(params.get("amount")), Belt_Int.fromString);
           var paymentKey = params.get("paymentKey");
           var paymentId = Belt_Option.flatMap(Caml_option.nullable_to_opt(params.get("payment-id")), Belt_Int.fromString);
           var tempOrderId = Belt_Option.flatMap(Caml_option.nullable_to_opt(params.get("temp-order-id")), Belt_Int.fromString);
-          if (!(orderId == null) && !(paymentKey == null) && amount !== undefined && paymentId !== undefined && !isMutating) {
+          var orderNo = params.get("order-no");
+          var orderNo$1 = (orderNo == null) ? undefined : Caml_option.some(orderNo);
+          if (!(orderId == null) && !(orderNo == null) && !(paymentKey == null) && amount !== undefined && paymentId !== undefined && !isMutating) {
             if (tempOrderId !== undefined) {
               setRedirectUrl(function (param) {
                     return {
-                            successUrl: "/buyer/web-order/complete/" + orderId$1 + "",
+                            successUrl: "/buyer/web-order/complete/" + orderNo$1 + "",
                             failUrl: "/buyer/web-order/" + String(tempOrderId) + ""
                           };
                   });
@@ -189,7 +193,7 @@ function TossPaymentsSuccess_Buyer(Props) {
                   undefined,
                   {
                     amount: amount,
-                    orderId: orderId$1,
+                    orderId: (orderId == null) ? undefined : Caml_option.some(orderId),
                     paymentId: paymentId,
                     paymentKey: (paymentKey == null) ? undefined : Caml_option.some(paymentKey),
                     tempOrderId: tempOrderId
@@ -215,7 +219,7 @@ function TossPaymentsSuccess_Buyer(Props) {
                   show: match$1[0],
                   href: redirectUrl.failUrl
                 }), React.createElement(TossPaymentsSuccess_Buyer$Dialog, {
-                  children: React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "결제 요청이 성공했습니다."), React.createElement("span", undefined, "결제완료 페이지로 이동합니다.")),
+                  children: React.createElement(React.Fragment, undefined, React.createElement("span", undefined, "주문 요청이 성공했습니다."), React.createElement("span", undefined, "주문완료 페이지로 이동합니다.")),
                   show: match[0],
                   href: redirectUrl.successUrl
                 }));

@@ -105,7 +105,7 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
   }
   let errorElement =
     <>
-      <img src=noticeIcon />
+      <img src=noticeIcon alt="notice-icon" />
       <div className=%twc("ml-1.5 text-sm")>
         {j`최소 결제금액(1,000원 이상)을 입력해주세요.`->React.string}
       </div>
@@ -140,16 +140,17 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
   }
 
   let handleConfirm = (data, _) => {
-    switch availableButton {
-    | true =>
-      switch data->form_decode {
-      | Ok(data') =>
-        {
-          open Webapi.Dom
+    switch data->form_decode {
+    | Ok(data') => {
+        open Webapi.Dom
 
-          setValueToHtmlInputElement("good_mny", data'.amount->Int.toString)
-          setValueToHtmlInputElement("pay_method", data'.paymentMethod->Payments.methodToKCPValue)
+        setValueToHtmlInputElement("good_mny", data'.amount->Int.toString)
+        setValueToHtmlInputElement("pay_method", data'.paymentMethod->Payments.methodToKCPValue)
 
+        switch (availableButton, data'.paymentMethod) {
+        | (false, #VIRTUAL_ACCOUNT) =>
+          Global.jsAlert(`서비스 점검으로 가상계좌 결제 기능을 이용할 수 없습니다.`)
+        | _ =>
           mutate(
             ~variables={
               paymentMethod: data'.paymentMethod,
@@ -184,22 +185,22 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
                       }
                     }
 
-                  | #RequestPaymentTossPaymentsResult(requestPaymentTossPaymentsResult) =>
+                  | #RequestPaymentTossPaymentsResult({amount, orderId, customerName, paymentId}) =>
                     Payments.requestTossPayment(.
                       data'.paymentMethod->Payments.methodToTossValue,
                       {
-                        amount: requestPaymentTossPaymentsResult.amount,
-                        orderId: requestPaymentTossPaymentsResult.orderId,
-                        orderName: `신선하이 ${requestPaymentTossPaymentsResult.amount->Int.toString}`,
+                        amount,
+                        orderId,
+                        orderName: `신선하이 ${amount->Int.toString}`,
                         taxFreeAmount: None,
-                        customerName: requestPaymentTossPaymentsResult.customerName,
+                        customerName,
                         validHours: data'.paymentMethod->Payments.tossPaymentsValidHours,
-                        successUrl: `${origin}/buyer/toss-payments/success?payment-id=${requestPaymentTossPaymentsResult.paymentId->Int.toString}`,
+                        successUrl: `${origin}/buyer/toss-payments/success?order-no=${orderId}&payment-id=${paymentId->Int.toString}`,
                         failUrl: `${origin}/buyer/toss-payments/fail?from=/transactions`,
                         cashReceipt: data'.paymentMethod->Payments.tossPaymentsCashReceipt,
                         appScheme: Global.Window.ReactNativeWebView.tOpt->Option.map(_ =>
                           Js.Global.encodeURIComponent(
-                            `sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?payment-id=${requestPaymentTossPaymentsResult.paymentId->Int.toString}`,
+                            `sinsunhi://com.greenlabs.sinsunhi/buyer/toss-payments/success?order-no=${orderId}&payment-id=${paymentId->Int.toString}`,
                           )
                         ),
                       },
@@ -216,15 +217,14 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
               err => handleError(~message=err.message, ())
             },
             (),
-          )
-        }->ignore
-      | Error(msg) => {
-          Js.Console.log(msg)
-          handleError(~message=msg.message, ())
+          )->ignore
         }
       }
-    | false =>
-      Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
+
+    | Error(msg) => {
+        Js.Console.log(msg)
+        handleError(~message=msg.message, ())
+      }
     }
   }
 
@@ -257,6 +257,7 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
     <RadixUI.Dialog.Portal>
       <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
       <RadixUI.Dialog.Content
+        onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}
         className=%twc("dialog-content p-5 overflow-y-auto text-text-L1 rounded-2xl")>
         <RadixUI.Dialog.Close id="btn-close" className=%twc("hidden")>
           {j``->React.string}
@@ -344,7 +345,7 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
                       v->Controller.OnChangeArg.value->onChange
                     }}
                     className=%twc("flex items-center cursor-pointer gap-2 text-sm")>
-                    <img src={value == v ? radioFilledIcon : radioDefaultIcon} />
+                    <img src={value == v ? radioFilledIcon : radioDefaultIcon} alt="" />
                     {name->React.string}
                   </button>
                 )
@@ -357,7 +358,7 @@ let make = (~hasRequireTerms, ~buttonClassName, ~buttonText) => {
               <button
                 className=%twc("flex items-center cursor-pointer")
                 onClick={_ => setRequireTerms(.prev => !prev)}>
-                <img src={requireTerms ? checkboxCheckedIcon : checkboxUncheckedIcon} />
+                <img src={requireTerms ? checkboxCheckedIcon : checkboxUncheckedIcon} alt="" />
                 <span className=%twc("ml-2 text-sm")>
                   {j`신선하이 이용약관 동의(필수)`->React.string}
                 </span>

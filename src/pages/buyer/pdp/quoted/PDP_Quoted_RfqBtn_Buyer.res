@@ -16,6 +16,7 @@ module Fragment = %relay(`
         name
       }
     }
+    ...PDPLikeButton_Fragment
   }
 `)
 
@@ -91,10 +92,10 @@ module PC = {
     }
 
     let btnStyle = %twc(
-      "w-full h-16 rounded-xl bg-primary hover:bg-primary-variant text-white text-lg font-bold"
+      "w-full h-16 rounded-xl bg-primary hover:bg-primary-variant text-white text-lg font-bold flex-1"
     )
     let disabledStyle = %twc(
-      "w-full h-16 rounded-xl flex items-center justify-center bg-gray-300 text-white font-bold text-xl"
+      "w-full h-16 rounded-xl flex items-center justify-center bg-gray-300 text-white font-bold text-xl flex-1"
     )
 
     switch rfqStatus {
@@ -137,7 +138,7 @@ module PC = {
         onClick={_ =>
           RequestQuotationGtm.make(~productId, ~displayName, ~category)
           ->DataGtm.mergeUserIdUnsafe
-          ->DataGtm.push}>
+          ->DataGtm.push} className=%twc("flex-1")>
         <RfqCreateRequestButton className=btnStyle buttonText={`최저가 견적받기`} />
       </div>
     }
@@ -151,7 +152,7 @@ module MO = {
     let router = useRouter()
 
     let user = CustomHooks.User.Buyer.use2()
-    let {productId, salesType, displayName, category} = query->Fragment.use
+    let {productId, salesType, displayName, category, fragmentRefs} = query->Fragment.use
 
     let rfqStatus = {
       switch user {
@@ -165,8 +166,8 @@ module MO = {
       }
     }
 
-    let btnStyle = %twc("h-14 w-full rounded-xl bg-primary text-white text-lg font-bold")
-    let disabledStyle = %twc("h-14 w-full rounded-xl bg-disabled-L2 text-white text-lg font-bold")
+    let btnStyle = %twc("h-14 flex-1 rounded-xl bg-primary text-white text-lg font-bold")
+    let disabledStyle = %twc("h-14 flex-1 rounded-xl bg-disabled-L2 text-white text-lg font-bold")
 
     switch rfqStatus {
     // SSR
@@ -183,7 +184,7 @@ module MO = {
           onClick={_ => setShowModal(._ => PDP_Quoted_Modals_Buyer.Show(Unauthorized))}>
           {`최저가 견적받기`->React.string}
         </button>
-        <PDP_CTA_Container_Buyer>
+        <PDP_CTA_Container_Buyer query=fragmentRefs>
           <button
             className=btnStyle
             onClick={_ => setShowModal(._ => PDP_Quoted_Modals_Buyer.Show(Unauthorized))}>
@@ -198,7 +199,7 @@ module MO = {
         <button disabled=true className=disabledStyle>
           {`최저가 견적받기`->React.string}
         </button>
-        <PDP_CTA_Container_Buyer>
+        <PDP_CTA_Container_Buyer query=fragmentRefs>
           <button disabled=true className=disabledStyle>
             {`최저가 견적받기`->React.string}
           </button>
@@ -215,7 +216,7 @@ module MO = {
       }
       <>
         <button className=btnStyle onClick> {`최저가 견적받기`->React.string} </button>
-        <PDP_CTA_Container_Buyer>
+        <PDP_CTA_Container_Buyer query=fragmentRefs>
           <button className=btnStyle onClick> {`최저가 견적받기`->React.string} </button>
         </PDP_CTA_Container_Buyer>
       </>
@@ -231,8 +232,8 @@ module MO = {
         <div onClick>
           <RfqCreateRequestButton className=btnStyle buttonText={`최저가 견적받기`} />
         </div>
-        <PDP_CTA_Container_Buyer>
-          <div className=%twc("w-full") onClick>
+        <PDP_CTA_Container_Buyer query=fragmentRefs>
+          <div className=%twc("w-full flex flex-1") onClick>
             <RfqCreateRequestButton className=btnStyle buttonText={`최저가 견적받기`} />
           </div>
         </PDP_CTA_Container_Buyer>

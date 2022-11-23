@@ -22,7 +22,8 @@ module ErrorDialog = {
         <RadixUI.Dialog.Content
           className=%twc(
             "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col items-center justify-center"
-          )>
+          )
+          onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
           children
           <button
             type_="button"
@@ -66,6 +67,7 @@ let make = () => {
         setErrMsg(._ => decode'->codeToString)
         setShowErr(._ => true)
       }
+
     | _ => setShowErr(._ => true)
     }
     None

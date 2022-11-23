@@ -22,8 +22,8 @@ import * as Search_Product_Admin from "../../components/Search_Product_Admin.mjs
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ProductsAdminQuery_graphql from "../../__generated__/ProductsAdminQuery_graphql.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
-import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
 import * as Select_Product_Operation_Status from "../../components/Select_Product_Operation_Status.mjs";
+import * as ExcelRequest_Button_Products_Admin from "../../components/ExcelRequest_Button_Products_Admin.mjs";
 import * as ProductsAdminCategoriesQuery_graphql from "../../__generated__/ProductsAdminCategoriesQuery_graphql.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
@@ -333,7 +333,7 @@ function useSearchInput(param) {
           displayCategoryId: Belt_Option.getWithDefault(Js_dict.get(query, "display-category-id"), ""),
           isDelivery: tmp,
           limit: Belt_Option.getWithDefault(Belt_Option.flatMap(Js_dict.get(query, "limit"), Belt_Int.fromString), 25),
-          name: Belt_Option.keep(Js_dict.get(query, "name"), (function (str) {
+          name: Belt_Option.keep(Js_dict.get(query, "product-name"), (function (str) {
                   return str !== "";
                 })),
           offset: Belt_Option.flatMap(Js_dict.get(query, "offset"), Belt_Int.fromString),
@@ -365,7 +365,7 @@ function useSearchInput(param) {
 function Products_Admin$List(Props) {
   var user = CustomHooks.Auth.use(undefined);
   var searchInput = useSearchInput(undefined);
-  var queryData = use(searchInput, /* NetworkOnly */3, undefined, undefined, undefined);
+  var match = use(searchInput, /* NetworkOnly */3, undefined, undefined, undefined);
   return React.createElement(React.Fragment, undefined, React.createElement("div", {
                   className: "md:flex md:justify-between pb-4"
                 }, React.createElement("div", {
@@ -374,15 +374,12 @@ function Products_Admin$List(Props) {
                           className: "font-bold"
                         }, "내역", React.createElement("span", {
                               className: "ml-1 text-green-gl font-normal"
-                            }, "" + String(queryData.products.totalCount) + "건")), React.createElement("div", {
+                            }, "" + String(match.products.totalCount) + "건")), React.createElement("div", {
                           className: "flex"
                         }, React.createElement(Select_CountPerPage.make, {
                               className: "mr-2"
-                            }), typeof user === "number" || user._0.role !== 2 ? null : React.createElement(Excel_Download_Request_Button.make, {
-                                userType: /* Admin */2,
-                                requestUrl: "/product/request-excel"
-                              })))), React.createElement(Products_List_Admin.make, {
-                  query: queryData.fragmentRefs
+                            }), typeof user === "number" || user._0.role !== 2 ? null : React.createElement(ExcelRequest_Button_Products_Admin.make, {})))), React.createElement(Products_List_Admin.make, {
+                  query: match.fragmentRefs
                 }));
 }
 

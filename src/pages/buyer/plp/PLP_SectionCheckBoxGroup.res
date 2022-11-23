@@ -1,107 +1,78 @@
-module PC = {
-  @react.component
-  let make = () => {
-    let router = Next.Router.useRouter()
+@react.component
+let make = () => {
+  let router = Next.Router.useRouter()
 
-    let sectionType = router.query->Js.Dict.get("section-type")->PLP_FilterOption.Section.make
+  let sectionType =
+    router.query->Js.Dict.get("section")->Product_FilterOption.Section.fromUrlParameter
 
-    let (matchingSelected, deliverySelected) =
-      sectionType->PLP_FilterOption.Section.toCheckBoxSelection
-
-    let onCheckBoxUpdate = (matching, delivery) => {
-      ReactEvents.interceptingHandler(_ => {
-        let sectionType = PLP_FilterOption.Section.fromCheckBoxSelection(matching, delivery)
-
-        let sortType =
-          router.query
-          ->Js.Dict.get("sort")
-          ->Option.getWithDefault("")
-          ->(sort => PLP_FilterOption.Sort.decodeSort(sectionType, sort))
-
-        let newQuery = router.query
-        newQuery->Js.Dict.set("section-type", sectionType->PLP_FilterOption.Section.toString)
-        newQuery->Js.Dict.set("sort", sortType->PLP_FilterOption.Sort.encodeSort)
-
-        router->Next.Router.replaceObj({
-          pathname: router.pathname,
-          query: newQuery,
-        })
-      })
-    }
-
-    <div className=%twc("flex-row inline-flex gap-5")>
-      <div className=%twc("inline-flex items-center gap-2")>
-        <Checkbox
-          id="matching-checkbox"
-          name="matching"
-          checked=matchingSelected
-          onChange={onCheckBoxUpdate(!matchingSelected, deliverySelected)}
-        />
-        {`신선매칭`->React.string}
-      </div>
-      <div className=%twc("inline-flex items-center gap-2")>
-        <Checkbox
-          id="delivery-checkbox"
-          name="delivery"
-          checked=deliverySelected
-          onChange={onCheckBoxUpdate(matchingSelected, !deliverySelected)}
-        />
-        {`신선배송`->React.string}
-      </div>
-    </div>
+  let (matchingSelected, deliverySelected) = switch sectionType {
+  | Some(sectionType) => sectionType->Product_FilterOption.Section.toCheckBoxSelection
+  | _ => (false, false)
   }
-}
 
-module MO = {
-  @react.component
-  let make = () => {
-    let router = Next.Router.useRouter()
+  let onCheckBoxUpdate = (matching, delivery) => {
+    ReactEvents.interceptingHandler(_ => {
+      let sectionType = Product_FilterOption.Section.fromCheckBoxSelection(matching, delivery)
 
-    let sectionType = router.query->Js.Dict.get("section-type")->PLP_FilterOption.Section.make
+      let sortType =
+        sectionType->Option.flatMap(sectionType' =>
+          sectionType'->Product_FilterOption.Sort.make(router.query->Js.Dict.get("sort"))
+        )
 
-    let (matchingSelected, deliverySelected) =
-      sectionType->PLP_FilterOption.Section.toCheckBoxSelection
+      let sortUrlParameter = sortType
 
-    let onCheckBoxUpdate = (matching, delivery) => {
-      ReactEvents.interceptingHandler(_ => {
-        let sectionType = PLP_FilterOption.Section.fromCheckBoxSelection(matching, delivery)
+      let sectionUrlParameter = sectionType->Option.map(Product_FilterOption.Section.toUrlParameter)
 
-        let sortType =
-          router.query
-          ->Js.Dict.get("sort")
-          ->Option.getWithDefault("")
-          ->(sort => PLP_FilterOption.Sort.decodeSort(sectionType, sort))
+      let newQuery = switch sortUrlParameter {
+      | Some(sortUrlParameter') => {
+          let newQuery = router.query
+          newQuery->Js.Dict.set("sort", sortUrlParameter'->Product_FilterOption.Sort.toString)
+          newQuery
+        }
 
-        let newQuery = router.query
-        newQuery->Js.Dict.set("section-type", sectionType->PLP_FilterOption.Section.toString)
-        newQuery->Js.Dict.set("sort", sortType->PLP_FilterOption.Sort.encodeSort)
+      | None =>
+        router.query->Js.Dict.entries->Array.keep(((key, _)) => key != "sort")->Js.Dict.fromArray
+      }
+      let newQuery = switch sectionUrlParameter {
+      | Some(sectionUrlParameter') => {
+          newQuery->Js.Dict.set("section", sectionUrlParameter')
+          newQuery
+        }
 
-        router->Next.Router.replaceObj({
-          pathname: router.pathname,
-          query: newQuery,
-        })
+      | None =>
+        router.query->Js.Dict.entries->Array.keep(((key, _)) => key != "section")->Js.Dict.fromArray
+      }
+      router->Next.Router.replaceObj({
+        pathname: router.pathname,
+        query: newQuery,
       })
-    }
-
-    <div className=%twc("flex-row inline-flex gap-5 text-sm")>
-      <div className=%twc("inline-flex items-center gap-2")>
-        <Checkbox
-          id="matching-checkbox"
-          name="matching"
-          checked=matchingSelected
-          onChange={onCheckBoxUpdate(!matchingSelected, deliverySelected)}
-        />
-        {`신선매칭`->React.string}
-      </div>
-      <div className=%twc("inline-flex items-center gap-2")>
-        <Checkbox
-          id="delivery-checkbox"
-          name="delivery"
-          checked=deliverySelected
-          onChange={onCheckBoxUpdate(matchingSelected, !deliverySelected)}
-        />
-        {`신선배송`->React.string}
-      </div>
-    </div>
+    })
   }
+
+  <div className=%twc("flex-row inline-flex gap-5 xl:text-base")>
+    <div className=%twc("inline-flex items-center gap-2")>
+      <Checkbox
+        id="matching-checkbox"
+        name="matching"
+        checked=matchingSelected
+        onChange={onCheckBoxUpdate(!matchingSelected, deliverySelected)}
+        alt={matchingSelected
+          ? `${Product_FilterOption.Section.toLabel(#MATCHING)} 상품을 선택합니다`
+          : `${Product_FilterOption.Section.toLabel(#MATCHING)} 상품을 선택해제합니다`}
+      />
+      {Product_FilterOption.Section.toLabel(#MATCHING)->React.string}
+    </div>
+    <div className=%twc("inline-flex items-center gap-2")>
+      <Checkbox
+        id="delivery-checkbox"
+        name="delivery"
+        checked=deliverySelected
+        onChange={onCheckBoxUpdate(matchingSelected, !deliverySelected)}
+        alt={deliverySelected
+          ? `${Product_FilterOption.Section.toLabel(#DELIVERY)} 상품을 선택합니다`
+          : `${Product_FilterOption.Section.toLabel(#DELIVERY)} 상품을 선택해제합니다`}
+      />
+      {Product_FilterOption.Section.toLabel(#DELIVERY)->React.string}
+    </div>
+  </div>
 }

@@ -9,27 +9,15 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="ko">
         <Head>
           <meta name="naver-site-verification" content="118b9725fc68d47f420bded30c9a1fbc10ef2d6c" />
           <meta name="google-site-verification" content="hxOisu7UrmoAE5HN9HWorLkG0Y4016ojm4NQ5aCPZT8" />
-          <meta name="description" content="농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요." />
           <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/themes/default.css"
           />
           <link rel="icon" type="image/ico" href="/favicon.ico" />
-          <meta
-            property="og:url"
-            content="https://app.sinsunhi.com"
-          />
-          <meta property="og:type" content="website" />
-          <meta property="og:title" content="신선하이" />
-          <meta property="og:description" content="농산물 소싱 플랫폼" />
-          <meta
-            property="og:image"
-            content="https://app.sinsunhi.com/og_img.jpg"
-          />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
           <link rel="stylesheet preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css" as="style" onLoad="this.onload=null;this.rel='stylesheet';this.type='text/css'" />

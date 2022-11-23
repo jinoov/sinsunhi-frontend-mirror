@@ -69,6 +69,8 @@ function displayError(errorCode) {
         return "주문서 양식 에러";
     case /* AfterPay */10 :
         return "나중결제 한도 부족";
+    case /* NotEnoughAdhocStock */11 :
+        return "남은 수량 부족";
     
   }
 }
@@ -92,12 +94,13 @@ function textOnConfirmButton(errorCode) {
     case /* Etc */9 :
         return "발주 메뉴얼 보기";
     case /* AfterPay */10 :
+    case /* NotEnoughAdhocStock */11 :
         return "";
     
   }
 }
 
-function errorMessage(errorCode) {
+function errorMessage(errorCode, detailedErrorMessage) {
   if (errorCode === undefined) {
     return null;
   }
@@ -113,6 +116,8 @@ function errorMessage(errorCode) {
         return "" + errorCode._0 + "\n";
     case /* AfterPay */10 :
         return React.createElement(React.Fragment, undefined, "나중결제 잔여 한도 부족으로 발주에 실패했습니다.\n주문 금액을 조정하여 다시 재업로드해주세요.\n");
+    case /* NotEnoughAdhocStock */11 :
+        return React.createElement(React.Fragment, undefined, "" + errorCode._0 + "\n\n " + Belt_Option.getWithDefault(detailedErrorMessage, "") + "");
     default:
       return "양식에 맞지 않은 주문서입니다.\n아래와 같은 이유로 실패할 수 있습니다.\n\n";
   }
@@ -152,6 +157,7 @@ function UploadStatus_Buyer(Props) {
   var prevUploadedDateTime = React.useRef(undefined);
   var match = React.useState(function () {
         return {
+                detailedErrorMessage: undefined,
                 errorCode: undefined,
                 isShow: /* Hide */1
               };
@@ -187,6 +193,7 @@ function UploadStatus_Buyer(Props) {
     var data$p = CustomHooks.UploadStatus.response_decode(status._0);
     if (data$p.TAG === /* Ok */0) {
       var data$p$1 = data$p._0;
+      console.log(data$p$1);
       tmp = React.createElement(React.Fragment, undefined, Garter_Array.isEmpty(data$p$1.data) ? React.createElement("div", undefined, "업로드 한 내역이 없습니다.") : Garter_Array.map(data$p$1.data, (function (d) {
                     var match = d.errorCode;
                     var dataGtm = match !== undefined ? "btn-recent-order-error-show-detail" : "btn-recent-order-success-show-detail";
@@ -217,6 +224,7 @@ function UploadStatus_Buyer(Props) {
                                                   onClick: (function (param) {
                                                       setErrorDetail(function (param) {
                                                             return {
+                                                                    detailedErrorMessage: d.errorMessage,
                                                                     errorCode: d.errorCode,
                                                                     isShow: /* Show */0
                                                                   };
@@ -274,6 +282,7 @@ function UploadStatus_Buyer(Props) {
                   onCancel: (function (param) {
                       setErrorDetail(function (param) {
                             return {
+                                    detailedErrorMessage: undefined,
                                     errorCode: undefined,
                                     isShow: /* Hide */1
                                   };
@@ -282,6 +291,7 @@ function UploadStatus_Buyer(Props) {
                   onConfirm: (function (param) {
                       setErrorDetail(function (param) {
                             return {
+                                    detailedErrorMessage: undefined,
                                     errorCode: undefined,
                                     isShow: /* Hide */1
                                   };
@@ -301,7 +311,7 @@ function UploadStatus_Buyer(Props) {
                       target: "_blank"
                     }), React.createElement("p", {
                       className: "whitespace-pre-wrap text-text-L1 text-center"
-                    }, errorMessage(errorDetail.errorCode)), tmp$1, uploadType >= 3 && match$2 === undefined ? "나중결제로 주문을 등록했어요. 맨 상단 [내역보기]를 눌러 만기일 및 상환필요금액을 확인하세요." : null));
+                    }, errorMessage(errorDetail.errorCode, errorDetail.detailedErrorMessage)), tmp$1, uploadType >= 3 && match$2 === undefined ? "나중결제로 주문을 등록했어요. 맨 상단 [내역보기]를 눌러 만기일 및 상환필요금액을 확인하세요." : null));
 }
 
 var make = UploadStatus_Buyer;

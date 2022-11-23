@@ -1,9 +1,14 @@
+@module("../../public/images/push_dialog.svg")
+external dialogImage: string = "default"
+
 type rec braze = {
   initialize: (. string, config) => unit,
   requestPushPermission: (. unit) => unit,
   openSession: (. unit) => unit,
   changeUser: (. string) => unit,
+  isPushSupported: unit => bool,
   isPushPermissionGranted: unit => bool,
+  isPushBlocked: unit => bool,
   automaticallyShowInAppMessages: (. unit) => unit,
   getUser: unit => user,
   wipeData: (. unit) => unit,
@@ -96,5 +101,86 @@ let changeUser = (user: CustomHooks.Auth.user, braze) => {
     | _ => braze.changeUser(. `${user.id->Int.toString}-dev`)
     }
   | Admin | ExternalStaff => ()
+  }
+}
+
+open Webapi
+module PushNotificationRequestDialog = {
+  let trigger = () => {
+    let dialogTrigger = Dom.document->Dom.Document.getElementById("braze-notification-trigger")
+    dialogTrigger
+    ->Option.flatMap(dialogTrigger' => {
+      dialogTrigger'->Dom.Element.asHtmlElement
+    })
+    ->Option.forEach(dialogTrigger' => {
+      dialogTrigger'->Dom.HtmlElement.click
+    })
+    ->ignore
+  }
+
+  @react.component
+  let make = () => {
+    // braze Init
+    let braze = use()
+    let user = CustomHooks.Auth.use()
+
+    let (availableShow, setAvailableShow) = React.Uncurried.useState(_ => false)
+    let (show, setShow) = React.Uncurried.useState(_ => false)
+
+    let requestPushNotification = _ => {
+      setShow(._ => false)
+      switch (Global.Window.ReactNativeWebView.tOpt, braze, user) {
+      | (None, Some(braze'), LoggedIn(user')) =>
+        // 참고 사항
+        // 유저가 동록되어 있는 상태에서 푸시 허가를 물어봐야한다.
+        // 그렇지 않으면 허락한 시점의 유저를 braze가 찾지 못해 푸시 메세지를 보내지 못한다.
+        changeUser(user', braze')
+        braze'.requestPushPermission(.)
+      | _ => ()
+      }
+    }
+
+    React.useEffect2(_ => {
+      braze->Option.forEach(braze' =>
+        setAvailableShow(.
+          _ =>
+            braze'.isPushSupported() &&
+            !braze'.isPushPermissionGranted() &&
+            !braze'.isPushBlocked(),
+        )
+      )
+      None
+    }, (braze, show))
+
+    <RadixUI.Dialog.Root _open={show && availableShow}>
+      <RadixUI.Dialog.Trigger
+        onClick={_ => setShow(._ => true)} id="braze-notification-trigger" className=%twc("hidden")>
+        {j``->React.string}
+      </RadixUI.Dialog.Trigger>
+      <RadixUI.Dialog.Portal>
+        <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
+        <RadixUI.Dialog.Content
+          onOpenAutoFocus={ReactEvent.Synthetic.preventDefault} // 자동으로 버튼에 포커스되는 것을 막기위함
+          className=%twc(
+            "dialog-content-fix rounded-xl w-fit flex flex-col items-center justify-center pb-7"
+          )>
+          <img src=dialogImage className=%twc("rounded-xl") alt={`push-notification-dialog`} />
+          <div className=%twc("mt-5 flex justify-center items-center gap-2 text-[17px]")>
+            <button
+              type_="button"
+              onClick={_ => setShow(._ => false)}
+              className=%twc("w-36 h-13 rounded-xl bg-enabled-L5 text-enabled-L1")>
+              {"나중에"->React.string}
+            </button>
+            <button
+              type_="button"
+              onClick={requestPushNotification}
+              className=%twc("w-36 h-13 rounded-xl bg-primary text-inverted font-bold")>
+              {"알림동의"->React.string}
+            </button>
+          </div>
+        </RadixUI.Dialog.Content>
+      </RadixUI.Dialog.Portal>
+    </RadixUI.Dialog.Root>
   }
 }

@@ -126,7 +126,9 @@ let make = (
         {j`유통 정보 입력`->React.string}
       </span>
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content-detail overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content-detail overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5 text-text-L1")>
         <article className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`온라인 유통 정보`->React.string} </h2>

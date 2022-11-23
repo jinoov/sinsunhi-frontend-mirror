@@ -435,7 +435,10 @@ function BulkSale_Product_Create_Button(Props) {
                                             });
                                       })
                                   }, "저장")))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

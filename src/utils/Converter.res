@@ -18,19 +18,21 @@ module Status = (
       | ERROR
       | REFUND
       | NEGOTIATING
+      | DEPOSIT_PENDING
   },
 ) => {
   let displayStatus = (s: T.status) =>
     switch s {
-    | CREATE => `신규주문`
-    | PACKING => `상품준비중`
-    | DEPARTURE => `집하중`
-    | DELIVERING => `배송중`
-    | COMPLETE => `배송완료`
-    | CANCEL => `주문취소`
-    | ERROR => `송장번호에러`
-    | REFUND => `환불처리`
-    | NEGOTIATING => `협의중`
+    | CREATE => "신규주문"
+    | PACKING => "상품준비중"
+    | DEPARTURE => "집하중"
+    | DELIVERING => "배송중"
+    | COMPLETE => "배송완료"
+    | CANCEL => "주문취소"
+    | ERROR => "송장번호에러"
+    | REFUND => "환불처리"
+    | NEGOTIATING => "협의중"
+    | DEPOSIT_PENDING => "입금대기"
     }
 }
 

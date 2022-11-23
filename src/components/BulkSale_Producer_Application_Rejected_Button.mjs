@@ -249,7 +249,10 @@ function BulkSale_Producer_Application_Rejected_Button(Props) {
                                             });
                                       })
                                   }, "저장")))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

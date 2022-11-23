@@ -6,6 +6,7 @@ import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Paperform from "./common/Paperform.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
@@ -39,7 +40,7 @@ function SignUp_Buyer_Survey(Props) {
   React.useEffect((function () {
           if (Belt_Option.isSome(Js_dict.get(router.query, "welcome"))) {
             var prim1_pathname = router.pathname;
-            var prim1_query = dropByK(router.query, "welcome");
+            var prim1_query = Caml_option.some(dropByK(router.query, "welcome"));
             var prim1 = {
               pathname: prim1_pathname,
               query: prim1_query

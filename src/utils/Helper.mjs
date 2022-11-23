@@ -213,8 +213,24 @@ function make1(fun, ms) {
   };
 }
 
+function make1WithoutPromise(fun, ms) {
+  var timeoutId = {
+    contents: undefined
+  };
+  return function (args) {
+    Belt_Option.map(timeoutId.contents, (function (id$p) {
+            clearTimeout(id$p);
+            timeoutId.contents = undefined;
+          }));
+    timeoutId.contents = Caml_option.some(setTimeout((function (param) {
+                Curry._1(fun, args);
+              }), ms));
+  };
+}
+
 var Debounce = {
-  make1: make1
+  make1: make1,
+  make1WithoutPromise: make1WithoutPromise
 };
 
 var $$Option = {

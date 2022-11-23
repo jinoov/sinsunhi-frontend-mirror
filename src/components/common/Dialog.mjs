@@ -114,7 +114,10 @@ function Dialog(Props) {
                         className: "dialog-overlay"
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
-                        className: boxClassName
+                        className: boxClassName,
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, React.createElement("div", {
                             className: "pt-10 px-7"
                           }, children), React.createElement(Dialog$ButtonBox, tmp))),

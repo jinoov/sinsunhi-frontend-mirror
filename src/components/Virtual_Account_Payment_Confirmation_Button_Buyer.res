@@ -3,9 +3,9 @@ module Query = %relay(`
     $paymentMethod: PaymentMethod!
     $status: PaymentStatus!
   ) {
-    payments(paymentMethod: $paymentMethod, status: $status) {
+    payments(method: $paymentMethod, status: $status) {
       status
-      paymentMethod
+      paymentMethod: method
       amount
       id
       virtualAccount {
@@ -181,7 +181,8 @@ let make = () => {
     <RadixUI.Dialog.Content
       className=%twc(
         "dialog-content-fix p-5 overflow-y-auto text-sm text-text-L1 rounded-2xl min-w-max"
-      )>
+      )
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <TitleAndCloseButton close />
       <TableHead />
       <RescriptReactErrorBoundary

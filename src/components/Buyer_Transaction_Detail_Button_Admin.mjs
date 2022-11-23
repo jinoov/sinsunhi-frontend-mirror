@@ -219,7 +219,10 @@ function Buyer_Transaction_Detail_Button_Admin(Props) {
                   className: "text-base focus:outline-none bg-primary-light rounded-lg text-primary py-1 px-5"
                 }), React.createElement(ReactDialog.Content, {
                   children: null,
-                  className: "dialog-content-detail overflow-y-auto"
+                  className: "dialog-content-detail overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }, React.createElement("div", {
                       className: "flex p-5"
                     }, React.createElement("h3", {

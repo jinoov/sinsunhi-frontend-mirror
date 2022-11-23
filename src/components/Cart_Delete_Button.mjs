@@ -174,7 +174,10 @@ function Cart_Delete_Button$Dialog(Props) {
                         className: "dialog-overlay"
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
-                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
+                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center",
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, React.createElement("span", {
                             className: "whitespace-pre text-center text-text-L1 pt-3"
                           }, "선택하신 상품 " + String(n) + "개를\n장바구니에서 삭제하시겠어요?"), React.createElement("div", {
@@ -218,7 +221,10 @@ function Cart_Delete_Button$NoSelectDialog(Props) {
                         className: "dialog-overlay"
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
-                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
+                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center",
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, React.createElement("span", {
                             className: "whitespace-pre text-center text-text-L1 pt-3"
                           }, "삭제하실 상품을 선택해주세요"), React.createElement("div", {

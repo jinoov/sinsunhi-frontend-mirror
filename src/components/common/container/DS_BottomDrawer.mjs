@@ -15,19 +15,19 @@ function toStyle(isShow, show, hide, style) {
 }
 
 function useLockBodyScroll(isLock) {
-  var bodyElement = document.querySelector("body");
   React.useEffect((function () {
+          var bodyElement = document.querySelector("body");
           if (isLock) {
             if (!(bodyElement == null)) {
-              bodyElement.className = "overflow-hidden";
+              bodyElement.classList.add("overflow-hidden");
               return (function (param) {
-                        bodyElement.className = "";
+                        bodyElement.classList.remove("overflow-hidden");
                       });
             } else {
               return ;
             }
           } else if (!(bodyElement == null)) {
-            bodyElement.className = "";
+            bodyElement.classList.remove("overflow-hidden");
             return ;
           } else {
             return ;
@@ -102,8 +102,13 @@ var Header = {
 
 function DS_BottomDrawer$Body(Props) {
   var children = Props.children;
+  var scrollableOpt = Props.scrollable;
+  var scrollable = scrollableOpt !== undefined ? scrollableOpt : false;
   return React.createElement("div", {
-              className: "flex flex-col overflow-hidden"
+              className: Cx.cx([
+                    "flex flex-col",
+                    scrollable ? "overflow-auto" : "overflow-hidden"
+                  ])
             }, children);
 }
 
@@ -132,7 +137,7 @@ function DS_BottomDrawer$Root(Props) {
             "aria-hidden": !isShow,
             className: showStyle(Cx.cx([
                       full ? "h-full" : "max-h-[85vh]",
-                      "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
+                      "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-transition"
                     ]))
           }, children));
   if (dimLocation) {

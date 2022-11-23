@@ -8,8 +8,7 @@
  */
 
 @module("../../public/assets/arrow-gray800-up-down.svg")
-external arrowUpDownIcon:string = "default"
-
+external arrowUpDownIcon: string = "default"
 
 let encodeSort = sort => {
   switch sort {
@@ -44,7 +43,6 @@ let makeSortLabel = sort => {
   }
 }
 
-
 @react.component
 let make = () => {
   let router = Next.Router.useRouter()
@@ -76,7 +74,7 @@ let make = () => {
       <Trigger className=%twc("focus:outline-none")>
         <div className=%twc("ml-2 flex items-center justify-center")>
           <span className=%twc("text-sm mr-1 text-gray-800")> {label->React.string} </span>
-          <img src=arrowUpDownIcon />
+          <img src=arrowUpDownIcon alt="" />
         </div>
       </Trigger>
       <Content
@@ -134,7 +132,7 @@ module MO = {
         <Trigger className=%twc("focus:outline-none")>
           <div className=%twc("ml-2 flex items-center justify-center")>
             <span className=%twc("text-sm mr-1 text-gray-800")> {label->React.string} </span>
-            <img src=arrowUpDownIcon />
+            <img src=arrowUpDownIcon alt="" />
           </div>
         </Trigger>
         <Content

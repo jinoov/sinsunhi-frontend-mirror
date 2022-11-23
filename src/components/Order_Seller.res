@@ -67,7 +67,9 @@ module Item = {
             <span className=%twc("block mb-2")>
               {`${order.productId->Int.toString} · ${order.productSku}`->React.string}
             </span>
-            <span className=%twc("block")> <Badge status=order.status /> </span>
+            <span className=%twc("block")>
+              <Badge status=order.status />
+            </span>
           </div>
           <div className=%twc("h-full flex flex-col px-4 py-2")>
             <Order_Detail_Button_Buyer_Seller order />
@@ -85,7 +87,8 @@ module Item = {
             | PACKING
             | DEPARTURE
             | DELIVERING
-            | ERROR => <>
+            | ERROR =>
+              <>
                 <Select_Courier courierCode setCourier />
                 <div className=%twc("flex mt-1")>
                   <label className=%twc("block flex-auto")>
@@ -93,7 +96,7 @@ module Item = {
                       type_="text"
                       name="invoice-number"
                       size=Input.Small
-                      placeholder=`송장번호입력`
+                      placeholder={`송장번호입력`}
                       value={invoice->Option.getWithDefault("")}
                       onChange=onChangeInvoice
                       error=None
@@ -129,7 +132,9 @@ module Item = {
             | COMPLETE
             | CANCEL
             | REFUND
-            | NEGOTIATING => <>
+            | NEGOTIATING
+            | DEPOSIT_PENDING =>
+              <>
                 <span className=%twc("block")> {courierName->React.string} </span>
                 <span className=%twc("block text-gray-500")>
                   {order.invoice->Option.getWithDefault(`-`)->React.string}
@@ -150,8 +155,11 @@ module Item = {
           <div className=%twc("h-full flex flex-col px-4 py-2")>
             {switch order.deliveryType {
             | Some(SELF) => <span className=%twc("block")> {`-`->React.string} </span>
-            | _ => <>
-                <span className=%twc("block")> {order.receiverName->Option.getWithDefault(`-`)->React.string} </span>
+            | _ =>
+              <>
+                <span className=%twc("block")>
+                  {order.receiverName->Option.getWithDefault(`-`)->React.string}
+                </span>
                 <span className=%twc("block text-gray-500")>
                   {order.receiverPhone
                   ->Option.getWithDefault(`-`)
@@ -169,8 +177,11 @@ module Item = {
           <div className=%twc("h-full flex flex-col px-4 py-2")>
             {switch order.deliveryType {
             | Some(SELF) => <span className=%twc("block")> {`-`->React.string} </span>
-            | _ => <>
-                <span className=%twc("block")> {order.receiverZipcode->Option.getWithDefault(`-`)->React.string} </span>
+            | _ =>
+              <>
+                <span className=%twc("block")>
+                  {order.receiverZipcode->Option.getWithDefault(`-`)->React.string}
+                </span>
               </>
             }}
           </div>
@@ -191,9 +202,9 @@ module Item = {
         // 다이얼로그
         <Dialog
           isShow=isShowPackingConfirm
-          textOnCancel=`취소`
+          textOnCancel={`취소`}
           onCancel={_ => setShowPackingConfirm(._ => Dialog.Hide)}
-          textOnConfirm=`확인`
+          textOnConfirm={`확인`}
           onConfirm={_ => {
             setShowPackingConfirm(._ => Dialog.Hide)
             onClickPacking([order.orderProductNo])
@@ -265,12 +276,15 @@ module Item = {
               </div>
               <div className=%twc("flex mt-2")>
                 <span className=%twc("w-20 text-gray-gl")> {j`주문번호`->React.string} </span>
-                <span className=%twc("ml-2")> <Order_Detail_Button_Buyer_Seller order /> </span>
+                <span className=%twc("ml-2")>
+                  <Order_Detail_Button_Buyer_Seller order />
+                </span>
               </div>
             </div>
             <div className=%twc("py-3")>
               {switch order.status {
-              | CREATE => <>
+              | CREATE =>
+                <>
                   <div className=%twc("flex")>
                     <span className=%twc("w-20 text-gray-gl")>
                       {j`택배사명`->React.string}
@@ -291,12 +305,15 @@ module Item = {
                     </button>
                   </div>
                 </>
-              | _ => <>
+              | _ =>
+                <>
                   <div className=%twc("flex")>
                     <span className=%twc("w-20 text-gray-gl")>
                       {j`택배사명`->React.string}
                     </span>
-                    <span className=%twc("flex-1")> <Select_Courier courierCode setCourier /> </span>
+                    <span className=%twc("flex-1")>
+                      <Select_Courier courierCode setCourier />
+                    </span>
                   </div>
                   <div className=%twc("flex-1 flex mt-1")>
                     <span className=%twc("w-20 text-gray-gl")>
@@ -308,7 +325,7 @@ module Item = {
                           type_="text"
                           name="invoice-number"
                           size=Input.Large
-                          placeholder=`송장번호입력`
+                          placeholder={`송장번호입력`}
                           value={invoice->Option.getWithDefault("")}
                           onChange=onChangeInvoice
                           error=None
@@ -370,7 +387,8 @@ module Item = {
             </div>
             <div className=%twc("py-3")>
               {switch order.deliveryType {
-              | Some(SELF) => <>
+              | Some(SELF) =>
+                <>
                   <div className=%twc("flex")>
                     <span className=%twc("w-20 text-gray-gl")> {j`수취인`->React.string} </span>
                     <span className=%twc("ml-2")> {`-`->React.string} </span>
@@ -390,29 +408,42 @@ module Item = {
                     <span className=%twc("ml-2")> {`-`->React.string} </span>
                   </div>
                 </>
-              | _ => <>
+              | _ =>
+                <>
                   <div className=%twc("flex")>
                     <span className=%twc("w-20 text-gray-gl")> {j`수취인`->React.string} </span>
-                    <span className=%twc("ml-2")> {order.receiverName->Option.getWithDefault(`-`)->React.string} </span>
+                    <span className=%twc("ml-2")>
+                      {order.receiverName->Option.getWithDefault(`-`)->React.string}
+                    </span>
                   </div>
                   <div className=%twc("flex mt-2")>
                     <span className=%twc("w-20 text-gray-gl")> {j`연락처`->React.string} </span>
-                    <span className=%twc("ml-2")> {order.receiverPhone->Option.getWithDefault(`-`)->React.string} </span>
+                    <span className=%twc("ml-2")>
+                      {order.receiverPhone->Option.getWithDefault(`-`)->React.string}
+                    </span>
                   </div>
                   <div className=%twc("flex mt-2")>
                     <span className=%twc("w-20 text-gray-gl")> {j`주소`->React.string} </span>
-                    <span className=%twc("flex-1 ml-2")> {order.receiverAddress->Option.getWithDefault(`-`)->React.string} </span>
+                    <span className=%twc("flex-1 ml-2")>
+                      {order.receiverAddress->Option.getWithDefault(`-`)->React.string}
+                    </span>
                   </div>
                   <div className=%twc("flex mt-2")>
-                    <span className=%twc("w-20 text-gray-gl")> {j`우편번호`->React.string} </span>
-                    <span className=%twc("ml-2")> {order.receiverZipcode->Option.getWithDefault(`-`)->React.string} </span>
+                    <span className=%twc("w-20 text-gray-gl")>
+                      {j`우편번호`->React.string}
+                    </span>
+                    <span className=%twc("ml-2")>
+                      {order.receiverZipcode->Option.getWithDefault(`-`)->React.string}
+                    </span>
                   </div>
                 </>
               }}
             </div>
             <div className=%twc("py-3")>
               <div className=%twc("flex")>
-                <span className=%twc("w-20 text-gray-gl")> {j`배송메세지`->React.string} </span>
+                <span className=%twc("w-20 text-gray-gl")>
+                  {j`배송메세지`->React.string}
+                </span>
                 <span className=%twc("ml-2")>
                   {order.deliveryMessage->Option.getWithDefault(``)->React.string}
                 </span>
@@ -435,9 +466,9 @@ module Item = {
         // 다이얼로그
         <Dialog
           isShow=isShowPackingConfirm
-          textOnCancel=`취소`
+          textOnCancel={`취소`}
           onCancel={_ => setShowPackingConfirm(._ => Dialog.Hide)}
-          textOnConfirm=`확인`
+          textOnConfirm={`확인`}
           onConfirm={_ => {
             setShowPackingConfirm(._ => Dialog.Hide)
             onClickPacking([order.orderProductNo])
@@ -507,7 +538,7 @@ let make = (~order: CustomHooks.Orders.order, ~check, ~onCheckOrder, ~onClickPac
                 )
               }
             },
-            ~onFailure={_ => setShowErrorPostCourierInvoiceNo(._ => Dialog.Show)},
+            ~onFailure={_ => setShowErrorPostCourierInvoiceNo(. _ => Dialog.Show)},
           )
         })
       })->ignore

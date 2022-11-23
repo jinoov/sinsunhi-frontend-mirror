@@ -37,12 +37,6 @@ module PC = {
               <span className=%twc("text-text-L2")> {`・`->React.string} </span>
               <div className=%twc("flex flex-col text-gray-800")>
                 <span>
-                  <span className=%twc("font-bold")>
-                    {`위탁 판매(택배) 상품`->React.string}
-                  </span>
-                  {`입니다.`->React.string}
-                </span>
-                <span>
                   <span className=%twc("text-green-500")>
                     {`원물, 대량구매는 1:1 채팅`->React.string}
                   </span>
@@ -101,12 +95,6 @@ module MO = {
             <div className=%twc("flex")>
               <span className=%twc("text-text-L2")> {`・`->React.string} </span>
               <div className=%twc("flex flex-col text-text-L1")>
-                <span>
-                  <span className=%twc("font-bold")>
-                    {`위탁 판매(택배) 상품`->React.string}
-                  </span>
-                  {`입니다.`->React.string}
-                </span>
                 <span>
                   <span className=%twc("text-primary")>
                     {`원물, 대량구매는 1:1 채팅`->React.string}

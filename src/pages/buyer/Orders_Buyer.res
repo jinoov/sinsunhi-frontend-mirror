@@ -149,7 +149,7 @@ module Orders = {
     let {mutate} = Swr.useSwrConfig()
     let {addToast} = ReactToastNotifications.useToasts()
 
-    let (cancelMutate, _) = Mutation.use()
+    let (cancelMutate, isMutating) = Mutation.use()
 
     let status = CustomHooks.Orders.use(
       router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
@@ -247,106 +247,199 @@ module Orders = {
     }
 
     let cancelOrder = orders =>
-      cancelMutate(
-        ~variables={
-          input: orders,
-        },
-        ~onCompleted=({cancelWosOrderProductOption}, _) => {
-          switch cancelWosOrderProductOption {
-          | Some(#CancelWosOrderProductOptionResult(_)) => onSuccess()
-          | Some(#Error({message})) =>
-            handleError(message->Option.getWithDefault(`주문 취소에 실패하였습니다.`))
-          | _ => handleError(`주문 취소에 실패하였습니다.`)
-          }
-        },
-        ~onError={err => handleError(err.message)},
-        (),
-      )->ignore
+      switch isMutating {
+      | true => ()
+      | false =>
+        cancelMutate(
+          ~variables={
+            input: orders,
+          },
+          ~onCompleted=({cancelWosOrderProductOption}, _) => {
+            switch cancelWosOrderProductOption {
+            | Some(#CancelWosOrderProductOptionResult(_)) => onSuccess()
+            | Some(#Error({message})) =>
+              handleError(message->Option.getWithDefault(`주문 취소에 실패하였습니다.`))
+            | _ => handleError(`주문 취소에 실패하였습니다.`)
+            }
+          },
+          ~onError={err => handleError(err.message)},
+          (),
+        )->ignore
+      }
 
     let isTotalSelected = router.query->Js.Dict.get("status")->Option.isNone
 
     let isCreateSelected =
       router.query->Js.Dict.get("status")->Option.keep(status => status === "CREATE")->Option.isSome
 
-    <>
-      <div className=%twc("sm:px-10 md:px-20")>
-        <Summary_Order_Buyer />
-        <div className=%twc("lg:px-7 mt-4 shadow-gl")>
-          <div className=%twc("md:flex md:justify-between pb-4 text-base")>
-            <div
-              className=%twc(
-                "pt-10 px-5 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
-              )>
-              <h3 className=%twc("font-bold")>
-                {j`주문내역`->React.string}
-                <span className=%twc("ml-1 text-green-gl font-normal")>
-                  {j`${count}건`->React.string}
-                </span>
-              </h3>
-              <div className=%twc("flex flex-col lg:flex-row mt-4 lg:mt-0")>
-                <div className=%twc("flex items-center")>
-                  <Select_CountPerPage className=%twc("mr-2") />
-                  <Select_Sorted className=%twc("mr-2") />
-                </div>
-                <div className=%twc("flex mt-2 lg:mt-0")>
-                  {isTotalSelected || isCreateSelected
-                    ? <button
-                        className=%twc(
-                          "hidden lg:flex items-center h-9 px-3 text-white bg-green-gl rounded-lg mr-2"
-                        )
-                        onClick={_ =>
-                          countOfChecked > 0
-                            ? setShowCancelConfirm(._ => Dialog.Show)
-                            : setShowNothingToCancel(._ => Dialog.Show)}>
-                        {j`선택한 항목 주문 취소`->React.string}
-                      </button>
-                    : React.null}
-                  <Excel_Download_Request_Button
-                    userType=Buyer requestUrl="/order/request-excel/buyer"
-                  />
+    let oldUI =
+      <>
+        <div className=%twc("sm:px-10 md:px-20")>
+          <Summary_Order_Buyer />
+          <div className=%twc("lg:px-7 mt-4 shadow-gl")>
+            <div className=%twc("md:flex md:justify-between pb-4 text-base")>
+              <div
+                className=%twc(
+                  "pt-10 px-5 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
+                )>
+                <h3 className=%twc("font-bold")>
+                  {j`주문내역`->React.string}
+                  <span className=%twc("ml-1 text-green-gl font-normal")>
+                    {j`${count}건`->React.string}
+                  </span>
+                </h3>
+                <div className=%twc("flex flex-col lg:flex-row mt-4 lg:mt-0")>
+                  <div className=%twc("flex items-center")>
+                    <Select_CountPerPage className=%twc("mr-2") />
+                    <Select_Sorted className=%twc("mr-2") />
+                  </div>
+                  <div className=%twc("flex mt-2 lg:mt-0")>
+                    {isTotalSelected || isCreateSelected
+                      ? <button
+                          className=%twc(
+                            "hidden lg:flex items-center h-9 px-3 text-white bg-green-gl rounded-lg mr-2"
+                          )
+                          onClick={_ =>
+                            countOfChecked > 0
+                              ? setShowCancelConfirm(._ => Dialog.Show)
+                              : setShowNothingToCancel(._ => Dialog.Show)}>
+                          {j`선택한 항목 주문 취소`->React.string}
+                        </button>
+                      : React.null}
+                    <Excel_Download_Request_Button
+                      userType=Buyer requestUrl="/order/request-excel/buyer"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+            <List
+              status
+              check
+              onCheckOrder=handleOnCheckOrder
+              countOfChecked
+              onCheckAll=handleCheckAll
+              onClickCancel=cancelOrder
+            />
           </div>
-          <List
-            status
-            check
-            onCheckOrder=handleOnCheckOrder
-            countOfChecked
-            onCheckAll=handleCheckAll
-            onClickCancel=cancelOrder
-          />
         </div>
-      </div>
-      <Dialog
-        isShow=isShowCancelConfirm
-        textOnCancel={`취소`}
-        onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
-        textOnConfirm={`확인`}
-        onConfirm={_ => cancelOrder(ordersToCancel->Set.String.toArray)}>
-        <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
-        <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
-          <span className=%twc("font-bold")>
-            {j`선택한 ${countOfChecked->Int.toString}개`->React.string}
-          </span>
-          {j`의 주문을 취소하시겠습니까?`->React.string}
-        </p>
-      </Dialog>
-      <Dialog
-        isShow=isShowNothingToCancel
-        textOnCancel={`확인`}
-        onCancel={_ => setShowNothingToCancel(._ => Dialog.Hide)}>
-        <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
-        <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
-          {j`취소할 주문을 선택해주세요.`->React.string}
-        </p>
-      </Dialog>
-      <Dialog isShow=isShowCancelError onConfirm={_ => setShowCancelError(._ => Dialog.Hide)}>
-        <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
-          {`주문 취소에 실패하였습니다.\n다시 시도하시기 바랍니다.`->React.string}
-        </p>
-      </Dialog>
-    </>
+        <Dialog
+          isShow=isShowCancelConfirm
+          textOnCancel={`취소`}
+          onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
+          textOnConfirm={`확인`}
+          onConfirm={_ => cancelOrder(ordersToCancel->Set.String.toArray)}>
+          <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
+          <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
+            <span className=%twc("font-bold")>
+              {j`선택한 ${countOfChecked->Int.toString}개`->React.string}
+            </span>
+            {j`의 주문을 취소하시겠습니까?`->React.string}
+          </p>
+        </Dialog>
+        <Dialog
+          isShow=isShowNothingToCancel
+          textOnCancel={`확인`}
+          onCancel={_ => setShowNothingToCancel(._ => Dialog.Hide)}>
+          <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
+          <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
+            {j`취소할 주문을 선택해주세요.`->React.string}
+          </p>
+        </Dialog>
+        <Dialog isShow=isShowCancelError onConfirm={_ => setShowCancelError(._ => Dialog.Hide)}>
+          <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+            {`주문 취소에 실패하였습니다.\n다시 시도하시기 바랍니다.`->React.string}
+          </p>
+        </Dialog>
+      </>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      {<div className=%twc("lg:w-[1920px] mx-auto bg-[#FAFBFC] flex")>
+        <div className=%twc("hidden lg:block ")>
+          <PC_MyInfo_Sidebar />
+        </div>
+        <div
+          className=%twc(
+            "sm:px-10 md:px-20 lg:mx-16 lg:px-0 lg:mt-10 lg:rounded-sm shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] lg:max-w-[1280px] lg:min-w-[872px] w-full lg:mb-10 lg:h-fit"
+          )>
+          <Summary_Order_Buyer />
+          <div className=%twc("lg:px-7 bg-white ")>
+            <div className=%twc("md:flex md:justify-between mt-4 lg:mt-0 pb-4 text-base")>
+              <div
+                className=%twc(
+                  "pt-10 px-5 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
+                )>
+                <h3 className=%twc("font-bold")>
+                  {j`주문내역`->React.string}
+                  <span className=%twc("ml-1 text-green-gl font-normal")>
+                    {j`${count}건`->React.string}
+                  </span>
+                </h3>
+                <div className=%twc("flex flex-col lg:flex-row mt-4 lg:mt-0")>
+                  <div className=%twc("flex items-center")>
+                    <Select_CountPerPage className=%twc("mr-2") />
+                    <Select_Sorted className=%twc("mr-2") />
+                  </div>
+                  <div className=%twc("flex mt-2 lg:mt-0")>
+                    {isTotalSelected || isCreateSelected
+                      ? <button
+                          className=%twc(
+                            "hidden lg:flex items-center h-9 px-3 text-white bg-green-gl rounded-lg mr-2"
+                          )
+                          onClick={_ =>
+                            countOfChecked > 0
+                              ? setShowCancelConfirm(._ => Dialog.Show)
+                              : setShowNothingToCancel(._ => Dialog.Show)}>
+                          {j`선택한 항목 주문 취소`->React.string}
+                        </button>
+                      : React.null}
+                    <Excel_Download_Request_Button
+                      userType=Buyer requestUrl="/order/request-excel/buyer"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <List
+              status
+              check
+              onCheckOrder=handleOnCheckOrder
+              countOfChecked
+              onCheckAll=handleCheckAll
+              onClickCancel=cancelOrder
+            />
+          </div>
+        </div>
+        <Dialog
+          isShow=isShowCancelConfirm
+          textOnCancel={`취소`}
+          onCancel={_ => setShowCancelConfirm(._ => Dialog.Hide)}
+          textOnConfirm={`확인`}
+          onConfirm={_ => cancelOrder(ordersToCancel->Set.String.toArray)}>
+          <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
+          <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
+            <span className=%twc("font-bold")>
+              {j`선택한 ${countOfChecked->Int.toString}개`->React.string}
+            </span>
+            {j`의 주문을 취소하시겠습니까?`->React.string}
+          </p>
+        </Dialog>
+        <Dialog
+          isShow=isShowNothingToCancel
+          textOnCancel={`확인`}
+          onCancel={_ => setShowNothingToCancel(._ => Dialog.Hide)}>
+          <a id="link-of-guide" href=Env.cancelFormUrl target="_blank" className=%twc("hidden") />
+          <p className=%twc("text-black-gl text-center whitespace-pre-wrap")>
+            {j`취소할 주문을 선택해주세요.`->React.string}
+          </p>
+        </Dialog>
+        <Dialog isShow=isShowCancelError onConfirm={_ => setShowCancelError(._ => Dialog.Hide)}>
+          <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+            {`주문 취소에 실패하였습니다.\n다시 시도하시기 바랍니다.`->React.string}
+          </p>
+        </Dialog>
+      </div>}
+    </FeatureFlagWrapper>
   }
 }
 

@@ -2,7 +2,7 @@
 let make = () => {
   <>
     <Next.Head>
-      <title> {j`서비스 이용약관 - 신선하이`->React.string} </title>
+      <title> {j`신선하이 | 서비스 이용약관`->React.string} </title>
     </Next.Head>
     <div className=%twc("p-4 mx-auto w-full sm:w-2/3 lg:w-1/2")>
       <div className=%twc("flex justify-center items-center relative text-xl font-bold")>
@@ -21,7 +21,9 @@ let make = () => {
           </p>
         </li>
         <li className=%twc("mt-4")>
-          <h3 className=%twc("font-bold")> {j`제 2 조 【 용어 정의 】`->React.string} </h3>
+          <h3 className=%twc("font-bold")>
+            {j`제 2 조 【 용어 정의 】`->React.string}
+          </h3>
           <p>
             {j`본 약관에서 사용하는 용어는 신용정보의 이용 및 보호에 관한 법률(이하 “법률”이라 한다)에서 정한 바에 따른다.`->React.string}
           </p>

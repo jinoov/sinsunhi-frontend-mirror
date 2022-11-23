@@ -170,8 +170,8 @@ function PDP_Normal_RfqBtn_Buyer$MO(Props) {
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;
-  var btnStyle = "flex flex-1 items-center justify-center rounded-xl bg-white border border-primary text-primary text-lg font-bold";
-  var disabledStyle = "flex flex-1 items-center justify-center rounded-xl bg-disabled-L2 text-lg font-bold text-white";
+  var btnStyle = "flex flex-1 items-center justify-center rounded-xl bg-white border border-primary text-primary text-lg font-bold        whitespace-pre";
+  var disabledStyle = "flex flex-1 items-center justify-center rounded-xl bg-disabled-L2 text-lg font-bold text-white whitespace-pre";
   var rfqStatus = typeof user === "number" ? (
       user !== 0 ? /* Unauthorized */1 : /* Loading */0
     ) : (
@@ -188,11 +188,11 @@ function PDP_Normal_RfqBtn_Buyer$MO(Props) {
                           var prim1 = "/buyer/tradematch/buy/products/" + String(productId) + "/apply";
                           router.push(prim1);
                         })
-                    }, "최저가 견적문의"));
+                    }, "견적문의"));
     } else {
       return React.createElement(RfqCreateRequestButton.make, {
                   className: btnStyle,
-                  buttonText: "최저가 견적문의"
+                  buttonText: "견적문의"
                 });
     }
   }
@@ -209,13 +209,13 @@ function PDP_Normal_RfqBtn_Buyer$MO(Props) {
                                         };
                                 });
                           })
-                      }, "최저가 견적문의"));
+                      }, "견적문의"));
     case /* Loading */0 :
     case /* NoPermission */2 :
         return React.createElement("button", {
                     className: disabledStyle,
                     disabled: true
-                  }, "최저가 견적문의");
+                  }, "견적문의");
     
   }
 }

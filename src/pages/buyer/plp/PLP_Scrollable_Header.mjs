@@ -199,6 +199,7 @@ function PLP_Scrollable_Header$PC$ScrollTab(Props) {
                 }, match[0] ? React.createElement("div", {
                         className: "w-[88px] h-11 inline-flex gradient-tab-l mr-auto"
                       }, React.createElement("button", {
+                            "aria-label": "이전 카테고리 목록",
                             className: "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto rotate-180",
                             onClick: handleClickLeftArrow
                           }, React.createElement(IconArrow.make, {
@@ -207,6 +208,7 @@ function PLP_Scrollable_Header$PC$ScrollTab(Props) {
                               }))) : null, match$1[0] ? React.createElement("div", {
                         className: "w-[88px] h-11 float-left inline-flex gradient-tab-r justify-end self-end ml-auto"
                       }, React.createElement("button", {
+                            "aria-label": "다음 카테고리 목록",
                             className: "w-8 h-8 flex justify-center items-center border-[1px] border-gray-300 pointer-events-auto",
                             onClick: handleClickRightArrow
                           }, React.createElement(IconArrow.make, {
@@ -396,53 +398,77 @@ function PLP_Scrollable_Header$MO(Props) {
         parentId: parentId
       }, undefined, undefined, undefined, undefined);
   var node = match.node;
-  var children = Belt_Option.mapWithDefault(node, [], (function (node) {
-          return node.children;
-        }));
-  var match$1;
-  if (children.length !== 0) {
-    var id = Belt_Option.mapWithDefault(node, "", (function (node$p) {
-            return node$p.id;
-          }));
-    var name = Belt_Option.mapWithDefault(node, "", (function (node$p) {
-            return node$p.name;
-          }));
-    var firstItem = PLP_Scrollable_Tab_Item.Data.make(id, "" + name + " 전체", /* All */0);
-    var restItem = Belt_Array.map(children, (function (item) {
-            return PLP_Scrollable_Tab_Item.Data.make(item.id, item.name, /* Specific */1);
-          }));
-    match$1 = [
-      firstItem,
-      restItem
-    ];
-  } else {
-    var parentNode = Belt_Option.flatMap(node, (function (node$p) {
-            return node$p.parent;
-          }));
-    var id$1 = Belt_Option.mapWithDefault(parentNode, "", (function (parentNode$p) {
+  if (node === undefined) {
+    return React.createElement(PLP_Scrollable_Header$MO$Skeleton, {});
+  }
+  var match$1 = node.type_;
+  var match$2 = node.children;
+  var match$3;
+  var exit = 0;
+  if (match$1 === "NORMAL") {
+    if (match$2.length !== 0) {
+      exit = 1;
+    } else {
+      var parentNode = node.parent;
+      var id = Belt_Option.mapWithDefault(parentNode, "", (function (parentNode$p) {
+              return parentNode$p.id;
+            }));
+      var name = Belt_Option.mapWithDefault(parentNode, "", (function (parentNode$p) {
+              return parentNode$p.name;
+            }));
+      var restItem = Belt_Array.map(Belt_Option.mapWithDefault(parentNode, [], (function (parentNode$p) {
+                  return parentNode$p.children;
+                })), (function (item) {
+              return PLP_Scrollable_Tab_Item.Data.make(item.id, item.name, /* Specific */1);
+            }));
+      match$3 = [
+        id,
+        restItem,
+        name,
+        true
+      ];
+    }
+  } else if (match$1 === "SHOWCASE" && match$2.length === 0) {
+    var parentNode$1 = node.parent;
+    var id$1 = Belt_Option.mapWithDefault(parentNode$1, "", (function (parentNode$p) {
             return parentNode$p.id;
           }));
-    var name$1 = Belt_Option.mapWithDefault(parentNode, "", (function (parentNode$p) {
-            return parentNode$p.name;
-          }));
-    var firstItem$1 = PLP_Scrollable_Tab_Item.Data.make(id$1, "" + name$1 + " 전체", /* All */0);
-    var restItem$1 = Belt_Array.map(Belt_Option.mapWithDefault(parentNode, [], (function (node) {
-                return node.children;
+    var name$1 = node.name;
+    var restItem$1 = Belt_Array.map(Belt_Option.mapWithDefault(parentNode$1, [], (function (parentNode$p) {
+                return parentNode$p.children;
               })), (function (item) {
             return PLP_Scrollable_Tab_Item.Data.make(item.id, item.name, /* Specific */1);
           }));
-    match$1 = [
-      firstItem$1,
-      restItem$1
+    match$3 = [
+      id$1,
+      restItem$1,
+      name$1,
+      false
+    ];
+  } else {
+    exit = 1;
+  }
+  if (exit === 1) {
+    var id$2 = node.id;
+    var name$2 = node.name;
+    var restItem$2 = Belt_Array.map(match$2, (function (item) {
+            return PLP_Scrollable_Tab_Item.Data.make(item.id, item.name, /* Specific */1);
+          }));
+    match$3 = [
+      id$2,
+      restItem$2,
+      name$2,
+      true
     ];
   }
-  var items = Belt_Array.concat([match$1[0]], Belt_Array.map(match$1[1], (function (item) {
+  var firstItem = PLP_Scrollable_Tab_Item.Data.make(match$3[0], "" + match$3[2] + " 전체", /* All */0);
+  var items = Belt_Array.concat([firstItem], Belt_Array.map(match$3[1], (function (item) {
               return PLP_Scrollable_Tab_Item.Data.make(item.id, item.name, /* Specific */1);
             })));
   return React.createElement(React.Suspense, {
-              children: React.createElement(PLP_Scrollable_Header$MO$View, {
-                    items: items
-                  }),
+              children: match$3[3] ? React.createElement(PLP_Scrollable_Header$MO$View, {
+                      items: items
+                    }) : null,
               fallback: React.createElement(PLP_Scrollable_Header$MO$Skeleton, {})
             });
 }

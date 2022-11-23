@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as FormulaComponents from "@greenlabs/formula-components";
 import InputCheckSvg from "../../../public/assets/input-check.svg";
 
 var inputCheckIcon = InputCheckSvg;
@@ -13,17 +14,18 @@ function Checkbox(Props) {
   var checked = Props.checked;
   var onChange = Props.onChange;
   var disabled = Props.disabled;
+  var alt = Props.alt;
   var style;
   var exit = 0;
   if (disabled !== undefined && disabled) {
-    style = "w-5 h-5 border-2 border-gray-200 bg-gray-100 rounded flex justify-center items-center";
+    style = "w-5 h-5 border-2 border-gray-200 bg-gray-100 rounded-[5px] flex justify-center items-center";
   } else {
     exit = 1;
   }
   if (exit === 1) {
     style = checked !== undefined ? (
-        checked ? "w-5 h-5 bg-green-gl rounded flex justify-center items-center cursor-pointer" : "w-5 h-5 bg-white border-2 border-gray-300 rounded flex justify-center items-center cursor-pointer"
-      ) : "w-5 h-5 border-2 border-gray-200 bg-gray-100 rounded flex justify-center items-center";
+        checked ? "w-5 h-5 bg-green-gl rounded-[5px] flex justify-center items-center cursor-pointer" : "w-5 h-5 bg-white border-2 border-gray-300 rounded-[5px] flex justify-center items-center cursor-pointer"
+      ) : "w-5 h-5 border-2 border-gray-200 bg-gray-100 rounded-[5px] flex justify-center items-center";
   }
   var tmp = {
     className: "hidden",
@@ -50,6 +52,8 @@ function Checkbox(Props) {
                 }, Belt_Option.mapWithDefault(checked, null, (function (checked$p) {
                         if (checked$p) {
                           return React.createElement("img", {
+                                      className: "w-[14px] h-3",
+                                      alt: Belt_Option.getWithDefault(alt, ""),
                                       src: inputCheckIcon
                                     });
                         } else {
@@ -65,9 +69,10 @@ function Checkbox$Uncontrolled(Props) {
   var onBlur = Props.onBlur;
   var onChange = Props.onChange;
   var disabled = Props.disabled;
+  var readOnly = Props.readOnly;
   var inputRef = Props.inputRef;
   var tmp = {
-    className: "peer " + "hidden",
+    className: "peer hidden",
     type: "checkbox"
   };
   if (inputRef !== undefined) {
@@ -85,6 +90,9 @@ function Checkbox$Uncontrolled(Props) {
   if (name !== undefined) {
     tmp.name = Caml_option.valFromOption(name);
   }
+  if (readOnly !== undefined) {
+    tmp.readOnly = Caml_option.valFromOption(readOnly);
+  }
   if (onBlur !== undefined) {
     tmp.onBlur = Caml_option.valFromOption(onBlur);
   }
@@ -92,10 +100,11 @@ function Checkbox$Uncontrolled(Props) {
     tmp.onChange = Caml_option.valFromOption(onChange);
   }
   return React.createElement(React.Fragment, undefined, React.createElement("input", tmp), React.createElement("label", {
-                  className: "w-5 h-5 rounded flex justify-center items-center peer-default:bg-white border-2 peer-default:border-gray-300 peer-checked:bg-green-gl peer-disabled:border-2 peer-disabled:border-gray-200 peer-disabled:bg-gray-100",
+                  className: "w-5 h-5 rounded-[5px] flex justify-center items-center peer-default:bg-white border-2 peer-default:border-gray-300 peer-checked:bg-green-gl peer-disabled:border-2 peer-disabled:border-gray-200 peer-disabled:bg-gray-100",
                   htmlFor: Belt_Option.getWithDefault(id, "")
-                }, React.createElement("img", {
-                      src: inputCheckIcon
+                }, React.createElement(FormulaComponents.CheckLineBold, {
+                      size: "sm",
+                      color: "white"
                     })));
 }
 

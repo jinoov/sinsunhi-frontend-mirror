@@ -5,6 +5,7 @@ import * as React from "react";
 
 function PDP_Matching_Image_Buyer(Props) {
   var src = Props.src;
+  var alt = Props.alt;
   return React.createElement("div", {
               className: "w-full"
             }, React.createElement("div", {
@@ -12,7 +13,7 @@ function PDP_Matching_Image_Buyer(Props) {
                 }, React.createElement($$Image.make, {
                       src: src,
                       placeholder: /* Lg */1,
-                      alt: "product-detail-thumbnail",
+                      alt: alt,
                       className: "w-full max-h-[300px] object-contain"
                     }), React.createElement("div", {
                       className: "w-full h-full absolute top-0 left-0 bg-black/[.03]"

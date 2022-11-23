@@ -7,6 +7,14 @@ tags.lock
 tags.temp
 .DS_Store
 
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # rescript
 .merlin
 lib
@@ -32,4 +40,4 @@ styles/.tailwind.dev.css
 .env.local
 .env.development
 
-.mjs
+*.mjs

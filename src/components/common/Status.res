@@ -99,6 +99,10 @@ let queriedStyle = (
     %twc(
       "py-1 px-2 flex justify-between border border-gray-200 border-t-0 text-gray-700 sm:flex-1 sm:flex-col sm:border-0 sm:p-4"
     )
+  | (false, Some(DEPOSIT_PENDING)) =>
+    %twc(
+      "py-1 px-2 flex justify-between border border-gray-200 border-t-0 text-gray-700 sm:flex-1 sm:flex-col sm:border-0 sm:p-4"
+    )
   }
 }
 
@@ -141,7 +145,9 @@ module Tooltip = {
   @react.component
   let make = (~text, ~fill) => {
     <RadixUI.Tooltip.Root delayDuration=300>
-      <RadixUI.Tooltip.Trigger> <IconInfo height="16" width="16" fill /> </RadixUI.Tooltip.Trigger>
+      <RadixUI.Tooltip.Trigger>
+        <IconInfo height="16" width="16" fill />
+      </RadixUI.Tooltip.Trigger>
       <RadixUI.Tooltip.Content side=#top sideOffset=4>
         <div className=%twc("block w-32 bg-red-400 relative")>
           <div

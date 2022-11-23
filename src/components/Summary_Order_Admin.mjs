@@ -22,25 +22,27 @@ function Summary_Order_Admin$StatusFilter(Props) {
   return React.createElement("ol", {
               className: "grid grid-cols-2 pt-3 sm:grid-cols-4 lg:grid-cols-6 lg:justify-between lg:w-full lg:py-4"
             }, React.createElement(Status.Total.make, {}), React.createElement(Status.Item.make, {
+                  kind: /* DEPOSIT_PENDING */9
+                }), React.createElement(Status.Item.make, {
                   kind: /* CREATE */0
                 }), React.createElement(Status.Item.make, {
                   kind: /* PACKING */1
-                }), React.createElement(Status.Item.make, {
-                  kind: /* DEPARTURE */2
                 }), React.createElement("div", {
                   className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
                 }), React.createElement(Status.Item.make, {
-                  kind: /* DELIVERING */3
+                  kind: /* DEPARTURE */2
                 }), React.createElement(Status.Item.make, {
-                  kind: /* COMPLETE */4
+                  kind: /* DELIVERING */3
                 }), React.createElement("div", {
                   className: "hidden lg:grid lg:grid-row-border-6"
                 }), React.createElement(Status.Item.make, {
-                  kind: /* CANCEL */5
+                  kind: /* COMPLETE */4
                 }), React.createElement(Status.Item.make, {
-                  kind: /* REFUND */7
+                  kind: /* CANCEL */5
                 }), React.createElement("div", {
                   className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
+                }), React.createElement(Status.Item.make, {
+                  kind: /* REFUND */7
                 }), React.createElement(Status.Item.make, {
                   kind: /* ERROR */6
                 }), React.createElement(Status.Item.make, {

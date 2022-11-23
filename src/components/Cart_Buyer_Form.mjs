@@ -81,7 +81,7 @@ function productOption_encode(v) {
               ],
               [
                 "product-option-name",
-                Spice.optionToJson(Spice.stringToJson, v.productOptionName)
+                Spice.stringToJson(v.productOptionName)
               ],
               [
                 "option-status",
@@ -89,7 +89,7 @@ function productOption_encode(v) {
               ],
               [
                 "updated-at",
-                Spice.optionToJson(Spice.stringToJson, v.updatedAt)
+                Spice.stringToJson(v.updatedAt)
               ],
               [
                 "price",
@@ -98,6 +98,18 @@ function productOption_encode(v) {
               [
                 "quantity",
                 Spice.intToJson(v.quantity)
+              ],
+              [
+                "adhoc-stock-is-limited",
+                Spice.boolToJson(v.adhocStockIsLimited)
+              ],
+              [
+                "adhoc-stock-is-num-remaining-visible",
+                Spice.boolToJson(v.adhocStockIsNumRemainingVisible)
+              ],
+              [
+                "adhoc-stock-num-remaining",
+                Spice.optionToJson(Spice.intToJson, v.adhocStockNumRemaining)
               ]
             ]);
 }
@@ -117,107 +129,146 @@ function productOption_decode(v) {
     if (cartId.TAG === /* Ok */0) {
       var productOptionId = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-option-id"), null));
       if (productOptionId.TAG === /* Ok */0) {
-        var productOptionName = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-option-name"), null));
+        var productOptionName = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-option-name"), null));
         if (productOptionName.TAG === /* Ok */0) {
           var optionStatus = productStatus_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "option-status"), null));
           if (optionStatus.TAG === /* Ok */0) {
-            var updatedAt = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "updated-at"), null));
+            var updatedAt = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "updated-at"), null));
             if (updatedAt.TAG === /* Ok */0) {
               var price = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "price"), null));
               if (price.TAG === /* Ok */0) {
                 var quantity = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "quantity"), null));
                 if (quantity.TAG === /* Ok */0) {
+                  var adhocStockIsLimited = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-is-limited"), null));
+                  if (adhocStockIsLimited.TAG === /* Ok */0) {
+                    var adhocStockIsNumRemainingVisible = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-is-num-remaining-visible"), null));
+                    if (adhocStockIsNumRemainingVisible.TAG === /* Ok */0) {
+                      var adhocStockNumRemaining = Spice.optionFromJson(Spice.intFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-num-remaining"), null));
+                      if (adhocStockNumRemaining.TAG === /* Ok */0) {
+                        return {
+                                TAG: /* Ok */0,
+                                _0: {
+                                  checked: checked._0,
+                                  cartId: cartId._0,
+                                  productOptionId: productOptionId._0,
+                                  productOptionName: productOptionName._0,
+                                  optionStatus: optionStatus._0,
+                                  updatedAt: updatedAt._0,
+                                  price: price._0,
+                                  quantity: quantity._0,
+                                  adhocStockIsLimited: adhocStockIsLimited._0,
+                                  adhocStockIsNumRemainingVisible: adhocStockIsNumRemainingVisible._0,
+                                  adhocStockNumRemaining: adhocStockNumRemaining._0
+                                }
+                              };
+                      }
+                      var e = adhocStockNumRemaining._0;
+                      return {
+                              TAG: /* Error */1,
+                              _0: {
+                                path: ".adhoc-stock-num-remaining" + e.path,
+                                message: e.message,
+                                value: e.value
+                              }
+                            };
+                    }
+                    var e$1 = adhocStockIsNumRemainingVisible._0;
+                    return {
+                            TAG: /* Error */1,
+                            _0: {
+                              path: ".adhoc-stock-is-num-remaining-visible" + e$1.path,
+                              message: e$1.message,
+                              value: e$1.value
+                            }
+                          };
+                  }
+                  var e$2 = adhocStockIsLimited._0;
                   return {
-                          TAG: /* Ok */0,
+                          TAG: /* Error */1,
                           _0: {
-                            checked: checked._0,
-                            cartId: cartId._0,
-                            productOptionId: productOptionId._0,
-                            productOptionName: productOptionName._0,
-                            optionStatus: optionStatus._0,
-                            updatedAt: updatedAt._0,
-                            price: price._0,
-                            quantity: quantity._0
+                            path: ".adhoc-stock-is-limited" + e$2.path,
+                            message: e$2.message,
+                            value: e$2.value
                           }
                         };
                 }
-                var e = quantity._0;
+                var e$3 = quantity._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".quantity" + e.path,
-                          message: e.message,
-                          value: e.value
+                          path: ".quantity" + e$3.path,
+                          message: e$3.message,
+                          value: e$3.value
                         }
                       };
               }
-              var e$1 = price._0;
+              var e$4 = price._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: ".price" + e$1.path,
-                        message: e$1.message,
-                        value: e$1.value
+                        path: ".price" + e$4.path,
+                        message: e$4.message,
+                        value: e$4.value
                       }
                     };
             }
-            var e$2 = updatedAt._0;
+            var e$5 = updatedAt._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: "." + ("updated-at" + e$2.path),
-                      message: e$2.message,
-                      value: e$2.value
+                      path: ".updated-at" + e$5.path,
+                      message: e$5.message,
+                      value: e$5.value
                     }
                   };
           }
-          var e$3 = optionStatus._0;
+          var e$6 = optionStatus._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: "." + ("option-status" + e$3.path),
-                    message: e$3.message,
-                    value: e$3.value
+                    path: ".option-status" + e$6.path,
+                    message: e$6.message,
+                    value: e$6.value
                   }
                 };
         }
-        var e$4 = productOptionName._0;
+        var e$7 = productOptionName._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: "." + ("product-option-name" + e$4.path),
-                  message: e$4.message,
-                  value: e$4.value
+                  path: ".product-option-name" + e$7.path,
+                  message: e$7.message,
+                  value: e$7.value
                 }
               };
       }
-      var e$5 = productOptionId._0;
+      var e$8 = productOptionId._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("product-option-id" + e$5.path),
-                message: e$5.message,
-                value: e$5.value
+                path: ".product-option-id" + e$8.path,
+                message: e$8.message,
+                value: e$8.value
               }
             };
     }
-    var e$6 = cartId._0;
+    var e$9 = cartId._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("cart-id" + e$6.path),
-              message: e$6.message,
-              value: e$6.value
+              path: ".cart-id" + e$9.path,
+              message: e$9.message,
+              value: e$9.value
             }
           };
   }
-  var e$7 = checked._0;
+  var e$10 = checked._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".checked" + e$7.path,
-            message: e$7.message,
-            value: e$7.value
+            path: ".checked" + e$10.path,
+            message: e$10.message,
+            value: e$10.value
           }
         };
 }
@@ -237,6 +288,10 @@ function cartItem_encode(v) {
                 Spice.boolToJson(v.checked)
               ],
               [
+                "isCourierAvailable",
+                Spice.optionToJson(Spice.boolToJson, v.isCourierAvailable)
+              ],
+              [
                 "checked-number",
                 Spice.intToJson(v.checkedNumber)
               ],
@@ -246,11 +301,11 @@ function cartItem_encode(v) {
               ],
               [
                 "image-url",
-                Spice.optionToJson(Spice.stringToJson, v.imageUrl)
+                Spice.stringToJson(v.imageUrl)
               ],
               [
                 "product-name",
-                Spice.optionToJson(Spice.stringToJson, v.productName)
+                Spice.stringToJson(v.productName)
               ],
               [
                 "total-price",
@@ -258,7 +313,7 @@ function cartItem_encode(v) {
               ],
               [
                 "updated-at",
-                Spice.optionToJson(Spice.stringToJson, v.updatedAt)
+                Spice.stringToJson(v.updatedAt)
               ],
               [
                 "product-status",
@@ -282,124 +337,137 @@ function cartItem_decode(v) {
   var dict$1 = dict._0;
   var checked = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "checked"), null));
   if (checked.TAG === /* Ok */0) {
-    var checkedNumber = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "checked-number"), null));
-    if (checkedNumber.TAG === /* Ok */0) {
-      var productId = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-id"), null));
-      if (productId.TAG === /* Ok */0) {
-        var imageUrl = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "image-url"), null));
-        if (imageUrl.TAG === /* Ok */0) {
-          var productName = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-name"), null));
-          if (productName.TAG === /* Ok */0) {
-            var totalPrice = Spice.optionFromJson(Spice.intFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "total-price"), null));
-            if (totalPrice.TAG === /* Ok */0) {
-              var updatedAt = Spice.optionFromJson(Spice.stringFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "updated-at"), null));
-              if (updatedAt.TAG === /* Ok */0) {
-                var productStatus = productStatus_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-status"), null));
-                if (productStatus.TAG === /* Ok */0) {
-                  var productOptions = Spice.arrayFromJson(productOption_decode, Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-options"), null));
-                  if (productOptions.TAG === /* Ok */0) {
+    var isCourierAvailable = Spice.optionFromJson(Spice.boolFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "isCourierAvailable"), null));
+    if (isCourierAvailable.TAG === /* Ok */0) {
+      var checkedNumber = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "checked-number"), null));
+      if (checkedNumber.TAG === /* Ok */0) {
+        var productId = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-id"), null));
+        if (productId.TAG === /* Ok */0) {
+          var imageUrl = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "image-url"), null));
+          if (imageUrl.TAG === /* Ok */0) {
+            var productName = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-name"), null));
+            if (productName.TAG === /* Ok */0) {
+              var totalPrice = Spice.optionFromJson(Spice.intFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "total-price"), null));
+              if (totalPrice.TAG === /* Ok */0) {
+                var updatedAt = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "updated-at"), null));
+                if (updatedAt.TAG === /* Ok */0) {
+                  var productStatus = productStatus_decode(Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-status"), null));
+                  if (productStatus.TAG === /* Ok */0) {
+                    var productOptions = Spice.arrayFromJson(productOption_decode, Belt_Option.getWithDefault(Js_dict.get(dict$1, "product-options"), null));
+                    if (productOptions.TAG === /* Ok */0) {
+                      return {
+                              TAG: /* Ok */0,
+                              _0: {
+                                checked: checked._0,
+                                isCourierAvailable: isCourierAvailable._0,
+                                checkedNumber: checkedNumber._0,
+                                productId: productId._0,
+                                imageUrl: imageUrl._0,
+                                productName: productName._0,
+                                totalPrice: totalPrice._0,
+                                updatedAt: updatedAt._0,
+                                productStatus: productStatus._0,
+                                productOptions: productOptions._0
+                              }
+                            };
+                    }
+                    var e = productOptions._0;
                     return {
-                            TAG: /* Ok */0,
+                            TAG: /* Error */1,
                             _0: {
-                              checked: checked._0,
-                              checkedNumber: checkedNumber._0,
-                              productId: productId._0,
-                              imageUrl: imageUrl._0,
-                              productName: productName._0,
-                              totalPrice: totalPrice._0,
-                              updatedAt: updatedAt._0,
-                              productStatus: productStatus._0,
-                              productOptions: productOptions._0
+                              path: ".product-options" + e.path,
+                              message: e.message,
+                              value: e.value
                             }
                           };
                   }
-                  var e = productOptions._0;
+                  var e$1 = productStatus._0;
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: "." + ("product-options" + e.path),
-                            message: e.message,
-                            value: e.value
+                            path: ".product-status" + e$1.path,
+                            message: e$1.message,
+                            value: e$1.value
                           }
                         };
                 }
-                var e$1 = productStatus._0;
+                var e$2 = updatedAt._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: "." + ("product-status" + e$1.path),
-                          message: e$1.message,
-                          value: e$1.value
+                          path: ".updated-at" + e$2.path,
+                          message: e$2.message,
+                          value: e$2.value
                         }
                       };
               }
-              var e$2 = updatedAt._0;
+              var e$3 = totalPrice._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: "." + ("updated-at" + e$2.path),
-                        message: e$2.message,
-                        value: e$2.value
+                        path: ".total-price" + e$3.path,
+                        message: e$3.message,
+                        value: e$3.value
                       }
                     };
             }
-            var e$3 = totalPrice._0;
+            var e$4 = productName._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: "." + ("total-price" + e$3.path),
-                      message: e$3.message,
-                      value: e$3.value
+                      path: ".product-name" + e$4.path,
+                      message: e$4.message,
+                      value: e$4.value
                     }
                   };
           }
-          var e$4 = productName._0;
+          var e$5 = imageUrl._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: "." + ("product-name" + e$4.path),
-                    message: e$4.message,
-                    value: e$4.value
+                    path: ".image-url" + e$5.path,
+                    message: e$5.message,
+                    value: e$5.value
                   }
                 };
         }
-        var e$5 = imageUrl._0;
+        var e$6 = productId._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: "." + ("image-url" + e$5.path),
-                  message: e$5.message,
-                  value: e$5.value
+                  path: ".product-id" + e$6.path,
+                  message: e$6.message,
+                  value: e$6.value
                 }
               };
       }
-      var e$6 = productId._0;
+      var e$7 = checkedNumber._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("product-id" + e$6.path),
-                message: e$6.message,
-                value: e$6.value
+                path: ".checked-number" + e$7.path,
+                message: e$7.message,
+                value: e$7.value
               }
             };
     }
-    var e$7 = checkedNumber._0;
+    var e$8 = isCourierAvailable._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("checked-number" + e$7.path),
-              message: e$7.message,
-              value: e$7.value
+              path: ".isCourierAvailable" + e$8.path,
+              message: e$8.message,
+              value: e$8.value
             }
           };
   }
-  var e$8 = checked._0;
+  var e$9 = checked._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".checked" + e$8.path,
-            message: e$8.message,
-            value: e$8.value
+            path: ".checked" + e$9.path,
+            message: e$9.message,
+            value: e$9.value
           }
         };
 }
@@ -478,7 +546,7 @@ function cart_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("cart-items" + e.path),
+              path: ".cart-items" + e.path,
               message: e.message,
               value: e.value
             }
@@ -540,7 +608,7 @@ function cartContainer_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("un-courier-available-item" + e.path),
+                path: ".un-courier-available-item" + e.path,
                 message: e.message,
                 value: e.value
               }
@@ -550,7 +618,7 @@ function cartContainer_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("courier-available-item" + e$1.path),
+              path: ".courier-available-item" + e$1.path,
               message: e$1.message,
               value: e$1.value
             }
@@ -560,7 +628,7 @@ function cartContainer_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("order-type" + e$2.path),
+            path: ".order-type" + e$2.path,
             message: e$2.message,
             value: e$2.value
           }
@@ -623,7 +691,10 @@ function names(prefix) {
           optionStatus: "" + prefix + ".option-status",
           checkedNumber: "" + prefix + ".checked-number",
           imageUrl: "" + prefix + ".image-url",
-          updatedAt: "" + prefix + ".updated-at"
+          updatedAt: "" + prefix + ".updated-at",
+          adhocStockIsLimited: "" + prefix + ".adhoc-stock-is-limited",
+          adhocStockIsNumRemainingVisible: "" + prefix + ".adhoc-stock-is-num-remaining-visible",
+          adhocStockNumRemaining: "" + prefix + ".adhoc-stock-num-remaining"
         };
 }
 
@@ -635,7 +706,7 @@ function soldable(s) {
   }
 }
 
-function toVariant(s) {
+function productStatusToVariant(s) {
   if (s === "NOSALE") {
     return "NOSALE";
   } else if (s === "SOLDOUT") {
@@ -649,20 +720,30 @@ function toVariant(s) {
   }
 }
 
+function optionStatusToVariant(s) {
+  if (s === "NOSALE") {
+    return "NOSALE";
+  } else if (s === "SOLDOUT") {
+    return "SOLDOUT";
+  } else if (s === "SALE" || s !== "RETIRE") {
+    return "SALE";
+  } else {
+    return "RETIRE";
+  }
+}
+
 function strDateToFloat(s) {
-  return Belt_Option.mapWithDefault(s, 0, (function (s$p) {
-                return new Date(s$p).getTime();
-              }));
+  return new Date(s).getTime();
 }
 
 function groupBy(arrayOfCartItem) {
   return Belt_Map.valuesToArray(Garter_Array.groupBy(arrayOfCartItem, (function (a) {
-                    return a.productId;
+                    return a.product.number;
                   }), Garter_Id.IntComparable));
 }
 
 function dateCompare(str1, str2) {
-  if (strDateToFloat(str2) - strDateToFloat(str1) > 0) {
+  if (new Date(str2).getTime() - new Date(str1).getTime() > 0) {
     return 1;
   } else {
     return -1;
@@ -670,8 +751,8 @@ function dateCompare(str1, str2) {
 }
 
 function compare(item1, item2) {
-  var match = item1.optionStatus;
-  var match$1 = item2.optionStatus;
+  var match = item1.productOption.status;
+  var match$1 = item2.productOption.status;
   if (match === "SOLDOUT") {
     if (match$1 === "SOLDOUT") {
       return dateCompare(item1.updatedAt, item2.updatedAt);
@@ -700,25 +781,27 @@ function map(arr) {
   return Belt_Option.map(Garter_Array.first(ordered), (function (item) {
                 return {
                         checked: true,
+                        isCourierAvailable: item.product.isCourierAvailable,
                         checkedNumber: ordered.length,
-                        productId: item.productId,
-                        imageUrl: Belt_Option.map(item.image, (function (image$p) {
-                                return image$p.thumb100x100;
-                              })),
-                        productName: item.productName,
+                        productId: item.product.number,
+                        imageUrl: item.product.image.thumb100x100,
+                        productName: item.productSnapshot.displayName,
                         totalPrice: 0,
                         updatedAt: item.updatedAt,
-                        productStatus: toVariant(item.productStatus),
+                        productStatus: productStatusToVariant(item.product.status),
                         productOptions: Belt_Array.map(ordered, (function (item$p) {
                                 return {
                                         checked: true,
-                                        cartId: item$p.cartId,
-                                        productOptionId: item$p.optionId,
-                                        productOptionName: item$p.optionName,
-                                        optionStatus: toVariant(item$p.optionStatus),
+                                        cartId: item$p.number,
+                                        productOptionId: item$p.productOption.number,
+                                        productOptionName: item$p.productOptionSnapshot.optionName,
+                                        optionStatus: optionStatusToVariant(item$p.productOption.status),
                                         updatedAt: item$p.updatedAt,
-                                        price: item$p.price,
-                                        quantity: item$p.quantity
+                                        price: item$p.productOptionSnapshot.price,
+                                        quantity: item$p.quantity,
+                                        adhocStockIsLimited: item$p.productOption.adhocStockIsLimited,
+                                        adhocStockIsNumRemainingVisible: item$p.productOption.adhocStockIsNumRemainingVisible,
+                                        adhocStockNumRemaining: item$p.productOption.adhocStockNumRemaining
                                       };
                               }))
                       };
@@ -738,6 +821,7 @@ function makeGtmData(data, cartIds, eventType) {
             items: Belt_Array.mapWithIndex(Belt_Array.concatMany(Belt_Array.map(Belt_Array.map(data, (function (item) {
                                 return {
                                         checked: item.checked,
+                                        isCourierAvailable: item.isCourierAvailable,
                                         checkedNumber: item.checkedNumber,
                                         productId: item.productId,
                                         imageUrl: item.imageUrl,
@@ -755,7 +839,7 @@ function makeGtmData(data, cartIds, eventType) {
                             return Belt_Array.map(item.productOptions, (function (option) {
                                           return {
                                                   item_id: String(item.productId),
-                                                  item_name: Belt_Option.getWithDefault(item.productName, ""),
+                                                  item_name: item.productName,
                                                   price: String(option.price),
                                                   quantity: option.quantity,
                                                   item_variant: option.productOptionName,
@@ -800,7 +884,8 @@ export {
   submit_decode ,
   names ,
   soldable ,
-  toVariant ,
+  productStatusToVariant ,
+  optionStatusToVariant ,
   strDateToFloat ,
   groupBy ,
   dateCompare ,

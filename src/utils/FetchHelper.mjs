@@ -162,7 +162,7 @@ function put(url, body, onSuccess, onFailure) {
 }
 
 function putWithToken(url, body) {
-  var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
+  var accessToken = Belt_Option.getWithDefault(Curry._1(LocalStorageHooks.AccessToken.get, undefined), "");
   return Js_promise.then_((function (res) {
                 if (res.ok) {
                   return Fetch.$$Response.json(res);
@@ -257,7 +257,7 @@ function putWithFileAsAttachment(url, file) {
 }
 
 function fetcher(url) {
-  var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
+  var accessToken = Belt_Option.getWithDefault(Curry._1(LocalStorageHooks.AccessToken.get, undefined), "");
   return Js_promise.then_((function (res) {
                 if (res.ok) {
                   return Fetch.$$Response.json(res);
@@ -282,7 +282,7 @@ function fetcher(url) {
 }
 
 function getWithToken(url, _body) {
-  var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
+  var accessToken = Belt_Option.getWithDefault(Curry._1(LocalStorageHooks.AccessToken.get, undefined), "");
   return Js_promise.then_((function (res) {
                 if (res.ok) {
                   return Fetch.$$Response.json(res);
@@ -307,7 +307,7 @@ function getWithToken(url, _body) {
 }
 
 function getWithTokenForExcel(url, _body) {
-  var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
+  var accessToken = Belt_Option.getWithDefault(Curry._1(LocalStorageHooks.AccessToken.get, undefined), "");
   return Js_promise.then_((function (res) {
                 if (res.ok) {
                   return Promise.resolve(res);
@@ -343,13 +343,13 @@ function getProcessedImage(url, _body) {
 
 function postWithToken(url, body) {
   var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
-  var headers = accessToken === "" ? ({
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }) : ({
+  var headers = accessToken !== undefined ? ({
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: "Bearer " + accessToken + ""
+      }) : ({
+        "Content-Type": "application/json",
+        Accept: "application/json"
       });
   return Js_promise.then_((function (res) {
                 if (res.ok) {
@@ -376,7 +376,7 @@ function postWithToken(url, body) {
 }
 
 function postWithTokenForExcel(url, body) {
-  var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
+  var accessToken = Belt_Option.getWithDefault(Curry._1(LocalStorageHooks.AccessToken.get, undefined), "");
   return Js_promise.then_((function (res) {
                 if (res.ok) {
                   return Promise.resolve(res);
@@ -402,13 +402,13 @@ function postWithTokenForExcel(url, body) {
 
 function patchWithToken(url, body) {
   var accessToken = Curry._1(LocalStorageHooks.AccessToken.get, undefined);
-  var headers = accessToken === "" ? ({
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }) : ({
+  var headers = accessToken !== undefined ? ({
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: "Bearer " + accessToken + ""
+      }) : ({
+        "Content-Type": "application/json",
+        Accept: "application/json"
       });
   return Js_promise.then_((function (res) {
                 if (res.ok) {
@@ -472,7 +472,7 @@ function responseToken_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("refresh-token" + e.path),
+              path: ".refresh-token" + e.path,
               message: e.message,
               value: e.value
             }
@@ -490,7 +490,7 @@ function responseToken_decode(v) {
 }
 
 function refreshToken(param) {
-  var rt = Curry._1(LocalStorageHooks.RefreshToken.get, undefined);
+  var rt = Belt_Option.getWithDefault(Curry._1(LocalStorageHooks.RefreshToken.get, undefined), "");
   var urlSearchParams = new URLSearchParams([
           [
             "grant-type",

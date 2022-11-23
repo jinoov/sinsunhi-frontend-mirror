@@ -1,0 +1,22 @@
+diff --git a/postInstall.js b/postInstall.js
+index fe2edbdc6a4683648072cf8c88b8027330d05103..e25dcd1c748c6581d1f29c1f75751e8c243fd35c 100644
+--- a/postInstall.js
++++ b/postInstall.js
+@@ -7,7 +7,7 @@ const installMacLinuxBinary = (binary) => {
+     // mac and linux support extension-less executables
+     // so just overwrite the shell script
+     const target = path.join(__dirname, "ppx");
+-    fs.renameSync(source, target);
++    fs.copyFileSync(source, target);
+ 
+     // The ppx should be executable in the bundle, but just in case
+     fs.chmodSync(target, 0777);
+@@ -21,7 +21,7 @@ const installWindowsBinary = () => {
+   const source = path.join(__dirname, "ppx-windows.exe");
+   if (fs.existsSync(source)) {
+     const target = path.join(__dirname, "ppx.exe");
+-    fs.renameSync(source, target);
++    fs.copyFileSync(source, target);
+ 
+     // windows scripts use a different file extension to executables
+     // so we delete the script to make sure windows uses the exe now

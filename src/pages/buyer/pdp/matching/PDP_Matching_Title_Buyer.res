@@ -44,24 +44,41 @@ module MO = {
 
     let user = CustomHooks.User.Buyer.use2()
 
-    <div className=%twc("w-full py-6 flex justify-between")>
-      <div>
-        <h1 className=%twc("text-lg text-black font-bold")> {displayName->React.string} </h1>
-        <span className=%twc("mt-1 text-xs text-gray-600")>
-          {`${representativeWeight->Float.toString}kg당 예상 거래가`->React.string}
-        </span>
+    let oldUI =
+      <div className=%twc("w-full py-6 flex justify-between")>
+        <div>
+          <h1 className=%twc("text-lg text-black font-bold break-all")>
+            {displayName->React.string}
+          </h1>
+          <span className=%twc("mt-1 text-xs text-gray-600")>
+            {`${representativeWeight->Float.toString}kg당 예상 거래가`->React.string}
+          </span>
+        </div>
+        {switch user {
+        | Unknown => React.null
+
+        | NotLoggedIn =>
+          <h1 className=%twc("text-[22px] text-black font-bold")>
+            {`예상가 회원공개`->React.string}
+          </h1>
+
+        | LoggedIn(_) =>
+          <h1 className=%twc("text-[22px] text-black font-bold")> {priceLabel->React.string} </h1>
+        }}
       </div>
-      {switch user {
-      | Unknown => React.null
 
-      | NotLoggedIn =>
-        <h1 className=%twc("text-[22px] text-black font-bold")>
-          {`예상가 회원공개`->React.string}
-        </h1>
-
-      | LoggedIn(_) =>
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback={oldUI}>
+      <div className=%twc("w-full py-6 flex justify-between")>
+        <div>
+          <h1 className=%twc("text-lg text-black font-bold break-all")>
+            {displayName->React.string}
+          </h1>
+          <span className=%twc("mt-1 text-xs text-gray-600")>
+            {`${representativeWeight->Float.toString}kg당 예상 거래가`->React.string}
+          </span>
+        </div>
         <h1 className=%twc("text-[22px] text-black font-bold")> {priceLabel->React.string} </h1>
-      }}
-    </div>
+      </div>
+    </FeatureFlagWrapper>
   }
 }

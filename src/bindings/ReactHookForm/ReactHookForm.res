@@ -120,6 +120,7 @@ module Hooks = {
       onBlur: ReactEvent.Focus.t => unit,
       ref: ReactDOM.domRef,
       name: string,
+      disabled: bool,
     }
 
     @deriving({abstract: light})
@@ -140,6 +141,8 @@ module Hooks = {
       valueAsDate: bool,
       @optional
       pattern: Js.Re.t,
+      @optional
+      disabled: bool,
     }
   }
 
@@ -323,7 +326,9 @@ module Provider = {
 
   @react.component
   let make = (~children, ~methods: Hooks.Form.t) =>
-    <ReactUtil.SpreadProps props={methods}> <P> {children} </P> </ReactUtil.SpreadProps>
+    <ReactUtil.SpreadProps props={methods}>
+      <P> {children} </P>
+    </ReactUtil.SpreadProps>
 }
 
 external valueToString: Js.Json.t => string = "%identity"

@@ -11,6 +11,7 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Belt_Result from "rescript/lib/es6/belt_Result.js";
 import * as CustomHooks from "../utils/CustomHooks.mjs";
 import * as ReactDialog from "@radix-ui/react-dialog";
+import * as Order_Detail_Deposit_Pending_Table from "./Order_Detail_Deposit_Pending_Table.mjs";
 
 function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
@@ -36,6 +37,7 @@ function Order_Detail_Button_Buyer_Seller(Props) {
                 return courier.name;
               })), "-");
   }
+  var match = order.status;
   return React.createElement(ReactDialog.Root, {
               children: null
             }, React.createElement(ReactDialog.Overlay, {
@@ -81,13 +83,18 @@ function Order_Detail_Button_Buyer_Seller(Props) {
                                     className: "p-3 bg-div-shape-L2 border-t sm:border-t-0"
                                   }, "결제금액"), React.createElement("div", {
                                     className: "p-3 border-t sm:border-t-0"
-                                  }, "" + Locale.Float.show(undefined, order.productPrice * order.quantity, 0) + "원")), React.createElement("div", {
-                                className: "grid grid-cols-2-detail"
-                              }, React.createElement("div", {
-                                    className: "p-3 bg-div-shape-L2"
-                                  }, "주문상태"), React.createElement("div", {
-                                    className: "p-3"
-                                  }, Curry._1(Converter$1.displayStatus, order.status))), React.createElement("div", {
+                                  }, "" + Locale.Float.show(undefined, order.productPrice * order.quantity, 0) + "원")), match >= 9 ? React.createElement(React.Suspense, {
+                                  children: React.createElement(Order_Detail_Deposit_Pending_Table.make, {
+                                        order: order
+                                      }),
+                                  fallback: React.createElement(Order_Detail_Deposit_Pending_Table.PlaceHolder.make, {})
+                                }) : React.createElement("div", {
+                                  className: "grid grid-cols-2-detail"
+                                }, React.createElement("div", {
+                                      className: "p-3 bg-div-shape-L2"
+                                    }, "주문상태"), React.createElement("div", {
+                                      className: "p-3"
+                                    }, Curry._1(Converter$1.displayStatus, order.status))), React.createElement("div", {
                                 className: "grid grid-cols-2-detail sm:grid-cols-4-detail"
                               }, React.createElement("div", {
                                     className: "p-3 bg-div-shape-L2"
@@ -162,7 +169,10 @@ function Order_Detail_Button_Buyer_Seller(Props) {
                                   }, "배송메모"), React.createElement("div", {
                                     className: "p-3"
                                   }, Belt_Option.getWithDefault(order.deliveryMessage, ""))))),
-                  className: "dialog-content-detail overflow-y-auto"
+                  className: "dialog-content-detail overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

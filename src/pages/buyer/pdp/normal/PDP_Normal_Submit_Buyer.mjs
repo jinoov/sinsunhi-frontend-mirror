@@ -10,8 +10,9 @@ import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
 import * as ReactRelay from "react-relay";
 import * as Belt_MapString from "rescript/lib/es6/belt_MapString.js";
 import * as Product_Parser from "../../../../utils/Product_Parser.mjs";
+import * as PDP_Like_Button from "../common/PDP_Like_Button.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
-import * as ToggleOrderAndPayment from "../../../../utils/ToggleOrderAndPayment.mjs";
+import * as PDP_CsChat_Button from "../common/PDP_CsChat_Button.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PDP_CTA_Container_Buyer from "../common/PDP_CTA_Container_Buyer.mjs";
 import * as PDP_Normal_RfqBtn_Buyer from "./PDP_Normal_RfqBtn_Buyer.mjs";
@@ -144,25 +145,19 @@ function PDP_Normal_Submit_Buyer$PC$ActionBtn(Props) {
   var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
   var children = Props.children;
-  var availableButton = ToggleOrderAndPayment.use(undefined);
   var product = use$1(query);
   var onClick = function (param) {
-    if (availableButton) {
-      Belt_Option.map(make(product, selectedOptions), (function (event$p) {
-              DataGtm.push({
-                    ecommerce: null
-                  });
-              DataGtm.push(DataGtm.mergeUserIdUnsafe(event$p));
-            }));
-      return setShowModal(function (param) {
-                  return /* Show */{
-                          _0: /* Confirm */1
-                        };
+    Belt_Option.map(make(product, selectedOptions), (function (event$p) {
+            DataGtm.push({
+                  ecommerce: null
                 });
-    } else {
-      window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
-      return ;
-    }
+            DataGtm.push(DataGtm.mergeUserIdUnsafe(event$p));
+          }));
+    setShowModal(function (param) {
+          return /* Show */{
+                  _0: /* Confirm */1
+                };
+        });
   };
   return React.createElement("button", {
               className: className,
@@ -254,12 +249,20 @@ function PDP_Normal_Submit_Buyer$PC(Props) {
   var match$1 = Product_Parser.Type.decode(match.__typename);
   return React.createElement("section", {
               className: "w-full"
-            }, React.createElement(PDP_Normal_Submit_Buyer$PC$OrderBtn, {
-                  status: match.status,
-                  selectedOptions: selectedOptions,
-                  setShowModal: setShowModal,
-                  query: fragmentRefs
-                }), match$1 === 1 ? React.createElement(PDP_Normal_RfqBtn_Buyer.PC.make, {
+            }, React.createElement("div", {
+                  className: "flex items-center box-border"
+                }, React.createElement("span", {
+                      className: "w-16 mr-2"
+                    }, React.createElement(PDP_Like_Button.make, {
+                          query: fragmentRefs
+                        })), React.createElement("span", {
+                      className: "w-16 mr-2"
+                    }, React.createElement(PDP_CsChat_Button.make, {})), React.createElement(PDP_Normal_Submit_Buyer$PC$OrderBtn, {
+                      status: match.status,
+                      selectedOptions: selectedOptions,
+                      setShowModal: setShowModal,
+                      query: fragmentRefs
+                    })), match$1 === 1 ? React.createElement(PDP_Normal_RfqBtn_Buyer.PC.make, {
                     query: fragmentRefs,
                     setShowModal: setShowModal
                   }) : null);
@@ -277,25 +280,19 @@ function PDP_Normal_Submit_Buyer$MO$OrderBtn$ActionBtn(Props) {
   var selectedOptions = Props.selectedOptions;
   var setShowModal = Props.setShowModal;
   var children = Props.children;
-  var availableButton = ToggleOrderAndPayment.use(undefined);
   var product = use$1(query);
   var onClick = function (param) {
-    if (availableButton) {
-      Belt_Option.map(make(product, selectedOptions), (function (event$p) {
-              DataGtm.push({
-                    ecommerce: null
-                  });
-              DataGtm.push(DataGtm.mergeUserIdUnsafe(event$p));
-            }));
-      return setShowModal(function (param) {
-                  return /* Show */{
-                          _0: /* Confirm */1
-                        };
+    Belt_Option.map(make(product, selectedOptions), (function (event$p) {
+            DataGtm.push({
+                  ecommerce: null
                 });
-    } else {
-      window.alert("서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.");
-      return ;
-    }
+            DataGtm.push(DataGtm.mergeUserIdUnsafe(event$p));
+          }));
+    setShowModal(function (param) {
+          return /* Show */{
+                  _0: /* Confirm */1
+                };
+        });
   };
   return React.createElement("button", {
               className: className,
@@ -387,12 +384,11 @@ function PDP_Normal_Submit_Buyer$MO(Props) {
   var fragmentRefs = match.fragmentRefs;
   var match$1 = Product_Parser.Type.decode(match.__typename);
   return React.createElement(PDP_CTA_Container_Buyer.make, {
+              query: fragmentRefs,
               children: null
             }, match$1 === 1 ? React.createElement(React.Fragment, undefined, React.createElement(PDP_Normal_RfqBtn_Buyer.MO.make, {
                         query: fragmentRefs,
                         setShowModal: setShowModal
-                      }), React.createElement("div", {
-                        className: "w-2"
                       })) : null, React.createElement(PDP_Normal_Submit_Buyer$MO$OrderBtn, {
                   status: match.status,
                   selectedOptions: selectedOptions,

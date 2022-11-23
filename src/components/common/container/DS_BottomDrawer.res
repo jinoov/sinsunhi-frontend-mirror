@@ -4,17 +4,18 @@ let toStyle = (isShow, show, hide, style) => {
 
 let useLockBodyScroll = isLock => {
   open Webapi
-  let bodyElement = Dom.document->Dom.Document.querySelector("body")
 
   React.useEffect1(_ => {
+    let bodyElement = Dom.document->Dom.Document.querySelector("body")
+
     switch (isLock, bodyElement) {
     | (true, Some(el)) => {
-        el->Dom.Element.setClassName("overflow-hidden")
-        Some(() => el->Dom.Element.setClassName(""))
+        el->Dom.Element.classList->Webapi.Dom.DomTokenList.add("overflow-hidden")
+        Some(() => el->Dom.Element.classList->Webapi.Dom.DomTokenList.remove("overflow-hidden"))
       }
 
     | (false, Some(el)) => {
-        el->Dom.Element.setClassName("")
+        el->Dom.Element.classList->Webapi.Dom.DomTokenList.remove("overflow-hidden")
         None
       }
 
@@ -66,8 +67,14 @@ module Header = {
 
 module Body = {
   @react.component
-  let make = (~children) => {
-    <div className=%twc("flex flex-col overflow-hidden")> children </div>
+  let make = (~children, ~scrollable=false) => {
+    <div
+      className={cx([
+        %twc("flex flex-col"),
+        scrollable ? %twc("overflow-auto") : %twc("overflow-hidden"),
+      ])}>
+      children
+    </div>
   }
 }
 
@@ -89,10 +96,9 @@ module Root = {
           className={cx([
             full ? "h-full" : "max-h-[85vh]",
             %twc(
-              "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-tarnsition"
+              "flex flex-col fixed w-full z-[13] left-1/2 -translate-x-1/2 max-w-3xl mx-auto bg-white rounded-t-2xl drawer-transition"
             ),
-          ])->showStyle}
-        >
+          ])->showStyle}>
           children
         </div>
       </BottomDrawerContext.Provider>

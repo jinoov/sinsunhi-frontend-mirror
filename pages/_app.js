@@ -9,7 +9,6 @@ import ResApp from "src/App.mjs";
 import React from "react";
 import Head from "next/head";
 import Script from "next/script";
-import { ErrorBoundary } from "@sentry/react";
 
 // Note:
 // We need to wrap the make call with

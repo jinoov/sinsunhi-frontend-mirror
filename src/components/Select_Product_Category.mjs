@@ -270,7 +270,7 @@ Caml_module.update_mod({
 
 var Category = Caml_module.init_mod([
       "Select_Product_Category.res",
-      87,
+      88,
       32
     ], {
       TAG: /* Module */0,
@@ -282,7 +282,7 @@ var Category = Caml_module.init_mod([
 
 var $$Selection = Caml_module.init_mod([
       "Select_Product_Category.res",
-      121,
+      122,
       27
     ], {
       TAG: /* Module */0,
@@ -412,8 +412,7 @@ function Select_Product_Category$Selection(Props) {
                                           });
                               }),
                             defaultValue: ReactSelect.encoderRule(/* NotSelected */0),
-                            rules: ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined),
-                            shouldUnregister: true
+                            rules: ReactHookForm.Rules.make(required, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
                           }))), React.createElement(Category.make, {
                     parentId: Belt_Option.flatMap(selectedId, (function (prim) {
                             if (prim == null) {

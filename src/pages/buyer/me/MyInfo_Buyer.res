@@ -21,19 +21,53 @@ module PC = {
     )
 
     switch queryData.viewer {
-    | Some({fragmentRefs: query}) =>
-      <MyInfo_Layout_Buyer query>
-        <div className=%twc("ml-4 flex flex-col w-full items-stretch")>
-          <div className=%twc("w-full bg-white")>
-            <MyInfo_Cash_Remain_Buyer.PC query />
-          </div>
-          <div className=%twc("w-full mt-4 bg-white")>
-            <MyInfo_Processing_Order_Buyer.PC query />
-          </div>
-          <MyInfo_Profile_Complete_Buyer.PC query />
-        </div>
-      </MyInfo_Layout_Buyer>
-    | None => React.null
+    | Some({fragmentRefs: query}) => {
+        let oldUI =
+          <MyInfo_Layout_Buyer query>
+            <div className=%twc("ml-4 flex flex-col w-full items-stretch")>
+              <div className=%twc("w-full bg-white")>
+                <MyInfo_Cash_Remain_Buyer.PC query />
+              </div>
+              <div className=%twc("w-full mt-4 bg-white")>
+                <MyInfo_Processing_Order_Buyer.PC query />
+              </div>
+              <MyInfo_Profile_Complete_Buyer.PC query />
+            </div>
+          </MyInfo_Layout_Buyer>
+
+        <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+          <MyInfo_Layout_Buyer query>
+            <div className=%twc("flex flex-col w-full mb-14")>
+              <div
+                className=%twc(
+                  "w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-4 px-[50px] pt-10 pb-5"
+                )>
+                <div className=%twc("flex flex-col")>
+                  <Formula.Text className=%twc("mb-[15px]") variant=#headline size=#lg weight=#bold>
+                    {"마이홈"->React.string}
+                  </Formula.Text>
+                  <MyInfo_ProfileSummary_Buyer.PC query />
+                </div>
+              </div>
+              <div
+                className=%twc(
+                  "w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-4 px-[22px]"
+                )>
+                <MyInfo_Cash_Remain_Buyer.PC query />
+              </div>
+              <div
+                className=%twc(
+                  "w-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] mb-4 px-[26px]"
+                )>
+                <MyInfo_Processing_Order_Buyer.PC query />
+              </div>
+              <MyInfo_Profile_Complete_Buyer.PC query />
+            </div>
+          </MyInfo_Layout_Buyer>
+        </FeatureFlagWrapper>
+      }
+
+    | None => <MyInfo_Skeleton_Buyer.PC />
     }
   }
 }
@@ -124,6 +158,24 @@ module Mobile = {
                       <IconArrow height="16" width="16" fill="#B2B2B2" />
                     </li>
                   </Next.Link>
+                  <Next.Link href="/buyer/me/like?mode=VIEW">
+                    <li
+                      className=%twc(
+                        "py-5 flex justify-between items-center border-b border-gray-100"
+                      )>
+                      <span className=%twc("font-bold")> {`찜한 상품`->React.string} </span>
+                      <IconArrow height="16" width="16" fill="#B2B2B2" />
+                    </li>
+                  </Next.Link>
+                  <Next.Link href="/buyer/me/recent-view?mode=VIEW">
+                    <li
+                      className=%twc(
+                        "py-5 flex justify-between items-center border-b border-gray-100"
+                      )>
+                      <span className=%twc("font-bold")> {`최근 본 상품`->React.string} </span>
+                      <IconArrow height="16" width="16" fill="#B2B2B2" />
+                    </li>
+                  </Next.Link>
                   <Next.Link href="/buyer/download-center">
                     <li
                       className=%twc(
@@ -160,6 +212,14 @@ module Mobile = {
                       </li>
                     </a>
                   </Next.Link>
+                  <li
+                    className=%twc(
+                      "py-5 flex justify-between items-center border-b border-gray-100"
+                    )
+                    onClick={_ => ChannelTalk.showMessenger()}>
+                    <span className=%twc("font-bold")> {`1:1 문의하기`->React.string} </span>
+                    <IconArrow height="16" width="16" fill="#B2B2B2" />
+                  </li>
                 </ol>
               </section>
             </div>
@@ -171,42 +231,57 @@ module Mobile = {
   }
 }
 
-type props = {
-  deviceType: DeviceDetect.deviceType,
-  gnbBanners: array<GnbBannerListBuyerQuery_graphql.Types.response_gnbBanners>,
-  displayCategories: array<ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories>,
-}
+type props = {deviceType: DeviceDetect.deviceType}
 type params
 type previewData
 
 // props를 구조분해 해줘야 함
-let default = ({deviceType, gnbBanners, displayCategories}) => {
+let default = ({deviceType}) => {
   let router = Next.Router.useRouter()
 
-  <div className=%twc("w-full min-h-screen")>
-    {switch deviceType {
-    | DeviceDetect.PC =>
-      <>
-        <div className=%twc("flex")>
-          <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
-        </div>
-        <Authorization.Buyer title={`신선하이`} ssrFallback={<MyInfo_Skeleton_Buyer.PC />}>
-          <RescriptReactErrorBoundary
-            fallback={_ =>
-              <div> {`계정정보를 가져오는데 실패했습니다`->React.string} </div>}>
-            <React.Suspense fallback={<MyInfo_Skeleton_Buyer.PC />}>
-              <PC />
-            </React.Suspense>
-          </RescriptReactErrorBoundary>
-        </Authorization.Buyer>
-        <Footer_Buyer.PC />
-      </>
+  {
+    switch deviceType {
+    | DeviceDetect.PC => {
+        let oldUI =
+          <div className=%twc("w-full min-h-screen")>
+            <Header_Buyer.PC key=router.asPath />
+            <Authorization.Buyer ssrFallback={<MyInfo_Skeleton_Buyer.PC />}>
+              <RescriptReactErrorBoundary
+                fallback={_ =>
+                  <div>
+                    {`계정정보를 가져오는데 실패했습니다`->React.string}
+                  </div>}>
+                <React.Suspense fallback={<MyInfo_Skeleton_Buyer.PC />}>
+                  <PC />
+                </React.Suspense>
+              </RescriptReactErrorBoundary>
+            </Authorization.Buyer>
+            <Footer_Buyer.PC />
+          </div>
+        <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+          <div className=%twc("w-full min-h-screen bg-[#F0F2F5]")>
+            <Header_Buyer.PC key=router.asPath />
+            <Authorization.Buyer ssrFallback={<MyInfo_Skeleton_Buyer.PC />}>
+              <RescriptReactErrorBoundary
+                fallback={_ =>
+                  <div>
+                    {`계정정보를 가져오는데 실패했습니다`->React.string}
+                  </div>}>
+                <React.Suspense fallback={<MyInfo_Skeleton_Buyer.PC />}>
+                  <PC />
+                </React.Suspense>
+              </RescriptReactErrorBoundary>
+            </Authorization.Buyer>
+            <Footer_Buyer.PC />
+          </div>
+        </FeatureFlagWrapper>
+      }
+
     | DeviceDetect.Unknown
     | DeviceDetect.Mobile =>
-      <>
+      <div className=%twc("w-full min-h-screen")>
         <Header_Buyer.Mobile key=router.asPath />
-        <Authorization.Buyer
-          title={`신선하이`} ssrFallback={<MyInfo_Skeleton_Buyer.Mobile.Main />}>
+        <Authorization.Buyer ssrFallback={<MyInfo_Skeleton_Buyer.Mobile.Main />}>
           <RescriptReactErrorBoundary
             fallback={_ =>
               <div> {`계정정보를 가져오는데 실패했습니다`->React.string} </div>}>
@@ -215,48 +290,18 @@ let default = ({deviceType, gnbBanners, displayCategories}) => {
             </React.Suspense>
           </RescriptReactErrorBoundary>
         </Authorization.Buyer>
-      </>
-    }}
-  </div>
+        <Bottom_Navbar deviceType />
+      </div>
+    }
+  }
 }
 
 let getServerSideProps = (ctx: Next.GetServerSideProps.context<props, params, previewData>) => {
+  open ServerSideHelper
+  let environment = SinsunMarket(Env.graphqlApiUrl)->RelayEnv.environment
+  let gnbAndCategoryQuery = environment->gnbAndCategory
+
   let deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req)
 
-  let gnb = () =>
-    GnbBannerList_Buyer.Query.fetchPromised(
-      ~environment=RelayEnv.envSinsunMarket,
-      ~variables=(),
-      (),
-    )
-  let displayCategories = () =>
-    ShopCategorySelect_Buyer.Query.fetchPromised(
-      ~environment=RelayEnv.envSinsunMarket,
-      ~variables={onlyDisplayable: Some(true), types: Some([#NORMAL]), parentId: None},
-      (),
-    )
-
-  Js.Promise.all2((gnb(), displayCategories()))
-  |> Js.Promise.then_(((
-    gnb: GnbBannerListBuyerQuery_graphql.Types.response,
-    displayCategories: ShopCategorySelectBuyerQuery_graphql.Types.response,
-  )) => {
-    Js.Promise.resolve({
-      "props": {
-        "deviceType": deviceType,
-        "gnbBanners": gnb.gnbBanners,
-        "displayCategories": displayCategories.displayCategories,
-      },
-    })
-  })
-  |> Js.Promise.catch(err => {
-    Js.log2(`에러 gnb preload`, err)
-    Js.Promise.resolve({
-      "props": {
-        "deviceType": deviceType,
-        "gnbBanners": [],
-        "displayCategories": [],
-      },
-    })
-  })
+  gnbAndCategoryQuery->makeResultWithQuery(~environment, ~extraProps={"deviceType": deviceType})
 }

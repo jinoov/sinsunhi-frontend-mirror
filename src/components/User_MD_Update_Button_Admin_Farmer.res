@@ -105,7 +105,9 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user) => {
     <Dialog.Trigger className=%twc("block text-left mb-1 underline focus:outline-none")>
       <img src=editIcon />
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <div className=%twc("p-5")>
         <section className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`담당소싱MD`->React.string} </h2>
@@ -122,7 +124,7 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user) => {
               cacheOptions=true
               defaultOptions=false
               onChange=handleChangeUser
-              placeholder=`담당MD 이름으로 찾기`
+              placeholder={`담당MD 이름으로 찾기`}
               noOptionsMessage={_ => `검색 결과가 없습니다.`}
               isClearable=true
               styles={ReactSelect.stylesOptions(~menu=(provide, _) => {

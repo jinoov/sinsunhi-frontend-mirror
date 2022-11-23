@@ -56,7 +56,8 @@ module Mo = {
           className=%twc(
             "dialog-content-base bg-white rounded-xl w-[calc(100vw-40px)] max-w-[calc(768px-40px)]"
           )
-          onPointerDownOutside={onCancel}>
+          onPointerDownOutside={onCancel}
+          onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
           {children->Option.getWithDefault(React.null)}
           <BtnSection confirmText cancelText ?onConfirm onCancel />
         </RadixUI.Dialog.Content>
@@ -84,7 +85,8 @@ let make = (
       <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
       <RadixUI.Dialog.Content
         className=%twc("dialog-content-base bg-white rounded-xl w-[480px]")
-        onPointerDownOutside={onCancel}>
+        onPointerDownOutside={onCancel}
+        onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         {children->Option.getWithDefault(React.null)}
         <BtnSection confirmText cancelText ?onConfirm onCancel />
       </RadixUI.Dialog.Content>

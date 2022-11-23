@@ -173,7 +173,10 @@ function BulkSale_Producer_Application_Withdrawn_Button(Props) {
                                     }, "닫기"),
                                 className: "flex mr-2"
                               }))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

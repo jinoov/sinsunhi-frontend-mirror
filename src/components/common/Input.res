@@ -47,6 +47,7 @@ let make = (
   ~className=?,
   ~value=?,
   ~onChange=?,
+  ~onBlur=?,
   ~defaultValue=?,
   ~size=?,
   ~error,
@@ -56,6 +57,8 @@ let make = (
   ~step=?,
   ~textAlign=?,
   ~inputRef as ref=?,
+  ~readOnly=?,
+  ~onKeyDown=?
 ) =>
   <div className=%twc("flex-1")>
     <label>
@@ -70,12 +73,15 @@ let make = (
         ?placeholder
         ?value
         ?onChange
+        ?readOnly
+        ?onBlur
         ?disabled
         ?tabIndex
         ?defaultValue
         ?min
         ?step
         ?ref
+        ?onKeyDown
       />
     </label>
     {error

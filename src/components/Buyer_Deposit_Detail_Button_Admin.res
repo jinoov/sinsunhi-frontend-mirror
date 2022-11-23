@@ -22,7 +22,6 @@ module Summary = {
         switch response->CustomHooks.TransactionSummary.response_decode {
         | Ok(response') =>
           open CustomHooks.TransactionSummary
-          response'->Js.Console.log
 
           <span ?className>
             {switch kind {
@@ -129,13 +128,15 @@ let make = () => {
         {j`잔액 자세히보기`->React.string}
       </button>
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <h3 className=%twc("p-5 font-bold text-center")>
         {`주문가능 잔액 상세`->React.string}
       </h3>
       <Summary />
       <Dialog.Close className=%twc("w-full focus:outline-none")>
-        <CustomDialog.ButtonBox textOnCancel=`닫기` onCancel={_ => Js.Console.log("!!")} />
+        <CustomDialog.ButtonBox textOnCancel={`닫기`} onCancel={_ => Js.Console.log("!!")} />
       </Dialog.Close>
     </Dialog.Content>
   </Dialog.Root>

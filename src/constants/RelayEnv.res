@@ -45,3 +45,19 @@ let environment = api =>
 
 let envSinsunMarket = environment(SinsunMarket(Env.graphqlApiUrl))
 let envFMBridge = environment(FMBridge(Env.fmbGraphqlApiUrl))
+
+let createDehydrateProps = (
+  environment: RescriptRelay.Environment.t,
+  ~extraProps: 'json=Js.Obj.empty(),
+  (),
+) => {
+  Js.Obj.assign(
+    {
+      "dehydrateStoreData": environment
+      ->RescriptRelay.Environment.getStore
+      ->RescriptRelay.Store.getSource
+      ->RescriptRelay.RecordSource.toJSON,
+    },
+    extraProps,
+  )
+}

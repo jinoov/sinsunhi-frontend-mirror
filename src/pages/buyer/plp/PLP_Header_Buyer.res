@@ -6,6 +6,9 @@
  *    쿼리 파라메터로 전달된 display-category-id 또는 `/categories/[cid]`를 활용하여, 전시 카테고리 이름을 조회, Gnb에 표현합니다
  *
  */
+
+@module("../../../../public/assets/arrow-left-line.svg")
+external arrowLeftLineIcon: string = "default"
 module DisplayCategoryName = {
   module Query = %relay(`
     query PLPHeaderBuyerQuery($displayCategoryId: ID!) {
@@ -32,7 +35,7 @@ module DisplayCategoryName = {
     | None => ""
     | Some(node) =>
       switch node.children {
-      | [] => node.parent->Option.mapWithDefault("", parent => parent.name)
+      | [] => node.parent->Option.mapWithDefault(node.name, parent => parent.name)
       | _ => node.name
       }
     }
@@ -60,10 +63,10 @@ let make = () => {
     // position fixed
     <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
       <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
-        <div className=%twc("px-5 py-4 flex w-full items-center")>
-          <div className=%twc("w-1/3 flex justify-start")>
+        <div className=%twc("px-5 py-4 flex w-full items-center justify-between")>
+          <div className=%twc("flex-1 flex justify-start")>
             <button onClick={_ => router->Next.Router.back}>
-              <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+              <img src=arrowLeftLineIcon className=%twc("w-6 h-6") />
             </button>
           </div>
           {switch isCsr {
@@ -73,25 +76,23 @@ let make = () => {
             // 전체 상품 리스트
             | None =>
               <>
-                <div className=%twc("w-1/3 flex justify-center")>
+                <div className=%twc("flex-1 flex justify-center")>
                   <span className=%twc("font-bold text-xl")> {`전체 상품`->React.string} </span>
                 </div>
-                <div className=%twc("w-1/3 flex justify-end gap-2")>
+                <div className=%twc("flex-1 flex justify-end gap-2")>
                   <CartLinkIcon />
-                  <HomeLinkIcon />
                 </div>
               </>
             // 특정 전시카테고리 내 상품 리스트
             | Some(displayCategoryId') =>
               <RescriptReactErrorBoundary fallback={_ => <span />}>
-                <div className=%twc("w-1/3 flex justify-center")>
+                <div className=%twc("flex-1 flex justify-center min-w-fit")>
                   <React.Suspense fallback={<span />}>
                     <DisplayCategoryName displayCategoryId=displayCategoryId' />
                   </React.Suspense>
                 </div>
-                <div className=%twc("w-1/3 flex justify-end gap-2")>
+                <div className=%twc("flex-1 flex justify-end gap-2")>
                   <CartLinkIcon />
-                  <HomeLinkIcon />
                 </div>
               </RescriptReactErrorBoundary>
             }

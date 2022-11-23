@@ -140,7 +140,7 @@ module Seller = {
               <img
                 src="/assets/sinsunhi-logo.svg"
                 className=%twc("w-[86px] h-[22px] md:w-[100px] md:h-[25px]")
-                alt={`신선하이 로고`}
+                alt={`신선하이 생산자 바로가기`}
               />
             </li>
           </Next.Link>
@@ -210,7 +210,7 @@ module SellerActivateUser = {
 
     <nav className=%twc("w-full max-w-3xl mx-auto h-14 bg-white pl-4 pr-5 flex items-center")>
       <button onClick={_ => router->Next.Router.back}>
-        <img src=arrowRight className=%twc("w-6 h-6 rotate-180") />
+        <img src=arrowRight className=%twc("w-6 h-6 rotate-180") alt={`뒤로가기`} />
       </button>
     </nav>
   }
@@ -228,7 +228,7 @@ module Admin = {
           <img
             src="/assets/sinsunhi-logo.svg"
             className=%twc("w-[86px] h-[22px] md:w-[100px] md:h-[25px]")
-            alt={`신선하이 로고`}
+            alt={`신선하이 어드민 바로가기`}
           />
         </li>
         <li>

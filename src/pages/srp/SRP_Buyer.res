@@ -1,20 +1,20 @@
 module Query = %relay(`
-  query SRPBuyerQuery(
+  query SRPBuyer_Query(
     $count: Int!
     $cursor: String
     $name: String!
-    $sort: ProductsQueryInputSort!
+    $orderBy: [SearchProductsOrderBy!]
     $onlyBuyable: Boolean
-    $types: [ProductType!]
+    $type_: [ProductType!]
   ) {
     ...SRPBuyer_fragment
       @arguments(
         count: $count
         cursor: $cursor
         name: $name
-        sort: $sort
+        orderBy: $orderBy
         onlyBuyable: $onlyBuyable
-        types: $types
+        type: $type_
       )
   }
 `)
@@ -27,17 +27,17 @@ module Fragment = %relay(`
     onlyBuyable: { type: "Boolean", defaultValue: null }
     cursor: { type: "String", defaultValue: null }
     name: { type: "String!" }
-    sort: { type: "ProductsQueryInputSort!" }
-    types: { type: "[ProductType!]" }
+    orderBy: { type: "[SearchProductsOrderBy!]" }
+    type: { type: "[ProductType!]" }
   ) {
-    products(
+    searchProducts(
       first: $count
       after: $cursor
       name: $name
-      sort: $sort
+      orderBy: $orderBy
       onlyBuyable: $onlyBuyable
-      type: $types
-    ) @connection(key: "ShopSearchBuyer_products") {
+      types: $type
+    ) @connection(key: "ShopSearchBuyer_searchProducts") {
       edges {
         cursor
         node {
@@ -51,35 +51,67 @@ module Fragment = %relay(`
 
 module Placeholder = {
   @react.component
-  let make = (~deviceType, ~gnbBanners, ~displayCategories) => {
+  let make = (~deviceType) => {
     let router = Next.Router.useRouter()
     switch deviceType {
     | DeviceDetect.Unknown => React.null
 
-    | DeviceDetect.PC =>
-      <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col")>
-        <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
-        <main className=%twc("flex flex-col grow w-full h-full bg-white")>
-          <div className=%twc("w-[1280px] pt-20 mx-auto")>
-            <section className=%twc("w-full flex items-center justify-center")>
-              <div className=%twc("bg-gray-150 animate-pulse rounded-xl w-[400px] h-[48px]") />
-            </section>
-            <section className=%twc("mt-20 w-full flex items-center justify-end")>
-              <div className=%twc("bg-gray-150 animate-pulse rounded-xl w-32 h-5") />
-            </section>
-            <section className=%twc("w-full mt-12")>
-              <ol className=%twc("grid grid-cols-4 gap-x-10 gap-y-16")>
-                {Array.range(1, 300)
-                ->Array.map(number => {
-                  <ShopProductListItem_Buyer.PC.Placeholder key={`box-${number->Int.toString}`} />
-                })
-                ->React.array}
-              </ol>
-            </section>
+    | DeviceDetect.PC => {
+        let oldUI =
+          <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col")>
+            <Header_Buyer.PC key=router.asPath />
+            <main className=%twc("flex flex-col grow w-full h-full bg-white")>
+              <div className=%twc("w-[1280px] pt-20 mx-auto")>
+                <section className=%twc("w-full flex items-center justify-center")>
+                  <div className=%twc("bg-gray-150 animate-pulse rounded-xl w-[400px] h-[48px]") />
+                </section>
+                <section className=%twc("mt-20 w-full flex items-center justify-end")>
+                  <div className=%twc("bg-gray-150 animate-pulse rounded-xl w-32 h-5") />
+                </section>
+                <section className=%twc("w-full mt-12")>
+                  <ol className=%twc("grid grid-cols-4 gap-x-10 gap-y-16")>
+                    {Array.range(1, 300)
+                    ->Array.map(number => {
+                      <ShopProductListItem_Buyer.PC.Placeholder
+                        key={`box-${number->Int.toString}`}
+                      />
+                    })
+                    ->React.array}
+                  </ol>
+                </section>
+              </div>
+            </main>
+            <Footer_Buyer.PC />
           </div>
-        </main>
-        <Footer_Buyer.PC />
-      </div>
+
+        <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+          <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col bg-[#FAFBFC]")>
+            <Header_Buyer.PC key=router.asPath />
+            <main className=%twc("flex flex-col grow w-full h-full bg-white")>
+              <div className=%twc("w-[1280px] pt-20 mx-auto")>
+                <section className=%twc("w-full flex items-center justify-center")>
+                  <div className=%twc("bg-gray-150 animate-pulse rounded-xl w-[400px] h-[48px]") />
+                </section>
+                <section className=%twc("mt-20 w-full flex items-center justify-end")>
+                  <div className=%twc("bg-gray-150 animate-pulse rounded-xl w-32 h-5") />
+                </section>
+                <section className=%twc("w-full mt-12")>
+                  <ol className=%twc("grid grid-cols-4 gap-x-10 gap-y-16")>
+                    {Array.range(1, 300)
+                    ->Array.map(number => {
+                      <ShopProductListItem_Buyer.PC.Placeholder
+                        key={`box-${number->Int.toString}`}
+                      />
+                    })
+                    ->React.array}
+                  </ol>
+                </section>
+              </div>
+            </main>
+            <Footer_Buyer.PC />
+          </div>
+        </FeatureFlagWrapper>
+      }
 
     | DeviceDetect.Mobile =>
       <div className=%twc("w-full bg-white")>
@@ -102,7 +134,6 @@ module Placeholder = {
             </div>
           </div>
         </main>
-        <Footer_Buyer.MO />
       </div>
     }
   }
@@ -110,7 +141,7 @@ module Placeholder = {
 
 module Error = {
   @react.component
-  let make = (~deviceType, ~gnbBanners, ~displayCategories) => {
+  let make = (~deviceType) => {
     let router = Next.Router.useRouter()
 
     switch deviceType {
@@ -118,7 +149,7 @@ module Error = {
 
     | DeviceDetect.PC =>
       <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col")>
-        <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
+        <Header_Buyer.PC key=router.asPath />
         <main className=%twc("flex flex-col grow w-full h-full bg-white")>
           <div className=%twc("w-full flex items-center justify-center mt-40")>
             <span className=%twc("text-3xl text-gray-800")>
@@ -139,7 +170,6 @@ module Error = {
             </span>
           </div>
         </main>
-        <Footer_Buyer.MO />
       </div>
     }
   }
@@ -147,10 +177,10 @@ module Error = {
 
 module PC = {
   @react.component
-  let make = (~keyword, ~query, ~gnbBanners, ~displayCategories) => {
+  let make = (~keyword, ~query, ~section: Product_FilterOption.Section.t) => {
     let router = Next.Router.useRouter()
 
-    let {data: {products}, hasNext, loadNext} = Fragment.usePagination(query)
+    let {data: {searchProducts}, hasNext, loadNext} = query->Fragment.usePagination
     let loadMoreRef = React.useRef(Js.Nullable.null)
 
     let isIntersecting = CustomHooks.IntersectionObserver.use(
@@ -160,16 +190,10 @@ module PC = {
       (),
     )
 
-    let currentSection = router.query->Js.Dict.get("section")->Product_FilterOption.Section.make
-
-    let selected = keyword => {
-      currentSection == keyword
-    }
-
-    let resultObjLabel = switch currentSection {
+    let resultObjLabel = switch section {
     | #MATCHING => `신선매칭 상품이`
     | #DELIVERY => `신선배송 상품이`
-    | _ => `검색결과가`
+    | #ALL => `검색결과가`
     }
 
     React.useEffect1(_ => {
@@ -180,147 +204,136 @@ module PC = {
       None
     }, [hasNext, isIntersecting])
 
-    let onTabClickHandler = section => {
-      let newRouteQueryParam = router.query
-
-      let sortOption =
-        router.query
-        ->Js.Dict.get("sort")
-        ->Option.map(sort' => Product_FilterOption.Sort.decodeSort(section, sort'))
-        ->Option.getWithDefault(#UPDATED_DESC)
-
-      newRouteQueryParam->Js.Dict.set("section", section->Product_FilterOption.Section.toString)
-
-      newRouteQueryParam->Js.Dict.set("sort", sortOption->Product_FilterOption.Sort.encodeSort)
-
-      router->Next.Router.replaceObj({pathname: router.pathname, query: newRouteQueryParam})
-    }
-
-    <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col")>
-      <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
-      <main className=%twc("flex flex-col grow w-full h-full bg-white")>
-        <div className=%twc("w-[1280px] mt-16 mx-auto h-12 px-5")>
-          <div
-            className=%twc(
-              "flex flex-row justify-start border-b-[1px] border-gray-100 gap-[10px] "
-            )>
-            <button
-              onClick={_ => onTabClickHandler(#ALL)}
-              className={Cn.make([
-                selected(#ALL) ? %twc("text-gray-800") : %twc("text-gray-400"),
-                %twc("flex justify-center items-center h-full"),
-              ])}>
-              <div className=%twc("flex flex-col w-full h-full justify-center items-center")>
-                <div
-                  className=%twc(
-                    "inline-flex flex-1 items-center justify-center font-bold px-[10px] py-3"
-                  )>
-                  {`전체`->React.string}
+    let oldUI =
+      <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col")>
+        <Header_Buyer.PC key=router.asPath />
+        <main className=%twc("flex flex-col grow w-full h-full bg-white")>
+          {switch keyword {
+          | Some(keyword) =>
+            <>
+              <div className=%twc("w-[1280px] mt-16 mx-auto h-12 px-5")>
+                <SRP_Tab currentSection=section />
+              </div>
+              {switch searchProducts.edges {
+              // 검색결과 없음
+              | [] =>
+                <div className=%twc("my-40")>
+                  <div className=%twc("w-full flex items-center justify-center")>
+                    <span className=%twc("text-3xl text-gray-800")>
+                      <span className=%twc("font-bold")> {`"${keyword}"`->React.string} </span>
+                      {`에 대한 검색결과`->React.string}
+                    </span>
+                  </div>
+                  <div className=%twc("mt-7 w-full flex flex-col items-center justify-center")>
+                    <span className=%twc("text-gray-800")>
+                      <span className=%twc("text-green-500 font-bold")>
+                        {`"${keyword}"`->React.string}
+                      </span>
+                      {`의 ${resultObjLabel} 없습니다.`->React.string}
+                    </span>
+                    <span className=%twc("text-gray-800")>
+                      {`다른 검색어를 입력하시거나 철자와 띄어쓰기를 확인해 보세요.`->React.string}
+                    </span>
+                  </div>
                 </div>
-                <div
-                  className={Cn.make([
-                    selected(#ALL) ? %twc("bg-gray-800") : %twc("bg-transparent"),
-                    %twc("h-[2px] w-full rounded -mt-[3px]"),
-                  ])}
-                />
-              </div>
-            </button>
-            <button
-              onClick={_ => onTabClickHandler(#DELIVERY)}
-              className={Cn.make([
-                selected(#DELIVERY) ? %twc("text-gray-800") : %twc("text-gray-400"),
-                %twc("flex justify-center items-center h-full"),
-              ])}>
-              <div className=%twc("flex flex-col w-full h-full justify-center items-center")>
-                <div
-                  className=%twc(
-                    "inline-flex flex-1 items-center justify-center font-bold px-[10px] py-3"
-                  )>
-                  {`신선배송`->React.string}
+              | edges =>
+                <div className=%twc("w-[1280px] mx-auto min-h-full px-5")>
+                  <div className=%twc("mt-10 w-full flex items-center justify-between")>
+                    <div className=%twc("text-sm mr-1 text-gray-800")>
+                      {`총 ${searchProducts.totalCount->Int.toString}개`->React.string}
+                    </div>
+                    <SRP_SortSelect.PC />
+                  </div>
+                  <div>
+                    <ol className=%twc("mt-6 grid grid-cols-4 gap-x-10 gap-y-16")>
+                      {edges
+                      ->Array.map(({cursor, node}) => {
+                        <ShopProductListItem_Buyer.PC key=cursor query=node.fragmentRefs />
+                      })
+                      ->React.array}
+                    </ol>
+                    <div ref={ReactDOM.Ref.domRef(loadMoreRef)} className=%twc("h-20 w-full") />
+                  </div>
                 </div>
-                <div
-                  className={Cn.make([
-                    selected(#DELIVERY) ? %twc("bg-gray-800") : %twc("bg-transparent"),
-                    %twc("h-[2px] w-full rounded -mt-[3px]"),
-                  ])}
-                />
-              </div>
-            </button>
-            <button
-              onClick={_ => onTabClickHandler(#MATCHING)}
-              className={Cn.make([
-                selected(#MATCHING) ? %twc("text-gray-800") : %twc("text-gray-400"),
-                %twc("flex justify-center items-center h-full"),
-              ])}>
-              <div className=%twc("flex flex-col w-full h-full justify-center items-center")>
-                <div
-                  className=%twc(
-                    "inline-flex flex-1 items-center justify-center font-bold px-[10px] py-3"
-                  )>
-                  {`신선매칭`->React.string}
-                </div>
-                <div
-                  className={Cn.make([
-                    selected(#MATCHING) ? %twc("bg-gray-800") : %twc("bg-transparent"),
-                    %twc("h-[2px] w-full rounded -mt-[3px]"),
-                  ])}
-                />
-              </div>
-            </button>
-          </div>
-        </div>
-        {switch products.edges {
-        // 검색결과 없음
-        | [] =>
-          <div className=%twc("my-40")>
-            <div className=%twc("w-full flex items-center justify-center")>
-              <span className=%twc("text-3xl text-gray-800")>
-                <span className=%twc("font-bold")> {keyword->React.string} </span>
-                {`에 대한 검색결과`->React.string}
-              </span>
-            </div>
-            <div className=%twc("mt-7 w-full flex flex-col items-center justify-center")>
-              <span className=%twc("text-gray-800")>
-                <span className=%twc("text-green-500 font-bold")> {keyword->React.string} </span>
-                {`의 ${resultObjLabel} 없습니다.`->React.string}
-              </span>
-              <span className=%twc("text-gray-800")>
-                {`다른 검색어를 입력하시거나 철자와 띄어쓰기를 확인해 보세요.`->React.string}
-              </span>
-            </div>
-          </div>
-        | edges =>
-          <div className=%twc("w-[1280px] mx-auto min-h-full px-5")>
-            <div className=%twc("mt-10 w-full flex items-center justify-between")>
-              <div className=%twc("text-sm mr-1 text-gray-800")>
-                {`총 ${products.totalCount->Int.toString}개`->React.string}
-              </div>
-              <SRP_SortSelect.PC />
-            </div>
-            <div>
-              <ol className=%twc("mt-6 grid grid-cols-4 gap-x-10 gap-y-16")>
-                {edges
-                ->Array.map(({cursor, node}) => {
-                  <ShopProductListItem_Buyer.PC key=cursor query=node.fragmentRefs />
-                })
-                ->React.array}
-              </ol>
-              <div ref={ReactDOM.Ref.domRef(loadMoreRef)} className=%twc("h-20 w-full") />
-            </div>
-          </div>
-        }}
-      </main>
-      <Footer_Buyer.PC />
-    </div>
+              }}
+            </>
+          | None => React.null
+          }}
+        </main>
+        <Footer_Buyer.PC />
+      </div>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col bg-[#FAFBFC]")>
+        <Header_Buyer.PC key=router.asPath />
+        <main
+          className=%twc(
+            "max-w-[1280px] min-w-[872px] mx-auto m-10 py-10 flex flex-col grow w-full h-full rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] px-[50px] min-h-[720px]"
+          )>
+          {switch keyword {
+          | Some(keyword) =>
+            <>
+              {switch searchProducts.edges {
+              // 검색결과 없음
+              | [] =>
+                <>
+                  <h3 className=%twc("text-[26px] font-bold")> {`'${keyword}'`->React.string} </h3>
+                  <div
+                    className=%twc(
+                      "max-w-[1280px] min-w-[872px] w-full h-full flex-1 mt-[60px] flex flex-col"
+                    )>
+                    <div
+                      className=%twc(
+                        "flex flex-1  flex-col justify-center items-center text-[17px] text-gray-800 mb-[100px]"
+                      )>
+                      <span className=%twc("font-bold mb-6")>
+                        {"검색결과가 없습니다."->React.string}
+                      </span>
+                      <span> {"다른 검색어를 입력하시거나"->React.string} </span>
+                      <span>
+                        {"철자와 띄어쓰기를 확인해 보세요."->React.string}
+                      </span>
+                    </div>
+                  </div>
+                </>
+
+              | edges =>
+                <>
+                  <h3 className=%twc("text-[26px] font-bold")> {`'${keyword}'`->React.string} </h3>
+                  <div className=%twc("max-w-[1280px] min-w-[872px] w-full min-h-full mt-[60px]")>
+                    <div className=%twc(" w-full flex items-center justify-between mb-8")>
+                      <PLP_SectionCheckBoxGroup />
+                      <SRP_SortSelect.PC />
+                    </div>
+                    <div>
+                      <ol className=%twc("grid plp-max:grid-cols-5 grid-cols-4 gap-x-10 gap-y-16")>
+                        {edges
+                        ->Array.map(({cursor, node}) => {
+                          <ShopProductListItem_Buyer.PC key=cursor query=node.fragmentRefs />
+                        })
+                        ->React.array}
+                      </ol>
+                      <div ref={ReactDOM.Ref.domRef(loadMoreRef)} className=%twc("h-20 w-full") />
+                    </div>
+                  </div>
+                </>
+              }}
+            </>
+          | None => React.null
+          }}
+        </main>
+        <Footer_Buyer.PC />
+      </div>
+    </FeatureFlagWrapper>
   }
 }
 
 module MO = {
   @react.component
-  let make = (~keyword, ~query) => {
+  let make = (~keyword, ~query, ~section: Product_FilterOption.Section.t) => {
     let router = Next.Router.useRouter()
 
-    let {data: {products}, hasNext, loadNext} = Fragment.usePagination(query)
+    let {data: {searchProducts}, hasNext, loadNext} = query->Fragment.usePagination
     let loadMoreRef = React.useRef(Js.Nullable.null)
 
     let isIntersecting = CustomHooks.IntersectionObserver.use(
@@ -330,16 +343,10 @@ module MO = {
       (),
     )
 
-    let currentSection = router.query->Js.Dict.get("section")->Product_FilterOption.Section.make
-
-    let selected = keyword => {
-      currentSection == keyword
-    }
-
-    let resultObjLabel = switch currentSection {
+    let resultObjLabel = switch section {
     | #MATCHING => `신선매칭 상품이`
     | #DELIVERY => `신선배송 상품이`
-    | _ => `검색결과가`
+    | #ALL => `검색결과가`
     }
 
     React.useEffect1(_ => {
@@ -350,143 +357,79 @@ module MO = {
       None
     }, [hasNext, isIntersecting])
 
-    let onTabClickHandler = section => {
-      let newRouteQueryParam = router.query
-
-      let sortOption =
-        router.query
-        ->Js.Dict.get("sort")
-        ->Option.map(sort' => Product_FilterOption.Sort.decodeSort(section, sort'))
-        ->Option.getWithDefault(#UPDATED_DESC)
-
-      newRouteQueryParam->Js.Dict.set("section", section->Product_FilterOption.Section.toString)
-
-      newRouteQueryParam->Js.Dict.set("sort", sortOption->Product_FilterOption.Sort.encodeSort)
-
-      router->Next.Router.replaceObj({pathname: router.pathname, query: newRouteQueryParam})
-    }
-
     <div className=%twc("w-full bg-white")>
       <Header_Buyer.Mobile key=router.asPath />
-      <main className=%twc("w-full max-w-3xl mx-auto relative bg-white min-h-screen")>
-        <div className=%twc("flex flex-row  h-12 border-b-[1px] border-gray-100 mt-[2px]")>
-          <button
-            onClick={_ => onTabClickHandler(#ALL)}
-            className={Cn.make([
-              selected(#ALL) ? %twc("text-gray-800") : %twc("text-gray-400"),
-              %twc("flex flex-1 justify-center items-center h-full "),
-            ])}>
-            <div className=%twc("flex flex-col w-full h-full justify-center items-center px-5")>
-              <div className=%twc("inline-flex flex-1 items-center justify-center font-bold")>
-                {`전체`->React.string}
-              </div>
-              <div
-                className={Cn.make([
-                  selected(#ALL) ? %twc("bg-gray-800") : %twc("bg-transparent"),
-                  %twc("h-[2px] w-full rounded"),
-                ])}
-              />
-            </div>
-          </button>
-          <button
-            onClick={_ => onTabClickHandler(#DELIVERY)}
-            className={Cn.make([
-              selected(#DELIVERY) ? %twc("text-gray-800") : %twc("text-gray-400"),
-              %twc("flex flex-1 justify-center items-center h-full "),
-            ])}>
-            <div className=%twc("flex flex-col w-full h-full justify-center items-center px-5")>
-              <div className=%twc("inline-flex flex-1 items-center justify-center font-bold")>
-                {`신선배송`->React.string}
-              </div>
-              <div
-                className={Cn.make([
-                  selected(#DELIVERY) ? %twc("bg-gray-800") : %twc("bg-transparent"),
-                  %twc("h-[2px] w-full rounded"),
-                ])}
-              />
-            </div>
-          </button>
-          <button
-            onClick={_ => onTabClickHandler(#MATCHING)}
-            className={Cn.make([
-              selected(#MATCHING) ? %twc("text-gray-800") : %twc("text-gray-400"),
-              %twc("flex flex-1 justify-center items-center h-full "),
-            ])}>
-            <div className=%twc("flex flex-col w-full h-full justify-center items-center px-5")>
-              <div className=%twc("inline-flex flex-1 items-center justify-center font-bold")>
-                {`신선매칭`->React.string}
-              </div>
-              <div
-                className={Cn.make([
-                  selected(#MATCHING) ? %twc("bg-gray-800") : %twc("bg-transparent"),
-                  %twc("h-[2px] w-full rounded"),
-                ])}
-              />
-            </div>
-          </button>
-        </div>
-        {switch products.edges {
-        // 검색결과 없음
-        | [] =>
+      <main className=%twc("w-full max-w-3xl mx-auto relative bg-white h-full")>
+        {switch keyword {
+        | Some(keyword) =>
           <>
-            <div className=%twc("w-full flex items-center justify-center pt-[134px] px-5")>
-              <span className=%twc("text-gray-800 text-xl text-center")>
-                <span className=%twc("font-bold")> {keyword->React.string} </span>
-                {`에 대한 검색결과`->React.string}
-              </span>
-            </div>
-            <div
-              className=%twc(
-                "mt-2 w-full flex flex-col items-center justify-center text-center text-base text-gray-600"
-              )>
-              <span>
-                <span className=%twc("text-green-500 font-bold")> {keyword->React.string} </span>
-                {`의 ${resultObjLabel} 없습니다.`->React.string}
-              </span>
-              <span> {`다른 검색어를 입력하시거나`->React.string} </span>
-              <span> {`철자와 띄어쓰기를 확인해 보세요.`->React.string} </span>
-            </div>
-          </>
+            <SRP_Tab currentSection=section />
+            {switch searchProducts.edges {
+            // 검색결과 없음
+            | [] =>
+              <>
+                <div className=%twc("w-full flex items-center justify-center pt-[134px] px-5")>
+                  <span className=%twc("text-gray-800 text-xl text-center")>
+                    <span className=%twc("font-bold")> {`"${keyword}"`->React.string} </span>
+                    {`에 대한 검색결과`->React.string}
+                  </span>
+                </div>
+                <div
+                  className=%twc(
+                    "mt-2 w-full flex flex-col items-center justify-center text-center text-base text-gray-600"
+                  )>
+                  <span>
+                    <span className=%twc("text-green-500 font-bold")>
+                      {`"${keyword}"`->React.string}
+                    </span>
+                    {`의 ${resultObjLabel} 없습니다.`->React.string}
+                  </span>
+                  <span> {`다른 검색어를 입력하시거나`->React.string} </span>
+                  <span> {`철자와 띄어쓰기를 확인해 보세요.`->React.string} </span>
+                </div>
+              </>
 
-        | edges =>
-          <div className=%twc("w-full px-5")>
-            <div className=%twc("pt-5 pb-4 w-full flex items-center justify-between")>
-              <div className=%twc("text-gray-800 text-sm")>
-                {`총 ${products.totalCount->Int.toString}개`->React.string}
+            | edges =>
+              <div className=%twc("w-full px-5")>
+                <div className=%twc("pt-5 pb-4 w-full flex items-center justify-between")>
+                  <div className=%twc("text-gray-800 text-sm")>
+                    {`총 ${searchProducts.totalCount->Int.toString}개`->React.string}
+                  </div>
+                  <SRP_SortSelect.MO />
+                </div>
+                <div>
+                  <ol className=%twc("grid grid-cols-2 gap-x-4 gap-y-8")>
+                    {edges
+                    ->Array.map(({cursor, node}) => {
+                      <ShopProductListItem_Buyer.MO key=cursor query=node.fragmentRefs />
+                    })
+                    ->React.array}
+                  </ol>
+                  <div ref={ReactDOM.Ref.domRef(loadMoreRef)} className=%twc("h-20 w-full") />
+                </div>
               </div>
-              <SRP_SortSelect.MO />
-            </div>
-            <div>
-              <ol className=%twc("grid grid-cols-2 gap-x-4 gap-y-8")>
-                {edges
-                ->Array.map(({cursor, node}) => {
-                  <ShopProductListItem_Buyer.MO key=cursor query=node.fragmentRefs />
-                })
-                ->React.array}
-              </ol>
-              <div ref={ReactDOM.Ref.domRef(loadMoreRef)} className=%twc("h-20 w-full") />
-            </div>
-          </div>
+            }}
+          </>
+        | None => <SRP_RecentSearchList />
         }}
       </main>
-      <Footer_Buyer.MO />
     </div>
   }
 }
 
 module Container = {
   @react.component
-  let make = (~deviceType, ~keyword, ~sort, ~gnbBanners, ~displayCategories, ~section) => {
+  let make = (~deviceType, ~keyword, ~sort, ~section) => {
     // 채널톡 버튼 사용
     ChannelTalkHelper.Hook.use()
 
     let {fragmentRefs} = Query.use(
       ~variables=Query.makeVariables(
-        ~name=keyword,
+        ~name=keyword->Option.getWithDefault(""),
         ~count=20,
-        ~sort,
+        ~orderBy=sort->Product_FilterOption.Sort.toSearchProductParam->Option.getWithDefault([]),
         ~onlyBuyable=true,
-        ~types=section->PLP_FilterOption.Section.toQueryParam,
+        ~type_=section->Product_FilterOption.Section.toQueryParam,
         (),
       ),
       ~fetchPolicy=RescriptRelay.StoreOrNetwork,
@@ -506,39 +449,35 @@ module Container = {
 
     switch deviceType {
     | DeviceDetect.Unknown => React.null
-    | DeviceDetect.PC => <PC keyword query=fragmentRefs gnbBanners displayCategories />
-    | DeviceDetect.Mobile => <MO keyword query=fragmentRefs />
+    | DeviceDetect.PC => <PC keyword query=fragmentRefs section />
+    | DeviceDetect.Mobile => <MO keyword query=fragmentRefs section />
     }
   }
 }
 
-type props = {
-  query: Js.Dict.t<string>,
-  deviceType: DeviceDetect.deviceType,
-  gnbBanners: array<GnbBannerListBuyerQuery_graphql.Types.response_gnbBanners>,
-  displayCategories: array<ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories>,
-}
+type props = {deviceType: DeviceDetect.deviceType}
 type params
 type previewData
 
 let default = (~props) => {
-  let {deviceType, gnbBanners, displayCategories} = props
+  let {deviceType} = props
   let router = Next.Router.useRouter()
   let keyword = router.query->Js.Dict.get("keyword")->Option.map(Js.Global.decodeURIComponent)
 
-  let section = router.query->Js.Dict.get("section")->PLP_FilterOption.Section.make
+  let section =
+    router.query
+    ->Js.Dict.get("section")
+    ->Product_FilterOption.Section.fromUrlParameter
+    ->Option.getWithDefault(#ALL)
 
   let sort =
-    router.query
-    ->Js.Dict.get("sort")
-    ->Option.map(sortStr => PLP_FilterOption.Sort.decodeSort(section, sortStr))
-    ->Option.getWithDefault(#UPDATED_DESC)
+    section
+    ->Product_FilterOption.Sort.makeSearch(router.query->Js.Dict.get("sort"))
+    ->Option.getWithDefault(Product_FilterOption.Sort.defaultValue)
 
-  let (isCsr, setIsCsr) = React.Uncurried.useState(_ => false)
+  let isCsr = CustomHooks.useCsr()
 
   React.useEffect0(() => {
-    setIsCsr(._ => true)
-
     keyword->Option.forEach(keyword =>
       Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
         ~kind=#VIEW_SEARCH_RESULT,
@@ -552,32 +491,71 @@ let default = (~props) => {
 
   <>
     <Next.Head>
-      <title> {`신선하이`->React.string} </title>
+      <title>
+        {`신선하이 | ${keyword->Option.getWithDefault("상품검색")}`->React.string}
+      </title>
+      <meta
+        name="description"
+        content={`농산물 소싱은 신선하이에서! ${keyword->Option.getWithDefault(
+            "",
+          )}에 대한 검색결과입니다.`}
+      />
     </Next.Head>
-    <RescriptReactErrorBoundary fallback={_ => <Error deviceType gnbBanners displayCategories />}>
-      <React.Suspense fallback={<Placeholder deviceType gnbBanners displayCategories />}>
-        {switch (isCsr, keyword) {
-        | (true, Some(keyword')) =>
-          <Container deviceType keyword=keyword' sort gnbBanners displayCategories section />
-        | _ => <Placeholder deviceType gnbBanners displayCategories />
+    <OpenGraph_Header
+      title={`${keyword->Option.getWithDefault("")} 검색결과`}
+      description={`${keyword->Option.getWithDefault("")}에 대한 검색결과입니다.`}
+    />
+    <RescriptReactErrorBoundary fallback={_ => <Error deviceType />}>
+      <React.Suspense fallback={<Placeholder deviceType />}>
+        {switch isCsr {
+        | true => <Container deviceType keyword sort section />
+
+        | _ => <Placeholder deviceType />
         }}
       </React.Suspense>
     </RescriptReactErrorBoundary>
+    <Bottom_Navbar deviceType />
   </>
 }
 
 let getServerSideProps = (ctx: Next.GetServerSideProps.context<props, params, previewData>) => {
+  open ServerSideHelper
+  let environment = SinsunMarket(Env.graphqlApiUrl)->RelayEnv.environment
+  let gnbAndCategoryQuery = environment->gnbAndCategory
+
   let deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req)
-  GnbBannerList_Buyer.Query.fetchPromised(~environment=RelayEnv.envSinsunMarket, ~variables=(), ())
-  |> Js.Promise.then_((res: GnbBannerListBuyerQuery_graphql.Types.response) =>
-    Js.Promise.resolve({
-      "props": {"query": ctx.query, "deviceType": deviceType, "gnbBanners": res.gnbBanners},
-    })
-  )
-  |> Js.Promise.catch(err => {
-    Js.log2("에러 GnbBannerListBuyerQuery", err)
-    Js.Promise.resolve({
-      "props": {"query": ctx.query, "deviceType": deviceType, "gnbBanners": []},
-    })
-  })
+
+  // TEMP: 가격노출조건 개선 전까지, SSR disable, CSR Only
+  gnbAndCategoryQuery->makeResultWithQuery(~environment, ~extraProps={"deviceType": deviceType})
+  // let keyword = ctx.query->Js.Dict.get("keyword")->Option.map(Js.Global.decodeURIComponent)
+  // let section = ctx.query->Js.Dict.get("section")->PLP_FilterOption.Section.make
+  // let sort =
+  //   ctx.query
+  //   ->Js.Dict.get("sort")
+  //   ->Option.map(sortStr => PLP_FilterOption.Sort.decodeSort(section, sortStr))
+  //   ->Option.getWithDefault(#UPDATED_DESC)
+
+  // let resolveEnv = _ => {
+  //   {"props": environment->RelayEnv.createDehydrateProps()}->Js.Promise.resolve
+  // }
+
+  // switch keyword {
+  // | None => resolveEnv()
+
+  // | Some(keyword') =>
+  //   Query.fetchPromised(
+  //     ~environment,
+  //     ~variables=Query.makeVariables(
+  //       ~name=keyword',
+  //       ~count=20,
+  //       ~sort,
+  //       ~onlyBuyable=true,
+  //       ~types=section->PLP_FilterOption.Section.toQueryParam,
+  //       (),
+  //     ),
+  //     (),
+  //   )
+  //   |> Js.Promise.then_(resolveEnv)
+  //   |> Js.Promise.catch(resolveEnv)
+  // }
 }

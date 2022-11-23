@@ -17,8 +17,8 @@ let makeInput = (
   progress,
   reason,
 ): BulkSaleProducerApplicationRejectedButtonMutation_graphql.Types.bulkSaleApplicationProgressInput => {
-  progress: progress,
-  reason: reason,
+  progress,
+  reason,
 }
 
 @react.component
@@ -112,7 +112,9 @@ let make = (
     <Dialog.Trigger className=triggerStyle onClick={_ => _open()}>
       <span className=%twc("block mt-[10px]")> {j`보류사유`->React.string} </span>
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5")>
         <article className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`판매 보류 사유`->React.string} </h2>
@@ -133,7 +135,7 @@ let make = (
               type_="rejected-reason"
               name="rejected-reason"
               className=%twc("flex-1 mr-1")
-              placeholder=`내용 입력`
+              placeholder={`내용 입력`}
               value={reason->Option.getWithDefault("")}
               onChange={handleOnChange(setReason)}
               error={formErrors

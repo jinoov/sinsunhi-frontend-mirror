@@ -6,6 +6,9 @@
  *    바이어 페이지의 공통 헤더로써 네비게이션을 제공합니다
  *
  */
+
+@module("../../public/assets/arrow-left-line.svg")
+external arrowLeftLineIcon: string = "default"
 module Mobile = {
   module LoggedInUserMenu = {
     @react.component
@@ -17,7 +20,7 @@ module Mobile = {
             <img
               src="/icons/user-gray-circle-3x.png"
               className=%twc("w-7 h-7 object-cover ml-2")
-              alt="user-icon"
+              alt={`마이페이지`}
             />
           </a>
         </Next.Link>
@@ -35,7 +38,7 @@ module Mobile = {
           <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
             <div className=%twc("px-5 py-4 flex justify-between")>
               <button type_="button" onClick={_ => router->Next.Router.back}>
-                <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+                <img src=arrowLeftLineIcon className=%twc("w-6 h-6") alt={`뒤로가기`} />
               </button>
               <div>
                 <span className=%twc("font-bold text-xl")> {title->React.string} </span>
@@ -61,7 +64,7 @@ module Mobile = {
             <div className=%twc("px-5 py-4 flex items-center")>
               <div className=%twc("w-1/3 flex justify-start")>
                 <button type_="button" onClick={_ => router->Next.Router.back}>
-                  <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+                  <img src=arrowLeftLineIcon className=%twc("w-6 h-6") alt={`뒤로가기`} />
                 </button>
               </div>
               <div className=%twc("w-1/3 flex justify-center")>
@@ -101,6 +104,25 @@ module Mobile = {
     </>
   }
 
+  module TitleOnly = {
+    @react.component
+    let make = (~title) => {
+      <>
+        <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white")>
+          <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
+            <div className=%twc("px-5 py-4 flex justify-center")>
+              <div>
+                <span className=%twc("font-bold text-xl")> {title->React.string} </span>
+              </div>
+            </div>
+          </header>
+        </div>
+        // placeholder
+        <div className=%twc("w-full h-14") />
+      </>
+    }
+  }
+
   module NoHome = {
     @react.component
     let make = (~title) => {
@@ -112,7 +134,7 @@ module Mobile = {
           <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
             <div className=%twc("px-5 py-4 flex justify-between")>
               <button type_="button" onClick={_ => router->Next.Router.back}>
-                <IconArrow height="24" width="24" fill="#262626" className=%twc("rotate-180") />
+                <img src=arrowLeftLineIcon className=%twc("w-6 h-6") />
               </button>
               <div>
                 <span className=%twc("font-bold text-xl")> {title->React.string} </span>
@@ -127,44 +149,122 @@ module Mobile = {
     }
   }
 
-  module GnbHome = {
+  module WithNumber = {
+    module NumberBadge = {
+      module Skeleton = {
+        @react.component
+        let make = () => {
+          <span
+            className=%twc(
+              "text-xs font-bold leading-3 px-1.5 py-0.5 rounded-xl bg-slate-100 w-3 h-4 animate-pulse"
+            )
+          />
+        }
+      }
+
+      @react.component
+      let make = (~count) => {
+        <span
+          className=%twc("text-xs font-bold leading-3 px-1.5 py-0.5 rounded-xl bg-slate-100 h-4")>
+          {`${count->Option.map(Int.toString)->Option.getWithDefault("")}`->React.string}
+        </span>
+      }
+    }
+
+    module Container = {
+      @react.component
+      let make = (~title, ~count) => {
+        let router = Next.Router.useRouter()
+        <>
+          // position fixed
+          <div className=%twc("w-full fixed top-0 left-0 z-10 bg-white h-14")>
+            <header className=%twc("w-full max-w-3xl mx-auto  bg-white")>
+              <div className=%twc("px-5 py-4 flex justify-between")>
+                <button
+                  type_="button" className=%twc("h-6") onClick={_ => router->Next.Router.back}>
+                  <img src=arrowLeftLineIcon className=%twc("w-6 h-6") />
+                </button>
+                <div className=%twc("inline-flex gap-1 items-center")>
+                  //텍스트를 가운데로 맞추기 위해 opacity-0인 숫자 렌더
+                  <span className=%twc("text-xs font-bold leading-3 px-1.5 h-4 opacity-0")>
+                    {`${count->Option.map(Int.toString)->Option.getWithDefault("")}`->React.string}
+                  </span>
+                  <span className=%twc("font-bold text-xl leading-6")> {title->React.string} </span>
+                  <React.Suspense fallback={<NumberBadge.Skeleton />}>
+                    <NumberBadge count />
+                  </React.Suspense>
+                </div>
+                <div className=%twc("w-6 h-6") />
+              </div>
+            </header>
+          </div>
+          // placeholder
+          <div className=%twc("w-full h-14") />
+        </>
+      }
+    }
+
     @react.component
-    let make = (~gnbBanners=?, ~displayCategories=?) => {
-      let router = Next.Router.useRouter()
-
-      let (isCsr, setCsr) = React.Uncurried.useState(_ => false)
-      let user = CustomHooks.User.Buyer.use2()
-
-      // category select 내에 query 때문에 ssr 이용시 hydration mismatch error 발생
-      // csr 사용
+    let make = (~title, ~count) => {
+      let (isCsr, setIsCsr) = React.Uncurried.useState(_ => false)
       React.useEffect0(_ => {
-        setCsr(._ => true)
+        setIsCsr(._ => true)
         None
       })
+      switch isCsr {
+      | true => <Container title count />
+      | false => React.null
+      }
+    }
+  }
+  module LikeHeader = {
+    module Query = %relay(`
+      query HeaderBuyer_LikeHeader_Query {
+        viewer {
+          likedProductCount
+        }
+      }
+    `)
+    @react.component
+    let make = () => {
+      let count =
+        Query.use(~variables=(), ()).viewer->Option.map(viewer => viewer.likedProductCount)
+      <WithNumber title={`찜한 상품`} count />
+    }
+  }
+
+  module RecentHeader = {
+    module Query = %relay(`
+      query HeaderBuyer_RecentHeader_Query {
+        viewer {
+          viewedProductCount
+        }
+      }
+    `)
+    @react.component
+    let make = () => {
+      let count =
+        Query.use(~variables=(), ()).viewer->Option.map(viewer => viewer.viewedProductCount)
+      <WithNumber title={`최근 본 상품`} count />
+    }
+  }
+
+  module GnbHome = {
+    @react.component
+    let make = () => {
+      let router = Next.Router.useRouter()
+
+      let user = CustomHooks.User.Buyer.use2()
 
       <div className=%twc("w-full bg-white")>
         <header className=%twc("w-full max-w-3xl mx-auto h-14 flex items-center px-3 bg-white")>
-          <div className=%twc("flex flex-1")>
-            {switch isCsr {
-            | true =>
-              <RescriptReactErrorBoundary fallback={_ => React.null}>
-                <React.Suspense fallback=React.null>
-                  {switch (gnbBanners, displayCategories) {
-                  | (Some(gnbBanners), Some(displayCategories)) =>
-                    <ShopCategorySelect_Buyer.Mobile gnbBanners displayCategories />
-                  | _ => React.null
-                  }}
-                </React.Suspense>
-              </RescriptReactErrorBoundary>
-            | false => <IconHamburger width="24" height="24" fill="#12B564" />
-            }}
-          </div>
+          <div className=%twc("h-6 w-6 flex-1") />
           <img
             src="/assets/sinsunhi-logo.svg"
-            className=%twc("w-[88px] h-7 object-contain")
-            alt="sinsunhi-logo-header-mobile"
+            className=%twc("w-[88px] h-7 object-contain flex-1")
+            alt="신선하이 로고"
           />
-          <div className=%twc("flex flex-1 justify-end")>
+          <div className=%twc("flex justify-end flex-1")>
             {
               let {makeWithDict, toString} = module(Webapi.Url.URLSearchParams)
               let redirectUrl = switch router.query->Js.Dict.get("redirect") {
@@ -182,7 +282,7 @@ module Mobile = {
                 }
               }
               switch user {
-              | LoggedIn(_) => <LoggedInUserMenu />
+              | LoggedIn(_) => <CartLinkIcon />
               | NotLoggedIn =>
                 <div className=%twc("flex items-center gap-2")>
                   <CartLinkIcon />
@@ -218,10 +318,14 @@ module Mobile = {
               "w-full max-w-3xl mx-auto h-14 py-2 px-3 bg-white flex items-center gap-2"
             )>
             <button type_="button" onClick={_ => router->Next.Router.back}>
-              <img src="/assets/arrow-right.svg" className=%twc("w-6 h-6 rotate-180") />
+              <img src=arrowLeftLineIcon className=%twc("w-6 h-6") alt={`뒤로가기`} />
             </button>
-            <ShopSearchInput_Buyer.MO />
-            <CartLinkIcon />
+            <div className=%twc("w-full mr-1")>
+              <ShopSearchInput_Buyer.MO />
+            </div>
+            <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback={<CartLinkIcon />}>
+              {React.null}
+            </FeatureFlagWrapper>
           </div>
         </div>
         // placeholder
@@ -243,25 +347,30 @@ module Mobile = {
       {switch (first, second, third) {
       | (Some("buyer"), Some("signin"), Some("find-id-password")) => <Normal title={``} />
       | (Some("buyer"), Some("signin"), _) => <Normal title={`로그인`} />
-      | (Some("buyer"), Some("signup"), _) => <Normal title={`회원가입`} />
+      | (Some("buyer"), Some("signup"), _) => <Normal title={`사업자 회원가입`} />
       | (Some("buyer"), Some("upload"), _) => <Normal title={`주문서 업로드`} />
+      | (Some("auction-price"), _, _) => <Normal title={`전국 농산물 경매가`} />
       | (Some("buyer"), Some("orders"), _) => <Normal title={`주문 내역`} />
       | (Some("buyer"), Some("me"), Some("account")) => <NoHome title={`계정정보`} />
       | (Some("buyer"), Some("me"), Some("profile")) => <NoHome title={`프로필정보`} />
-      | (Some("buyer"), Some("me"), _) => <NoHome title={`마이페이지`} />
+      | (Some("buyer"), Some("me"), Some("like")) => <LikeHeader />
+      | (Some("buyer"), Some("me"), Some("recent-view")) => <RecentHeader />
+      | (Some("buyer"), Some("me"), _) => <TitleOnly title={`마이페이지`} />
       | (Some("buyer"), Some("download-center"), _) => <Normal title={`다운로드 센터`} />
       | (Some("buyer"), Some("transactions"), _) => <Normal title={`결제 내역`} />
       | (Some("buyer"), Some("products"), Some("advanced-search")) =>
         <Normal title={`상품 검색`} />
       | (Some("products"), Some("advanced-search"), None) => <Normal title={`상품 검색`} />
       | (Some("search"), _, _) => <Search />
-      | (Some("buyer"), Some("web-order"), Some("complete")) => <NoBack title={`주문 완료`} />
+      | (Some("buyer"), Some("web-order"), Some("complete")) => <Normal title={`주문 완료`} />
       | (Some("buyer"), Some("web-order"), _) => <Normal title={`주문·결제`} />
       | (Some("delivery"), None, _) => <BackAndCart title={`신선배송`} />
       | (Some("delivery"), Some(_), _) => <BackAndCart title={`신선배송`} />
       | (Some("matching"), None, _) => <NoHome title={`신선매칭`} />
       | (Some("matching"), Some(_), _) => <Normal title={`신선매칭`} />
       | (Some("buyer"), Some("cart"), _) => <Normal title={`장바구니`} />
+      | (Some("menu"), _, _) => <TitleOnly title={`카테고리`} />
+      | (Some("saved-products"), _, _) => <TitleOnly title={`저장된 상품`} />
       | (Some("buyer"), None, _) => <GnbHome />
       | _ => <Normal title={``} />
       }}
@@ -369,127 +478,107 @@ module PC_Old = {
           <a className=buttonStyle> {`로그인`->React.string} </a>
         </Next.Link>
         <Next.Link href={`/buyer/signup?${redirectUrl}`}>
-          <a className=buttonStyle> {`회원가입`->React.string} </a>
+          <a className=buttonStyle> {`사업자 회원가입`->React.string} </a>
         </Next.Link>
       </div>
-    }
-  }
-
-  module GnbBanners = {
-    @react.component
-    let make = () => {
-      let {gnbBanners} = GnbBannerList_Buyer.Query.use(~variables=(), ())
-      <GnbBannerList_Buyer gnbBanners />
-    }
-  }
-
-  module Categories = {
-    @react.component
-    let make = () => {
-      let {displayCategories} = ShopCategorySelect_Buyer.Query.use(
-        ~variables={onlyDisplayable: Some(true), types: Some([#NORMAL]), parentId: None},
-        (),
-      )
-      <ShopCategorySelect_Buyer.PC displayCategories />
     }
   }
 
   @react.component
   let make = () => {
     let user = CustomHooks.User.Buyer.use2()
-    let isCsr = CustomHooks.useCsr()
 
-    <>
-      <AppLink_Header />
-      <header className=%twc("w-full fixed top-0 bg-white z-10")>
-        <div className=%twc("w-full flex justify-between items-center py-4 px-10")>
-          <div className=%twc("flex items-center")>
-            // 로고
-            <Next.Link href="/">
-              <a>
-                <img
-                  src="/assets/sinsunhi-logo.svg"
-                  className=%twc("w-[120px] h-10 object-contain")
-                  alt="sinsunhi-logo-header-pc"
-                />
-              </a>
-            </Next.Link>
-            // 검색창
-            <div className=%twc("ml-12")>
-              <ShopSearchInput_Buyer />
-            </div>
-          </div>
-          <div className=%twc("flex items-center")>
-            <span>
-              {switch user {
-              | LoggedIn(user') =>
-                <div className=%twc("flex items-center gap-5")>
-                  <CartLinkIcon />
-                  <LoggedInUserMenu user={user'} />
-                </div>
-              | NotLoggedIn =>
-                <div className=%twc("flex items-center gap-2")>
-                  <CartLinkIcon />
-                  <NotLoggedInUserMenu />
-                </div>
-              | Unknown =>
-                <div className=%twc("h-16 flex items-center")>
-                  <div className=%twc("w-40 h-6 bg-gray-150 animate-pulse rounded-lg") />
-                </div>
-              }}
-            </span>
-          </div>
-        </div>
-        <nav className=%twc("flex items-center justify-between pr-10 pl-2 border-y")>
-          <div className=%twc("h-14 flex items-center divide-x")>
-            // 카테고리
-            <RescriptReactErrorBoundary fallback={_ => React.null}>
-              <React.Suspense fallback=React.null>
-                {switch isCsr {
-                | false => React.null
-                | true => <Categories />
-                }}
-              </React.Suspense>
-            </RescriptReactErrorBoundary>
-            // Gnb Banners
-            <RescriptReactErrorBoundary fallback={_ => React.null}>
-              <React.Suspense fallback=React.null>
-                {switch isCsr {
-                | false => React.null
-                | true => <GnbBanners />
-                }}
-              </React.Suspense>
-            </RescriptReactErrorBoundary>
-          </div>
-          // 네비게이션
-          <div className=%twc("flex items-center text-base text-gray-800")>
-            {
-              let (link, target) = switch user {
-              | LoggedIn(_) => (
-                  "https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN",
-                  "_blank",
-                )
-              | _ => ("/buyer/signin", "_self")
-              }
-              <Next.Link href=link>
-                <a target className=%twc("ml-4 cursor-pointer")>
-                  {`판매자료 다운로드`->React.string}
+    let oldUI =
+      <>
+        <AppLink_Header />
+        <header className=%twc("w-full min-w-[1280px] fixed top-0 bg-white z-10")>
+          <div className=%twc("w-full flex justify-between items-center py-4 px-10")>
+            <div className=%twc("flex items-center")>
+              // 로고
+              <Next.Link href="/">
+                <a>
+                  <img
+                    src="/assets/sinsunhi-logo.svg"
+                    className=%twc("w-[120px] h-10 object-contain")
+                    alt="신선하이 홈으로 바로가기"
+                  />
                 </a>
               </Next.Link>
-            }
-            <Next.Link href="/buyer/upload">
-              <a className=%twc("ml-4 cursor-pointer")> {`주문서 업로드`->React.string} </a>
-            </Next.Link>
-            <Next.Link href="https://shinsunmarket.co.kr/532">
-              <a target="_blank" className=%twc("ml-4 cursor-pointer")>
-                {`고객지원`->React.string}
-              </a>
-            </Next.Link>
+              // 검색창
+              <div className=%twc("ml-12")>
+                <ShopSearchInput_Buyer />
+              </div>
+            </div>
+            <div className=%twc("flex items-center")>
+              <span>
+                {switch user {
+                | LoggedIn(user') =>
+                  <div className=%twc("flex items-center gap-5")>
+                    <CartLinkIcon />
+                    <LoggedInUserMenu user={user'} />
+                  </div>
+                | NotLoggedIn =>
+                  <div className=%twc("flex items-center gap-2")>
+                    <CartLinkIcon />
+                    <NotLoggedInUserMenu />
+                  </div>
+                | Unknown =>
+                  <div className=%twc("h-16 flex items-center")>
+                    <div className=%twc("w-40 h-6 bg-gray-150 animate-pulse rounded-lg") />
+                  </div>
+                }}
+              </span>
+            </div>
           </div>
-        </nav>
-      </header>
-      <div className=%twc("w-full h-[154px]") />
-    </>
+          <nav className=%twc("flex items-center justify-between pr-10 pl-2 border-y")>
+            <div className=%twc("h-14 flex items-center divide-x")>
+              // 카테고리
+              <RescriptReactErrorBoundary fallback={_ => React.null}>
+                <React.Suspense fallback=React.null>
+                  <ShopCategorySelect_Buyer />
+                </React.Suspense>
+              </RescriptReactErrorBoundary>
+              // Gnb Banners
+              <RescriptReactErrorBoundary fallback={_ => React.null}>
+                <React.Suspense fallback=React.null>
+                  <GnbBannerList_Buyer />
+                </React.Suspense>
+              </RescriptReactErrorBoundary>
+            </div>
+            // 네비게이션
+            <div className=%twc("flex items-center text-base text-gray-800")>
+              {
+                let (link, target) = switch user {
+                | LoggedIn(_) => (
+                    "https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN",
+                    "_blank",
+                  )
+                | _ => ("/buyer/signin", "_self")
+                }
+                <Next.Link href=link>
+                  <a target className=%twc("ml-4 cursor-pointer")>
+                    {`판매자료 다운로드`->React.string}
+                  </a>
+                </Next.Link>
+              }
+              <Next.Link href="/buyer/upload">
+                <a className=%twc("ml-4 cursor-pointer")> {`주문서 업로드`->React.string} </a>
+              </Next.Link>
+              <Next.Link href="https://shinsunmarket.co.kr/532">
+                <a target="_blank" className=%twc("ml-4 cursor-pointer")>
+                  {`고객지원`->React.string}
+                </a>
+              </Next.Link>
+            </div>
+          </nav>
+        </header>
+        <div className=%twc("w-full h-[154px]") />
+      </>
+
+    <FeatureFlagWrapper
+      featureFlag=#HOME_UI_UX fallback={oldUI} suspenseFallback={<PC_Header.Buyer.Placeholder />}>
+      <PC_Header.Buyer />
+    </FeatureFlagWrapper>
   }
 }
 
@@ -592,95 +681,101 @@ module PC = {
           <a className=buttonStyle> {`로그인`->React.string} </a>
         </Next.Link>
         <Next.Link href={`/buyer/signup?${redirectUrl}`}>
-          <a className=buttonStyle> {`회원가입`->React.string} </a>
+          <a className=buttonStyle> {`사업자 회원가입`->React.string} </a>
         </Next.Link>
       </div>
     }
   }
 
   @react.component
-  let make = (~gnbBanners, ~displayCategories) => {
+  let make = () => {
     let user = CustomHooks.User.Buyer.use2()
 
-    <>
-      <AppLink_Header />
-      <header className=%twc("w-full sticky top-0 bg-white z-10")>
-        <div className=%twc("w-full flex justify-between items-center py-4 px-10")>
-          <div className=%twc("flex items-center")>
-            // 로고
-            <Next.Link href="/">
-              <a>
-                <img
-                  src="/assets/sinsunhi-logo.svg"
-                  className=%twc("w-[120px] h-10 object-contain")
-                  alt="sinsunhi-logo-header-pc"
-                />
-              </a>
-            </Next.Link>
-            // 검색창
-            <div className=%twc("ml-12")>
-              <ShopSearchInput_Buyer />
-            </div>
-          </div>
-          <div className=%twc("flex items-center")>
-            <span>
-              {switch user {
-              | LoggedIn(user') =>
-                <div className=%twc("flex items-center gap-5")>
-                  <CartLinkIcon />
-                  <LoggedInUserMenu user={user'} />
-                </div>
-              | NotLoggedIn =>
-                <div className=%twc("flex items-center gap-2")>
-                  <CartLinkIcon />
-                  <NotLoggedInUserMenu />
-                </div>
-              | Unknown =>
-                <div className=%twc("h-16 flex items-center")>
-                  <div className=%twc("w-40 h-6 bg-gray-150 animate-pulse rounded-lg") />
-                </div>
-              }}
-            </span>
-          </div>
-        </div>
-        <nav className=%twc("flex items-center justify-between pr-10 pl-2 border-y")>
-          <div className=%twc("h-14 flex items-center divide-x")>
-            // 카테고리
-            <ShopCategorySelect_Buyer.PC displayCategories />
-            // Gnb Banners
-            <RescriptReactErrorBoundary fallback={_ => React.null}>
-              <React.Suspense fallback=React.null>
-                <GnbBannerList_Buyer gnbBanners />
-              </React.Suspense>
-            </RescriptReactErrorBoundary>
-          </div>
-          // 네비게이션
-          <div className=%twc("flex items-center text-base text-gray-800")>
-            {
-              let (link, target) = switch user {
-              | LoggedIn(_) => (
-                  "https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN",
-                  "_blank",
-                )
-              | _ => ("/buyer/signin", "_self")
-              }
-              <Next.Link href=link>
-                <a target className=%twc("ml-4 cursor-pointer")>
-                  {`판매자료 다운로드`->React.string}
+    let oldUI =
+      <>
+        <AppLink_Header />
+        <header className=%twc("w-full sticky top-0 bg-white z-10 min-w-[1280px]")>
+          <div className=%twc("w-full flex justify-between items-center py-4 px-10")>
+            <div className=%twc("flex items-center")>
+              // 로고
+              <Next.Link href="/">
+                <a>
+                  <img
+                    src="/assets/sinsunhi-logo.svg"
+                    className=%twc("w-[120px] h-10 object-contain")
+                    alt="신선하이 홈으로 바로가기"
+                  />
                 </a>
               </Next.Link>
-            }
-            <Next.Link href="/buyer/upload">
-              <a className=%twc("ml-4 cursor-pointer")> {`주문서 업로드`->React.string} </a>
-            </Next.Link>
-            <Next.Link href="https://shinsunmarket.co.kr/532">
-              <a target="_blank" className=%twc("ml-4 cursor-pointer")>
-                {`고객지원`->React.string}
-              </a>
-            </Next.Link>
+              // 검색창
+              <div className=%twc("ml-12")>
+                <ShopSearchInput_Buyer />
+              </div>
+            </div>
+            <div className=%twc("flex items-center")>
+              <span>
+                {switch user {
+                | LoggedIn(user') =>
+                  <div className=%twc("flex items-center gap-5")>
+                    <CartLinkIcon />
+                    <LoggedInUserMenu user={user'} />
+                  </div>
+                | NotLoggedIn =>
+                  <div className=%twc("flex items-center gap-2")>
+                    <CartLinkIcon />
+                    <NotLoggedInUserMenu />
+                  </div>
+                | Unknown =>
+                  <div className=%twc("h-16 flex items-center")>
+                    <div className=%twc("w-40 h-6 bg-gray-150 animate-pulse rounded-lg") />
+                  </div>
+                }}
+              </span>
+            </div>
           </div>
-        </nav>
-      </header>
-    </>
+          <nav className=%twc("flex items-center justify-between pr-10 pl-2 border-y")>
+            <div className=%twc("h-14 flex items-center divide-x")>
+              // 카테고리
+              <ShopCategorySelect_Buyer />
+              // Gnb Banners
+              <RescriptReactErrorBoundary fallback={_ => React.null}>
+                <React.Suspense fallback=React.null>
+                  <GnbBannerList_Buyer />
+                </React.Suspense>
+              </RescriptReactErrorBoundary>
+            </div>
+            // 네비게이션
+            <div className=%twc("flex items-center text-base text-gray-800")>
+              {
+                let (link, target) = switch user {
+                | LoggedIn(_) => (
+                    "https://drive.google.com/drive/u/0/folders/1DbaGUxpkYnJMrl4RPKRzpCqTfTUH7bYN",
+                    "_blank",
+                  )
+                | _ => ("/buyer/signin", "_self")
+                }
+                <Next.Link href=link>
+                  <a target className=%twc("ml-4 cursor-pointer")>
+                    {`판매자료 다운로드`->React.string}
+                  </a>
+                </Next.Link>
+              }
+              <Next.Link href="/buyer/upload">
+                <a className=%twc("ml-4 cursor-pointer")> {`주문서 업로드`->React.string} </a>
+              </Next.Link>
+              <Next.Link href="https://shinsunmarket.co.kr/532">
+                <a target="_blank" className=%twc("ml-4 cursor-pointer")>
+                  {`고객지원`->React.string}
+                </a>
+              </Next.Link>
+            </div>
+          </nav>
+        </header>
+      </>
+
+    <FeatureFlagWrapper
+      featureFlag=#HOME_UI_UX fallback={oldUI} suspenseFallback={<PC_Header.Buyer.Placeholder />}>
+      <PC_Header.Buyer />
+    </FeatureFlagWrapper>
   }
 }

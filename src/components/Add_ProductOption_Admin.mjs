@@ -7,6 +7,7 @@ import * as Dialog from "./common/Dialog.mjs";
 import * as Helper from "../utils/Helper.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Checkbox from "./common/Checkbox.mjs";
 import * as IconArrow from "./svgs/IconArrow.mjs";
 import * as IconError from "./svgs/IconError.mjs";
@@ -92,7 +93,7 @@ function cost_decode(v) {
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: "." + ("buyer-price" + e.path),
+                    path: ".buyer-price" + e.path,
                     message: e.message,
                     value: e.value
                   }
@@ -102,7 +103,7 @@ function cost_decode(v) {
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: "." + ("cost-type" + e$1.path),
+                  path: ".cost-type" + e$1.path,
                   message: e$1.message,
                   value: e$1.value
                 }
@@ -112,7 +113,7 @@ function cost_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("delivery-cost" + e$2.path),
+                path: ".delivery-cost" + e$2.path,
                 message: e$2.message,
                 value: e$2.value
               }
@@ -122,7 +123,7 @@ function cost_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("working-cost" + e$3.path),
+              path: ".working-cost" + e$3.path,
               message: e$3.message,
               value: e$3.value
             }
@@ -132,7 +133,7 @@ function cost_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("raw-cost" + e$4.path),
+            path: ".raw-cost" + e$4.path,
             message: e$4.message,
             value: e$4.value
           }
@@ -192,6 +193,18 @@ function submit_encode(v) {
               [
                 "shipping-unit-quantity",
                 Spice.intToJson(v.shippingUnitQuantity)
+              ],
+              [
+                "adhoc-stock-is-limited",
+                Spice.boolToJson(v.adhocStockIsLimited)
+              ],
+              [
+                "adhoc-stock-num-limit",
+                Spice.optionToJson(Spice.intToJson, v.adhocStockNumLimit)
+              ],
+              [
+                "adhoc-stock-is-num-remaining-visible",
+                Spice.boolToJson(v.adhocStockIsNumRemainingVisible)
               ]
             ]);
 }
@@ -231,152 +244,191 @@ function submit_decode(v) {
                         if (isFreeShipping.TAG === /* Ok */0) {
                           var shippingUnitQuantity = Spice.intFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "shipping-unit-quantity"), null));
                           if (shippingUnitQuantity.TAG === /* Ok */0) {
+                            var adhocStockIsLimited = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-is-limited"), null));
+                            if (adhocStockIsLimited.TAG === /* Ok */0) {
+                              var adhocStockNumLimit = Spice.optionFromJson(Spice.intFromJson, Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-num-limit"), null));
+                              if (adhocStockNumLimit.TAG === /* Ok */0) {
+                                var adhocStockIsNumRemainingVisible = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "adhoc-stock-is-num-remaining-visible"), null));
+                                if (adhocStockIsNumRemainingVisible.TAG === /* Ok */0) {
+                                  return {
+                                          TAG: /* Ok */0,
+                                          _0: {
+                                            name: name._0,
+                                            grade: grade._0,
+                                            package: $$package._0,
+                                            amount: amount._0,
+                                            each: each._0,
+                                            amountUnit: amountUnit._0,
+                                            operationStatus: operationStatus._0,
+                                            cost: cost._0,
+                                            cutOffTime: cutOffTime._0,
+                                            memo: memo._0,
+                                            showEach: showEach._0,
+                                            isFreeShipping: isFreeShipping._0,
+                                            shippingUnitQuantity: shippingUnitQuantity._0,
+                                            adhocStockIsLimited: adhocStockIsLimited._0,
+                                            adhocStockNumLimit: adhocStockNumLimit._0,
+                                            adhocStockIsNumRemainingVisible: adhocStockIsNumRemainingVisible._0
+                                          }
+                                        };
+                                }
+                                var e = adhocStockIsNumRemainingVisible._0;
+                                return {
+                                        TAG: /* Error */1,
+                                        _0: {
+                                          path: ".adhoc-stock-is-num-remaining-visible" + e.path,
+                                          message: e.message,
+                                          value: e.value
+                                        }
+                                      };
+                              }
+                              var e$1 = adhocStockNumLimit._0;
+                              return {
+                                      TAG: /* Error */1,
+                                      _0: {
+                                        path: ".adhoc-stock-num-limit" + e$1.path,
+                                        message: e$1.message,
+                                        value: e$1.value
+                                      }
+                                    };
+                            }
+                            var e$2 = adhocStockIsLimited._0;
                             return {
-                                    TAG: /* Ok */0,
+                                    TAG: /* Error */1,
                                     _0: {
-                                      name: name._0,
-                                      grade: grade._0,
-                                      package: $$package._0,
-                                      amount: amount._0,
-                                      each: each._0,
-                                      amountUnit: amountUnit._0,
-                                      operationStatus: operationStatus._0,
-                                      cost: cost._0,
-                                      cutOffTime: cutOffTime._0,
-                                      memo: memo._0,
-                                      showEach: showEach._0,
-                                      isFreeShipping: isFreeShipping._0,
-                                      shippingUnitQuantity: shippingUnitQuantity._0
+                                      path: ".adhoc-stock-is-limited" + e$2.path,
+                                      message: e$2.message,
+                                      value: e$2.value
                                     }
                                   };
                           }
-                          var e = shippingUnitQuantity._0;
+                          var e$3 = shippingUnitQuantity._0;
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: "." + ("shipping-unit-quantity" + e.path),
-                                    message: e.message,
-                                    value: e.value
+                                    path: ".shipping-unit-quantity" + e$3.path,
+                                    message: e$3.message,
+                                    value: e$3.value
                                   }
                                 };
                         }
-                        var e$1 = isFreeShipping._0;
+                        var e$4 = isFreeShipping._0;
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: "." + ("is-free-shipping" + e$1.path),
-                                  message: e$1.message,
-                                  value: e$1.value
+                                  path: ".is-free-shipping" + e$4.path,
+                                  message: e$4.message,
+                                  value: e$4.value
                                 }
                               };
                       }
-                      var e$2 = showEach._0;
+                      var e$5 = showEach._0;
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: "." + ("show-each" + e$2.path),
-                                message: e$2.message,
-                                value: e$2.value
+                                path: ".show-each" + e$5.path,
+                                message: e$5.message,
+                                value: e$5.value
                               }
                             };
                     }
-                    var e$3 = memo._0;
+                    var e$6 = memo._0;
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: "." + ("memo" + e$3.path),
-                              message: e$3.message,
-                              value: e$3.value
+                              path: ".memo" + e$6.path,
+                              message: e$6.message,
+                              value: e$6.value
                             }
                           };
                   }
-                  var e$4 = cutOffTime._0;
+                  var e$7 = cutOffTime._0;
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: "." + ("cut-off-time" + e$4.path),
-                            message: e$4.message,
-                            value: e$4.value
+                            path: ".cut-off-time" + e$7.path,
+                            message: e$7.message,
+                            value: e$7.value
                           }
                         };
                 }
-                var e$5 = cost._0;
+                var e$8 = cost._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: ".cost" + e$5.path,
-                          message: e$5.message,
-                          value: e$5.value
+                          path: ".cost" + e$8.path,
+                          message: e$8.message,
+                          value: e$8.value
                         }
                       };
               }
-              var e$6 = operationStatus._0;
+              var e$9 = operationStatus._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: "." + ("operation-status" + e$6.path),
-                        message: e$6.message,
-                        value: e$6.value
+                        path: ".operation-status" + e$9.path,
+                        message: e$9.message,
+                        value: e$9.value
                       }
                     };
             }
-            var e$7 = amountUnit._0;
+            var e$10 = amountUnit._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: "." + ("amount-unit" + e$7.path),
-                      message: e$7.message,
-                      value: e$7.value
+                      path: ".amount-unit" + e$10.path,
+                      message: e$10.message,
+                      value: e$10.value
                     }
                   };
           }
-          var e$8 = each._0;
+          var e$11 = each._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: ".each" + e$8.path,
-                    message: e$8.message,
-                    value: e$8.value
+                    path: ".each" + e$11.path,
+                    message: e$11.message,
+                    value: e$11.value
                   }
                 };
         }
-        var e$9 = amount._0;
+        var e$12 = amount._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: ".amount" + e$9.path,
-                  message: e$9.message,
-                  value: e$9.value
+                  path: ".amount" + e$12.path,
+                  message: e$12.message,
+                  value: e$12.value
                 }
               };
       }
-      var e$10 = $$package._0;
+      var e$13 = $$package._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: ".package" + e$10.path,
-                message: e$10.message,
-                value: e$10.value
+                path: ".package" + e$13.path,
+                message: e$13.message,
+                value: e$13.value
               }
             };
     }
-    var e$11 = grade._0;
+    var e$14 = grade._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: ".grade" + e$11.path,
-              message: e$11.message,
-              value: e$11.value
+              path: ".grade" + e$14.path,
+              message: e$14.message,
+              value: e$14.value
             }
           };
   }
-  var e$12 = name._0;
+  var e$15 = name._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: ".name" + e$12.path,
-            message: e$12.message,
-            value: e$12.value
+            path: ".name" + e$15.path,
+            message: e$15.message,
+            value: e$15.value
           }
         };
 }
@@ -401,7 +453,10 @@ function makeNames(prefix) {
           memo: "" + prefix + ".memo",
           each: "" + prefix + ".each",
           showEach: "" + prefix + ".show-each",
-          shippingUnitQuantity: "" + prefix + ".shipping-unit-quantity"
+          shippingUnitQuantity: "" + prefix + ".shipping-unit-quantity",
+          adhocStockIsLimited: "" + prefix + ".adhoc-stock-is-limited",
+          adhocStockNumLimit: "" + prefix + ".adhoc-stock-num-limit",
+          adhocStockIsNumRemainingVisible: "" + prefix + ".adhoc-stock-is-num-remaining-visible"
         };
 }
 
@@ -466,6 +521,18 @@ var defaultValue = Js_dict.fromArray([
       [
         "shipping-unit-quantity",
         "1"
+      ],
+      [
+        "adhoc-stock-is-limited",
+        false
+      ],
+      [
+        "adhoc-stock-num-limit",
+        null
+      ],
+      [
+        "adhoc-stock-is-num-remaining-visible",
+        false
       ]
     ]);
 
@@ -488,7 +555,10 @@ var Form_names = {
   memo: "memo",
   each: "each",
   showEach: "show-each",
-  shippingUnitQuantity: "shipping-unit-quantity"
+  shippingUnitQuantity: "shipping-unit-quantity",
+  adhocStockIsLimited: "adhoc-stock-is-limited",
+  adhocStockNumLimit: "adhoc-stock-num-limit",
+  adhocStockIsNumRemainingVisible: "adhoc-stock-is-num-remaining-visible"
 };
 
 var Form = {
@@ -670,6 +740,7 @@ function Add_ProductOption_Admin$GradeInput(Props) {
                   ref: match$1.ref,
                   className: "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg",
                   id: name,
+                  maxLength: 20,
                   name: name,
                   placeholder: "등급 또는 용도 입력(선택사항)",
                   onBlur: match$1.onBlur,
@@ -697,6 +768,7 @@ function Add_ProductOption_Admin$PackageInput(Props) {
                   ref: match$1.ref,
                   className: "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg",
                   id: name,
+                  maxLength: 20,
                   name: name,
                   placeholder: "포장재질(선택사항)",
                   onBlur: match$1.onBlur,
@@ -1268,6 +1340,205 @@ var ShippingUnitQuantityInput = {
   make: Add_ProductOption_Admin$ShippingUnitQuantityInput
 };
 
+function Add_ProductOption_Admin$AdhocStockIsLimitedCheckbox(Props) {
+  var inputName = Props.inputName;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var match$1 = match.register(inputName, undefined);
+  var name = match$1.name;
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 h-[125px] mr-10"
+            }, React.createElement("div", {
+                  className: "block"
+                }, React.createElement("span", {
+                      className: "font-bold"
+                    }, "공급 수량 설정")), React.createElement("div", {
+                  className: "flex gap-2 items-center"
+                }, React.createElement(Checkbox.Uncontrolled.make, {
+                      id: name,
+                      name: name,
+                      defaultChecked: false,
+                      onBlur: match$1.onBlur,
+                      onChange: match$1.onChange,
+                      inputRef: match$1.ref
+                    }), React.createElement("label", {
+                      className: "cursor-pointer",
+                      htmlFor: name
+                    }, "공급 수량 설정하기")));
+}
+
+var AdhocStockIsLimitedCheckbox = {
+  make: Add_ProductOption_Admin$AdhocStockIsLimitedCheckbox
+};
+
+function Add_ProductOption_Admin$AdhocStockNumLimit(Props) {
+  var inputName = Props.inputName;
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var quotableCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName
+      });
+  var isDisabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
+  var match$1 = match.register(inputName, {
+        required: !isDisabled,
+        valueAsNumber: !isDisabled
+      });
+  var name = match$1.name;
+  if (isDisabled) {
+    match.setValue(inputName, null);
+  }
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "공급 수량"), React.createElement("span", {
+                      className: isDisabled ? "text-gray-400" : "text-red-500"
+                    }, "*")), React.createElement("input", {
+                  ref: match$1.ref,
+                  defaultValue: "0",
+                  className: "mt-2 w-full h-9 px-3 py-2 border border-gray-300 rounded-lg",
+                  id: name,
+                  disabled: isDisabled,
+                  name: name,
+                  placeholder: "공급 수량 입력",
+                  readOnly: isDisabled,
+                  type: "number",
+                  onBlur: match$1.onBlur,
+                  onChange: match$1.onChange
+                }), React.createElement(ErrorMessage.ErrorMessage, {
+                  name: name,
+                  errors: match.formState.errors,
+                  render: (function (param) {
+                      return React.createElement("span", {
+                                  className: "flex"
+                                }, React.createElement(IconError.make, {
+                                      width: "20",
+                                      height: "20"
+                                    }), React.createElement("span", {
+                                      className: "text-sm text-notice ml-1"
+                                    }, "올바른 공급수량을 입력해주세요."));
+                    })
+                }));
+}
+
+var AdhocStockNumLimit = {
+  make: Add_ProductOption_Admin$AdhocStockNumLimit
+};
+
+function Add_ProductOption_Admin$AdhocStockNumSold(Props) {
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var quotableCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName
+      });
+  var isDisabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "whitespace-nowrap block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "판매된 수량"), React.createElement("span", {
+                      className: isDisabled ? "text-gray-400" : "text-gray-600"
+                    }, " *자동계산")), React.createElement("div", {
+                  className: "mt-2 h-9 w-full px-3 py-2 border border-gray-300 rounded-lg"
+                }, "-"));
+}
+
+var AdhocStockNumSold = {
+  make: Add_ProductOption_Admin$AdhocStockNumSold
+};
+
+function Add_ProductOption_Admin$AdhocStockNumRemaining(Props) {
+  var adhocStockNumLimitName = Props.adhocStockNumLimitName;
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var quotableCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName
+      });
+  var isDisabled = quotableCheckboxValue !== undefined && quotableCheckboxValue ? false : true;
+  var adhocStockNumLimitValue = ReactHookForm$1.useWatch({
+        name: adhocStockNumLimitName
+      });
+  var remaining = Belt_Option.flatMap(adhocStockNumLimitValue, Belt_Int.fromString);
+  var isShowWarningMessage = Belt_Option.mapWithDefault(remaining, false, (function (x) {
+          return 0 > x;
+        }));
+  return React.createElement("div", {
+              className: "flex flex-col w-[158px] min-w-[158px]"
+            }, React.createElement("label", {
+                  className: "whitespace-nowrap block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "판매 가능 수량"), React.createElement("span", {
+                      className: isDisabled ? "text-gray-400" : "text-gray-600"
+                    }, " *자동계산")), React.createElement("div", {
+                  className: "mt-2 h-9 w-full px-3 py-2 border border-gray-300 rounded-lg"
+                }, Belt_Option.mapWithDefault(remaining, "-", (function (x) {
+                        return String(x);
+                      }))), isShowWarningMessage ? React.createElement("span", {
+                    className: "flex"
+                  }, React.createElement(IconError.make, {
+                        width: "20",
+                        height: "20"
+                      }), React.createElement("span", {
+                        className: "text-sm text-notice ml-1"
+                      }, "주문 취소가 필요합니다")) : null);
+}
+
+var AdhocStockNumRemaining = {
+  make: Add_ProductOption_Admin$AdhocStockNumRemaining
+};
+
+function Add_ProductOption_Admin$AdhocStockIsNumRemainingVisibleCheckbox(Props) {
+  var inputName = Props.inputName;
+  var adhocStockIsLimitedCheckboxName = Props.adhocStockIsLimitedCheckboxName;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var setValue = match.setValue;
+  var adhocStockIsLimitedCheckboxValue = ReactHookForm$1.useWatch({
+        name: adhocStockIsLimitedCheckboxName
+      });
+  var isDisabled = adhocStockIsLimitedCheckboxValue !== undefined && adhocStockIsLimitedCheckboxValue ? false : true;
+  var match$1 = match.register(inputName, undefined);
+  var name = match$1.name;
+  React.useEffect((function () {
+          if (isDisabled) {
+            setValue(inputName, false);
+          }
+          
+        }), [isDisabled]);
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 h-16"
+            }, React.createElement("div", {
+                  className: "block"
+                }, React.createElement("span", {
+                      className: isDisabled ? "font-bold text-gray-400" : "font-bold"
+                    }, "판매 가능 수량 노출 설정")), React.createElement("div", {
+                  className: "flex gap-2 items-center"
+                }, React.createElement(Checkbox.Uncontrolled.make, {
+                      id: name,
+                      name: name,
+                      defaultChecked: false,
+                      onBlur: match$1.onBlur,
+                      onChange: match$1.onChange,
+                      disabled: isDisabled,
+                      readOnly: isDisabled,
+                      inputRef: match$1.ref
+                    }), React.createElement("label", {
+                      className: isDisabled ? "text-gray-400" : "cursor-pointer",
+                      htmlFor: name
+                    }, "판매 가능 수량 노출하기")));
+}
+
+var AdhocStockIsNumRemainingVisibleCheckbox = {
+  make: Add_ProductOption_Admin$AdhocStockIsNumRemainingVisibleCheckbox
+};
+
 function Add_ProductOption_Admin$CutOffTimeInput(Props) {
   var inputName = Props.inputName;
   var match = ReactHookForm$1.useFormContext({
@@ -1491,6 +1762,23 @@ function Add_ProductOption_Admin(Props) {
                                         inputName: inputNames.shippingUnitQuantity
                                       }))), React.createElement("div", {
                                 className: "flex flex-col gap-6 py-6 w-full"
+                              }, React.createElement("div", {
+                                    className: "flex gap-4 items-center justify-start"
+                                  }, React.createElement(Add_ProductOption_Admin$AdhocStockIsLimitedCheckbox, {
+                                        inputName: inputNames.adhocStockIsLimited
+                                      }), React.createElement(Add_ProductOption_Admin$AdhocStockNumLimit, {
+                                        inputName: inputNames.adhocStockNumLimit,
+                                        adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited
+                                      }), React.createElement(Add_ProductOption_Admin$AdhocStockNumSold, {
+                                        adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited
+                                      }), React.createElement(Add_ProductOption_Admin$AdhocStockNumRemaining, {
+                                        adhocStockNumLimitName: inputNames.adhocStockNumLimit,
+                                        adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited
+                                      }), React.createElement(Add_ProductOption_Admin$AdhocStockIsNumRemainingVisibleCheckbox, {
+                                        inputName: inputNames.adhocStockIsNumRemainingVisible,
+                                        adhocStockIsLimitedCheckboxName: inputNames.adhocStockIsLimited
+                                      }))), React.createElement("div", {
+                                className: "flex flex-col gap-6 py-6 w-full"
                               }, React.createElement(Add_ProductOption_Admin$CutOffTimeInput, {
                                     inputName: inputNames.cutOffTime
                                   }), React.createElement(Add_ProductOption_Admin$MemoInput, {
@@ -1551,6 +1839,11 @@ export {
   TotalRawCost ,
   CostTypeSelect ,
   ShippingUnitQuantityInput ,
+  AdhocStockIsLimitedCheckbox ,
+  AdhocStockNumLimit ,
+  AdhocStockNumSold ,
+  AdhocStockNumRemaining ,
+  AdhocStockIsNumRemainingVisibleCheckbox ,
   CutOffTimeInput ,
   MemoInput ,
   make ,

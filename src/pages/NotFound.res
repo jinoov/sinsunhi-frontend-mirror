@@ -18,20 +18,12 @@ let getFirstPath = pathname => {
 
 module Buyer = {
   @react.component
-  let make = () => {
-    let {gnbBanners} = GnbBannerList_Buyer.Query.use(
-      ~variables=(),
-      ~fetchPolicy=RescriptRelay.StoreOrNetwork,
-      (),
-    )
-
-    let {displayCategories} = ShopCategorySelect_Buyer.Query.use(
-      ~variables={parentId: None, types: Some([#NORMAL]), onlyDisplayable: Some(true)},
-      (),
-    )
-
+  let make = (~deviceType) => {
     <div className=%twc("w-screen h-screen flex flex-col items-center justify-start")>
-      <Header_Buyer.PC gnbBanners displayCategories />
+      {switch deviceType {
+      | DeviceDetect.PC => <Header_Buyer.PC />
+      | _ => <Header_Buyer.Mobile.BackAndCart title="" />
+      }}
       <div className=%twc("flex flex-col h-full items-center justify-center")>
         <IconNotFound width="160" height="160" />
         <h1 className=%twc("mt-7 text-3xl text-gray-800")>
@@ -44,15 +36,20 @@ module Buyer = {
           {`입력하신 주소가 정확한지 다시 한 번 확인해주세요.`->React.string}
         </span>
       </div>
+      <Bottom_Navbar deviceType />
     </div>
   }
 }
 
 module Default = {
   @react.component
-  let make = () => {
-    <div className=%twc("w-screen h-screen flex items-center justify-center")>
-      <div className=%twc("flex flex-col items-center justify-center")>
+  let make = (~deviceType) => {
+    <div className=%twc("w-screen h-screen flex flex-col items-center")>
+      {switch deviceType {
+      | DeviceDetect.PC => <Header_Buyer.PC />
+      | _ => <Header_Buyer.Mobile.BackAndCart title="" />
+      }}
+      <div className=%twc("flex h-full flex-col items-center justify-center")>
         <IconNotFound width="160" height="160" />
         <h1 className=%twc("mt-7 text-3xl text-gray-800")>
           {`페이지를 찾을 수 없습니다.`->React.string}
@@ -64,19 +61,20 @@ module Default = {
           {`입력하신 주소가 정확한지 다시 한 번 확인해주세요.`->React.string}
         </span>
       </div>
+      <Bottom_Navbar deviceType />
     </div>
   }
 }
 
 module Container = {
   @react.component
-  let make = () => {
+  let make = (~deviceType) => {
     let router = Next.Router.useRouter()
     let service = router.asPath->getFirstPath->Option.flatMap(parsePath)
 
     switch service {
-    | Some(Buyer) => <Buyer />
-    | Some(Seller) | Some(Admin) | None => <Default />
+    | Some(Buyer) => <Buyer deviceType />
+    | Some(Seller) | Some(Admin) | None => <Default deviceType />
     }
   }
 }
@@ -92,15 +90,19 @@ let make = () => {
 
   let (isCsr, setIsCsr) = React.Uncurried.useState(_ => false)
 
+  let deviceType = DeviceDetect.detectDevice()
+
   React.useEffect0(() => {
     setIsCsr(._ => true)
     None
   })
 
   <>
-    <Next.Head> <title> {`신선하이`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {`신선하이 | 페이지를 찾을 수 없습니다.`->React.string} </title>
+    </Next.Head>
     {switch isCsr {
-    | true => <Container />
+    | true => <Container deviceType />
     | false => React.null
     }}
   </>

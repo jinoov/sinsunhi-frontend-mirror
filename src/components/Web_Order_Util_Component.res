@@ -8,6 +8,7 @@ module Tooltip = {
             onClick={e => e->ReactEvent.Synthetic.preventDefault}
             src="/icons/icon_common_tooltip_q_line_20.png"
             className={cx([%twc("w-5 h-5"), className])}
+            alt=""
           />
         </RadixUI.Tooltip.Trigger>
         <RadixUI.Tooltip.Content side=#top sideOffset=10 avoidCollisions=false>
@@ -50,6 +51,7 @@ module Tooltip = {
             }}
             src="/icons/icon_common_tooltip_q_line_20.png"
             className={cx([%twc("w-5 h-5"), className])}
+            alt=""
           />
         </RadixUI.Tooltip.Trigger>
         <RadixUI.Tooltip.Content side=#top sideOffset=10 avoidCollisions=false>

@@ -60,7 +60,7 @@ let make = (~isShowCancelConfirm, ~setShowCancelConfirm, ~selectedOrders, ~confi
   let (reason, setReason) = React.Uncurried.useState(_ => None)
   let (reasonDetail, setReasonDetail) = React.Uncurried.useState(_ => None)
 
-  let (mutate, _) = Mutation.use()
+  let (mutate, isMutating) = Mutation.use()
 
   let reset = () => {
     setShowCancelConfirm(._ => Dialog.Hide)
@@ -90,9 +90,8 @@ let make = (~isShowCancelConfirm, ~setShowCancelConfirm, ~selectedOrders, ~confi
   }
 
   let onConfirm = () => {
-    switch reason {
-    | None => handleError("주문취소사유를 선택해주세요.")
-    | Some(_) =>
+    switch (reason, isMutating) {
+    | (Some(_), false) =>
       mutate(
         ~variables={
           input: {
@@ -112,6 +111,8 @@ let make = (~isShowCancelConfirm, ~setShowCancelConfirm, ~selectedOrders, ~confi
         ~onError={err => handleError(err.message)},
         (),
       )->ignore
+    | (None, _) => handleError("주문취소사유를 선택해주세요.")
+    | (_, true) => handleError("요청 중입니다.")
     }
   }
 

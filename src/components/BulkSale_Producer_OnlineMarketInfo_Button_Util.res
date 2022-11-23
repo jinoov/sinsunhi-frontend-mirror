@@ -1,4 +1,7 @@
-let decodeMarket: string => result<RelaySchemaAssets_graphql.enum_OnlineMarket, unit> = rm =>
+let decodeMarket: string => result<
+  BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Types.enum_OnlineMarket,
+  unit,
+> = rm =>
   if rm == `naver` {
     Ok(#NAVER)
   } else if rm == `coupang` {
@@ -24,7 +27,9 @@ let decodeMarket: string => result<RelaySchemaAssets_graphql.enum_OnlineMarket, 
   } else {
     Error()
   }
-let stringifyMarket = (rm: RelaySchemaAssets_graphql.enum_OnlineMarket) =>
+let stringifyMarket = (
+  rm: BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Types.enum_OnlineMarket,
+) =>
   switch rm {
   | #NAVER => `naver`
   | #COUPANG => `coupang`
@@ -39,7 +44,9 @@ let stringifyMarket = (rm: RelaySchemaAssets_graphql.enum_OnlineMarket) =>
   | #OTHER
   | _ => `etc`
   }
-let displayMarket = (rm: RelaySchemaAssets_graphql.enum_OnlineMarket) =>
+let displayMarket = (
+  rm: BulkSaleProducerOnlineMarketInfoAdminFragment_graphql.Types.enum_OnlineMarket,
+) =>
   switch rm {
   | #NAVER => `네이버`
   | #COUPANG => `쿠팡`

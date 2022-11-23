@@ -73,8 +73,7 @@ module PC = {
     )
 
     let cmpNum = 5 - items->Array.length
-
-    switch items->Garter.Array.isEmpty {
+    let oldUI = switch items->Garter.Array.isEmpty {
     | true => React.null
     | false =>
       <div className=%twc("w-full mt-4 bg-white h-full")>
@@ -109,6 +108,47 @@ module PC = {
         />
       </div>
     }
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback={oldUI}>
+      {switch items->Garter.Array.isEmpty {
+      | true => React.null
+      | false =>
+        <div
+          className=%twc(
+            "w-full bg-white h-full rounded-sm shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)]"
+          )>
+          <div className=%twc("py-10 px-[50px]")>
+            <div className=%twc("mb-10")>
+              <span className=%twc("font-bold text-2xl")>
+                {`프로필 완성하기`->React.string}
+              </span>
+              <span className=%twc("ml-1 text-sm text-primary")>
+                {`${cmpNum->Int.toString}/5`->React.string}
+              </span>
+            </div>
+            <div className=%twc("mb-4 grid grid-cols-2 gap-2")>
+              {items
+              ->Array.map(i => {
+                <div key={UniqueId.make(~prefix="profile", ())}> {i} </div>
+              })
+              ->React.array}
+            </div>
+          </div>
+          <Update_SectorAndSale_Buyer
+            isOpen={openModal == Some(SectorAndSale)} onClose={_ => setOpenModal(._ => None)}
+          />
+          <Update_InterestedCategories_Buyer
+            isOpen={openModal == Some(Categories)} onClose={_ => setOpenModal(._ => None)}
+          />
+          <Update_BusinessNumber_Buyer
+            isOpen={openModal == Some(BizNumber)} onClose={_ => setOpenModal(._ => None)}
+          />
+          <Update_Manager_Buyer
+            isOpen={openModal == Some(Manager)} onClose={_ => setOpenModal(._ => None)}
+          />
+        </div>
+      }}
+    </FeatureFlagWrapper>
   }
 }
 

@@ -9,12 +9,14 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import * as CartLinkIcon from "../../../components/common/CartLinkIcon.mjs";
-import * as HomeLinkIcon from "../../../components/HomeLinkIcon.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
 import * as PLPHeaderBuyerQuery_graphql from "../../../__generated__/PLPHeaderBuyerQuery_graphql.mjs";
+import ArrowLeftLineSvg from "../../../../public/assets/arrow-left-line.svg";
+
+var arrowLeftLineIcon = ArrowLeftLineSvg;
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
   var data = ReactRelay.useLazyLoadQuery(PLPHeaderBuyerQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(PLPHeaderBuyerQuery_graphql.Internal.convertVariables(variables)), {
@@ -103,7 +105,7 @@ function PLP_Header_Buyer$DisplayCategoryName(Props) {
   var title;
   if (node !== undefined) {
     var match$1 = node.children;
-    title = match$1.length !== 0 ? node.name : Belt_Option.mapWithDefault(node.parent, "", (function (parent) {
+    title = match$1.length !== 0 ? node.name : Belt_Option.mapWithDefault(node.parent, node.name, (function (parent) {
               return parent.name;
             }));
   } else {
@@ -137,16 +139,16 @@ function PLP_Header_Buyer(Props) {
                 }, React.createElement("header", {
                       className: "w-full max-w-3xl mx-auto h-14 bg-white"
                     }, React.createElement("div", {
-                          className: "px-5 py-4 flex w-full items-center"
+                          className: "px-5 py-4 flex w-full items-center justify-between"
                         }, React.createElement("div", {
-                              className: "w-1/3 flex justify-start"
+                              className: "flex-1 flex justify-start"
                             }, React.createElement("button", {
                                   onClick: (function (param) {
                                       router.back();
                                     })
                                 }, React.createElement("img", {
-                                      className: "w-6 h-6 rotate-180",
-                                      src: "/assets/arrow-right.svg"
+                                      className: "w-6 h-6",
+                                      src: arrowLeftLineIcon
                                     }))), match[0] ? (
                             displayCategoryId !== undefined ? React.createElement(RescriptReactErrorBoundary.make, {
                                     children: null,
@@ -154,21 +156,21 @@ function PLP_Header_Buyer(Props) {
                                         return React.createElement("span", undefined);
                                       })
                                   }, React.createElement("div", {
-                                        className: "w-1/3 flex justify-center"
+                                        className: "flex-1 flex justify-center min-w-fit"
                                       }, React.createElement(React.Suspense, {
                                             children: React.createElement(PLP_Header_Buyer$DisplayCategoryName, {
                                                   displayCategoryId: displayCategoryId
                                                 }),
                                             fallback: React.createElement("span", undefined)
                                           })), React.createElement("div", {
-                                        className: "w-1/3 flex justify-end gap-2"
-                                      }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {}))) : React.createElement(React.Fragment, undefined, React.createElement("div", {
-                                        className: "w-1/3 flex justify-center"
+                                        className: "flex-1 flex justify-end gap-2"
+                                      }, React.createElement(CartLinkIcon.make, {}))) : React.createElement(React.Fragment, undefined, React.createElement("div", {
+                                        className: "flex-1 flex justify-center"
                                       }, React.createElement("span", {
                                             className: "font-bold text-xl"
                                           }, "전체 상품")), React.createElement("div", {
-                                        className: "w-1/3 flex justify-end gap-2"
-                                      }, React.createElement(CartLinkIcon.make, {}), React.createElement(HomeLinkIcon.make, {})))
+                                        className: "flex-1 flex justify-end gap-2"
+                                      }, React.createElement(CartLinkIcon.make, {})))
                           ) : React.createElement("span", undefined)))), React.createElement("div", {
                   className: "w-full h-14"
                 }));
@@ -177,7 +179,8 @@ function PLP_Header_Buyer(Props) {
 var make = PLP_Header_Buyer;
 
 export {
+  arrowLeftLineIcon ,
   DisplayCategoryName ,
   make ,
 }
-/* react Not a pure module */
+/* arrowLeftLineIcon Not a pure module */

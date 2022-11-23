@@ -130,6 +130,13 @@ module SelectedItems = {
   }
 
   let makeOrderBranchGtm = (selectedItems, ~orderType) => {
+    let eventName = {
+      switch orderType {
+      | OrderMethod.Excel => "click_upload_order_btn"
+      | OrderMethod.Wos => "click_purchase_now_btn"
+      }
+    }
+
     let makeItems = nonEmptyItems => {
       nonEmptyItems->Array.map(({
         productId,
@@ -161,7 +168,7 @@ module SelectedItems = {
     ->filterEmptyArr
     ->Option.map(nonEmptyItems =>
       {
-        "event": "click_purchase", // 이벤트 타입: 상품 구매 클릭 시
+        "event": eventName, // 이벤트 타입: 상품 구매 클릭 시
         "ecommerce": {"items": nonEmptyItems->makeItems},
       }
     )
@@ -244,10 +251,12 @@ module Tab = {
 module CartBtn = {
   module CartMutation = %relay(`
   mutation PDPNormalOrderSpecificationBuyerCartMutation(
-    $items: [RequestAddCartItem!]!
+    $items: [RequestCreateCartItem!]!
   ) {
-    addCartItemList(input: $items) {
-      result
+    createCartItems(input: $items) {
+      ... on CreateCartItemsSuccess {
+        result
+      }
     }
   }
 `)
@@ -255,14 +264,34 @@ module CartBtn = {
   module CartQuery = %relay(`
     query PDPNormalOrderSpecificationBuyerCartQuery {
       cartItemCount
+      cartItems {
+        number
+        quantity
+        product {
+          number
+        }
+        productSnapshot {
+          displayName
+          status
+        }
+        productOption {
+          number
+        }
+        productOptionSnapshot {
+          price
+          optionName
+          status
+        }
+        quantity
+      }
     }
   `)
 
-  let makeMutationItem: SelectedItems.item => PDPNormalOrderSpecificationBuyerCartMutation_graphql.Types.requestAddCartItem = ({
+  let makeMutationItem: SelectedItems.item => PDPNormalOrderSpecificationBuyerCartMutation_graphql.Types.requestCreateCartItem = ({
     optionId,
     quantity,
   }) => {
-    optionId,
+    productOptionId: optionId,
     quantity,
   }
 
@@ -276,7 +305,6 @@ module CartBtn = {
     let product = query->Fragment.use
     let selectedItems = product->SelectedItems.make(~selectedOptions)
     let (addCartItems, isAddingCartItems) = CartMutation.use()
-    let (_, refreshCount, _) = CartQuery.useLoader()
 
     let showToast = (message, toastType) => {
       addToast(.
@@ -293,7 +321,60 @@ module CartBtn = {
       )
     }
 
-    let onClick = _ => {
+    let environment = RescriptRelay.useEnvironmentFromContext()
+
+    let fetchCartItems = environment => {
+      CartQuery.fetchPromised(
+        ~variables=(),
+        ~environment,
+        ~fetchPolicy=RescriptRelay.NetworkOnly,
+        (),
+      ) |> Js.Promise.then_((
+        {cartItems}: PDPNormalOrderSpecificationBuyerCartQuery_graphql.Types.response,
+      ) => {
+        // Airbridge 이벤트 전송
+        // cartItemCount도 쿼리해서 릴레이 스토어에 업데이트 됩니다.
+        let totalPrice =
+          cartItems->Array.reduce(0, (totalPrice, {productOptionSnapshot: {price}}) =>
+            totalPrice + price
+          )
+        
+        let unfold = (
+          {
+            number,
+            quantity,
+            product,
+            productSnapshot,
+            productOption,
+            productOptionSnapshot,
+          }: PDPNormalOrderSpecificationBuyerCartQuery_graphql.Types.response_cartItems,
+        ) =>
+          {
+            "cartId": number,
+            "optionId": productOption.number,
+            "optionName": productOptionSnapshot.optionName,
+            "optionStatus": productOptionSnapshot.status,
+            "price": productOptionSnapshot.price,
+            "productId": product.number,
+            "productName": productSnapshot.displayName,
+            "productStatus": productSnapshot.status,
+            "quantity": quantity,
+          }
+        let airbridgePayload = {
+          "products": cartItems -> Array.map(unfold),
+          "currency": "KRW",
+          "total": totalPrice,
+        }
+        Global.Window.ReactNativeWebView.PostMessage.airbridgeWithPayload(
+          ~kind=#ADD_TO_CART,
+          ~payload=airbridgePayload,
+          (),
+        )
+        Js.Promise.resolve()
+      })
+    }
+
+    let onClick = (environment, _) => {
       // add_to_cart gtm 발송
       selectedItems
       ->SelectedItems.makeAddToCartGtm
@@ -312,16 +393,16 @@ module CartBtn = {
           addCartItems(
             ~variables,
             ~onCompleted={
-              ({addCartItemList}, _) => {
-                switch addCartItemList.result {
-                | true => {
-                    refreshCount(~variables=(), ~fetchPolicy=RescriptRelay.StoreAndNetwork, ())
+              ({createCartItems}, _) => {
+                switch createCartItems {
+                | #CreateCartItemsSuccess(_) => {
+                    fetchCartItems(environment)->ignore
                     closeFn()
                     setSelectedOptions(._ => Map.String.fromArray([]))
                     showToast(`장바구니에 상품이 담겼습니다.`, Success)
                   }
 
-                | false => showToast(`요청에 실패하였습니다.`, Failure)
+                | _ => showToast(`요청에 실패하였습니다.`, Failure)
                 }
               }
             },
@@ -334,7 +415,7 @@ module CartBtn = {
 
     <button
       disabled=isAddingCartItems
-      onClick
+      onClick={onClick(environment)}
       className=%twc(
         "h-16 rounded-xl bg-white border border-primary text-primary text-base font-bold flex flex-1 items-center justify-center"
       )>
@@ -387,9 +468,7 @@ module WosBtn = {
           <IconError height="24" width="24" className=%twc("mr-2") />
           {message->Option.getWithDefault(`요청에 실패하였습니다.`)->React.string}
         </div>,
-        {
-          appearance: "success",
-        },
+        {appearance: "success"},
       )
     }
 

@@ -13,13 +13,17 @@ module PlaceHolder = {
             "text-sm flex flex-col gap-5 py-7 border border-x-0 border-t-0 border-div-border-L2 w-[440px]"
           )>
           <div className=%twc("flex justify-between items-center")>
-            <Box className=%twc("w-16") /> <Box className=%twc("w-8") />
+            <Box className=%twc("w-16") />
+            <Box className=%twc("w-8") />
           </div>
           <div className=%twc("flex justify-between items-center")>
-            <Box className=%twc("w-16") /> <Box className=%twc("w-8") />
+            <Box className=%twc("w-16") />
+            <Box className=%twc("w-8") />
           </div>
           <div className=%twc("flex justify-between items-center")>
-            <div className=%twc("flex flex-col")> <Box className=%twc("w-16") /> </div>
+            <div className=%twc("flex flex-col")>
+              <Box className=%twc("w-16") />
+            </div>
             <Box className=%twc("w-8") />
           </div>
         </div>
@@ -33,7 +37,8 @@ module PlaceHolder = {
         <div className=%twc("text-sm flex flex-col gap-5 py-7 border-0 border-div-border-L2")>
           <div className=%twc("flex justify-between items-center")>
             <div className=%twc("flex flex-col")>
-              <Box className=%twc("w-16") /> <Box className=%twc("block w-16") />
+              <Box className=%twc("w-16") />
+              <Box className=%twc("block w-16") />
             </div>
             <Box className=%twc("w-8") />
           </div>
@@ -146,6 +151,7 @@ module MO = {
         let totalNum = checked->Array.length
         (totalOrderPrice, totalNum)
       }
+
     | _ => (0, 0)
     }
 

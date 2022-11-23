@@ -2,13 +2,14 @@
 
 ## 준비물
 
-- Node.js v14.x 이상
+- Node.js v16.14.0 이상
 - yarn
 
 ## 의존성 설치
 
 ```sh
 yarn install
+yarn res link
 ```
 
 ## 그래프큐엘 API 인트로스펙트
@@ -19,7 +20,7 @@ yarn install
 yarn api-introspect
 ```
 
-> 인트로스펙트 할 API를 변경해야할 경우, `codegen.yml` 에서 `.evn.local`의 엔드포인트를 참조하기 때문에 `.evn.local`의 NEXT_PUBLIC_API_URL API 엔드포인트를 수정하면 됩니다. 그리고 위의 스크립트를 다시 실행해줍니다.
+> 인트로스펙트 할 API를 변경해야할 경우, `codegen.yml` 에서 `.env.local`의 엔드포인트를 참조하기 때문에 `.env.local`의 NEXT_PUBLIC_API_URL API 엔드포인트를 수정하면 됩니다. 그리고 위의 스크립트를 다시 실행해줍니다.
 
 ## 빌드
 

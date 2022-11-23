@@ -107,7 +107,8 @@ let make = () => {
     <RadixUI.Dialog.Content
       className=%twc(
         "dialog-content-fix p-5 overflow-y-auto text-sm text-text-L1 rounded-2xl min-w-max"
-      )>
+      )
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <TitleAndCloseButton close />
       <div className=%twc("flex items-center gap-4")>
         <span className=%twc("text-sm font-bold text-text-L1 min-w-fit")>

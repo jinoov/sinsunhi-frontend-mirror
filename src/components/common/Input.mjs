@@ -88,6 +88,7 @@ function Input(Props) {
   var className = Props.className;
   var value = Props.value;
   var onChange = Props.onChange;
+  var onBlur = Props.onBlur;
   var defaultValue = Props.defaultValue;
   var size = Props.size;
   var error = Props.error;
@@ -97,6 +98,8 @@ function Input(Props) {
   var step = Props.step;
   var textAlign = Props.textAlign;
   var ref = Props.inputRef;
+  var readOnly = Props.readOnly;
+  var onKeyDown = Props.onKeyDown;
   var tmp = {
     className: Cx.cx([
           styleByTextAlign(inputStyleBySize(style(error, disabled), size), textAlign),
@@ -126,11 +129,20 @@ function Input(Props) {
   if (placeholder !== undefined) {
     tmp.placeholder = Caml_option.valFromOption(placeholder);
   }
+  if (readOnly !== undefined) {
+    tmp.readOnly = Caml_option.valFromOption(readOnly);
+  }
   if (step !== undefined) {
     tmp.step = Caml_option.valFromOption(step);
   }
   if (value !== undefined) {
     tmp.value = Caml_option.valFromOption(value);
+  }
+  if (onKeyDown !== undefined) {
+    tmp.onKeyDown = Caml_option.valFromOption(onKeyDown);
+  }
+  if (onBlur !== undefined) {
+    tmp.onBlur = Caml_option.valFromOption(onBlur);
   }
   if (onChange !== undefined) {
     tmp.onChange = Caml_option.valFromOption(onChange);

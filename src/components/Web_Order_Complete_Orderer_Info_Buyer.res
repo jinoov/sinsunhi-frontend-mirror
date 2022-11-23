@@ -16,13 +16,16 @@ module Placeholder = {
       }}
       <ul className=%twc("flex flex-col")>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
         <li className=%twc("flex gap-5")>
-          <Box className=%twc("w-18") /> <Box className=%twc("w-32") />
+          <Box className=%twc("w-18") />
+          <Box className=%twc("w-32") />
         </li>
       </ul>
     </section>
@@ -71,7 +74,7 @@ let make = (~deviceType) => {
           </li>
         </ul>
       </section>
-    | _ => <Placeholder deviceType/>
+    | _ => <Placeholder deviceType />
     }
   }
 }

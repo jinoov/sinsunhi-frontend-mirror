@@ -342,7 +342,7 @@ module QuotationContent = {
         <Listitem.Quotation
           label={`총 금액`}
           bold=true
-          text={`${price->Int.toString->numberToComma}원`}
+          text={`${price->Float.toString->numberToComma}원`}
           highlightContent={lowCostPrice->Option.mapWithDefault(React.null, x => <>
             <span> {`기존거래가 보다 `->React.string} </span>
             <span className=%twc("font-bold")>
@@ -461,7 +461,9 @@ module ConfirmButton = {
                 {`${quotation.node.pricePerKg->numberToComma}원/kg`->React.string}
               </span>
               <span className=%twc("block")>
-                {`총 금액:${quotation.node.price->Int.toString->numberToComma}원`->React.string}
+                {`총 금액:${quotation.node.price
+                  ->Float.toString
+                  ->numberToComma}원`->React.string}
               </span>
             </DS_Dialog.Popup.Description>
             <DS_Dialog.Popup.Buttons>

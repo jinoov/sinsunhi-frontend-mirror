@@ -96,6 +96,32 @@ module Item = {
       ],
     }),
     Root({
+      title: `매칭 관리`,
+      anchor: {url: "/admin/matching/purchases", target: #_self},
+      icon: <img src=naviOrderIcon className=%twc("w-5 h-5") />,
+      role: [Admin],
+      children: [
+        Sub({
+          title: `구매 신청 조회`,
+          anchor: {url: "/admin/matching/purchases", target: #_self},
+          slug: None,
+          role: [Admin],
+        }),
+        Sub({
+          title: "매칭 주문관리",
+          anchor: {url: "/admin/rfq/web-order", target: #_self},
+          slug: None,
+          role: [Admin],
+        }),
+        Sub({
+          title: "매칭 결제관리",
+          anchor: {url: "/admin/rfq/transactions", target: #_self},
+          slug: None,
+          role: [Admin],
+        }),
+      ],
+    }),
+    Root({
       title: `정산`,
       anchor: {url: "/admin/cost-management", target: #_self},
       icon: <IconNaviSettlement width="1.25rem" height="1.25rem" fill="#262626" />,

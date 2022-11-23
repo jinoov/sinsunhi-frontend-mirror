@@ -20,7 +20,7 @@ module Orders = {
     let user = CustomHooks.Auth.use()
     let {mutate} = Swr.useSwrConfig()
 
-    let status = CustomHooks.OrdersAdmin.use(
+    let status = CustomHooks.Orders.use(
       router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
     )
 
@@ -42,7 +42,7 @@ module Orders = {
 
     let count = switch status {
     | Loaded(orders) =>
-      switch orders->CustomHooks.OrdersAdmin.orders_decode {
+      switch orders->CustomHooks.Orders.orders_decode {
       | Ok(orders') => orders'.count->Int.toString
       | Error(_) => `-`
       }

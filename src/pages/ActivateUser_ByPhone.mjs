@@ -87,7 +87,7 @@ function ActivateUser_ByPhone$SendPhoneNumber(Props) {
           }));
   };
   var verifyPhoneNumberForm = Curry._7(VerifyPhoneNumberForm.use, initialStateVerifyPhoneNumber, /* Schema */{
-        _0: Belt_Array.concatMany([Curry._4(VerifyPhoneNumberForm.ReSchema.Validation.regExp, "휴대전화 번호를 다시 확인해주세요.", "^\d{3}-\d{3,4}-\d{4}$", undefined, /* PhoneNumber */0)])
+        _0: Belt_Array.concatMany([Curry._4(VerifyPhoneNumberForm.ReSchema.Validation.regExp, "휴대전화 번호를 다시 확인해주세요.", "^\\d{3}-\\d{3,4}-\\d{4}$", undefined, /* PhoneNumber */0)])
       }, onSubmitVerifyPhoneNumber, undefined, undefined, /* OnChange */0, undefined);
   var handleOnSubmit = function (param) {
     return ReactEvents.interceptingHandler((function (param) {
@@ -96,6 +96,7 @@ function ActivateUser_ByPhone$SendPhoneNumber(Props) {
   };
   var handleOnChangePhoneNumber = function (e) {
     var newValue = e.currentTarget.value.replace(/[^0-9]/g, "").replace(/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, "$1-$2-$3").replace("--", "-");
+    console.log(newValue);
     Curry._4(verifyPhoneNumberForm.setFieldValue, /* PhoneNumber */0, newValue, true, undefined);
   };
   var handleOnSubmitPhoneNumber = function (param) {

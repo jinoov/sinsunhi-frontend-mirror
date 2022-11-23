@@ -5,10 +5,10 @@ import Head from "next/head";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Router from "next/router";
+import * as DeviceDetect from "../bindings/DeviceDetect.mjs";
 import * as Header_Buyer from "../components/Header_Buyer.mjs";
 import * as IconNotFound from "../components/svgs/IconNotFound.mjs";
-import * as GnbBannerList_Buyer from "../components/GnbBannerList_Buyer.mjs";
-import * as ShopCategorySelect_Buyer from "../components/ShopCategorySelect_Buyer.mjs";
+import * as Bottom_Navbar from "../components/Bottom_Navbar.mjs";
 
 function parsePath(path) {
   switch (path) {
@@ -28,18 +28,12 @@ function getFirstPath(pathname) {
 }
 
 function NotFound$Buyer(Props) {
-  var match = GnbBannerList_Buyer.Query.use(undefined, /* StoreOrNetwork */1, undefined, undefined, undefined);
-  var match$1 = ShopCategorySelect_Buyer.Query.use({
-        onlyDisplayable: true,
-        parentId: undefined,
-        types: ["NORMAL"]
-      }, undefined, undefined, undefined, undefined);
+  var deviceType = Props.deviceType;
   return React.createElement("div", {
               className: "w-screen h-screen flex flex-col items-center justify-start"
-            }, React.createElement(Header_Buyer.PC.make, {
-                  gnbBanners: match.gnbBanners,
-                  displayCategories: match$1.displayCategories
-                }), React.createElement("div", {
+            }, deviceType !== 1 ? React.createElement(Header_Buyer.Mobile.BackAndCart.make, {
+                    title: ""
+                  }) : React.createElement(Header_Buyer.PC.make, {}), React.createElement("div", {
                   className: "flex flex-col h-full items-center justify-center"
                 }, React.createElement(IconNotFound.make, {
                       width: "160",
@@ -50,7 +44,9 @@ function NotFound$Buyer(Props) {
                       className: "mt-7 text-gray-800"
                     }, "페이지가 존재하지 않거나 사용할 수 없는 페이지입니다."), React.createElement("span", {
                       className: "text-gray-800"
-                    }, "입력하신 주소가 정확한지 다시 한 번 확인해주세요.")));
+                    }, "입력하신 주소가 정확한지 다시 한 번 확인해주세요.")), React.createElement(Bottom_Navbar.make, {
+                  deviceType: deviceType
+                }));
 }
 
 var Buyer = {
@@ -58,10 +54,13 @@ var Buyer = {
 };
 
 function NotFound$Default(Props) {
+  var deviceType = Props.deviceType;
   return React.createElement("div", {
-              className: "w-screen h-screen flex items-center justify-center"
-            }, React.createElement("div", {
-                  className: "flex flex-col items-center justify-center"
+              className: "w-screen h-screen flex flex-col items-center"
+            }, deviceType !== 1 ? React.createElement(Header_Buyer.Mobile.BackAndCart.make, {
+                    title: ""
+                  }) : React.createElement(Header_Buyer.PC.make, {}), React.createElement("div", {
+                  className: "flex h-full flex-col items-center justify-center"
                 }, React.createElement(IconNotFound.make, {
                       width: "160",
                       height: "160"
@@ -71,7 +70,9 @@ function NotFound$Default(Props) {
                       className: "mt-7 text-gray-800"
                     }, "페이지가 존재하지 않거나 사용할 수 없는 페이지입니다."), React.createElement("span", {
                       className: "text-gray-800"
-                    }, "입력하신 주소가 정확한지 다시 한 번 확인해주세요.")));
+                    }, "입력하신 주소가 정확한지 다시 한 번 확인해주세요.")), React.createElement(Bottom_Navbar.make, {
+                  deviceType: deviceType
+                }));
 }
 
 var Default = {
@@ -79,16 +80,23 @@ var Default = {
 };
 
 function NotFound$Container(Props) {
+  var deviceType = Props.deviceType;
   var router = Router.useRouter();
   var service = Belt_Option.flatMap(getFirstPath(router.asPath), parsePath);
   if (service !== undefined) {
     if (service !== 1) {
-      return React.createElement(NotFound$Default, {});
+      return React.createElement(NotFound$Default, {
+                  deviceType: deviceType
+                });
     } else {
-      return React.createElement(NotFound$Buyer, {});
+      return React.createElement(NotFound$Buyer, {
+                  deviceType: deviceType
+                });
     }
   } else {
-    return React.createElement(NotFound$Default, {});
+    return React.createElement(NotFound$Default, {
+                deviceType: deviceType
+              });
   }
 }
 
@@ -101,14 +109,17 @@ function NotFound(Props) {
         return false;
       });
   var setIsCsr = match[1];
+  var deviceType = DeviceDetect.detectDevice(undefined);
   React.useEffect((function () {
           setIsCsr(function (param) {
                 return true;
               });
         }), []);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "신선하이")
-                }), match[0] ? React.createElement(NotFound$Container, {}) : null);
+                  children: React.createElement("title", undefined, "신선하이 | 페이지를 찾을 수 없습니다.")
+                }), match[0] ? React.createElement(NotFound$Container, {
+                    deviceType: deviceType
+                  }) : null);
 }
 
 var make = NotFound;

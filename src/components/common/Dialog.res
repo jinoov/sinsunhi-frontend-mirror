@@ -81,7 +81,8 @@ let make = (
   <RadixUI.Dialog.Root _open>
     <RadixUI.Dialog.Portal>
       <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
-      <RadixUI.Dialog.Content className=boxClassName>
+      <RadixUI.Dialog.Content
+        className=boxClassName onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         <div className=%twc("pt-10 px-7")> {children} </div>
         <ButtonBox
           ?onCancel

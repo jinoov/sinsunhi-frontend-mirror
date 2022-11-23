@@ -3,7 +3,9 @@ type mode = ByPhone | ByEmail | HasNoMethod
 module HasNoMethod = {
   @react.component
   let make = () => <>
-    <Next.Head> <title> {j`휴면계정 해제`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {j`휴면계정 해제`->React.string} </title>
+    </Next.Head>
     <div
       className=%twc(
         "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"

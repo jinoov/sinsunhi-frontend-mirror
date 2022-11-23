@@ -4,6 +4,7 @@ import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Constants from "../../constants/Constants.mjs";
 import * as ErrorPanel from "../../components/common/ErrorPanel.mjs";
 import * as Pagination from "../../components/common/Pagination.mjs";
@@ -14,8 +15,11 @@ import * as Garter_Array from "@greenlabs/garter/src/Garter_Array.mjs";
 import * as Authorization from "../../utils/Authorization.mjs";
 import * as EmptyProducts from "../../components/EmptyProducts.mjs";
 import * as Product_Buyer from "../../components/Product_Buyer.mjs";
+import * as PC_MyInfo_Sidebar from "./pc/me/PC_MyInfo_Sidebar.mjs";
+import * as FeatureFlagWrapper from "./pc/FeatureFlagWrapper.mjs";
 import * as Select_CountPerPage from "../../components/Select_CountPerPage.mjs";
 import * as Search_Product_Buyer from "../../components/Search_Product_Buyer.mjs";
+import * as FormulaComponents from "@greenlabs/formula-components";
 import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
 
 function Products_Buyer$List(Props) {
@@ -66,7 +70,7 @@ function Products_Buyer$List(Props) {
                 }, React.createElement("div", {
                       className: "text-sm lg:min-w-max"
                     }, React.createElement("div", {
-                          className: "hidden lg:grid lg:grid-cols-7-buyer-product bg-gray-100 text-gray-500 h-12"
+                          className: "hidden lg:grid lg:grid-cols-8-buyer-product bg-gray-100 text-gray-500 h-12"
                         }, React.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
                             }, "판매상태"), React.createElement("div", {
@@ -76,6 +80,8 @@ function Products_Buyer$List(Props) {
                             }, "상품명·단품명"), React.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
                             }, "현재 판매가"), React.createElement("div", {
+                              className: "h-full px-4 flex items-center whitespace-nowrap"
+                            }, "구매 가능 수량"), React.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap"
                             }, "출고기준시간"), React.createElement("div", {
                               className: "h-full px-4 flex items-center whitespace-nowrap text-center"
@@ -124,7 +130,7 @@ function data_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("update-count" + e.path),
+              path: ".update-count" + e.path,
               message: e.message,
               value: e.value
             }
@@ -134,7 +140,7 @@ function data_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("total-count" + e$1.path),
+            path: ".total-count" + e$1.path,
             message: e$1.message,
             value: e$1.value
           }
@@ -206,32 +212,68 @@ function Products_Buyer$Products(Props) {
     var products$p = CustomHooks.Products.products_decode(status._0);
     count = products$p.TAG === /* Ok */0 ? String(products$p._0.count) : "-";
   }
-  return React.createElement("div", {
-              className: "sm:px-10 md:px-20"
-            }, React.createElement(Search_Product_Buyer.make, {}), React.createElement("div", {
-                  className: "lg:px-7 mt-4 shadow-gl"
-                }, React.createElement("div", {
-                      className: "md:flex md:justify-between pb-4 text-base"
-                    }, React.createElement("div", {
-                          className: "pt-10 px-5 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
-                        }, React.createElement("h3", {
-                              className: "font-bold"
-                            }, "내역", React.createElement("span", {
-                                  className: "ml-1 text-green-gl font-normal"
-                                }, "" + count + "건")), React.createElement("div", {
-                              className: "flex flex-col lg:flex-row mt-4 lg:mt-0"
-                            }, React.createElement("div", {
-                                  className: "flex items-center"
-                                }, React.createElement(Select_CountPerPage.make, {
-                                      className: "mr-2"
-                                    })), React.createElement("div", {
-                                  className: "flex mt-2 lg:mt-0"
-                                }, React.createElement(Excel_Download_Request_Button.make, {
-                                      userType: /* Buyer */1,
-                                      requestUrl: "/product/request-excel"
-                                    }))))), React.createElement(Products_Buyer$List, {
-                      status: status
-                    })));
+  var oldUI = React.createElement("div", {
+        className: "sm:px-10 md:px-20"
+      }, React.createElement(Search_Product_Buyer.make, {}), React.createElement("div", {
+            className: "lg:px-7 mt-4 shadow-gl"
+          }, React.createElement("div", {
+                className: "md:flex md:justify-between pb-4 text-base"
+              }, React.createElement("div", {
+                    className: "pt-10 px-5 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
+                  }, React.createElement("h3", {
+                        className: "font-bold"
+                      }, "내역", React.createElement("span", {
+                            className: "ml-1 text-green-gl font-normal"
+                          }, "" + count + "건")), React.createElement("div", {
+                        className: "flex flex-col lg:flex-row mt-4 lg:mt-0"
+                      }, React.createElement("div", {
+                            className: "flex items-center"
+                          }, React.createElement(Select_CountPerPage.make, {
+                                className: "mr-2"
+                              })), React.createElement("div", {
+                            className: "flex mt-2 lg:mt-0"
+                          }, React.createElement(Excel_Download_Request_Button.make, {
+                                userType: /* Buyer */1,
+                                requestUrl: "/product/request-excel"
+                              }))))), React.createElement(Products_Buyer$List, {
+                status: status
+              })));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "flex pc-content bg-[#FAFBFC]"
+                  }, React.createElement(PC_MyInfo_Sidebar.make, {}), React.createElement("div", {
+                        className: "lg:mx-16 lg:max-w-[1280px] lg:min-w-[872px] shadow-gl bg-white lg:mt-10 mb-14 rounded-sm h-fit "
+                      }, React.createElement(Search_Product_Buyer.make, {}), React.createElement("div", {
+                            className: "hidden lg:block px-[50px] my-5"
+                          }, React.createElement(FormulaComponents.Divider, {
+                                variant: "small"
+                              })), React.createElement("div", {
+                            className: "lg:px-[50px] mt-4"
+                          }, React.createElement("div", {
+                                className: "md:flex md:justify-between pb-4 text-base"
+                              }, React.createElement("div", {
+                                    className: "pt-10 px-5 lg:pt-0 lg:px-0 flex flex-col lg:flex-row sm:flex-auto sm:justify-between"
+                                  }, React.createElement("h3", {
+                                        className: "font-bold"
+                                      }, "내역", React.createElement("span", {
+                                            className: "ml-1 text-green-gl font-normal"
+                                          }, "" + Belt_Option.getWithDefault(Belt_Option.map(Belt_Int.fromString(count), (function (count$p) {
+                                                      return count$p.toLocaleString("ko-KR");
+                                                    })), "") + "건")), React.createElement("div", {
+                                        className: "flex flex-col lg:flex-row mt-4 lg:mt-0"
+                                      }, React.createElement("div", {
+                                            className: "flex lg:mt-0 mr-2"
+                                          }, React.createElement(Excel_Download_Request_Button.make, {
+                                                userType: /* Buyer */1,
+                                                requestUrl: "/product/request-excel"
+                                              })), React.createElement("div", {
+                                            className: "flex items-center mt-2 lg:mt-0"
+                                          }, React.createElement(Select_CountPerPage.make, {}))))), React.createElement(Products_Buyer$List, {
+                                status: status
+                              })))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var Products = {

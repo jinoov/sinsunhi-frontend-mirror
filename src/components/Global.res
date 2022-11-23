@@ -16,6 +16,9 @@ module Window = {
   @val @scope(("window", "navigator", "serviceWorker"))
   external serviceWorkerRegister: string => Js.Promise.t<Js.Nullable.t<'a>> = "register"
 
+  @val @scope(("window", "navigator", "clipboard"))
+  external writeText: string => Js.Promise.t<Js.Nullable.t<'a>> = "writeText"
+
   module ReactNativeWebView = {
     type t
     @val @scope("window") @return(nullable)
@@ -70,6 +73,14 @@ module Window = {
         | None => ()
         }
     }
+  }
+
+  module Appboy = {
+    type t
+    @val @scope("window") @return(nullable)
+    external tOpt: option<t> = "appboy"
+
+    @send external setLogger: (t, string => unit) => unit = "setLogger"
   }
 }
 

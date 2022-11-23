@@ -233,7 +233,10 @@ function Web_Order_Inputs_Buyer$ReceiverAddressInput(Props) {
                                                       className: "dialog-overlay"
                                                     }), React.createElement(ReactDialog.Content, {
                                                       children: null,
-                                                      className: "dialog-content-plain top-0 bottom-0 left-0 right-0"
+                                                      className: "dialog-content-plain top-0 bottom-0 left-0 right-0",
+                                                      onOpenAutoFocus: (function (prim) {
+                                                          prim.preventDefault();
+                                                        })
                                                     }, React.createElement("section", {
                                                           className: "h-14 w-full xl:h-auto xl:w-auto xl:mt-10"
                                                         }, React.createElement("div", {
@@ -264,7 +267,8 @@ function Web_Order_Inputs_Buyer$ReceiverAddressInput(Props) {
                                                         }))));
                                 }),
                               defaultValue: "",
-                              rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+                              rules: ReactHookForm.Rules.make(true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined),
+                              shouldUnregister: true
                             })), React.createElement("input", {
                           ref: addressRegister.ref,
                           className: "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg bg-disabled-L3 text-disabled-L1",
@@ -443,6 +447,10 @@ function Web_Order_Inputs_Buyer$PaymentMethodSelection(Props) {
                       [
                         "transfer",
                         "계좌이체"
+                      ],
+                      [
+                        "virtual",
+                        "가상계좌"
                       ]
                     ], (function (param) {
                         var n = param[1];

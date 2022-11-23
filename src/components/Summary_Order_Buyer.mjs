@@ -16,40 +16,80 @@ import Parse from "date-fns/parse";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import Format from "date-fns/format";
 import SubDays from "date-fns/subDays";
+import * as FeatureFlagWrapper from "../pages/buyer/pc/FeatureFlagWrapper.mjs";
 import * as Query_Order_Form_Buyer from "./Query_Order_Form_Buyer.mjs";
 
 function Summary_Order_Buyer$StatusFilter(Props) {
-  return React.createElement("div", {
-              className: "py-4 lg:px-5"
-            }, React.createElement("h3", {
-                  className: "font-bold text-xl whitespace-nowrap"
-                }, "주문내역 현황"), React.createElement("ol", {
-                  className: "grid grid-cols-2 pt-3 sm:grid-cols-4 lg:grid-cols-6 lg:justify-between lg:w-full lg:pt-4"
-                }, React.createElement(Status.Total.make, {}), React.createElement(Status.Item.make, {
-                      kind: /* CREATE */0
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* PACKING */1
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* DEPARTURE */2
-                    }), React.createElement("div", {
-                      className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* DELIVERING */3
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* COMPLETE */4
-                    }), React.createElement("div", {
-                      className: "hidden lg:grid lg:grid-row-border-6"
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* CANCEL */5
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* REFUND */7
-                    }), React.createElement("div", {
-                      className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* ERROR */6
-                    }), React.createElement(Status.Item.make, {
-                      kind: /* NEGOTIATING */8
-                    })));
+  var oldUI = React.createElement("div", {
+        className: "py-4 lg:px-5"
+      }, React.createElement("h3", {
+            className: "font-bold text-xl whitespace-nowrap"
+          }, "주문내역 현황"), React.createElement("ol", {
+            className: "grid grid-cols-2 pt-3 sm:grid-cols-4 lg:grid-cols-6 lg:justify-between lg:w-full lg:pt-4"
+          }, React.createElement(Status.Total.make, {}), React.createElement(Status.Item.make, {
+                kind: /* DEPOSIT_PENDING */9
+              }), React.createElement(Status.Item.make, {
+                kind: /* CREATE */0
+              }), React.createElement(Status.Item.make, {
+                kind: /* PACKING */1
+              }), React.createElement("div", {
+                className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
+              }), React.createElement(Status.Item.make, {
+                kind: /* DEPARTURE */2
+              }), React.createElement(Status.Item.make, {
+                kind: /* DELIVERING */3
+              }), React.createElement("div", {
+                className: "hidden lg:grid lg:grid-row-border-6"
+              }), React.createElement(Status.Item.make, {
+                kind: /* COMPLETE */4
+              }), React.createElement(Status.Item.make, {
+                kind: /* CANCEL */5
+              }), React.createElement("div", {
+                className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
+              }), React.createElement(Status.Item.make, {
+                kind: /* REFUND */7
+              }), React.createElement(Status.Item.make, {
+                kind: /* ERROR */6
+              }), React.createElement(Status.Item.make, {
+                kind: /* NEGOTIATING */8
+              })));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "py-7 lg:px-5"
+                  }, React.createElement("h3", {
+                        className: "font-bold text-[26px] whitespace-nowrap"
+                      }, "주문내역"), React.createElement("ol", {
+                        className: "grid grid-cols-2 pt-3 sm:grid-cols-4 lg:grid-cols-6 lg:justify-between lg:w-full lg:pt-4"
+                      }, React.createElement(Status.Total.make, {}), React.createElement(Status.Item.make, {
+                            kind: /* DEPOSIT_PENDING */9
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* CREATE */0
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* PACKING */1
+                          }), React.createElement("div", {
+                            className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* DEPARTURE */2
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* DELIVERING */3
+                          }), React.createElement("div", {
+                            className: "hidden lg:grid lg:grid-row-border-6"
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* COMPLETE */4
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* CANCEL */5
+                          }), React.createElement("div", {
+                            className: "hidden sm:grid sm:grid-row-border-4 lg:hidden"
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* REFUND */7
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* ERROR */6
+                          }), React.createElement(Status.Item.make, {
+                            kind: /* NEGOTIATING */8
+                          }))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var StatusFilter = {
@@ -180,159 +220,321 @@ function Summary_Order_Buyer(Props) {
   var partial_arg$2 = Curry._1(form.handleChange, /* OrderProductNo */0);
   var partial_arg$3 = Curry._1(form.handleChange, /* ProductId */1);
   var partial_arg$4 = Curry._1(form.handleChange, /* Sku */4);
-  return React.createElement("div", {
-              className: "py-3 px-4 pb-7 shadow-gl sm:mt-4"
-            }, React.createElement(Summary_Order_Buyer$StatusFilter, {}), React.createElement("form", {
-                  className: "lg:px-4",
-                  onSubmit: handleOnSubmit
-                }, React.createElement("div", {
-                      className: "py-3 flex flex-col text-sm bg-gray-gl rounded-xl"
-                    }, React.createElement("div", {
-                          className: "flex flex-col lg:flex-row"
-                        }, React.createElement("div", {
-                              className: "w-32 font-bold pl-3 whitespace-nowrap lg:pl-7 lg:pt-3"
-                            }, "검색"), React.createElement("div", {
-                              className: "flex-1 px-3 lg:px-0"
-                            }, React.createElement("div", {
-                                  className: "flex mt-2"
-                                }, React.createElement("div", {
-                                      className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
-                                    }, React.createElement("label", {
-                                          className: "whitespace-nowrap mr-2",
-                                          htmlFor: "orderer-name"
-                                        }, "주문자명"), React.createElement(Input.make, {
-                                          type_: "text",
-                                          name: "orderer-name",
-                                          placeholder: "주문자명 입력",
-                                          value: Query_Order_Form_Buyer.FormFields.get(form.values, /* OrdererName */2),
-                                          onChange: (function (param) {
-                                              return ReForm__Helpers.handleChange(partial_arg, param);
-                                            }),
-                                          error: Curry._1(form.getFieldError, /* Field */{
-                                                _0: /* OrdererName */2
-                                              }),
-                                          tabIndex: 1
-                                        })), React.createElement("div", {
-                                      className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
-                                    }, React.createElement("label", {
-                                          className: "whitespace-nowrap mr-2",
-                                          htmlFor: "receiver-name"
-                                        }, "수취인명"), React.createElement(Input.make, {
-                                          type_: "text",
-                                          name: "receiver-name",
-                                          placeholder: "수취인명 입력",
-                                          value: Query_Order_Form_Buyer.FormFields.get(form.values, /* ReceiverName */3),
-                                          onChange: (function (param) {
-                                              return ReForm__Helpers.handleChange(partial_arg$1, param);
-                                            }),
-                                          error: Curry._1(form.getFieldError, /* Field */{
-                                                _0: /* ReceiverName */3
-                                              }),
-                                          tabIndex: 2
-                                        }))), React.createElement("div", {
-                                  className: "flex mt-3"
-                                }, React.createElement("div", {
-                                      className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
-                                    }, React.createElement("label", {
-                                          className: "whitespace-nowrap mr-2",
-                                          htmlFor: "order-product-no"
-                                        }, "주문번호"), React.createElement(Input.make, {
-                                          type_: "text",
-                                          name: "order-product-no",
-                                          placeholder: "주문번호 입력",
-                                          value: Query_Order_Form_Buyer.FormFields.get(form.values, /* OrderProductNo */0),
-                                          onChange: (function (param) {
-                                              return ReForm__Helpers.handleChange(partial_arg$2, param);
-                                            }),
-                                          error: Curry._1(form.getFieldError, /* Field */{
-                                                _0: /* OrderProductNo */0
-                                              }),
-                                          tabIndex: 3
-                                        })), React.createElement("div", {
-                                      className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
-                                    }, React.createElement("label", {
-                                          className: "whitespace-nowrap mr-2",
-                                          htmlFor: "product-id"
-                                        }, "상품번호"), React.createElement(Input.make, {
-                                          type_: "text",
-                                          name: "product-id",
-                                          placeholder: "상품번호 입력",
-                                          value: Query_Order_Form_Buyer.FormFields.get(form.values, /* ProductId */1),
-                                          onChange: (function (param) {
-                                              return ReForm__Helpers.handleChange(partial_arg$3, param);
-                                            }),
-                                          error: Curry._1(form.getFieldError, /* Field */{
-                                                _0: /* ProductId */1
-                                              }),
-                                          tabIndex: 4
-                                        })), React.createElement("div", {
-                                      className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
-                                    }, React.createElement("label", {
-                                          className: "whitespace-nowrap mr-2",
-                                          htmlFor: "sku"
-                                        }, "단품번호"), React.createElement(Input.make, {
-                                          type_: "text",
-                                          name: "sku",
-                                          placeholder: "단품번호 입력",
-                                          value: Query_Order_Form_Buyer.FormFields.get(form.values, /* Sku */4),
-                                          onChange: (function (param) {
-                                              return ReForm__Helpers.handleChange(partial_arg$4, param);
-                                            }),
-                                          error: Curry._1(form.getFieldError, /* Field */{
-                                                _0: /* Sku */4
-                                              }),
-                                          tabIndex: 5
-                                        }))))), React.createElement("div", {
-                          className: "flex flex-col lg:flex-row mt-4 mb-2"
-                        }, React.createElement("div", {
-                              className: "w-32 font-bold pl-3 whitespace-nowrap lg:pl-7 lg:pt-3"
-                            }, "기간"), React.createElement("div", {
-                              className: "flex flex-col px-3 sm:flex-row lg:px-0"
-                            }, React.createElement("div", {
-                                  className: "flex mb-2 sm:mb-0 sm:mr-8"
-                                }, React.createElement(PeriodSelector.make, {
-                                      from: query.from,
-                                      to_: query.to_,
-                                      onSelect: handleOnChangePeriod
-                                    })), React.createElement("div", {
-                                  className: "flex"
-                                }, React.createElement(DatePicker.make, {
-                                      id: "from",
-                                      onChange: (function (param) {
-                                          return handleOnChangeDate(/* From */0, param);
+  var oldUI = React.createElement("div", {
+        className: "py-3 px-4 pb-7 shadow-gl sm:mt-4"
+      }, React.createElement(Summary_Order_Buyer$StatusFilter, {}), React.createElement("form", {
+            className: "lg:px-4",
+            onSubmit: handleOnSubmit
+          }, React.createElement("div", {
+                className: "py-3 flex flex-col text-sm bg-gray-gl rounded-xl"
+              }, React.createElement("div", {
+                    className: "flex flex-col lg:flex-row"
+                  }, React.createElement("div", {
+                        className: "w-32 font-bold pl-3 whitespace-nowrap lg:pl-7 lg:pt-3"
+                      }, "검색"), React.createElement("div", {
+                        className: "flex-1 px-3 lg:px-0"
+                      }, React.createElement("div", {
+                            className: "flex mt-2"
+                          }, React.createElement("div", {
+                                className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
+                              }, React.createElement("label", {
+                                    className: "whitespace-nowrap mr-2",
+                                    htmlFor: "orderer-name"
+                                  }, "주문자명"), React.createElement(Input.make, {
+                                    type_: "text",
+                                    name: "orderer-name",
+                                    placeholder: "주문자명 입력",
+                                    value: Query_Order_Form_Buyer.FormFields.get(form.values, /* OrdererName */2),
+                                    onChange: (function (param) {
+                                        return ReForm__Helpers.handleChange(partial_arg, param);
+                                      }),
+                                    error: Curry._1(form.getFieldError, /* Field */{
+                                          _0: /* OrdererName */2
                                         }),
-                                      date: query.from,
-                                      maxDate: Format(new Date(), "yyyy-MM-dd"),
-                                      firstDayOfWeek: 0
-                                    }), React.createElement("span", {
-                                      className: "flex items-center mr-1"
-                                    }, "~"), React.createElement(DatePicker.make, {
-                                      id: "to",
-                                      onChange: (function (param) {
-                                          return handleOnChangeDate(/* To */1, param);
+                                    tabIndex: 1
+                                  })), React.createElement("div", {
+                                className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
+                              }, React.createElement("label", {
+                                    className: "whitespace-nowrap mr-2",
+                                    htmlFor: "receiver-name"
+                                  }, "수취인명"), React.createElement(Input.make, {
+                                    type_: "text",
+                                    name: "receiver-name",
+                                    placeholder: "수취인명 입력",
+                                    value: Query_Order_Form_Buyer.FormFields.get(form.values, /* ReceiverName */3),
+                                    onChange: (function (param) {
+                                        return ReForm__Helpers.handleChange(partial_arg$1, param);
+                                      }),
+                                    error: Curry._1(form.getFieldError, /* Field */{
+                                          _0: /* ReceiverName */3
                                         }),
-                                      date: query.to_,
-                                      maxDate: Format(new Date(), "yyyy-MM-dd"),
-                                      minDate: Format(query.from, "yyyy-MM-dd"),
-                                      firstDayOfWeek: 0
-                                    }))))), React.createElement("div", {
-                      className: "flex justify-center mt-5"
-                    }, React.createElement("span", {
-                          className: "w-20 h-11 flex mr-2"
-                        }, React.createElement("input", {
-                              className: "btn-level6",
-                              tabIndex: 6,
-                              type: "button",
-                              value: "초기화",
-                              onClick: handleOnReset
-                            })), React.createElement("span", {
-                          className: "w-20 h-11 flex"
-                        }, React.createElement("input", {
-                              className: "btn-level1",
-                              tabIndex: 5,
-                              type: "submit",
-                              value: "검색"
-                            })))));
+                                    tabIndex: 2
+                                  }))), React.createElement("div", {
+                            className: "flex mt-3"
+                          }, React.createElement("div", {
+                                className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
+                              }, React.createElement("label", {
+                                    className: "whitespace-nowrap mr-2",
+                                    htmlFor: "order-product-no"
+                                  }, "주문번호"), React.createElement(Input.make, {
+                                    type_: "text",
+                                    name: "order-product-no",
+                                    placeholder: "주문번호 입력",
+                                    value: Query_Order_Form_Buyer.FormFields.get(form.values, /* OrderProductNo */0),
+                                    onChange: (function (param) {
+                                        return ReForm__Helpers.handleChange(partial_arg$2, param);
+                                      }),
+                                    error: Curry._1(form.getFieldError, /* Field */{
+                                          _0: /* OrderProductNo */0
+                                        }),
+                                    tabIndex: 3
+                                  })), React.createElement("div", {
+                                className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
+                              }, React.createElement("label", {
+                                    className: "whitespace-nowrap mr-2",
+                                    htmlFor: "product-id"
+                                  }, "상품번호"), React.createElement(Input.make, {
+                                    type_: "text",
+                                    name: "product-id",
+                                    placeholder: "상품번호 입력",
+                                    value: Query_Order_Form_Buyer.FormFields.get(form.values, /* ProductId */1),
+                                    onChange: (function (param) {
+                                        return ReForm__Helpers.handleChange(partial_arg$3, param);
+                                      }),
+                                    error: Curry._1(form.getFieldError, /* Field */{
+                                          _0: /* ProductId */1
+                                        }),
+                                    tabIndex: 4
+                                  })), React.createElement("div", {
+                                className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
+                              }, React.createElement("label", {
+                                    className: "whitespace-nowrap mr-2",
+                                    htmlFor: "sku"
+                                  }, "단품번호"), React.createElement(Input.make, {
+                                    type_: "text",
+                                    name: "sku",
+                                    placeholder: "단품번호 입력",
+                                    value: Query_Order_Form_Buyer.FormFields.get(form.values, /* Sku */4),
+                                    onChange: (function (param) {
+                                        return ReForm__Helpers.handleChange(partial_arg$4, param);
+                                      }),
+                                    error: Curry._1(form.getFieldError, /* Field */{
+                                          _0: /* Sku */4
+                                        }),
+                                    tabIndex: 5
+                                  }))))), React.createElement("div", {
+                    className: "flex flex-col lg:flex-row mt-4 mb-2"
+                  }, React.createElement("div", {
+                        className: "w-32 font-bold pl-3 whitespace-nowrap lg:pl-7 lg:pt-3"
+                      }, "기간"), React.createElement("div", {
+                        className: "flex flex-col px-3 sm:flex-row lg:px-0"
+                      }, React.createElement("div", {
+                            className: "flex mb-2 sm:mb-0 sm:mr-8"
+                          }, React.createElement(PeriodSelector.make, {
+                                from: query.from,
+                                to_: query.to_,
+                                onSelect: handleOnChangePeriod
+                              })), React.createElement("div", {
+                            className: "flex"
+                          }, React.createElement(DatePicker.make, {
+                                id: "from",
+                                onChange: (function (param) {
+                                    return handleOnChangeDate(/* From */0, param);
+                                  }),
+                                date: query.from,
+                                maxDate: Format(new Date(), "yyyy-MM-dd"),
+                                firstDayOfWeek: 0
+                              }), React.createElement("span", {
+                                className: "flex items-center mr-1"
+                              }, "~"), React.createElement(DatePicker.make, {
+                                id: "to",
+                                onChange: (function (param) {
+                                    return handleOnChangeDate(/* To */1, param);
+                                  }),
+                                date: query.to_,
+                                maxDate: Format(new Date(), "yyyy-MM-dd"),
+                                minDate: Format(query.from, "yyyy-MM-dd"),
+                                firstDayOfWeek: 0
+                              }))))), React.createElement("div", {
+                className: "flex justify-center mt-5"
+              }, React.createElement("span", {
+                    className: "w-20 h-11 flex mr-2"
+                  }, React.createElement("input", {
+                        className: "btn-level6",
+                        tabIndex: 6,
+                        type: "button",
+                        value: "초기화",
+                        onClick: handleOnReset
+                      })), React.createElement("span", {
+                    className: "w-20 h-11 flex"
+                  }, React.createElement("input", {
+                        className: "btn-level1",
+                        tabIndex: 5,
+                        type: "submit",
+                        value: "검색"
+                      })))));
+  var partial_arg$5 = Curry._1(form.handleChange, /* OrdererName */2);
+  var partial_arg$6 = Curry._1(form.handleChange, /* ReceiverName */3);
+  var partial_arg$7 = Curry._1(form.handleChange, /* OrderProductNo */0);
+  var partial_arg$8 = Curry._1(form.handleChange, /* ProductId */1);
+  var partial_arg$9 = Curry._1(form.handleChange, /* Sku */4);
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "py-3 px-4 lg:px-[30px] pb-7 shadow-gl lg:shadow-none sm:mt-4 lg:mt-0 bg-white w-full"
+                  }, React.createElement(Summary_Order_Buyer$StatusFilter, {}), React.createElement("form", {
+                        className: "lg:px-4",
+                        onSubmit: handleOnSubmit
+                      }, React.createElement("div", {
+                            className: "py-3 flex flex-col text-sm bg-gray-gl rounded-xl"
+                          }, React.createElement("div", {
+                                className: "flex flex-col lg:flex-row"
+                              }, React.createElement("div", {
+                                    className: "w-32 font-bold pl-3 whitespace-nowrap lg:pl-7 lg:pt-3"
+                                  }, "검색"), React.createElement("div", {
+                                    className: "flex-1 px-3 lg:px-0"
+                                  }, React.createElement("div", {
+                                        className: "flex mt-2"
+                                      }, React.createElement("div", {
+                                            className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
+                                          }, React.createElement("label", {
+                                                className: "whitespace-nowrap mr-2",
+                                                htmlFor: "orderer-name"
+                                              }, "주문자명"), React.createElement(Input.make, {
+                                                type_: "text",
+                                                name: "orderer-name",
+                                                placeholder: "주문자명 입력",
+                                                value: Query_Order_Form_Buyer.FormFields.get(form.values, /* OrdererName */2),
+                                                onChange: (function (param) {
+                                                    return ReForm__Helpers.handleChange(partial_arg$5, param);
+                                                  }),
+                                                error: Curry._1(form.getFieldError, /* Field */{
+                                                      _0: /* OrdererName */2
+                                                    }),
+                                                tabIndex: 1
+                                              })), React.createElement("div", {
+                                            className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
+                                          }, React.createElement("label", {
+                                                className: "whitespace-nowrap mr-2",
+                                                htmlFor: "receiver-name"
+                                              }, "수취인명"), React.createElement(Input.make, {
+                                                type_: "text",
+                                                name: "receiver-name",
+                                                placeholder: "수취인명 입력",
+                                                value: Query_Order_Form_Buyer.FormFields.get(form.values, /* ReceiverName */3),
+                                                onChange: (function (param) {
+                                                    return ReForm__Helpers.handleChange(partial_arg$6, param);
+                                                  }),
+                                                error: Curry._1(form.getFieldError, /* Field */{
+                                                      _0: /* ReceiverName */3
+                                                    }),
+                                                tabIndex: 2
+                                              }))), React.createElement("div", {
+                                        className: "flex mt-3"
+                                      }, React.createElement("div", {
+                                            className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
+                                          }, React.createElement("label", {
+                                                className: "whitespace-nowrap mr-2",
+                                                htmlFor: "order-product-no"
+                                              }, "주문번호"), React.createElement(Input.make, {
+                                                type_: "text",
+                                                name: "order-product-no",
+                                                placeholder: "주문번호 입력",
+                                                value: Query_Order_Form_Buyer.FormFields.get(form.values, /* OrderProductNo */0),
+                                                onChange: (function (param) {
+                                                    return ReForm__Helpers.handleChange(partial_arg$7, param);
+                                                  }),
+                                                error: Curry._1(form.getFieldError, /* Field */{
+                                                      _0: /* OrderProductNo */0
+                                                    }),
+                                                tabIndex: 3
+                                              })), React.createElement("div", {
+                                            className: "flex-1 flex flex-col mr-2 sm:w-64 sm:flex-initial sm:flex-row sm:items-center sm:mr-16"
+                                          }, React.createElement("label", {
+                                                className: "whitespace-nowrap mr-2",
+                                                htmlFor: "product-id"
+                                              }, "상품번호"), React.createElement(Input.make, {
+                                                type_: "text",
+                                                name: "product-id",
+                                                placeholder: "상품번호 입력",
+                                                value: Query_Order_Form_Buyer.FormFields.get(form.values, /* ProductId */1),
+                                                onChange: (function (param) {
+                                                    return ReForm__Helpers.handleChange(partial_arg$8, param);
+                                                  }),
+                                                error: Curry._1(form.getFieldError, /* Field */{
+                                                      _0: /* ProductId */1
+                                                    }),
+                                                tabIndex: 4
+                                              })), React.createElement("div", {
+                                            className: "flex-1 flex flex-col sm:flex-initial sm:w-64 sm:flex-row sm:items-center"
+                                          }, React.createElement("label", {
+                                                className: "whitespace-nowrap mr-2",
+                                                htmlFor: "sku"
+                                              }, "단품번호"), React.createElement(Input.make, {
+                                                type_: "text",
+                                                name: "sku",
+                                                placeholder: "단품번호 입력",
+                                                value: Query_Order_Form_Buyer.FormFields.get(form.values, /* Sku */4),
+                                                onChange: (function (param) {
+                                                    return ReForm__Helpers.handleChange(partial_arg$9, param);
+                                                  }),
+                                                error: Curry._1(form.getFieldError, /* Field */{
+                                                      _0: /* Sku */4
+                                                    }),
+                                                tabIndex: 5
+                                              }))))), React.createElement("div", {
+                                className: "flex flex-col lg:flex-row mt-4 mb-2"
+                              }, React.createElement("div", {
+                                    className: "w-32 font-bold pl-3 whitespace-nowrap lg:pl-7 lg:pt-3"
+                                  }, "기간"), React.createElement("div", {
+                                    className: "flex flex-col px-3 sm:flex-row lg:px-0"
+                                  }, React.createElement("div", {
+                                        className: "flex mb-2 sm:mb-0 sm:mr-8"
+                                      }, React.createElement(PeriodSelector.make, {
+                                            from: query.from,
+                                            to_: query.to_,
+                                            onSelect: handleOnChangePeriod
+                                          })), React.createElement("div", {
+                                        className: "flex"
+                                      }, React.createElement(DatePicker.make, {
+                                            id: "from",
+                                            onChange: (function (param) {
+                                                return handleOnChangeDate(/* From */0, param);
+                                              }),
+                                            date: query.from,
+                                            maxDate: Format(new Date(), "yyyy-MM-dd"),
+                                            firstDayOfWeek: 0
+                                          }), React.createElement("span", {
+                                            className: "flex items-center mr-1"
+                                          }, "~"), React.createElement(DatePicker.make, {
+                                            id: "to",
+                                            onChange: (function (param) {
+                                                return handleOnChangeDate(/* To */1, param);
+                                              }),
+                                            date: query.to_,
+                                            maxDate: Format(new Date(), "yyyy-MM-dd"),
+                                            minDate: Format(query.from, "yyyy-MM-dd"),
+                                            firstDayOfWeek: 0
+                                          }))))), React.createElement("div", {
+                            className: "flex justify-end mt-5"
+                          }, React.createElement("span", {
+                                className: "w-20 h-11 flex mr-2"
+                              }, React.createElement("input", {
+                                    className: "btn-level6",
+                                    tabIndex: 6,
+                                    type: "button",
+                                    value: "초기화",
+                                    onClick: handleOnReset
+                                  })), React.createElement("span", {
+                                className: "w-20 h-11 flex"
+                              }, React.createElement("input", {
+                                    className: "btn-level1",
+                                    tabIndex: 5,
+                                    type: "submit",
+                                    value: "검색"
+                                  }))))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var FormFields;

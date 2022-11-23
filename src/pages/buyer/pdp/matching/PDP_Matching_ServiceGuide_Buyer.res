@@ -26,7 +26,7 @@ module PriceCard = {
           src={`/images/matching-card-price.png`}
           loading=Image.Loading.Lazy
           className=%twc("w-[280px] h-[144px] object-contain")
-          alt="matching-price"
+          alt={`신선하이 매칭 가격`}
         />
       </div>
     </Card>
@@ -51,7 +51,7 @@ module GradeCard = {
           src={`/images/matching-card-grade.png`}
           loading=Image.Loading.Lazy
           className=%twc("w-[262px] h-[126px] object-contain")
-          alt="matching-grade"
+          alt={`신선하이 매칭 가격 분류`}
         />
       </div>
     </Card>
@@ -76,7 +76,7 @@ module DeliveryCard = {
           src={`/images/matching-card-delivery.png`}
           loading=Image.Loading.Lazy
           className=%twc("w-[180px] h-[144px] object-contain")
-          alt="matching-delivery"
+          alt={`신선하이 매칭 배송`}
         />
       </div>
     </Card>
@@ -93,7 +93,7 @@ module Banner = {
         <Image
           src="/images/matching-guide-bg-pc.png"
           className=%twc("w-full h-[336px] object-cover")
-          alt="matching-banner"
+          alt={`신선하이 매칭`}
         />
       </picture>
       <div className=%twc("absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2")>
@@ -164,7 +164,7 @@ module Trigger = {
           {`필요한 품종에 대해 견적요청하시면,\n최저가 상품을 연결해드립니다.`->ReactNl2br.nl2br}
         </span>
       </div>
-      <Image className=%twc("w-[69px] object-contain") src="/images/matching-button.png" />
+      <Image className=%twc("w-[69px] object-contain") src="/images/matching-button.png" alt={""} />
     </button>
   }
 }

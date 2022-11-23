@@ -12,6 +12,9 @@ import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as PDP_Parser_Buyer from "../../../../utils/PDP_Parser_Buyer.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
+import * as ReactToastNotifications from "react-toast-notifications";
+import * as FormulaComponents from "@greenlabs/formula-components";
+import * as AdhocStock_Parser_Buyer_Admin from "../../../../utils/AdhocStock_Parser_Buyer_Admin.mjs";
 import * as PDPNormalSelectedOptionItemBuyerQuery_graphql from "../../../../__generated__/PDPNormalSelectedOptionItemBuyerQuery_graphql.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
@@ -107,17 +110,45 @@ function PDP_Normal_SelectedOptionItem_Buyer$PC(Props) {
   }
   var stockSku = node.stockSku;
   var productId = node.product.productId;
+  var adhocStockNumRemaining = node.adhocStockNumRemaining;
+  var match$1 = ReactToastNotifications.useToasts();
+  var addToast = match$1.addToast;
+  var toastWhenOverMaxQuantity = function (param) {
+    if (adhocStockNumRemaining !== undefined) {
+      return addToast(React.createElement("div", {
+                      className: "flex items-center"
+                    }, React.createElement("div", {
+                          className: "mr-[6px]"
+                        }, React.createElement(FormulaComponents.CheckCircleFill, {
+                              color: "primary-contents"
+                            })), React.createElement("span", undefined, "구매 가능 수량은 " + Locale.Float.show(undefined, adhocStockNumRemaining, 0) + "개 입니다")), {
+                  appearance: "success"
+                });
+    }
+    
+  };
+  var isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(node.adhocStockIsLimited, node.adhocStockIsNumRemainingVisible);
   var totalOptionPrice = Belt_Option.map(PDP_Parser_Buyer.ProductOption.makeOptionPrice(node.price, node.productOptionCost.deliveryCost, node.isFreeShipping), (function (optionPrice$p) {
           return Math.imul(optionPrice$p, quantity);
         }));
+  var tmp = {
+    value: quantity,
+    onChange: (function (value) {
+        Curry._2(onChange, id, value);
+      }),
+    onOverMaxQuantity: toastWhenOverMaxQuantity
+  };
+  if (adhocStockNumRemaining !== undefined) {
+    tmp.max = Caml_option.valFromOption(adhocStockNumRemaining);
+  }
   return React.createElement("div", {
-              className: "pt-6 flex items-center justify-between"
-            }, React.createElement(Spinbox.make, {
-                  value: quantity,
-                  onChange: (function (value) {
-                      Curry._2(onChange, id, value);
-                    })
-                }), React.createElement("div", {
+              className: "pt-6 flex items-start justify-between"
+            }, React.createElement("div", undefined, React.createElement(Spinbox.make, tmp), isShowRemaining && adhocStockNumRemaining !== undefined ? React.createElement(FormulaComponents.TextBody, {
+                        className: "mt-2",
+                        size: "sm",
+                        color: "gray-70",
+                        children: "" + Locale.Float.show(undefined, adhocStockNumRemaining, 0) + "개 남음"
+                      }) : null), React.createElement("div", {
                   className: "flex flex-col items-end"
                 }, React.createElement("span", {
                       className: "mt-1 text-gray-800 text-right text-[15px]"
@@ -163,17 +194,45 @@ function PDP_Normal_SelectedOptionItem_Buyer$MO(Props) {
   }
   var stockSku = node.stockSku;
   var productId = node.product.productId;
+  var adhocStockNumRemaining = node.adhocStockNumRemaining;
+  var match$1 = ReactToastNotifications.useToasts();
+  var addToast = match$1.addToast;
+  var toastWhenOverMaxQuantity = function (param) {
+    if (adhocStockNumRemaining !== undefined) {
+      return addToast(React.createElement("div", {
+                      className: "flex items-center"
+                    }, React.createElement("div", {
+                          className: "mr-[6px]"
+                        }, React.createElement(FormulaComponents.CheckCircleFill, {
+                              color: "primary-contents"
+                            })), React.createElement("span", undefined, "구매 가능 수량은 " + String(adhocStockNumRemaining) + "개 입니다")), {
+                  appearance: "success"
+                });
+    }
+    
+  };
+  var isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(node.adhocStockIsLimited, node.adhocStockIsNumRemainingVisible);
   var totalOptionPrice = Belt_Option.map(PDP_Parser_Buyer.ProductOption.makeOptionPrice(node.price, node.productOptionCost.deliveryCost, node.isFreeShipping), (function (optionPrice$p) {
           return Math.imul(optionPrice$p, quantity);
         }));
+  var tmp = {
+    value: quantity,
+    onChange: (function (value) {
+        Curry._2(onChange, id, value);
+      }),
+    onOverMaxQuantity: toastWhenOverMaxQuantity
+  };
+  if (adhocStockNumRemaining !== undefined) {
+    tmp.max = Caml_option.valFromOption(adhocStockNumRemaining);
+  }
   return React.createElement("section", {
               className: "pt-5 flex items-start justify-between"
-            }, React.createElement(Spinbox.make, {
-                  value: quantity,
-                  onChange: (function (value) {
-                      Curry._2(onChange, id, value);
-                    })
-                }), React.createElement("div", {
+            }, React.createElement("div", undefined, React.createElement(Spinbox.make, tmp), isShowRemaining && adhocStockNumRemaining !== undefined ? React.createElement(FormulaComponents.TextBody, {
+                        className: "mt-2",
+                        size: "sm",
+                        color: "gray-70",
+                        children: "" + Locale.Float.show(undefined, adhocStockNumRemaining, 0) + "개 남음"
+                      }) : null), React.createElement("div", {
                   className: "flex flex-col items-end"
                 }, React.createElement("span", {
                       className: "mt-1 text-gray-800 text-right text-[15px]"

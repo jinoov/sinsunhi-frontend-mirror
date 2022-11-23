@@ -139,4 +139,19 @@ module Debounce = {
       })
     }
   }
+
+  let make1WithoutPromise = (fun, ms) => {
+    let timeoutId = ref(None)
+
+    args => {
+      timeoutId.contents
+      ->Option.map(id' => {
+        Js.Global.clearTimeout(id')
+        timeoutId := None
+      })
+      ->ignore
+
+      timeoutId := Some(Js.Global.setTimeout(() => fun(args), ms))
+    }
+  }
 }

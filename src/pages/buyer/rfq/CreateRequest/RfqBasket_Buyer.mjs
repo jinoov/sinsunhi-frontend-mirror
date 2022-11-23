@@ -385,8 +385,6 @@ function useBlockingPagination(fRef) {
 
 var makeRefetchVariables = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_Query_graphql.Types.makeRefetchVariables;
 
-var RequestItemsMeat_getConnectionNodes = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.getConnectionNodes;
-
 var RequestItemsMeat_countryCode_decode = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.countryCode_decode;
 
 var RequestItemsMeat_countryCode_fromString = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.countryCode_fromString;
@@ -403,8 +401,9 @@ var RequestItemsMeat_rfqRequestItemStatus_decode = RfqBasketBuyer_RfqRequestItem
 
 var RequestItemsMeat_rfqRequestItemStatus_fromString = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.rfqRequestItemStatus_fromString;
 
+var RequestItemsMeat_getConnectionNodes = RfqBasketBuyer_RfqRequestItemsMeat_Fragment_graphql.Utils.getConnectionNodes;
+
 var RequestItemsMeat = {
-  getConnectionNodes: RequestItemsMeat_getConnectionNodes,
   countryCode_decode: RequestItemsMeat_countryCode_decode,
   countryCode_fromString: RequestItemsMeat_countryCode_fromString,
   rfqMeatPackageMethod_decode: RequestItemsMeat_rfqMeatPackageMethod_decode,
@@ -413,6 +412,7 @@ var RequestItemsMeat = {
   rfqMeatStorageMethod_fromString: RequestItemsMeat_rfqMeatStorageMethod_fromString,
   rfqRequestItemStatus_decode: RequestItemsMeat_rfqRequestItemStatus_decode,
   rfqRequestItemStatus_fromString: RequestItemsMeat_rfqRequestItemStatus_fromString,
+  getConnectionNodes: RequestItemsMeat_getConnectionNodes,
   Types: undefined,
   internal_makeRefetchableFnOpts: internal_makeRefetchableFnOpts,
   useRefetchable: useRefetchable,
@@ -577,28 +577,32 @@ function RfqBasket_Buyer$BasketListItems(Props) {
                     var node = param.node;
                     var id = node.id;
                     var isSelected = selectedPartIds.includes(id);
-                    return React.createElement("li", {
-                                key: id,
-                                "aria-selected": isSelected,
-                                className: "flex items-center min-h-[48px] mx-5 cursor-pointer tab-highlight-color",
-                                onClick: (function (param) {
-                                    Curry._1(handleClickListitem, id);
-                                  })
-                              }, React.createElement("div", {
-                                    className: "flex flex-col justify-between truncate"
-                                  }, React.createElement("span", {
-                                        className: "block text-base truncate text-text-L1"
-                                      }, "" + node.name)), React.createElement("div", {
-                                    className: "ml-auto pl-2"
-                                  }, isSelected ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
-                                          height: "24",
-                                          width: "24",
-                                          fill: "#12B564"
-                                        }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
-                                          height: "24",
-                                          width: "24",
-                                          fill: "#12B564"
-                                        })));
+                    if (node.isAvailable) {
+                      return React.createElement("li", {
+                                  key: id,
+                                  "aria-selected": isSelected,
+                                  className: "flex items-center min-h-[48px] mx-5 cursor-pointer tab-highlight-color",
+                                  onClick: (function (param) {
+                                      Curry._1(handleClickListitem, id);
+                                    })
+                                }, React.createElement("div", {
+                                      className: "flex flex-col justify-between truncate"
+                                    }, React.createElement("span", {
+                                          className: "block text-base truncate text-text-L1"
+                                        }, node.name)), React.createElement("div", {
+                                      className: "ml-auto pl-2"
+                                    }, isSelected ? React.createElement(DS_Icon.Common.CheckedLarge1.make, {
+                                            height: "24",
+                                            width: "24",
+                                            fill: "#12B564"
+                                          }) : React.createElement(DS_Icon.Common.UncheckedLarge1.make, {
+                                            height: "24",
+                                            width: "24",
+                                            fill: "#12B564"
+                                          })));
+                    } else {
+                      return null;
+                    }
                   })));
 }
 

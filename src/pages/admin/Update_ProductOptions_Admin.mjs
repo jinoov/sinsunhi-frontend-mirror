@@ -229,9 +229,9 @@ var Mutation_errorCode_decode = UpdateProductOptionsAdminMutation_graphql.Utils.
 
 var Mutation_errorCode_fromString = UpdateProductOptionsAdminMutation_graphql.Utils.errorCode_fromString;
 
-var Mutation_productOptionContractType_decode = UpdateProductOptionsAdminMutation_graphql.Utils.productOptionContractType_decode;
+var Mutation_productOptionCostContractType_decode = UpdateProductOptionsAdminMutation_graphql.Utils.productOptionCostContractType_decode;
 
-var Mutation_productOptionContractType_fromString = UpdateProductOptionsAdminMutation_graphql.Utils.productOptionContractType_fromString;
+var Mutation_productOptionCostContractType_fromString = UpdateProductOptionsAdminMutation_graphql.Utils.productOptionCostContractType_fromString;
 
 var Mutation_productOptionStatus_decode = UpdateProductOptionsAdminMutation_graphql.Utils.productOptionStatus_decode;
 
@@ -246,8 +246,8 @@ var Mutation = {
   amountUnit_fromString: Mutation_amountUnit_fromString,
   errorCode_decode: Mutation_errorCode_decode,
   errorCode_fromString: Mutation_errorCode_fromString,
-  productOptionContractType_decode: Mutation_productOptionContractType_decode,
-  productOptionContractType_fromString: Mutation_productOptionContractType_fromString,
+  productOptionCostContractType_decode: Mutation_productOptionCostContractType_decode,
+  productOptionCostContractType_fromString: Mutation_productOptionCostContractType_fromString,
   productOptionStatus_decode: Mutation_productOptionStatus_decode,
   productOptionStatus_fromString: Mutation_productOptionStatus_fromString,
   sizeUnit_decode: Mutation_sizeUnit_decode,
@@ -307,7 +307,7 @@ function submit_decode(v) {
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("edit" + e.path),
+                path: ".edit" + e.path,
                 message: e.message,
                 value: e.value
               }
@@ -317,7 +317,7 @@ function submit_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("create" + e$1.path),
+              path: ".create" + e$1.path,
               message: e$1.message,
               value: e$1.value
             }
@@ -327,7 +327,7 @@ function submit_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("connection-id" + e$2.path),
+            path: ".connection-id" + e$2.path,
             message: e$2.message,
             value: e$2.value
           }
@@ -362,7 +362,7 @@ function productOption_decode(v) {
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("product-options" + e.path),
+            path: ".product-options" + e.path,
             message: e.message,
             value: e.value
           }
@@ -459,6 +459,9 @@ function makeUpdateOption(option) {
     
   }
   return {
+          adhocStockIsLimited: option.adhocStockIsLimited,
+          adhocStockIsNumRemainingVisible: option.adhocStockIsNumRemainingVisible,
+          adhocStockNumLimit: option.adhocStockNumLimit,
           cutOffTime: noneToDefaultCutOffTime(Belt_Option.keep(option.cutOffTime, nonEmptyString)),
           id: option.id,
           isFreeShipping: match ? true : false,
@@ -506,6 +509,9 @@ function makeCreateOption(productNodeId, option) {
               })), Belt_Option.map(match$1[5], Select_Product_Option_Unit.Size.toString), true, undefined);
   }
   return {
+          adhocStockIsLimited: option.adhocStockIsLimited,
+          adhocStockIsNumRemainingVisible: option.adhocStockIsNumRemainingVisible,
+          adhocStockNumLimit: option.adhocStockNumLimit,
           amount: option.amount,
           amountUnit: amountUnitEncode(option.amountUnit),
           countPerPackageMax: Belt_Option.map(Belt_Option.keep(option.each, (function (param) {

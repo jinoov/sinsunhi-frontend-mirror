@@ -1,6 +1,6 @@
 import SignInBuyer from "src/pages/buyer/SignIn_Buyer.mjs";
 
-export { getServerSideProps } from "src/pages/buyer/FindIdPassword_Buyer.mjs";
+export { getServerSideProps } from "src/pages/buyer/SignIn_Buyer.mjs";
 
 // Note:
 // We need to wrap the make call with

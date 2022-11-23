@@ -147,10 +147,10 @@ module MO = {
     let {productId, salesType, displayName, category} = query->Fragment.use
 
     let btnStyle = %twc(
-      "flex flex-1 items-center justify-center rounded-xl bg-white border border-primary text-primary text-lg font-bold"
+      "flex flex-1 items-center justify-center rounded-xl bg-white border border-primary text-primary text-lg font-bold        whitespace-pre"
     )
     let disabledStyle = %twc(
-      "flex flex-1 items-center justify-center rounded-xl bg-disabled-L2 text-lg font-bold text-white"
+      "flex flex-1 items-center justify-center rounded-xl bg-disabled-L2 text-lg font-bold text-white whitespace-pre"
     )
 
     let rfqStatus = {
@@ -171,9 +171,7 @@ module MO = {
 
     switch rfqStatus {
     | Loading =>
-      <button disabled=true className=disabledStyle>
-        {`최저가 견적문의`->React.string}
-      </button>
+      <button disabled=true className=disabledStyle> {`견적문의`->React.string} </button>
 
     | Unauthorized =>
       <>
@@ -184,14 +182,12 @@ module MO = {
               Unauthorized(`로그인 후에\n견적을 받으실 수 있습니다.`),
             ))
           }}>
-          {`최저가 견적문의`->React.string}
+          {`견적문의`->React.string}
         </button>
       </>
 
     | NoPermission =>
-      <button disabled=true className=disabledStyle>
-        {`최저가 견적문의`->React.string}
-      </button>
+      <button disabled=true className=disabledStyle> {`견적문의`->React.string} </button>
 
     | Available(TRADEMATCH_AQUATIC) =>
       <>
@@ -203,12 +199,12 @@ module MO = {
             ->DataGtm.push
             router->push(`/buyer/tradematch/buy/products/${productId->Int.toString}/apply`)
           }}>
-          {`최저가 견적문의`->React.string}
+          {`견적문의`->React.string}
         </button>
       </>
 
     | Available(RFQ_LIVESTOCK) =>
-      <RfqCreateRequestButton className=btnStyle buttonText={`최저가 견적문의`} />
+      <RfqCreateRequestButton className=btnStyle buttonText={`견적문의`} />
     }
   }
 }

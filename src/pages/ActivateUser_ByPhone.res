@@ -83,7 +83,7 @@ module SendPhoneNumber = {
           [
             regExp(
               PhoneNumber,
-              ~matches="^\d{3}-\d{3,4}-\d{4}$",
+              ~matches="^\\d{3}-\\d{3,4}-\\d{4}$",
               ~error=`휴대전화 번호를 다시 확인해주세요.`,
             ),
           ]->Array.concatMany,
@@ -104,6 +104,8 @@ module SendPhoneNumber = {
         ->Js.String2.replaceByRe(%re("/[^0-9]/g"), "")
         ->Js.String2.replaceByRe(%re("/(^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/"), "$1-$2-$3")
         ->Js.String2.replace("--", "-")
+
+      newValue->Js.log
 
       VerifyPhoneNumberFormFields.PhoneNumber->verifyPhoneNumberForm.setFieldValue(
         newValue,
@@ -171,7 +173,7 @@ module SendPhoneNumber = {
                 type_="text"
                 name="phone-number"
                 size=Input.Large
-                placeholder=`휴대폰 번호를 입력해주세요`
+                placeholder={`휴대폰 번호를 입력해주세요`}
                 className=%twc("flex-1")
                 value={verifyPhoneNumberForm.values->VerifyPhoneNumberFormFields.get(
                   VerifyPhoneNumberFormFields.PhoneNumber,

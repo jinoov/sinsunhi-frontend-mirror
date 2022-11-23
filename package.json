@@ -6,15 +6,18 @@
   "dependencies": {
     "@braze/web-sdk": "^4.0.2",
     "@duetds/date-picker": "^1.4.0",
+    "@greenlabs/formula-components": "^0.0.1-alpha.17",
     "@greenlabs/garter": "^0.11.0",
     "@greenlabs/re-korean-numeral": "^0.1.2",
     "@greenlabs/res-daum-postcode": "^0.1.1",
+    "@greenlabs/rescript-formula-components": "^0.0.1-alpha.20",
     "@hookform/error-message": "^2.0.0",
     "@radix-ui/react-accordion": "^0.1.6",
     "@radix-ui/react-collapsible": "^0.1.5",
     "@radix-ui/react-dialog": "^0.1.8-rc.39",
     "@radix-ui/react-dropdown-menu": "^0.1.7-rc.35",
     "@radix-ui/react-hover-card": "^0.1.5",
+    "@radix-ui/react-portal": "^1.0.1",
     "@radix-ui/react-radio-group": "^0.1.5",
     "@radix-ui/react-scroll-area": "^0.1.4",
     "@radix-ui/react-separator": "^0.1.4",
@@ -29,6 +32,7 @@
     "@tailwindcss/line-clamp": "^0.2.2",
     "@tinymce/tinymce-react": "^3.13.0",
     "bs-fetch": "^0.6.2",
+    "buffer": "^6.0.3",
     "clipboard": "^2.0.8",
     "date-fns": "2.8.1",
     "detect-browser": "^5.2.0",
@@ -40,10 +44,11 @@
     "next-images": "^1.8.4",
     "postscribe": "^2.0.8",
     "react": "^18.0.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.0.0",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.22.1",
+    "react-hook-form": "^7.34.2",
     "react-images-viewer": "^1.7.1",
     "react-nl2br": "^1.0.4",
     "react-relay": "13.2.0",
@@ -55,8 +60,9 @@
     "res-date-fns": "^1.1.2",
     "reschema": "^2.0.3",
     "rescript-classnames": "^6.0.0",
-    "rescript-relay": "0.0.0-connection-id-maker-fix-24be613b",
+    "rescript-relay": "^1.0.0-beta.26",
     "rescript-webapi": "^0.6.0",
+    "swiper": "^8.4.4",
     "swr": "^1.2.0",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tinymce": "^5.10.3",
@@ -72,11 +78,13 @@
     "@graphql-codegen/schema-ast": "^2.4.1",
     "@greenlabs/ppx-spice": "^0.1.6",
     "@greenlabs/res-tailwindcss": "^0.1.8",
-    "@rescript/react": "^0.11.0-alpha.1",
+    "@rescript/react": "^0.10.3",
+    "@sentry/cli": "^2.8.1",
     "@svgr/webpack": "^5.4.0",
     "autoprefixer": "^10.2.6",
     "babel-jest": "^27.0.6",
     "babel-loader": "^8.2.2",
+    "bs-css": "14.0.2",
     "bs-css-emotion": "^3.0.0",
     "concurrently": "^6.2.0",
     "core-js": "^3.6.5",
@@ -93,13 +101,14 @@
     "lenses-ppx": "^6.1.10",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.8.4",
-    "next-transpile-modules": "^8.0.0",
+    "next-transpile-modules": "8.0.0",
     "postcss": "^8.4.5",
     "postcss-cli": "^8.3.1",
     "prettier": "^2.5.1",
-    "rescript": "^10.1.0-rc.1",
+    "rescript": "10",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.0.7"
+    "tailwindcss": "^3.0.7",
+    "zrender": "^5.4.0"
   },
   "scripts": {
     "dev": "next",
@@ -120,12 +129,83 @@
     "lint": "yarn run eslint 'src/**/*.mjs'",
     "relay": "mkdir -p src/__generated__ && rescript-relay-compiler",
     "relay:watch": "rescript-relay-compiler --watch",
-    "api-introspect": "set -o allexport && source .env.local && set +o allexport && graphql-codegen --config codegen.yml",
+    "api-introspect": "sh -c 'set -o allexport && source .env.local && set +o allexport && graphql-codegen --config codegen.yml'",
     "format": "rescript format -all",
     "clean": "rm -rf node_modules && rm -rf .next && yarn && yarn res:clean"
   },
   "resolutions": {
     "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react-dom": "18.0.0",
+    "lenses-ppx@^6.1.10": "patch:lenses-ppx@npm%3A6.1.10#./.yarn/patches/lenses-ppx-npm-6.1.10-b1b7660621.patch",
+    "rescript-relay@^1.0.0-beta.26": "patch:rescript-relay@npm%3A1.0.0-beta.26#./.yarn/patches/rescript-relay-npm-1.0.0-beta.26-4f125dc546.patch",
+    "@greenlabs/ppx-spice@^0.1.6": "patch:@greenlabs/ppx-spice@npm%3A0.1.6#./.yarn/patches/@greenlabs-ppx-spice-npm-0.1.6-b91a939504.patch",
+    "gentype@^4.1.0": "patch:gentype@npm%3A4.1.0#./.yarn/patches/gentype-npm-4.1.0-e7c0d2a5d3.patch",
+    "@greenlabs/res-tailwindcss@^0.1.8": "patch:@greenlabs/res-tailwindcss@npm%3A0.1.8#./.yarn/patches/@greenlabs-res-tailwindcss-npm-0.1.8-d94e136753.patch"
+  },
+  "packageManager": "yarn@3.2.3",
+  "dependenciesMeta": {
+    "@glennsl/bs-jest@0.7.0": {
+      "unplugged": true
+    },
+    "@greenlabs/garter@0.11.0": {
+      "unplugged": true
+    },
+    "@greenlabs/ppx-spice@0.1.6": {
+      "unplugged": true
+    },
+    "@greenlabs/re-korean-numeral@0.1.2": {
+      "unplugged": true
+    },
+    "@greenlabs/res-daum-postcode@0.1.1": {
+      "unplugged": true
+    },
+    "@greenlabs/res-tailwindcss@0.1.8": {
+      "unplugged": true
+    },
+    "@greenlabs/rescript-formula-components@0.0.1-alpha.20": {
+      "unplugged": true
+    },
+    "@rescript/react@0.10.3": {
+      "unplugged": true
+    },
+    "@rescriptbr/reform@11.0.1": {
+      "unplugged": true
+    },
+    "bs-css@14.0.2": {
+      "unplugged": true
+    },
+    "bs-css-emotion@3.0.0": {
+      "unplugged": true
+    },
+    "bs-fetch@0.6.2": {
+      "unplugged": true
+    },
+    "gentype@4.1.0": {
+      "unplugged": true
+    },
+    "lenses-ppx@6.1.10": {
+      "unplugged": true
+    },
+    "res-date-fns@1.2.0": {
+      "unplugged": true
+    },
+    "reschema@2.0.3": {
+      "unplugged": true
+    },
+    "rescript@10.0.0": {
+      "unplugged": true
+    },
+    "rescript-classnames@6.0.0": {
+      "unplugged": true
+    },
+    "rescript-react-update@3.0.2": {
+      "unplugged": true
+    },
+    "rescript-relay@1.0.0-beta.26": {
+      "unplugged": true
+    },
+    "rescript-webapi@0.6.0": {
+      "unplugged": true
+    }
   }
 }

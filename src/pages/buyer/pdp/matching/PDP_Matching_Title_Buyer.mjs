@@ -8,6 +8,7 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
 import * as ReactRelay from "react-relay";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
+import * as FeatureFlagWrapper from "../../pc/FeatureFlagWrapper.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PDPMatchingTitleBuyer_fragment_graphql from "../../../../__generated__/PDPMatchingTitleBuyer_fragment_graphql.mjs";
 
@@ -40,6 +41,7 @@ function PDP_Matching_Title_Buyer$MO(Props) {
   var selectedGroup = Props.selectedGroup;
   var match = use(query);
   var representativeWeight = match.representativeWeight;
+  var displayName = match.displayName;
   var priceLabel = Belt_Option.mapWithDefault(match.recentMarketPrice, "", (function (param) {
           var price;
           switch (selectedGroup) {
@@ -66,19 +68,32 @@ function PDP_Matching_Title_Buyer$MO(Props) {
                       }));
         }));
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
-  return React.createElement("div", {
-              className: "w-full py-6 flex justify-between"
-            }, React.createElement("div", undefined, React.createElement("h1", {
-                      className: "text-lg text-black font-bold"
-                    }, match.displayName), React.createElement("span", {
-                      className: "mt-1 text-xs text-gray-600"
-                    }, "" + String(representativeWeight) + "kg당 예상 거래가")), typeof user === "number" ? (
-                user !== 0 ? React.createElement("h1", {
+  var oldUI = React.createElement("div", {
+        className: "w-full py-6 flex justify-between"
+      }, React.createElement("div", undefined, React.createElement("h1", {
+                className: "text-lg text-black font-bold break-all"
+              }, displayName), React.createElement("span", {
+                className: "mt-1 text-xs text-gray-600"
+              }, "" + String(representativeWeight) + "kg당 예상 거래가")), typeof user === "number" ? (
+          user !== 0 ? React.createElement("h1", {
+                  className: "text-[22px] text-black font-bold"
+                }, "예상가 회원공개") : null
+        ) : React.createElement("h1", {
+              className: "text-[22px] text-black font-bold"
+            }, priceLabel));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "w-full py-6 flex justify-between"
+                  }, React.createElement("div", undefined, React.createElement("h1", {
+                            className: "text-lg text-black font-bold break-all"
+                          }, displayName), React.createElement("span", {
+                            className: "mt-1 text-xs text-gray-600"
+                          }, "" + String(representativeWeight) + "kg당 예상 거래가")), React.createElement("h1", {
                         className: "text-[22px] text-black font-bold"
-                      }, "예상가 회원공개") : null
-              ) : React.createElement("h1", {
-                    className: "text-[22px] text-black font-bold"
-                  }, priceLabel));
+                      }, priceLabel)),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var MO = {

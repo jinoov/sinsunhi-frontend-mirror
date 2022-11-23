@@ -107,8 +107,8 @@ function PDP_Quoted_RfqBtn_Buyer$PC(Props) {
             _0: Belt_Option.getWithDefault(decode(match.salesType), /* RFQ_LIVESTOCK */0)
           })
     );
-  var btnStyle = "w-full h-16 rounded-xl bg-primary hover:bg-primary-variant text-white text-lg font-bold";
-  var disabledStyle = "w-full h-16 rounded-xl flex items-center justify-center bg-gray-300 text-white font-bold text-xl";
+  var btnStyle = "w-full h-16 rounded-xl bg-primary hover:bg-primary-variant text-white text-lg font-bold flex-1";
+  var disabledStyle = "w-full h-16 rounded-xl flex items-center justify-center bg-gray-300 text-white font-bold text-xl flex-1";
   if (typeof rfqStatus !== "number") {
     if (rfqStatus._0) {
       return React.createElement("button", {
@@ -121,6 +121,7 @@ function PDP_Quoted_RfqBtn_Buyer$PC(Props) {
                 }, "최저가 견적받기");
     } else {
       return React.createElement("div", {
+                  className: "flex-1",
                   onClick: (function (param) {
                       DataGtm.push(DataGtm.mergeUserIdUnsafe(make(displayName, productId, category)));
                     })
@@ -162,6 +163,7 @@ function PDP_Quoted_RfqBtn_Buyer$MO(Props) {
   var router = Router.useRouter();
   var user = Curry._1(CustomHooks.User.Buyer.use2, undefined);
   var match = use(query);
+  var fragmentRefs = match.fragmentRefs;
   var productId = match.productId;
   var displayName = match.displayName;
   var category = match.category;
@@ -172,8 +174,8 @@ function PDP_Quoted_RfqBtn_Buyer$MO(Props) {
             _0: Belt_Option.getWithDefault(decode(match.salesType), /* RFQ_LIVESTOCK */0)
           })
     );
-  var btnStyle = "h-14 w-full rounded-xl bg-primary text-white text-lg font-bold";
-  var disabledStyle = "h-14 w-full rounded-xl bg-disabled-L2 text-white text-lg font-bold";
+  var btnStyle = "h-14 flex-1 rounded-xl bg-primary text-white text-lg font-bold";
+  var disabledStyle = "h-14 flex-1 rounded-xl bg-disabled-L2 text-white text-lg font-bold";
   if (typeof rfqStatus === "number") {
     switch (rfqStatus) {
       case /* Loading */0 :
@@ -192,6 +194,7 @@ function PDP_Quoted_RfqBtn_Buyer$MO(Props) {
                                   });
                             })
                         }, "최저가 견적받기"), React.createElement(PDP_CTA_Container_Buyer.make, {
+                          query: fragmentRefs,
                           children: React.createElement("button", {
                                 className: btnStyle,
                                 onClick: (function (param) {
@@ -208,6 +211,7 @@ function PDP_Quoted_RfqBtn_Buyer$MO(Props) {
                           className: disabledStyle,
                           disabled: true
                         }, "최저가 견적받기"), React.createElement(PDP_CTA_Container_Buyer.make, {
+                          query: fragmentRefs,
                           children: React.createElement("button", {
                                 className: disabledStyle,
                                 disabled: true
@@ -226,6 +230,7 @@ function PDP_Quoted_RfqBtn_Buyer$MO(Props) {
                       className: btnStyle,
                       onClick: onClick
                     }, "최저가 견적받기"), React.createElement(PDP_CTA_Container_Buyer.make, {
+                      query: fragmentRefs,
                       children: React.createElement("button", {
                             className: btnStyle,
                             onClick: onClick
@@ -241,8 +246,9 @@ function PDP_Quoted_RfqBtn_Buyer$MO(Props) {
                         className: btnStyle,
                         buttonText: "최저가 견적받기"
                       })), React.createElement(PDP_CTA_Container_Buyer.make, {
+                    query: fragmentRefs,
                     children: React.createElement("div", {
-                          className: "w-full",
+                          className: "w-full flex flex-1",
                           onClick: onClick$1
                         }, React.createElement(RfqCreateRequestButton.make, {
                               className: btnStyle,

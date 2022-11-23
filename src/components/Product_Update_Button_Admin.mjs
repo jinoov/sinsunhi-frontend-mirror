@@ -198,7 +198,10 @@ function Product_Update_Button_Admin$CutOffAndMemo(Props) {
                                     className: "btn-level1 py-3 px-5",
                                     onClick: save
                                   }, "저장")))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 
@@ -322,7 +325,10 @@ function Product_Update_Button_Admin$Crop(Props) {
                                     className: "btn-level1 py-3 px-5",
                                     onClick: save
                                   }, "저장")))),
-                  className: "dialog-content overflow-y-auto text-sm"
+                  className: "dialog-content overflow-y-auto text-sm",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 
@@ -639,7 +645,10 @@ function Product_Update_Button_Admin$Detail(Props) {
                                             className: "btn-level1 py-3 px-5",
                                             type: "submit"
                                           }, "저장")))))),
-                  className: "dialog-content overflow-y-auto text-sm"
+                  className: "dialog-content overflow-y-auto text-sm",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

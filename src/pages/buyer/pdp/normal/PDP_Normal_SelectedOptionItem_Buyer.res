@@ -22,6 +22,9 @@ module Query = %relay(`
         productOptionCost {
           deliveryCost
         }
+        adhocStockIsLimited
+        adhocStockIsNumRemainingVisible
+        adhocStockNumRemaining
       }
     }
   }
@@ -42,7 +45,36 @@ module PC = {
         price,
         isFreeShipping,
         productOptionCost,
+        adhocStockIsLimited,
+        adhocStockIsNumRemainingVisible,
+        adhocStockNumRemaining,
       }) =>
+      let {addToast} = ReactToastNotifications.useToasts()
+
+      let toastWhenOverMaxQuantity = _ =>
+        switch adhocStockNumRemaining {
+        | Some(max) =>
+          addToast(.
+            <div className=%twc("flex items-center")>
+              <div className=%twc("mr-[6px]")>
+                <Formula.Icon.CheckCircleFill color=#"primary-contents" />
+              </div>
+              <span>
+                {`구매 가능 수량은 ${max
+                  ->Int.toFloat
+                  ->Locale.Float.show(~digits=0)}개 입니다`->React.string}
+              </span>
+            </div>,
+            {appearance: "success"},
+          )
+        | None => ()
+        }
+
+      let isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(
+        ~adhocStockIsLimited,
+        ~adhocStockIsNumRemainingVisible,
+      )
+
       let totalOptionPrice = {
         PDP_Parser_Buyer.ProductOption.makeOptionPrice(
           ~price,
@@ -51,8 +83,22 @@ module PC = {
         )->Option.map(optionPrice' => optionPrice' * quantity)
       }
 
-      <div className=%twc("pt-6 flex items-center justify-between")>
-        <Spinbox value=quantity onChange={value => onChange(id, value)} />
+      <div className=%twc("pt-6 flex items-start justify-between")>
+        <div>
+          <Spinbox
+            value=quantity
+            onChange={value => onChange(id, value)}
+            max=?adhocStockNumRemaining
+            onOverMaxQuantity={toastWhenOverMaxQuantity}
+          />
+          {switch (isShowRemaining, adhocStockNumRemaining) {
+          | (true, Some(remaining)) =>
+            <Formula.Text.Body size=#sm color=#"gray-70" className=%twc("mt-2")>
+              {`${remaining->Int.toFloat->Locale.Float.show(~digits=0)}개 남음`->React.string}
+            </Formula.Text.Body>
+          | _ => React.null
+          }}
+        </div>
         <div className=%twc("flex flex-col items-end")>
           <span className=%twc("mt-1 text-gray-800 text-right text-[15px]")>
             <span> {optionName->React.string} </span>
@@ -99,7 +145,34 @@ module MO = {
         price,
         isFreeShipping,
         productOptionCost,
+        adhocStockIsLimited,
+        adhocStockIsNumRemainingVisible,
+        adhocStockNumRemaining,
       }) =>
+      let {addToast} = ReactToastNotifications.useToasts()
+
+      let toastWhenOverMaxQuantity = _ =>
+        switch adhocStockNumRemaining {
+        | Some(max) =>
+          addToast(.
+            <div className=%twc("flex items-center")>
+              <div className=%twc("mr-[6px]")>
+                <Formula.Icon.CheckCircleFill color=#"primary-contents" />
+              </div>
+              <span>
+                {`구매 가능 수량은 ${max->Int.toString}개 입니다`->React.string}
+              </span>
+            </div>,
+            {appearance: "success"},
+          )
+        | None => ()
+        }
+
+      let isShowRemaining = AdhocStock_Parser_Buyer_Admin.getIsShowRemaining(
+        ~adhocStockIsLimited,
+        ~adhocStockIsNumRemainingVisible,
+      )
+
       let totalOptionPrice = {
         PDP_Parser_Buyer.ProductOption.makeOptionPrice(
           ~price,
@@ -109,7 +182,21 @@ module MO = {
       }
 
       <section className=%twc("pt-5 flex items-start justify-between")>
-        <Spinbox value=quantity onChange={value => onChange(id, value)} />
+        <div>
+          <Spinbox
+            value=quantity
+            onChange={value => onChange(id, value)}
+            max=?adhocStockNumRemaining
+            onOverMaxQuantity={toastWhenOverMaxQuantity}
+          />
+          {switch (isShowRemaining, adhocStockNumRemaining) {
+          | (true, Some(remaining)) =>
+            <Formula.Text.Body size=#sm color=#"gray-70" className=%twc("mt-2")>
+              {`${remaining->Int.toFloat->Locale.Float.show(~digits=0)}개 남음`->React.string}
+            </Formula.Text.Body>
+          | _ => React.null
+          }}
+        </div>
         <div className=%twc("flex flex-col items-end")>
           <span className=%twc("mt-1 text-gray-800 text-right text-[15px]")>
             <span> {optionName->React.string} </span>

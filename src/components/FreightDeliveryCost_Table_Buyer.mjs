@@ -129,7 +129,10 @@ function FreightDeliveryCost_Table_Buyer(Props) {
                       }, "화물비 표 보기")
                 }), React.createElement(ReactDialog.Content, {
                   children: null,
-                  className: "dialog-content-fix p-5 overflow-y-auto text-sm text-text-L1 rounded-2xl min-w-max"
+                  className: "dialog-content-fix p-5 overflow-y-auto text-sm text-text-L1 rounded-2xl min-w-max",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }, React.createElement(FreightDeliveryCost_Table_Buyer$TitleAndCloseButton, {
                       close: close
                     }), React.createElement("div", {

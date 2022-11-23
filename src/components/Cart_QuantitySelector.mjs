@@ -3,6 +3,7 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Spinbox from "./common/Spinbox.mjs";
 import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
@@ -12,9 +13,11 @@ import * as ReactHookForm from "../bindings/ReactHookForm/ReactHookForm.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as Cart_Buyer_Form from "./Cart_Buyer_Form.mjs";
 import * as ReactHookForm$1 from "react-hook-form";
+import * as ErrorMessage from "@hookform/error-message";
 import * as ReactToastNotifications from "react-toast-notifications";
 import PlusSvg from "../../public/assets/plus.svg";
 import MinusSvg from "../../public/assets/minus.svg";
+import * as FormulaComponents from "@greenlabs/formula-components";
 import * as CartQuantitySelectorMutation_graphql from "../__generated__/CartQuantitySelectorMutation_graphql.mjs";
 
 function commitMutation(environment, variables, optimisticUpdater, optimisticResponse, updater, onCompleted, onError, uploadables, param) {
@@ -83,11 +86,19 @@ function Cart_QuantitySelector(Props) {
   var prefix = Props.prefix;
   var quantity = Props.quantity;
   var cartId = Props.cartId;
+  var maxOpt = Props.max;
+  var max = maxOpt !== undefined ? maxOpt : Spinbox.maxQuantity;
   var match = ReactToastNotifications.useToasts();
   var addToast = match.addToast;
   var match$1 = ReactHookForm$1.useFormContext({
         mode: "onChange"
       }, undefined);
+  var setValue = match$1.setValue;
+  var setError = match$1.setError;
+  var errors = match$1.formState.errors;
+  var match$2 = use(undefined);
+  var mutate = match$2[0];
+  var formNames = Cart_Buyer_Form.names(prefix);
   var handleError = function (message, param) {
     addToast(React.createElement("div", {
               className: "flex items-center w-full whitespace-pre-wrap"
@@ -99,17 +110,68 @@ function Cart_QuantitySelector(Props) {
           appearance: "error"
         });
   };
-  var match$2 = use(undefined);
-  var mutate = match$2[0];
-  var formNames = Cart_Buyer_Form.names(prefix);
+  React.useEffect((function () {
+          if (quantity > max) {
+            Curry.app(mutate, [
+                  (function (err) {
+                      handleError(err.message, undefined);
+                    }),
+                  (function (param, param$1) {
+                      var updateCartItemQuantity = param.updateCartItemQuantity;
+                      if (typeof updateCartItemQuantity !== "object") {
+                        return handleError(undefined, undefined);
+                      }
+                      var variant = updateCartItemQuantity.NAME;
+                      if (variant === "UpdateCartItemQuantitySuccess") {
+                        setValue(formNames.quantity, max);
+                        return setError(formNames.quantity, {
+                                    message: "상품 수량이 변경되었습니다.",
+                                    type: "custom"
+                                  });
+                      } else if (variant === "Error") {
+                        return handleError(Belt_Option.getWithDefault(updateCartItemQuantity.VAL.message, ""), undefined);
+                      } else {
+                        return handleError(undefined, undefined);
+                      }
+                    }),
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  {
+                    cartId: cartId,
+                    quantity: max
+                  },
+                  undefined,
+                  undefined
+                ]);
+          }
+          
+        }), []);
+  var plus = function (x, y) {
+    return x + y | 0;
+  };
+  var minus = function (x, y) {
+    return x - y | 0;
+  };
   var handleChange = function (changeFn, fn, v) {
     return function (param) {
       return ReactEvents.interceptingHandler((function (param) {
                     Belt_Option.forEach(Belt_Option.map(Js_json.decodeNumber(v), (function (prim) {
                                 return prim | 0;
                               })), (function (v$p) {
-                            var match = Curry._2(fn, v$p, 1);
-                            if (match !== 0 && match !== 1000) {
+                            var nextQuantity = Curry._2(fn, v$p, 1);
+                            if (nextQuantity > max) {
+                              return addToast(React.createElement("div", {
+                                              className: "flex items-center"
+                                            }, React.createElement("div", {
+                                                  className: "mr-[6px]"
+                                                }, React.createElement(FormulaComponents.CheckCircleFill, {
+                                                      color: "primary-contents"
+                                                    })), React.createElement("span", undefined, "구매 가능 수량은 " + String(max) + "개 입니다")), {
+                                          appearance: "success"
+                                        });
+                            } else if (nextQuantity > 0) {
                               Curry.app(mutate, [
                                     (function (err) {
                                         handleError(err.message, undefined);
@@ -121,7 +183,7 @@ function Cart_QuantitySelector(Props) {
                                         }
                                         var variant = updateCartItemQuantity.NAME;
                                         if (variant === "UpdateCartItemQuantitySuccess") {
-                                          return Curry._1(changeFn, Curry._1(ReactHookForm.Controller.OnChangeArg.value, Curry._2(fn, v$p, 1)));
+                                          return Curry._1(changeFn, Curry._1(ReactHookForm.Controller.OnChangeArg.value, nextQuantity));
                                         } else if (variant === "Error") {
                                           return handleError(Belt_Option.getWithDefault(updateCartItemQuantity.VAL.message, ""), undefined);
                                         } else {
@@ -134,23 +196,18 @@ function Cart_QuantitySelector(Props) {
                                     undefined,
                                     {
                                       cartId: cartId,
-                                      quantity: Curry._2(fn, v$p, 1)
+                                      quantity: nextQuantity
                                     },
                                     undefined,
                                     undefined
                                   ]);
                               return ;
+                            } else {
+                              return ;
                             }
-                            
                           }));
                   }), param);
     };
-  };
-  var plus = function (x, y) {
-    return x + y | 0;
-  };
-  var minus = function (x, y) {
-    return x - y | 0;
   };
   return React.createElement(ReactHookForm$1.Controller, {
               name: formNames.quantity,
@@ -159,21 +216,35 @@ function Cart_QuantitySelector(Props) {
                   var match = param.field;
                   var value = match.value;
                   var onChange = match.onChange;
-                  return React.createElement("div", {
-                              className: "w-24 flex justify-between py-[7px] px-[11px] gap-[11px] bg-white rounded-lg border border-gray-250"
-                            }, React.createElement("button", {
-                                  onClick: handleChange(onChange, minus, value)
-                                }, React.createElement("img", {
-                                      className: "w-4 h-4 cursor-pointer",
-                                      alt: "minus-icon",
-                                      src: minusIcon
-                                    })), JSON.stringify(value), React.createElement("button", {
-                                  onClick: handleChange(onChange, plus, value)
-                                }, React.createElement("img", {
-                                      className: "w-4 h-4 cursor-pointer",
-                                      alt: "plus-icon",
-                                      src: plusIcon
-                                    })));
+                  return React.createElement("div", undefined, React.createElement("div", {
+                                  className: "w-[120px] h-[38px] flex justify-between items-center bg-white rounded-lg border border-gray-250"
+                                }, React.createElement("button", {
+                                      className: "w-[38px] h-full flex justify-center items-center",
+                                      disabled: value === 1,
+                                      onClick: handleChange(onChange, minus, value)
+                                    }, React.createElement(FormulaComponents.MinusLineRegular, {
+                                          size: "sm",
+                                          color: "gray-90"
+                                        })), JSON.stringify(value), React.createElement("button", {
+                                      className: "w-[38px] h-full flex justify-center items-center",
+                                      onClick: handleChange(onChange, plus, value)
+                                    }, React.createElement(FormulaComponents.PlusLineRegular, {
+                                          size: "sm",
+                                          color: "gray-90"
+                                        }))), React.createElement(ErrorMessage.ErrorMessage, {
+                                  name: formNames.quantity,
+                                  errors: errors,
+                                  render: (function (param) {
+                                      return React.createElement("span", {
+                                                  className: "flex mt-2"
+                                                }, React.createElement(IconError.make, {
+                                                      width: "20",
+                                                      height: "20"
+                                                    }), React.createElement("span", {
+                                                      className: "text-sm text-notice ml-1"
+                                                    }, param.message));
+                                    })
+                                }));
                 }),
               defaultValue: quantity
             });

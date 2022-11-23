@@ -52,7 +52,8 @@ module Popup = {
         ref=?{Js.Nullable.toOption(ref_)->Belt.Option.map(ReactDOM.Ref.domRef)}
         className={className->Option.mapWithDefault(defaultStyle, className' =>
           cx([defaultStyle, className'])
-        )}>
+        )}
+        onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         {children}
       </RadixUI.Dialog.Content>
     })

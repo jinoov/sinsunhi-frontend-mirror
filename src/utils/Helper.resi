@@ -27,4 +27,5 @@ module PhoneNumber: {
 
 module Debounce: {
   let make1: ('a => Js.Promise.t<'b>, int, 'a) => Js.Promise.t<'b>
+  let make1WithoutPromise: ('a => unit, int, 'a) => unit
 }

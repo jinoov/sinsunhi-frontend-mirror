@@ -271,7 +271,10 @@ function BulkSale_Producer_Sample_Review_Button_Update_Admin$UpdateSampleReview(
   };
   return React.createElement(ReactDialog.Content, {
               children: null,
-              className: "dialog-content-detail overflow-y-auto"
+              className: "dialog-content-detail overflow-y-auto",
+              onOpenAutoFocus: (function (prim) {
+                  prim.preventDefault();
+                })
             }, React.createElement("section", {
                   className: "p-5"
                 }, React.createElement("article", {

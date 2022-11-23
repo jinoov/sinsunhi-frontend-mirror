@@ -62,7 +62,7 @@ let make = (~userType: CustomHooks.Auth.role, ~requestUrl, ~buttonText=?, ~bodyO
         "h-9 px-3 text-black-gl bg-gray-button-gl rounded-lg flex items-center min-w-max"
       )
       onClick={_ => setIsShowRequest(._ => Dialog.Show)}>
-      <img src=downloadIcon className=%twc("relative mr-1") />
+      <img src=downloadIcon className=%twc("relative mr-1") alt="" />
       {buttonText->Option.getWithDefault(j`엑셀 다운로드 요청`)->React.string}
     </button>
     <Dialog

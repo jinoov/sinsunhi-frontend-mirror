@@ -42,9 +42,8 @@ let rec render = (
       }
     }
 
-  | Sub({anchor: {url, target}, title, role}) => switch role->Garter.Array.some(roleOfItem =>
-      userRole == Some(roleOfItem)
-    ) {
+  | Sub({anchor: {url, target}, title, role}) =>
+    switch role->Garter.Array.some(roleOfItem => userRole == Some(roleOfItem)) {
     | true =>
       <Layout_Admin_Sub
         key={url} title href={url} selected={t->Layout_Admin_Data.Item.hasUrl(pathname)} target
@@ -64,10 +63,10 @@ let make = (~children) => {
   }
   let (openedAdminMenu, setOpenedAdminMenu) = LocalStorageHooks.AdminMenu.useLocalStorage()
 
-  <>
+  <div className=%twc("min-h-screen flex flex-col")>
     <Header.Admin />
-    <main className="flex flex-row bg-div-shape-L1">
-      <aside className=%twc("mt-px min-h-screen bg-white")>
+    <main className="flex flex-row flex-1 bg-div-shape-L1">
+      <aside className=%twc("mt-px min-h-full bg-white")>
         {Layout_Admin_Data.Item.items
         ->Array.map(t =>
           t->render(
@@ -79,7 +78,7 @@ let make = (~children) => {
         )
         ->React.array}
       </aside>
-      <article className=%twc("w-full max-w-gnb-panel")> children </article>
+      <article className=%twc("w-[calc(100%-288px)] min-h-full")> children </article>
     </main>
-  </>
+  </div>
 }

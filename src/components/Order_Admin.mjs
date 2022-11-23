@@ -22,10 +22,6 @@ function formatDate(d) {
 function isCheckableOrder(order) {
   var match = order.status;
   switch (match) {
-    case /* DELIVERING */3 :
-    case /* CANCEL */5 :
-    case /* REFUND */7 :
-        return false;
     case /* CREATE */0 :
     case /* PACKING */1 :
     case /* DEPARTURE */2 :
@@ -33,6 +29,11 @@ function isCheckableOrder(order) {
     case /* ERROR */6 :
     case /* NEGOTIATING */8 :
         return true;
+    case /* DELIVERING */3 :
+    case /* CANCEL */5 :
+    case /* REFUND */7 :
+    case /* DEPOSIT_PENDING */9 :
+        return false;
     
   }
 }
@@ -127,9 +128,9 @@ function Order_Admin$Item$Table(Props) {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement("span", {
                           className: "block mb-1"
-                        }, order.buyerName), React.createElement("span", {
+                        }, Belt_Option.getWithDefault(order.buyerName, "-")), React.createElement("span", {
                           className: "block mb-1"
-                        }, order.farmerName)), React.createElement("div", {
+                        }, Belt_Option.getWithDefault(order.farmerName, "-"))), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement("span", {
                           className: "block text-gray-400"

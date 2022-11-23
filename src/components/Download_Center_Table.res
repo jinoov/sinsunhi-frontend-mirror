@@ -86,6 +86,7 @@ module DownloadTableRow = {
             src=naviDownloadIcon
             className=%twc("ml-5 cursor-pointer")
             onClick={_ => downloadFtn(id->Int.toString, filename)}
+            alt="다운로드"
           />
         </p>
       | FAIL => <p className=%twc("text-emphasis")> {j`생성오류`->React.string} </p>
@@ -145,37 +146,79 @@ module DownloadTableRow = {
 let make = (~downloads': CustomHooks.Downloads.downloads) => {
   let {data, count, limit} = downloads'
 
-  <div
-    className="mt-5 p-5 bg-white rounded w-full min-h-[50vh] sm:min-h-[75vh] sm:p-7 sm:shadow-gl">
-    <p className=%twc("flex items-center mb-3")>
-      <h3 className=%twc("font-bold")> {`다운로드 요청내역`->React.string} </h3>
-      <span className=%twc("ml-2 text-primary")> {`${count->Int.toString}건`->React.string} </span>
-    </p>
-    <div className=%twc("flex flex-col sm:flex-row sm:justify-between sm:items-center")>
-      <span className=%twc("sm:text-sm")>
-        {j`생성완료 후 7일간 다운로드 가능합니다.`->React.string}
-      </span>
-      {count !== 0 ? <Select_CountPerPage className=%twc("my-5 sm:my-0 w-fit") /> : React.null}
-    </div>
-    {switch count {
-    | 0 =>
-      <main
-        className=%twc(
-          "flex flex-row justify-center items-center w-full min-h-screen text-sm text-text-L2"
-        )>
-        {j`요청하신 다운로드가 없습니다.`->React.string}
-      </main>
-    | _ => <>
-        <DownloadTableHead />
-        <main>
-          {data
-          ->Array.map(data => <DownloadTableRow data key={data.filename ++ data.requestAt} />)
-          ->React.array}
-          <div className=%twc("flex flex-row items-center my-7 w-full justify-center")>
-            <Pagination pageDisplySize=Constants.pageDisplySize itemPerPage=limit total=count />
-          </div>
+  let oldUI =
+    <div
+      className="mt-5 p-5 bg-white rounded w-full min-h-[50vh] sm:min-h-[75vh] sm:p-7 sm:shadow-gl">
+      <p className=%twc("flex items-center mb-3")>
+        <h3 className=%twc("font-bold")> {`다운로드 요청내역`->React.string} </h3>
+        <span className=%twc("ml-2 text-primary")>
+          {`${count->Int.toString}건`->React.string}
+        </span>
+      </p>
+      <div className=%twc("flex flex-col sm:flex-row sm:justify-between sm:items-center")>
+        <span className=%twc("sm:text-sm")>
+          {j`생성완료 후 7일간 다운로드 가능합니다.`->React.string}
+        </span>
+        {count !== 0 ? <Select_CountPerPage className=%twc("my-5 sm:my-0 w-fit") /> : React.null}
+      </div>
+      {switch count {
+      | 0 =>
+        <main
+          className=%twc(
+            "flex flex-row justify-center items-center w-full min-h-screen text-sm text-text-L2"
+          )>
+          {j`요청하신 다운로드가 없습니다.`->React.string}
         </main>
-      </>
-    }}
-  </div>
+      | _ =>
+        <>
+          <DownloadTableHead />
+          <main>
+            {data
+            ->Array.map(data => <DownloadTableRow data key={data.filename ++ data.requestAt} />)
+            ->React.array}
+            <div className=%twc("flex flex-row items-center my-7 w-full justify-center")>
+              <Pagination pageDisplySize=Constants.pageDisplySize itemPerPage=limit total=count />
+            </div>
+          </main>
+        </>
+      }}
+    </div>
+
+  <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+    <div
+      className="mt-5 lg:mt-0 px-[50px] py-10 bg-white rounded min-h-[50vh] sm:min-h-[75vh] sm:shadow-gl">
+      <p className=%twc("flex items-center mb-[38px]")>
+        <h3 className=%twc("font-bold text-[26px]")>
+          {`다운로드 요청내역`->React.string}
+        </h3>
+      </p>
+      <div className=%twc("flex flex-col sm:flex-row sm:justify-between sm:items-center")>
+        <span className=%twc("mb-[15px] text-[#8B8D94]")>
+          {j`생성완료 후 7일간 다운로드 가능합니다.`->React.string}
+        </span>
+        {count !== 0 ? <Select_CountPerPage className=%twc("my-5 sm:my-0 w-fit") /> : React.null}
+      </div>
+      {switch count {
+      | 0 =>
+        <main
+          className=%twc(
+            "flex flex-row justify-center items-center w-full min-h-[720px] text-sm text-text-L2"
+          )>
+          {j`요청하신 다운로드가 없습니다.`->React.string}
+        </main>
+      | _ =>
+        <>
+          <DownloadTableHead />
+          <main>
+            {data
+            ->Array.map(data => <DownloadTableRow data key={data.filename ++ data.requestAt} />)
+            ->React.array}
+            <div className=%twc("flex flex-row items-center my-7 w-full justify-center")>
+              <Pagination pageDisplySize=Constants.pageDisplySize itemPerPage=limit total=count />
+            </div>
+          </main>
+        </>
+      }}
+    </div>
+  </FeatureFlagWrapper>
 }

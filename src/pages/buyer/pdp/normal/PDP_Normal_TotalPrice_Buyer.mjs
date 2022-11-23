@@ -132,9 +132,9 @@ function PDP_Normal_TotalPrice_Buyer$PC(Props) {
   if (typeof priceLabelStatus === "number") {
     switch (priceLabelStatus) {
       case /* Loading */0 :
-          tmp$1 = React.createElement("span", {
-                className: "text-gray-500 text-sm"
-              }, "");
+          tmp$1 = React.createElement("div", {
+                className: "h-6"
+              });
           break;
       case /* Unauthorized */1 :
           tmp$1 = React.createElement("span", {
@@ -169,7 +169,7 @@ function PDP_Normal_TotalPrice_Buyer$PC(Props) {
                   className: "flex justify-between"
                 }, React.createElement("span", {
                       className: "text-lg font-bold text-gray-800"
-                    }, "총 결제 금액"), tmp), tmp$1);
+                    }, "총 결제 금액"), tmp), React.createElement("div", undefined, tmp$1));
 }
 
 var PC = {
@@ -232,27 +232,26 @@ function PDP_Normal_TotalPrice_Buyer$MO(Props) {
   if (typeof priceLabelStatus === "number") {
     switch (priceLabelStatus) {
       case /* Loading */0 :
-          var captionStyle = "text-[13px] text-gray-500";
-          tmp$1 = React.createElement("span", {
-                className: captionStyle
-              }, "");
+          tmp$1 = React.createElement("div", {
+                className: "h-[15.5px]"
+              });
           break;
       case /* Unauthorized */1 :
-          var captionStyle$1 = "text-[13px] text-green-500";
+          var captionStyle = "text-[13px] text-green-500";
           tmp$1 = React.createElement("span", {
-                className: captionStyle$1
+                className: captionStyle
               }, "로그인을 하시면 총 결제 금액을 보실 수 있습니다");
           break;
       case /* Soldout */2 :
-          var captionStyle$2 = "text-[13px] text-gray-500";
+          var captionStyle$1 = "text-[13px] text-gray-500";
           tmp$1 = React.createElement("span", {
-                className: captionStyle$2
+                className: captionStyle$1
               }, "품절된 상품으로 총 결제 금액을 보실 수 없습니다");
           break;
       case /* NoOption */3 :
-          var captionStyle$3 = "text-[13px] text-green-500";
+          var captionStyle$2 = "text-[13px] text-green-500";
           tmp$1 = React.createElement("span", {
-                className: captionStyle$3
+                className: captionStyle$2
               }, "단품을 선택하시면 총 결제 금액을 보실 수 있습니다");
           break;
       
@@ -263,9 +262,9 @@ function PDP_Normal_TotalPrice_Buyer$MO(Props) {
     var deliveryCostLabel = withDeliveryCost ? (
         totalDeliveryCost !== 0 ? "배송비 " + Locale.Float.show(undefined, totalDeliveryCost, 0) + "원 포함" : "배송비 무료"
       ) : "택배 배송비 포함 금액(배송방식에 따라 변동됨)";
-    var captionStyle$4 = "text-[13px] text-gray-600";
+    var captionStyle$3 = "text-[13px] text-gray-600";
     tmp$1 = React.createElement("span", {
-          className: captionStyle$4
+          className: captionStyle$3
         }, deliveryCostLabel);
   }
   return React.createElement("div", undefined, React.createElement("div", {

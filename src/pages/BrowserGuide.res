@@ -22,9 +22,11 @@ let make = () => {
     )
 
   <>
-    <Next.Head> <title> {j`IE 접속 가이드 - 신선하이`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {j`신선하이 | IE 접속 가이드`->React.string} </title>
+    </Next.Head>
     <div className=%twc("flex flex-col h-screen justify-center items-center text-black-gl")>
-      <img src="/assets/sinsunhi-logo.svg" width="164" height="42" alt=`신선하이 로고` />
+      <img src="/assets/sinsunhi-logo.svg" width="164" height="42" alt={`신선하이 로고`} />
       <div className=%twc("text-center text-lg whitespace-pre font-bold mt-14")>
         {j`지금 사용중인 브라우저에서는 
 신선하이를 이용하실 수 없습니다.`->React.string}

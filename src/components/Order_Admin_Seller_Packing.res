@@ -4,7 +4,7 @@ module Item = {
   module Table = {
     @react.component
     let make = (
-      ~order: CustomHooks.OrdersAdmin.order,
+      ~order: CustomHooks.Orders.order,
       ~courierCode: option<string>,
       ~setCourier,
       ~invoice,
@@ -18,14 +18,21 @@ module Item = {
 
       <li className=%twc("grid grid-cols-11-gl-admin text-gray-700")>
         <div className=%twc("h-full flex flex-col px-4 py-2")>
-          <span className=%twc("block mb-1")> {order.farmerName->React.string} </span>
           <span className=%twc("block mb-1")>
-            {`(${order.farmerPhone
-              ->Helper.PhoneNumber.parse
-              ->Option.flatMap(Helper.PhoneNumber.format)
-              ->Option.getWithDefault(order.farmerPhone)})`->React.string}
+            {order.farmerName->Option.getWithDefault("-")->React.string}
           </span>
-          <span className=%twc("block mb-1")> {order.buyerName->React.string} </span>
+          <span className=%twc("block mb-1")>
+            {`(${order.farmerPhone->Option.mapWithDefault("-", farmerPhone' =>
+                farmerPhone'
+                ->Helper.PhoneNumber.parse
+                ->Option.flatMap(Helper.PhoneNumber.format)
+                ->Option.getWithDefault(farmerPhone')
+              )}
+              )`->React.string}
+          </span>
+          <span className=%twc("block mb-1")>
+            {order.buyerName->Option.getWithDefault("-")->React.string}
+          </span>
         </div>
         <div className=%twc("h-full flex flex-col px-4 py-2")>
           <span className=%twc("block")> {order.orderDate->formatDate->React.string} </span>
@@ -168,7 +175,7 @@ module Item = {
 }
 
 @react.component
-let make = (~order: CustomHooks.OrdersAdmin.order) => {
+let make = (~order: CustomHooks.Orders.order) => {
   let router = Next.Router.useRouter()
   let {mutate} = Swr.useSwrConfig()
   let {addToast} = ReactToastNotifications.useToasts()

@@ -6,7 +6,9 @@ let make = (~isOpen, ~onClose) => {
 
   <Dialog.Root _open={isOpen}>
     <Dialog.Overlay className=%twc("dialog-overlay") />
-    <Dialog.Content className=%twc("dialog-content-detail overflow-y-auto rounded-2xl")>
+    <Dialog.Content
+      className=%twc("dialog-content-detail overflow-y-auto rounded-2xl")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("text-text-L1")>
         <article className=%twc("flex")>
           <Dialog.Close

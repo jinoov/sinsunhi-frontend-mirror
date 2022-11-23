@@ -15,6 +15,7 @@ module Fragment = %relay(`
         name
       }
     }
+    ...PDPLikeButton_Fragment
   }
 `)
 
@@ -50,12 +51,12 @@ module MO = {
     let router = useRouter()
     let user = CustomHooks.User.Buyer.use2()
 
-    let {productId, displayName, category} = query->Fragment.use
+    let {productId, displayName, category, fragmentRefs} = query->Fragment.use
 
-    let btnStyle = %twc("h-14 w-full rounded-xl bg-primary text-white text-lg font-bold")
-    let disabledStyle = %twc("h-14 w-full rounded-xl bg-disabled-L2 text-white text-lg font-bold")
+    let btnStyle = %twc("h-14 flex-1 rounded-xl bg-primary text-white text-lg font-bold")
+    let disabledStyle = %twc("h-14 flex-1 rounded-xl bg-disabled-L2 text-white text-lg font-bold")
 
-    <PDP_CTA_Container_Buyer>
+    <PDP_CTA_Container_Buyer query=fragmentRefs>
       {switch user {
       | Unknown =>
         <button disabled=true className=disabledStyle> {buttonText->React.string} </button>

@@ -111,7 +111,10 @@ var make$2 = React.forwardRef(function (Props, ref_) {
                             defaultStyle,
                             className$p
                           ]);
-              }))
+              })),
+        onOpenAutoFocus: (function (prim) {
+            prim.preventDefault();
+          })
       };
       var tmp$1 = Belt_Option.map((ref_ == null) ? undefined : Caml_option.some(ref_), (function (prim) {
               return prim;

@@ -7,6 +7,7 @@ import * as React from "react";
 import * as Dialog from "./common/Dialog.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Checkbox from "./common/Checkbox.mjs";
 import * as IconError from "./svgs/IconError.mjs";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Float from "rescript/lib/es6/belt_Float.js";
@@ -260,6 +261,10 @@ function submit_encode(v) {
               [
                 "description-html",
                 Spice.stringToJson(v.editor)
+              ],
+              [
+                "auto-status",
+                Spice.boolToJson(v.isAutoStatus)
               ]
             ]);
 }
@@ -299,152 +304,165 @@ function submit_decode(v) {
                         if (documentURL.TAG === /* Ok */0) {
                           var editor = Spice.stringFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "description-html"), null));
                           if (editor.TAG === /* Ok */0) {
+                            var isAutoStatus = Spice.boolFromJson(Belt_Option.getWithDefault(Js_dict.get(dict$1, "auto-status"), null));
+                            if (isAutoStatus.TAG === /* Ok */0) {
+                              return {
+                                      TAG: /* Ok */0,
+                                      _0: {
+                                        producerProductName: producerProductName._0,
+                                        buyerProductName: buyerProductName._0,
+                                        origin: origin._0,
+                                        displayCategories: displayCategories._0,
+                                        operationStatus: operationStatus._0,
+                                        shipmentFrom: shipmentFrom._0,
+                                        shipmentTo: shipmentTo._0,
+                                        notice: notice._0,
+                                        noticeStartAt: noticeStartAt._0,
+                                        noticeEndAt: noticeEndAt._0,
+                                        thumbnail: thumbnail._0,
+                                        documentURL: documentURL._0,
+                                        editor: editor._0,
+                                        isAutoStatus: isAutoStatus._0
+                                      }
+                                    };
+                            }
+                            var e = isAutoStatus._0;
                             return {
-                                    TAG: /* Ok */0,
+                                    TAG: /* Error */1,
                                     _0: {
-                                      producerProductName: producerProductName._0,
-                                      buyerProductName: buyerProductName._0,
-                                      origin: origin._0,
-                                      displayCategories: displayCategories._0,
-                                      operationStatus: operationStatus._0,
-                                      shipmentFrom: shipmentFrom._0,
-                                      shipmentTo: shipmentTo._0,
-                                      notice: notice._0,
-                                      noticeStartAt: noticeStartAt._0,
-                                      noticeEndAt: noticeEndAt._0,
-                                      thumbnail: thumbnail._0,
-                                      documentURL: documentURL._0,
-                                      editor: editor._0
+                                      path: ".auto-status" + e.path,
+                                      message: e.message,
+                                      value: e.value
                                     }
                                   };
                           }
-                          var e = editor._0;
+                          var e$1 = editor._0;
                           return {
                                   TAG: /* Error */1,
                                   _0: {
-                                    path: "." + ("description-html" + e.path),
-                                    message: e.message,
-                                    value: e.value
+                                    path: ".description-html" + e$1.path,
+                                    message: e$1.message,
+                                    value: e$1.value
                                   }
                                 };
                         }
-                        var e$1 = documentURL._0;
+                        var e$2 = documentURL._0;
                         return {
                                 TAG: /* Error */1,
                                 _0: {
-                                  path: "." + ("document-url" + e$1.path),
-                                  message: e$1.message,
-                                  value: e$1.value
+                                  path: ".document-url" + e$2.path,
+                                  message: e$2.message,
+                                  value: e$2.value
                                 }
                               };
                       }
-                      var e$2 = thumbnail._0;
+                      var e$3 = thumbnail._0;
                       return {
                               TAG: /* Error */1,
                               _0: {
-                                path: "." + ("thumbnail" + e$2.path),
-                                message: e$2.message,
-                                value: e$2.value
+                                path: ".thumbnail" + e$3.path,
+                                message: e$3.message,
+                                value: e$3.value
                               }
                             };
                     }
-                    var e$3 = noticeEndAt._0;
+                    var e$4 = noticeEndAt._0;
                     return {
                             TAG: /* Error */1,
                             _0: {
-                              path: "." + ("notice-date-to" + e$3.path),
-                              message: e$3.message,
-                              value: e$3.value
+                              path: ".notice-date-to" + e$4.path,
+                              message: e$4.message,
+                              value: e$4.value
                             }
                           };
                   }
-                  var e$4 = noticeStartAt._0;
+                  var e$5 = noticeStartAt._0;
                   return {
                           TAG: /* Error */1,
                           _0: {
-                            path: "." + ("notice-date-from" + e$4.path),
-                            message: e$4.message,
-                            value: e$4.value
+                            path: ".notice-date-from" + e$5.path,
+                            message: e$5.message,
+                            value: e$5.value
                           }
                         };
                 }
-                var e$5 = notice._0;
+                var e$6 = notice._0;
                 return {
                         TAG: /* Error */1,
                         _0: {
-                          path: "." + ("notice" + e$5.path),
-                          message: e$5.message,
-                          value: e$5.value
+                          path: ".notice" + e$6.path,
+                          message: e$6.message,
+                          value: e$6.value
                         }
                       };
               }
-              var e$6 = shipmentTo._0;
+              var e$7 = shipmentTo._0;
               return {
                       TAG: /* Error */1,
                       _0: {
-                        path: "." + ("shipment-to" + e$6.path),
-                        message: e$6.message,
-                        value: e$6.value
+                        path: ".shipment-to" + e$7.path,
+                        message: e$7.message,
+                        value: e$7.value
                       }
                     };
             }
-            var e$7 = shipmentFrom._0;
+            var e$8 = shipmentFrom._0;
             return {
                     TAG: /* Error */1,
                     _0: {
-                      path: "." + ("shipment-from" + e$7.path),
-                      message: e$7.message,
-                      value: e$7.value
+                      path: ".shipment-from" + e$8.path,
+                      message: e$8.message,
+                      value: e$8.value
                     }
                   };
           }
-          var e$8 = operationStatus._0;
+          var e$9 = operationStatus._0;
           return {
                   TAG: /* Error */1,
                   _0: {
-                    path: "." + ("product-operation-status" + e$8.path),
-                    message: e$8.message,
-                    value: e$8.value
+                    path: ".product-operation-status" + e$9.path,
+                    message: e$9.message,
+                    value: e$9.value
                   }
                 };
         }
-        var e$9 = displayCategories._0;
+        var e$10 = displayCategories._0;
         return {
                 TAG: /* Error */1,
                 _0: {
-                  path: "." + ("display-categories" + e$9.path),
-                  message: e$9.message,
-                  value: e$9.value
+                  path: ".display-categories" + e$10.path,
+                  message: e$10.message,
+                  value: e$10.value
                 }
               };
       }
-      var e$10 = origin._0;
+      var e$11 = origin._0;
       return {
               TAG: /* Error */1,
               _0: {
-                path: "." + ("origin" + e$10.path),
-                message: e$10.message,
-                value: e$10.value
+                path: ".origin" + e$11.path,
+                message: e$11.message,
+                value: e$11.value
               }
             };
     }
-    var e$11 = buyerProductName._0;
+    var e$12 = buyerProductName._0;
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("buyer-product-name" + e$11.path),
-              message: e$11.message,
-              value: e$11.value
+              path: ".buyer-product-name" + e$12.path,
+              message: e$12.message,
+              value: e$12.value
             }
           };
   }
-  var e$12 = producerProductName._0;
+  var e$13 = producerProductName._0;
   return {
           TAG: /* Error */1,
           _0: {
-            path: "." + ("producer-product-name" + e$12.path),
-            message: e$12.message,
-            value: e$12.value
+            path: ".producer-product-name" + e$13.path,
+            message: e$13.message,
+            value: e$13.value
           }
         };
 }
@@ -463,7 +481,8 @@ var Form_formName = {
   noticeDateFrom: "notice-date-from",
   thumbnail: "thumbnail",
   documentURL: "document-url",
-  editor: "description-html"
+  editor: "description-html",
+  isAutoStatus: "auto-status"
 };
 
 var Form = {
@@ -1127,6 +1146,38 @@ var EditorInput = {
   make: Update_Matching_Product_Form_Admin$EditorInput
 };
 
+function Update_Matching_Product_Form_Admin$AutoStatusCheckbox(Props) {
+  var name = Props.name;
+  var defaultChecked = Props.defaultChecked;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "onChange"
+      }, undefined);
+  var autoStatus = match.register(name, undefined);
+  return React.createElement("div", {
+              className: "flex flex-col gap-2 max-w-md w-1/3"
+            }, React.createElement("div", {
+                  className: "block"
+                }, React.createElement("span", {
+                      className: "font-bold"
+                    }, "매칭 상품 자동관리")), React.createElement("div", {
+                  className: "flex gap-2 items-center"
+                }, React.createElement(Checkbox.Uncontrolled.make, {
+                      id: autoStatus.name,
+                      name: autoStatus.name,
+                      defaultChecked: defaultChecked,
+                      onBlur: autoStatus.onBlur,
+                      onChange: autoStatus.onChange,
+                      inputRef: autoStatus.ref
+                    }), React.createElement("label", {
+                      className: "cursor-pointer",
+                      htmlFor: autoStatus.name
+                    }, "자동 관리 설정")));
+}
+
+var AutoStatusCheckbox = {
+  make: Update_Matching_Product_Form_Admin$AutoStatusCheckbox
+};
+
 function toDisplayCategory(query) {
   var match = Belt_Option.map(Garter_Array.first(query), (function (param) {
           return param.type_;
@@ -1263,13 +1314,14 @@ function makeMatchingProductVariables(productId, form) {
     id: productId,
     image: {
       original: form.thumbnail.original,
+      thumb1000x1000: form.thumbnail.thumb1000x1000,
       thumb100x100: form.thumbnail.thumb100x100,
+      thumb1920x1920: form.thumbnail.thumb1920x1920,
       thumb400x400: form.thumbnail.thumb400x400,
       thumb800x800: form.thumbnail.thumb800x800,
-      thumb800xall: form.thumbnail.thumb800xall,
-      thumb1000x1000: form.thumbnail.thumb1000x1000,
-      thumb1920x1920: form.thumbnail.thumb1920x1920
+      thumb800xall: form.thumbnail.thumb800xall
     },
+    isAutoStatus: form.isAutoStatus,
     name: form.producerProductName,
     origin: form.origin,
     releaseEndMonth: form.shipmentTo | 0,
@@ -1453,7 +1505,10 @@ function Update_Matching_Product_Form_Admin(Props) {
                                       toName: "shipment-to",
                                       defaultFromValue: String(product.releaseStartMonth),
                                       defaultToValue: String(product.releaseEndMonth)
-                                    }))))), React.createElement("section", {
+                                    })), React.createElement(Update_Matching_Product_Form_Admin$AutoStatusCheckbox, {
+                                  name: "auto-status",
+                                  defaultChecked: product.isAutoStatus
+                                })))), React.createElement("section", {
                       className: "p-7 mt-4 mx-4 mb-7 bg-white rounded shadow-gl"
                     }, React.createElement("h2", {
                           className: "text-text-L1 text-lg font-bold"
@@ -1561,6 +1616,7 @@ export {
   ThumbnailUploadInput ,
   SalesDocumentURLInput ,
   EditorInput ,
+  AutoStatusCheckbox ,
   toDisplayCategory ,
   toProductCategory ,
   toImage ,

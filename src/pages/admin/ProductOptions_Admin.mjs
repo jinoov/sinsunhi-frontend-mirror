@@ -19,8 +19,8 @@ import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Intern
 import * as Product_Option_List_Admin from "../../components/Product_Option_List_Admin.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
 import * as Search_Product_Option_Admin from "../../components/Search_Product_Option_Admin.mjs";
-import * as Excel_Download_Request_Button from "../../components/Excel_Download_Request_Button.mjs";
 import * as ProductOptionsAdminQuery_graphql from "../../__generated__/ProductOptionsAdminQuery_graphql.mjs";
+import * as ExcelRequest_Button_ProductOptions_Admin from "../../components/ExcelRequest_Button_ProductOptions_Admin.mjs";
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
   var data = ReactRelay.useLazyLoadQuery(ProductOptionsAdminQuery_graphql.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(ProductOptionsAdminQuery_graphql.Internal.convertVariables(variables)), {
@@ -225,10 +225,7 @@ function ProductOptions_Admin$ProductOptions(Props) {
                               className: "flex"
                             }, React.createElement(Select_CountPerPage.make, {
                                   className: "mr-2"
-                                }), typeof user === "number" || user._0.role !== 2 ? null : React.createElement(Excel_Download_Request_Button.make, {
-                                    userType: /* Admin */2,
-                                    requestUrl: "/product/request-excel"
-                                  })))), React.createElement(Product_Option_List_Admin.make, {
+                                }), typeof user === "number" || user._0.role !== 2 ? null : React.createElement(ExcelRequest_Button_ProductOptions_Admin.make, {})))), React.createElement(Product_Option_List_Admin.make, {
                       query: match$1.fragmentRefs
                     })));
 }

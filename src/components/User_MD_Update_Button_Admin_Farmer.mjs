@@ -160,7 +160,10 @@ function User_MD_Update_Button_Admin_Farmer(Props) {
                                     className: "btn-level1 py-3 px-5",
                                     onClick: save
                                   }, "저장")))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

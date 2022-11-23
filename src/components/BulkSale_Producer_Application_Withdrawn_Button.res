@@ -35,7 +35,9 @@ let make = (~applicationId: string) => {
       onClick={_ => setShow(._ => true)}>
       <span className=%twc("block mt-[10px] underline")> {`취소사유`->React.string} </span>
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5")>
         <article className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {`판매 취소 사유`->React.string} </h2>
@@ -49,7 +51,9 @@ let make = (~applicationId: string) => {
           <div className=%twc("pb-5")>
             {`농민이 안심판매 신청을 취소한 사유입니다.`->React.string}
           </div>
-          <React.Suspense fallback={React.null}> <Reasons applicationId /> </React.Suspense>
+          <React.Suspense fallback={React.null}>
+            <Reasons applicationId />
+          </React.Suspense>
         </article>
         <article className=%twc("flex justify-center items-center mt-5")>
           <Dialog.Close className=%twc("flex mr-2") onClick={_ => setShow(._ => false)}>

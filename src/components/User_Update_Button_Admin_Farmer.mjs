@@ -266,7 +266,10 @@ function User_Update_Button_Admin_Farmer(Props) {
                                         className: "btn-level1 py-3 px-5",
                                         type: "submit"
                                       }, "저장"))))),
-                  className: "dialog-content overflow-y-auto"
+                  className: "dialog-content overflow-y-auto",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

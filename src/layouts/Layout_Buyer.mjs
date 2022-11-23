@@ -6,6 +6,7 @@ import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Router from "next/router";
 import * as Footer_Buyer from "../components/Footer_Buyer.mjs";
 import * as Header_Buyer from "../components/Header_Buyer.mjs";
+import * as FeatureFlagWrapper from "../pages/buyer/pc/FeatureFlagWrapper.mjs";
 
 function Layout_Buyer$Responsive(Props) {
   var pc = Props.pc;
@@ -32,15 +33,23 @@ function Layout_Buyer(Props) {
   var router = Router.useRouter();
   var match = Belt_List.fromArray(router.pathname.split("/"));
   var paths = match ? Belt_List.toArray(match.tl) : [];
+  var exit = 0;
   var len = paths.length;
-  if (len < 5) {
+  if (len >= 5) {
+    exit = 1;
+  } else {
     switch (len) {
       case 0 :
+          exit = 1;
           break;
       case 1 :
           var match$1 = paths[0];
-          if (match$1 === "products") {
-            return children;
+          switch (match$1) {
+            case "auction-price" :
+            case "products" :
+                return children;
+            default:
+              exit = 1;
           }
           break;
       case 2 :
@@ -51,9 +60,14 @@ function Layout_Buyer(Props) {
                 switch (match$3) {
                   case "cart" :
                   case "products" :
+                  case "saved-products" :
                       return children;
+                  case "signin" :
+                  case "signup" :
+                      exit = 2;
+                      break;
                   default:
-                    
+                    exit = 1;
                 }
                 break;
             case "products" :
@@ -63,11 +77,11 @@ function Layout_Buyer(Props) {
                   case "all" :
                       return children;
                   default:
-                    
+                    exit = 1;
                 }
                 break;
             default:
-              
+              exit = 1;
           }
           break;
       case 3 :
@@ -82,14 +96,19 @@ function Layout_Buyer(Props) {
                     case "all" :
                         return children;
                     default:
-                      
+                      exit = 1;
                   }
+                  break;
+              case "signin" :
+                  exit = 2;
                   break;
               case "web-order" :
                   return children;
               default:
-                
+                exit = 1;
             }
+          } else {
+            exit = 1;
           }
           break;
       case 4 :
@@ -101,15 +120,20 @@ function Layout_Buyer(Props) {
               if (match$10 === "complete") {
                 return children;
               }
-              
+              exit = 1;
+            } else {
+              exit = 1;
             }
-            
+          } else {
+            exit = 1;
           }
           break;
       
     }
   }
-  return React.createElement("div", {
+  switch (exit) {
+    case 1 :
+        var oldUI = React.createElement("div", {
               className: "w-full min-h-screen"
             }, React.createElement("div", {
                   className: "hidden xl:flex"
@@ -124,6 +148,43 @@ function Layout_Buyer(Props) {
                 }, React.createElement(Footer_Buyer.PC.make, {})), React.createElement("div", {
                   className: "block xl:hidden"
                 }, React.createElement(Footer_Buyer.MO.make, {})));
+        return React.createElement(FeatureFlagWrapper.make, {
+                    children: React.createElement("div", {
+                          className: "w-full min-h-screen bg-[#F0F2F5]"
+                        }, React.createElement("div", {
+                              className: "hidden xl:block xl:top-0 xl:sticky z-10"
+                            }, React.createElement(Header_Buyer.PC_Old.make, {
+                                  key: router.asPath
+                                })), React.createElement("div", {
+                              className: "block xl:hidden"
+                            }, React.createElement(Header_Buyer.Mobile.make, {
+                                  key: router.asPath
+                                })), children, React.createElement("div", {
+                              className: "hidden xl:flex"
+                            }, React.createElement(Footer_Buyer.PC.make, {})), React.createElement("div", {
+                              className: "block xl:hidden"
+                            }, React.createElement(Footer_Buyer.MO.make, {}))),
+                    fallback: oldUI,
+                    featureFlag: "HOME_UI_UX"
+                  });
+    case 2 :
+        return React.createElement("div", {
+                    className: "w-full min-h-screen"
+                  }, React.createElement("div", {
+                        className: "hidden xl:flex"
+                      }, React.createElement(Header_Buyer.PC_Old.make, {
+                            key: router.asPath
+                          })), React.createElement("div", {
+                        className: "block xl:hidden"
+                      }, React.createElement(Header_Buyer.Mobile.make, {
+                            key: router.asPath
+                          })), children, React.createElement("div", {
+                        className: "hidden xl:flex"
+                      }, React.createElement(Footer_Buyer.PC.make, {})), React.createElement("div", {
+                        className: "block xl:hidden"
+                      }, React.createElement(Footer_Buyer.MO.make, {})));
+    
+  }
 }
 
 var make = Layout_Buyer;

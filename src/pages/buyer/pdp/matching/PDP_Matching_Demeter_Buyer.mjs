@@ -3,21 +3,46 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Locale from "../../../../utils/Locale.mjs";
-import * as Echarts from "../../../../bindings/Echarts.mjs";
-import Link from "next/link";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as CustomHooks from "../../../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import ReactNl2br from "react-nl2br";
 import * as ReactRelay from "react-relay";
+import Dynamic from "next/dynamic";
 import * as Product_Parser from "../../../../utils/Product_Parser.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
+import * as FeatureFlagWrapper from "../../pc/FeatureFlagWrapper.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as PDPMatchingDemeterBuyer_fragment_graphql from "../../../../__generated__/PDPMatchingDemeterBuyer_fragment_graphql.mjs";
 import DemeterChartPlaceholderSvg from "../../../../../public/assets/demeter-chart-placeholder.svg";
 
 var placeholderIcon = DemeterChartPlaceholderSvg;
+
+var echart = Dynamic((function (param) {
+        return Js_promise.then_((function (mod) {
+                      return mod.make;
+                    }), import("../../../../bindings/Echarts.mjs"));
+      }), {
+      ssr: false
+    });
+
+function PDP_Matching_Demeter_Buyer$Component(Props) {
+  var as_ = Props.as_;
+  var id = Props.id;
+  var option = Props.option;
+  var className = Props.className;
+  return React.createElement(as_, {
+              id: id,
+              option: option,
+              className: className
+            });
+}
+
+var Component = {
+  make: PDP_Matching_Demeter_Buyer$Component
+};
 
 function use(fRef) {
   var data = ReactRelay.useFragment(PDPMatchingDemeterBuyer_fragment_graphql.node, fRef);
@@ -95,6 +120,7 @@ function PDP_Matching_Demeter_Buyer(Props) {
   var router = Router.useRouter();
   var chartGroup = use$1(query);
   var match = use(query);
+  var number = match.number;
   var selectedChart = chartGroup !== undefined ? (
       selectedGroup === "high" ? chartGroup.high : (
           selectedGroup === "medium" ? chartGroup.medium : (
@@ -103,112 +129,198 @@ function PDP_Matching_Demeter_Buyer(Props) {
         )
     ) : undefined;
   var data = use$2(selectedChart);
+  var oldUI;
   if (typeof data === "number") {
     switch (data) {
       case /* Unknown */0 :
-          return React.createElement("div", {
-                      className: "w-full pt-[113%] relative"
-                    }, React.createElement("img", {
-                          className: "w-full h-full object-contain absolute top-0 left-0",
-                          src: "/images/chart_placeholder.png"
-                        }));
+          oldUI = React.createElement("div", {
+                className: "w-full pt-[113%] relative"
+              }, React.createElement("img", {
+                    className: "w-full h-full object-contain absolute top-0 left-0",
+                    src: "/images/chart_placeholder.png"
+                  }));
+          break;
       case /* Unauthorized */1 :
-          return React.createElement("div", {
-                      className: "w-full pt-[113%] relative"
-                    }, React.createElement("img", {
-                          className: "w-full h-full object-contain absolute top-0 left-0",
-                          src: "/images/chart_placeholder.png"
-                        }), React.createElement("div", {
-                          className: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center"
-                        }, React.createElement("div", {
-                              className: "text-center mb-4"
-                            }, ReactNl2br("회원 로그인 후\n전국 도매시장 주간 시세를 확인해보세요")), React.createElement(Link, {
-                              href: "/buyer/signin?redirect=" + router.asPath + "",
-                              children: React.createElement("a", undefined, React.createElement("span", {
-                                        className: "mt-2 px-3 py-2 rounded-xl border border-primary text-primary"
-                                      }, "로그인하고 시세 확인하기"))
-                            })));
+          oldUI = React.createElement("div", {
+                className: "w-full pt-[113%] relative"
+              }, React.createElement("img", {
+                    className: "w-full h-full object-contain absolute top-0 left-0",
+                    src: "/images/chart_placeholder.png"
+                  }), React.createElement("div", {
+                    className: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center"
+                  }, React.createElement("div", {
+                        className: "text-center mb-4"
+                      }, ReactNl2br("회원 로그인 후\n전국 도매시장 주간 시세를 확인해보세요")), React.createElement("button", {
+                        className: "mt-2 px-3 py-2 rounded-xl border border-primary text-primary whitespace-nowrap",
+                        onClick: (function (param) {
+                            router.push("/buyer/signin?redirect=" + router.asPath + "");
+                          })
+                      }, "로그인하고 시세 확인하기")));
+          break;
       case /* Empty */2 :
-          return React.createElement("div", {
-                      className: "w-full h-[112px] flex flex-col items-center justify-center"
-                    }, React.createElement("img", {
-                          className: "w-6 h-6 object-contain",
-                          src: placeholderIcon
-                        }), React.createElement("span", {
-                          className: "mt-3 text-gray-600 text-[13px]"
-                        }, "아직 시세 정보가 없습니다."));
+          oldUI = React.createElement("div", {
+                className: "w-full h-[112px] flex flex-col items-center justify-center"
+              }, React.createElement("img", {
+                    className: "w-6 h-6 object-contain",
+                    src: placeholderIcon
+                  }), React.createElement("span", {
+                    className: "mt-3 text-gray-600 text-[13px]"
+                  }, "아직 시세 정보가 없습니다."));
+          break;
       
     }
   } else {
     var data$1 = data._0;
-    var chartId = "pdp-demeter-chart-" + String(match.number) + "-" + selectedGroup + "";
+    var chartId = "pdp-demeter-chart-" + String(number) + "-" + selectedGroup + "";
     var graphOption = Curry._1(Product_Parser.Matching.Chart.Graph.make, data$1);
     var tableData = Curry._1(Product_Parser.Matching.Chart.Table.make, data$1);
-    return React.createElement(React.Fragment, undefined, React.createElement(Echarts.make, {
-                    id: chartId,
-                    option: graphOption,
-                    className: "w-full h-[400px] px-3",
-                    key: chartId
-                  }), React.createElement("div", undefined, React.createElement("div", {
-                        className: "px-5 grid grid-rows-4 grid-flow-col mb-2"
-                      }, React.createElement("div", {
-                            className: "grid grid-cols-4 grid-flow-row pb-1 border-b"
-                          }, React.createElement("div", {
-                                className: "col-start-3 text-right"
-                              }, "주간 최고"), React.createElement("div", {
-                                className: "col-start-4 text-right"
-                              }, "주간 최저")), React.createElement("div", {
-                            className: "grid grid-cols-4 grid-flow-row py-2"
-                          }, React.createElement("div", {
-                                className: "text-left inline-flex items-center"
-                              }, React.createElement("div", {
-                                    className: "w-2 h-2 rounded-full bg-orange-500 mr-1"
-                                  }), "최대가"), React.createElement("div", {
-                                className: "col-start-3 text-right"
-                              }, React.createElement("span", {
-                                    className: "font-bold"
-                                  }, "" + Locale.Float.show(undefined, tableData.higherMax, 0) + "원")), React.createElement("div", {
-                                className: "col-start-4 text-right"
-                              }, React.createElement("span", {
-                                    className: "font-bold"
-                                  }, "" + Locale.Float.show(undefined, tableData.higherMin, 0) + "원"))), React.createElement("div", {
-                            className: "grid grid-cols-4 grid-flow-row py-2"
-                          }, React.createElement("div", {
-                                className: "text-left inline-flex items-center"
-                              }, React.createElement("div", {
-                                    className: "w-2 h-2 rounded-full bg-green-500 mr-1"
-                                  }), "평균가"), React.createElement("div", {
-                                className: "col-start-3 text-right"
-                              }, React.createElement("span", {
-                                    className: "font-bold"
-                                  }, "" + Locale.Float.show(undefined, tableData.meanMax, 0) + "원")), React.createElement("div", {
-                                className: "col-start-4 text-right"
-                              }, React.createElement("span", {
-                                    className: "font-bold"
-                                  }, "" + Locale.Float.show(undefined, tableData.meanMin, 0) + "원"))), React.createElement("div", {
-                            className: "grid grid-cols-4 grid-flow-row py-2"
-                          }, React.createElement("div", {
-                                className: "text-left inline-flex items-center"
-                              }, React.createElement("div", {
-                                    className: "w-2 h-2 rounded-full bg-blue-500 mr-1"
-                                  }), "최소가"), React.createElement("div", {
-                                className: "col-start-3 text-right"
-                              }, React.createElement("span", {
-                                    className: "font-bold"
-                                  }, "" + Locale.Float.show(undefined, tableData.lowerMax, 0) + "원")), React.createElement("div", {
-                                className: "col-start-4 text-right"
-                              }, React.createElement("span", {
-                                    className: "font-bold"
-                                  }, "" + Locale.Float.show(undefined, tableData.lowerMin, 0) + "원")))), React.createElement("div", {
-                        className: "text-right text-xs text-gray-500 px-5"
-                      }, ReactNl2br("농림수산부식품교육문화정보원\n전국 도매시장 평균 거래가"))));
+    oldUI = React.createElement(React.Fragment, undefined, React.createElement(PDP_Matching_Demeter_Buyer$Component, {
+              as_: echart,
+              id: chartId,
+              option: graphOption,
+              className: "w-full h-[400px] px-3",
+              key: chartId
+            }), React.createElement("div", undefined, React.createElement("div", {
+                  className: "px-5 grid grid-rows-4 grid-flow-col mb-2"
+                }, React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row pb-1 border-b"
+                    }, React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, "주간 최고"), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, "주간 최저")), React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row py-2"
+                    }, React.createElement("div", {
+                          className: "text-left inline-flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-2 h-2 rounded-full bg-[#ffddbd] mr-1"
+                            }), "최대가"), React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData.higherMax, 0) + "원")), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData.higherMin, 0) + "원"))), React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row py-2"
+                    }, React.createElement("div", {
+                          className: "text-left inline-flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-2 h-2 rounded-full bg-green-500 mr-1"
+                            }), "평균가"), React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData.meanMax, 0) + "원")), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData.meanMin, 0) + "원"))), React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row py-2"
+                    }, React.createElement("div", {
+                          className: "text-left inline-flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-2 h-2 rounded-full bg-[#dcdfe3] mr-1"
+                            }), "최소가"), React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData.lowerMax, 0) + "원")), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData.lowerMin, 0) + "원")))), React.createElement("div", {
+                  className: "text-right text-xs text-gray-500 px-5"
+                }, ReactNl2br("농림수산부식품교육문화정보원\n전국 도매시장 평균 거래가"))));
   }
+  var tmp;
+  if (selectedChart !== undefined) {
+    var chartId$1 = "pdp-demeter-chart-" + String(number) + "-" + selectedGroup + "";
+    var graphOption$1 = Curry._1(Product_Parser.Matching.Chart.Graph.make, selectedChart);
+    var tableData$1 = Curry._1(Product_Parser.Matching.Chart.Table.make, selectedChart);
+    tmp = React.createElement(React.Fragment, undefined, React.createElement(PDP_Matching_Demeter_Buyer$Component, {
+              as_: echart,
+              id: chartId$1,
+              option: graphOption$1,
+              className: "w-full h-[400px] px-3",
+              key: chartId$1
+            }), React.createElement("div", undefined, React.createElement("div", {
+                  className: "px-5 grid grid-rows-4 grid-flow-col mb-2"
+                }, React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row pb-1 border-b"
+                    }, React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, "주간 최고"), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, "주간 최저")), React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row py-2"
+                    }, React.createElement("div", {
+                          className: "text-left inline-flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-2 h-2 rounded-full bg-[#ffddbd] mr-1"
+                            }), "최대가"), React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData$1.higherMax, 0) + "원")), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData$1.higherMin, 0) + "원"))), React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row py-2"
+                    }, React.createElement("div", {
+                          className: "text-left inline-flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-2 h-2 rounded-full bg-green-500 mr-1"
+                            }), "평균가"), React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData$1.meanMax, 0) + "원")), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData$1.meanMin, 0) + "원"))), React.createElement("div", {
+                      className: "grid grid-cols-4 grid-flow-row py-2"
+                    }, React.createElement("div", {
+                          className: "text-left inline-flex items-center"
+                        }, React.createElement("div", {
+                              className: "w-2 h-2 rounded-full bg-[#dcdfe3] mr-1"
+                            }), "최소가"), React.createElement("div", {
+                          className: "col-start-3 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData$1.lowerMax, 0) + "원")), React.createElement("div", {
+                          className: "col-start-4 text-right"
+                        }, React.createElement("span", {
+                              className: "font-bold"
+                            }, "" + Locale.Float.show(undefined, tableData$1.lowerMin, 0) + "원")))), React.createElement("div", {
+                  className: "text-right text-xs text-gray-500 px-5"
+                }, ReactNl2br("농림수산부식품교육문화정보원\n전국 도매시장 평균 거래가"))));
+  } else {
+    tmp = React.createElement("div", {
+          className: "w-full h-[112px] flex flex-col items-center justify-center"
+        }, React.createElement("img", {
+              className: "w-6 h-6 object-contain",
+              src: placeholderIcon
+            }), React.createElement("span", {
+              className: "mt-3 text-gray-600 text-[13px]"
+            }, "아직 시세 정보가 없습니다."));
+  }
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: tmp,
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var make = PDP_Matching_Demeter_Buyer;
 
 export {
   placeholderIcon ,
+  echart ,
+  Component ,
   Fragment ,
   ChartHook ,
   make ,

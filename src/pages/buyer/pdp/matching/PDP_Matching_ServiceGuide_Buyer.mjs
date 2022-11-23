@@ -31,7 +31,7 @@ function PDP_Matching_ServiceGuide_Buyer$PriceCard(Props) {
                 }, React.createElement($$Image.make, {
                       src: "/images/matching-card-price.png",
                       loading: /* Lazy */1,
-                      alt: "matching-price",
+                      alt: "신선하이 매칭 가격",
                       className: "w-[280px] h-[144px] object-contain"
                     })));
 }
@@ -55,7 +55,7 @@ function PDP_Matching_ServiceGuide_Buyer$GradeCard(Props) {
                 }, React.createElement($$Image.make, {
                       src: "/images/matching-card-grade.png",
                       loading: /* Lazy */1,
-                      alt: "matching-grade",
+                      alt: "신선하이 매칭 가격 분류",
                       className: "w-[262px] h-[126px] object-contain"
                     })));
 }
@@ -79,7 +79,7 @@ function PDP_Matching_ServiceGuide_Buyer$DeliveryCard(Props) {
                 }, React.createElement($$Image.make, {
                       src: "/images/matching-card-delivery.png",
                       loading: /* Lazy */1,
-                      alt: "matching-delivery",
+                      alt: "신선하이 매칭 배송",
                       className: "w-[180px] h-[144px] object-contain"
                     })));
 }
@@ -99,7 +99,7 @@ function PDP_Matching_ServiceGuide_Buyer$Banner(Props) {
                       srcSet: "/images/matching-guide-bg-pc.png"
                     }), React.createElement($$Image.make, {
                       src: "/images/matching-guide-bg-pc.png",
-                      alt: "matching-banner",
+                      alt: "신선하이 매칭",
                       className: "w-full h-[336px] object-cover"
                     })), React.createElement("div", {
                   className: "absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
@@ -163,6 +163,7 @@ function PDP_Matching_ServiceGuide_Buyer$Trigger(Props) {
                       className: "mt-2 text-gray-600 text-sm text-left"
                     }, ReactNl2br("필요한 품종에 대해 견적요청하시면,\n최저가 상품을 연결해드립니다."))), React.createElement($$Image.make, {
                   src: "/images/matching-button.png",
+                  alt: "",
                   className: "w-[69px] object-contain"
                 }));
 }

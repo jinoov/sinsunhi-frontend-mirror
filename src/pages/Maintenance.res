@@ -239,7 +239,9 @@ module Container = {
       <RadixUI.Dialog.Root _open=true>
         <RadixUI.Dialog.Portal>
           <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
-          <RadixUI.Dialog.Content className=%twc("top-0 bg-white fixed z-20")>
+          <RadixUI.Dialog.Content
+            className=%twc("top-0 bg-white fixed z-20")
+            onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
             <Next.Head>
               <title> {`🚧 신선하이 점검중입니다 🚧`->React.string} </title>
             </Next.Head>

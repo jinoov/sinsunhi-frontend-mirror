@@ -437,7 +437,10 @@ function Update_Password_Buyer(Props) {
                                           });
                                     })
                                 })),
-                      className: "dialog-content-plain bottom-0 left-0 xl:bottom-auto xl:left-auto xl:rounded-2xl xl:state-open:top-1/2 xl:state-open:left-1/2 xl:state-open:-translate-x-1/2 xl:state-open:-translate-y-1/2 dialog-content-z-15"
+                      className: "dialog-content-plain bottom-0 left-0 xl:bottom-auto xl:left-auto xl:rounded-2xl xl:state-open:top-1/2 xl:state-open:left-1/2 xl:state-open:-translate-x-1/2 xl:state-open:-translate-y-1/2 dialog-content-z-15",
+                      onOpenAutoFocus: (function (prim) {
+                          prim.preventDefault();
+                        })
                     })), React.createElement(Dialog.make, {
                   isShow: isShowNotice,
                   children: React.createElement("div", {

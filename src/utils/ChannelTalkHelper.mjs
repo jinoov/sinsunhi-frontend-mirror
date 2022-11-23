@@ -10,7 +10,6 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ChannelTalk from "../bindings/ChannelTalk.mjs";
 import * as CustomHooks from "./CustomHooks.mjs";
 import * as ReactRelay from "react-relay";
-import * as DeviceDetect from "../bindings/DeviceDetect.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
@@ -151,30 +150,7 @@ function useBoot(param) {
         }), [user]);
 }
 
-function use$1(viewModeOpt, trackData, param) {
-  var viewMode = viewModeOpt !== undefined ? viewModeOpt : /* PcAndMobile */0;
-  React.useEffect((function () {
-          var match = DeviceDetect.detectDevice(undefined);
-          switch (viewMode) {
-            case /* PcAndMobile */0 :
-                ChannelTalk.showChannelButton(undefined);
-                break;
-            case /* PcOnly */1 :
-                if (match !== 1) {
-                  
-                } else {
-                  ChannelTalk.showChannelButton(undefined);
-                }
-                break;
-            case /* MobileOnly */2 :
-                if (match >= 2) {
-                  ChannelTalk.showChannelButton(undefined);
-                }
-                break;
-            
-          }
-          return ChannelTalk.hideChannelButton;
-        }), []);
+function use$1(trackData, param) {
   React.useEffect((function () {
           if (trackData !== undefined) {
             ChannelTalk.track("track", trackData.eventName, trackData.eventProperty);

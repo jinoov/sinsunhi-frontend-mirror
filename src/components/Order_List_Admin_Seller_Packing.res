@@ -57,7 +57,7 @@ module Loading = {
 }
 
 @react.component
-let make = (~status: CustomHooks.OrdersAdmin.result) => {
+let make = (~status: CustomHooks.Orders.result) => {
   switch status {
   | Error(error) => <ErrorPanel error renderOnRetry={<Loading />} />
   | Loading => <Loading />
@@ -65,7 +65,7 @@ let make = (~status: CustomHooks.OrdersAdmin.result) => {
       <div className=%twc("w-full overflow-x-scroll")>
         <div className=%twc("min-w-max text-sm divide-y divide-gray-100")>
           <Header />
-          {switch orders->CustomHooks.OrdersAdmin.orders_decode {
+          {switch orders->CustomHooks.Orders.orders_decode {
           | Ok(orders') =>
             <ol
               className=%twc(
@@ -87,7 +87,7 @@ let make = (~status: CustomHooks.OrdersAdmin.result) => {
       </div>
       {switch status {
       | Loaded(orders) =>
-        switch orders->CustomHooks.OrdersAdmin.orders_decode {
+        switch orders->CustomHooks.Orders.orders_decode {
         | Ok(orders') =>
           <div className=%twc("flex justify-center pt-5")>
             <Pagination

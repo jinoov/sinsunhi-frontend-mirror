@@ -158,6 +158,7 @@ function Orders_Cancel_Dialog_Admin(Props) {
   var setReasonDetail = match$2[1];
   var reasonDetail = match$2[0];
   var match$3 = use(undefined);
+  var isMutating = match$3[1];
   var mutate = match$3[0];
   var reset = function (param) {
     setShowCancelConfirm(function (param) {
@@ -268,53 +269,57 @@ function Orders_Cancel_Dialog_Admin(Props) {
                 }),
               onConfirm: (function (param) {
                   if (reason !== undefined) {
-                    Curry.app(mutate, [
-                          (function (err) {
-                              handleError(err.message);
-                            }),
-                          (function (param, param$1) {
-                              var cancelWosOrderProductOption = param.cancelWosOrderProductOption;
-                              if (cancelWosOrderProductOption === undefined) {
-                                return handleError("주문 취소에 실패하였습니다.");
+                    if (isMutating) {
+                      return handleError("요청 중입니다.");
+                    } else {
+                      Curry.app(mutate, [
+                            (function (err) {
+                                handleError(err.message);
+                              }),
+                            (function (param, param$1) {
+                                var cancelWosOrderProductOption = param.cancelWosOrderProductOption;
+                                if (cancelWosOrderProductOption === undefined) {
+                                  return handleError("주문 취소에 실패하였습니다.");
+                                }
+                                if (typeof cancelWosOrderProductOption !== "object") {
+                                  return handleError("주문 취소에 실패하였습니다.");
+                                }
+                                var variant = cancelWosOrderProductOption.NAME;
+                                if (variant === "CancelWosOrderProductOptionResult") {
+                                  Curry._1(confirmFn, undefined);
+                                  reset(undefined);
+                                  return addToast(React.createElement("div", {
+                                                  className: "flex items-center"
+                                                }, React.createElement(IconCheck.make, {
+                                                      height: "24",
+                                                      width: "24",
+                                                      fill: "#12B564",
+                                                      className: "mr-2"
+                                                    }), "주문이 취소되었습니다."), {
+                                              appearance: "success"
+                                            });
+                                } else if (variant === "Error") {
+                                  return handleError(Belt_Option.getWithDefault(cancelWosOrderProductOption.VAL.message, "주문 취소에 실패하였습니다."));
+                                } else {
+                                  return handleError("주문 취소에 실패하였습니다.");
+                                }
+                              }),
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                            {
+                              input: {
+                                detailReason: reasonDetail,
+                                idsToCancel: selectedOrders,
+                                reason: reason
                               }
-                              if (typeof cancelWosOrderProductOption !== "object") {
-                                return handleError("주문 취소에 실패하였습니다.");
-                              }
-                              var variant = cancelWosOrderProductOption.NAME;
-                              if (variant === "CancelWosOrderProductOptionResult") {
-                                Curry._1(confirmFn, undefined);
-                                reset(undefined);
-                                return addToast(React.createElement("div", {
-                                                className: "flex items-center"
-                                              }, React.createElement(IconCheck.make, {
-                                                    height: "24",
-                                                    width: "24",
-                                                    fill: "#12B564",
-                                                    className: "mr-2"
-                                                  }), "주문이 취소되었습니다."), {
-                                            appearance: "success"
-                                          });
-                              } else if (variant === "Error") {
-                                return handleError(Belt_Option.getWithDefault(cancelWosOrderProductOption.VAL.message, "주문 취소에 실패하였습니다."));
-                              } else {
-                                return handleError("주문 취소에 실패하였습니다.");
-                              }
-                            }),
-                          undefined,
-                          undefined,
-                          undefined,
-                          undefined,
-                          {
-                            input: {
-                              detailReason: reasonDetail,
-                              idsToCancel: selectedOrders,
-                              reason: reason
-                            }
-                          },
-                          undefined,
-                          undefined
-                        ]);
-                    return ;
+                            },
+                            undefined,
+                            undefined
+                          ]);
+                      return ;
+                    }
                   } else {
                     return handleError("주문취소사유를 선택해주세요.");
                   }

@@ -205,7 +205,7 @@ function Web_Order_Complete_Delivery_Info_Buyer(Props) {
                             className: "w-23 font-bold"
                           }, "배송 요청사항"), React.createElement("span", {
                             className: "xl:w-64 w-56 whitespace-pre-wrap"
-                          }, deliveryMessage)) : null));
+                          }, deliveryMessage.trim() === "" ? "-" : deliveryMessage)) : null));
 }
 
 var make = Web_Order_Complete_Delivery_Info_Buyer;

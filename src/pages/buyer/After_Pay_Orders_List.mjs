@@ -127,7 +127,10 @@ function After_Pay_Orders_List$Dialog(Props) {
                   className: "dialog-overlay"
                 }), React.createElement(ReactDialog.Content, {
                   children: children,
-                  className: "w-fit shadow-[0px_10px_40px_10px_rgba(0,0,0,0.3)] rounded-2xl p-5 dialog-content-nosize"
+                  className: "w-fit shadow-[0px_10px_40px_10px_rgba(0,0,0,0.3)] rounded-2xl p-5 dialog-content-nosize",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

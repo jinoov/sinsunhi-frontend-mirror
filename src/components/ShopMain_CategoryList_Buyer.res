@@ -42,57 +42,110 @@ module PC = {
   }
 
   @react.component
-  let make = (
-    ~categories: array<ShopMainCategoryListBuyerQuery_graphql.Types.response_mainDisplayCategories>,
-  ) => {
-    let mainDisplayCategories = categories
+  let make = () => {
+    let {mainDisplayCategories} = Query.use(~variables={onlyDisplayable: true}, ())
 
-    <div className=%twc("w-full")>
-      <span className=%twc("text-2xl text-gray-800 font-bold ml-5")>
-        {`전체 카테고리`->React.string}
-      </span>
-      <ol className=%twc("mt-6 w-full flex items-center")>
-        {mainDisplayCategories
-        ->Array.map(({id, name, image}) => {
-          let key = `display-category-${id}-pc`
-          let src =
-            image->Option.mapWithDefault(Image.Placeholder.Sm->Image.Placeholder.getSrc, image' =>
-              image'.original
-            )
+    let oldUI =
+      <div className=%twc("w-full")>
+        <span className=%twc("text-2xl text-gray-800 font-bold ml-5")>
+          {`전체 카테고리`->React.string}
+        </span>
+        <ol className=%twc("mt-6 w-full flex items-center")>
+          {mainDisplayCategories
+          ->Array.map(({id, name, image}) => {
+            let key = `display-category-${id}-pc`
+            let src =
+              image->Option.mapWithDefault(Image.Placeholder.Sm->Image.Placeholder.getSrc, image' =>
+                image'.original
+              )
 
-          <li key className=%twc("mx-6 w-[112px]")>
-            <Next.Link href={`/categories/${id}`}>
+            <li key className=%twc("mx-6 w-[112px]")>
+              <Next.Link
+                href={`/categories/${id}?${Product_FilterOption.defaultFilterOptionUrlParam}`}>
+                <a>
+                  <div className=%twc("w-28 aspect-square rounded-lg overflow-hidden")>
+                    <Image
+                      src
+                      placeholder=Image.Placeholder.Sm
+                      className=%twc("w-full h-full object-cover")
+                      alt=key
+                    />
+                  </div>
+                  <p className=%twc("text-gray-800 font-bold text-center")>
+                    {name->React.string}
+                  </p>
+                </a>
+              </Next.Link>
+            </li>
+          })
+          ->React.array}
+          <li className=%twc("mx-6 w-[112px] max-w-[112px]")>
+            <Next.Link href={`/products`}>
               <a>
-                <div className=%twc("w-28 aspect-square rounded-lg overflow-hidden")>
-                  <Image
-                    src
-                    placeholder=Image.Placeholder.Sm
-                    className=%twc("w-full h-full object-cover")
-                    alt=key
-                  />
-                </div>
-                <p className=%twc("text-gray-800 font-bold text-center")> {name->React.string} </p>
+                <img
+                  src="https://public.sinsunhi.com/images/20220512/category_all.png"
+                  className=%twc("w-28 h-28")
+                  alt={`display-category-all`}
+                />
+                <p className=%twc("w-[112px] text-gray-800 font-bold text-center")>
+                  {`전체 상품`->React.string}
+                </p>
               </a>
             </Next.Link>
           </li>
-        })
-        ->React.array}
-        <li className=%twc("mx-6 w-[112px] max-w-[112px]")>
-          <Next.Link href={`/products`}>
-            <a>
-              <img
-                src="https://public.sinsunhi.com/images/20220512/category_all.png"
-                className=%twc("w-28 h-28")
-                alt={`display-category-all`}
-              />
-              <p className=%twc("w-[112px] text-gray-800 font-bold text-center")>
-                {`전체 상품`->React.string}
-              </p>
-            </a>
-          </Next.Link>
-        </li>
-      </ol>
-    </div>
+        </ol>
+      </div>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      <div className=%twc("w-full mx-7 flex flex-col my-14")>
+        <span className=%twc("text-2xl text-gray-800 font-bold ml-5")>
+          {`전체 카테고리`->React.string}
+        </span>
+        <ol className=%twc("mt-6 w-full flex items-center")>
+          {mainDisplayCategories
+          ->Array.map(({id, name, image}) => {
+            let key = `display-category-${id}-pc`
+            let src =
+              image->Option.mapWithDefault(Image.Placeholder.Sm->Image.Placeholder.getSrc, image' =>
+                image'.original
+              )
+
+            <li key className=%twc("mx-6 w-23")>
+              <Next.Link href={`/categories/${id}?sort=POPULARITY_DESC&section=delivery`}>
+                <a>
+                  <div className=%twc("w-23 aspect-square rounded-lg overflow-hidden")>
+                    <Image
+                      src
+                      placeholder=Image.Placeholder.Sm
+                      className=%twc("w-full h-full object-cover")
+                      alt=key
+                    />
+                  </div>
+                  <p className=%twc("text-gray-800 font-bold text-center")>
+                    {name->React.string}
+                  </p>
+                </a>
+              </Next.Link>
+            </li>
+          })
+          ->React.array}
+          <li className=%twc("mx-6 w-23 max-w-[92px]")>
+            <Next.Link href={`/products?section=delivery&sort=POPULARITY_DESC`}>
+              <a>
+                <img
+                  src="https://public.sinsunhi.com/images/20220512/category_all.png"
+                  className=%twc("w-23 h-[92px]")
+                  alt={`display-category-all`}
+                />
+                <p className=%twc("w-23 text-gray-800 font-bold text-center")>
+                  {`전체 상품`->React.string}
+                </p>
+              </a>
+            </Next.Link>
+          </li>
+        </ol>
+      </div>
+    </FeatureFlagWrapper>
   }
 }
 
@@ -121,54 +174,101 @@ module MO = {
   }
 
   @react.component
-  let make = (
-    ~categories: array<ShopMainCategoryListBuyerQuery_graphql.Types.response_mainDisplayCategories>,
-  ) => {
-    let mainDisplayCategories = categories
+  let make = () => {
+    let {mainDisplayCategories} = Query.use(~variables={onlyDisplayable: true}, ())
 
-    <div className=%twc("w-full")>
-      <span className=%twc("ml-5 text-lg text-gray-800 font-bold")>
-        {`전체 카테고리`->React.string}
-      </span>
-      <ol className=%twc("mt-6 w-full grid grid-cols-4 gap-y-3")>
-        <li className=%twc("w-full flex items-center justify-center")>
-          <Next.Link href={`/products`}>
-            <a>
-              <div className=%twc("w-[90px] flex flex-col items-center justify-center")>
-                <img
-                  src="https://public.sinsunhi.com/images/20220512/category_all.png"
-                  className=%twc("w-14 aspect-square object-cover")
-                  alt={`display-category-all`}
-                />
-                <p className=%twc("text-gray-800 text-sm")> {`전체 상품`->React.string} </p>
-              </div>
-            </a>
-          </Next.Link>
-        </li>
-        {mainDisplayCategories
-        ->Array.map(({id, name, image}) => {
-          let key = `display-category-${id}-mobile`
-
-          <li key className=%twc("w-full flex items-center justify-center")>
-            <Next.Link href={`/categories/${id}`}>
+    let oldUI =
+      <div className=%twc("w-full")>
+        <span className=%twc("ml-5 text-lg text-gray-800 font-bold")>
+          {`전체 카테고리`->React.string}
+        </span>
+        <ol className=%twc("mt-6 w-full grid grid-cols-4 gap-y-3")>
+          <li className=%twc("w-full flex items-center justify-center")>
+            <Next.Link href={`/products`}>
               <a>
                 <div className=%twc("w-[90px] flex flex-col items-center justify-center")>
-                  <div className=%twc("w-14 aspect-square rounded-lg overflow-hidden")>
-                    <Image
-                      src=?{image->Option.map(({original}) => original)}
-                      placeholder=Image.Placeholder.Sm
-                      className=%twc("w-full h-full object-cover")
-                      alt=key
-                    />
-                  </div>
-                  <p className=%twc("text-gray-800 text-sm")> {name->React.string} </p>
+                  <img
+                    src="https://public.sinsunhi.com/images/20220512/category_all.png"
+                    className=%twc("w-14 aspect-square object-cover")
+                    alt={`display-category-all`}
+                  />
+                  <p className=%twc("text-gray-800 text-sm")> {`전체 상품`->React.string} </p>
                 </div>
               </a>
             </Next.Link>
           </li>
-        })
-        ->React.array}
-      </ol>
-    </div>
+          {mainDisplayCategories
+          ->Array.map(({id, name, image}) => {
+            let key = `display-category-${id}-mobile`
+
+            <li key className=%twc("w-full flex items-center justify-center")>
+              <Next.Link
+                href={`/categories/${id}?${Product_FilterOption.defaultFilterOptionUrlParam}`}>
+                <a>
+                  <div className=%twc("w-[90px] flex flex-col items-center justify-center")>
+                    <div className=%twc("w-14 aspect-square rounded-lg overflow-hidden")>
+                      <Image
+                        src=?{image->Option.map(({original}) => original)}
+                        placeholder=Image.Placeholder.Sm
+                        className=%twc("w-full h-full object-cover")
+                        alt=key
+                      />
+                    </div>
+                    <p className=%twc("text-gray-800 text-sm")> {name->React.string} </p>
+                  </div>
+                </a>
+              </Next.Link>
+            </li>
+          })
+          ->React.array}
+        </ol>
+      </div>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback={oldUI}>
+      <div className=%twc("w-full")>
+        <span className=%twc("ml-3 text-[19px] text-[#1F2024] font-bold")>
+          {`전체 카테고리`->React.string}
+        </span>
+        <ol className=%twc("mt-6 w-full grid grid-cols-4 gap-y-3")>
+          {mainDisplayCategories
+          ->Array.map(({id, name, image}) => {
+            let key = `display-category-${id}-mobile`
+
+            <li key className=%twc("w-full flex items-center justify-center")>
+              <Next.Link href={`/categories/${id}?sort=POPULARITY_DESC&section=delivery`}>
+                <a>
+                  <div className=%twc("w-[90px] flex flex-col items-center justify-center")>
+                    <div className=%twc("w-14 aspect-square rounded-lg overflow-hidden")>
+                      <Image
+                        src=?{image->Option.map(({original}) => original)}
+                        placeholder=Image.Placeholder.Sm
+                        className=%twc("w-full h-full object-cover")
+                        alt=key
+                      />
+                    </div>
+                    <p className=%twc("text-gray-800 text-sm")> {name->React.string} </p>
+                  </div>
+                </a>
+              </Next.Link>
+            </li>
+          })
+          ->React.array}
+          <li className=%twc("w-full flex items-center justify-center")>
+            <Next.Link href={`/products?sort=POPULARITY_DESC&section=delivery`}>
+              <a>
+                <div className=%twc("w-[90px] flex flex-col items-center justify-center")>
+                  <img
+                    src="https://public.sinsunhi.com/images/20220512/category_all.png"
+                    className=%twc("w-14 aspect-square object-cover")
+                    alt={`display-category-all`}
+                  />
+                  <p className=%twc("text-gray-800 text-sm")> {`전체 상품`->React.string} </p>
+                </div>
+              </a>
+            </Next.Link>
+          </li>
+        </ol>
+      </div>
+    </FeatureFlagWrapper>
   }
 }

@@ -26,9 +26,7 @@ module ReceiverNameInput = {
           name
           onChange
           onBlur
-          className=%twc(
-            "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg"
-          )
+          className=%twc("w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg")
           placeholder={`배송 받으실 분의 이름을 입력해주세요`}
         />
         <ErrorMessage
@@ -91,9 +89,7 @@ module ReceiverPhoneInput = {
             <input
               ref
               value={value->Js.Json.decodeString->Option.getWithDefault("")}
-              className=%twc(
-                "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg"
-              )
+              className=%twc("w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg")
               placeholder={`배송 받으실 분의 연락처를 입력해주세요`}
               onChange={toPhoneFormat(onChange)}
             />
@@ -131,6 +127,7 @@ module ReceiverAddressInput = {
       formNames.receiverZipCode,
       Some(Hooks.Register.config(~required=true, ())),
     )
+
     let addressRegister = register(. formNames.receiverAddress, None)
 
     let detailAdressRegister = register(.
@@ -193,6 +190,7 @@ module ReceiverAddressInput = {
             <Controller
               name=zipcodeRegister.name
               control
+              shouldUnregister=true
               defaultValue={Js.Json.string("")}
               rules={Rules.make(~required=true, ())}
               render={({field: {onChange, value, name, ref}}) => <>
@@ -236,7 +234,8 @@ module ReceiverAddressInput = {
                   <Dialog.Root _open={isShowSearchAddress}>
                     <Dialog.Overlay className=%twc("dialog-overlay") />
                     <Dialog.Content
-                      className=%twc("dialog-content-plain top-0 bottom-0 left-0 right-0")>
+                      className=%twc("dialog-content-plain top-0 bottom-0 left-0 right-0")
+                      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
                       <section className=%twc("h-14 w-full xl:h-auto xl:w-auto xl:mt-10")>
                         <div
                           className=%twc(
@@ -282,9 +281,7 @@ module ReceiverAddressInput = {
             name=detailAdressRegister.name
             onChange=detailAdressRegister.onChange
             onBlur=detailAdressRegister.onBlur
-            className=%twc(
-              "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg "
-            )
+            className=%twc("w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg ")
             placeholder={`상세주소를 입력해주세요.`}
           />
           <ErrorMessage
@@ -331,9 +328,7 @@ module DeliveryMessageInput = {
           name
           onChange
           onBlur
-          className=%twc(
-            "w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg"
-          )
+          className=%twc("w-full h-13 xl:h-9 px-3 border border-gray-300 rounded-lg")
           placeholder={`${selfMode
               ? `수령`
               : `배송`}시 요청사항을 입력해주세요 (최대 100자)`}
@@ -380,8 +375,7 @@ module DeliveryDesiredDateSelection = {
           }
       )
 
-    <div
-      className=%twc("flex flex-col xl:flex-row gap-2 xl:gap-0 xl:w-full xl:items-baseline")>
+    <div className=%twc("flex flex-col xl:flex-row gap-2 xl:gap-0 xl:w-full xl:items-baseline")>
       <label className=%twc("xl:w-1/4 block font-bold")>
         {`${selfMode ? `수령` : `배송`} 희망일`->React.string}
       </label>
@@ -442,7 +436,7 @@ module PaymentMethodSelection = {
         {`결제 수단 선택`->React.string}
       </span>
       <div className=%twc("flex gap-2")>
-        {[("card", `카드결제`), ("transfer", `계좌이체`)]
+        {[("card", "카드결제"), ("transfer", "계좌이체"), ("virtual", "가상계좌")]
         ->Array.map(((value, n)) =>
           <label
             key=n

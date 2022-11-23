@@ -1,0 +1,29 @@
+diff --git a/postinstall.js b/postinstall.js
+index 2c29d18ffd10c9d356ef98ac976efe6321fc5c06..629a2735974c2dc7dc7b4a661bd108e77e46e540 100644
+--- a/postinstall.js
++++ b/postinstall.js
+@@ -6,8 +6,8 @@ var platform = process.platform;
+ const targetPath = path.join(__dirname, "gentype.exe");
+ 
+ function fail(msg) {
+-    console.warn(msg);
+-    process.exit(1);
++  console.warn(msg);
++  process.exit(1);
+ }
+ 
+ function getPlatformBinaryPath(platform) {
+@@ -17,10 +17,10 @@ function getPlatformBinaryPath(platform) {
+ function movePlatformBinary(platform) {
+   const sourcePath = getPlatformBinaryPath(platform);
+ 
+-  if(!fs.existsSync(sourcePath)) {
+-      return fail("error: executable not found: " + sourcePath);
++  if (!fs.existsSync(sourcePath)) {
++    return fail("error: executable not found: " + sourcePath);
+   }
+-  fs.renameSync(sourcePath, targetPath);
++  fs.copyFileSync(sourcePath, targetPath);
+   fs.chmodSync(targetPath, 0777);
+ }
+ 

@@ -5,8 +5,7 @@ import * as React from "react";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
-import * as IconSpinnerPlus from "../svgs/IconSpinnerPlus.mjs";
-import * as IconSpinnerMinus from "../svgs/IconSpinnerMinus.mjs";
+import * as FormulaComponents from "@greenlabs/formula-components";
 
 function setIntInRange(number, min, max) {
   if (Caml_obj.lessthan(number, min)) {
@@ -23,14 +22,35 @@ function Spinbox(Props) {
   var maxOpt = Props.max;
   var value = Props.value;
   var onChange = Props.onChange;
+  var onOverMaxQuantityOpt = Props.onOverMaxQuantity;
   var min = minOpt !== undefined ? minOpt : 1;
   var max = maxOpt !== undefined ? maxOpt : 999;
-  var onChangeValue = function (e) {
-    var nonEmptyStr = e.target.value;
-    var parsed = nonEmptyStr === "" ? min : Belt_Option.map(Belt_Int.fromString(nonEmptyStr.replace(/[^0-9]/g, "")), (function (v$p) {
-              return setIntInRange(v$p, min, max);
-            }));
-    Belt_Option.map(parsed, onChange);
+  var onOverMaxQuantity = onOverMaxQuantityOpt !== undefined ? onOverMaxQuantityOpt : (function (param) {
+        
+      });
+  var onChangeFromTyping = function (e) {
+    var inputValue = e.target.value;
+    var parseValue = function (v) {
+      if (v === "") {
+        return String(min);
+      } else {
+        return v;
+      }
+    };
+    var validateValueForNumber = function (v) {
+      return v.replace(/[^0-9]/g, "");
+    };
+    var nextValue = Belt_Int.fromString(validateValueForNumber(parseValue(inputValue)));
+    var finalValue = Belt_Option.map(nextValue, (function (v) {
+            return setIntInRange(v, min, max);
+          }));
+    Belt_Option.map(nextValue, (function (x) {
+            if (x > max) {
+              return Curry._1(onOverMaxQuantity, undefined);
+            }
+            
+          }));
+    Belt_Option.map(finalValue, onChange);
   };
   return React.createElement("div", {
               className: "w-[7.5rem] h-10 flex border rounded-xl divide-x"
@@ -40,29 +60,38 @@ function Spinbox(Props) {
                   onClick: (function (param) {
                       Curry._1(onChange, value - 1 | 0);
                     })
-                }, React.createElement(IconSpinnerMinus.make, {
-                      fill: value === min ? "#cccccc" : "#262626"
-                    })), React.createElement("div", {
+                }, React.createElement("div", undefined, React.createElement(FormulaComponents.MinusLineRegular, {
+                          size: "lg",
+                          color: "gray-90"
+                        }))), React.createElement("div", {
                   className: "flex flex-1 items-center justify-center"
                 }, React.createElement("input", {
                       className: "w-[46px] text-center focus:outline-none",
                       value: String(value),
-                      onChange: onChangeValue
+                      onChange: onChangeFromTyping
                     })), React.createElement("button", {
                   className: "w-9 flex items-center justify-center",
-                  disabled: value === max,
                   onClick: (function (param) {
-                      Curry._1(onChange, value + 1 | 0);
+                      var nextValue = value + 1 | 0;
+                      if (nextValue > max) {
+                        return Curry._1(onOverMaxQuantity, undefined);
+                      } else {
+                        return Curry._1(onChange, nextValue);
+                      }
                     })
-                }, React.createElement(IconSpinnerPlus.make, {
-                      fill: value === max ? "#cccccc" : "#262626"
-                    })));
+                }, React.createElement("div", undefined, React.createElement(FormulaComponents.PlusLineRegular, {
+                          size: "lg",
+                          color: "gray-90"
+                        }))));
 }
+
+var maxQuantity = 999;
 
 var make = Spinbox;
 
 export {
   setIntInRange ,
+  maxQuantity ,
   make ,
 }
 /* react Not a pure module */

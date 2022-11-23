@@ -133,9 +133,13 @@ let default = () => {
   // 저장된 휴대폰 번호 prefill
   React.useEffect0(_ => {
     let phoneNumber = LocalStorageHooks.PhoneNumber.get()
-    if phoneNumber != "" {
-      setCheckedSavePhone(._ => true)
-      FormFields.Phone->form.setFieldValue(phoneNumber, ())
+    switch phoneNumber {
+    | Some(phoneNumber') => {
+        setCheckedSavePhone(._ => true)
+        FormFields.Phone->form.setFieldValue(phoneNumber', ())
+      }
+
+    | None => ()
     }
 
     None

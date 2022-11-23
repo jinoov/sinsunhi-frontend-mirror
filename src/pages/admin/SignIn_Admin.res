@@ -35,6 +35,7 @@ let make = () => {
 
               router->push(redirectUrl)
             }
+
           | Error(_) => setShowLoginError(._ => Dialog.Show)
           }
         }
@@ -80,18 +81,20 @@ let make = () => {
   React.useEffect0(_ => {
     let email = LocalStorageHooks.EmailAdmin.get()
     setCheckedSaveEmail(._ => true)
-    FormFields.Email->form.setFieldValue(email, ~shouldValidate=true, ())
+    FormFields.Email->form.setFieldValue(email->Option.getWithDefault(""), ~shouldValidate=true, ())
 
     None
   })
 
   <>
-    <Next.Head> <title> {j`관리자 로그인 - 신선하이`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {j`관리자 로그인 - 신선하이`->React.string} </title>
+    </Next.Head>
     <div
       className=%twc(
         "container mx-auto max-w-lg min-h-screen flex flex-col justify-center items-center relative"
       )>
-      <img src="/assets/sinsunhi-logo.svg" width="164" height="42" alt=`신선하이 로고` />
+      <img src="/assets/sinsunhi-logo.svg" width="164" height="42" alt={`신선하이 로고`} />
       <div className=%twc("text-gray-500 mt-2")>
         <span> {`농산물 바이어 전용`->React.string} </span>
         <span className=%twc("ml-1 font-semibold")> {`소싱플랫폼`->React.string} </span>
@@ -109,7 +112,7 @@ let make = () => {
             type_="email"
             name="email"
             size=Input.Large
-            placeholder=`이메일`
+            placeholder={`이메일`}
             value={form.values->FormFields.get(FormFields.Email)}
             onChange={FormFields.Email->form.handleChange->ReForm.Helpers.handleChange}
             error={FormFields.Email->Form.ReSchema.Field->form.getFieldError}
@@ -119,7 +122,7 @@ let make = () => {
             type_="password"
             name="password"
             size=Input.Large
-            placeholder=`비밀번호`
+            placeholder={`비밀번호`}
             onChange={FormFields.Password->form.handleChange->ReForm.Helpers.handleChange}
             error={FormFields.Password->Form.ReSchema.Field->form.getFieldError}
           />

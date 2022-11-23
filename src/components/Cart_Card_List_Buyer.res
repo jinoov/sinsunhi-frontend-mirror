@@ -12,7 +12,7 @@ module ProductNameAndDelete = {
     <div className=%twc("flex w-full justify-between items-baseline")>
       <Next.Link href={`/products/${productId->Int.toString}`}>
         <a className=%twc("text-text-L1 font-bold self-start underline-offset-4 hover:underline")>
-          {productName->Option.getWithDefault("")->React.string}
+          {productName->React.string}
         </a>
       </Next.Link>
       <Cart_Delete_Button
@@ -103,8 +103,8 @@ module PC = {
       <Next.Link href={`/products/${productId->Int.toString}`}>
         <a>
           <img
-            src={imageUrl->Option.getWithDefault("")}
-            alt={`${productName->Option.getWithDefault("")}-image`}
+            src={imageUrl}
+            alt={productName}
             className=%twc("min-w-[80px] min-h-[80px] w-20 h-20 rounded-[10px]")
           />
         </a>
@@ -166,11 +166,7 @@ module MO = {
           />
           <Next.Link href={`/products/${productId->Int.toString}`}>
             <a>
-              <img
-                src={imageUrl->Option.getWithDefault("")}
-                alt={`${productName->Option.getWithDefault("")}-image`}
-                className=%twc("w-20 h-20 rounded-[10px]")
-              />
+              <img src={imageUrl} alt={productName} className=%twc("w-20 h-20 rounded-[10px]") />
             </a>
           </Next.Link>
         </div>
@@ -205,7 +201,6 @@ let make = (~cartItem: Form.cartItem, ~refetchCart, ~prefix, ~isLast, ~deviceTyp
   )
   let {productOptions} = cartItem
   let formNames = Form.names(prefix)
-
   let watchOptions = Hooks.WatchValues.use(
     Hooks.WatchValues.NullableObjects,
     ~config=Hooks.WatchValues.config(~name=formNames.productOptions, ()),

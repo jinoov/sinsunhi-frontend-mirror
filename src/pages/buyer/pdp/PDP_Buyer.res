@@ -1,6 +1,10 @@
 module Query = %relay(`
   query PDPBuyerQuery($number: Int!) {
     product(number: $number) {
+      displayName
+      image {
+        thumb1920x1920
+      }
       ...PDPBuyerFragment
     }
   }
@@ -40,9 +44,26 @@ module Fragment = %relay(`
     }
   
     # Fragments
-    ...PDPNormalBuyerFragment
-    ...PDPQuotedBuyerFragment
-    ...PDPMatchingBuyer_fragment
+    ...PDPNormalBuyerPCFragment
+    ...PDPNormalBuyerMOFragment
+    ...PDPQuotedBuyerPCFragment
+    ...PDPQuotedBuyerMOFragment
+    ...PDPMatchingBuyerMO_fragment
+    ...PDPMatching2BuyerMO_fragment
+  }
+`)
+
+module Mutation = %relay(`
+  mutation PDPBuyer_ProductView_Mutation($input: MarkProductAsViewedInput!) {
+    markProductAsViewed(input: $input) {
+      ... on MarkProductAsViewedResult {
+        markedProductId
+      }
+      ... on Error {
+        code
+        message
+      }
+    }
   }
 `)
 
@@ -85,7 +106,7 @@ module PageViewGtm = {
 
 module Placeholder = {
   @react.component
-  let make = (~deviceType, ~gnbBanners, ~displayCategories) => {
+  let make = (~deviceType) => {
     let router = Next.Router.useRouter()
 
     switch deviceType {
@@ -93,7 +114,7 @@ module Placeholder = {
 
     | DeviceDetect.PC =>
       <div className=%twc("w-full min-w-[1280px] min-h-screen")>
-        <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
+        <Header_Buyer.PC key=router.asPath />
         <div className=%twc("w-[1280px] mx-auto min-h-full")>
           <div className=%twc("w-full pt-16 px-5")>
             <section className=%twc("w-full flex justify-between")>
@@ -204,7 +225,7 @@ module Placeholder = {
 
 module NotFound = {
   @react.component
-  let make = (~deviceType, ~gnbBanners, ~displayCategories) => {
+  let make = (~deviceType) => {
     let router = Next.Router.useRouter()
 
     switch deviceType {
@@ -212,7 +233,7 @@ module NotFound = {
 
     | DeviceDetect.PC =>
       <div className=%twc("w-full min-w-[1280px] min-h-screen flex flex-col")>
-        <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
+        <Header_Buyer.PC key=router.asPath />
         <div className=%twc("flex flex-col flex-1 w-[1280px] px-5 py-16 mx-auto")>
           <div className=%twc("mt-14")>
             <div className=%twc("w-full flex items-center justify-center")>
@@ -259,7 +280,7 @@ module NotFound = {
 
 module Error = {
   @react.component
-  let make = (~deviceType, ~gnbBanners, ~displayCategories) => {
+  let make = (~deviceType) => {
     let router = Next.Router.useRouter()
 
     switch deviceType {
@@ -267,7 +288,7 @@ module Error = {
 
     | DeviceDetect.PC =>
       <div className=%twc("w-full min-w-[1280px] min-h-screen")>
-        <Header_Buyer.PC key=router.asPath gnbBanners displayCategories />
+        <Header_Buyer.PC key=router.asPath />
         <div className=%twc("w-[1280px] px-5 py-16 mx-auto")>
           <div className=%twc("mt-14")>
             <div className=%twc("w-full flex items-center justify-center")>
@@ -314,7 +335,7 @@ module Error = {
 
 module Presenter = {
   @react.component
-  let make = (~deviceType, ~query, ~gnbBanners, ~displayCategories) => {
+  let make = (~deviceType, ~query) => {
     let product = query->Fragment.use
     let {
       id,
@@ -326,8 +347,11 @@ module Presenter = {
       fragmentRefs,
     } = product
 
+    let user = CustomHooks.Auth.use()
+
+    let (markProductAsViewed, _) = Mutation.use()
+
     ChannelTalkHelper.Hook.use(
-      ~viewMode=ChannelTalkHelper.Hook.PcOnly,
       ~trackData={
         eventName: `최근 본 상품`,
         eventProperty: {"productId": id, "productName": name},
@@ -348,23 +372,54 @@ module Presenter = {
       None
     })
 
+    React.useEffect2(() => {
+      switch user {
+      | LoggedIn(_) =>
+        markProductAsViewed(
+          ~variables=Mutation.makeVariables(~input={productId: id}),
+          ~onCompleted=(_, _) => (),
+          (),
+        )->ignore
+
+      | _ => ()
+      }
+      None
+    }, (user, product))
+
     React.useEffect1(() => {
       {"ecommerce": Js.Nullable.null}->DataGtm.push
       product->PageViewGtm.make->DataGtm.mergeUserIdUnsafe->DataGtm.push
+
       None
     }, [product])
 
+    // 피쳐플래그 데이터 in Context
+    let features = React.useContext(FeatureFlag.Context.context)
+    let isRenewalPDPActive = !(
+      features
+      ->Array.keep(feature =>
+        switch feature.featureType {
+        | #MATCHING_PDP_RENEW_Q4_2022 if feature.active => true
+        | _ => false
+        }
+      )
+      ->Garter.Array.isEmpty
+    )
+
     switch __typename->Product_Parser.Type.decode {
     // 일반 / 일반 + 견적 상품
-    | Some(Normal) | Some(Quotable) =>
-      <PDP_Normal_Buyer deviceType query=fragmentRefs gnbBanners displayCategories />
+    | Some(Normal) | Some(Quotable) => <PDP_Normal_Buyer deviceType query=fragmentRefs />
 
     // 견적 상품
-    | Some(Quoted) =>
-      <PDP_Quoted_Buyer deviceType query=fragmentRefs gnbBanners displayCategories />
+    | Some(Quoted) => <PDP_Quoted_Buyer deviceType query=fragmentRefs />
 
     // 매칭 상품
-    | Some(Matching) => <PDP_Matching_Buyer deviceType query=fragmentRefs /> // 초기 버전에선 모바일 뷰만 제공
+    | Some(Matching) =>
+      if isRenewalPDPActive {
+        <PDP_Matching2_Buyer deviceType query=fragmentRefs /> // 초기 버전에선 모바일 뷰만 제공
+      } else {
+        <PDP_Matching_Buyer deviceType query=fragmentRefs />
+      }
 
     // Unknown
     | None => React.null
@@ -374,104 +429,50 @@ module Presenter = {
 
 module Container = {
   @react.component
-  let make = (~deviceType, ~productId, ~gnbBanners, ~displayCategories) => {
+  let make = (~deviceType, ~pid) => {
     let {product} = Query.use(
-      ~variables=Query.makeVariables(~number=productId),
+      ~variables=Query.makeVariables(~number=pid),
       ~fetchPolicy=RescriptRelay.StoreAndNetwork,
       (),
     )
 
     switch product {
-    | None => <NotFound deviceType gnbBanners displayCategories />
-    | Some({fragmentRefs}) =>
-      <Presenter deviceType query=fragmentRefs gnbBanners displayCategories />
+    | None => <NotFound deviceType />
+    | Some({fragmentRefs, displayName, image: {thumb1920x1920}}) =>
+      <>
+        <Next.Head>
+          <title> {`신선하이 | ${displayName}`->React.string} </title>
+          <meta
+            name="description"
+            content="농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요."
+          />
+        </Next.Head>
+        <OpenGraph_Header
+          title={`${displayName}`}
+          imageURL={thumb1920x1920->Js.Global.encodeURI}
+          canonicalUrl={`https://sinsunhi.com/products/${pid->Int.toString}`}
+        />
+        <Presenter deviceType query=fragmentRefs />
+      </>
     }
   }
 }
 
-module RedirectOldUrl = {
-  // PDP의 Url이 /products/{node-id} -> /products/{product-id}로 개편되면서
-  // 기존에 crm등을 통해 공유된 유저의 진입을 보장하기 위해
-  // 일시적으로 node-id를 통해 진입하는 유저를 product-id기반의 url로 redirect 시킨다. (한달 정도 유지할 예정)
-  // 접근한 url이 node-id라는것은 int변환이 정상적이지 않은 query 스트링을 가졌을 경우
-  // node-id라고 판단한다. 불안정한 로직이지만, 기존 유저의 하위호환을 일시적으로 보장하기 위한
-  // 장치이므로 이 이상의 정교한 로직은 불필요하다고 생각된다.
-  // 적용일: 2022.07.21
-  // 제거 예정일: 2022.08.21
-
-  module Redirector = {
-    module Query = %relay(`
-      query PDPBuyerRedirectQuery($id: ID!) {
-        node(id: $id) {
-          ... on Product {
-            number
-          }
-        }
-      }
-    `)
-
-    @react.component
-    let make = (~nodeId, ~deviceType, ~gnbBanners, ~displayCategories) => {
-      let {useRouter, replace} = module(Next.Router)
-      let router = useRouter()
-
-      let {node} = Query.use(~variables=Query.makeVariables(~id=nodeId), ())
-
-      switch node {
-      | None => <NotFound deviceType gnbBanners displayCategories />
-      | Some({number}) =>
-        switch number {
-        | None => <NotFound deviceType gnbBanners displayCategories />
-        | Some(number') =>
-          router->replace(`/products/${number'->Int.toString}`)
-          <> </>
-        }
-      }
-    }
-  }
-
-  @react.component
-  let make = (~pid, ~deviceType, ~gnbBanners, ~displayCategories) => {
-    switch pid->Int.fromString {
-    // int변환이 정상적으로 될 경우 product-id라고 판단
-    | Some(productId) => <Container productId deviceType gnbBanners displayCategories />
-
-    // int변환이 실패할 경우 node-id로 판단
-    | None => <Redirector nodeId=pid deviceType gnbBanners displayCategories />
-    }
-  }
-}
-
-type props = {
-  query: Js.Dict.t<string>,
-  deviceType: DeviceDetect.deviceType,
-  gnbBanners: array<GnbBannerListBuyerQuery_graphql.Types.response_gnbBanners>,
-  displayCategories: array<ShopCategorySelectBuyerQuery_graphql.Types.response_displayCategories>,
-}
+type props = {deviceType: DeviceDetect.deviceType}
 type params
 type previewData
 
 let default = (~props) => {
-  let {deviceType, gnbBanners, displayCategories} = props
+  let {deviceType} = props
   let router = Next.Router.useRouter()
-  let pid = router.query->Js.Dict.get("pid")
-
-  let (isCsr, setIsCsr) = React.Uncurried.useState(_ => false)
-
-  React.useEffect0(() => {
-    setIsCsr(._ => true)
-    None
-  })
+  let pid = router.query->Js.Dict.get("pid")->Option.flatMap(Int.fromString)
 
   <>
-    <Next.Head>
-      <title> {`신선하이`->React.string} </title>
-    </Next.Head>
-    <RescriptReactErrorBoundary fallback={_ => <Error deviceType gnbBanners displayCategories />}>
+    <RescriptReactErrorBoundary fallback={_ => <Error deviceType />}>
       <React.Suspense fallback={React.null}>
-        {switch (isCsr, pid) {
-        | (true, Some(pid')) => <RedirectOldUrl deviceType pid=pid' gnbBanners displayCategories />
-        | _ => React.null
+        {switch pid {
+        | None => <NotFound deviceType />
+        | Some(pid') => <Container deviceType pid=pid' />
         }}
       </React.Suspense>
     </RescriptReactErrorBoundary>
@@ -479,33 +480,24 @@ let default = (~props) => {
 }
 
 let getServerSideProps = (ctx: Next.GetServerSideProps.context<props, params, previewData>) => {
+  open ServerSideHelper
+  let pid = ctx.query->Js.Dict.get("pid")->Option.flatMap(Int.fromString)
+  let environment = SinsunMarket(Env.graphqlApiUrl)->RelayEnv.environment
+  let gnbAndCategoryQuery = environment->gnbAndCategory
+  let features = environment->featureFlags
+
   let deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req)
-  GnbBannerList_Buyer.Query.fetchPromised(~environment=RelayEnv.envSinsunMarket, ~variables=(), ())
-  |> Js.Promise.then_((res: GnbBannerListBuyerQuery_graphql.Types.response) =>
-    ShopCategorySelect_Buyer.Query.fetchPromised(
-      ~environment=RelayEnv.envSinsunMarket,
-      ~variables={onlyDisplayable: Some(true), types: Some([#NORMAL]), parentId: None},
-      (),
-    ) |> Js.Promise.then_((res1: ShopCategorySelectBuyerQuery_graphql.Types.response) => {
-      Js.Promise.resolve({
-        "props": {
-          "query": ctx.query,
-          "deviceType": deviceType,
-          "gnbBanners": res.gnbBanners,
-          "displayCategories": res1.displayCategories,
-        },
-      })
-    })
-  )
-  |> Js.Promise.catch(err => {
-    Js.log2("에러 GnbBannerListBuyerQuery", err)
-    Js.Promise.resolve({
-      "props": {
-        "query": ctx.query,
-        "deviceType": deviceType,
-        "gnbBanners": [],
-        "displayCategories": [],
-      },
-    })
-  })
+
+  switch pid {
+  | None =>
+    gnbAndCategoryQuery->makeResultWithQuery(~environment, ~extraProps={"deviceType": deviceType})
+  | Some(pid') => {
+      let p1 = Query.fetchPromised(~environment, ~variables=Query.makeVariables(~number=pid'), ())
+
+      Promise.allSettled3((gnbAndCategoryQuery, features, p1))->makeResultWithQuery(
+        ~environment,
+        ~extraProps={"deviceType": deviceType},
+      )
+    }
+  }
 }

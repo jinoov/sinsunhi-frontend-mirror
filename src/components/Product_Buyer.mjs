@@ -10,10 +10,25 @@ function formatDate(d) {
   return Locale.DateTime.formatFromUTC(new Date(d), "yyyy/MM/dd HH:mm");
 }
 
+function Product_Buyer$Item$AdhocText(Props) {
+  var salesStatus = Props.salesStatus;
+  var adhocStockIsLimited = Props.adhocStockIsLimited;
+  var adhocStockNumRemaining = Props.adhocStockNumRemaining;
+  var match = salesStatus === /* SOLDOUT */1;
+  var adhocRemaningText = match ? "품절" : (
+      adhocStockIsLimited && adhocStockNumRemaining !== undefined ? "" + Locale.Float.show(undefined, adhocStockNumRemaining, 0) + "개 남음" : "수량 제한 없음"
+    );
+  return React.createElement(React.Fragment, undefined, adhocRemaningText);
+}
+
+var AdhocText = {
+  make: Product_Buyer$Item$AdhocText
+};
+
 function Product_Buyer$Item$Table(Props) {
   var product = Props.product;
   return React.createElement(React.Fragment, undefined, React.createElement("li", {
-                  className: "hidden lg:grid lg:grid-cols-7-buyer-product text-gray-700"
+                  className: "hidden lg:grid lg:grid-cols-8-buyer-product text-gray-700"
                 }, React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement(Product_Badge.make, {
@@ -35,6 +50,14 @@ function Product_Buyer$Item$Table(Props) {
                     }, React.createElement("span", {
                           className: "whitespace-nowrap"
                         }, "" + Locale.Float.show(undefined, product.price, 0) + "원")), React.createElement("div", {
+                      className: "h-full flex flex-col px-4 py-2"
+                    }, React.createElement("span", {
+                          className: "whitespace-nowrap"
+                        }, React.createElement(Product_Buyer$Item$AdhocText, {
+                              salesStatus: product.salesStatus,
+                              adhocStockIsLimited: product.adhocStockIsLimited,
+                              adhocStockNumRemaining: product.adhocStockNumRemaining
+                            }))), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement("span", {
                           className: "block"
@@ -85,7 +108,17 @@ function Product_Buyer$Item$Card(Props) {
                               className: "w-20 text-gray-gl"
                             }, "현재 판매가"), React.createElement("span", {
                               className: "ml-2"
-                            }, "" + Locale.Float.show(undefined, product.price, 0) + "원")), React.createElement(ReactSeparator.Root, {
+                            }, "" + Locale.Float.show(undefined, product.price, 0) + "원")), React.createElement("div", {
+                          className: "flex mt-3"
+                        }, React.createElement("span", {
+                              className: "w-20 text-gray-gl"
+                            }, "구매 가능 수량"), React.createElement("span", {
+                              className: "ml-2"
+                            }, React.createElement(Product_Buyer$Item$AdhocText, {
+                                  salesStatus: product.salesStatus,
+                                  adhocStockIsLimited: product.adhocStockIsLimited,
+                                  adhocStockNumRemaining: product.adhocStockNumRemaining
+                                }))), React.createElement(ReactSeparator.Root, {
                           className: "separator my-5"
                         }), React.createElement("div", {
                           className: "flex mt-3"
@@ -107,6 +140,7 @@ var Card = {
 };
 
 var Item = {
+  AdhocText: AdhocText,
   Table: Table,
   Card: Card
 };

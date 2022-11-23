@@ -146,7 +146,7 @@ function Header$Seller(Props) {
                                 className: "flex-1 py-2"
                               }, React.createElement("img", {
                                     className: "w-[86px] h-[22px] md:w-[100px] md:h-[25px]",
-                                    alt: "신선하이 로고",
+                                    alt: "신선하이 생산자 바로가기",
                                     src: "/assets/sinsunhi-logo.svg"
                                   }))
                         }), React.createElement("li", {
@@ -201,6 +201,7 @@ function Header$SellerActivateUser(Props) {
                     })
                 }, React.createElement("img", {
                       className: "w-6 h-6 rotate-180",
+                      alt: "뒤로가기",
                       src: arrowRight
                     })));
 }
@@ -215,7 +216,7 @@ function Header$Admin(Props) {
                   className: "px-4 shadow-inner-b-1 shadow-gray flex justify-between items-center h-16 sm:px-10 md:px-20"
                 }, React.createElement("li", undefined, React.createElement("img", {
                           className: "w-[86px] h-[22px] md:w-[100px] md:h-[25px]",
-                          alt: "신선하이 로고",
+                          alt: "신선하이 어드민 바로가기",
                           src: "/assets/sinsunhi-logo.svg"
                         })), React.createElement("li", undefined, React.createElement(Header$User, {}))));
 }

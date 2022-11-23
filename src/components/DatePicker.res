@@ -59,6 +59,7 @@ let make = (
   ~isDateDisabled=?,
   ~onFocus=?,
   ~disabled=?,
+  ~localization=DuetDatePicker.krLocalization,
 ) => {
   let dateRe = %re("/^(\d{4})\-(\d{1,2})\-(\d{1,2})$/")
   let max = maxDate
@@ -89,7 +90,7 @@ let make = (
         format: (~date) => date->DateFns.format("yyyy-MM-dd"),
       }
       value=?{date->Option.map(date' => date'->DateFns.format("yyyy-MM-dd"))}
-      localization=DuetDatePicker.krLocalization
+      localization
       onChange
       ?max
       ?min
@@ -103,6 +104,6 @@ let make = (
       | None => "right"
       }}
     />
-    <img src=calendarIcon className=%twc("absolute top-2 right-3") />
+    <img src=calendarIcon className=%twc("absolute top-2 right-3") alt="calendar" />
   </label>
 }

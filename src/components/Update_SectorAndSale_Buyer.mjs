@@ -40,7 +40,10 @@ function Update_SectorAndSale_Buyer(Props) {
                                   })),
                             close: onClose
                           })),
-                  className: "dialog-content-detail overflow-y-auto rounded-2xl"
+                  className: "dialog-content-detail overflow-y-auto rounded-2xl",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

@@ -12,12 +12,12 @@ module Custom = {
 
     let placements = placement =>
       switch placement {
-      | #"top-left" => [top(px(0)), left(px(0))]
-      | #"top-center" => [top(px(0)), left(pct(50.)), transform(translateX(pct(-50.)))]
-      | #"top-right" => [top(px(0)), right(px(0))]
-      | #"bottom-left" => [bottom(px(0)), left(px(0))]
-      | #"bottom-center" => [bottom(px(0)), left(pct(50.)), transform(translateX(pct(-50.)))]
-      | #"bottom-right" => [bottom(px(0)), right(px(0))]
+      | #"top-left" => [top(px(16)), left(px(0))]
+      | #"top-center" => [top(px(16)), left(pct(50.)), transform(translateX(pct(-50.)))]
+      | #"top-right" => [top(px(16)), right(px(0))]
+      | #"bottom-left" => [bottom(px(16)), left(px(0))]
+      | #"bottom-center" => [bottom(px(16)), left(pct(50.)), transform(translateX(pct(-50.)))]
+      | #"bottom-right" => [bottom(px(16)), right(px(0))]
       }
 
     let container = placement =>
@@ -42,8 +42,8 @@ module Custom = {
         height(px(50)),
         paddingRight(px(16)),
         paddingLeft(px(16)),
-        borderRadius(px(10)),
-        backgroundColor(hsla(deg(0.0), pct(0.0), pct(0.0), #num(0.8))),
+        borderRadius(px(12)),
+        backgroundColor(hex("121212")),
         transition("all", ~duration=transitionDuration, ~timingFunction=#easeInOut),
         opacity(
           switch transitionState {
@@ -55,7 +55,8 @@ module Custom = {
       ])
 
     let p = style(. [
-      fontSize(px(15)),
+      fontSize(px(16)),
+      fontWeight(#bold),
       color(white),
       overflow(#hidden),
       textOverflow(#ellipsis),
@@ -74,7 +75,7 @@ module Custom = {
     @react.component
     let make = (~children, ~transitionDuration, ~transitionState) => {
       <div className={Styles.toast(transitionDuration, transitionState)}>
-        <p className=Styles.p> {children} </p>
+        <div className=Styles.p> {children} </div>
       </div>
     }
   }
@@ -133,7 +134,7 @@ module ToastProvider = {
       autoDismissTimeout=2000
       autoDismiss=true
       components={{
-        "ToastContainer": ({children, placement}: containerProps) =>
+        "ToastContainer": ({children, placement}) =>
           <Custom.ToastContainer placement> {children} </Custom.ToastContainer>,
         "Toast": ({children, transitionDuration, transitionState}) =>
           <Custom.Toast transitionDuration transitionState> {children} </Custom.Toast>,

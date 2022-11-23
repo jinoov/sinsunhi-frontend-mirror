@@ -89,14 +89,16 @@ function Layout_Admin(Props) {
   var match = Curry._1(LocalStorageHooks.AdminMenu.useLocalStorage, undefined);
   var setOpenedAdminMenu = match[1];
   var openedAdminMenu = match[0];
-  return React.createElement(React.Fragment, undefined, React.createElement(Header.Admin.make, {}), React.createElement("main", {
-                  className: "flex flex-row bg-div-shape-L1"
+  return React.createElement("div", {
+              className: "min-h-screen flex flex-col"
+            }, React.createElement(Header.Admin.make, {}), React.createElement("main", {
+                  className: "flex flex-row flex-1 bg-div-shape-L1"
                 }, React.createElement("aside", {
-                      className: "mt-px min-h-screen bg-white"
+                      className: "mt-px min-h-full bg-white"
                     }, Belt_Array.map(Layout_Admin_Data.Item.items, (function (t) {
                             return render(t, router.pathname, Belt_Option.getWithDefault(openedAdminMenu, []), setOpenedAdminMenu, role);
                           }))), React.createElement("article", {
-                      className: "w-full max-w-gnb-panel"
+                      className: "w-[calc(100%-288px)] min-h-full"
                     }, children)));
 }
 

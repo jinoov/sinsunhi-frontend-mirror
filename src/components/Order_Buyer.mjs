@@ -61,20 +61,60 @@ function Order_Buyer$Item$Table(Props) {
   var match$1 = order.status;
   var isDisabedCheckbox = match$1 !== 0;
   var match$2 = order.status;
-  var match$3 = order.deliveryType;
   var tmp;
   var exit = 0;
+  switch (match$2) {
+    case /* CREATE */0 :
+        tmp = React.createElement("div", {
+              className: "flex flex-col"
+            }, React.createElement("span", undefined, "미등록"), React.createElement("button", {
+                  className: "px-3 max-h-10 bg-gray-gl text-gray-gl rounded-lg whitespace-nowrap py-1 mt-2 max-w-min",
+                  type: "button",
+                  onClick: (function (param) {
+                      setShowCancelConfirm(function (param) {
+                            return /* Show */0;
+                          });
+                    })
+                }, "주문취소"));
+        break;
+    case /* DEPARTURE */2 :
+    case /* DELIVERING */3 :
+    case /* COMPLETE */4 :
+    case /* CANCEL */5 :
+    case /* ERROR */6 :
+    case /* REFUND */7 :
+    case /* NEGOTIATING */8 :
+        exit = 1;
+        break;
+    case /* PACKING */1 :
+    case /* DEPOSIT_PENDING */9 :
+        tmp = "미등록";
+        break;
+    
+  }
+  if (exit === 1) {
+    tmp = React.createElement(React.Fragment, undefined, React.createElement("span", {
+              className: "block"
+            }, courierName), React.createElement("span", {
+              className: "block text-gray-500"
+            }, Belt_Option.getWithDefault(order.invoice, "-")), React.createElement(Tracking_Buyer.make, {
+              order: order
+            }));
+  }
+  var match$3 = order.deliveryType;
+  var tmp$1;
+  var exit$1 = 0;
   if (match$3 === 0) {
-    tmp = React.createElement("div", {
+    tmp$1 = React.createElement("div", {
           className: "h-full flex flex-col px-4 py-2"
         }, React.createElement("span", {
               className: "block"
             }, "직접수령"));
   } else {
-    exit = 1;
+    exit$1 = 1;
   }
-  if (exit === 1) {
-    tmp = React.createElement("div", {
+  if (exit$1 === 1) {
+    tmp$1 = React.createElement("div", {
           className: "h-full flex flex-col px-4 py-2"
         }, React.createElement("span", {
               className: "block"
@@ -123,25 +163,7 @@ function Order_Buyer$Item$Table(Props) {
                           className: "block"
                         }, String(order.quantity))), React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
-                    }, match$2 !== 1 ? (
-                        match$2 !== 0 ? React.createElement(React.Fragment, undefined, React.createElement("span", {
-                                    className: "block"
-                                  }, courierName), React.createElement("span", {
-                                    className: "block text-gray-500"
-                                  }, Belt_Option.getWithDefault(order.invoice, "-")), React.createElement(Tracking_Buyer.make, {
-                                    order: order
-                                  })) : React.createElement("div", {
-                                className: "flex flex-col"
-                              }, React.createElement("span", undefined, "미등록"), React.createElement("button", {
-                                    className: "px-3 max-h-10 bg-gray-gl text-gray-gl rounded-lg whitespace-nowrap py-1 mt-2 max-w-min",
-                                    type: "button",
-                                    onClick: (function (param) {
-                                        setShowCancelConfirm(function (param) {
-                                              return /* Show */0;
-                                            });
-                                      })
-                                  }, "주문취소"))
-                      ) : "미등록"), tmp, React.createElement("div", {
+                    }, tmp), tmp$1, React.createElement("div", {
                       className: "h-full flex flex-col px-4 py-2"
                     }, React.createElement("span", {
                           className: "block"
@@ -200,18 +222,68 @@ function Order_Buyer$Item$Card(Props) {
               })), "택배사 선택");
   }
   var match$1 = order.status;
-  var match$2 = order.deliveryType;
   var tmp;
   var exit = 0;
+  switch (match$1) {
+    case /* CREATE */0 :
+        tmp = React.createElement("div", {
+              className: "flex-1 flex justify-between"
+            }, React.createElement("span", {
+                  className: "w-20 text-gray-gl"
+                }, "운송장번호"), React.createElement("div", {
+                  className: "flex-1"
+                }, React.createElement("button", {
+                      className: "w-full py-3 px-3 bg-gray-gl text-gray-gl rounded-lg whitespace-nowrap text-base font-bold",
+                      type: "button",
+                      onClick: (function (param) {
+                          setShowCancelConfirm(function (param) {
+                                return /* Show */0;
+                              });
+                        })
+                    }, "주문취소")));
+        break;
+    case /* DEPARTURE */2 :
+    case /* DELIVERING */3 :
+    case /* COMPLETE */4 :
+    case /* CANCEL */5 :
+    case /* ERROR */6 :
+    case /* REFUND */7 :
+    case /* NEGOTIATING */8 :
+        exit = 1;
+        break;
+    case /* PACKING */1 :
+    case /* DEPOSIT_PENDING */9 :
+        tmp = "미등록";
+        break;
+    
+  }
+  if (exit === 1) {
+    tmp = React.createElement(React.Fragment, undefined, React.createElement("div", {
+              className: "flex"
+            }, React.createElement("span", {
+                  className: "w-20 text-gray-gl"
+                }, "운송장번호"), React.createElement("div", {
+                  className: "ml-2"
+                }, React.createElement("span", undefined, React.createElement("span", {
+                          className: "block"
+                        }, courierName), React.createElement("span", {
+                          className: "block"
+                        }, Belt_Option.getWithDefault(order.invoice, "-"))))), React.createElement(Tracking_Buyer.make, {
+              order: order
+            }));
+  }
+  var match$2 = order.deliveryType;
+  var tmp$1;
+  var exit$1 = 0;
   if (match$2 === 0) {
-    tmp = React.createElement("span", {
+    tmp$1 = React.createElement("span", {
           className: "block"
         }, "직접수령");
   } else {
-    exit = 1;
+    exit$1 = 1;
   }
-  if (exit === 1) {
-    tmp = React.createElement(React.Fragment, undefined, React.createElement("span", {
+  if (exit$1 === 1) {
+    tmp$1 = React.createElement(React.Fragment, undefined, React.createElement("span", {
               className: "block"
             }, "" + Belt_Option.getWithDefault(order.receiverName, "-") + " " + Belt_Option.getWithDefault(order.receiverPhone, "-") + ""), React.createElement("span", {
               className: "block mt-1"
@@ -277,41 +349,13 @@ function Order_Buyer$Item$Card(Props) {
                           className: "py-3"
                         }, React.createElement("div", {
                               className: "flex justify-between"
-                            }, match$1 !== 1 ? (
-                                match$1 !== 0 ? React.createElement(React.Fragment, undefined, React.createElement("div", {
-                                            className: "flex"
-                                          }, React.createElement("span", {
-                                                className: "w-20 text-gray-gl"
-                                              }, "운송장번호"), React.createElement("div", {
-                                                className: "ml-2"
-                                              }, React.createElement("span", undefined, React.createElement("span", {
-                                                        className: "block"
-                                                      }, courierName), React.createElement("span", {
-                                                        className: "block"
-                                                      }, Belt_Option.getWithDefault(order.invoice, "-"))))), React.createElement(Tracking_Buyer.make, {
-                                            order: order
-                                          })) : React.createElement("div", {
-                                        className: "flex-1 flex justify-between"
-                                      }, React.createElement("span", {
-                                            className: "w-20 text-gray-gl"
-                                          }, "운송장번호"), React.createElement("div", {
-                                            className: "flex-1"
-                                          }, React.createElement("button", {
-                                                className: "w-full py-3 px-3 bg-gray-gl text-gray-gl rounded-lg whitespace-nowrap text-base font-bold",
-                                                type: "button",
-                                                onClick: (function (param) {
-                                                    setShowCancelConfirm(function (param) {
-                                                          return /* Show */0;
-                                                        });
-                                                  })
-                                              }, "주문취소")))
-                              ) : "미등록"), React.createElement("div", {
+                            }, tmp), React.createElement("div", {
                               className: "flex mt-4"
                             }, React.createElement("span", {
                                   className: "w-20 text-gray-gl"
                                 }, "배송정보"), React.createElement("div", {
                                   className: "flex-1 pl-2"
-                                }, tmp)), React.createElement("div", {
+                                }, tmp$1)), React.createElement("div", {
                               className: "flex mt-4"
                             }, React.createElement("span", {
                                   className: "w-20 text-gray-gl"

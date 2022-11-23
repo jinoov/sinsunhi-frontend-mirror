@@ -153,49 +153,51 @@ module PC = {
           </span>
         }}
       </div>
-      {switch priceLabelStatus {
-      // SSR
-      | Loading => <span className=%twc("text-gray-500 text-sm")> {``->React.string} </span>
+      <div>
+        {switch priceLabelStatus {
+        // SSR
+        | Loading => <div className=%twc("h-6") />
 
-      // 품절상품
-      | Soldout =>
-        <span className=%twc("text-gray-500 text-sm")>
-          {`품절된 상품으로 총 결제 금액을 보실 수 없습니다`->React.string}
-        </span>
+        // 품절상품
+        | Soldout =>
+          <span className=%twc("text-gray-500 text-sm")>
+            {`품절된 상품으로 총 결제 금액을 보실 수 없습니다`->React.string}
+          </span>
 
-      // 미인증
-      | Unauthorized =>
-        <span className=%twc("text-green-500 text-sm")>
-          {`로그인을 하시면 총 결제 금액을 보실 수 있습니다`->React.string}
-        </span>
+        // 미인증
+        | Unauthorized =>
+          <span className=%twc("text-green-500 text-sm")>
+            {`로그인을 하시면 총 결제 금액을 보실 수 있습니다`->React.string}
+          </span>
 
-      // 단품 미선택
-      | NoOption =>
-        <span className=%twc("text-green-500 text-sm")>
-          {`단품을 선택하시면 총 결제 금액을 보실 수 있습니다`->React.string}
-        </span>
+        // 단품 미선택
+        | NoOption =>
+          <span className=%twc("text-green-500 text-sm")>
+            {`단품을 선택하시면 총 결제 금액을 보실 수 있습니다`->React.string}
+          </span>
 
-      // 가격 표시
-      | Available(priceObjs) =>
-        let (_, totalDeliveryCost) = priceObjs->sumPriceObjs
+        // 가격 표시
+        | Available(priceObjs) =>
+          let (_, totalDeliveryCost) = priceObjs->sumPriceObjs
 
-        let deliveryCostLabel = {
-          switch withDeliveryCost {
-          // 배송비 포함
-          | true =>
-            switch totalDeliveryCost {
-            | 0 => `배송비 무료`
-            | nonZeroInt =>
-              `배송비 ${nonZeroInt->Int.toFloat->Locale.Float.show(~digits=0)}원 포함`
+          let deliveryCostLabel = {
+            switch withDeliveryCost {
+            // 배송비 포함
+            | true =>
+              switch totalDeliveryCost {
+              | 0 => `배송비 무료`
+              | nonZeroInt =>
+                `배송비 ${nonZeroInt->Int.toFloat->Locale.Float.show(~digits=0)}원 포함`
+              }
+
+            // 배송비 비포함
+            | false => `택배 배송비 포함 금액(배송방식에 따라 변동됨)`
             }
-
-          // 배송비 비포함
-          | false => `택배 배송비 포함 금액(배송방식에 따라 변동됨)`
           }
-        }
 
-        <span className=%twc("text-gray-600")> {deliveryCostLabel->React.string} </span>
-      }}
+          <span className=%twc("text-gray-600")> {deliveryCostLabel->React.string} </span>
+        }}
+      </div>
     </div>
   }
 }
@@ -255,9 +257,7 @@ module MO = {
         }}
       </div>
       {switch priceLabelStatus {
-      | Loading =>
-        let captionStyle = captionBaseStyle ++ %twc("text-gray-500")
-        <span className=captionStyle> {``->React.string} </span>
+      | Loading => <div className=%twc("h-[15.5px]") />
 
       | Soldout =>
         let captionStyle = captionBaseStyle ++ %twc("text-gray-500")

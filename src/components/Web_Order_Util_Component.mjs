@@ -25,6 +25,7 @@ function Web_Order_Util_Component$Tooltip$PC(Props) {
                               "w-5 h-5",
                               className
                             ]),
+                        alt: "",
                         src: "/icons/icon_common_tooltip_q_line_20.png",
                         onClick: (function (e) {
                             e.preventDefault();
@@ -78,6 +79,7 @@ function Web_Order_Util_Component$Tooltip$Mobile(Props) {
                               "w-5 h-5",
                               className
                             ]),
+                        alt: "",
                         src: "/icons/icon_common_tooltip_q_line_20.png",
                         onClick: (function (e) {
                             e.preventDefault();

@@ -3,7 +3,9 @@ let make = () => {
   ChannelTalkHelper.Hook.use()
 
   <>
-    <Next.Head> <title> {j`서비스 점검 - 신선하이`->React.string} </title> </Next.Head>
+    <Next.Head>
+      <title> {j`신선하이 | 서비스 점검`->React.string} </title>
+    </Next.Head>
     <section className=%twc("min-h-screen flex flex-col justify-center items-center")>
       <p className=%twc("text-xl font-bold")> {`서비스 점검 중 입니다.`->React.string} </p>
       <RadixUI.Separator.Root

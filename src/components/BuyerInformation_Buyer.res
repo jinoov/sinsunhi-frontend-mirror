@@ -325,7 +325,7 @@ module SectorAndSale = {
     React.useEffect0(_ => {
       ChannelTalk.hideChannelButton()
 
-      Some(_ => ChannelTalk.showChannelButton())
+      None
     })
 
     <>
@@ -852,7 +852,7 @@ module InterestedCategories = {
     React.useEffect0(_ => {
       ChannelTalk.hideChannelButton()
 
-      Some(_ => ChannelTalk.showChannelButton())
+      None
     })
 
     <>
@@ -938,11 +938,12 @@ module Fetcher = {
       switch user {
       | LoggedIn({id, role: Buyer}) => {
           let lastShownDate = LocalStorageHooks.BuyerInfoLastShown.get()
-          let userId = lastShownDate->parse->Option.map(lastShown => lastShown.userId)
-          let date = lastShownDate->parse->Option.map(lastShown => lastShown.date)
+          let userId =
+            lastShownDate->Option.flatMap(parse)->Option.map(lastShown => lastShown.userId)
+          let date = lastShownDate->Option.flatMap(parse)->Option.map(lastShown => lastShown.date)
 
           if (
-            lastShownDate == "" ||
+            lastShownDate->Option.isNone ||
             userId != Some(id) ||
             date->Option.mapWithDefault(true, d =>
               d->DateFns.parseISO->DateFns.isBefore(Js.Date.make()->DateFns.startOfDay)
@@ -991,8 +992,11 @@ module Fetcher = {
 
     let _changeModeToSectorSale = () => setMode(._ => SectorAndSale)
     let changeModeToInterestedItemCategory = () => setMode(._ => InterestedCategories)
-    let close = () => setOpen(._ => Hide)
-
+    let close = () => {
+      setOpen(._ => Hide)
+      // Braze Push Notification Request
+      Braze.PushNotificationRequestDialog.trigger()
+    }
     // A/B 테스트를 위한 주석 처리
     // let hasInputBusinessSectorsAndSalesBin = queryData.viewer->Option.mapWithDefault(false, v => {
     //   let bs = v.selfReportedBusinessSectors->Option.map(arr => !(arr->Garter.Array.isEmpty))
@@ -1021,7 +1025,7 @@ module Fetcher = {
       | Hide => false
       }}>
       <Dialog.Overlay className=%twc("dialog-overlay") />
-      <Dialog.Content className=contentStyle>
+      <Dialog.Content className=contentStyle onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         <section className=%twc("text-text-L1")>
           <article className=%twc("flex")>
             <Dialog.Close
@@ -1037,6 +1041,8 @@ module Fetcher = {
                   setMode(._ => InterestedCategories)
                 } else {
                   setOpen(._ => Hide)
+                  // Braze Push Notification Request
+                  Braze.PushNotificationRequestDialog.trigger()
                 }
               }}>
               <IconClose height="24" width="24" fill="#262626" />

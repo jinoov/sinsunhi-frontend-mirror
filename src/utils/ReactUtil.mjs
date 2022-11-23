@@ -27,9 +27,24 @@ function setValueElementByRef(ref, value) {
         }));
 }
 
+function ReactUtil$Component(Props) {
+  var as_ = Props.as_;
+  var propsOpt = Props.props;
+  var children = Props.children;
+  var props = propsOpt !== undefined ? Caml_option.valFromOption(propsOpt) : ({});
+  return React.createElement(as_, Object.assign({
+                  children: children
+                }, props));
+}
+
+var Component = {
+  make: ReactUtil$Component
+};
+
 export {
   SpreadProps ,
   focusElementByRef ,
   setValueElementByRef ,
+  Component ,
 }
 /* react Not a pure module */

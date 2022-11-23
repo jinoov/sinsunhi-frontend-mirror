@@ -7,10 +7,15 @@ module type UserHook = {
 
 module Layout = (UserHook: UserHook) => {
   @react.component
-  let make = (~children, ~title, ~fallback=?, ~ssrFallback=React.null) => {
+  let make = (~children, ~title=?, ~fallback=?, ~ssrFallback=React.null) => {
     let user = UserHook.use()
     <>
-      <Next.Head> <title> {j`${title} - 신선하이`->React.string} </title> </Next.Head>
+      <Next.Head>
+        <title>
+          {j`신선하이 ${title->Option.mapWithDefault("", t => `| ${t}`)}`->React.string}
+        </title>
+      </Next.Head>
+      <OpenGraph_Header title={`신선하이 ${title->Option.mapWithDefault("", t => `| ${t}`)}`}/>
       {switch user {
       // TODO 로딩상태 페이지 추가 필요
       | Unknown => ssrFallback

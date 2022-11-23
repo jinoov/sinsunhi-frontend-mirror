@@ -7,14 +7,14 @@
 */
 
 @react.component
-let make = (~src) => {
+let make = (~src, ~alt) => {
   <div className=%twc("w-full")>
     <div className=%twc("relative overflow-hidden")>
       <Image
         src
         placeholder=Image.Placeholder.Lg
         className=%twc("w-full max-h-[300px] object-contain")
-        alt="product-detail-thumbnail"
+        alt
       />
       <div className=%twc("w-full h-full absolute top-0 left-0 bg-black/[.03]") />
     </div>

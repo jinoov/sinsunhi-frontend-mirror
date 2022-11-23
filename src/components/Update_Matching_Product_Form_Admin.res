@@ -38,6 +38,7 @@ module Fragment = %relay(`
     noticeEndAt
     releaseStartMonth
     releaseEndMonth
+    isAutoStatus
   }
 `)
 
@@ -57,6 +58,7 @@ module Mutation = %relay(`
     $status: ProductStatus!
     $releaseEndMonth: Int!
     $releaseStartMonth: Int!
+    $isAutoStatus: Boolean!
   ) {
     updateMatchingProduct(
       input: {
@@ -74,6 +76,7 @@ module Mutation = %relay(`
         status: $status
         releaseEndMonth: $releaseEndMonth
         releaseStartMonth: $releaseStartMonth
+        isAutoStatus: $isAutoStatus
       }
     ) {
       ... on UpdateMatchingProductResult {
@@ -114,6 +117,7 @@ module Form = {
     thumbnail: string,
     documentURL: string,
     editor: string,
+    isAutoStatus: string,
   }
 
   let formName = {
@@ -131,6 +135,7 @@ module Form = {
     thumbnail: "thumbnail",
     documentURL: "document-url",
     editor: "description-html",
+    isAutoStatus: "auto-status",
   }
 
   let encoderShipment = ship => ship->Js.Json.number
@@ -163,6 +168,7 @@ module Form = {
     @spice.key(formName.thumbnail) thumbnail: Upload_Thumbnail_Admin.Form.image,
     @spice.key(formName.documentURL) documentURL: option<string>,
     @spice.key(formName.editor) editor: string,
+    @spice.key(formName.isAutoStatus) isAutoStatus: bool,
   }
 }
 
@@ -766,6 +772,34 @@ module EditorInput = {
   }
 }
 
+// 자동관리대상 적용
+module AutoStatusCheckbox = {
+  @react.component
+  let make = (~name, ~defaultChecked) => {
+    let {register} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
+    let autoStatus = register(. name, None)
+
+    <div className=%twc("flex flex-col gap-2 max-w-md w-1/3")>
+      <div className=%twc("block")>
+        <span className=%twc("font-bold")> {`매칭 상품 자동관리`->React.string} </span>
+      </div>
+      <div className=%twc("flex gap-2 items-center")>
+        <Checkbox.Uncontrolled
+          inputRef=autoStatus.ref
+          defaultChecked
+          id=autoStatus.name
+          name=autoStatus.name
+          onChange=autoStatus.onChange
+          onBlur=autoStatus.onBlur
+        />
+        <label htmlFor=autoStatus.name className=%twc("cursor-pointer")>
+          {`자동 관리 설정`->React.string}
+        </label>
+      </div>
+    </div>
+  }
+}
+
 let toDisplayCategory = query => {
   let generateForm: array<
     UpdateMatchingProductFormAdminFragment_graphql.Types.fragment_displayCategories_fullyQualifiedName,
@@ -848,9 +882,9 @@ let toImage: UpdateMatchingProductFormAdminFragment_graphql.Types.fragment_image
   thumb800xall: image.thumb800xall->Option.getWithDefault(image.thumb1920x1920),
 }
 
-let decodeStatus = (s: RelaySchemaAssets_graphql.enum_ProductStatus): option<
-  Select_Product_Operation_Status.Base.status,
-> => {
+let decodeStatus = (
+  s: UpdateMatchingProductFormAdminFragment_graphql.Types.enum_ProductStatus,
+): option<Select_Product_Operation_Status.Base.status> => {
   switch s {
   | #SALE => SALE->Some
   | #SOLDOUT => SOLDOUT->Some
@@ -895,6 +929,7 @@ let makeMatchingProductVariables = (productId, form: Form.submit) =>
     ~status=form.operationStatus->encodeStatus,
     ~releaseEndMonth=form.shipmentTo->Float.toInt,
     ~releaseStartMonth=form.shipmentFrom->Float.toInt,
+    ~isAutoStatus=form.isAutoStatus,
     (),
   )
 
@@ -955,6 +990,7 @@ let make = (~query) => {
     thumbnail,
     documentURL,
     editor,
+    isAutoStatus,
   } = Form.formName
 
   let onSubmit = (data: Js.Json.t, _) => {
@@ -1023,6 +1059,7 @@ let make = (~query) => {
                 defaultToValue={product.releaseEndMonth->Int.toString}
               />
             </div>
+            <AutoStatusCheckbox name=isAutoStatus defaultChecked={product.isAutoStatus} />
           </div>
         </div>
       </section>

@@ -46,7 +46,9 @@ module Loading = {
             "divide-y divide-gray-100 lg:list-height-admin-buyer lg:overflow-y-scroll"
           )>
           {Garter.Array.make(5, 0)
-          ->Garter.Array.map(_ => <Order_Admin.Item.Table.Loading />)
+          ->Garter.Array.mapWithIndex((idx, _) =>
+            <Order_Admin.Item.Table.Loading key={`${idx->Int.toString}-table-loading`} />
+          )
           ->React.array}
         </ol>
       </div>
@@ -55,7 +57,7 @@ module Loading = {
 
 @react.component
 let make = (
-  ~status: CustomHooks.OrdersAdmin.result,
+  ~status: CustomHooks.Orders.result,
   ~check,
   ~onCheckOrder,
   ~onCheckAll,
@@ -67,7 +69,7 @@ let make = (
   | Loading => <Loading />
   | Loaded(orders) =>
     let countOfOrdersToCheck = {
-      switch orders->CustomHooks.OrdersAdmin.orders_decode {
+      switch orders->CustomHooks.Orders.orders_decode {
       | Ok(orders') =>
         orders'.data->Garter.Array.keep(Order_Admin.isCheckableOrder)->Garter.Array.length
       | Error(_) => 0
@@ -78,7 +80,7 @@ let make = (
 
     let isDisabledCheckAll = switch status {
     | Loaded(orders) =>
-      switch orders->CustomHooks.OrdersAdmin.orders_decode {
+      switch orders->CustomHooks.Orders.orders_decode {
       | Ok(orders') =>
         orders'.data->Garter.Array.keep(Order_Admin.isCheckableOrder)->Garter.Array.length == 0
       | Error(_) => true
@@ -90,7 +92,7 @@ let make = (
       <div className=%twc("w-full overflow-x-scroll")>
         <div className=%twc("min-w-max text-sm divide-y divide-gray-100")>
           <Header checked=isCheckAll onChange=onCheckAll disabled=isDisabledCheckAll />
-          {switch orders->CustomHooks.OrdersAdmin.orders_decode {
+          {switch orders->CustomHooks.Orders.orders_decode {
           | Ok(orders') =>
             <ol
               className=%twc(

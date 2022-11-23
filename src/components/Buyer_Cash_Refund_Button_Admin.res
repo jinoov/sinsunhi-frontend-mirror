@@ -101,7 +101,9 @@ let make = (~buyerId) => {
         {j`잔액환불`->React.string}
       </RadixUI.Dialog.Trigger>
     </div>
-    <RadixUI.Dialog.Content className=%twc("dialog-content overflow-y-auto text-text-L1")>
+    <RadixUI.Dialog.Content
+      className=%twc("dialog-content overflow-y-auto text-text-L1")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <div className=%twc("flex p-5")>
         <RadixUI.Dialog.Close id="btn-close" className=%twc("focus:outline-none ml-auto")>
           {j``->React.string}
@@ -130,7 +132,7 @@ let make = (~buyerId) => {
           <Input
             type_="text"
             name="refund-tid"
-            placeholder=`TID 입력`
+            placeholder={`TID 입력`}
             value={form.values->FormFields.get(FormFields.Tid)}
             onChange={FormFields.Tid->form.handleChange->ReForm.Helpers.handleChange}
             error={FormFields.Tid->Form.ReSchema.Field->form.getFieldError}
@@ -140,7 +142,7 @@ let make = (~buyerId) => {
             <Input
               type_="number"
               name="refund-amount"
-              placeholder=`환불 금액 입력(단위 1원)`
+              placeholder={`환불 금액 입력(단위 1원)`}
               value={form.values->FormFields.get(FormFields.Amount)}
               onChange={FormFields.Amount->form.handleChange->ReForm.Helpers.handleChange}
               error={FormFields.Amount->Form.ReSchema.Field->form.getFieldError}
@@ -153,7 +155,7 @@ let make = (~buyerId) => {
           <Input
             type_="text"
             name="refund-reason"
-            placeholder=`사유 입력`
+            placeholder={`사유 입력`}
             value={form.values->FormFields.get(FormFields.Reason)}
             onChange={FormFields.Reason->form.handleChange->ReForm.Helpers.handleChange}
             error={FormFields.Reason->Form.ReSchema.Field->form.getFieldError}
@@ -162,9 +164,9 @@ let make = (~buyerId) => {
       </div>
       <Dialog.ButtonBox
         onCancel={_ => close()}
-        textOnCancel=`닫기`
+        textOnCancel={`닫기`}
         onConfirm={handleOnSubmit}
-        textOnConfirm=`확인`
+        textOnConfirm={`확인`}
       />
     </RadixUI.Dialog.Content>
   </RadixUI.Dialog.Root>

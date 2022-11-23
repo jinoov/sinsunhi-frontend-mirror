@@ -5,7 +5,7 @@ let make = (~title=?, ~handleClickLeftButton=History.back) => {
       <header className=%twc("w-full max-w-3xl mx-auto h-14 bg-white")>
         <div className=%twc("px-5 py-4 flex justify-between")>
           <button onClick={_ => handleClickLeftButton()}>
-            <IconArrow height="24" width="24" className=%twc("rotate-180") />
+            <Formula.Icon.ArrowLeftLineRegular size=#xl />
           </button>
           <div>
             <span className=%twc("font-bold text-base")>

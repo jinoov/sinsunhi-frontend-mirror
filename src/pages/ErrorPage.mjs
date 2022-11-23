@@ -9,7 +9,7 @@ function ErrorPage(Props) {
                   children: React.createElement("title", undefined, "신선하이")
                 }), React.createElement("div", {
                   className: "w-screen h-screen flex items-center justify-center"
-                }, React.createElement("contents", {
+                }, React.createElement("div", {
                       className: "flex flex-col items-center justify-center"
                     }, React.createElement(IconNotFound.make, {
                           width: "160",

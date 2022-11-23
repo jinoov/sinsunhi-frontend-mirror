@@ -52,7 +52,8 @@ let make = (~isOpen, ~onClose, ~query) => {
     <Dialog.Content
       className=%twc(
         "dialog-content-plain bottom-0 left-0 xl:bottom-auto xl:left-auto xl:rounded-2xl xl:state-open:top-1/2 xl:state-open:left-1/2 xl:state-open:-translate-x-1/2 xl:state-open:-translate-y-1/2"
-      )>
+      )
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <div
         className=%twc(
           "fixed top-0 left-0 h-full xl:static bg-white w-full max-w-3xl xl:min-h-fit xl:min-w-min xl:w-[90vh] xl:max-w-[480px] xl:max-h-[85vh] "
@@ -75,8 +76,7 @@ let make = (~isOpen, ~onClose, ~query) => {
           <div className=%twc("flex flex-col ")>
             <div className=%twc("flex flex-col mb-10")>
               <ol>
-                <Next.Link
-                  href="https://sinsun-policy.oopy.io/a9f5ca47-9dda-4a34-929c-60e1ce1dfbe5">
+                <Next.Link href=Env.termsUrl>
                   <a target="_blank" rel="noopener">
                     <li className=%twc("py-4 text-sm border-b")>
                       <span className=%twc("font-bold")> {`이용약관`->React.string} </span>
@@ -86,8 +86,7 @@ let make = (~isOpen, ~onClose, ~query) => {
                     </li>
                   </a>
                 </Next.Link>
-                <Next.Link
-                  href="https://sinsun-policy.oopy.io/3335fdb0-c235-4e17-8ecc-1c4977c506f9">
+                <Next.Link href=Env.privacyPolicyUrl>
                   <a target="_blank" rel="noopener">
                     <li className=%twc("py-4 text-sm border-b")>
                       <span className=%twc("font-bold")>
@@ -100,8 +99,7 @@ let make = (~isOpen, ~onClose, ~query) => {
                   </a>
                 </Next.Link>
                 <li className=%twc("py-4 text-sm flex justify-between items-center border-b")>
-                  <Next.Link
-                    href="https://sinsun-policy.oopy.io/4f08bfe5-9ba7-4d1d-ba34-04281414ee00">
+                  <Next.Link href=Env.privacyMarketing>
                     <a target="_blank" rel="noopener">
                       <span className=%twc("font-bold")>
                         {`마케팅 이용 동의(선택)`->React.string}

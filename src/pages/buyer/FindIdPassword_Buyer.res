@@ -76,7 +76,7 @@ module FindId = {
           <div className=%twc("flex h-13 mt-24")>
             <button
               className=%twc("btn-level1") onClick={_ => router->Next.Router.push(`/buyer/signup`)}>
-              {`회원가입`->React.string}
+              {`사업자 회원가입`->React.string}
             </button>
           </div>
           <div className=%twc("flex h-13 mt-4")>
@@ -307,7 +307,11 @@ let default = (~props: props) => {
   <>
     <Next.Head>
       <title>
-        {j`바이어 아이디 찾기 비밀번호 찾기 - 신선하이`->React.string}
+        {j`신선하이 | 바이어 아이디 찾기 비밀번호 찾기`->React.string}
+        <meta
+          name="description"
+          content="농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요."
+        />
       </title>
     </Next.Head>
     <div

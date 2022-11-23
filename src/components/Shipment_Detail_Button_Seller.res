@@ -347,7 +347,8 @@ let make = (~date: string, ~sku: string) => {
     <Dialog.Content
       className=%twc(
         "dialog-content text-text-L1 text-xs p-5 tracking-tight min-w-max overflow-y-auto"
-      )>
+      )
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <Dialog.Title className=%twc("flex justify-between")>
         <span className=%twc("font-bold text-xl leading-7")>
           {j`상세내역 조회`->React.string}
@@ -359,13 +360,21 @@ let make = (~date: string, ~sku: string) => {
       {switch status {
       | Loaded(response) =>
         switch response->CustomHooks.WholeSale.response_decode {
-        | Ok({data: wholesale}) => <>
-            <section className=%twc("mt-10")> <Detail wholesale /> </section>
+        | Ok({data: wholesale}) =>
+          <>
+            <section className=%twc("mt-10")>
+              <Detail wholesale />
+            </section>
             {switch wholesale.bulksale {
-            | Some(bulksale) => <section className=%twc("mt-10")> <BulkSale bulksale /> </section>
+            | Some(bulksale) =>
+              <section className=%twc("mt-10")>
+                <BulkSale bulksale />
+              </section>
             | None => React.null
             }}
-            <section className=%twc("mt-12")> <OrderList orders={wholesale.orders} /> </section>
+            <section className=%twc("mt-12")>
+              <OrderList orders={wholesale.orders} />
+            </section>
           </>
         | Error(error) => {
             Js.log(error)

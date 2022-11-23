@@ -18,13 +18,7 @@ function Layout_Estimation_Services_Buyer(Props) {
   if (secondPathname !== undefined) {
     switch (secondPathname) {
       case "rfq" :
-          if (thirdPathname !== undefined) {
-            return children;
-          } else {
-            return React.createElement(Layout_Buyer.make, {
-                        children: children
-                      });
-          }
+          return children;
       case "tradematch" :
           if (fourthPathname !== undefined) {
             switch (fourthPathname) {

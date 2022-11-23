@@ -64,6 +64,8 @@ function DatePicker(Props) {
   var isDateDisabled = Props.isDateDisabled;
   var onFocus = Props.onFocus;
   var disabled = Props.disabled;
+  var localizationOpt = Props.localization;
+  var localization = localizationOpt !== undefined ? localizationOpt : DuetDatePicker.krLocalization;
   var dateRe = /^(\d{4})\-(\d{1,2})\-(\d{1,2})$/;
   var tmp = {
     identifier: id,
@@ -103,7 +105,7 @@ function DatePicker(Props) {
           return Format(date, "yyyy-MM-dd");
         })
     },
-    localization: DuetDatePicker.krLocalization,
+    localization: localization,
     onChange: onChange,
     direction: align !== undefined && !align ? "left" : "right"
   };
@@ -135,6 +137,7 @@ function DatePicker(Props) {
               className: wrapper
             }, React.createElement(DuetDatePicker.make, tmp), React.createElement("img", {
                   className: "absolute top-2 right-3",
+                  alt: "calendar",
                   src: calendarIcon
                 }));
 }

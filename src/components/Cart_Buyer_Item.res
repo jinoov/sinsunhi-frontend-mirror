@@ -6,59 +6,38 @@ module Util = Cart_Buyer_Util
 module Hidden = Util.Hidden
 
 module Fragment = %relay(`
-  fragment CartBuyerItemFragment on Query
-  @refetchable(queryName: "CartItemBuyerRefetchQuery") {
+  fragment CartBuyerItemFragment on Query {
     cartItems {
-      cartId
-      image {
-        thumb100x100
+      number
+      productSnapshot {
+        displayName
       }
-      optionId
-      optionName
-      optionStatus
-      price
-      productId
-      productName
-      productStatus
-      quantity
-      updatedAt
-    }
-  }
-`)
-
-module Query = %relay(`
-  query CartBuyerItemQuery($productNos: [Int!]) {
-    products(productNos: $productNos, sort: UPDATED_ASC) {
-      edges {
-        node {
-          ... on NormalProduct {
-            isCourierAvailable
-            number
-          }
-          ... on QuotableProduct {
-            isCourierAvailable
-            number
-          }
+      product {
+        number
+        status
+        image {
+          thumb100x100
+        }
+        ... on NormalProduct {
+          isCourierAvailable
+        }
+        ... on QuotableProduct {
+          isCourierAvailable
         }
       }
-    }
-  }
-`)
-
-// HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-// 22.08.25 작성되었습니다.
-// 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-module TempQuery = %relay(`
-  query CartBuyerItemQuery_Temp_Query($number: Int!) {
-    product(number: $number) {
-      ... on NormalProduct {
-        isCourierAvailable
-        number
+      productOptionSnapshot {
+        optionName
+        price
       }
-      ... on QuotableProduct {
-        isCourierAvailable
+      productOption {
+        status
         number
+        adhocStockIsLimited
+        adhocStockIsNumRemainingVisible
+        adhocStockNumRemaining
       }
+      quantity
+      updatedAt
     }
   }
 `)
@@ -140,14 +119,16 @@ module SelectAll = {
       let make = () =>
         <div className=%twc("w-full")>
           <div className=%twc("flex w-full justify-around bg-white py-3 mb-5")>
-            <Box className=%twc("w-1/3") /> <Box className=%twc("w-1/3") />
+            <Box className=%twc("w-1/3") />
+            <Box className=%twc("w-1/3") />
           </div>
           <div
             className=%twc(
               "pb-5 mb-5 mt-0 px-0 w-full relative top-0 bg-white flex justify-between border border-x-0 border-t-0 border-div-border-L2"
             )>
             <div className=%twc("flex gap-2 items-center")>
-              <Box className=%twc("w-6") /> <Box className=%twc("w-18") />
+              <Box className=%twc("w-6") />
+              <Box className=%twc("w-18") />
             </div>
             <Box className=%twc("w-12") />
           </div>
@@ -159,7 +140,8 @@ module SelectAll = {
       let make = () =>
         <div className=%twc("w-full pb-5 mb-5 px-4 mt-16 fixed top-0 bg-white")>
           <div className=%twc("flex w-full justify-around bg-white py-3 mb-5")>
-            <Box className=%twc("w-1/3") /> <Box className=%twc("w-1/3") />
+            <Box className=%twc("w-1/3") />
+            <Box className=%twc("w-1/3") />
           </div>
         </div>
     }
@@ -210,10 +192,12 @@ module SelectAll = {
           ->Array.mapWithIndex((i, c) => {
             let firstDepth = Form.names(`${formNames.cartItems}.${i->Int.toString}`)
             c->Array.mapWithIndex((j, option) =>
-              option->Option.map(option' => {
-                let secondDepth = Form.names(`${firstDepth.productOptions}.${j->Int.toString}`)
-                (secondDepth.checked, option')
-              })
+              option->Option.map(
+                option' => {
+                  let secondDepth = Form.names(`${firstDepth.productOptions}.${j->Int.toString}`)
+                  (secondDepth.checked, option')
+                },
+              )
             )
           })
           ->Array.concatMany
@@ -222,7 +206,8 @@ module SelectAll = {
         let (names, options) = filtered->Garter.Array.unzip
 
         (options->Array.keep(option => option.checked), filtered, names)
-      | _ => ([], [], [])
+      | Some(Error(_))
+      | None => ([], [], [])
       }
 
       <div
@@ -309,10 +294,12 @@ module SelectAll = {
           ->Array.mapWithIndex((i, c) => {
             let firstDepth = Form.names(`${formNames.cartItems}.${i->Int.toString}`)
             c->Array.mapWithIndex((j, option) =>
-              option->Option.map(option' => {
-                let secondDepth = Form.names(`${firstDepth.productOptions}.${j->Int.toString}`)
-                (secondDepth.checked, option')
-              })
+              option->Option.map(
+                option' => {
+                  let secondDepth = Form.names(`${firstDepth.productOptions}.${j->Int.toString}`)
+                  (secondDepth.checked, option')
+                },
+              )
             )
           })
           ->Array.concatMany
@@ -370,31 +357,60 @@ module PlaceHolder = {
     let make = (~deviceType) => {
       let router = Next.Router.useRouter()
 
-      <>
-        <Header_Buyer.PC_Old key=router.asPath />
-        <main className=%twc("flex flex-col gap-5 px-[14%] py-20 bg-surface pb-20")>
-          <h1 className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
-            {`장바구니`->React.string}
-          </h1>
-          <div className=%twc("flex flex-row gap-4 xl:gap-5")>
-            <div className=%twc("w-2/3 flex flex-col gap-5")>
-              <div className=%twc("flex flex-col pt-7 px-7 bg-white")>
-                <div className=%twc("flex flex-col items-center")>
-                  <SelectAll.PlaceHolder.PC />
-                  <Box className=%twc("w-full px-0 min-h-[4rem] mt-0") />
-                </div>
-                <div className=%twc("flex flex-col gap-4 mt-7 mb-10 bg-white")>
-                  <Cart_Card_List_Buyer.PlaceHolder deviceType />
+      let oldUI =
+        <>
+          <Header_Buyer.PC_Old key=router.asPath />
+          <main className=%twc("flex flex-col gap-5 px-[14%] py-20 bg-surface pb-20")>
+            <h1 className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
+              {`장바구니`->React.string}
+            </h1>
+            <div className=%twc("flex flex-row gap-4 xl:gap-5")>
+              <div className=%twc("w-2/3 flex flex-col gap-5")>
+                <div className=%twc("flex flex-col pt-7 px-7 bg-white")>
+                  <div className=%twc("flex flex-col items-center")>
+                    <SelectAll.PlaceHolder.PC />
+                    <Box className=%twc("w-full px-0 min-h-[4rem] mt-0") />
+                  </div>
+                  <div className=%twc("flex flex-col gap-4 mt-7 mb-10 bg-white")>
+                    <Cart_Card_List_Buyer.PlaceHolder deviceType />
+                  </div>
                 </div>
               </div>
+              <div className=%twc("w-1/3 xl:min-h-full relative bottom-0")>
+                <Cart_Payment_Info_Buyer.PlaceHolder.PC />
+              </div>
             </div>
-            <div className=%twc("w-1/3 xl:min-h-full relative bottom-0")>
-              <Cart_Payment_Info_Buyer.PlaceHolder.PC />
+          </main>
+          <Footer_Buyer.PC />
+        </>
+
+      <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+        {<>
+          <Header_Buyer.PC_Old key=router.asPath />
+          <main className=%twc("flex flex-col gap-5 px-[14%] py-20 bg-[#FAFBFC] pb-20")>
+            <h1 className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
+              {`장바구니`->React.string}
+            </h1>
+            <div className=%twc("flex flex-row gap-4 xl:gap-5")>
+              <div className=%twc("w-2/3 flex flex-col gap-5")>
+                <div className=%twc("flex flex-col pt-7 px-7 bg-white")>
+                  <div className=%twc("flex flex-col items-center")>
+                    <SelectAll.PlaceHolder.PC />
+                    <Box className=%twc("w-full px-0 min-h-[4rem] mt-0") />
+                  </div>
+                  <div className=%twc("flex flex-col gap-4 mt-7 mb-10 bg-white")>
+                    <Cart_Card_List_Buyer.PlaceHolder deviceType />
+                  </div>
+                </div>
+              </div>
+              <div className=%twc("w-1/3 xl:min-h-full relative bottom-0")>
+                <Cart_Payment_Info_Buyer.PlaceHolder.PC />
+              </div>
             </div>
-          </div>
-        </main>
-        <Footer_Buyer.PC />
-      </>
+          </main>
+          <Footer_Buyer.PC />
+        </>}
+      </FeatureFlagWrapper>
     }
   }
   module MO = {
@@ -409,7 +425,8 @@ module PlaceHolder = {
             <div className=%twc("w-full flex flex-col gap-5")>
               <div className=%twc("flex flex-col pt-7 px-0 bg-white")>
                 <div className=%twc("flex flex-col items-center")>
-                  <SelectAll.PlaceHolder.MO /> <Box className=%twc("w-[92%] min-h-[4rem] mt-10") />
+                  <SelectAll.PlaceHolder.MO />
+                  <Box className=%twc("w-[92%] min-h-[4rem] mt-10") />
                 </div>
                 <div className=%twc("flex flex-col gap-4 bg-surface")>
                   <Cart_Card_List_Buyer.PlaceHolder deviceType />
@@ -589,25 +606,50 @@ type renderParams = {
 module PC = {
   @react.component
   let make = (~renderParams, ~refetchCart, ~availableNum, ~unavailableNum, ~deviceType) => {
-    <main className=%twc("w-full flex flex-col gap-5 px-[14%] py-20 bg-surface pb-20")>
-      <h1 className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
-        {`장바구니`->React.string}
-      </h1>
-      {renderParams
-      ->Array.map(({orderType, data, formNames}) =>
-        <RenderByOrderType
-          key=formNames.name
-          orderType
-          data
-          formNames
-          refetchCart
-          availableNum
-          unavailableNum
-          deviceType
-        />
-      )
-      ->React.array}
-    </main>
+    let oldUI =
+      <main
+        className=%twc("w-full min-w-[1280px] flex flex-col gap-5 px-[14%] py-20 bg-surface pb-20")>
+        <h1 className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
+          {`장바구니`->React.string}
+        </h1>
+        {renderParams
+        ->Array.map(({orderType, data, formNames}) =>
+          <RenderByOrderType
+            key=formNames.name
+            orderType
+            data
+            formNames
+            refetchCart
+            availableNum
+            unavailableNum
+            deviceType
+          />
+        )
+        ->React.array}
+      </main>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      <main
+        className=%twc("w-full min-w-[1280px] flex flex-col gap-5 px-[14%] py-20 bg-[#FAFBFC] pb-20")>
+        <h1 className=%twc("flex ml-5 mb-3 text-3xl font-bold text-enabled-L1")>
+          {`장바구니`->React.string}
+        </h1>
+        {renderParams
+        ->Array.map(({orderType, data, formNames}) =>
+          <RenderByOrderType
+            key=formNames.name
+            orderType
+            data
+            formNames
+            refetchCart
+            availableNum
+            unavailableNum
+            deviceType
+          />
+        )
+        ->React.array}
+      </main>
+    </FeatureFlagWrapper>
   }
 }
 
@@ -650,61 +692,14 @@ let make = (~query, ~deviceType) => {
   let {setValue} = Hooks.Context.use(. ~config=Hooks.Form.config(~mode=#onChange, ()), ())
   let formNames = Form.names(Form.name)
 
-  let (queryData, _) = Fragment.useRefetchable(query)
+  let queryData = Fragment.use(query)
 
   let refetchCart = () => router->Next.Router.reload(router.pathname)->ignore
-
-  let productNos = queryData.cartItems->Array.map(cartItem => cartItem.productId)
-
-  // HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-  // 22.08.25 작성되었습니다.
-  // 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-  // let query = Query.use(
-  //   ~variables={
-  //     productNos: Some(productNos),
-  //   },
-  //   (),
-  // )
-
-  let tempQuery = productNos->Array.map(productNo =>
-    TempQuery.use(
-      ~variables={
-        number: productNo,
-      },
-      (),
-    )
-  )
-
-  // HIDDEN_SALE이 Query.products로 조회되지 않기 때문에 임시로 단건조회를 여러번하는 코드를 추가하였습니다.
-  // 22.08.25 작성되었습니다.
-  // 이 부분 개선이 이루어지면 해당 코드 수정하겠습니다.
-  // let toTuple = (edge: CartBuyerItemQuery_graphql.Types.response_products_edges) =>
-  //   switch edge.node {
-  //   | #NormalProduct(product) => Some((product.number, product.isCourierAvailable))
-  //   | #QuotableProduct(product) => Some((product.number, product.isCourierAvailable))
-  //   | #UnselectedUnionMember(_) => None
-  //   }
-
-  let toTupleTemp = (product: CartBuyerItemQuery_Temp_Query_graphql.Types.response_product) => {
-    switch product {
-    | #NormalProduct(product) => Some((product.number, product.isCourierAvailable))
-    | #QuotableProduct(product) => Some((product.number, product.isCourierAvailable))
-    | #UnselectedUnionMember(_) => None
-    }
-  }
-
-  // "
-  // let productIdMap = query.products.edges->Array.keepMap(toTuple)->Map.Int.fromArray
-
-  let productIdMapTemp =
-    tempQuery->Array.keepMap(a => a.product->Option.flatMap(toTupleTemp))->Map.Int.fromArray
 
   let data = queryData.cartItems->Form.groupBy->Array.keepMap(Form.map)
 
   let (courierAvailableData, unCourierAvailableData) =
-    data->Array.partition(cartItem =>
-      productIdMapTemp->Map.Int.get(cartItem.productId)->Option.getWithDefault(false)
-    )
+    data->Array.partition(cartItem => cartItem.isCourierAvailable->Option.getWithDefault(false))
 
   let itemLength = (d: array<Form.cartItem>) =>
     d

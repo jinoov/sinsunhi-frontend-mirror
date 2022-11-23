@@ -9,8 +9,7 @@ let make = (~children) => {
 
   switch (secondPathname, thirdPathname, fourthPathname) {
   // 견적요청(Rfq) 서비스
-  | (Some("rfq"), None, _) => <Layout_Buyer> children </Layout_Buyer>
-  | (Some("rfq"), Some(_), _) => children
+  | (Some("rfq"), _, _) => children
 
   // 구매요청(Tradematch) 서비스
   | (Some("tradematch"), _, Some("apply"))

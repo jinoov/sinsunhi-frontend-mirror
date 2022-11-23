@@ -135,7 +135,7 @@ module Orders = {
     let router = Next.Router.useRouter()
     let {mutate} = Swr.useSwrConfig()
 
-    let status = CustomHooks.OrdersAdmin.use(
+    let status = CustomHooks.Orders.use(
       router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
     )
 

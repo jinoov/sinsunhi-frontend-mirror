@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.greenlabs.sinsunhi",
+      "sha256_cert_fingerprints": [
+        "A8:C9:F8:06:77:6B:AC:30:83:DB:74:55:CF:6A:EB:1D:9A:16:69:6E:C5:0E:81:5A:DA:9A:37:FD:F5:41:CC:89"
+      ]
+    }
+  }
+]

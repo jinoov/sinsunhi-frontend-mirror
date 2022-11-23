@@ -2,7 +2,7 @@
 let make = () => {
   <>
     <Next.Head>
-      <title> {j`개인 정보 수집이용 동의 - 신선하이`->React.string} </title>
+      <title> {j`신선하이 | 개인 정보 수집이용 동의`->React.string} </title>
     </Next.Head>
     <div className=%twc("p-4 mx-auto w-full sm:w-2/3 lg:w-1/2")>
       <div className=%twc("flex justify-center items-center relative text-xl font-bold")>

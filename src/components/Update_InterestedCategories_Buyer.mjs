@@ -37,7 +37,10 @@ function Update_InterestedCategories_Buyer(Props) {
                                   })),
                             close: onClose
                           })),
-                  className: "dialog-content-full overflow-y-auto sm:rounded-2xl"
+                  className: "dialog-content-full overflow-y-auto sm:rounded-2xl",
+                  onOpenAutoFocus: (function (prim) {
+                      prim.preventDefault();
+                    })
                 }));
 }
 

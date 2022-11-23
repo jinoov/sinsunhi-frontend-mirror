@@ -157,7 +157,9 @@ let make = (~user: CustomHooks.QueryUser.Farmer.user, ~className: option<string>
     <Dialog.Trigger className=%twc("block text-left mb-1 underline focus:outline-none")>
       <img src=editIcon ?className />
     </Dialog.Trigger>
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <div className=%twc("p-5")>
         <section className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`생산자 정보`->React.string} </h2>

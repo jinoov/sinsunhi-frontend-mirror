@@ -177,7 +177,7 @@ module MeatItemTypes = RfqItemDetailSeller_RfqRequestItemMeatNode_Query_graphql.
 let convertNumberInputValue = value =>
   value->Js.String2.replaceByRe(%re("/[^0-9]/g"), "")->Js.String2.replaceByRe(%re("/^[0]/g"), "")
 
-let displayDeleveryMethod = (v: RelaySchemaAssets_graphql.enum_RfqDeliveryMethod) =>
+let displayDeleveryMethod = (v: MeatItemTypes.enum_RfqDeliveryMethod) =>
   switch v {
   | #ANY => `상관없음`
   | #DIRECT_DELIVERY => `신선하이 직접배송`
@@ -187,7 +187,7 @@ let displayDeleveryMethod = (v: RelaySchemaAssets_graphql.enum_RfqDeliveryMethod
   | _ => `기타`
   }
 
-let displayStorageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatStorageMethod) =>
+let displayStorageMethod = (v: MeatItemTypes.enum_RfqMeatStorageMethod) =>
   switch v {
   | #ANY => `모두`
   | #CHILLED => `냉장`
@@ -197,7 +197,7 @@ let displayStorageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatStorageMeth
   | _ => ``
   }
 
-let displayPackageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatPackageMethod) =>
+let displayPackageMethod = (v: MeatItemTypes.enum_RfqMeatPackageMethod) =>
   switch v {
   | #ANY => `모두`
   | #CUT => `세절`
@@ -207,7 +207,7 @@ let displayPackageMethod = (v: RelaySchemaAssets_graphql.enum_RfqMeatPackageMeth
   | _ => ``
   }
 
-let displayMadeInMethod = (v: RelaySchemaAssets_graphql.enum_CountryCode) =>
+let displayMadeInMethod = (v: MeatItemTypes.enum_CountryCode) =>
   switch v {
   | #KR => `국내산`
   | #US => `미국산`

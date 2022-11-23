@@ -2,16 +2,24 @@
 
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as DeviceDetect from "../../bindings/DeviceDetect.mjs";
 import * as Authorization from "../../utils/Authorization.mjs";
+import * as PC_MyInfo_Sidebar from "./pc/me/PC_MyInfo_Sidebar.mjs";
+import * as FeatureFlagWrapper from "./pc/FeatureFlagWrapper.mjs";
 import * as DownloadCenter_Render from "../../components/DownloadCenter_Render.mjs";
 
 function DownloadCenter_Buyer$Layout(Props) {
   var children = Props.children;
-  return React.createElement("div", {
-              className: "sm:px-20 py-4"
-            }, Belt_Option.getWithDefault(children, null), React.createElement("footer", {
-                  className: "w-full flex flex-row items-center justify-center py-7 text-text-L3 "
-                }, "ⓒ Copyright Greenlabs All Reserved. (주)그린랩스"));
+  var oldUI = React.createElement("div", {
+        className: "sm:px-20 py-4"
+      }, Belt_Option.getWithDefault(children, null), React.createElement("footer", {
+            className: "w-full flex flex-row items-center justify-center py-7 text-text-L3 "
+          }, "ⓒ Copyright Greenlabs All Reserved. (주)그린랩스"));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: Belt_Option.getWithDefault(children, null),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var Layout = {
@@ -19,11 +27,27 @@ var Layout = {
 };
 
 function DownloadCenter_Buyer(Props) {
-  return React.createElement(Authorization.Buyer.make, {
-              children: React.createElement(DownloadCenter_Render.make, {
-                    children: React.createElement(DownloadCenter_Buyer$Layout, {})
-                  }),
-              title: "다운로드 센터"
+  var deviceDetect = DeviceDetect.detectDevice(undefined);
+  var oldUI = React.createElement(Authorization.Buyer.make, {
+        children: React.createElement(DownloadCenter_Render.make, {
+              children: React.createElement(DownloadCenter_Buyer$Layout, {})
+            }),
+        title: "다운로드 센터"
+      });
+  var newUI = React.createElement(Authorization.Buyer.make, {
+        children: React.createElement("div", {
+              className: "flex bg-[#FAFBFC] pc-content"
+            }, React.createElement(PC_MyInfo_Sidebar.make, {}), React.createElement("div", {
+                  className: "min-w-[872px] max-w-[1280px] w-full mx-16 mt-10"
+                }, React.createElement(DownloadCenter_Render.make, {
+                      children: React.createElement(DownloadCenter_Buyer$Layout, {})
+                    }))),
+        title: "다운로드 센터"
+      });
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: deviceDetect !== 1 ? oldUI : newUI,
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
             });
 }
 

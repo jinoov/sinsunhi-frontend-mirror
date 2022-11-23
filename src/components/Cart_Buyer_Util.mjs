@@ -24,19 +24,105 @@ var checkboxUncheckedIcon = CheckboxDimUncheckedSvg;
 
 var checkboxDisableIcon = CheckboxDisableSvg;
 
-function Cart_Buyer_Util$Hidden(Props) {
-  var value = Props.value;
+function Cart_Buyer_Util$Hidden$Checkbox(Props) {
+  var checked = Props.checked;
   var inputName = Props.inputName;
-  var isNumberOpt = Props.isNumber;
-  var isNumber = isNumberOpt !== undefined ? isNumberOpt : false;
   var match = ReactHookForm$1.useFormContext({
         mode: "all",
         shouldUnregister: true
       }, undefined);
   var setValue = match.setValue;
-  var match$1 = match.register(inputName, isNumber ? ({
-            valueAsNumber: true
-          }) : undefined);
+  var match$1 = match.register(inputName, undefined);
+  var name = match$1.name;
+  React.useEffect((function () {
+          setValue(inputName, checked);
+        }), [checked]);
+  return React.createElement("input", {
+              ref: match$1.ref,
+              id: name,
+              checked: checked,
+              name: name,
+              type: "checkbox"
+            });
+}
+
+var Checkbox = {
+  make: Cart_Buyer_Util$Hidden$Checkbox
+};
+
+function Cart_Buyer_Util$Hidden$NullableNumberInput(Props) {
+  var value = Props.value;
+  var inputName = Props.inputName;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "all",
+        shouldUnregister: true
+      }, undefined);
+  var match$1 = match.register(inputName, {
+        valueAsNumber: Belt_Option.isSome(value)
+      });
+  var name = match$1.name;
+  if (Belt_Option.isSome(value)) {
+    
+  } else {
+    match.setValue(inputName, null);
+  }
+  var tmp = {
+    ref: match$1.ref,
+    id: name,
+    name: name,
+    type: "hidden"
+  };
+  if (value !== undefined) {
+    tmp.defaultValue = Caml_option.valFromOption(value);
+  }
+  if (value !== undefined) {
+    tmp.value = Caml_option.valFromOption(value);
+  }
+  return React.createElement("input", tmp);
+}
+
+var NullableNumberInput = {
+  make: Cart_Buyer_Util$Hidden$NullableNumberInput
+};
+
+function Cart_Buyer_Util$Hidden$NumberInput(Props) {
+  var value = Props.value;
+  var inputName = Props.inputName;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "all",
+        shouldUnregister: true
+      }, undefined);
+  var setValue = match.setValue;
+  var match$1 = match.register(inputName, {
+        valueAsNumber: true
+      });
+  var name = match$1.name;
+  React.useEffect((function () {
+          setValue(inputName, value);
+        }), [value]);
+  return React.createElement("input", {
+              ref: match$1.ref,
+              defaultValue: value,
+              id: name,
+              name: name,
+              type: "hidden",
+              value: value
+            });
+}
+
+var NumberInput = {
+  make: Cart_Buyer_Util$Hidden$NumberInput
+};
+
+function Cart_Buyer_Util$Hidden(Props) {
+  var value = Props.value;
+  var inputName = Props.inputName;
+  var match = ReactHookForm$1.useFormContext({
+        mode: "all",
+        shouldUnregister: true
+      }, undefined);
+  var setValue = match.setValue;
+  var match$1 = match.register(inputName, undefined);
   var name = match$1.name;
   React.useEffect((function () {
           setValue(inputName, Belt_Option.getWithDefault(value, ""));
@@ -54,6 +140,9 @@ function Cart_Buyer_Util$Hidden(Props) {
 }
 
 var Hidden = {
+  Checkbox: Checkbox,
+  NullableNumberInput: NullableNumberInput,
+  NumberInput: NumberInput,
   make: Cart_Buyer_Util$Hidden
 };
 
@@ -127,7 +216,7 @@ function Cart_Buyer_Util$Checkbox(Props) {
             });
 }
 
-var Checkbox = {
+var Checkbox$1 = {
   make: Cart_Buyer_Util$Checkbox
 };
 
@@ -141,7 +230,10 @@ function Cart_Buyer_Util$SubmitDialog(Props) {
                         className: "dialog-overlay"
                       }), React.createElement(ReactDialog.Content, {
                         children: null,
-                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
+                        className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center",
+                        onOpenAutoFocus: (function (prim) {
+                            prim.preventDefault();
+                          })
                       }, React.createElement("span", {
                             className: "whitespace-pre text-center text-text-L1 pt-3"
                           }, "주문하실 상품을\n선택해주세요"), React.createElement("div", {
@@ -173,17 +265,15 @@ function Cart_Buyer_Util$HiddenInputs(Props) {
                 return React.createElement("div", {
                             key: formNames.name,
                             className: "hidden"
-                          }, React.createElement(Cart_Buyer_Util$Hidden, {
+                          }, React.createElement(Cart_Buyer_Util$Hidden$NumberInput, {
                                 value: String(cartItem.productId),
-                                inputName: formNames.productId,
-                                isNumber: true
+                                inputName: formNames.productId
                               }), React.createElement(Cart_Buyer_Util$Hidden, {
                                 value: cartItem.productName,
                                 inputName: formNames.productName
-                              }), React.createElement(Cart_Buyer_Util$Hidden, {
+                              }), React.createElement(Cart_Buyer_Util$Hidden$NumberInput, {
                                 value: String(3),
-                                inputName: formNames.checkedNumber,
-                                isNumber: true
+                                inputName: formNames.checkedNumber
                               }), React.createElement(Cart_Buyer_Util$Hidden, {
                                 value: Js_json.decodeString(Cart_Buyer_Form.productStatus_encode(cartItem.productStatus)),
                                 inputName: formNames.productStatus
@@ -197,31 +287,38 @@ function Cart_Buyer_Util$HiddenInputs(Props) {
                                   var formNames2 = Cart_Buyer_Form.names("" + formNames.productOptions + "." + String(optionIndex) + "");
                                   return React.createElement("div", {
                                               key: formNames2.name
-                                            }, React.createElement(Cart_Buyer_Util$Hidden, {
+                                            }, React.createElement(Cart_Buyer_Util$Hidden$NumberInput, {
                                                   value: String(productOption.cartId),
-                                                  inputName: formNames2.cartId,
-                                                  isNumber: true
-                                                }), React.createElement(Cart_Buyer_Util$Hidden, {
+                                                  inputName: formNames2.cartId
+                                                }), React.createElement(Cart_Buyer_Util$Hidden$NumberInput, {
                                                   value: String(productOption.productOptionId),
-                                                  inputName: formNames2.productOptionId,
-                                                  isNumber: true
+                                                  inputName: formNames2.productOptionId
                                                 }), React.createElement(Cart_Buyer_Util$Hidden, {
                                                   value: Js_json.decodeString(Cart_Buyer_Form.productStatus_encode(productOption.optionStatus)),
                                                   inputName: formNames2.optionStatus
-                                                }), React.createElement(Cart_Buyer_Util$Hidden, {
+                                                }), React.createElement(Cart_Buyer_Util$Hidden$NumberInput, {
                                                   value: String(productOption.price),
-                                                  inputName: formNames2.price,
-                                                  isNumber: true
-                                                }), React.createElement(Cart_Buyer_Util$Hidden, {
+                                                  inputName: formNames2.price
+                                                }), React.createElement(Cart_Buyer_Util$Hidden$NumberInput, {
                                                   value: String(productOption.quantity),
-                                                  inputName: formNames2.quantity,
-                                                  isNumber: true
+                                                  inputName: formNames2.quantity
                                                 }), React.createElement(Cart_Buyer_Util$Hidden, {
                                                   value: productOption.updatedAt,
                                                   inputName: formNames2.updatedAt
                                                 }), React.createElement(Cart_Buyer_Util$Hidden, {
                                                   value: productOption.productOptionName,
                                                   inputName: formNames2.productOptionName
+                                                }), React.createElement(Cart_Buyer_Util$Hidden$Checkbox, {
+                                                  checked: productOption.adhocStockIsLimited,
+                                                  inputName: formNames2.adhocStockIsLimited
+                                                }), React.createElement(Cart_Buyer_Util$Hidden$Checkbox, {
+                                                  checked: productOption.adhocStockIsNumRemainingVisible,
+                                                  inputName: formNames2.adhocStockIsNumRemainingVisible
+                                                }), React.createElement(Cart_Buyer_Util$Hidden$NullableNumberInput, {
+                                                  value: Belt_Option.map(productOption.adhocStockNumRemaining, (function (x) {
+                                                          return String(x);
+                                                        })),
+                                                  inputName: formNames2.adhocStockNumRemaining
                                                 }));
                                 })));
               }));
@@ -287,7 +384,7 @@ export {
   checkboxUncheckedIcon ,
   checkboxDisableIcon ,
   Hidden ,
-  Checkbox ,
+  Checkbox$1 as Checkbox,
   SubmitDialog ,
   HiddenInputs ,
   RadioButton ,

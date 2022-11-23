@@ -13,6 +13,7 @@ import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import * as Product_Parser from "../utils/Product_Parser.mjs";
 import * as Js_null_undefined from "rescript/lib/es6/js_null_undefined.js";
+import * as FeatureFlagWrapper from "../pages/buyer/pc/FeatureFlagWrapper.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ShopProductListItemBuyerFragment_graphql from "../__generated__/ShopProductListItemBuyerFragment_graphql.mjs";
 import * as ShopProductListItemBuyerNormalFragment_graphql from "../__generated__/ShopProductListItemBuyerNormalFragment_graphql.mjs";
@@ -162,6 +163,8 @@ function ShopProductListItem_Buyer$Normal$PC(Props) {
   var match = use$1(query);
   var status = match.status;
   var productId = match.productId;
+  var image = match.image;
+  var displayName = match.displayName;
   var priceLabel = Belt_Option.mapWithDefault(match.price, "", (function (price$p) {
           return "" + Locale.Float.show(undefined, price$p, 0) + "원";
         }));
@@ -176,37 +179,75 @@ function ShopProductListItem_Buyer$Normal$PC(Props) {
           className: "mt-2 font-bold text-lg" + textColor
         }, priceLabel);
   }
-  return React.createElement("div", {
-              className: "w-[280px] h-[376px] cursor-pointer",
-              onClick: (function (param) {
-                  var prim1 = "/products/" + String(productId) + "";
-                  router.push(prim1);
-                })
-            }, React.createElement("div", {
-                  className: "w-[280px] aspect-square rounded-xl overflow-hidden relative"
-                }, React.createElement($$Image.make, {
-                      src: match.image.thumb800x800,
-                      placeholder: /* Sm */0,
-                      loading: /* Lazy */1,
-                      alt: "product-" + String(productId) + "",
-                      className: "w-full h-full object-cover"
-                    }), React.createElement("div", {
-                      className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl"
-                    }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                        text: "숨김"
-                      }) : (
-                    status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                            text: "품절"
-                          }) : (
-                        status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                                text: "비공개 판매"
-                              }) : null
-                      )
-                  )), React.createElement("div", {
-                  className: "flex flex-col mt-4"
-                }, React.createElement("span", {
-                      className: "text-gray-800 line-clamp-2"
-                    }, match.displayName), tmp));
+  var oldUI = React.createElement("div", {
+        className: "w-[280px] h-[376px] cursor-pointer",
+        onClick: (function (param) {
+            var prim1 = "/products/" + String(productId) + "";
+            router.push(prim1);
+          })
+      }, React.createElement("div", {
+            className: "w-[280px] aspect-square rounded-xl overflow-hidden relative"
+          }, React.createElement($$Image.make, {
+                src: image.thumb400x400,
+                placeholder: /* Sm */0,
+                loading: /* Lazy */1,
+                alt: displayName,
+                className: "w-full h-full object-cover"
+              }), React.createElement("div", {
+                className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl"
+              }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                  text: "숨김"
+                }) : (
+              status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                      text: "품절"
+                    }) : (
+                  status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                          text: "비공개 판매"
+                        }) : null
+                )
+            )), React.createElement("div", {
+            className: "flex flex-col mt-4"
+          }, React.createElement("span", {
+                className: "text-gray-800 line-clamp-2"
+              }, displayName), tmp));
+  var textColor$1 = status === "HIDDEN_SALE" || status === "SOLDOUT" ? " text-gray-400" : " text-text-L1";
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "max-w-[220px] min-w-[178px] w-full h-[316px] cursor-pointer",
+                    onClick: (function (param) {
+                        var prim1 = "/products/" + String(productId) + "";
+                        router.push(prim1);
+                      })
+                  }, React.createElement("div", {
+                        className: "max-w-[220px] min-w-[178px] w-full aspect-square rounded-[10px] overflow-hidden relative"
+                      }, React.createElement($$Image.make, {
+                            src: image.thumb400x400,
+                            placeholder: /* Sm */0,
+                            loading: /* Lazy */1,
+                            alt: displayName,
+                            className: "w-full h-full object-cover"
+                          }), React.createElement("div", {
+                            className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]"
+                          }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                              text: "숨김"
+                            }) : (
+                          status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                  text: "품절"
+                                }) : (
+                              status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                      text: "비공개 판매"
+                                    }) : null
+                            )
+                        )), React.createElement("div", {
+                        className: "flex flex-col mt-4"
+                      }, React.createElement("span", {
+                            className: "text-gray-800 line-clamp-2"
+                          }, displayName), React.createElement("span", {
+                            className: "mt-2 font-bold text-xl" + textColor$1
+                          }, priceLabel))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var PC = {
@@ -220,6 +261,8 @@ function ShopProductListItem_Buyer$Normal$MO(Props) {
   var match = use$1(query);
   var status = match.status;
   var productId = match.productId;
+  var image = match.image;
+  var displayName = match.displayName;
   var isSoldout = status === "SOLDOUT";
   var priceLabel = Belt_Option.mapWithDefault(match.price, "", (function (price$p) {
           return "" + Locale.Float.show(undefined, price$p, 0) + "원";
@@ -235,37 +278,75 @@ function ShopProductListItem_Buyer$Normal$MO(Props) {
           className: "mt-1 font-bold" + textColor
         }, priceLabel);
   }
-  return React.createElement("div", {
-              className: "cursor-pointer",
-              onClick: (function (param) {
-                  var prim1 = "/products/" + String(productId) + "";
-                  router.push(prim1);
-                })
-            }, React.createElement("div", {
-                  className: "rounded-xl overflow-hidden relative aspect-square"
-                }, React.createElement($$Image.make, {
-                      src: match.image.thumb800x800,
-                      placeholder: /* Sm */0,
-                      loading: /* Lazy */1,
-                      alt: "product-" + String(productId) + "",
-                      className: "w-full h-full object-cover"
-                    }), React.createElement("div", {
-                      className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
-                    }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                        text: "숨김"
-                      }) : (
-                    status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                            text: "품절"
-                          }) : (
-                        status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                                text: "비공개 판매"
-                              }) : null
-                      )
-                  )), React.createElement("div", {
-                  className: "flex flex-col mt-3"
-                }, React.createElement("span", {
-                      className: "text-gray-800 line-clamp-2 text-sm"
-                    }, match.displayName), tmp));
+  var oldUI = React.createElement("li", {
+        className: "cursor-pointer",
+        onClick: (function (param) {
+            var prim1 = "/products/" + String(productId) + "";
+            router.push(prim1);
+          })
+      }, React.createElement("div", {
+            className: "rounded-xl overflow-hidden relative aspect-square"
+          }, React.createElement($$Image.make, {
+                src: image.thumb400x400,
+                placeholder: /* Sm */0,
+                loading: /* Lazy */1,
+                alt: displayName,
+                className: "w-full h-full object-cover"
+              }), React.createElement("div", {
+                className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
+              }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                  text: "숨김"
+                }) : (
+              status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                      text: "품절"
+                    }) : (
+                  status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                          text: "비공개 판매"
+                        }) : null
+                )
+            )), React.createElement("div", {
+            className: "flex flex-col mt-3"
+          }, React.createElement("span", {
+                className: "text-gray-800 line-clamp-2 text-sm"
+              }, displayName), tmp));
+  var textColor$1 = isSoldout ? " text-gray-400" : " text-text-L1";
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("li", {
+                    className: "cursor-pointer",
+                    onClick: (function (param) {
+                        var prim1 = "/products/" + String(productId) + "";
+                        router.push(prim1);
+                      })
+                  }, React.createElement("div", {
+                        className: "rounded-[10px] overflow-hidden relative aspect-square"
+                      }, React.createElement($$Image.make, {
+                            src: image.thumb400x400,
+                            placeholder: /* Sm */0,
+                            loading: /* Lazy */1,
+                            alt: displayName,
+                            className: "w-full h-full object-cover"
+                          }), React.createElement("div", {
+                            className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
+                          }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                              text: "숨김"
+                            }) : (
+                          status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                  text: "품절"
+                                }) : (
+                              status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                      text: "비공개 판매"
+                                    }) : null
+                            )
+                        )), React.createElement("div", {
+                        className: "flex flex-col mt-3"
+                      }, React.createElement("span", {
+                            className: "text-gray-800 line-clamp-2 text-sm"
+                          }, displayName), React.createElement("span", {
+                            className: "mt-1 font-bold" + textColor$1
+                          }, priceLabel))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var MO = {
@@ -283,39 +364,78 @@ function ShopProductListItem_Buyer$Quoted$PC(Props) {
   var match = use$2(query);
   var status = match.status;
   var productId = match.productId;
-  return React.createElement("div", {
-              className: "w-[280px] h-[376px] cursor-pointer",
-              onClick: (function (param) {
-                  var prim1 = "/products/" + String(productId) + "";
-                  router.push(prim1);
-                })
-            }, React.createElement("div", {
-                  className: "w-[280px] aspect-square rounded-xl overflow-hidden relative"
-                }, React.createElement($$Image.make, {
-                      src: match.image.thumb800x800,
-                      placeholder: /* Sm */0,
-                      loading: /* Lazy */1,
-                      alt: "product-" + String(productId) + "",
-                      className: "w-full h-full object-cover"
-                    }), React.createElement("div", {
-                      className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl"
-                    }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                        text: "숨김"
-                      }) : (
-                    status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                            text: "품절"
-                          }) : (
-                        status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                                text: "비공개 판매"
-                              }) : null
-                      )
-                  )), React.createElement("div", {
-                  className: "flex flex-col mt-4"
-                }, React.createElement("span", {
-                      className: "text-gray-800 line-clamp-2"
-                    }, match.displayName), React.createElement("span", {
-                      className: "mt-2 font-bold text-lg text-blue-500"
-                    }, "최저가 견적받기")));
+  var image = match.image;
+  var displayName = match.displayName;
+  var oldUI = React.createElement("li", {
+        className: "w-[280px] h-[376px] cursor-pointer",
+        onClick: (function (param) {
+            var prim1 = "/products/" + String(productId) + "";
+            router.push(prim1);
+          })
+      }, React.createElement("div", {
+            className: "w-[280px] aspect-square rounded-[10px] overflow-hidden relative"
+          }, React.createElement($$Image.make, {
+                src: image.thumb400x400,
+                placeholder: /* Sm */0,
+                loading: /* Lazy */1,
+                alt: displayName,
+                className: "w-full h-full object-cover"
+              }), React.createElement("div", {
+                className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]"
+              }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                  text: "숨김"
+                }) : (
+              status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                      text: "품절"
+                    }) : (
+                  status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                          text: "비공개 판매"
+                        }) : null
+                )
+            )), React.createElement("div", {
+            className: "flex flex-col mt-4"
+          }, React.createElement("span", {
+                className: "text-gray-800 line-clamp-2"
+              }, displayName), React.createElement("span", {
+                className: "mt-2 font-bold text-xl text-blue-500"
+              }, "최저가 견적받기")));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("li", {
+                    className: "max-w-[220px] min-w-[178px] w-full h-[316px] cursor-pointer",
+                    onClick: (function (param) {
+                        var prim1 = "/products/" + String(productId) + "";
+                        router.push(prim1);
+                      })
+                  }, React.createElement("div", {
+                        className: "max-w-[220px] min-w-[178px] w-full aspect-square rounded-[10px] overflow-hidden relative"
+                      }, React.createElement($$Image.make, {
+                            src: image.thumb400x400,
+                            placeholder: /* Sm */0,
+                            loading: /* Lazy */1,
+                            alt: displayName,
+                            className: "w-full h-full object-cover"
+                          }), React.createElement("div", {
+                            className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]"
+                          }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                              text: "숨김"
+                            }) : (
+                          status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                  text: "품절"
+                                }) : (
+                              status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                      text: "비공개 판매"
+                                    }) : null
+                            )
+                        )), React.createElement("div", {
+                        className: "flex flex-col mt-4"
+                      }, React.createElement("span", {
+                            className: "text-gray-800 line-clamp-2"
+                          }, displayName), React.createElement("span", {
+                            className: "mt-2 font-bold text-xl text-blue-500"
+                          }, "최저가 견적받기"))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var PC$1 = {
@@ -328,39 +448,78 @@ function ShopProductListItem_Buyer$Quoted$MO(Props) {
   var match = use$2(query);
   var status = match.status;
   var productId = match.productId;
-  return React.createElement("div", {
-              className: "cursor-pointer",
-              onClick: (function (param) {
-                  var prim1 = "/products/" + String(productId) + "";
-                  router.push(prim1);
-                })
-            }, React.createElement("div", {
-                  className: "rounded-xl overflow-hidden relative aspect-square"
-                }, React.createElement($$Image.make, {
-                      src: match.image.thumb800x800,
-                      placeholder: /* Sm */0,
-                      loading: /* Lazy */1,
-                      alt: "product-" + String(productId) + "",
-                      className: "w-full h-full object-cover"
-                    }), React.createElement("div", {
-                      className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
-                    }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                        text: "숨김"
-                      }) : (
-                    status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                            text: "품절"
-                          }) : (
-                        status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                                text: "비공개 판매"
-                              }) : null
-                      )
-                  )), React.createElement("div", {
-                  className: "flex flex-col mt-3"
-                }, React.createElement("span", {
-                      className: "text-text-L1 line-clamp-2 text-sm"
-                    }, match.displayName), React.createElement("span", {
-                      className: "mt-1 font-bold text-blue-500"
-                    }, "최저가 견적받기")));
+  var image = match.image;
+  var displayName = match.displayName;
+  var oldUI = React.createElement("li", {
+        className: "cursor-pointer",
+        onClick: (function (param) {
+            var prim1 = "/products/" + String(productId) + "";
+            router.push(prim1);
+          })
+      }, React.createElement("div", {
+            className: "rounded-xl overflow-hidden relative aspect-square"
+          }, React.createElement($$Image.make, {
+                src: image.thumb400x400,
+                placeholder: /* Sm */0,
+                loading: /* Lazy */1,
+                alt: displayName,
+                className: "w-full h-full object-cover"
+              }), React.createElement("div", {
+                className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
+              }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                  text: "숨김"
+                }) : (
+              status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                      text: "품절"
+                    }) : (
+                  status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                          text: "비공개 판매"
+                        }) : null
+                )
+            )), React.createElement("div", {
+            className: "flex flex-col mt-3"
+          }, React.createElement("span", {
+                className: "text-text-L1 line-clamp-2 text-sm"
+              }, displayName), React.createElement("span", {
+                className: "mt-1 font-bold text-blue-500"
+              }, "최저가 견적받기")));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("li", {
+                    className: "cursor-pointer",
+                    onClick: (function (param) {
+                        var prim1 = "/products/" + String(productId) + "";
+                        router.push(prim1);
+                      })
+                  }, React.createElement("div", {
+                        className: "rounded-[10px] overflow-hidden relative aspect-square"
+                      }, React.createElement($$Image.make, {
+                            src: image.thumb400x400,
+                            placeholder: /* Sm */0,
+                            loading: /* Lazy */1,
+                            alt: displayName,
+                            className: "w-full h-full object-cover"
+                          }), React.createElement("div", {
+                            className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
+                          }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                              text: "숨김"
+                            }) : (
+                          status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                  text: "품절"
+                                }) : (
+                              status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                      text: "비공개 판매"
+                                    }) : null
+                            )
+                        )), React.createElement("div", {
+                        className: "flex flex-col mt-3"
+                      }, React.createElement("span", {
+                            className: "text-text-L1 line-clamp-2 text-sm"
+                          }, displayName), React.createElement("span", {
+                            className: "mt-1 font-bold text-blue-500"
+                          }, "최저가 견적받기"))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var MO$1 = {
@@ -409,7 +568,7 @@ function ShopProductListItem_Buyer$Matching$PriceText$PC(Props) {
               className: "inline-flex flex-col"
             }, React.createElement("span", {
                   className: Cn.make([
-                        "mt-1 font-bold text-lg",
+                        "mt-1 font-bold text-xl",
                         isSoldout ? "text-text-L3" : "text-text-L1"
                       ])
                 }, "" + Locale.Float.show(undefined, price, 0) + "원"), React.createElement("span", {
@@ -456,6 +615,8 @@ function ShopProductListItem_Buyer$Matching$PC(Props) {
   var productId = match.productId;
   var pricePerKg = match.pricePerKg;
   var price = match.price;
+  var image = match.image;
+  var displayName = match.displayName;
   var tmp;
   var exit = 0;
   if (price !== undefined) {
@@ -484,38 +645,102 @@ function ShopProductListItem_Buyer$Matching$PC(Props) {
           className: "mt-2 font-bold text-lg text-green-500"
         }, "예상가 회원공개");
   }
-  return React.createElement("div", {
-              className: "w-[280px] h-[376px] cursor-pointer",
-              onClick: (function (param) {
-                  var prim1 = "/products/" + String(productId) + "";
-                  router.push(prim1);
-                })
-            }, React.createElement("div", {
-                  className: "w-[280px] aspect-square rounded-xl overflow-hidden relative"
-                }, React.createElement($$Image.make, {
-                      src: match.image.thumb800x800,
-                      placeholder: /* Sm */0,
-                      loading: /* Lazy */1,
-                      alt: "product-" + String(productId) + "",
-                      className: "w-full h-full object-cover"
-                    }), React.createElement("div", {
-                      className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-2xl"
-                    }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                        text: "숨김"
-                      }) : (
-                    status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                            text: "품절"
-                          }) : (
-                        status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                                text: "비공개 판매"
-                              }) : null
-                      )
-                  )), React.createElement("div", {
-                  className: "flex flex-col mt-4"
-                }, React.createElement(ShopProductListItem_Buyer$Matching$ProductName$PC, {
-                      productName: match.displayName,
-                      representativeWeight: representativeWeight
-                    }), tmp));
+  var oldUI = React.createElement("li", {
+        className: "w-[280px] h-[376px] cursor-pointer",
+        onClick: (function (param) {
+            var prim1 = "/products/" + String(productId) + "";
+            router.push(prim1);
+          })
+      }, React.createElement("div", {
+            className: "w-[280px] aspect-square rounded-[10px] overflow-hidden relative"
+          }, React.createElement($$Image.make, {
+                src: image.thumb400x400,
+                placeholder: /* Sm */0,
+                loading: /* Lazy */1,
+                alt: displayName,
+                className: "w-full h-full object-cover"
+              }), React.createElement("div", {
+                className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]"
+              }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                  text: "숨김"
+                }) : (
+              status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                      text: "품절"
+                    }) : (
+                  status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                          text: "비공개 판매"
+                        }) : null
+                )
+            )), React.createElement("div", {
+            className: "flex flex-col mt-4"
+          }, React.createElement(ShopProductListItem_Buyer$Matching$ProductName$PC, {
+                productName: displayName,
+                representativeWeight: representativeWeight
+              }), tmp));
+  var tmp$1;
+  var exit$1 = 0;
+  if (price !== undefined) {
+    if (pricePerKg !== undefined) {
+      var isSoldout$2 = status === "SOLDOUT";
+      tmp$1 = React.createElement(ShopProductListItem_Buyer$Matching$PriceText$PC, {
+            price: price,
+            pricePerKg: pricePerKg,
+            isSoldout: isSoldout$2
+          });
+    } else {
+      exit$1 = 1;
+    }
+  } else if (pricePerKg !== undefined) {
+    var isSoldout$3 = status === "SOLDOUT";
+    tmp$1 = React.createElement(ShopProductListItem_Buyer$Matching$PriceText$PC, {
+          price: pricePerKg * representativeWeight,
+          pricePerKg: pricePerKg,
+          isSoldout: isSoldout$3
+        });
+  } else {
+    exit$1 = 1;
+  }
+  if (exit$1 === 1) {
+    tmp$1 = React.createElement("span", {
+          className: "mt-2 font-bold text-lg text-green-500"
+        }, "예상가 회원공개");
+  }
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("li", {
+                    className: "max-w-[220px] min-w-[178px] w-full h-[316px] cursor-pointer",
+                    onClick: (function (param) {
+                        var prim1 = "/products/" + String(productId) + "";
+                        router.push(prim1);
+                      })
+                  }, React.createElement("div", {
+                        className: "max-w-[220px] min-w-[178px] w-full aspect-square rounded-[10px] overflow-hidden relative"
+                      }, React.createElement($$Image.make, {
+                            src: image.thumb400x400,
+                            placeholder: /* Sm */0,
+                            loading: /* Lazy */1,
+                            alt: displayName,
+                            className: "w-full h-full object-cover"
+                          }), React.createElement("div", {
+                            className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-[10px]"
+                          }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                              text: "숨김"
+                            }) : (
+                          status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                  text: "품절"
+                                }) : (
+                              status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                      text: "비공개 판매"
+                                    }) : null
+                            )
+                        )), React.createElement("div", {
+                        className: "flex flex-col mt-4"
+                      }, React.createElement(ShopProductListItem_Buyer$Matching$ProductName$PC, {
+                            productName: displayName,
+                            representativeWeight: representativeWeight
+                          }), tmp$1)),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var PC$4 = {
@@ -532,6 +757,8 @@ function ShopProductListItem_Buyer$Matching$MO(Props) {
   var productId = match.productId;
   var pricePerKg = match.pricePerKg;
   var price = match.price;
+  var image = match.image;
+  var displayName = match.displayName;
   var tmp;
   var exit = 0;
   if (price !== undefined) {
@@ -560,38 +787,102 @@ function ShopProductListItem_Buyer$Matching$MO(Props) {
           className: "mt-2 font-bold text-lg text-green-500"
         }, "예상가 회원공개");
   }
-  return React.createElement("div", {
-              className: "cursor-pointer",
-              onClick: (function (param) {
-                  var prim1 = "/products/" + String(productId) + "";
-                  router.push(prim1);
-                })
-            }, React.createElement("div", {
-                  className: "rounded-xl overflow-hidden relative aspect-square"
-                }, React.createElement($$Image.make, {
-                      src: match.image.thumb800x800,
-                      placeholder: /* Sm */0,
-                      loading: /* Lazy */1,
-                      alt: "product-" + String(productId) + "",
-                      className: "w-full h-full object-cover"
-                    }), React.createElement("div", {
-                      className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
-                    }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                        text: "숨김"
-                      }) : (
-                    status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                            text: "품절"
-                          }) : (
-                        status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
-                                text: "비공개 판매"
-                              }) : null
-                      )
-                  )), React.createElement("div", {
-                  className: "flex flex-col mt-3"
-                }, React.createElement(ShopProductListItem_Buyer$Matching$ProductName$MO, {
-                      productName: match.displayName,
-                      representativeWeight: representativeWeight
-                    }), tmp));
+  var oldUI = React.createElement("li", {
+        className: "cursor-pointer",
+        onClick: (function (param) {
+            var prim1 = "/products/" + String(productId) + "";
+            router.push(prim1);
+          })
+      }, React.createElement("div", {
+            className: "rounded-xl overflow-hidden relative aspect-square"
+          }, React.createElement($$Image.make, {
+                src: image.thumb400x400,
+                placeholder: /* Sm */0,
+                loading: /* Lazy */1,
+                alt: displayName,
+                className: "w-full h-full object-cover"
+              }), React.createElement("div", {
+                className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
+              }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                  text: "숨김"
+                }) : (
+              status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                      text: "품절"
+                    }) : (
+                  status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                          text: "비공개 판매"
+                        }) : null
+                )
+            )), React.createElement("div", {
+            className: "flex flex-col mt-3"
+          }, React.createElement(ShopProductListItem_Buyer$Matching$ProductName$MO, {
+                productName: displayName,
+                representativeWeight: representativeWeight
+              }), tmp));
+  var tmp$1;
+  var exit$1 = 0;
+  if (price !== undefined) {
+    if (pricePerKg !== undefined) {
+      var isSoldout$2 = status === "SOLDOUT";
+      tmp$1 = React.createElement(ShopProductListItem_Buyer$Matching$PriceText$MO, {
+            price: price,
+            pricePerKg: pricePerKg,
+            isSoldout: isSoldout$2
+          });
+    } else {
+      exit$1 = 1;
+    }
+  } else if (pricePerKg !== undefined) {
+    var isSoldout$3 = status === "SOLDOUT";
+    tmp$1 = React.createElement(ShopProductListItem_Buyer$Matching$PriceText$MO, {
+          price: pricePerKg * representativeWeight,
+          pricePerKg: pricePerKg,
+          isSoldout: isSoldout$3
+        });
+  } else {
+    exit$1 = 1;
+  }
+  if (exit$1 === 1) {
+    tmp$1 = React.createElement("span", {
+          className: "mt-2 font-bold text-lg text-green-500"
+        }, "예상가 회원공개");
+  }
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("li", {
+                    className: "cursor-pointer",
+                    onClick: (function (param) {
+                        var prim1 = "/products/" + String(productId) + "";
+                        router.push(prim1);
+                      })
+                  }, React.createElement("div", {
+                        className: "rounded-[10px] overflow-hidden relative aspect-square"
+                      }, React.createElement($$Image.make, {
+                            src: image.thumb400x400,
+                            placeholder: /* Sm */0,
+                            loading: /* Lazy */1,
+                            alt: displayName,
+                            className: "w-full h-full object-cover"
+                          }), React.createElement("div", {
+                            className: "w-full h-full absolute top-0 left-0 bg-black/[.03] rounded-xl"
+                          }), status === "NOSALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                              text: "숨김"
+                            }) : (
+                          status === "SOLDOUT" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                  text: "품절"
+                                }) : (
+                              status === "HIDDEN_SALE" ? React.createElement(ShopProductListItem_Buyer$StatusLabel, {
+                                      text: "비공개 판매"
+                                    }) : null
+                            )
+                        )), React.createElement("div", {
+                        className: "flex flex-col mt-3"
+                      }, React.createElement(ShopProductListItem_Buyer$Matching$ProductName$MO, {
+                            productName: displayName,
+                            representativeWeight: representativeWeight
+                          }), tmp$1)),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var MO$4 = {
@@ -606,15 +897,28 @@ var Matching$1 = {
 };
 
 function ShopProductListItem_Buyer$PC$Placeholder(Props) {
-  return React.createElement("div", {
-              className: "w-[280px] h-[376px]"
-            }, React.createElement("div", {
-                  className: "w-[280px] h-[280px] animate-pulse rounded-xl bg-gray-100"
-                }), React.createElement("div", {
-                  className: "mt-3 w-[244px] h-[24px] animate-pulse rounded-sm bg-gray-100"
-                }), React.createElement("div", {
-                  className: "mt-2 w-[88px] h-[24px] animate-pulse rounded-sm bg-gray-100"
-                }));
+  var oldUI = React.createElement("div", {
+        className: "w-[280px] h-[376px]"
+      }, React.createElement("div", {
+            className: "w-[280px] h-[280px] animate-pulse rounded-xl bg-gray-100"
+          }), React.createElement("div", {
+            className: "mt-3 w-[244px] h-[24px] animate-pulse rounded-sm bg-gray-100"
+          }), React.createElement("div", {
+            className: "mt-2 w-[88px] h-[24px] animate-pulse rounded-sm bg-gray-100"
+          }));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "max-w-[220px] min-w-[178px] w-full h-[316px]"
+                  }, React.createElement("div", {
+                        className: "max-w-[220px] min-w-[178px] w-full aspect-square animate-pulse rounded-xl bg-gray-100"
+                      }), React.createElement("div", {
+                        className: "mt-3 max-w-[200px] min-w-[178px] w-full h-[24px] animate-pulse rounded-sm bg-gray-100"
+                      }), React.createElement("div", {
+                        className: "mt-2 w-[88px] h-[24px] animate-pulse rounded-sm bg-gray-100"
+                      })),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var Placeholder = {
@@ -653,7 +957,7 @@ var PC$5 = {
 };
 
 function ShopProductListItem_Buyer$MO$Placeholder(Props) {
-  return React.createElement("div", undefined, React.createElement("div", {
+  return React.createElement("li", undefined, React.createElement("div", {
                   className: "w-full aspect-square animate-pulse rounded-xl bg-gray-100"
                 }), React.createElement("div", {
                   className: "mt-3 w-[132px] h-5 animate-pulse rounded-sm bg-gray-100"

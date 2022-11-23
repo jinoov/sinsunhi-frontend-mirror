@@ -3,103 +3,74 @@
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Checkbox from "../../../components/common/Checkbox.mjs";
+import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactEvents from "../../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
-import * as PLP_FilterOption from "./PLP_FilterOption.mjs";
+import * as Product_FilterOption from "../Product_FilterOption.mjs";
 
-function PLP_SectionCheckBoxGroup$PC(Props) {
+function PLP_SectionCheckBoxGroup(Props) {
   var router = Router.useRouter();
-  var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type"));
-  var match = PLP_FilterOption.Section.toCheckBoxSelection(sectionType);
+  var sectionType = Product_FilterOption.Section.fromUrlParameter(Js_dict.get(router.query, "section"));
+  var match = sectionType !== undefined ? Product_FilterOption.Section.toCheckBoxSelection(sectionType) : [
+      false,
+      false
+    ];
   var deliverySelected = match[1];
   var matchingSelected = match[0];
   var onCheckBoxUpdate = function (matching, delivery) {
     return function (param) {
       return ReactEvents.interceptingHandler((function (param) {
-                    var sectionType = PLP_FilterOption.Section.fromCheckBoxSelection(matching, delivery);
-                    var sort = Belt_Option.getWithDefault(Js_dict.get(router.query, "sort"), "");
-                    var sortType = PLP_FilterOption.Sort.decodeSort(sectionType, sort);
-                    var newQuery = router.query;
-                    newQuery["section-type"] = PLP_FilterOption.Section.toString(sectionType);
-                    newQuery["sort"] = PLP_FilterOption.Sort.encodeSort(sortType);
+                    var sectionType = Product_FilterOption.Section.fromCheckBoxSelection(matching, delivery);
+                    var sortType = Belt_Option.flatMap(sectionType, (function (sectionType$p) {
+                            return Product_FilterOption.Sort.make(sectionType$p, Js_dict.get(router.query, "sort"));
+                          }));
+                    var sectionUrlParameter = Belt_Option.map(sectionType, Product_FilterOption.Section.toUrlParameter);
+                    var newQuery;
+                    if (sortType !== undefined) {
+                      var newQuery$1 = router.query;
+                      newQuery$1["sort"] = Product_FilterOption.Sort.toString(sortType);
+                      newQuery = newQuery$1;
+                    } else {
+                      newQuery = Js_dict.fromArray(Belt_Array.keep(Js_dict.entries(router.query), (function (param) {
+                                  return param[0] !== "sort";
+                                })));
+                    }
+                    var newQuery$2 = sectionUrlParameter !== undefined ? (newQuery["section"] = sectionUrlParameter, newQuery) : Js_dict.fromArray(Belt_Array.keep(Js_dict.entries(router.query), (function (param) {
+                                  return param[0] !== "section";
+                                })));
                     router.replace({
                           pathname: router.pathname,
-                          query: newQuery
+                          query: Caml_option.some(newQuery$2)
                         });
                   }), param);
     };
   };
   return React.createElement("div", {
-              className: "flex-row inline-flex gap-5"
+              className: "flex-row inline-flex gap-5 xl:text-base"
             }, React.createElement("div", {
                   className: "inline-flex items-center gap-2"
                 }, React.createElement(Checkbox.make, {
                       id: "matching-checkbox",
                       name: "matching",
                       checked: matchingSelected,
-                      onChange: onCheckBoxUpdate(!matchingSelected, deliverySelected)
-                    }), "신선매칭"), React.createElement("div", {
+                      onChange: onCheckBoxUpdate(!matchingSelected, deliverySelected),
+                      alt: matchingSelected ? "" + Product_FilterOption.Section.toLabel("MATCHING") + " 상품을 선택합니다" : "" + Product_FilterOption.Section.toLabel("MATCHING") + " 상품을 선택해제합니다"
+                    }), Product_FilterOption.Section.toLabel("MATCHING")), React.createElement("div", {
                   className: "inline-flex items-center gap-2"
                 }, React.createElement(Checkbox.make, {
                       id: "delivery-checkbox",
                       name: "delivery",
                       checked: deliverySelected,
-                      onChange: onCheckBoxUpdate(matchingSelected, !deliverySelected)
-                    }), "신선배송"));
+                      onChange: onCheckBoxUpdate(matchingSelected, !deliverySelected),
+                      alt: deliverySelected ? "" + Product_FilterOption.Section.toLabel("DELIVERY") + " 상품을 선택합니다" : "" + Product_FilterOption.Section.toLabel("DELIVERY") + " 상품을 선택해제합니다"
+                    }), Product_FilterOption.Section.toLabel("DELIVERY")));
 }
 
-var PC = {
-  make: PLP_SectionCheckBoxGroup$PC
-};
-
-function PLP_SectionCheckBoxGroup$MO(Props) {
-  var router = Router.useRouter();
-  var sectionType = PLP_FilterOption.Section.make(Js_dict.get(router.query, "section-type"));
-  var match = PLP_FilterOption.Section.toCheckBoxSelection(sectionType);
-  var deliverySelected = match[1];
-  var matchingSelected = match[0];
-  var onCheckBoxUpdate = function (matching, delivery) {
-    return function (param) {
-      return ReactEvents.interceptingHandler((function (param) {
-                    var sectionType = PLP_FilterOption.Section.fromCheckBoxSelection(matching, delivery);
-                    var sort = Belt_Option.getWithDefault(Js_dict.get(router.query, "sort"), "");
-                    var sortType = PLP_FilterOption.Sort.decodeSort(sectionType, sort);
-                    var newQuery = router.query;
-                    newQuery["section-type"] = PLP_FilterOption.Section.toString(sectionType);
-                    newQuery["sort"] = PLP_FilterOption.Sort.encodeSort(sortType);
-                    router.replace({
-                          pathname: router.pathname,
-                          query: newQuery
-                        });
-                  }), param);
-    };
-  };
-  return React.createElement("div", {
-              className: "flex-row inline-flex gap-5 text-sm"
-            }, React.createElement("div", {
-                  className: "inline-flex items-center gap-2"
-                }, React.createElement(Checkbox.make, {
-                      id: "matching-checkbox",
-                      name: "matching",
-                      checked: matchingSelected,
-                      onChange: onCheckBoxUpdate(!matchingSelected, deliverySelected)
-                    }), "신선매칭"), React.createElement("div", {
-                  className: "inline-flex items-center gap-2"
-                }, React.createElement(Checkbox.make, {
-                      id: "delivery-checkbox",
-                      name: "delivery",
-                      checked: deliverySelected,
-                      onChange: onCheckBoxUpdate(matchingSelected, !deliverySelected)
-                    }), "신선배송"));
-}
-
-var MO = {
-  make: PLP_SectionCheckBoxGroup$MO
-};
+var make = PLP_SectionCheckBoxGroup;
 
 export {
-  PC ,
-  MO ,
+  make ,
 }
 /* react Not a pure module */

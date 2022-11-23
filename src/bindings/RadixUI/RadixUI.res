@@ -61,6 +61,7 @@ module Dialog = {
   module Trigger = {
     @module("@radix-ui/react-dialog") @react.component
     external make: (
+      ~id: string=?,
       ~onClick: ReactEvent.synthetic<'a> => unit=?,
       ~children: React.element,
       ~className: string=?,
@@ -86,6 +87,7 @@ module Dialog = {
       ~className: string=?,
       ~ref: ReactDOM.Ref.t=?,
       ~onPointerDownOutside: ReactEvent.Mouse.t => unit=?,
+      ~onOpenAutoFocus: ReactEvent.Pointer.t => unit=?,
     ) => React.element = "Content"
   }
 
@@ -378,7 +380,7 @@ module HoverCard = {
       ~className: string=?,
       ~defaultOpen: bool=?,
       ~open_: bool=?,
-      ~onOpenChange: bool => unit=?,
+      ~onOpenChange: option<bool => unit>=?,
       ~openDelay: int=?,
       ~closeDelay: int=?,
     ) => React.element = "Root"
@@ -419,6 +421,7 @@ module Tabs = {
       ~onValueChange: string => unit=?,
       ~orientation: orientation=?,
       ~dir: dir=?,
+      ~value: string=?,
       ~activationMode: activationMode=?,
     ) => React.element = "Root"
   }

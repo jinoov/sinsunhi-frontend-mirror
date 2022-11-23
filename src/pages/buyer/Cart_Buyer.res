@@ -30,7 +30,6 @@ module Container = {
     let {addToast} = ReactToastNotifications.useToasts()
     let {useRouter, push} = module(Next.Router)
     let router = useRouter()
-    let availableButton = ToggleOrderAndPayment.use()
 
     let methods = Hooks.Form.use(.
       ~config=Hooks.Form.config(~mode=#all, ~shouldUnregister=true, ()),
@@ -64,72 +63,92 @@ module Container = {
     }
 
     let onSubmit = (data: Js.Json.t, _) => {
-      switch availableButton {
-      | true =>
-        switch data->Form.submit_decode {
-        | Ok({cart}) => {
-            let (cartIds, cartItems) = switch cart.orderType {
-            | #CourierAvailable => (
-                cart.courierAvailableItem->extractCartIds,
-                cart.courierAvailableItem.cartItems->Option.getWithDefault([]),
-              )
-            | #UnCourierAvailable => (
-                cart.unCourierAvailableItem->extractCartIds,
-                cart.unCourierAvailableItem.cartItems->Option.getWithDefault([]),
-              )
-            }
-            mutate(
-              ~variables={
-                cartItems: cartIds,
-              },
-              ~onCompleted={
-                ({createTempWosOrder}, _) => {
-                  switch createTempWosOrder {
-                  | Some(createTempWosOrder') =>
-                    switch createTempWosOrder' {
-                    | #TempWosOrder({tempOrderId}) =>
-                      // GTM
-                      cartItems->Form.cartGtmPush(cartIds, "begin_checkout")
-                      router->push(`/buyer/web-order/${tempOrderId->Int.toString}`)
-                    | #Error({message}) =>
-                      handleError(~message=message->Option.getWithDefault(""), ())
-                    | #CartError({message}) =>
-                      handleError(~message=message->Option.getWithDefault(""), ())
-                    | _ => handleError()
-                    }
-                  | None => Js.log("fail to mutation")
-                  }
-                }
-              },
-              ~onError={
-                err => handleError(~message=err.message, ())
-              },
-              (),
-            )->ignore
+      switch data->Form.submit_decode {
+      | Ok({cart}) => {
+          let (cartIds, cartItems) = switch cart.orderType {
+          | #CourierAvailable => (
+              cart.courierAvailableItem->extractCartIds,
+              cart.courierAvailableItem.cartItems->Option.getWithDefault([]),
+            )
+          | #UnCourierAvailable => (
+              cart.unCourierAvailableItem->extractCartIds,
+              cart.unCourierAvailableItem.cartItems->Option.getWithDefault([]),
+            )
           }
-        | Error(err) => Js.log(err)
+          mutate(
+            ~variables={
+              cartItems: cartIds,
+            },
+            ~onCompleted={
+              ({createTempWosOrder}, _) => {
+                switch createTempWosOrder {
+                | Some(createTempWosOrder') =>
+                  switch createTempWosOrder' {
+                  | #TempWosOrder({tempOrderId}) =>
+                    // GTM
+                    cartItems->Form.cartGtmPush(cartIds, "begin_checkout")
+                    router->push(`/buyer/web-order/${tempOrderId->Int.toString}`)
+                  | #Error({message}) =>
+                    handleError(~message=message->Option.getWithDefault(""), ())
+                  | #CartError({message}) =>
+                    handleError(~message=message->Option.getWithDefault(""), ())
+                  | _ => handleError()
+                  }
+                | None => Js.log("fail to mutation")
+                }
+              }
+            },
+            ~onError={
+              err => handleError(~message=err.message, ())
+            },
+            (),
+          )->ignore
         }
-      | false =>
-        Global.jsAlert(`서비스 점검으로 인해 주문,결제 기능을 이용할 수 없습니다.`)
+
+      | Error(err) => Js.log(err)
       }
     }
 
     <>
-      <ReactHookForm.Provider methods>
-        <form onSubmit={handleSubmit(. onSubmit)}>
-          {switch deviceType {
-          | DeviceDetect.Unknown => React.null
-          | DeviceDetect.PC => <>
+      {switch deviceType {
+      | DeviceDetect.Unknown => React.null
+      | DeviceDetect.PC => {
+          let oldUI =
+            <>
               <Header_Buyer.PC_Old key=router.asPath />
-              <Cart_Buyer_Item query=query.fragmentRefs deviceType />
+              <ReactHookForm.Provider methods>
+                <form onSubmit={handleSubmit(. onSubmit)}>
+                  <Cart_Buyer_Item query=query.fragmentRefs deviceType />
+                </form>
+              </ReactHookForm.Provider>
               <Footer_Buyer.PC />
             </>
-          | DeviceDetect.Mobile => <>
-              <Header_Buyer.Mobile /> <Cart_Buyer_Item query=query.fragmentRefs deviceType />
-            </>
-          }}
-        </form>
-      </ReactHookForm.Provider>
+
+          <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+            {<div className=%twc("w-full min-h-screen bg-[#F0F2F5] flex flex-col")>
+              <Header_Buyer.PC_Old key=router.asPath />
+              <section className=%twc("w-[1920px] mx-auto bg-[#FAFBFC] flex-1")>
+                <ReactHookForm.Provider methods>
+                  <form onSubmit={handleSubmit(. onSubmit)}>
+                    <Cart_Buyer_Item query=query.fragmentRefs deviceType />
+                  </form>
+                </ReactHookForm.Provider>
+              </section>
+              <Footer_Buyer.PC />
+            </div>}
+          </FeatureFlagWrapper>
+        }
+
+      | DeviceDetect.Mobile =>
+        <>
+          <Header_Buyer.Mobile />
+          <ReactHookForm.Provider methods>
+            <form onSubmit={handleSubmit(. onSubmit)}>
+              <Cart_Buyer_Item query=query.fragmentRefs deviceType />
+            </form>
+          </ReactHookForm.Provider>
+        </>
+      }}
       <Util.SubmitDialog _open=showNotChecked setOpen=setShowNotChecked />
     </>
   }
@@ -142,7 +161,8 @@ type previewData
 let default = (~props) => {
   let {deviceType} = props
 
-  <Authorization.Buyer title=j`장바구니` fallback={<Cart_Buyer_Item.PlaceHolder deviceType />}>
+  <Authorization.Buyer
+    title={j`장바구니`} fallback={<Cart_Buyer_Item.PlaceHolder deviceType />}>
     <React.Suspense fallback={<Cart_Buyer_Item.PlaceHolder deviceType />}>
       <Container deviceType />
     </React.Suspense>

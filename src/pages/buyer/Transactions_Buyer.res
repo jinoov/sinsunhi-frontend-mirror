@@ -1,4 +1,11 @@
-external unsafeAsFile: Webapi.Blob.t => Webapi.File.t = "%identity"
+let setValueToHtmlInputElement = (name, v) => {
+  open Webapi.Dom
+  document
+  ->Document.getElementById(name)
+  ->Option.flatMap(HtmlInputElement.ofElement)
+  ->Option.map(e => e->HtmlInputElement.setValue(v))
+  ->ignore
+}
 
 module Mutation = %relay(`
   mutation TransactionsBuyerMutation(
@@ -154,22 +161,12 @@ let getHtmlInputElementValue = id => {
 }
 
 module Transactions = {
-  type test = {
-    encData: option<string>,
-    encInfo: option<string>,
-    id: option<int>,
-    ordrMony: option<int>,
-    siteCd: option<string>,
-    siteKey: option<string>,
-    tranCd: option<string>,
-  }
-
   @react.component
   let make = () => {
     let {addToast} = ReactToastNotifications.useToasts()
     let swr = Swr.useSwrConfig()
     let router = Next.Router.useRouter()
-    let (mutate, _isMutating) = Mutation.use()
+    let (mutate, isMutating) = Mutation.use()
     let status = CustomHooks.Transaction.use(
       router.query->Webapi.Url.URLSearchParams.makeWithDict->Webapi.Url.URLSearchParams.toString,
     )
@@ -227,7 +224,7 @@ module Transactions = {
           let siteKey = getHtmlInputElementValue("site_key")
           let tranCd = getHtmlInputElementValue("tran_cd")
 
-          switch (encData, encInfo, paymentId, ordrMony, siteCd, siteKey, tranCd) {
+          switch (encData, encInfo, paymentId, ordrMony, siteCd, siteKey, tranCd, isMutating) {
           | (
               Some(encData'),
               Some(encInfo'),
@@ -236,13 +233,22 @@ module Transactions = {
               Some(siteCd'),
               Some(siteKey'),
               Some(tranCd'),
+              false,
             ) =>
+            // start - mutation이 여러번 날아가는 경우가 있어서 뮤테이션 전에 paymentId와 ordrMony를 초기화 합니다.
+            let _paymentId = paymentId'
+            let _ordrMony = ordrMony'
+
+            setValueToHtmlInputElement("ordr_idxx", "")
+            setValueToHtmlInputElement("good_mny", "")
+            // end - mutation이 여러번 날아가는 경우가 있어서 뮤테이션 전에 paymentId와 ordrMony를 초기화 합니다.
+
             mutate(
               ~variables={
                 encData: encData',
                 encInfo: encInfo',
-                paymentId: paymentId',
-                ordrMony: ordrMony',
+                paymentId: _paymentId,
+                ordrMony: _ordrMony,
                 siteCd: siteCd',
                 siteKey: siteKey',
                 tranCd: tranCd',
@@ -302,7 +308,7 @@ module Transactions = {
               },
               (),
             )->ignore
-          | _ => handleError(~message=`결제 인증에 실패하였습니다.`, ())
+          | _ => ()
           }
         })
       | None => () // SSR 단계
@@ -310,52 +316,116 @@ module Transactions = {
       None
     })
 
-    <>
-      <div className=%twc("sm:px-10 md:px-20 text-enabled-L1")>
-        <div
-          className=%twc(
-            "flex flex-col mx-4 lg:flex-row sm:mx-0 py-4 px-5 bg-red-gl rounded-lg text-red-500 mt-4"
-          )>
-          <span className=%twc("block font-bold mr-4 min-w-max")>
-            {j`[주의사항]`->React.string}
-          </span>
-          <span className=%twc("whitespace-pre-wrap")>
-            {notices->Array.map(notice => <p key=notice> {notice->React.string} </p>)->React.array}
-          </span>
-        </div>
-        <Summary />
-        <div className=%twc("px-5 lg:px-7 mt-4 shadow-gl")>
-          <div className=%twc("md:flex md:justify-between pb-4 text-base")>
-            <div className=%twc("pt-10 flex flex-col lg:flex-row sm:flex-auto sm:justify-between")>
-              <h3 className=%twc("font-bold")>
-                {j`결제내역`->React.string}
-                <span className=%twc("ml-1 text-green-gl font-normal")>
-                  {j`${count}건`->React.string}
-                </span>
-              </h3>
-              <div className=%twc("flex flex-col lg:flex-row mt-4 lg:mt-0")>
-                <div className=%twc("flex items-center")>
-                  <Select_CountPerPage className=%twc("mr-2") />
-                  <Select_Transaction_Status className=%twc("mr-2") />
-                </div>
-                <div className=%twc("flex mt-2 lg:mt-0")>
-                  <Excel_Download_Request_Button
-                    userType=Buyer requestUrl="/transaction/request-excel" bodyOption
-                  />
+    let oldUI =
+      <>
+        <div className=%twc("sm:px-10 md:px-20 text-enabled-L1")>
+          <div
+            className=%twc(
+              "flex flex-col mx-4 lg:flex-row sm:mx-0 py-4 px-5 bg-red-gl rounded-lg text-red-500 mt-4"
+            )>
+            <span className=%twc("block font-bold mr-4 min-w-max")>
+              {j`[주의사항]`->React.string}
+            </span>
+            <span className=%twc("whitespace-pre-wrap")>
+              {notices
+              ->Array.map(notice => <p key=notice> {notice->React.string} </p>)
+              ->React.array}
+            </span>
+          </div>
+          <Summary />
+          <div className=%twc("px-5 lg:px-7 mt-4 shadow-gl")>
+            <div className=%twc("md:flex md:justify-between pb-4 text-base")>
+              <div
+                className=%twc("pt-10 flex flex-col lg:flex-row sm:flex-auto sm:justify-between")>
+                <h3 className=%twc("font-bold")>
+                  {j`결제내역`->React.string}
+                  <span className=%twc("ml-1 text-green-gl font-normal")>
+                    {j`${count}건`->React.string}
+                  </span>
+                </h3>
+                <div className=%twc("flex flex-col lg:flex-row mt-4 lg:mt-0")>
+                  <div className=%twc("flex items-center")>
+                    <Select_CountPerPage className=%twc("mr-2") />
+                    <Select_Transaction_Status className=%twc("mr-2") />
+                  </div>
+                  <div className=%twc("flex mt-2 lg:mt-0")>
+                    <Excel_Download_Request_Button
+                      userType=Buyer requestUrl="/transaction/request-excel" bodyOption
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+            <List status />
           </div>
-          <List status />
         </div>
-      </div>
-      <Dialog
-        isShow=isShowErrorForDownload onConfirm={_ => setShowErrorForDownload(._ => Dialog.Hide)}>
-        <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
-          {`다운로드에 실패하였습니다.\n다시 시도하시기 바랍니다.`->React.string}
-        </p>
-      </Dialog>
-    </>
+        <Dialog
+          isShow=isShowErrorForDownload onConfirm={_ => setShowErrorForDownload(._ => Dialog.Hide)}>
+          <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+            {`다운로드에 실패하였습니다.\n다시 시도하시기 바랍니다.`->React.string}
+          </p>
+        </Dialog>
+      </>
+
+    <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+      {<section className=%twc("flex lg:max-w-[1920px] lg:bg-[#FAFBFC] lg:w-full lg:mx-auto ")>
+        <div className=%twc("hidden lg:block max-w-[340px] min-w-[280px] w-full")>
+          <PC_MyInfo_Sidebar />
+        </div>
+        <div
+          className=%twc(
+            "lg:rounded-sm lg:bg-white lg:shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] my-10 lg:mx-16 lg:h-fit"
+          )>
+          <div className=%twc("sm:px-10 md:px-20 text-enabled-L1 lg:px-0")>
+            <div
+              className=%twc(
+                "flex flex-col mx-4 lg:flex-row sm:mx-0 py-4 px-5 bg-red-gl rounded-lg text-red-500 mt-4 lg:mt-0"
+              )>
+              <span className=%twc("block font-bold mr-4 min-w-max")>
+                {j`[주의사항]`->React.string}
+              </span>
+              <span className=%twc("whitespace-pre-wrap")>
+                {notices
+                ->Array.map(notice => <p key=notice> {notice->React.string} </p>)
+                ->React.array}
+              </span>
+            </div>
+            <Summary />
+            <div className=%twc("px-5 lg:px-7 mt-4 shadow-gl lg:shadow-none bg-white")>
+              <div className=%twc("md:flex md:justify-between pb-4 text-base")>
+                <div
+                  className=%twc("pt-10 flex flex-col lg:flex-row sm:flex-auto sm:justify-between")>
+                  <h3 className=%twc("font-bold")>
+                    {j`결제내역`->React.string}
+                    <span className=%twc("ml-1 text-green-gl font-normal")>
+                      {j`${count}건`->React.string}
+                    </span>
+                  </h3>
+                  <div className=%twc("flex flex-col lg:flex-row mt-4 lg:mt-0")>
+                    <div className=%twc("flex items-center")>
+                      <Select_CountPerPage className=%twc("mr-2") />
+                      <Select_Transaction_Status className=%twc("mr-2") />
+                    </div>
+                    <div className=%twc("flex mt-2 lg:mt-0")>
+                      <Excel_Download_Request_Button
+                        userType=Buyer requestUrl="/transaction/request-excel" bodyOption
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <List status />
+            </div>
+          </div>
+        </div>
+        <Dialog
+          isShow=isShowErrorForDownload onConfirm={_ => setShowErrorForDownload(._ => Dialog.Hide)}>
+          <p className=%twc("text-gray-500 text-center whitespace-pre-wrap")>
+            {`다운로드에 실패하였습니다.\n다시 시도하시기 바랍니다.`->React.string}
+          </p>
+        </Dialog>
+      </section>}
+    </FeatureFlagWrapper>
   }
 }
 

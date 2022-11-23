@@ -170,7 +170,7 @@ let make = (~defaultValue: defaultValue, ~defaultCategoryQuery) => {
     | Ok(data') => {
         router.query->Js.Dict.set("producer-name", data'.producerName)
         router.query->Js.Dict.set("producer-codes", data'.producerCodes)
-        router.query->Js.Dict.set("name", data'.productName)
+        router.query->Js.Dict.set("product-name", data'.productName)
         router.query->Js.Dict.set("product-nos", data'.productNos)
         router.query->Js.Dict.set("status", data'.status)
         router.query->Js.Dict.set("delivery", data'.delivery)

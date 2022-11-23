@@ -21,7 +21,7 @@ module SoldOut = {
             className=%twc("w-6 h-6 min-w-max self-start")
           />
           <span className=%twc("pr-5 text-sm text-gray-600")>
-            {productOptionName->Option.getWithDefault("")->React.string}
+            {productOptionName->React.string}
           </span>
         </div>
         <Controller
@@ -46,7 +46,14 @@ module SoldOut = {
 module Container = {
   @react.component
   let make = (~productOption: Form.productOption, ~prefix, ~refetchCart) => {
-    let {productOptionName, quantity, price, cartId, optionStatus} = productOption
+    let {
+      productOptionName,
+      quantity,
+      price,
+      cartId,
+      optionStatus,
+      adhocStockNumRemaining,
+    } = productOption
     let formNames = Form.names(prefix)
 
     let watchQuantity =
@@ -65,13 +72,13 @@ module Container = {
             name=formNames.checked status=optionStatus targetNames=[formNames.checked]
           />
           <span className=%twc("pr-5 text-sm text-gray-800")>
-            {productOptionName->Option.getWithDefault("")->React.string}
+            {productOptionName->React.string}
           </span>
         </div>
         <Cart_Delete_Button refetchCart productOptions=[productOption] />
       </div>
       <div className=%twc("flex justify-between items-center pl-8 mt-1")>
-        <Cart_QuantitySelector prefix quantity cartId />
+        <Cart_QuantitySelector prefix quantity cartId max=?adhocStockNumRemaining />
         <span className=%twc("text-text-L1 font-bold text-sm")>
           {`${(watchQuantity * price)->Locale.Int.show} 원`->React.string}
         </span>
@@ -87,7 +94,7 @@ let make = (
   ~prefix,
   ~productStatus: Form.productStatus,
 ) => {
-  switch (productOption.optionStatus->Form.soldable, productStatus->Form.soldable) {
+  switch (productStatus->Form.soldable, productOption.optionStatus->Form.soldable) {
   | (true, true) => <Container refetchCart productOption prefix />
   | _ => <SoldOut refetchCart productOption prefix />
   }

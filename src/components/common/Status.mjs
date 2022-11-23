@@ -82,6 +82,7 @@ function queriedStyle(router, status, param) {
     case /* CANCEL */5 :
     case /* ERROR */6 :
     case /* NEGOTIATING */8 :
+    case /* DEPOSIT_PENDING */9 :
         return "py-1 px-2 flex justify-between border border-gray-200 border-t-0 text-gray-700 sm:flex-1 sm:flex-col sm:border-0 sm:p-4";
     
   }

@@ -8,9 +8,11 @@ import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as Router from "next/router";
 import * as Footer_Buyer from "../../components/Footer_Buyer.mjs";
 import * as Header_Buyer from "../../components/Header_Buyer.mjs";
+import * as Bottom_Navbar from "../../components/Bottom_Navbar.mjs";
+import * as OpenGraph_Header from "../../components/OpenGraph_Header.mjs";
 import * as ChannelTalkHelper from "../../utils/ChannelTalkHelper.mjs";
-import * as ShopSearchInput_Buyer from "../../components/ShopSearchInput_Buyer.mjs";
 import * as ShopMain_SubBanner_Buyer from "../../components/ShopMain_SubBanner_Buyer.mjs";
+import * as ShopMainSearchInput_Buyer from "../../components/ShopMainSearchInput_Buyer.mjs";
 import * as ShopMain_MainBanner_Buyer from "../../components/ShopMain_MainBanner_Buyer.mjs";
 import * as RescriptReactErrorBoundary from "@rescript/react/src/RescriptReactErrorBoundary.mjs";
 import * as ShopMain_CategoryList_Buyer from "../../components/ShopMain_CategoryList_Buyer.mjs";
@@ -34,19 +36,11 @@ var Placeholder = {
 };
 
 function ShopMain_Buyer$PC(Props) {
-  var deviceType = Props.deviceType;
-  var gnbBanners = Props.gnbBanners;
-  var mainBanners = Props.mainBanners;
-  var subBanners = Props.subBanners;
-  var categories = Props.categories;
-  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   var isCsr = CustomHooks.useCsr(undefined);
   return React.createElement("div", {
               className: "w-full min-w-[1280px] min-h-screen"
             }, React.createElement(Header_Buyer.PC.make, {
-                  gnbBanners: gnbBanners,
-                  displayCategories: displayCategories,
                   key: router.asPath
                 }), React.createElement("main", {
                   className: "w-full bg-white pt-12 pb-20"
@@ -56,16 +50,34 @@ function ShopMain_Buyer$PC(Props) {
                           className: "flex px-5"
                         }, React.createElement("div", {
                               className: "w-[920px]"
-                            }, React.createElement(ShopMain_MainBanner_Buyer.PC.make, {
-                                  mainBanners: mainBanners
+                            }, React.createElement(RescriptReactErrorBoundary.make, {
+                                  children: React.createElement(React.Suspense, {
+                                        children: React.createElement(ShopMain_MainBanner_Buyer.PC.make, {}),
+                                        fallback: React.createElement(ShopMain_MainBanner_Buyer.PC.Placeholder.make, {})
+                                      }),
+                                  fallback: (function (param) {
+                                      return React.createElement(ShopMain_MainBanner_Buyer.PC.Placeholder.make, {});
+                                    })
                                 })), React.createElement("div", {
                               className: "ml-5 w-[310px]"
-                            }, React.createElement(ShopMain_SubBanner_Buyer.PC.make, {
-                                  subBanners: subBanners
+                            }, React.createElement(RescriptReactErrorBoundary.make, {
+                                  children: React.createElement(React.Suspense, {
+                                        children: React.createElement(ShopMain_SubBanner_Buyer.PC.make, {}),
+                                        fallback: React.createElement(ShopMain_SubBanner_Buyer.PC.Placeholder.make, {})
+                                      }),
+                                  fallback: (function (param) {
+                                      return React.createElement(ShopMain_SubBanner_Buyer.PC.Placeholder.make, {});
+                                    })
                                 }))), React.createElement("div", {
                           className: "w-full mt-20"
-                        }, React.createElement(ShopMain_CategoryList_Buyer.PC.make, {
-                              categories: categories
+                        }, React.createElement(RescriptReactErrorBoundary.make, {
+                              children: React.createElement(React.Suspense, {
+                                    children: React.createElement(ShopMain_CategoryList_Buyer.PC.make, {}),
+                                    fallback: React.createElement(ShopMain_CategoryList_Buyer.PC.Placeholder.make, {})
+                                  }),
+                              fallback: (function (param) {
+                                  return React.createElement(ShopMain_CategoryList_Buyer.PC.Placeholder.make, {});
+                                })
                             })))), isCsr ? React.createElement(RescriptReactErrorBoundary.make, {
                     children: React.createElement(React.Suspense, {
                           children: React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.make, {}),
@@ -74,9 +86,7 @@ function ShopMain_Buyer$PC(Props) {
                     fallback: (function (param) {
                         return React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.Placeholder.make, {});
                       })
-                  }) : React.createElement(ShopMain_Buyer$Placeholder, {
-                    deviceType: deviceType
-                  }), React.createElement(Footer_Buyer.PC.make, {}));
+                  }) : React.createElement(ShopMainSpecialShowcaseList_Buyer.PC.Placeholder.make, {}), React.createElement(Footer_Buyer.PC.make, {}));
 }
 
 var PC = {
@@ -85,11 +95,6 @@ var PC = {
 
 function ShopMain_Buyer$MO(Props) {
   var deviceType = Props.deviceType;
-  var gnbBanners = Props.gnbBanners;
-  var mainBanners = Props.mainBanners;
-  var subBanners = Props.subBanners;
-  var categories = Props.categories;
-  var displayCategories = Props.displayCategories;
   var router = Router.useRouter();
   var isCsr = CustomHooks.useCsr(undefined);
   return React.createElement("div", {
@@ -99,27 +104,43 @@ function ShopMain_Buyer$MO(Props) {
                 }, React.createElement("div", {
                       className: "w-full max-w-3xl mx-auto bg-white min-h-screen"
                     }, React.createElement(Header_Buyer.Mobile.GnbHome.make, {
-                          gnbBanners: gnbBanners,
-                          displayCategories: displayCategories,
                           key: router.asPath
                         }), React.createElement("div", {
-                          className: "w-full p-3 pt-1 bg-white sticky top-0 z-10"
-                        }, React.createElement(ShopSearchInput_Buyer.MO.make, {})), React.createElement("div", {
+                          className: "w-full p-3 bg-white sticky top-0 z-10"
+                        }, React.createElement(ShopMainSearchInput_Buyer.make, {})), React.createElement("div", {
                           className: "w-full flex flex-col bg-white pb-16"
                         }, React.createElement("section", {
                               className: "w-full px-5"
                             }, React.createElement("div", {
                                   className: "mt-5"
-                                }, React.createElement(ShopMain_MainBanner_Buyer.MO.make, {
-                                      mainBanners: mainBanners
+                                }, React.createElement(RescriptReactErrorBoundary.make, {
+                                      children: React.createElement(React.Suspense, {
+                                            children: React.createElement(ShopMain_MainBanner_Buyer.MO.make, {}),
+                                            fallback: React.createElement(ShopMain_MainBanner_Buyer.MO.Placeholder.make, {})
+                                          }),
+                                      fallback: (function (param) {
+                                          return React.createElement(ShopMain_MainBanner_Buyer.MO.Placeholder.make, {});
+                                        })
                                     })), React.createElement("div", {
                                   className: "mt-3"
-                                }, React.createElement(ShopMain_SubBanner_Buyer.MO.make, {
-                                      subBanners: subBanners
+                                }, React.createElement(RescriptReactErrorBoundary.make, {
+                                      children: React.createElement(React.Suspense, {
+                                            children: React.createElement(ShopMain_SubBanner_Buyer.MO.make, {}),
+                                            fallback: React.createElement(ShopMain_SubBanner_Buyer.MO.Placeholder.make, {})
+                                          }),
+                                      fallback: (function (param) {
+                                          return React.createElement(ShopMain_SubBanner_Buyer.MO.Placeholder.make, {});
+                                        })
                                     }))), React.createElement("section", {
                               className: "w-full mt-12"
-                            }, React.createElement(ShopMain_CategoryList_Buyer.MO.make, {
-                                  categories: categories
+                            }, React.createElement(RescriptReactErrorBoundary.make, {
+                                  children: React.createElement(React.Suspense, {
+                                        children: React.createElement(ShopMain_CategoryList_Buyer.MO.make, {}),
+                                        fallback: React.createElement(ShopMain_CategoryList_Buyer.MO.Placeholder.make, {})
+                                      }),
+                                  fallback: (function (param) {
+                                      return React.createElement(ShopMain_CategoryList_Buyer.MO.Placeholder.make, {});
+                                    })
                                 })), isCsr ? React.createElement(RescriptReactErrorBoundary.make, {
                                 children: React.createElement(React.Suspense, {
                                       children: React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.make, {}),
@@ -128,9 +149,9 @@ function ShopMain_Buyer$MO(Props) {
                                 fallback: (function (param) {
                                     return React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.Placeholder.make, {});
                                   })
-                              }) : React.createElement(ShopMain_Buyer$Placeholder, {
-                                deviceType: deviceType
-                              })), React.createElement(Footer_Buyer.MO.make, {}))));
+                              }) : React.createElement(ShopMainSpecialShowcaseList_Buyer.MO.Placeholder.make, {})))), React.createElement(Bottom_Navbar.make, {
+                  deviceType: deviceType
+                }));
 }
 
 var MO = {
@@ -139,32 +160,15 @@ var MO = {
 
 function ShopMain_Buyer$Container(Props) {
   var deviceType = Props.deviceType;
-  var gnbBanners = Props.gnbBanners;
-  var mainBanners = Props.mainBanners;
-  var subBanners = Props.subBanners;
-  var categories = Props.categories;
-  var displayCategories = Props.displayCategories;
-  ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
+  ChannelTalkHelper.Hook.use(undefined, undefined);
   switch (deviceType) {
     case /* Unknown */0 :
         return null;
     case /* PC */1 :
-        return React.createElement(ShopMain_Buyer$PC, {
-                    deviceType: deviceType,
-                    gnbBanners: gnbBanners,
-                    mainBanners: mainBanners,
-                    subBanners: subBanners,
-                    categories: categories,
-                    displayCategories: displayCategories
-                  });
+        return React.createElement(ShopMain_Buyer$PC, {});
     case /* Mobile */2 :
         return React.createElement(ShopMain_Buyer$MO, {
-                    deviceType: deviceType,
-                    gnbBanners: gnbBanners,
-                    mainBanners: mainBanners,
-                    subBanners: subBanners,
-                    categories: categories,
-                    displayCategories: displayCategories
+                    deviceType: deviceType
                   });
     
   }
@@ -176,25 +180,21 @@ var Container = {
 
 function ShopMain_Buyer(Props) {
   var deviceType = Props.deviceType;
-  var gnbBanners = Props.gnbBanners;
-  var mainBanners = Props.mainBanners;
-  var subBanners = Props.subBanners;
-  var categories = Props.categories;
-  var displayCategories = Props.displayCategories;
   React.useEffect((function () {
           Curry._3(Global.$$Window.ReactNativeWebView.PostMessage.airbridgeWithPayload, "VIEW_HOME", undefined, undefined);
         }), []);
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "신선하이")
+                  children: null
+                }, React.createElement("title", undefined, "신선하이 | 농산물 소싱 온라인 플랫폼"), React.createElement("meta", {
+                      content: "농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요.",
+                      name: "description"
+                    })), React.createElement(OpenGraph_Header.make, {
+                  title: "신선하이 | 농산물 소싱 온라인 플랫폼",
+                  description: "농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요."
                 }), React.createElement(RescriptReactErrorBoundary.make, {
                   children: React.createElement(React.Suspense, {
                         children: React.createElement(ShopMain_Buyer$Container, {
-                              deviceType: deviceType,
-                              gnbBanners: gnbBanners,
-                              mainBanners: mainBanners,
-                              subBanners: subBanners,
-                              categories: categories,
-                              displayCategories: displayCategories
+                              deviceType: deviceType
                             }),
                         fallback: React.createElement(ShopMain_Buyer$Placeholder, {
                               deviceType: deviceType

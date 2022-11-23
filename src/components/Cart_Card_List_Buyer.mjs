@@ -26,7 +26,7 @@ function Cart_Card_List_Buyer$ProductNameAndDelete(Props) {
                   href: "/products/" + String(cartItem.productId) + "",
                   children: React.createElement("a", {
                         className: "text-text-L1 font-bold self-start underline-offset-4 hover:underline"
-                      }, Belt_Option.getWithDefault(cartItem.productName, ""))
+                      }, cartItem.productName)
                 }), React.createElement(Cart_Delete_Button.make, {
                   productOptions: cartItem.productOptions,
                   refetchCart: refetchCart,
@@ -134,8 +134,8 @@ function Cart_Card_List_Buyer$PC(Props) {
                   href: "/products/" + String(cartItem.productId) + "",
                   children: React.createElement("a", undefined, React.createElement("img", {
                             className: "min-w-[80px] min-h-[80px] w-20 h-20 rounded-[10px]",
-                            alt: "" + Belt_Option.getWithDefault(cartItem.productName, "") + "-image",
-                            src: Belt_Option.getWithDefault(cartItem.imageUrl, "")
+                            alt: cartItem.productName,
+                            src: cartItem.imageUrl
                           }))
                 }), React.createElement("div", {
                   className: Cx.cx([
@@ -219,8 +219,8 @@ function Cart_Card_List_Buyer$MO(Props) {
                           href: "/products/" + String(cartItem.productId) + "",
                           children: React.createElement("a", undefined, React.createElement("img", {
                                     className: "w-20 h-20 rounded-[10px]",
-                                    alt: "" + Belt_Option.getWithDefault(cartItem.productName, "") + "-image",
-                                    src: Belt_Option.getWithDefault(cartItem.imageUrl, "")
+                                    alt: cartItem.productName,
+                                    src: cartItem.imageUrl
                                   }))
                         })), React.createElement(Cart_Card_List_Buyer$ProductNameAndDelete, {
                       cartItem: cartItem,

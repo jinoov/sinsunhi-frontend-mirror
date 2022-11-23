@@ -52,7 +52,9 @@ let make = (~itemIds) => {
         {j`조회하기`->React.string}
       </div>
     }}
-    <Dialog.Content className=%twc("dialog-content-detail overflow-y-auto rounded-2xl")>
+    <Dialog.Content
+      className=%twc("dialog-content-detail overflow-y-auto rounded-2xl")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("flex p-5")>
         <h3 className=%twc("text-lg font-bold")> {j`관심품목 조회`->React.string} </h3>
         <Dialog.Close className=%twc("focus:outline-none ml-auto")>

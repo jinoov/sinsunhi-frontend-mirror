@@ -83,7 +83,8 @@ module List = {
           <tr key={i->Belt.Int.toString}>
             <Td className=%twc("text-center")> {order.createdAt->makeDate} </Td>
             <Td className=%twc("text-right")>
-              {order.payment->Locale.Float.show(~digits=0)->React.string} {`원`->React.string}
+              {order.payment->Locale.Float.show(~digits=0)->React.string}
+              {`원`->React.string}
             </Td>
             <Td className=%twc("text-right")>
               {order.paymentWithFees->Locale.Float.show(~digits=0)->React.string}
@@ -109,7 +110,8 @@ module Dialog = {
       <RadixUI.Dialog.Content
         className=%twc(
           "w-fit shadow-[0px_10px_40px_10px_rgba(0,0,0,0.3)] rounded-2xl p-5 dialog-content-nosize"
-        )>
+        )
+        onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
         children
       </RadixUI.Dialog.Content>
     </RadixUI.Dialog.Root>
@@ -167,11 +169,14 @@ module View = {
           </span>
         </div>
         <div className=%twc("ml-auto")>
-          <button onClick=handleClose> <IconClose height="24" width="24" fill="#262626" /> </button>
+          <button onClick=handleClose>
+            <IconClose height="24" width="24" fill="#262626" />
+          </button>
         </div>
       </div>
       {switch data {
-      | Loaded(list) => <>
+      | Loaded(list) =>
+        <>
           <div className=%twc("flex flex-col gap-2")>
             <List data=list.data />
             <div className=%twc("ml-auto text-[0.8125rem] text-gray-500")>
@@ -195,5 +200,7 @@ module View = {
 
 @react.component
 let make = (~open_, ~setOpen) => {
-  <Dialog open_> <View setOpen /> </Dialog>
+  <Dialog open_>
+    <View setOpen />
+  </Dialog>
 }

@@ -160,63 +160,102 @@ let make = (~setShowModal, ~query, ~selectedGroup, ~setSelectedGroup) => {
   let (showBottmSheet, setShowBottomSheet) = React.Uncurried.useState(_ => false)
   let {matchingProductId} = query->Fragment.use
 
-  <>
-    {switch user {
-    | Unknown =>
-      <button
-        disabled=true
-        className=%twc(
-          "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black"
-        )>
-        {`가격 상위 그룹`->React.string}
-        <IconArrowSelect width="24" height="24" fill="#262626" />
-      </button>
-
-    | NotLoggedIn =>
-      <button
-        onClick={_ =>
-          setShowModal(._ => PDP_Matching_Modals_Buyer.Show(
-            Unauthorized(`로그인 후에\n견적을 받으실 수 있습니다.`),
-          ))}
-        className=%twc(
-          "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black"
-        )>
-        {`가격 상위 그룹`->React.string}
-        <IconArrowSelect width="24" height="24" fill="#262626" />
-      </button>
-
-    | LoggedIn(_) =>
-      let label = switch selectedGroup {
-      | "high" => `가격 상위 그룹`
-      | "medium" => `가격 중위 그룹`
-      | "low" => `가격 하위 그룹`
-      | _ => ""
-      }
-
-      <>
+  let oldUI =
+    <>
+      {switch user {
+      | Unknown =>
         <button
-          onClick={_ => {
-            matchingProductId
-            ->ClickPriceGroupFilterGtm.make
-            ->DataGtm.mergeUserIdUnsafe
-            ->DataGtm.push
-            setShowBottomSheet(._ => true)
-          }}
+          disabled=true
           className=%twc(
             "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black"
           )>
-          {label->React.string}
+          {`가격 상위 그룹`->React.string}
           <IconArrowSelect width="24" height="24" fill="#262626" />
         </button>
-        <BottomSheet
-          show=showBottmSheet
-          onClose={_ => setShowBottomSheet(._ => false)}
-          setShowModal
-          query
-          selectedGroup
-          setSelectedGroup
-        />
-      </>
-    }}
-  </>
+
+      | NotLoggedIn =>
+        <button
+          onClick={_ =>
+            setShowModal(._ => PDP_Matching_Modals_Buyer.Show(
+              Unauthorized(`로그인 후에\n견적을 받으실 수 있습니다.`),
+            ))}
+          className=%twc(
+            "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black"
+          )>
+          {`가격 상위 그룹`->React.string}
+          <IconArrowSelect width="24" height="24" fill="#262626" />
+        </button>
+
+      | LoggedIn(_) =>
+        let label = switch selectedGroup {
+        | "high" => `가격 상위 그룹`
+        | "medium" => `가격 중위 그룹`
+        | "low" => `가격 하위 그룹`
+        | _ => ""
+        }
+
+        <>
+          <button
+            onClick={_ => {
+              matchingProductId
+              ->ClickPriceGroupFilterGtm.make
+              ->DataGtm.mergeUserIdUnsafe
+              ->DataGtm.push
+              setShowBottomSheet(._ => true)
+            }}
+            className=%twc(
+              "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black"
+            )>
+            {label->React.string}
+            <IconArrowSelect width="24" height="24" fill="#262626" />
+          </button>
+          <BottomSheet
+            show=showBottmSheet
+            onClose={_ => setShowBottomSheet(._ => false)}
+            setShowModal
+            query
+            selectedGroup
+            setSelectedGroup
+          />
+        </>
+      }}
+    </>
+
+  <FeatureFlagWrapper featureFlag=#HOME_UI_UX fallback=oldUI>
+    {<>
+      {
+        let label = switch selectedGroup {
+        | "high" => `가격 상위 그룹`
+        | "medium" => `가격 중위 그룹`
+        | "low" => `가격 하위 그룹`
+        | _ => ""
+        }
+
+        <>
+          <button
+            onClick={_ => {
+              matchingProductId
+              ->ClickPriceGroupFilterGtm.make
+              ->DataGtm.mergeUserIdUnsafe
+              ->DataGtm.push
+              setShowBottomSheet(._ => true)
+            }}
+            className=%twc(
+              "w-full h-12 px-4 border border-gray-250 rounded-xl flex items-center justify-between text-base text-black"
+            )>
+            {label->React.string}
+            <IconArrowSelect width="24" height="24" fill="#262626" />
+          </button>
+          <BottomSheet
+            show=showBottmSheet
+            onClose={_ => setShowBottomSheet(._ => false)}
+            setShowModal
+            query
+            selectedGroup
+            setSelectedGroup
+          />
+        </>
+      }
+    </>}
+  </FeatureFlagWrapper>
 }

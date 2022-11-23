@@ -8,33 +8,33 @@ import * as ReactToastNotifications from "react-toast-notifications";
 function placements(placement) {
   if (placement === "top-left") {
     return [
-            CssJs.top(CssJs.px(0)),
+            CssJs.top(CssJs.px(16)),
             CssJs.left(CssJs.px(0))
           ];
   } else if (placement === "top-center") {
     return [
-            CssJs.top(CssJs.px(0)),
+            CssJs.top(CssJs.px(16)),
             CssJs.left(CssJs.pct(50)),
             CssJs.transform(CssJs.translateX(CssJs.pct(-50)))
           ];
   } else if (placement === "top-right") {
     return [
-            CssJs.top(CssJs.px(0)),
+            CssJs.top(CssJs.px(16)),
             CssJs.right(CssJs.px(0))
           ];
   } else if (placement === "bottom-left") {
     return [
-            CssJs.bottom(CssJs.px(0)),
+            CssJs.bottom(CssJs.px(16)),
             CssJs.left(CssJs.px(0))
           ];
   } else if (placement === "bottom-right") {
     return [
-            CssJs.bottom(CssJs.px(0)),
+            CssJs.bottom(CssJs.px(16)),
             CssJs.right(CssJs.px(0))
           ];
   } else {
     return [
-            CssJs.bottom(CssJs.px(0)),
+            CssJs.bottom(CssJs.px(16)),
             CssJs.left(CssJs.pct(50)),
             CssJs.transform(CssJs.translateX(CssJs.pct(-50)))
           ];
@@ -63,11 +63,8 @@ function toast(transitionDuration, transitionState) {
               CssJs.height(CssJs.px(50)),
               CssJs.paddingRight(CssJs.px(16)),
               CssJs.paddingLeft(CssJs.px(16)),
-              CssJs.borderRadius(CssJs.px(10)),
-              CssJs.backgroundColor(CssJs.hsla(CssJs.deg(0.0), CssJs.pct(0.0), CssJs.pct(0.0), {
-                        NAME: "num",
-                        VAL: 0.8
-                      })),
+              CssJs.borderRadius(CssJs.px(12)),
+              CssJs.backgroundColor(CssJs.hex("121212")),
               CssJs.transition(transitionDuration, undefined, "easeInOut", "all"),
               CssJs.opacity(tmp),
               CssJs.marginBottom(CssJs.rem(0.5))
@@ -75,7 +72,8 @@ function toast(transitionDuration, transitionState) {
 }
 
 var p = CssJs.style([
-      CssJs.fontSize(CssJs.px(15)),
+      CssJs.fontSize(CssJs.px(16)),
+      CssJs.fontWeight("bold"),
       CssJs.color(CssJs.white),
       CssJs.overflow("hidden"),
       CssJs.textOverflow("ellipsis"),
@@ -100,7 +98,7 @@ function ReactToastNotifications$Custom$Toast(Props) {
   var transitionState = Props.transitionState;
   return React.createElement("div", {
               className: toast(transitionDuration, transitionState)
-            }, React.createElement("p", {
+            }, React.createElement("div", {
                   className: p
                 }, children));
 }

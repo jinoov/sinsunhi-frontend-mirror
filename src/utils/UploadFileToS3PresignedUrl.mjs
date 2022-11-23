@@ -2,12 +2,16 @@
 
 import * as Env from "../constants/Env.mjs";
 import * as Curry from "rescript/lib/es6/curry.js";
+import * as Fetch from "bs-fetch/src/Fetch.mjs";
 import * as Spice from "@greenlabs/ppx-spice/src/rescript/Spice.mjs";
+import * as Js_exn from "rescript/lib/es6/js_exn.js";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
+import * as Redirect from "../components/Redirect.mjs";
 import * as Js_promise from "rescript/lib/es6/js_promise.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as FetchHelper from "./FetchHelper.mjs";
+import * as Nextjs from "@sentry/nextjs";
 
 function responseData_encode(v) {
   return Js_dict.fromArray([[
@@ -231,16 +235,51 @@ function uploadBulkSale(file, farmmorningUserId, onSuccess, onFailure, param) {
 }
 
 function uploadImage(file, original, resizedImg, onSuccess, onFailure, param) {
+  var recFetchCdnImage = function (url, countOpt, intervalOpt, err, param) {
+    var count = countOpt !== undefined ? countOpt : 10;
+    var interval = intervalOpt !== undefined ? intervalOpt : 0;
+    var urlWithCount = "" + url + "?count=" + String(count) + "";
+    if (count <= 0) {
+      Belt_Option.forEach(err, (function (error) {
+              Nextjs.captureException(error);
+            }));
+      return Promise.reject(Belt_Option.getWithDefault(err, Js_exn.raiseError("요청 재시도를 실패하였습니다.")));
+    } else {
+      return Js_promise.$$catch((function (err) {
+                    var match = err.status;
+                    if (match !== 401) {
+                      return Js_promise.then_((function (param) {
+                                    return recFetchCdnImage(url, count - 1 | 0, interval, err, undefined);
+                                  }), FetchHelper.wait(interval));
+                    } else {
+                      return Js_promise.$$catch((function (param) {
+                                    Redirect.redirectByRole(undefined);
+                                    return Promise.reject(err);
+                                  }), Js_promise.then_((function (param) {
+                                        return Js_promise.then_((function (param) {
+                                                      return recFetchCdnImage(url, count - 1 | 0, interval, undefined, undefined);
+                                                    }), FetchHelper.wait(interval));
+                                      }), FetchHelper.refreshToken(undefined)));
+                    }
+                  }), Js_promise.then_((function (res) {
+                        if (res.ok) {
+                          return Promise.resolve(res);
+                        } else {
+                          return Promise.reject(Js_exn.raiseError("처리된 이미지를 찾을 수 없습니다."));
+                        }
+                      }), fetch(urlWithCount, Fetch.RequestInit.make(/* Get */0, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)(undefined))));
+    }
+  };
   return Js_promise.$$catch((function (err) {
                 return Promise.resolve(Curry._1(onFailure, err));
               }), Js_promise.then_((function (res) {
                     return Promise.resolve(Curry._1(onSuccess, res));
-                  }), Js_promise.then_((function (_res) {
+                  }), Js_promise.then_((function (param) {
                         return Js_promise.$$catch((function (err) {
                                       return Promise.reject(err);
                                     }), Js_promise.then_((function (res) {
                                           return Promise.resolve(res);
-                                        }), FetchHelper.fetchWithIntervalRetry(FetchHelper.getProcessedImage, resizedImg, "", 10, 3000)));
+                                        }), recFetchCdnImage(resizedImg, undefined, 3000, undefined, undefined)));
                       }), FetchHelper.fetchWithRetry(FetchHelper.putWithFile, original, file, 3))));
 }
 

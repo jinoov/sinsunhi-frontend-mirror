@@ -105,7 +105,7 @@ function CartLinkIcon$PlaceHolder(Props) {
   return React.createElement(Link, {
               href: "/buyer/cart",
               children: React.createElement("a", undefined, React.createElement("img", {
-                        className: "w-6 h-6 min-w-[24px] min-h-[24px] place-self-center",
+                        className: "w-6 h-6 min-w-[32px] min-h-[32px] place-self-center",
                         alt: "cart-icon",
                         src: cartIcon
                       }))
@@ -134,7 +134,10 @@ function CartLinkIcon$NotLoggedIn(Props) {
                             className: "dialog-overlay"
                           }), React.createElement(ReactDialog.Content, {
                             children: null,
-                            className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
+                            className: "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center",
+                            onOpenAutoFocus: (function (prim) {
+                                prim.preventDefault();
+                              })
                           }, React.createElement("span", {
                                 className: "whitespace-pre text-center text-text-L1 pt-3"
                               }, "로그인 후에\n확인하실 수 있습니다"), React.createElement("div", {
@@ -173,7 +176,7 @@ function CartLinkIcon$NotLoggedIn(Props) {
                           });
                     })
                 }, React.createElement("img", {
-                      className: "w-6 h-6 min-w-[24px] min-h-[24px]",
+                      className: "w-6 h-6 min-w-[32px] min-h-[32px]",
                       alt: "cart-icon",
                       src: cartIcon
                     })));
@@ -187,27 +190,24 @@ function CartLinkIcon$Container(Props) {
   var queryData = use(undefined, /* StoreAndNetwork */2, undefined, undefined, undefined);
   var router = Router.useRouter();
   var count = queryData.cartItemCount;
-  return React.createElement(React.Suspense, {
-              children: React.createElement(DataGtm.make, {
-                    children: React.createElement("button", {
-                          className: "relative w-6 h-6 min-w-[24px] min-h-[24px] place-self-center",
-                          type: "button",
-                          onClick: (function (param) {
-                              router.push("/buyer/cart");
-                            })
-                        }, count !== 0 ? React.createElement("div", {
-                                className: Cx.cx([
-                                      "flex justify-center items-center rounded-[10px] bg-emphasis h-4 text-white text-xs absolute font-bold -top-1 leading-[14.4px]",
-                                      count >= 10 ? "-right-2 w-[23px]" : "-right-1 w-4"
-                                    ])
-                              }, String(count)) : null, React.createElement("img", {
-                              className: "w-6 h-6 min-w-[24px] min-h-[24px] place-self-center",
-                              alt: "cart-icon",
-                              src: cartIcon
-                            })),
-                    dataGtm: "click_cart"
-                  }),
-              fallback: React.createElement(CartLinkIcon$PlaceHolder, {})
+  return React.createElement(DataGtm.make, {
+              children: React.createElement("button", {
+                    className: "relative w-6 h-6 min-w-[32px] min-h-[32px] place-self-center",
+                    type: "button",
+                    onClick: (function (param) {
+                        router.push("/buyer/cart");
+                      })
+                  }, count !== 0 ? React.createElement("div", {
+                          className: Cx.cx([
+                                "flex justify-center items-center rounded-[10px] bg-emphasis h-4 text-white text-xs absolute font-bold -top-1 leading-[14.4px]",
+                                count >= 10 ? "-right-2 w-[23px]" : "-right-1 w-4"
+                              ])
+                        }, String(count)) : null, React.createElement("img", {
+                        className: "w-6 h-6 min-w-[32px] min-h-[32px] place-self-center",
+                        alt: "cart-icon",
+                        src: cartIcon
+                      })),
+              dataGtm: "click_cart"
             });
 }
 
@@ -217,17 +217,22 @@ var Container = {
 
 function CartLinkIcon(Props) {
   var user = CustomHooks.Auth.use(undefined);
-  var isLoggedIn;
-  if (typeof user === "number") {
-    isLoggedIn = false;
+  var isLoggedIn = typeof user === "number" ? (
+      user !== 0 ? false : undefined
+    ) : (
+      user._0.role === /* Buyer */1 ? true : false
+    );
+  if (isLoggedIn !== undefined) {
+    if (isLoggedIn) {
+      return React.createElement(React.Suspense, {
+                  children: React.createElement(CartLinkIcon$Container, {}),
+                  fallback: React.createElement(CartLinkIcon$PlaceHolder, {})
+                });
+    } else {
+      return React.createElement(CartLinkIcon$NotLoggedIn, {});
+    }
   } else {
-    var match = user._0.role;
-    isLoggedIn = match === 1;
-  }
-  if (isLoggedIn) {
-    return React.createElement(CartLinkIcon$Container, {});
-  } else {
-    return React.createElement(CartLinkIcon$NotLoggedIn, {});
+    return React.createElement(CartLinkIcon$PlaceHolder, {});
   }
 }
 

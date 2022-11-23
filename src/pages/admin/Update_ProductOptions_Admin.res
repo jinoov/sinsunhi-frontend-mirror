@@ -102,6 +102,11 @@ module Mutation = %relay(`
           stockSku
           amount
           amountUnit
+          adhocStockIsLimited
+          adhocStockIsNumRemainingVisible
+          adhocStockNumLimit
+          adhocStockNumRemaining
+          adhocStockNumSold
         }
         updatedProductOptions {
           id
@@ -128,6 +133,11 @@ module Mutation = %relay(`
           status
           stockSku
           amount
+          adhocStockIsLimited
+          adhocStockIsNumRemainingVisible
+          adhocStockNumLimit
+          adhocStockNumRemaining
+          adhocStockNumSold
         }
       }
     }
@@ -216,6 +226,9 @@ let makeUpdateOption: Update_ProductOption_Admin.Form.submit => UpdateProductOpt
   | NOTFREE => false
   },
   shippingUnitQuantity: option.shippingUnitQuantity,
+  adhocStockIsLimited: option.adhocStockIsLimited,
+  adhocStockIsNumRemainingVisible: option.adhocStockIsNumRemainingVisible,
+  adhocStockNumLimit: option.adhocStockNumLimit,
 }
 
 let makeCreateOption: (
@@ -319,6 +332,9 @@ let makeCreateOption: (
   amountUnit: option.amountUnit->amountUnitEncode,
   status: option.operationStatus->statusEncode,
   shippingUnitQuantity: option.shippingUnitQuantity,
+  adhocStockIsLimited: option.adhocStockIsLimited,
+  adhocStockIsNumRemainingVisible: option.adhocStockIsNumRemainingVisible,
+  adhocStockNumLimit: option.adhocStockNumLimit,
 }
 
 module Title = {

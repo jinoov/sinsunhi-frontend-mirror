@@ -2,7 +2,7 @@ module Form = Cart_Buyer_Form
 
 module Mutation = %relay(`
   mutation CartDeleteButtonMutation($optionIds: [Int]!) {
-    deleteCartItems(input: { optionIds: $optionIds }) {
+    deleteCartItems(input: { productOptionIds: $optionIds }) {
       ... on DeleteCartItemsSuccess {
         count
       }
@@ -26,6 +26,7 @@ module Dialog = {
       <RadixUI.Dialog.Portal>
         <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
         <RadixUI.Dialog.Content
+          onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}
           className=%twc(
             "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
           )>
@@ -64,6 +65,7 @@ module NoSelectDialog = {
       <RadixUI.Dialog.Portal>
         <RadixUI.Dialog.Overlay className=%twc("dialog-overlay") />
         <RadixUI.Dialog.Content
+          onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}
           className=%twc(
             "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
           )>

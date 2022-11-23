@@ -34,7 +34,9 @@ let make = (~query) => {
           {`입력 내용 보기`->React.string}
         </Dialog.Trigger>
       : <span> {`없음`->React.string} </span>}
-    <Dialog.Content className=%twc("dialog-content overflow-y-auto")>
+    <Dialog.Content
+      className=%twc("dialog-content overflow-y-auto")
+      onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
       <section className=%twc("p-5 text-text-L1")>
         <article className=%twc("flex")>
           <h2 className=%twc("text-xl font-bold")> {j`출하 시장 정보`->React.string} </h2>

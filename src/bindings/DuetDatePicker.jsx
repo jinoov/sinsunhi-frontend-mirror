@@ -42,6 +42,7 @@ export function DatePicker({
       identifier={identifier}
       ref={ref}
       first-day-of-week={firstDayOfWeek}
+      placeholder={"test"}
       {...props}
     />
   );

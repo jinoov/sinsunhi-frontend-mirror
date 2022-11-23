@@ -11,6 +11,8 @@ import * as Router from "next/router";
 import * as ReactRelay from "react-relay";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
+import * as FeatureFlagWrapper from "../pages/buyer/pc/FeatureFlagWrapper.mjs";
+import * as Product_FilterOption from "../pages/buyer/Product_FilterOption.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ShopProductListItem_Buyer from "./ShopProductListItem_Buyer.mjs";
 import * as ShopMainSpecialShowcaseListBuyerQuery_graphql from "../__generated__/ShopMainSpecialShowcaseListBuyerQuery_graphql.mjs";
@@ -82,13 +84,7 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
-var Query_displayCategoryProductsSort_decode = ShopMainSpecialShowcaseListBuyerQuery_graphql.Utils.displayCategoryProductsSort_decode;
-
-var Query_displayCategoryProductsSort_fromString = ShopMainSpecialShowcaseListBuyerQuery_graphql.Utils.displayCategoryProductsSort_fromString;
-
 var Query = {
-  displayCategoryProductsSort_decode: Query_displayCategoryProductsSort_decode,
-  displayCategoryProductsSort_fromString: Query_displayCategoryProductsSort_fromString,
   Operation: undefined,
   Types: undefined,
   use: use,
@@ -100,38 +96,56 @@ var Query = {
 };
 
 function ShopMainSpecialShowcaseList_Buyer$PC$Placeholder(Props) {
-  return React.createElement("div", undefined, Belt_Array.map(Belt_Array.range(1, 10), (function (categoryIdx) {
-                    var containerStyle = categoryIdx === 1 ? "w-full bg-[#F9F9F9] py-16" : "w-full bg-white py-16";
-                    return React.createElement("section", {
-                                key: "showcase-skeleton-" + String(categoryIdx) + "",
-                                className: containerStyle
-                              }, React.createElement("div", {
-                                    className: "w-[1280px] mx-auto px-5"
-                                  }, React.createElement("div", {
-                                        className: "w-[155px] h-[38px] animate-pulse bg-gray-150 rounded-lg"
-                                      }), React.createElement("ol", {
-                                        className: "mt-12 grid grid-cols-4 gap-x-10 gap-y-16"
-                                      }, Belt_Array.map(Belt_Array.range(1, 8), (function (idx) {
-                                              return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
-                                                          key: "category-" + String(categoryIdx) + "-product-skeleton-" + String(idx) + ""
-                                                        });
-                                            })))));
-                  })));
+  var oldUI = React.createElement("div", undefined, Belt_Array.map(Belt_Array.range(1, 10), (function (categoryIdx) {
+              var containerStyle = categoryIdx === 1 ? "w-full bg-[#F9F9F9] py-16" : "w-full bg-white py-16";
+              return React.createElement("section", {
+                          key: "showcase-skeleton-" + String(categoryIdx) + "",
+                          className: containerStyle
+                        }, React.createElement("div", {
+                              className: "w-[1280px] mx-auto px-5"
+                            }, React.createElement("div", {
+                                  className: "w-[155px] h-[38px] animate-pulse bg-gray-150 rounded-lg"
+                                }), React.createElement("ol", {
+                                  className: "mt-12 grid grid-cols-4 gap-x-10 gap-y-16"
+                                }, Belt_Array.map(Belt_Array.range(1, 8), (function (idx) {
+                                        return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
+                                                    key: "category-" + String(categoryIdx) + "-product-skeleton-" + String(idx) + ""
+                                                  });
+                                      })))));
+            })));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", undefined, Belt_Array.map(Belt_Array.range(1, 10), (function (categoryIdx) {
+                          var containerStyle = categoryIdx === 1 ? "w-full bg-[#F9F9F9] py-16" : "w-full bg-white py-16";
+                          return React.createElement("section", {
+                                      key: "showcase-skeleton-" + String(categoryIdx) + "",
+                                      className: containerStyle
+                                    }, React.createElement("div", {
+                                          className: "w-[1280px] mx-auto px-5"
+                                        }, React.createElement("div", {
+                                              className: "w-[155px] h-[38px] animate-pulse bg-gray-150 rounded-lg"
+                                            }), React.createElement("ol", {
+                                              className: "mt-12 grid grid-cols-5 gap-x-10 gap-y-16"
+                                            }, Belt_Array.map(Belt_Array.range(1, 10), (function (idx) {
+                                                    return React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {
+                                                                key: "category-" + String(categoryIdx) + "-product-skeleton-" + String(idx) + ""
+                                                              });
+                                                  })))));
+                        }))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var Placeholder = {
   make: ShopMainSpecialShowcaseList_Buyer$PC$Placeholder
 };
 
-function ShopMainSpecialShowcaseList_Buyer$PC(Props) {
+function ShopMainSpecialShowcaseList_Buyer$PC$OldUI(Props) {
   var router = Router.useRouter();
   var variables = {
-    first: 8,
-    onlyBuyable: true,
-    onlyDisplayable: true,
-    sort: "UPDATED_DESC"
+    first: 8
   };
-  var match = use(variables, /* StoreAndNetwork */2, undefined, undefined, undefined);
+  var match = use(variables, undefined, undefined, undefined, undefined);
   return Belt_Array.mapWithIndex(match.specialDisplayCategories, (function (idx, param) {
                 var match = param.products;
                 var edges = match.edges;
@@ -158,10 +172,10 @@ function ShopMainSpecialShowcaseList_Buyer$PC(Props) {
                                           }))), match.pageInfo.hasNextPage ? React.createElement("div", {
                                         className: "mt-12 flex items-center justify-center"
                                       }, React.createElement("button", {
-                                            className: "px-6 py-3 bg-gray-100 rounded-full text-sm flex items-center",
+                                            className: "px-6 py-3 bg-gray-100 rounded-full text-sm flex items-center interactable",
                                             onClick: (function (param) {
                                                 return ReactEvents.interceptingHandler((function (param) {
-                                                              router.push("/categories/" + id + "");
+                                                              router.push("/categories/" + id + "?" + Product_FilterOption.defaultFilterOptionUrlParam + "");
                                                             }), param);
                                               })
                                           }, "전체보기", React.createElement(IconArrow.make, {
@@ -176,8 +190,66 @@ function ShopMainSpecialShowcaseList_Buyer$PC(Props) {
               }));
 }
 
+var OldUI = {
+  make: ShopMainSpecialShowcaseList_Buyer$PC$OldUI
+};
+
+function ShopMainSpecialShowcaseList_Buyer$PC(Props) {
+  var router = Router.useRouter();
+  var variables = {
+    first: 10
+  };
+  var match = use(variables, undefined, undefined, undefined, undefined);
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: Belt_Array.map(match.specialDisplayCategories, (function (param) {
+                      var match = param.products;
+                      var edges = match.edges;
+                      var id = param.id;
+                      if (edges.length !== 0) {
+                        return React.createElement("section", {
+                                    key: "main-special-category-" + id + "-pc",
+                                    className: "mt-4 text-gray-800 w-[1280px] mx-auto rounded-sm bg-white shadow-[0px_10px_40px_10px_rgba(0,0,0,0.03)] py-14 last-of-type:mb-[144px]"
+                                  }, React.createElement("div", {
+                                        className: "w-[1280px] mx-auto px-[50px]"
+                                      }, React.createElement("h1", {
+                                            className: "text-[26px] font-bold"
+                                          }, param.name), React.createElement("ol", {
+                                            className: "mt-12 grid grid-cols-5 gap-x-4 gap-y-16 mx-auto"
+                                          }, Belt_Array.map(edges, (function (param) {
+                                                  return React.createElement(React.Suspense, {
+                                                              children: React.createElement(ShopProductListItem_Buyer.PC.make, {
+                                                                    query: param.node.fragmentRefs
+                                                                  }),
+                                                              fallback: React.createElement(ShopProductListItem_Buyer.PC.Placeholder.make, {}),
+                                                              key: "main-special-category-" + id + "-list-item-" + param.cursor + "-pc"
+                                                            });
+                                                }))), match.pageInfo.hasNextPage ? React.createElement("div", {
+                                              className: "mt-8 flex items-center justify-center"
+                                            }, React.createElement("button", {
+                                                  className: "px-[18px] py-[10px] bg-gray-100 rounded-full text-sm flex items-center",
+                                                  onClick: (function (param) {
+                                                      return ReactEvents.interceptingHandler((function (param) {
+                                                                    router.push("/categories/" + id + "?" + Product_FilterOption.defaultFilterOptionUrlParam + "");
+                                                                  }), param);
+                                                    })
+                                                }, "전체보기", React.createElement(IconArrow.make, {
+                                                      height: "16",
+                                                      width: "16",
+                                                      stroke: "#262626",
+                                                      className: "ml-1"
+                                                    }))) : null));
+                      } else {
+                        return null;
+                      }
+                    })),
+              fallback: React.createElement(ShopMainSpecialShowcaseList_Buyer$PC$OldUI, {}),
+              featureFlag: "HOME_UI_UX"
+            });
+}
+
 var PC = {
   Placeholder: Placeholder,
+  OldUI: OldUI,
   make: ShopMainSpecialShowcaseList_Buyer$PC
 };
 
@@ -204,15 +276,12 @@ var Placeholder$1 = {
   make: ShopMainSpecialShowcaseList_Buyer$MO$Placeholder
 };
 
-function ShopMainSpecialShowcaseList_Buyer$MO(Props) {
+function ShopMainSpecialShowcaseList_Buyer$MO$OldUI(Props) {
   var router = Router.useRouter();
   var variables = {
-    first: 8,
-    onlyBuyable: true,
-    onlyDisplayable: true,
-    sort: "UPDATED_DESC"
+    first: 8
   };
-  var match = use(variables, /* StoreAndNetwork */2, undefined, undefined, undefined);
+  var match = use(variables, undefined, undefined, undefined, undefined);
   return Belt_Array.map(match.specialDisplayCategories, (function (param) {
                 var match = param.products;
                 var edges = match.edges;
@@ -241,7 +310,7 @@ function ShopMainSpecialShowcaseList_Buyer$MO(Props) {
                                             className: "px-[18px] py-[10px] bg-gray-100 rounded-full text-sm flex items-center",
                                             onClick: (function (param) {
                                                 return ReactEvents.interceptingHandler((function (param) {
-                                                              router.push("/categories/" + id + "");
+                                                              router.push("/categories/" + id + "?" + Product_FilterOption.defaultFilterOptionUrlParam + "");
                                                             }), param);
                                               })
                                           }, "전체보기", React.createElement(IconArrow.make, {
@@ -256,8 +325,66 @@ function ShopMainSpecialShowcaseList_Buyer$MO(Props) {
               }));
 }
 
+var OldUI$1 = {
+  make: ShopMainSpecialShowcaseList_Buyer$MO$OldUI
+};
+
+function ShopMainSpecialShowcaseList_Buyer$MO(Props) {
+  var router = Router.useRouter();
+  var variables = {
+    first: 10
+  };
+  var match = use(variables, undefined, undefined, undefined, undefined);
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: Belt_Array.map(match.specialDisplayCategories, (function (param) {
+                      var match = param.products;
+                      var edges = match.edges;
+                      var id = param.id;
+                      if (edges.length !== 0) {
+                        return React.createElement("section", {
+                                    key: "main-special-category-" + id + "-mobile",
+                                    className: "w-full px-5 mt-12"
+                                  }, React.createElement("div", {
+                                        className: "w-full"
+                                      }, React.createElement("h1", {
+                                            className: "text-[19px] font-bold text-[#1F2024]"
+                                          }, param.name), React.createElement("ol", {
+                                            className: "mt-4 grid grid-cols-2 gap-x-4 gap-y-8"
+                                          }, Belt_Array.map(edges, (function (param) {
+                                                  return React.createElement(React.Suspense, {
+                                                              children: React.createElement(ShopProductListItem_Buyer.MO.make, {
+                                                                    query: param.node.fragmentRefs
+                                                                  }),
+                                                              fallback: React.createElement(ShopProductListItem_Buyer.MO.Placeholder.make, {}),
+                                                              key: "main-special-category-" + id + "-list-item-" + param.cursor + "-mobile"
+                                                            });
+                                                }))), match.pageInfo.hasNextPage ? React.createElement("div", {
+                                              className: "mt-8 flex items-center justify-center"
+                                            }, React.createElement("button", {
+                                                  className: "px-[18px] py-[10px] bg-gray-100 rounded-full text-sm flex items-center",
+                                                  onClick: (function (param) {
+                                                      return ReactEvents.interceptingHandler((function (param) {
+                                                                    router.push("/categories/" + id + "?" + Product_FilterOption.defaultFilterOptionUrlParam + "");
+                                                                  }), param);
+                                                    })
+                                                }, "전체보기", React.createElement(IconArrow.make, {
+                                                      height: "16",
+                                                      width: "16",
+                                                      stroke: "#262626",
+                                                      className: "ml-1"
+                                                    }))) : null));
+                      } else {
+                        return null;
+                      }
+                    })),
+              fallback: React.createElement(ShopMainSpecialShowcaseList_Buyer$MO$OldUI, {}),
+              featureFlag: "HOME_UI_UX"
+            });
+}
+
 var MO = {
   Placeholder: Placeholder$1,
+  OldUI: OldUI$1,
   make: ShopMainSpecialShowcaseList_Buyer$MO
 };
 

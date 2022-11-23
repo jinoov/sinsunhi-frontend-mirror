@@ -23,7 +23,9 @@ module ContentsGuide = {
       open RadixUI.ScrollArea
       <Root className=%twc("h-screen flex flex-col overflow-hidden")>
         <Viewport className=%twc("w-full h-full")> {children} </Viewport>
-        <Scrollbar> <Thumb /> </Scrollbar>
+        <Scrollbar>
+          <Thumb />
+        </Scrollbar>
       </Root>
     }
   }
@@ -83,11 +85,11 @@ module Unauthorized = {
 
       <ShopDialog_Buyer
         isShow
-        cancelText=`취소`
+        cancelText={`취소`}
         onCancel={_ => {
           closeFn()
         }}
-        confirmText=`로그인`
+        confirmText={`로그인`}
         onConfirm={_ => {
           let {makeWithDict, toString} = module(Webapi.Url.URLSearchParams)
           let redirectUrl = switch router.query->Js.Dict.get("redirect") {
@@ -119,11 +121,11 @@ module Unauthorized = {
 
       <ShopDialog_Buyer.Mo
         isShow
-        cancelText=`취소`
+        cancelText={`취소`}
         onCancel={_ => {
           closeFn()
         }}
-        confirmText=`로그인`
+        confirmText={`로그인`}
         onConfirm={_ => {
           let {makeWithDict, toString} = module(Webapi.Url.URLSearchParams)
           let redirectUrl = switch router.query->Js.Dict.get("redirect") {
@@ -198,7 +200,8 @@ module Confirm = {
             className=%twc(
               "dialog-content-base bg-white rounded-xl w-[calc(100vw-40px)] max-w-[calc(768px-40px)]"
             )
-            onPointerDownOutside={_ => closeFn()}>
+            onPointerDownOutside={_ => closeFn()}
+            onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
             <div>
               <section className=%twc("w-full h-14 flex justify-end items-center px-4")>
                 <button onClick={_ => closeFn()}>
@@ -231,7 +234,7 @@ module NoOption = {
 
       <ShopDialog_Buyer
         isShow
-        cancelText=`확인`
+        cancelText={`확인`}
         onCancel={_ => {
           closeFn()
         }}>
@@ -255,7 +258,7 @@ module NoOption = {
 
       <ShopDialog_Buyer.Mo
         isShow
-        cancelText=`확인`
+        cancelText={`확인`}
         onCancel={_ => {
           closeFn()
         }}>

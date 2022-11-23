@@ -11,6 +11,8 @@ import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactRelay from "react-relay";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
+import * as FeatureFlagWrapper from "../pages/buyer/pc/FeatureFlagWrapper.mjs";
+import * as Product_FilterOption from "../pages/buyer/Product_FilterOption.mjs";
 import * as RescriptRelay_Internal from "rescript-relay/src/RescriptRelay_Internal.mjs";
 import * as ShopMainCategoryListBuyerQuery_graphql from "../__generated__/ShopMainCategoryListBuyerQuery_graphql.mjs";
 
@@ -114,47 +116,94 @@ var Placeholder = {
 };
 
 function ShopMain_CategoryList_Buyer$PC(Props) {
-  var categories = Props.categories;
-  return React.createElement("div", {
-              className: "w-full"
-            }, React.createElement("span", {
-                  className: "text-2xl text-gray-800 font-bold ml-5"
-                }, "전체 카테고리"), React.createElement("ol", {
-                  className: "mt-6 w-full flex items-center"
-                }, Belt_Array.map(categories, (function (param) {
-                        var id = param.id;
-                        var key = "display-category-" + id + "-pc";
-                        var src = Belt_Option.mapWithDefault(param.image, $$Image.Placeholder.getSrc(/* Sm */0), (function (image$p) {
-                                return image$p.original;
-                              }));
-                        return React.createElement("li", {
-                                    key: key,
-                                    className: "mx-6 w-[112px]"
-                                  }, React.createElement(Link, {
-                                        href: "/categories/" + id + "",
-                                        children: React.createElement("a", undefined, React.createElement("div", {
-                                                  className: "w-28 aspect-square rounded-lg overflow-hidden"
-                                                }, React.createElement($$Image.make, {
-                                                      src: src,
-                                                      placeholder: /* Sm */0,
-                                                      alt: key,
-                                                      className: "w-full h-full object-cover"
-                                                    })), React.createElement("p", {
-                                                  className: "text-gray-800 font-bold text-center"
-                                                }, param.name))
-                                      }));
-                      })), React.createElement("li", {
-                      className: "mx-6 w-[112px] max-w-[112px]"
-                    }, React.createElement(Link, {
-                          href: "/products",
-                          children: React.createElement("a", undefined, React.createElement("img", {
-                                    className: "w-28 h-28",
-                                    alt: "display-category-all",
-                                    src: "https://public.sinsunhi.com/images/20220512/category_all.png"
-                                  }), React.createElement("p", {
-                                    className: "w-[112px] text-gray-800 font-bold text-center"
-                                  }, "전체 상품"))
-                        }))));
+  var match = use({
+        onlyDisplayable: true
+      }, undefined, undefined, undefined, undefined);
+  var mainDisplayCategories = match.mainDisplayCategories;
+  var oldUI = React.createElement("div", {
+        className: "w-full"
+      }, React.createElement("span", {
+            className: "text-2xl text-gray-800 font-bold ml-5"
+          }, "전체 카테고리"), React.createElement("ol", {
+            className: "mt-6 w-full flex items-center"
+          }, Belt_Array.map(mainDisplayCategories, (function (param) {
+                  var id = param.id;
+                  var key = "display-category-" + id + "-pc";
+                  var src = Belt_Option.mapWithDefault(param.image, $$Image.Placeholder.getSrc(/* Sm */0), (function (image$p) {
+                          return image$p.original;
+                        }));
+                  return React.createElement("li", {
+                              key: key,
+                              className: "mx-6 w-[112px]"
+                            }, React.createElement(Link, {
+                                  href: "/categories/" + id + "?" + Product_FilterOption.defaultFilterOptionUrlParam + "",
+                                  children: React.createElement("a", undefined, React.createElement("div", {
+                                            className: "w-28 aspect-square rounded-lg overflow-hidden"
+                                          }, React.createElement($$Image.make, {
+                                                src: src,
+                                                placeholder: /* Sm */0,
+                                                alt: key,
+                                                className: "w-full h-full object-cover"
+                                              })), React.createElement("p", {
+                                            className: "text-gray-800 font-bold text-center"
+                                          }, param.name))
+                                }));
+                })), React.createElement("li", {
+                className: "mx-6 w-[112px] max-w-[112px]"
+              }, React.createElement(Link, {
+                    href: "/products",
+                    children: React.createElement("a", undefined, React.createElement("img", {
+                              className: "w-28 h-28",
+                              alt: "display-category-all",
+                              src: "https://public.sinsunhi.com/images/20220512/category_all.png"
+                            }), React.createElement("p", {
+                              className: "w-[112px] text-gray-800 font-bold text-center"
+                            }, "전체 상품"))
+                  }))));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "w-full mx-7 flex flex-col my-14"
+                  }, React.createElement("span", {
+                        className: "text-2xl text-gray-800 font-bold ml-5"
+                      }, "전체 카테고리"), React.createElement("ol", {
+                        className: "mt-6 w-full flex items-center"
+                      }, Belt_Array.map(mainDisplayCategories, (function (param) {
+                              var id = param.id;
+                              var key = "display-category-" + id + "-pc";
+                              var src = Belt_Option.mapWithDefault(param.image, $$Image.Placeholder.getSrc(/* Sm */0), (function (image$p) {
+                                      return image$p.original;
+                                    }));
+                              return React.createElement("li", {
+                                          key: key,
+                                          className: "mx-6 w-23"
+                                        }, React.createElement(Link, {
+                                              href: "/categories/" + id + "?sort=POPULARITY_DESC&section=delivery",
+                                              children: React.createElement("a", undefined, React.createElement("div", {
+                                                        className: "w-23 aspect-square rounded-lg overflow-hidden"
+                                                      }, React.createElement($$Image.make, {
+                                                            src: src,
+                                                            placeholder: /* Sm */0,
+                                                            alt: key,
+                                                            className: "w-full h-full object-cover"
+                                                          })), React.createElement("p", {
+                                                        className: "text-gray-800 font-bold text-center"
+                                                      }, param.name))
+                                            }));
+                            })), React.createElement("li", {
+                            className: "mx-6 w-23 max-w-[92px]"
+                          }, React.createElement(Link, {
+                                href: "/products?section=delivery&sort=POPULARITY_DESC",
+                                children: React.createElement("a", undefined, React.createElement("img", {
+                                          className: "w-23 h-[92px]",
+                                          alt: "display-category-all",
+                                          src: "https://public.sinsunhi.com/images/20220512/category_all.png"
+                                        }), React.createElement("p", {
+                                          className: "w-23 text-gray-800 font-bold text-center"
+                                        }, "전체 상품"))
+                              })))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var PC = {
@@ -188,54 +237,108 @@ var Placeholder$1 = {
 };
 
 function ShopMain_CategoryList_Buyer$MO(Props) {
-  var categories = Props.categories;
-  return React.createElement("div", {
-              className: "w-full"
-            }, React.createElement("span", {
-                  className: "ml-5 text-lg text-gray-800 font-bold"
-                }, "전체 카테고리"), React.createElement("ol", {
-                  className: "mt-6 w-full grid grid-cols-4 gap-y-3"
-                }, React.createElement("li", {
-                      className: "w-full flex items-center justify-center"
-                    }, React.createElement(Link, {
-                          href: "/products",
-                          children: React.createElement("a", undefined, React.createElement("div", {
-                                    className: "w-[90px] flex flex-col items-center justify-center"
-                                  }, React.createElement("img", {
-                                        className: "w-14 aspect-square object-cover",
-                                        alt: "display-category-all",
-                                        src: "https://public.sinsunhi.com/images/20220512/category_all.png"
-                                      }), React.createElement("p", {
-                                        className: "text-gray-800 text-sm"
-                                      }, "전체 상품")))
-                        })), Belt_Array.map(categories, (function (param) {
-                        var id = param.id;
-                        var key = "display-category-" + id + "-mobile";
-                        var tmp = {
-                          placeholder: /* Sm */0,
-                          alt: key,
-                          className: "w-full h-full object-cover"
-                        };
-                        var tmp$1 = Belt_Option.map(param.image, (function (param) {
-                                return param.original;
-                              }));
-                        if (tmp$1 !== undefined) {
-                          tmp.src = Caml_option.valFromOption(tmp$1);
-                        }
-                        return React.createElement("li", {
-                                    key: key,
-                                    className: "w-full flex items-center justify-center"
-                                  }, React.createElement(Link, {
-                                        href: "/categories/" + id + "",
-                                        children: React.createElement("a", undefined, React.createElement("div", {
-                                                  className: "w-[90px] flex flex-col items-center justify-center"
-                                                }, React.createElement("div", {
-                                                      className: "w-14 aspect-square rounded-lg overflow-hidden"
-                                                    }, React.createElement($$Image.make, tmp)), React.createElement("p", {
-                                                      className: "text-gray-800 text-sm"
-                                                    }, param.name)))
-                                      }));
-                      }))));
+  var match = use({
+        onlyDisplayable: true
+      }, undefined, undefined, undefined, undefined);
+  var mainDisplayCategories = match.mainDisplayCategories;
+  var oldUI = React.createElement("div", {
+        className: "w-full"
+      }, React.createElement("span", {
+            className: "ml-5 text-lg text-gray-800 font-bold"
+          }, "전체 카테고리"), React.createElement("ol", {
+            className: "mt-6 w-full grid grid-cols-4 gap-y-3"
+          }, React.createElement("li", {
+                className: "w-full flex items-center justify-center"
+              }, React.createElement(Link, {
+                    href: "/products",
+                    children: React.createElement("a", undefined, React.createElement("div", {
+                              className: "w-[90px] flex flex-col items-center justify-center"
+                            }, React.createElement("img", {
+                                  className: "w-14 aspect-square object-cover",
+                                  alt: "display-category-all",
+                                  src: "https://public.sinsunhi.com/images/20220512/category_all.png"
+                                }), React.createElement("p", {
+                                  className: "text-gray-800 text-sm"
+                                }, "전체 상품")))
+                  })), Belt_Array.map(mainDisplayCategories, (function (param) {
+                  var id = param.id;
+                  var key = "display-category-" + id + "-mobile";
+                  var tmp = {
+                    placeholder: /* Sm */0,
+                    alt: key,
+                    className: "w-full h-full object-cover"
+                  };
+                  var tmp$1 = Belt_Option.map(param.image, (function (param) {
+                          return param.original;
+                        }));
+                  if (tmp$1 !== undefined) {
+                    tmp.src = Caml_option.valFromOption(tmp$1);
+                  }
+                  return React.createElement("li", {
+                              key: key,
+                              className: "w-full flex items-center justify-center"
+                            }, React.createElement(Link, {
+                                  href: "/categories/" + id + "?" + Product_FilterOption.defaultFilterOptionUrlParam + "",
+                                  children: React.createElement("a", undefined, React.createElement("div", {
+                                            className: "w-[90px] flex flex-col items-center justify-center"
+                                          }, React.createElement("div", {
+                                                className: "w-14 aspect-square rounded-lg overflow-hidden"
+                                              }, React.createElement($$Image.make, tmp)), React.createElement("p", {
+                                                className: "text-gray-800 text-sm"
+                                              }, param.name)))
+                                }));
+                }))));
+  return React.createElement(FeatureFlagWrapper.make, {
+              children: React.createElement("div", {
+                    className: "w-full"
+                  }, React.createElement("span", {
+                        className: "ml-3 text-[19px] text-[#1F2024] font-bold"
+                      }, "전체 카테고리"), React.createElement("ol", {
+                        className: "mt-6 w-full grid grid-cols-4 gap-y-3"
+                      }, Belt_Array.map(mainDisplayCategories, (function (param) {
+                              var id = param.id;
+                              var key = "display-category-" + id + "-mobile";
+                              var tmp = {
+                                placeholder: /* Sm */0,
+                                alt: key,
+                                className: "w-full h-full object-cover"
+                              };
+                              var tmp$1 = Belt_Option.map(param.image, (function (param) {
+                                      return param.original;
+                                    }));
+                              if (tmp$1 !== undefined) {
+                                tmp.src = Caml_option.valFromOption(tmp$1);
+                              }
+                              return React.createElement("li", {
+                                          key: key,
+                                          className: "w-full flex items-center justify-center"
+                                        }, React.createElement(Link, {
+                                              href: "/categories/" + id + "?sort=POPULARITY_DESC&section=delivery",
+                                              children: React.createElement("a", undefined, React.createElement("div", {
+                                                        className: "w-[90px] flex flex-col items-center justify-center"
+                                                      }, React.createElement("div", {
+                                                            className: "w-14 aspect-square rounded-lg overflow-hidden"
+                                                          }, React.createElement($$Image.make, tmp)), React.createElement("p", {
+                                                            className: "text-gray-800 text-sm"
+                                                          }, param.name)))
+                                            }));
+                            })), React.createElement("li", {
+                            className: "w-full flex items-center justify-center"
+                          }, React.createElement(Link, {
+                                href: "/products?sort=POPULARITY_DESC&section=delivery",
+                                children: React.createElement("a", undefined, React.createElement("div", {
+                                          className: "w-[90px] flex flex-col items-center justify-center"
+                                        }, React.createElement("img", {
+                                              className: "w-14 aspect-square object-cover",
+                                              alt: "display-category-all",
+                                              src: "https://public.sinsunhi.com/images/20220512/category_all.png"
+                                            }), React.createElement("p", {
+                                              className: "text-gray-800 text-sm"
+                                            }, "전체 상품")))
+                              })))),
+              fallback: oldUI,
+              featureFlag: "HOME_UI_UX"
+            });
 }
 
 var MO = {

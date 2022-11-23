@@ -6,7 +6,7 @@ import Head from "next/head";
 
 function Privacy(Props) {
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "개인 정보 수집이용 동의 - 신선하이")
+                  children: React.createElement("title", undefined, "신선하이 | 개인 정보 수집이용 동의")
                 }), React.createElement("div", {
                   className: "p-4 mx-auto w-full sm:w-2/3 lg:w-1/2"
                 }, React.createElement("div", {

@@ -24,6 +24,8 @@ import * as CustomHooks from "../../utils/CustomHooks.mjs";
 import * as FetchHelper from "../../utils/FetchHelper.mjs";
 import * as ReactEvents from "../../utils/ReactEvents.mjs";
 import * as Router from "next/router";
+import * as DeviceDetect from "../../bindings/DeviceDetect.mjs";
+import * as Bottom_Navbar from "../../components/Bottom_Navbar.mjs";
 import * as ReForm__Helpers from "@rescriptbr/reform/src/ReForm__Helpers.mjs";
 import * as ChannelTalkHelper from "../../utils/ChannelTalkHelper.mjs";
 import * as LocalStorageHooks from "../../utils/LocalStorageHooks.mjs";
@@ -91,7 +93,7 @@ function info_decode(v) {
     return {
             TAG: /* Error */1,
             _0: {
-              path: "." + ("activation-method" + e$1.path),
+              path: ".activation-method" + e$1.path,
               message: e$1.message,
               value: e$1.value
             }
@@ -237,15 +239,13 @@ function $$default(props) {
         });
   };
   React.useEffect((function () {
-          var email = uid !== undefined ? uid : Curry._1(LocalStorageHooks.BuyerEmail.get, undefined);
-          if (email !== "") {
-            setCheckedSaveEmail(function (param) {
-                  return true;
-                });
-            Curry._4(form.setFieldValue, /* Email */0, email, true, undefined);
-            ReactUtil.focusElementByRef(inputPasswordRef);
-          }
-          
+          Belt_Option.mapWithDefault(uid !== undefined ? uid : Curry._1(LocalStorageHooks.BuyerEmail.get, undefined), undefined, (function (email$p) {
+                  setCheckedSaveEmail(function (param) {
+                        return true;
+                      });
+                  Curry._4(form.setFieldValue, /* Email */0, email$p, true, undefined);
+                  ReactUtil.focusElementByRef(inputPasswordRef);
+                }));
         }), [uid]);
   var isFormFilled = function (param) {
     var email = SignIn_Buyer_Form.FormFields.get(form.values, /* Email */0);
@@ -307,13 +307,23 @@ function $$default(props) {
           }
           
         }), [router.query]);
-  ChannelTalkHelper.Hook.use(undefined, undefined, undefined);
+  ChannelTalkHelper.Hook.use(undefined, undefined);
   var partial_arg = Curry._1(form.handleChange, /* Email */0);
   var partial_arg$1 = Curry._1(form.handleChange, /* Password */1);
+  var redirectUrl = Belt_Option.map(Js_dict.get(router.query, "redirect"), (function (redirect) {
+          return new URLSearchParams(Js_dict.fromArray([[
+                              "redirect",
+                              redirect
+                            ]])).toString();
+        }));
+  var signUpUrlWithRedirect = redirectUrl !== undefined ? "/buyer/signup?" + redirectUrl : "/buyer/signup";
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "바이어 로그인 - 신선하이")
-                }), React.createElement("div", {
-                  className: "container mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20"
+                  children: null
+                }, React.createElement("title", undefined, "신선하이 | 바이어 로그인"), React.createElement("meta", {
+                      content: "농산물 소싱은 신선하이에서! 전국 70만 산지농가의 우수한 농산물을 싸고 편리하게 공급합니다. 국내 유일한 농산물 B2B 플랫폼 신선하이와 함께 매출을 올려보세요.",
+                      name: "description"
+                    })), React.createElement("div", {
+                  className: "container bg-white mx-auto max-w-lg min-h-buyer relative flex flex-col justify-center pb-20 xl:bg-inherit"
                 }, React.createElement("div", {
                       className: "flex-auto flex flex-col xl:justify-center items-center"
                     }, React.createElement("div", {
@@ -380,11 +390,11 @@ function $$default(props) {
                             }), React.createElement("div", undefined, React.createElement("button", {
                                   className: "w-full h-14 flex justify-center items-center rounded-xl border-[1px] border-green-500",
                                   onClick: (function (param) {
-                                      router.push("/buyer/signup");
+                                      router.push(signUpUrlWithRedirect);
                                     })
                                 }, React.createElement("span", {
                                       className: "text-green-500 font-bold"
-                                    }, "바이어 회원가입")))))), React.createElement(Dialog.make, {
+                                    }, "사업자 회원가입")))))), React.createElement(Dialog.make, {
                   isShow: match$1[0],
                   children: React.createElement(SignIn_Buyer_Set_Password.make, {
                         onSuccess: match$1[1],
@@ -423,13 +433,17 @@ function $$default(props) {
                             return /* Hide */1;
                           });
                     })
+                }), React.createElement(Bottom_Navbar.make, {
+                  deviceType: props.deviceType
                 }));
 }
 
-function getServerSideProps(param) {
+function getServerSideProps(ctx) {
+  var deviceType = DeviceDetect.detectDeviceFromCtx2(ctx.req);
   return Promise.resolve({
               props: {
-                query: param.query
+                query: ctx.query,
+                deviceType: deviceType
               }
             });
 }

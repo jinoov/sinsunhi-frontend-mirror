@@ -2,6 +2,7 @@
 
 import * as Env from "./Env.mjs";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as FetchHelper from "../utils/FetchHelper.mjs";
 import * as RescriptRelay from "rescript-relay/src/RescriptRelay.mjs";
 import * as RelayRuntime from "relay-runtime";
@@ -9,21 +10,25 @@ import * as Caml_exceptions from "rescript/lib/es6/caml_exceptions.js";
 
 var Graphql_error = /* @__PURE__ */Caml_exceptions.create("RelayEnv.Graphql_error");
 
+function fetchQuery(api, operation, variables, _cacheConfig, _uploadables) {
+  return FetchHelper.fetchWithRetryForRelay(FetchHelper.postWithToken, api._0, JSON.stringify(Js_dict.fromList({
+                      hd: [
+                        "query",
+                        operation.text
+                      ],
+                      tl: {
+                        hd: [
+                          "variables",
+                          variables
+                        ],
+                        tl: /* [] */0
+                      }
+                    })), 5);
+}
+
 function network(api) {
   return RelayRuntime.Network.create((function (param, param$1, param$2, param$3) {
-                return FetchHelper.fetchWithRetryForRelay(FetchHelper.postWithToken, api._0, JSON.stringify(Js_dict.fromList({
-                                    hd: [
-                                      "query",
-                                      param.text
-                                    ],
-                                    tl: {
-                                      hd: [
-                                        "variables",
-                                        param$1
-                                      ],
-                                      tl: /* [] */0
-                                    }
-                                  })), 5);
+                return fetchQuery(api, param, param$1, param$2, param$3);
               }), undefined);
 }
 
@@ -41,9 +46,20 @@ var envFMBridge = environment({
       _0: Env.fmbGraphqlApiUrl
     });
 
+function createDehydrateProps(environment, extraPropsOpt, param) {
+  var extraProps = extraPropsOpt !== undefined ? Caml_option.valFromOption(extraPropsOpt) : ({});
+  return Object.assign({
+              dehydrateStoreData: environment.getStore().getSource().toJSON()
+            }, extraProps);
+}
+
 export {
   Graphql_error ,
+  fetchQuery ,
+  network ,
+  environment ,
   envSinsunMarket ,
   envFMBridge ,
+  createDehydrateProps ,
 }
 /* envSinsunMarket Not a pure module */

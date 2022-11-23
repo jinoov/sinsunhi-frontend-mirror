@@ -106,6 +106,8 @@ function ShopMain_MainBanner_Buyer$PC$PrevBtn(Props) {
               className: "absolute z-[5] left-3 top-1/2 translate-y-[-50%]",
               onClick: handleClick
             }, React.createElement("img", {
+                  className: "w-10 h-14",
+                  alt: "이전",
                   src: arrowWhiteLeftIcon
                 }));
 }
@@ -125,6 +127,8 @@ function ShopMain_MainBanner_Buyer$PC$NextBtn(Props) {
               className: "absolute rotate-180 z-[5] right-3 top-1/2 translate-y-[-50%]",
               onClick: handleClick
             }, React.createElement("img", {
+                  className: "w-10 h-14",
+                  alt: "다음",
                   src: arrowWhiteLeftIcon
                 }));
 }
@@ -176,20 +180,21 @@ var Placeholder = {
 };
 
 function ShopMain_MainBanner_Buyer$PC(Props) {
-  var mainBanners = Props.mainBanners;
+  var match = use(undefined, undefined, undefined, undefined, undefined);
+  var mainBanners = match.mainBanners;
   var total = mainBanners.length;
-  var match = React.useState(function () {
+  var match$1 = React.useState(function () {
         return 0;
       });
-  var setCurrent = match[1];
-  var current = match[0];
+  var setCurrent = match$1[1];
+  var current = match$1[0];
   var afterChange = function (changedTo) {
     setCurrent(function (param) {
           return changedTo;
         });
   };
   return React.createElement("div", {
-              className: "relative"
+              className: "relative w-[920px]"
             }, React.createElement(ReactSlick, {
                   dots: false,
                   infinite: true,
@@ -277,13 +282,14 @@ var Dots$1 = {
 };
 
 function ShopMain_MainBanner_Buyer$MO(Props) {
-  var mainBanners = Props.mainBanners;
+  var match = use(undefined, undefined, undefined, undefined, undefined);
+  var mainBanners = match.mainBanners;
   var total = mainBanners.length;
-  var match = React.useState(function () {
+  var match$1 = React.useState(function () {
         return 0;
       });
-  var setCurrent = match[1];
-  var current = match[0];
+  var setCurrent = match$1[1];
+  var current = match$1[0];
   var afterChange = function (changedTo) {
     setCurrent(function (param) {
           return changedTo;

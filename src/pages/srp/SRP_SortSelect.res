@@ -10,27 +10,40 @@
 @module("../../../public/assets/arrow-gray800-up-down.svg")
 external arrowUpDownIcon: string = "default"
 
+module SortSelectDropDownItem = {
+  @react.component
+  let make = (~sortOption, ~itemWidth, ~makeOnSelect) => {
+    open RadixUI.DropDown
+
+    <Item
+      onSelect={sortOption->makeOnSelect}
+      className={Cn.make([
+        itemWidth,
+        %twc("p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"),
+      ])}>
+      {sortOption->Product_FilterOption.Sort.toSortLabel->React.string}
+    </Item>
+  }
+}
 module PC = {
   @react.component
   let make = () => {
     let router = Next.Router.useRouter()
 
-    let sectionType = router.query->Js.Dict.get("section")->PLP_FilterOption.Section.make
+    let sectionType =
+      router.query->Js.Dict.get("section")->Product_FilterOption.Section.fromUrlParameter
 
-    let label =
-      router.query
-      ->Js.Dict.get("sort")
-      ->Option.map(PLP_FilterOption.Sort.decodeSort(sectionType))
-      ->Option.getWithDefault(#UPDATED_DESC)
-      ->PLP_FilterOption.Sort.makeSortLabel
+    let sort =
+      sectionType
+      ->Option.flatMap(sectionType' =>
+        sectionType'->Product_FilterOption.Sort.makeSearch(router.query->Js.Dict.get("sort"))
+      )
+      ->Option.getWithDefault(Product_FilterOption.Sort.searchDefaultValue)
 
-    let priceOption = switch sectionType {
-    | #MATCHING => #PRICE_PER_KG_ASC
-    | _ => #PRICE_ASC
-    }
+    let label = sort->Product_FilterOption.Sort.toSortLabel
 
     let itemWidth = switch sectionType {
-    | #MATCHING => %twc("w-[140px]")
+    | Some(#MATCHING) => %twc("w-[140px]")
     | _ => %twc("w-[120px]")
     }
 
@@ -40,7 +53,8 @@ module PC = {
       ReactEvents.interceptingHandler(_ => {
         setOpen(._ => false)
         let newQuery = router.query
-        newQuery->Js.Dict.set("sort", sort->PLP_FilterOption.Sort.encodeSort)
+
+        newQuery->Js.Dict.set("sort", sort->Product_FilterOption.Sort.toString)
 
         router->Next.Router.replaceObj({
           pathname: router.pathname,
@@ -64,22 +78,17 @@ module PC = {
           className=%twc(
             "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
           )>
-          <Item
-            onSelect={#UPDATED_DESC->makeOnSelect}
-            className={Cn.make([
-              itemWidth,
-              %twc("p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"),
-            ])}>
-            {#UPDATED_DESC->PLP_FilterOption.Sort.makeSortLabel->React.string}
-          </Item>
-          <Item
-            onSelect={priceOption->makeOnSelect}
-            className={Cn.make([
-              itemWidth,
-              %twc(" p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"),
-            ])}>
-            {priceOption->PLP_FilterOption.Sort.makeSortLabel->React.string}
-          </Item>
+          <SortSelectDropDownItem sortOption=#RELEVANCE_DESC itemWidth makeOnSelect />
+          <SortSelectDropDownItem sortOption=#POPULARITY_DESC itemWidth makeOnSelect />
+          <SortSelectDropDownItem sortOption=#UPDATED_DESC itemWidth makeOnSelect />
+          <SortSelectDropDownItem
+            sortOption={switch sectionType {
+            | Some(#MATCHING) => #PRICE_PER_KG_ASC
+            | _ => #PRICE_ASC
+            }}
+            itemWidth
+            makeOnSelect
+          />
         </Content>
       </Root>
     </div>
@@ -91,32 +100,31 @@ module MO = {
   let make = () => {
     let router = Next.Router.useRouter()
 
-    let sectionType = router.query->Js.Dict.get("section")->PLP_FilterOption.Section.make
+    let sectionType =
+      router.query->Js.Dict.get("section")->Product_FilterOption.Section.fromUrlParameter
 
-    let label =
-      router.query
-      ->Js.Dict.get("sort")
-      ->Option.map(PLP_FilterOption.Sort.decodeSort(sectionType))
-      ->Option.getWithDefault(#UPDATED_DESC)
-      ->PLP_FilterOption.Sort.makeSortLabel
+    let sort =
+      sectionType
+      ->Option.flatMap(sectionType' =>
+        sectionType'->Product_FilterOption.Sort.makeSearch(router.query->Js.Dict.get("sort"))
+      )
+      ->Option.getWithDefault(Product_FilterOption.Sort.searchDefaultValue)
 
-    let (_open, setOpen) = React.Uncurried.useState(_ => false)
-
-    let priceOption = switch sectionType {
-    | #MATCHING => #PRICE_PER_KG_ASC
-    | _ => #PRICE_ASC
-    }
+    let label = sort->Product_FilterOption.Sort.toSortLabel
 
     let itemWidth = switch sectionType {
-    | #MATCHING => %twc("w-[140px]")
+    | Some(#MATCHING) => %twc("w-[140px]")
     | _ => %twc("w-[120px]")
     }
+
+    let (_open, setOpen) = React.Uncurried.useState(_ => false)
 
     let makeOnSelect = sort => {
       ReactEvents.interceptingHandler(_ => {
         setOpen(._ => false)
         let newQuery = router.query
-        newQuery->Js.Dict.set("sort", sort->PLP_FilterOption.Sort.encodeSort)
+
+        newQuery->Js.Dict.set("sort", sort->Product_FilterOption.Sort.toString)
 
         router->Next.Router.replaceObj({
           pathname: router.pathname,
@@ -139,22 +147,17 @@ module MO = {
           className=%twc(
             "dropdown-content bg-white shadow-lg p-1 border border-[#cccccc] rounded-lg cursor-pointer"
           )>
-          <Item
-            onSelect={#UPDATED_DESC->makeOnSelect}
-            className={Cn.make([
-              itemWidth,
-              %twc("p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"),
-            ])}>
-            {#UPDATED_DESC->PLP_FilterOption.Sort.makeSortLabel->React.string}
-          </Item>
-          <Item
-            onSelect={priceOption->makeOnSelect}
-            className={Cn.make([
-              itemWidth,
-              %twc("p-2 focus:outline-none text-gray-800 hover:bg-gray-100 rounded-lg"),
-            ])}>
-            {priceOption->PLP_FilterOption.Sort.makeSortLabel->React.string}
-          </Item>
+          <SortSelectDropDownItem sortOption=#RELEVANCE_DESC itemWidth makeOnSelect />
+          <SortSelectDropDownItem sortOption=#POPULARITY_DESC itemWidth makeOnSelect />
+          <SortSelectDropDownItem sortOption=#UPDATED_DESC itemWidth makeOnSelect />
+          <SortSelectDropDownItem
+            sortOption={switch sectionType {
+            | Some(#MATCHING) => #PRICE_PER_KG_ASC
+            | _ => #PRICE_ASC
+            }}
+            itemWidth
+            makeOnSelect
+          />
         </Content>
       </Root>
     </div>

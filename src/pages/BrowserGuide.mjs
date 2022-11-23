@@ -24,7 +24,7 @@ function BrowserGuide(Props) {
           return window.location.origin;
         }));
   return React.createElement(React.Fragment, undefined, React.createElement(Head, {
-                  children: React.createElement("title", undefined, "IE 접속 가이드 - 신선하이")
+                  children: React.createElement("title", undefined, "신선하이 | IE 접속 가이드")
                 }), React.createElement("div", {
                   className: "flex flex-col h-screen justify-center items-center text-black-gl"
                 }, React.createElement("img", {

@@ -10,17 +10,77 @@ external checkboxUncheckedIcon: string = "default"
 @module("../../public/assets/checkbox-disable.svg")
 external checkboxDisableIcon: string = "default"
 
+// React Hook Form에 데이터를 기록하기 위한 hidden input입니다.
 module Hidden = {
+  module Checkbox = {
+    @react.component
+    let make = (~checked, ~inputName) => {
+      let {register, setValue} = Hooks.Context.use(.
+        ~config=Hooks.Form.config(~mode=#all, ~shouldUnregister=true, ()),
+        (),
+      )
+
+      let {ref, name} = register(. inputName, None)
+
+      React.useEffect1(_ => {
+        setValue(. inputName, Js.Json.boolean(checked))
+        None
+      }, [checked])
+
+      <input type_="checkbox" id=name ref name checked />
+    }
+  }
+
+  module NullableNumberInput = {
+    @react.component
+    let make = (~value, ~inputName) => {
+      let {register, setValue} = Hooks.Context.use(.
+        ~config=Hooks.Form.config(~mode=#all, ~shouldUnregister=true, ()),
+        (),
+      )
+
+      let {ref, name} = register(.
+        inputName,
+        Some(Hooks.Register.config(~valueAsNumber=value->Option.isSome, ())),
+      )
+
+      // 1. React-Hook-Form에서 valueAsNumber 설정으로인해 ""(empty string)이 NaN으로 파싱됨을 방지합니다.
+      // 2. React-Hook-Form에서 handleSubmit 등의 rerender과정을 거칠 때, input value가 undefined로 초기화됨을 방지합니다. (Json에 undefined가 존재할 수 없음)
+      switch value->Option.isSome {
+      | true => ()
+      | false => setValue(. inputName, Js.Json.null)
+      }
+
+      <input type_="hidden" id=name ref name defaultValue=?value ?value />
+    }
+  }
+
+  module NumberInput = {
+    @react.component
+    let make = (~value, ~inputName) => {
+      let {register, setValue} = Hooks.Context.use(.
+        ~config=Hooks.Form.config(~mode=#all, ~shouldUnregister=true, ()),
+        (),
+      )
+
+      let {ref, name} = register(. inputName, Some(Hooks.Register.config(~valueAsNumber=true, ())))
+
+      React.useEffect1(_ => {
+        setValue(. inputName, Js.Json.string(value))
+        None
+      }, [value])
+
+      <input type_="hidden" id=name ref name defaultValue=value value />
+    }
+  }
+
   @react.component
-  let make = (~value, ~inputName, ~isNumber=false) => {
+  let make = (~value, ~inputName) => {
     let {register, setValue} = Hooks.Context.use(.
       ~config=Hooks.Form.config(~mode=#all, ~shouldUnregister=true, ()),
       (),
     )
-    let {ref, name} = register(.
-      inputName,
-      isNumber ? Some(Hooks.Register.config(~valueAsNumber=true, ())) : None,
-    )
+    let {ref, name} = register(. inputName, None)
     React.useEffect1(_ => {
       setValue(. inputName, Js.Json.string(value->Option.getWithDefault("")))
       None
@@ -108,7 +168,8 @@ module SubmitDialog = {
         <RadixUI.Dialog.Content
           className=%twc(
             "dialog-content p-7 bg-white rounded-xl w-[480px] flex flex-col gap-7 items-center justify-center"
-          )>
+          )
+          onOpenAutoFocus={ReactEvent.Synthetic.preventDefault}>
           <span className=%twc("whitespace-pre text-center text-text-L1 pt-3")>
             {`주문하실 상품을
 선택해주세요`->React.string}
@@ -136,17 +197,15 @@ module HiddenInputs = {
         let {productName, imageUrl, productId, productStatus, updatedAt, productOptions} = cartItem
         let formNames = Form.names(`${parnetFormName.cartItems}.${cartIndex->Int.toString}`)
         <div key=formNames.name className=%twc("hidden")>
-          <Hidden
-            inputName={formNames.productId} isNumber=true value=Some(productId->Int.toString)
-          />
-          <Hidden inputName={formNames.productName} value=productName />
-          <Hidden inputName={formNames.checkedNumber} isNumber=true value=Some(3->Int.toString) />
+          <Hidden.NumberInput inputName={formNames.productId} value={productId->Int.toString} />
+          <Hidden inputName={formNames.productName} value={Some(productName)} />
+          <Hidden.NumberInput inputName={formNames.checkedNumber} value={3->Int.toString} />
           <Hidden
             inputName={formNames.productStatus}
             value={productStatus->Form.productStatus_encode->Js.Json.decodeString}
           />
-          <Hidden inputName={formNames.imageUrl} value=imageUrl />
-          <Hidden inputName={formNames.updatedAt} value=updatedAt />
+          <Hidden inputName={formNames.imageUrl} value={Some(imageUrl)} />
+          <Hidden inputName={formNames.updatedAt} value={Some(updatedAt)} />
           {productOptions
           ->Array.mapWithIndex((optionIndex, productOption) => {
             let formNames2 = Form.names(`${formNames.productOptions}.${optionIndex->Int.toString}`)
@@ -158,26 +217,34 @@ module HiddenInputs = {
               updatedAt,
               productOptionName,
               cartId,
+              adhocStockIsLimited,
+              adhocStockIsNumRemainingVisible,
+              adhocStockNumRemaining,
             } = productOption
             <div key=formNames2.name>
-              <Hidden
-                inputName={formNames2.cartId} isNumber=true value=Some(cartId->Int.toString)
-              />
-              <Hidden
-                inputName={formNames2.productOptionId}
-                isNumber=true
-                value=Some(productOptionId->Int.toString)
+              <Hidden.NumberInput inputName={formNames2.cartId} value={cartId->Int.toString} />
+              <Hidden.NumberInput
+                inputName={formNames2.productOptionId} value={productOptionId->Int.toString}
               />
               <Hidden
                 inputName={formNames2.optionStatus}
                 value={optionStatus->Form.productStatus_encode->Js.Json.decodeString}
               />
-              <Hidden inputName=formNames2.price isNumber=true value=Some(price->Int.toString) />
-              <Hidden
-                inputName=formNames2.quantity isNumber=true value=Some(quantity->Int.toString)
+              <Hidden.NumberInput inputName=formNames2.price value={price->Int.toString} />
+              <Hidden.NumberInput inputName=formNames2.quantity value={quantity->Int.toString} />
+              <Hidden inputName=formNames2.updatedAt value={Some(updatedAt)} />
+              <Hidden inputName=formNames2.productOptionName value={Some(productOptionName)} />
+              <Hidden.Checkbox
+                inputName=formNames2.adhocStockIsLimited checked={adhocStockIsLimited}
               />
-              <Hidden inputName=formNames2.updatedAt value=updatedAt />
-              <Hidden inputName=formNames2.productOptionName value=productOptionName />
+              <Hidden.Checkbox
+                inputName=formNames2.adhocStockIsNumRemainingVisible
+                checked={adhocStockIsNumRemainingVisible}
+              />
+              <Hidden.NullableNumberInput
+                inputName=formNames2.adhocStockNumRemaining
+                value={adhocStockNumRemaining->Option.map(x => x->Int.toString)}
+              />
             </div>
           })
           ->React.array}
